@@ -14,7 +14,14 @@ class CreateRolesTable extends Migration
     {
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->boolean('mandant_required');
+            $table->boolean('admin_role');
+            $table->boolean('system_role');
+            $table->boolean('mandant_role');
+            $table->boolean('wiki_role');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,6 +32,8 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('roles');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

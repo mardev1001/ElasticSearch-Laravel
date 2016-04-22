@@ -14,7 +14,13 @@ class CreateEditorVariantDocumentsTable extends Migration
     {
         Schema::create('editor_variant_documents', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('editor_variant_id')->unsigned();
+            $table->integer('document_status_id')->unsigned();
+            $table->integer('document_group_id');
+            $table->integer('document_id')->unsigned();
             $table->timestamps();
+            $table->softDeletes();
+            
         });
     }
 
@@ -25,6 +31,8 @@ class CreateEditorVariantDocumentsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('editor_variant_documents');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

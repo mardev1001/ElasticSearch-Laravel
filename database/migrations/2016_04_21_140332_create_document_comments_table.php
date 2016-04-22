@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -14,7 +14,14 @@ class CreateDocumentCommentsTable extends Migration
     {
         Schema::create('document_comments', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();//FK
+            $table->integer('document_id')->unsigned();//FL
+            $table->boolean('freigeber');
+            $table->string('betreff');
+            $table->text('comment');
+            $table->boolean('active');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,6 +32,8 @@ class CreateDocumentCommentsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('document_comments');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

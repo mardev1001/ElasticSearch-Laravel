@@ -14,6 +14,8 @@ class CreateIsoCategoriesTable extends Migration
     {
         Schema::create('iso_categories', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('iso_category_parent_id');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -25,6 +27,8 @@ class CreateIsoCategoriesTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('iso_categories');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

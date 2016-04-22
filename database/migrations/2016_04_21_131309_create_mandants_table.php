@@ -14,7 +14,25 @@ class CreateMandantsTable extends Migration
     {
         Schema::create('mandants', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');  
+            $table->string('kurzname');  
+            $table->string('mandant_number',10);  
+            $table->boolean('rights_wiki');  
+            $table->boolean('rights_admin');  
+            $table->string('logo');  
+            $table->integer('mandant_id_hauptstelle');  
+            $table->boolean('hauptstelle');  
+            $table->string('adresszusatz');  
+            $table->string('strasse',100);  
+            $table->string('ort',100);  
+            $table->string('telefon',30);  
+            $table->string('kurzwahl',30);  
+            $table->string('fax',30);  
+            $table->string('email',30);  
+            $table->string('website',50);  
+            $table->text('geschaftsfuhrer_history');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -25,6 +43,8 @@ class CreateMandantsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('mandants');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

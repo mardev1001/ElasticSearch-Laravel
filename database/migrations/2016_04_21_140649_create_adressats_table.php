@@ -14,6 +14,8 @@ class CreateAdressatsTable extends Migration
     {
         Schema::create('adressats', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->boolean('active');
             $table->timestamps();
         });
     }
@@ -25,6 +27,8 @@ class CreateAdressatsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('adressats');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

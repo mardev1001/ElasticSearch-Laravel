@@ -14,7 +14,23 @@ class CreateDocumentApprovalsTable extends Migration
     {
         Schema::create('document_approvals', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('user_id')->unsigned();//FK
+            $table->integer('document_id')->unsigned();//FK
+            $table->timestamp('date_approved');
+            $table->boolean('approved');
             $table->timestamps();
+            $table->softDeletes();
+            
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('cascade');
+            
+            $table->foreign('document_id')
+                  ->references('id')
+                  ->on('documents')
+                  ->onDelete('cascade'); 
+            
         });
     }
 
@@ -25,6 +41,8 @@ class CreateDocumentApprovalsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('document_approvals');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

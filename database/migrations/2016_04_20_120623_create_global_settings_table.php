@@ -14,6 +14,9 @@ class CreateGlobalSettingsTable extends Migration
     {
         Schema::create('global_settings', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
+            $table->string('category');
+            $table->string('value');
             $table->timestamps();
         });
     }
@@ -25,6 +28,8 @@ class CreateGlobalSettingsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('global_settings');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

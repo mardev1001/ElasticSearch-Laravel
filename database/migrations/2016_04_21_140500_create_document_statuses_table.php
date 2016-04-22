@@ -14,6 +14,7 @@ class CreateDocumentStatusesTable extends Migration
     {
         Schema::create('document_statuses', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -25,6 +26,8 @@ class CreateDocumentStatusesTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('document_statuses');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

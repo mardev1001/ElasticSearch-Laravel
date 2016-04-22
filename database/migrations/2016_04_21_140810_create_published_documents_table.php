@@ -14,7 +14,16 @@ class CreatePublishedDocumentsTable extends Migration
     {
         Schema::create('published_documents', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('document_id')->unsigned();
+            $table->integer('document_group_id');
+            $table->string('url_unique');
             $table->timestamps();
+            $table->softDeletes();
+            
+            $table->foreign('document_id')
+                  ->references('id')
+                  ->on('documents')
+                  ->onDelete('cascade');
         });
     }
 
@@ -25,6 +34,8 @@ class CreatePublishedDocumentsTable extends Migration
      */
     public function down()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
         Schema::drop('published_documents');
+        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }
