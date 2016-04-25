@@ -1,0 +1,55 @@
+/* Mixins - start */
+
+/* Media queries Mixins - start */
+
+@mixin mobile{
+    @media (max-width: 767px) and (min-width: 300px){
+        @content;
+    }
+}
+
+@mixin mobilePortrait{
+    @media (max-width: 380px) and (min-width: 300px){
+        @content;
+    }
+}
+
+@mixin mobileLandscape{
+    @media (max-width: 767px) and (min-width: 381px){
+        @content;
+    }
+}
+
+@mixin tablet{
+    @media (max-width: 1024px) and (min-width: 768px){
+        @content;
+    }
+}
+
+@mixin tabletPortrait{
+    @media (max-width: 992px) and (min-width: 768px){
+        @content;
+    }
+}
+
+@mixin tabletLandscape{
+    @media (max-width: 1025px) and (min-width: 993px){
+        @content;
+    }
+}
+
+@mixin desktopLg{
+     @media (max-width: 1400px) and (min-width: 1025px){
+        @content;
+    }
+}
+
+@mixin desktop{
+    @media (min-width: 1025px){
+        @content;
+    }
+}
+
+/* Media queries Mixins - end */
+
+

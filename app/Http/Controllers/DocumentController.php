@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class TestController extends Controller
+use App\Document;
+
+class DocumentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,7 +27,7 @@ class TestController extends Controller
      */
     public function create()
     {
-        //
+        return view('formWrapper');
     }
 
     /**
@@ -58,7 +60,8 @@ class TestController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Document::find($id);
+        return view('formWrapper', compact('data'));
     }
 
     /**

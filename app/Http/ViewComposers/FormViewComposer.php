@@ -27,13 +27,8 @@ class FormViewComposer
      */
     public function compose(View $view)
     {
-        $params = '';
-        $action = 'store';
-        $method = 'post';
-        $form = '';
-        $controller ='TESTING123321';
-        //this is the real view composer
-        $view->with('controller',$controller );
+        $formWrapperData = $this->detectMethod();
+        $view->with('formWrapperData',$formWrapperData );
        
         
     }
@@ -44,19 +39,29 @@ class FormViewComposer
      * @return void
      */
      protected function detectMethod(){
-        $action = 'store';
-        $method = 'post';
-        $form = '';
-        $button = 'save';
-        $fileUpload  = '';
+        $formWrapperData = new \stdClass();
+        $formWrapperData->action = 'store';
+        $formWrapperData->method = 'post';
+        $formWrapperData->form = '';
+        $formWrapperData->controller = Request::segment(1);
+        $formWrapperData->title = trans( 'controller.'.$formWrapperData->controller );
+        $formWrapperData->buttonMethod = trans('formWrapper.save');
+        $formWrapperData->formUrl = '';
+        $formWrapperData->fileUpload = '';
         if( Request::is('*/edit') ){
-            $action = 'post';
-            $method = 'patch';
-          trans('controller.edit');// EDIT controller
-         
+            $formWrapperData->action = 'PATCH';
+            $formWrapperData->method = 'post';
+            $formWrapperData->form = '';
+            $formWrapperData->formUrl = '/'.Request::segment(2);
+            $formWrapperData->title = trans( 'controller.'.$formWrapperData->controller );
+            $formWrapperData->buttonMethod = trans('formWrapper.update');
         } 
         elseif( Request::is('*/search') ){
-            
+            $formWrapperData->form = '';
+            $formWrapperData->button = 'Save';
+            $formWrapperData->title = trans( 'controller.'.$formWrapperData->controller );
+            $formWrapperData->buttonMethod = trans('formWrapper.update');
         }
+        return $formWrapperData;
      }
 }

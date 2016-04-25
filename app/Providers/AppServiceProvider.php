@@ -14,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
           view()->composer('formWrapper', 'App\Http\ViewComposers\FormViewComposer');
+          view()->composer('formWrapper', 'App\Http\ViewComposers\FormViewComposer');
     }
 
     /**
