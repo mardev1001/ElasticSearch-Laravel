@@ -25,7 +25,7 @@ class StatsController extends Controller
      */
     public function create()
     {
-        //
+        return view('formWrapper');
     }
 
     /**

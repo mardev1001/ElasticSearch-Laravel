@@ -21,7 +21,7 @@ class CreateMandantInfosTable extends Migration
             $table->text('handelsregister_sitz');  
             $table->text('steuernummer',30);  
             $table->text('steuernummer_lohn',30);  
-            $table->integer('ust_ident_number');  
+            $table->text('ust_ident_number',30);  
             $table->text('zausatzinfo_steuer');  
             $table->string('berufsgenossenschaft_number',30);  
             $table->text('berufsgenossenschaft_zusatzinfo');  

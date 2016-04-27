@@ -1,18 +1,17 @@
 <?php
 
-Route::get('/', function(){
-    return view('welcome');
-});
+Route::get('/', 'HomeController@index');
 
 Route::get('/formwrapper', function () {
     return view('formWrapper');
 });
 
-Route::auth();
+//Route::auth();
 
-Route::get('/home', 'HomeController@index');
+//Route::get('/home', 'HomeController@index');
     
 Route::group(['middleware' => ['web']], function () {
+    
     Route::auth();
     Route::resource('dokumente', 'DocumentController');
     Route::resource('iso-kategorien', 'DocumentController');

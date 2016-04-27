@@ -15,7 +15,7 @@ class MandantController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**
@@ -25,7 +25,7 @@ class MandantController extends Controller
      */
     public function create()
     {
-        //
+        return view('formWrapper');
     }
 
     /**

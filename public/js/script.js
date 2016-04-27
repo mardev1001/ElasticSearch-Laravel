@@ -1684,6 +1684,28 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
 })(jQuery);
 
 /**
+ * Created by Marijan on 27.04.2016..
+ */
+$( function() {
+    $('[data-hideswitch]').on('click',  function (e) {
+        $(this).toggle();
+        console.log('trig');
+        console.log($(this).attr('checked') );
+        var $this= $(this), yesClass = $('.'+$this.data('yes') ), noClass = $('.'+$this.data('no') );
+       if( $this.attr('checked',true) || $this.attr('checked','checked') ){
+               yesClass.removeClass('hidden');
+               noClass.addClass('hidden');
+       }
+       else{
+               noClass.removeClass('hidden');
+               yesClass.addClass('hidden');
+           }
+        
+   } );
+    
+  
+});
+/**
  * Created by Marijan on 25.04.2016..
  */
 $( function() {
@@ -1701,6 +1723,8 @@ $( function() {
  * Created by Marijan on 25.04.2016..
  */
 $( function() {
+     
+    
      $(window).bind("load resize", function() {
         topOffset = 50;
         width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
@@ -1719,12 +1743,34 @@ $( function() {
         }
     });
 
-    var url = window.location;
+    /*Exapand all third level childs*/
+  /*  var url = window.location;
     var element = $('ul.nav a').filter(function() {
         return this.href == url || url.href.indexOf(this.href) == 0;
     }).addClass('active').parent().parent().addClass('in').parent();
     if (element.is('li')) {
         element.addClass('active');
-    }
+    }*/
+    /*End Exapand all third level childs*/
+    
+    /* Simulate tree view */
+    $(function () {
+        $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+        $('.tree li.parent_li > span').on('click', function (e) {
+            var children = $(this).parent('li.parent_li').find(' > ul > li');
+            if (children.is(":visible")) {
+                children.hide('fast');
+                $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+            } else {
+                children.show('fast');
+                $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+            }
+            e.stopPropagation();
+        });
+    });
+    /* End Simulate tree view */
+    
+    
+    
 });
 //# sourceMappingURL=script.js.map

@@ -25,7 +25,7 @@ class FavoritesController extends Controller
      */
     public function create()
     {
-        //
+       return view('formWrapper');
     }
 
     /**

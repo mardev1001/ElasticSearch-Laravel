@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Adressat;
+
 class AdressatController extends Controller
 {
     /**
@@ -25,7 +27,7 @@ class AdressatController extends Controller
      */
     public function create()
     {
-        //
+        return view('formWrapper');
     }
 
     /**

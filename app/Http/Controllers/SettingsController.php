@@ -25,7 +25,7 @@ class SettingsController extends Controller
      */
     public function create()
     {
-        //
+        return view('formWrapper');
     }
 
     /**

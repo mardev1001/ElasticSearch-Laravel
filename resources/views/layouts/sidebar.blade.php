@@ -1,73 +1,44 @@
    <div class="navbar-default sidebar" role="navigation">
                 <div class="sidebar-nav navbar-collapse">
                     <ul class="nav" id="side-menu">
-                        <li class="sidebar-search">
-                            <div class="input-group custom-search-form">
-                                <input type="text" class="form-control" placeholder="Search...">
-                                <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </span>
-                            </div>
-                            <!-- /input-group -->
-                        </li>
                         <li>
-                            <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                            <a href="/"><i class="fa fa-dashboard fa-fw"></i> Startseite</a>
                         </li>
-                        <li>
-                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> Charts<span class="fa arrow"></span></a>
+                        
+                        <li class="">
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> {{ trans('navigation.mandantenverwaltung') }}<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="flot.html">Flot Charts</a>
+                                   <a href="#">{{ ucfirst( trans('navigation.mandant') ) }} {{ trans('navigation.anlegen') }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Create</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Search</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
                                 </li>
                                 <li>
-                                    <a href="morris.html">Morris.js Charts</a>
+                                   <a href="#">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                    </ul><!-- End .nav-third-level -->
                                 </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
-                        </li>
-                        <li>
-                            <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
+                            </ul><!--End .nav-second-level -->
+                        </li><!-- End menu item -->
+                        
+                        <li class="">
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> {{ ucfirst( trans('navigation.document') ) }}<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a href="panels-wells.html">Panels and Wells</a>
-                                </li>
-                                <li>
-                                    <a href="buttons.html">Buttons</a>
-                                </li>
-                                <li>
-                                    <a href="notifications.html">Notifications</a>
-                                </li>
-                                <li>
-                                    <a href="typography.html">Typography</a>
-                                </li>
-                                <li>
-                                    <a href="icons.html"> Icons</a>
-                                </li>
-                                <li>
-                                    <a href="grid.html">Grid</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
-                            <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="#">Second Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Second Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Third Level <span class="fa arrow"></span></a>
+                                   <a href="#">{{ ucfirst( trans('navigation.runschreiben') ) }} {{ trans('navigation.qmr') }}<span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="#">Third Level Item</a>
@@ -84,24 +55,122 @@
                                     </ul>
                                     <!-- /.nav-third-level -->
                                 </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
+                                <li>
+                                   <a href="#">{{ ucfirst( trans('navigation.runschreiben') ) }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                    </ul><!-- End .nav-third-level -->
+                                </li>
+                                <li>
+                                   <a href="#">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.document') }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
+                                </li>
+                                    <li>
+                                   <a href="#">{{ ucfirst( trans('navigation.vorlagendokument') ) }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                    </ul><!-- End .nav-third-level -->
+                                </li>
+                                 <li>
+                                   <a href="#">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}<span class="fa arrow"></span></a>
+                                    
+                                    <!-- /.nav-third-level -->
+                                </li>
+                            </ul><!--End .nav-second-level -->
+                       
+                           
+                        </li><!-- End menu item -->
+                        
+                         <li>
+                            <a href="#"><i class="fa fa-wikipedia-w fa-fw"></i> {{ ucfirst( trans('navigation.wiki') ) }}</a>
                         </li>
-                        <li class="active">
-                            <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
+                        
+                         <li>
+                            <a href="#"><i class="fa fa-dashboard fa-fw"></i> {{ ucfirst( trans('navigation.phonebook') ) }}</a>
+                        </li>
+                        
+                        
+                        <li class="">
+                            <a href="#"><i class="fa fa-files-o fa-fw"></i> {{ ucfirst( trans('navigation.redaktion') )}} {{ ucfirst( trans('navigation.verwaltung') )}}<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li>
-                                    <a class="active" href="blank.html">Blank Page</a>
+                                   <a href="#">{{ ucfirst( trans('navigation.rollenverwatung') ) }} <span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                    </ul>
+                                    <!-- /.nav-third-level -->
                                 </li>
                                 <li>
-                                    <a href="login.html">Login Page</a>
+                                   <a href="#">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.type') ) }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">Third Level Item</a>
+                                        </li>
+                                    </ul><!-- End .nav-third-level -->
                                 </li>
-                            </ul>
-                            <!-- /.nav-second-level -->
-                        </li>
+                            </ul><!--End .nav-second-level -->
+                        </li><!-- End menu item -->
+                        
                     </ul>
                 </div>
                 <!-- /.sidebar-collapse -->
             </div>
             <!-- /.navbar-static-side -->
         </nav>
+     

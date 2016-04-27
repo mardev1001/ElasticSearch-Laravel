@@ -25,7 +25,7 @@ class SearchController extends Controller
      */
     public function create()
     {
-        //
+        return view('formWrapper');
     }
 
     /**

@@ -33,10 +33,10 @@ class ForeignKeysUpdate extends Migration
                   ->onDelete('cascade');
           });
           
-           Schema::table('mandant_users', function (Blueprint $table) {
+       Schema::table('mandant_users', function (Blueprint $table) {
             $table->foreign('mandant_id')
                   ->references('id')
-                  ->on('document_types')
+                  ->on('mandants')
                   ->onDelete('cascade');
             
             $table->foreign('user_id')

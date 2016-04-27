@@ -23,15 +23,21 @@
             $table->boolean('approval_all_roles');
             $table->boolean('approval_all_mandants');
             $table->boolean('pdf_upload');-->
-{!! ViewHelper::setSelect() !!}
+
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
         <label class=" control-label">{{ trans('label.name') }} <i class="fa fa-asterisk text-info"></i></label>
-        <select class="form-control select" placeholder="Choose a country...">
-         
-                {--ViewHelper::setSelect() --}
+        <select class="form-control select" data-placeholder="{{trans('placeholders.documentStatus')}}">
+             {!! ViewHelper::setSelect($documentStatus) !!}
         </select>
+    </div>   
+</div><!--End input box-->
+
+<!-- input box-->
+<div class="col-lg-3"> 
+    <div class="form-group">
+        <label class=" control-label">{{ trans('label.name') }} <i class="fa fa-asterisk text-info"></i></label>
         <input type="text" class="form-control" name="name" placeholder="{{ trans('label.name') }}" required 
 		 @if( Request::is('*/edit') && $data->name )
 			 value="{{ $data->name }}"

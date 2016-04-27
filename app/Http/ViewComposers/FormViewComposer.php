@@ -5,6 +5,8 @@ namespace App\Http\ViewComposers;
 use Illuminate\Contracts\View\View;
 use Request;
 
+use App\DocumentStatus;
+
 class FormViewComposer
 {
     
@@ -29,6 +31,7 @@ class FormViewComposer
     {
         $formWrapperData = $this->detectMethod();
         $view->with('formWrapperData',$formWrapperData );
+        $view->with('documentStatus', DocumentStatus::all() );
        
         
     }
