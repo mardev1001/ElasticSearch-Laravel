@@ -2,24 +2,21 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used during authentication for various
-    | messages that we need to display to the user. You are free to modify
-    | these language lines according to your application's requirements.
-    |
-    */
-
     'anlegen'               => 'anlegen',
     'verwaltung'            => 'verwaltung',
+    'ubersicht'             => 'Übersicht',
     'mandant'               => 'mandant',
+    'mandanten'             => 'mandanten',
+    'adressat'              => 'Adressat',
+    'adressate'             => 'Adressate',
     'mandantenverwaltung'   => 'Mandantenverwaltung',
+    'benutzerverwaltung'    => 'Benutzerverwaltung',
     'benutzer'              => 'benutzer',
-    'document'              => 'dokumente',
-    'runschreiben'          => 'runschreiben',
+    'document'              => 'dokument',
+    'documents'              =>'dokumenten',
+    'kategorie'             => 'Kategorie',
+    'kategorien'            => 'Kategorien',
+    'rundschreiben'          => 'runschreiben',
     'qmr'                   => 'QMR',
     'news'                  => 'News',
     'iso'                   => 'ISO',
@@ -29,6 +26,8 @@ return [
     'redaktion'             => 'redaktion',
     'rollenverwatung'       => 'rollenverwatung',
     'type'                  => 'typ',
+    'types'                  => 'typen',
+    'favorites'             => 'Favoriten',
     'search'                => 'Suche',
 
 ];

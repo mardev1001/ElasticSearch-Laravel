@@ -24,12 +24,15 @@ class CreateMandantsTable extends Migration
             $table->boolean('hauptstelle');  
             $table->string('adresszusatz');  
             $table->string('strasse',100);  
-            $table->string('ort',100);  
+            $table->string('hausnummer',10);
+            $table->string('plz',10);
+            $table->string('ort',100);
             $table->string('telefon',30);  
             $table->string('kurzwahl',30);  
             $table->string('fax',30);  
             $table->string('email',30);  
             $table->string('website',50);  
+            $table->integer('geschaftsfuhrer_id');
             $table->text('geschaftsfuhrer_history');
             $table->timestamps();
             $table->softDeletes();

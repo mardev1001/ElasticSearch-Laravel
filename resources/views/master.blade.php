@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="shortcut icon" href="/img/favicon.png">
-    <title>@yield("title",'Neptun intranet')</title>
+    <title>@yield("title",'NEPTUN Intranet')</title>
 
     {!! Html::style(elixir('css/style.css')) !!}
             <!-- CSS files - end -->

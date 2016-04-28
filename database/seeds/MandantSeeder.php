@@ -27,6 +27,8 @@ class MandantSeeder extends Seeder
                     'hauptstelle' => 1,
                     'adresszusatz' => 'Test Adresszusatz',
                     'strasse' => 'Teststrasse',
+                    'hausnummer' => '123a',
+                    'plz' => '50000',
                     'ort' => 'Testort',
                     'telefon' => '+000 123 456 7890',
                     'fax' => '+000 123 456 0000',
@@ -37,7 +39,7 @@ class MandantSeeder extends Seeder
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ]
-            
+                
        );
        
      

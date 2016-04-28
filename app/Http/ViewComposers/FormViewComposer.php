@@ -28,10 +28,15 @@ class FormViewComposer
      * @return void
      */
     public function compose(View $view)
-    {
+    {   
         $formWrapperData = $this->detectMethod();
         $view->with('formWrapperData',$formWrapperData );
         $view->with('documentStatus', DocumentStatus::all() );
+        $view->with('collections', array() );
+        if( Request::is('*/create')){
+            $data = '';
+            $view->with('data', $data );
+        }
        
         
     }

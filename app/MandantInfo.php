@@ -18,5 +18,9 @@ class MandantInfo extends Model
             'heschaftsjahr','heschaftsjahr_info','bankverbindungen','info_wichtiges','info_sonstiges',
             'mitarbeiter_lohn_id','mitarbeiter_finanz_id','mitarbeiter_edv_id','mitarbeiter_vertrieb_id','mitarbeiter_umwelt_id',
         ]; //whitelist
+        
+    public function mandant(){
+        return $this->belongsTo('App\Mandant');
+    }
 }
  

@@ -119,6 +119,20 @@ class ForeignKeysUpdate extends Migration
                   ->on('roles')
                   ->onDelete('cascade');
         });
+        
+        //  Schema::table('mandants', function (Blueprint $table) {
+        //     $table->foreign('geschaftsfuhrer_id')
+        //           ->references('id')
+        //           ->on('users')
+        //           ->onDelete('cascade');
+        // });
+        
+        //  Schema::table('mandant_infos', function (Blueprint $table) {
+        //     $table->foreign('mandant_id')
+        //           ->references('id')
+        //           ->on('mandants')
+        //           ->onDelete('cascade');
+        // });
     }
 
     /**

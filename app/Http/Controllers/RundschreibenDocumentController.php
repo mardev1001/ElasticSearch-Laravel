@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-class MandantController extends Controller
+class RundschreibenDocumentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class MandantController extends Controller
      */
     public function index()
     {
-        
+        //
     }
 
     /**
@@ -25,7 +25,7 @@ class MandantController extends Controller
      */
     public function create()
     {
-        return view('formWrapper', compact('data'));
+        //
     }
 
     /**
@@ -36,7 +36,7 @@ class MandantController extends Controller
      */
     public function store(Request $request)
     {
-        // Request merge mandant_id
+        //
     }
 
     /**
@@ -70,7 +70,7 @@ class MandantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Request merge mandant_id
+        //
     }
 
     /**

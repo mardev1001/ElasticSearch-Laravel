@@ -14,7 +14,11 @@ class Mandant extends Model
     [
         'name','kurzname','mandant_number','rights_wiki',
         'rights_admin','logo','mandant_id_hauptstelle','hauptstelle',
-        'adresszusatz','strasse','ort','telefon',
+        'adresszusatz','strasse','plz','hausnummer','ort','telefon',
         'kurzwahl','fax','email','website','geschaftsfuhrer_history'
     ]; //whitelist
+    
+    public function mandantInfo(){
+        return $this->hasOne('App\MandantInfo');
+    }
 }

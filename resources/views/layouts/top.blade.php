@@ -9,7 +9,7 @@
             <!--    <i class="fa fa-2x fa-bars"></i>-->
             <!--</button>-->
             
-            <button type="button" class="navbar-toggle big hidden-xs pull-left">
+            <button type="button" class="navbar-toggle big hidden-xs pull-left" title="Navi Ein-/Ausblenden">
                 <span class="sr-only">Navi Ein-/Ausblenden</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
