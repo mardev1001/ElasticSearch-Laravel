@@ -14,13 +14,16 @@ class ViewHelper
      * @param bool $required
      * @return string $value || $old
      */
-    static function setInput( $inputName ,$data , $old, $label='', $placeholder='', $required=false ){
+    static function setInput( $inputName , $data, $old, $label='', $placeholder='', $required=false, $type='' , $classes=array(), $dataTags=array() ){
         $string = '';
         if( $placeholder == '')
             $placeholder = $label;
          
+        if( $type == '')
+            $type = 'text';
+         
             $string = view('partials.inputText',
-                    compact('inputName','data','label','old','placeholder','required')
+                    compact('inputName','data', 'type', 'label', 'old', 'placeholder', 'required', 'classes', 'dataTags')
                 )->render();
    
      
@@ -37,7 +40,7 @@ class ViewHelper
      * @param bool $required
      * @return string $value || $old
      */
-    static function setCheckbox( $inputName ,$data , $old, $label='', $required=false ){
+    static function setCheckbox( $inputName ,$data , $old, $label='', $required=false, $required=false, $classes=array(), $dataTag=array() ){
         $string = '';
         
         $string = view('partials.inputCheckbox',
@@ -56,9 +59,11 @@ class ViewHelper
      * @param string $label
      * @param string $placeholder
      * @param bool $required
+     * @param array $classes
+     * @param array $dataAttr
      * @return string $value || $old
      */
-    static function setArea( $inputName ,$data , $old, $label='', $placeholder='', $required=false ){
+    static function setArea( $inputName ,$data , $old, $label='', $placeholder='', $required=false, $classes=array(), $dataTag=array()  ){
         $string = '';
         if( $placeholder == '')
             $placeholder = $label;
@@ -73,19 +78,29 @@ class ViewHelper
     
     
     /**
-     * Set select value 
+     * Generate and check input type textarea
      *
-     * @param object array $collections
-     * @param string $value
-     * @return string $string
+     * @param array $collections
+     * @param string $inputName
+     * @param array $data || string $data='' ( declared in FormViewComposer)
+     * @param string $old
+     * @param string $label
+     * @param string $placeholder
+     * @param bool $required
+     * @param array $classes
+     * @param array $dataAttr
+     * @return string $value || $old
      */
-    static function setSelect($collections=array(), $inputName,$inputName ,$data , $old, $label='', $placeholder='', $required=false ){
-        if( $old == '' &&  !isset( $data->$inputName) )
+    static function setSelect($collections=array(), $inputName, $data , $old, $label='', $placeholder='', $required=false, $classes=array(), $dataTag=array(), $attributes=array()  ){
+        if( $placeholder == '')
+            $placeholder = $label;
+            
+        if( $old == '' &&  isset( $data->$inputName) && !empty($data->$inputName) )
             $value = $data->$inputName;
             
-       $string = '';
+        $string = '';
         $string = view('partials.inputSelect',
-                    compact('collections','inputName','data','label','old','placeholder','required')
+                    compact('collections','inputName','data','label','old','placeholder','required','classes','dataTag','attributes')
                 )->render();
        
      
@@ -99,6 +114,15 @@ class ViewHelper
      */
     static function asterisk(){
         echo '<i class="fa fa-asterisk text-info"></i>';
+    }
+    
+    /**
+     * Echo required font awesome asterisk 
+     *
+     * @echo string 
+     */
+    static function incrementCounter($counter){
+       return $counter++;
     }
 }
 

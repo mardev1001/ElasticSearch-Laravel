@@ -31,12 +31,7 @@ class CreateMandantInfosTable extends Migration
             $table->text('geschaftsjahr_info');  
             $table->text('bankverbindungen');   
             $table->text('info_wichtiges');  
-            $table->text('info_sonstiges');  
-            $table->integer('mitarbeiter_lohn_id');  
-            $table->integer('mitarbeiter_finanz_id');  
-            $table->integer('mitarbeiter_edv_id');  
-            $table->integer('mitarbeiter_vertrieb_id');  
-            $table->integer('mitarbeiter_umwelt_id');  
+            $table->text('info_sonstiges');
             $table->timestamps();
             $table->softDeletes();
             

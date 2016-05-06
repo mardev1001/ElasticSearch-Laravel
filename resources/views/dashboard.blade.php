@@ -6,217 +6,114 @@
         Dashboard
     </h1>
 
-    <div class="col-xs-12 col-md-6 box">
-        <h3 class="text-info">Neue Dokumente/Roundschreiben</h3>
-        <div class="col-xs-12">
-            <div class="tree">
-                <ul>
-                    <li>
-                        <span><i class="icon-calendar"></i> 2016, Week 2</span>
-                        <ul>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Monday, January 7: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 8.00</span> &ndash; Changed CSS to accomodate...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Tuesday, January 8: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <span><i class="icon-time"></i> 6.00</span> &ndash; <a href="">Altered code...</a>
-                                    </li>
-                                    <li>
-                                        <span><i class="icon-time"></i> 2.00</span> &ndash; <a href="">Simplified our approach to...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-warning"><i class="icon-minus-sign"></i> Wednesday, January 9: 6.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 3.00</span> &ndash; Fixed bug caused by...</a>
-                                    </li>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 3.00</span> &ndash; Comitting latest code to Git...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-important"><i class="icon-minus-sign"></i> Wednesday, January 9: 4.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 2.00</span> &ndash; Create component that...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <span><i class="icon-calendar"></i> 2013, Week 3</span>
-                        <ul>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Monday, January 14: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <span><i class="icon-time"></i> 7.75</span> &ndash; <a href="">Writing documentation...</a>
-                                    </li>
-                                    <li>
-                                        <span><i class="icon-time"></i> 0.25</span> &ndash; <a href="">Reverting code back to...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!--end .tree-->
+    <div class="row">
+        <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 bordered home">
+                <h4 class="text-info">Neue Dokumente/Rundschreiben</h3>
+                <div class="box home">
+                    <div class="tree-view" data-selector="rundschreibenNeu">
+                        <div class="rundschreibenNeu hide">
+                            {{ $rundschreibenNeu }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <ul class="pagination">
+                        <li><a href="#" aria-label="Next"><span aria-hidden="true">&laquo;</span></a></li>
+                        <li class="active"><a href="#">1</a></li>
+                        @for($i=2; $i < 5; $i++)
+                            <li><a href="#">{{$i}}</a></li>
+                        @endfor
+                        <li><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                    </ul>
+                </div>
+                
+            </div>
         </div>
-    </div>
-
-    <div class="col-xs-12 col-md-6 box pink">
-        <h3 class="text-info">Ersteller - Meine Rundschreiben</h3>
-        <div class="col-xs-12">
-            <div class="tree">
-                <ul>
-                    <li>
-                        <span><i class="icon-calendar"></i> 2016, Week 2</span>
-                        <ul>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Monday, January 7: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 8.00</span> &ndash; Changed CSS to accomodate...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Tuesday, January 8: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <span><i class="icon-time"></i> 6.00</span> &ndash; <a href="">Altered code...</a>
-                                    </li>
-                                    <li>
-                                        <span><i class="icon-time"></i> 2.00</span> &ndash; <a href="">Simplified our approach to...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-warning"><i class="icon-minus-sign"></i> Wednesday, January 9: 6.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 3.00</span> &ndash; Fixed bug caused by...</a>
-                                    </li>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 3.00</span> &ndash; Comitting latest code to Git...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-important"><i class="icon-minus-sign"></i> Wednesday, January 9: 4.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 2.00</span> &ndash; Create component that...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <span><i class="icon-calendar"></i> 2013, Week 3</span>
-                        <ul>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Monday, January 14: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <span><i class="icon-time"></i> 7.75</span> &ndash; <a href="">Writing documentation...</a>
-                                    </li>
-                                    <li>
-                                        <span><i class="icon-time"></i> 0.25</span> &ndash; <a href="">Reverting code back to...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!--end .tree-->
-        </div>
-    </div>
-
-
-    <div class="col-xs-12 col-md-6 box purple">
-        <h3 class="text-info">Neue Wiki-Einträge</h3>
-        <div class="col-xs-12">
-            <div class="tree">
-                <ul>
-                    <li>
-                        <span><i class="icon-calendar"></i> 2016, Week 2</span>
-                        <ul>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Monday, January 7: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 8.00</span> &ndash; Changed CSS to accomodate...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Tuesday, January 8: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <span><i class="icon-time"></i> 6.00</span> &ndash; <a href="">Altered code...</a>
-                                    </li>
-                                    <li>
-                                        <span><i class="icon-time"></i> 2.00</span> &ndash; <a href="">Simplified our approach to...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-warning"><i class="icon-minus-sign"></i> Wednesday, January 9: 6.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 3.00</span> &ndash; Fixed bug caused by...</a>
-                                    </li>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 3.00</span> &ndash; Comitting latest code to Git...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <span class="badge badge-important"><i class="icon-minus-sign"></i> Wednesday, January 9: 4.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <a href=""><span><i class="icon-time"></i> 2.00</span> &ndash; Create component that...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <span><i class="icon-calendar"></i> 2013, Week 3</span>
-                        <ul>
-                            <li>
-                                <span class="badge badge-success"><i class="icon-minus-sign"></i> Monday, January 14: 8.00 hours</span>
-                                <ul>
-                                    <li>
-                                        <span><i class="icon-time"></i> 7.75</span> &ndash; <a href="">Writing documentation...</a>
-                                    </li>
-                                    <li>
-                                        <span><i class="icon-time"></i> 0.25</span> &ndash; <a href="">Reverting code back to...</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div><!--end .tree-->
-        </div>
-    </div>
     
-    <div class="clearfix"></div>
+        <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 bordered home">
+                <h4 class="text-info">Ersteller - Meine Rundschreiben</h3>
+                <div class="box home">
+                    <div class="tree-view" data-selector="rundschreibenMeine">
+                        <div class="rundschreibenMeine hide">
+                            {{ $rundschreibenMeine }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
     
     <br>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 bordered home">
+                <h4 class="text-info">Neue Wiki-Einträge</h3>
+                <div class="box home">
+                    <div class="tree-view" data-selector="wikiEntries">
+                        <div class="wikiEntries hide">
+                            {{ $wikiEntries }}
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons wiki">
+                    <a href="#" class="btn btn-default">Zum WIKI</a>
+                    <div class="clearfix"></div><br>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 bordered home">
+                <h4 class="text-info">Ersteller - Meine Dokumente</h3>
+                <div class="box home">
+                    <div class="tree-view" data-selector="documentsNew">
+                        <div class="documentsNew hide">
+                            {{ $documentsNew }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
+    
+    <div class="clearfix"></div><br>
+    
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 bordered">
+                <h4 class="text-info">Neue Kommtare</h3>
+                <div class="tree-view" data-selector="commentsNew">
+                    <div class="commentsNew hide">
+                        {{ $commentsNew }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div><br>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 bordered">
+                <h4 class="text-info">Meine letzten Kommentare</h3>
+                <div class="tree-view" data-selector="commentsMy">
+                    <div class="commentsMy hide">
+                        {{ $commentsMy }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="clearfix"></div><br>
+
 @stop
    

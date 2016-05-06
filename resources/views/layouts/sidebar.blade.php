@@ -44,16 +44,16 @@
                         <!-- /.nav-third-level -->
                     </li>
                     <li>
-                        <a href="{{ url('iso-dokumente/index') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
+                        <a href="{{ url('dokumente/iso-dokumente') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
                     </li>
                     <li>
-                        <a href="{{ url('rundschreiben/index') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }} {{ trans('navigation.qmr') }}</a>
+                        <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }} {{ trans('navigation.qmr') }}</a>
                     </li>
                     <li>
-                        <a href="{{ url('rundschreiben-qmr/index') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }} {{ trans('navigation.news') }}</a>
+                        <a href="{{ url('dokumente/rundschreiben') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
                     </li>
                     <li>
-                        <a href="{{ url('rundschreiben-news/index') }}">{{ ucfirst( trans('navigation.vorlagendokument') ) }}</a>
+                        <a href="{{ url('dokumente/rundschreiben-news') }}">{{ ucfirst( trans('navigation.vorlagendokument') ) }}  {{ trans('navigation.news') }}</a>
                     </li>
 
                 </ul><!--End .nav-second-level -->
@@ -61,11 +61,11 @@
             </li><!-- End menu item -->
 
             <li>
-                <a href="{{ url('favoriten/index') }}"><i class="fa fa-heart fa-fw"></i> {{ ucfirst( trans('navigation.favorites') ) }}</a>
+                <a href="{{ url('favoriten') }}"><i class="fa fa-heart fa-fw"></i> {{ ucfirst( trans('navigation.favorites') ) }}</a>
             </li>
 
             <li>
-                <a href="{{ url('telefonliste/index') }}"><i class="fa fa-phone fa-fw"></i> {{ ucfirst( trans('navigation.phonebook') ) }}</a>
+                <a href="{{ url('telefonliste') }}"><i class="fa fa-phone fa-fw"></i> {{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>
 
             <li>
@@ -78,22 +78,25 @@
                 <ul class="nav nav-second-level">
 
                     <li>
-                        <a href="{{ url('mandanten/index') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
+                        <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
                     </li>
 
                     <li>
                         <a href="{{ url('mandanten/create') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.anlegen') }}</a>
                     </li>
-
+                    <li>
+                        <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
+                    </li>
                 </ul><!--End .nav-second-level -->
             </li><!-- End menu item -->
 
+            {{--
             <li class="">
                 <a href="#"><i class="fa fa-users fa-fw"></i> {{ ucfirst(trans('navigation.benutzerverwaltung')) }}<span
                             class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{ url('benutzer/index') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
+                        <a href="{{ url('benutzer') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
                     </li>
 
                     <li>
@@ -101,6 +104,7 @@
                     </li>
                 </ul><!--End .nav-second-level -->
             </li><!-- End menu item -->
+            --}}
 
             <li class="">
                 <a href="#">
@@ -109,16 +113,16 @@
                 </a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{ url('adressaten/index') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
+                        <a href="{{ url('adressaten') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
                     </li>
                     <li>
-                        <a href="{{ url('dokument-typen/index') }}">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.type') ) }}</a>
+                        <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.type') ) }}</a>
                     </li>
                     <li>
-                        <a href="{{ url('iso-kategorien/index') }}">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.kategorien') }} </a>
+                        <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.kategorien') }} </a>
                     </li>
                     <li>
-                        <a href="{{ url('rollen/index') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
+                        <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
                     </li>
                 </ul><!--End .nav-second-level -->
             </li><!-- End menu item -->

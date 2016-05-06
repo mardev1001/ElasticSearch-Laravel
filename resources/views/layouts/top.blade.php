@@ -28,17 +28,21 @@
         </div>
         
         <div class="col-xs-12 col-md-9">
+            {{ Form::open(['route'=>['suche.index'], 'method'=>'GET']) }}
             <div class="input-group custom-search-form">
-                <input type="text" class="form-control" placeholder="{{ trans('navigation.search') }}">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" title="Suche">
-                        <i class="fa fa-search"></i>
-                    </button>
-                    <button class="btn btn-default" type="button" title="Erweiterte Suche ...">
-                        <i class="fa fa-list"></i>
-                    </button>
-                </span>
+                
+                    <input type="text" class="form-control" name="parameter" placeholder="{{ trans('navigation.search') }}" required >
+                    <span class="input-group-btn">
+                        <button type="submit" name="search" class="btn btn-default" title="Suche">
+                            <i class="fa fa-search"></i>
+                        </button>
+                        <a href="{{ action('SearchController@searchAdvanced') }}" class="btn btn-default" title="Erweiterte Suche ...">
+                            <i class="fa fa-list"></i>
+                        </a>
+                    </span>
+                
             </div>
+            {{ Form::close() }}
         </div>
     </div>
     <!-- /.navbar-header -->

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -18,12 +17,16 @@ class UserSeeder extends Seeder
         DB::table('users')->insert(
 
             [
+                'email_reciever' => 1,
                 'email' => 'test@webbite.de',
                 'username' => 'administrator',
-                'password' => Hash::make('webbite123'),
+                'username_sso' => 'administrator',
+                'password' => bcrypt('webbite123'),
+                'title' => 'Herr',
                 'short_name' => 'Deadpool',
                 'first_name' => 'Struktur',
                 'last_name' => 'Administrator',
+                'active' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ]

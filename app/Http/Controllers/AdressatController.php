@@ -17,7 +17,7 @@ class AdressatController extends Controller
      */
     public function index()
     {
-        //
+        return view('adressaten.index');
     }
 
     /**
@@ -27,7 +27,7 @@ class AdressatController extends Controller
      */
     public function create()
     {
-        return view('formWrapper');
+        //
     }
 
     /**

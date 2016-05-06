@@ -16,7 +16,6 @@ class CreateDocumentsTable extends Migration
             $table->increments('id');
             $table->integer('document_type_id')->unsigned();//Fk
             $table->integer('user_id')->unsigned();//FK
-            $table->timestamp('date_created');
             $table->integer('version');
             $table->string('name');
             $table->integer('owner_user_id')->unsigned();//FK
@@ -24,7 +23,6 @@ class CreateDocumentsTable extends Migration
             $table->string('search_tags');
             $table->text('summary');
             $table->timestamp('date_published');
-            $table->timestamp('date_modified');
             $table->timestamp('date_expired');
             $table->integer('version_parent');
             $table->integer('document_group_id');

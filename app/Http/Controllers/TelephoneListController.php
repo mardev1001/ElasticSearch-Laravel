@@ -15,7 +15,7 @@ class TelephoneListController extends Controller
      */
     public function index()
     {
-        //
+        return view('telefonliste.index');
     }
 
     /**

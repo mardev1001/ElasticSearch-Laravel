@@ -17,6 +17,7 @@ class CreateUserReadDocumentsTable extends Migration
             $table->integer('document_group_id');
             $table->integer('user_id')->unsigned();  
             $table->timestamp('date_read');
+            $table->timestamp('date_read_last');
             $table->timestamps();
             $table->softDeletes();
             

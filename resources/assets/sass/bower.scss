@@ -8,7 +8,15 @@
 @import "../vendor/jquery-ui/themes/base/draggable";
 @import "../vendor/font-awesome/css/font-awesome";
 @import "../vendor/chosen/chosen";
-//@import "../vendor/animate.css/animate";
+@import "../vendor/tinymce/skins/lightgray/content.inline.min";
+@import "../vendor/tinymce/skins/lightgray/content.min";
+@import "../vendor/tinymce/skins/lightgray/skin.min";
+@import "../vendor/tinymce/skins/lightgray/skin.ie7.min";
+@import "../vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput";
+@import "../vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker";
+@import "../vendor/bootstrap-treeview/dist/bootstrap-treeview.min";
+// @import "../vendor/eonasdan-bootstrap-datetimepicker/src/sass/bootstrap-datetimepicker-build.scss";
+//@import ".vendor/bootstrap-tagsinput/dist/bootstrap-tagsinput
 //@import "../vendor/selectize/dist/css/selectize";
 //@import "../vendor/selectize/dist/css/selectize.bootstrap3";
 //@import "../vendor/bootstrap-switch/dist/css/bootstrap3/bootstrap-switch";

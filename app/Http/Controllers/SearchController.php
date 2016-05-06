@@ -13,9 +13,11 @@ class SearchController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $parameter = $request->input('parameter');
+        $result = "Keine Suchergebnisse.";
+        return view('suche.index', compact('parameter','result'));
     }
 
     /**
@@ -25,7 +27,7 @@ class SearchController extends Controller
      */
     public function create()
     {
-        return view('formWrapper');
+        //
     }
 
     /**
@@ -82,5 +84,16 @@ class SearchController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Advanced search.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function searchAdvanced(Request $request)
+    {
+        return view('suche.erweitert');
     }
 }

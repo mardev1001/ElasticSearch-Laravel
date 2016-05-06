@@ -2,6 +2,8 @@
 
 return [
 
-    'cancel' => 'Cancel',
-     'save' => 'Save',
+    'cancel'    => 'Abbrechen',
+    'reset'     => 'Zurücksetzen',
+    'save'      => 'Speichern'
+    
 ];

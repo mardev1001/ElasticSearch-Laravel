@@ -1,7 +1,12 @@
   <label class="control-label">
         {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif 
     </label>
-<select name="{{$inputName}}" class="form-control select" data-placeholder="{{ ucfirst($placeholder) }}"
+<select name="{{$inputName}}" class="form-control select @foreach($classes as $class) {{$class}} @endforeach"
+data-placeholder="{{ ucfirst($placeholder) }}"
+@foreach($dataTag as $tag) {{$tag}} @endforeach
+
+@foreach($attributes as $attr) {{$attr}} @endforeach
+
     @if( $required !=false ) 
         required 
     @endif
@@ -13,8 +18,8 @@
                 @if( !empty( $value) && $collection->id == $value)
                     selected
                 @endif >
-               {{$collection->name}}</option>
-          
+               {{$collection->name}}
+           </option>
         @endforeach
     @endif
 </select>

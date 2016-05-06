@@ -15,7 +15,7 @@ class MandantController extends Controller
      */
     public function index()
     {
-        
+        return view('mandanten.administration');
     }
 
     /**
@@ -82,5 +82,18 @@ class MandantController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    /**
+     * Generate and return HTML row
+     *
+     * @param  array  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function generateUserRole()
+    {
+        $collections = array();
+        $data = '';
+        return view('partials.userRole', compact('collections','data'))->render();
     }
 }

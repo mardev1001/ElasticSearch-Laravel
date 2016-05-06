@@ -16,11 +16,16 @@ var gulp = require('gulp'),
 
 var cmsScripts = [
     "jquery/dist/jquery.min.js",
-    "jquery-ui/jquery-ui.min.js",
+    // "jquery-ui/jquery-ui.min.js",
     "bootstrap/dist/js/bootstrap.min.js",
     "metisMenu/dist/metisMenu.min.js",
     "chosen/chosen.jquery.js",
-    "tinymce/jquery.tinymce.js",
+    "tinymce/tinymce.js",
+    "tinymce/themes/modern/theme.js",
+    "bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js",
+    "moment/min/moment-with-locales.min.js",
+    "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
+    "/bootstrap-treeview/public/js/bootstrap-treeview.js",
     "js/**",
     //frontend
     
@@ -36,6 +41,11 @@ elixir(function(mix) {
         .copy(bower + 'jquery-ui/themes/base/images/', 'public/img/jquery-ui')
         .copy(bower + 'chosen/chosen-sprite.png', 'public/build/css/')
         .copy(bower + 'chosen/chosen-sprite@2x.png', 'public/build/css/')
+        .copy(bower + 'tinymce/skins/lightgray/fonts/', 'public/style/css/fonts/')
+        .copy(bower + 'tinymce/skins/lightgray/img/', 'public/build/css/img/')
+        .copy(bower + 'tinymce/skins/lightgray/skin.min.css', 'public/css/style/')
+        .copy(bower + 'tinymce/skins/lightgray/content.min.css', 'public/css/style/')
+        .copy(bower + 'tinymce/skins/lightgray/fonts/', 'public/css/style/fonts/')
         .copy(bower + 'img/', 'public/img/');
 
 });

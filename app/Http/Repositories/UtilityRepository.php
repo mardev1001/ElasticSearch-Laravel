@@ -11,5 +11,8 @@ use DB;
 
 class UtilityRepository
 {
-    
+     public function chewData($data){
+         foreach($data as $d)
+            //something
+     }
 }

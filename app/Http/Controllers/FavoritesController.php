@@ -15,7 +15,8 @@ class FavoritesController extends Controller
      */
     public function index()
     {
-        //
+        $data = '[{"text":"Dokument-197","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]},{"text":"Dokument-161","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]},{"text":"Dokument-4","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]},{"text":"Dokument-90","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]}]'; 
+        return view('favoriten.index', compact('data'));
     }
 
     /**
@@ -25,7 +26,7 @@ class FavoritesController extends Controller
      */
     public function create()
     {
-       return view('formWrapper');
+       //
     }
 
     /**

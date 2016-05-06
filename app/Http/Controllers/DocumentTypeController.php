@@ -15,7 +15,7 @@ class DocumentTypeController extends Controller
      */
     public function index()
     {
-        //
+        return view('dokument-typen.form');
     }
 
     /**

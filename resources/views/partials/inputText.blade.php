@@ -1,8 +1,17 @@
- 
     <label class="control-label">
         {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif 
     </label>
-    <input type="text" class="form-control" name="{{$inputName}}" 
+    <input type="{{ $type }}" class="form-control 
+    @foreach( $classes as $class)
+        {{ $class }}
+    @endforeach
+    " 
+    name="{{ $inputName }}"
+
+    @foreach ($dataTags as $dataTag ) 
+        {{$dataTag}}
+    @endforeach
+    
     placeholder="{{ ucfirst($placeholder) }}"  autocomplete="off"
         @if( $required !=false ) 
             required 

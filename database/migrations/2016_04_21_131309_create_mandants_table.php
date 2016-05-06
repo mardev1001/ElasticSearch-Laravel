@@ -32,7 +32,7 @@ class CreateMandantsTable extends Migration
             $table->string('fax',30);  
             $table->string('email',30);  
             $table->string('website',50);  
-            $table->integer('geschaftsfuhrer_id');
+            // $table->integer('geschaftsfuhrer_id');
             $table->text('geschaftsfuhrer_history');
             $table->timestamps();
             $table->softDeletes();
