@@ -11,4 +11,12 @@ class Role extends Model
     
     protected $guarded = []; //blacklist
     protected $fillable = ['name','mandant_required','admin_role','system_role','mandant_role','wiki_role']; //whitelist
+
+    public function hasRole(){
+        
+    }
+    
+    public function isManager(){
+        
+    }
 }

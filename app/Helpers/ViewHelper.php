@@ -40,11 +40,10 @@ class ViewHelper
      * @param bool $required
      * @return string $value || $old
      */
-    static function setCheckbox( $inputName ,$data , $old, $label='', $required=false, $required=false, $classes=array(), $dataTag=array() ){
+    static function setCheckbox( $inputName ,$data , $old, $label='', $required=false, $classes=array(), $dataTags=array() ){
         $string = '';
-        
         $string = view('partials.inputCheckbox',
-                compact('inputName','data','label','old','required')
+                compact('inputName','classes', 'dataTags','data','label','old','required')
             )->render();
      
       echo $string;
@@ -105,6 +104,23 @@ class ViewHelper
        
      
        echo $string;
+    }
+    
+    /**
+     * Generate and check input type textarea
+     *
+     * @param object array $userValues
+     * @param string $value
+     * @echo string 'selected'
+     */
+    static function setMultipleSelect( $userValues, $value ){
+        
+        foreach($userValues as $userValue){
+            if($userValue->id == $value )
+            echo 'selected';
+        }
+       
+     
     }
     
     /**

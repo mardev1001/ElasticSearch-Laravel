@@ -4,10 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Request as RequestMerge;
+
 use App\Http\Requests;
+
+use App\Http\Requests\MandantRequest;
+
+use App\Mandant;
+use App\MandantInfo;
+use App\User;
+use App\Role;
 
 class MandantController extends Controller
 {
+    
+    public function __construct(){
+        // 
+    }
     /**
      * Display a listing of the resource.
      *
@@ -15,7 +28,24 @@ class MandantController extends Controller
      */
     public function index()
     {
-        return view('mandanten.administration');
+        $roles = Role::all();
+        $mandants = Mandant::all();
+        return view('mandanten.administration', compact('roles','mandants') );
+    }
+    
+    /**
+     * Search the database with the given parameters
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $search = true;
+        $roles = Role::all();
+        //$users = User::where('name',$request->get('search'))->get();   
+        $mandants = Mandant::where('name','LIKE',$request->get('search'))->get();  
+        return view('mandanten.administration', compact('search','mandants','roles') );
     }
 
     /**
@@ -34,9 +64,14 @@ class MandantController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MandantRequest $request)
     {
-        // Request merge mandant_id
+        session()->flash('message',trans('mandantForm.success'));
+        $data = Mandant::create( $request->all() );
+         
+        
+         return redirect('mandanten/'.$data->id.'/edit')->with(['message'=>trans('mandantenForm.success')]);
+         
     }
 
     /**
@@ -58,7 +93,9 @@ class MandantController extends Controller
      */
     public function edit($id)
     {
-        //
+        $roles = Role::all();
+        $data = Mandant::find($id);
+        return view('formWrapper', compact('data','roles'));
     }
 
     /**
@@ -68,9 +105,18 @@ class MandantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MandantRequest $request, $id)
     {
-        // Request merge mandant_id
+        RequestMerge::merge(['mandant_id' => $id ] );
+        $mandant = Mandant::find($id);
+        $mandantInfos = MandantInfo::firstOrNew( ['mandant_id' =>$id] );
+        $mandant->fill( $request->all() );
+        $mandantInfos->fill( $request->all() );
+        if( $mandant->save() && $mandantInfos->save() )
+          return back()->with(['message'=>trans('mandantenForm.saved')]);
+            //dd( $mandantInfos );
+            
+        return back()->with(['message'=>trans('mandantenForm.error')]);
     }
 
     /**

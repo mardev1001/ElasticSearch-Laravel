@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\DocumentType;
+
 class DocumentTypeController extends Controller
 {
     /**
@@ -15,7 +17,8 @@ class DocumentTypeController extends Controller
      */
     public function index()
     {
-        return view('dokument-typen.form');
+        $documentTypes = DocumentType::all();
+        return view('dokument-typen.index', compact('documentTypes'));
     }
 
     /**
@@ -25,7 +28,7 @@ class DocumentTypeController extends Controller
      */
     public function create()
     {
-        return view('formWrapper');
+        //
     }
 
     /**
@@ -36,7 +39,15 @@ class DocumentTypeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $documentType = new DocumentType();
+        $documentType->name = $request->input('name');
+        $documentType->document_art = $request->input('document_art');
+        $documentType->document_role = $request->input('document_role');
+        if($request->has('read_required')) $documentType->read_required = true;
+        if($request->has('allow_comments')) $documentType->allow_comments = true;
+        $documentType->active = true;
+        $documentType->save();
+        return back()->with('message', 'Dokument Typ erfolgreich gespeichert.');
     }
 
     /**
@@ -70,7 +81,28 @@ class DocumentTypeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $documentType = DocumentType::find($id);
+        
+        if($request->has('save')){
+        
+            $documentType->name = $request->input('name');
+            
+            $documentType->document_art = $request->input('document_art');
+            $documentType->document_role = $request->input('document_role');
+            
+            if($request->has('read_required')) $documentType->read_required = true;
+            else $documentType->read_required = false;
+            
+            if($request->has('allow_comments')) $documentType->allow_comments = true;
+            else $documentType->allow_comments = false;
+        }
+        
+        if($request->has('activate'))
+            $documentType->active = !$request->input('activate');
+        
+        $documentType->save();
+        
+        return back()->with('message', 'Dokument Typ erfolgreich aktualisiert.');
     }
 
     /**

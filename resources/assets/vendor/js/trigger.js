@@ -123,8 +123,17 @@ $( function() {
        
     });
    
+    $('.trigger-inputs').on('change',function(e){
+        if ( $(this).is(':checked') ){
+            $('[data-hide='+$(this).data('second')+']' ).removeClass('hide').attr('required');
+        }
+        else{
+            $('[data-hide='+$(this).data('second')+']' ).addClass('hide').removeAttr('required');
+        }
+        
+    });
 
- $('[data-adder]').on('click touch', addRow);
+    $('[data-adder]').on('click touch', addRow);
     /*End copy new line*/
     
 });

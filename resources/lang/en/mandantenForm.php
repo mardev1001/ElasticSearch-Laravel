@@ -57,6 +57,12 @@ return [
     'showDeletedUsers' =>'gelöschte Benutzer anzeigen',
     'showDeletedClients' =>'gelöschte Mandanten anzeigen',
     
+    //'name'
+    
     /* end Mandantenverwaltung*/
+    
+    /*Controller messages*/
+    'saved' => 'Mandanten erfolgreich gespeichert',
+    'error' => 'Mandanten erfolgreich gespeichert'
 
 ];

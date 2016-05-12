@@ -9,6 +9,12 @@
 .hide{
     display:none;
 }
+.checkbox.no-margin-top .checkbox{
+    margin-top: 0;
+}
+.checkbox.no-margin-bottom .checkbox{
+    margin-bottom: 0;
+}
 .no-margin-top {
     margin-top: 0 !important; 
 }
@@ -20,6 +26,14 @@
 .vertical-center {
     vertical-align: middle !important;
 }
+
+.table.data-table{
+    width: 100% !important;
+    th.no-sort:after{
+        content: "";
+    }
+}
+
 
 .bordered{
     border: 1px solid rgb(230, 230, 230);
@@ -33,8 +47,12 @@
     display: none;
 }
 
-td.table-options .btn {
+.table-options .btn {
     min-width: 90px;
+}
+
+.label-button .btn{
+    margin-top: 25px;
 }
 
 .collapsing {

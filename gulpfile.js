@@ -25,7 +25,8 @@ var cmsScripts = [
     "bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js",
     "moment/min/moment-with-locales.min.js",
     "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
-    "/bootstrap-treeview/public/js/bootstrap-treeview.js",
+    "bootstrap-treeview/public/js/bootstrap-treeview.js",
+    "datatables/media/js/jquery.dataTables.js",
     "js/**",
     //frontend
     
@@ -46,6 +47,7 @@ elixir(function(mix) {
         .copy(bower + 'tinymce/skins/lightgray/skin.min.css', 'public/css/style/')
         .copy(bower + 'tinymce/skins/lightgray/content.min.css', 'public/css/style/')
         .copy(bower + 'tinymce/skins/lightgray/fonts/', 'public/css/style/fonts/')
+        .copy(bower + 'datatables/media/images/', 'public/build/images/')
         .copy(bower + 'img/', 'public/img/');
 
 });

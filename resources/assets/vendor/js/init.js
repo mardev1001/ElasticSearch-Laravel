@@ -2,6 +2,13 @@
  * Created by Marijan on 25.04.2016..
  */
 $( function() {
+    
+    /*Blank space fix for textareas*/
+    $('textarea').each(function(){
+        $(this).html($(this).html().trim());
+    });
+    /*End Blank space fix for textareas*/
+    
     $('#side-menu').metisMenu();
     
     $(".select").chosen({});
@@ -22,19 +29,25 @@ $( function() {
                 enableLinks: true,
                 levels: 0,
            }); 
-        /*  $treeview[counter].on('click', function (e) {
-              var expandibleNodes = $( $treeview[counter]+' li').find('span.node-icon').html();
-          $treeview[counter].treeview('toggleNodeExpanded', 
-		  [ expandibleNodes, { silent: true }]);
-        }); */
         });
         
     }
+    
+    $('.data-table').DataTable({
+        searching: false,
+        paging: false,
+        info: false,
+        columnDefs: [
+            {
+                targets: 'no-sort', 
+                orderable: false
+            }
+        ]
+    });
     
     tinymce.init({
         selector: '.editable',
         skin_url: '/css/style'
     });
     
-    //$(".switch").bootstrapSwitch();
 });/*End function() wrapper*/

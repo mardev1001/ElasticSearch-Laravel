@@ -17,7 +17,8 @@ class AdressatController extends Controller
      */
     public function index()
     {
-        return view('adressaten.index');
+        $adressate = Adressat::all();
+        return view('adressaten.index', compact('adressate'));
     }
 
     /**
@@ -38,7 +39,13 @@ class AdressatController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $adressat = new Adressat();
+        $adressat->name = $request->input('name');
+        $adressat->active = true;
+        $adressat->save();
+        
+        return back()->with(['message'=>'Adressat erfolgreich gespeichert.']);
+        // return redirect()->route('adressaten.index')->with(['message'=>'Task was successful!']);
     }
 
     /**
@@ -49,7 +56,7 @@ class AdressatController extends Controller
      */
     public function show($id)
     {
-        //
+        
     }
 
     /**
@@ -72,7 +79,17 @@ class AdressatController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $adressat = Adressat::find($id);
+        
+        if($request->has('activate'))
+            $adressat->active = !$request->input('activate');
+        
+        if($request->has('save'))
+            $adressat->name = $request->input('name');    
+        
+        $adressat->save();
+        
+        return back()->with('message', 'Adressat erfolgreich aktualisiert');
     }
 
     /**

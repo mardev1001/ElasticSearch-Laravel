@@ -21,4 +21,8 @@ class Mandant extends Model
     public function mandantInfo(){
         return $this->hasOne('App\MandantInfo');
     }
+    
+    public function mandantUsers(){
+        return $this->hasMany('App\MandantUser','mandant_id','id');
+    }
 }

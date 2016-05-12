@@ -19,6 +19,7 @@ class CreateDocumentTypesTable extends Migration
             $table->boolean('document_role');
             $table->boolean('read_required');
             $table->boolean('allow_comments');
+            $table->boolean('active');
             $table->timestamps();
         });
     }

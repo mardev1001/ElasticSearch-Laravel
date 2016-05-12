@@ -85,7 +85,7 @@
         <div class="col-lg-3"> 
             <div class="form-group">
                 <br>        
-               {!! ViewHelper::setCheckbox('email_reciever', $data, old('email_reciever'), trans('benutzerForm.email_reciever'), trans('benutzerForm.email_reciever'), false) !!}
+               {!! ViewHelper::setCheckbox('email_reciever', $data, old('email_reciever'), trans('benutzerForm.email_reciever')) !!}
             </div>   
         </div><!--End input box-->
         

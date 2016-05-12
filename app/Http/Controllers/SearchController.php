@@ -89,11 +89,23 @@ class SearchController extends Controller
     /**
      * Advanced search.
      *
-     * @param  int  $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function searchAdvanced(Request $request)
     {
         return view('suche.erweitert');
     }
+
+    /**
+     * Return search results for the phone list users/mandants.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchPhoneList(Request $request)
+    {
+        return redirect('telefonliste');
+    }
+    
 }

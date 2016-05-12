@@ -15,8 +15,9 @@
         <div class="col-lg-6"> 
             {!! Form::open(['route' => 'adressaten.store']) !!}
             <div class="form-inline">
-                {!! ViewHelper::setInput('name','', old('name'), trans('adressatenForm.name'), trans('adressatenForm.name'), true) !!} 
-                <button class="btn btn-primary">{{ trans('adressatenForm.add') }} </button>
+                <label> {{ trans('adressatenForm.name') }} <i class="fa fa-asterisk text-info"></i></label>
+                <input type="text" class="form-control" name="name" placeholder="{{ trans('adressatenForm.name') }}" required/>
+                <button class="btn btn-primary"> {{ trans('adressatenForm.add') }} </button>
             </div>
             {!! Form::close() !!}
         </div><!--End input box-->
@@ -37,17 +38,26 @@
                         {{ trans('adressatenForm.adressat') }}
                     </th>
                 </tr>
-                @for($i=1; $i < 5; $i++)
+                @foreach($adressate as $adressat)
                 <tr>
-                    <td>
-                         <input type="text" class="form-control" name="name" placeholder="Name"/>
+                    {!! Form::open(['route' => ['adressaten.update', 'adressaten'=> $adressat->id], 'method' => 'PATCH']) !!}
+                    <td class="col-sm-8">
+                         <input type="text" class="form-control" name="name" value="{{ $adressat->name }}" placeholder="Name"/>
                     </td>
-                    <td>
-                        <button class="btn btn-white">{{ trans('adressatenForm.active') }}</button>
-                        <button class="btn btn-primary">{{ trans('adressatenForm.save') }}</button>
+                    <td class="col-sm-4 table-options">
+                        
+                        @if($adressat->active)
+                            <button class="btn btn-success" type="submit" name="activate" value="1">{{ trans('adressatenForm.active') }}</button>
+                        @else
+                            <button class="btn btn-danger" type="submit" name="activate" value="0">{{ trans('adressatenForm.inactive') }}</button>
+                        @endif
+                        
+                        <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
+                        
                     </td>
+                    {!! Form::close() !!}
                 </tr>
-                @endfor
+                @endforeach
             </table>
         </div>
     </div>

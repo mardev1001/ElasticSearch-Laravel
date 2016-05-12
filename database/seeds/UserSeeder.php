@@ -15,7 +15,6 @@ class UserSeeder extends Seeder
         // Add users
 
         DB::table('users')->insert(
-
             [
                 'email_reciever' => 1,
                 'email' => 'test@webbite.de',
@@ -50,7 +49,6 @@ class UserSeeder extends Seeder
         // Add mandant specific roles to users
 
         DB::table('mandant_user_roles')->insert(
-
             [
                 'mandant_user_id' => 1,
                 'role_id' => 1,

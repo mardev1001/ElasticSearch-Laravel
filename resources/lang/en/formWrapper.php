@@ -4,6 +4,7 @@ return [
 
     'cancel'    => 'Abbrechen',
     'reset'     => 'Zurücksetzen',
-    'save'      => 'Speichern'
+    'save'      => 'Speichern',
+    'update'    => 'Aktualisieren'
     
 ];

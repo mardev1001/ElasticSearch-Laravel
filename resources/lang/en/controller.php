@@ -6,6 +6,7 @@ return [
     'overview' => 'Übersicht',
     'dokumente' => 'dokumente',
     'mandanten' => 'mandanten',
+    'administration' => 'Mandantenverwaltung',
     'benutzer'  => 'Benutzer',
     'adressaten' => 'Adressaten',
     'favorites' => 'Meine Favoriten',

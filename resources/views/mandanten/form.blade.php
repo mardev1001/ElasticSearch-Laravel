@@ -2,27 +2,28 @@
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('name',$data,old('name'),trans('mandantenForm.name') , 
-               trans('mandantenForm.name') , true  ) !!}
+               trans('mandantenForm.name') , false  ) !!}
             </div>   
         </div><!--End input box-->
            
         <!-- input box-->
         <div class="col-xs-3 col-lg-3">
-            {!! ViewHelper::setCheckbox('hauptstelle',$data,old('hauptstelle'),trans('mandantenForm.hauptstelle') ) !!}
+            {!! ViewHelper::setCheckbox('hauptstelle',$data,old('hauptstelle'),trans('mandantenForm.hauptstelle')
+            , false, array('trigger-inputs'), array(' data-first="mandatenNumber" ','data-second="mandanten" ' ) ) !!}
         </div><!--End input box-->
         
         <div class="clearfix"></div>
         
         <!-- input box-->
-        <div class="col-lg-3 visible-yes"> <!-- add class hidden when activating js hidden -->
+        <div class="col-lg-3 " data-hide="mandatenNumber"> <!-- add class hidden when activating js hidden -->
             <div class="form-group">
               {!! ViewHelper::setInput('mandant_number',$data,old('mandant_number'),trans('mandantenForm.mandantenNum') , 
-               trans('mandantenForm.mandantenNum') , true  ) !!}
+               trans('mandantenForm.mandantenNum') , false  ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
-        <div class="col-lg-3"> 
+        <div class="col-lg-3 hide" data-hide="mandanten"> 
             <div class="form-group">
                 {!! ViewHelper::setSelect($collections,'mandant_id_hauptstelle',$data,old('mandant_id_hauptstelle'),
                 trans('mandantenForm.mandanten') )  !!}
@@ -34,7 +35,7 @@
 
 
 
-********* this will be wrapped in edit statement
+ @if( Request::is('*/edit') )
     <h3>Zusatzdaten</h3>
   
         <!-- input box-->
@@ -45,11 +46,12 @@
         </div><!--End input box-->
         <!-- input box-->
         <div class="col-xs-6 col-lg-6">
-            {!! ViewHelper::setCheckbox('rights_wiki',$data,old('rights_wiki'),trans('mandantenForm.rightsWiki') ) !!}
-            
-            {!! ViewHelper::setCheckbox('rights_admin',$data,old('rights_admin'),trans('mandantenForm.redaktion') ) !!}
+            <div class="checkbox no-margin-top no-margin-bottom">    
+                {!! ViewHelper::setCheckbox('rights_wiki',$data,old('rights_wiki'),trans('mandantenForm.rightsWiki') ) !!}
+                
+                {!! ViewHelper::setCheckbox('rights_admin',$data,old('rights_admin'),trans('mandantenForm.redaktion') ) !!}
+            </div>
         </div>
-        
         <div class="clearfix"></div>
        
        <h3>Adresse</h3>
@@ -150,7 +152,7 @@
                 </div><!--End input box-->
                 
                 <!-- input box-->
-                <div class="col-lg-3">
+                <div class="col-lg-3 label-button">
                     <button type="button" class="btn btn-primary">{{  trans('mandantenForm.historyAddButton')  }}</button>
                 </div><!--End input box-->
                 
@@ -175,11 +177,11 @@
         <div class="clearfix"></div>
         
         <h3>Zusätzliche Infos</h3>
-         
+        
        <!-- input box-->
         <div class="col-lg-6">
             <div class="form-group">
-                {!! ViewHelper::setInput('prokura',$data,old('prokura'),trans('mandantenForm.procuration') ) !!}
+                {!! ViewHelper::setInput('prokura',$data->mandantInfo,old('prokura'),trans('mandantenForm.procuration') ) !!}
             </div>   
         </div><!--End input box-->
         
@@ -188,21 +190,21 @@
         <!-- input box-->
         <div class="col-lg-3">
             <div class="form-group">
-                {!! ViewHelper::setInput('betriebsnummmer',$data,old('betriebsnummmer'),trans('mandantenForm.operationNum') ) !!}
+                {!! ViewHelper::setInput('betriebsnummmer',$data->mandantInfo,old('betriebsnummmer'),trans('mandantenForm.operationNum') ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
         <div class="col-lg-3">
             <div class="form-group">
-                {!! ViewHelper::setInput('handelsregister',$data,old('handelsregister'),trans('mandantenForm.commercialRegister') ) !!}
+                {!! ViewHelper::setInput('handelsregister',$data->mandantInfo,old('handelsregister'),trans('mandantenForm.commercialRegister') ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                {!! ViewHelper::setArea('handelsregister_sitz',$data,old('handelsregister_sitz'),trans('mandantenForm.hrSitz') ) !!}
+                {!! ViewHelper::setArea('handelsregister_sitz',$data->mandantInfo,old('handelsregister_sitz'),trans('mandantenForm.hrSitz') ) !!}
             </div>   
         </div><!--End input box-->
         
@@ -211,28 +213,28 @@
         <!-- input box-->
         <div class="col-lg-3">
             <div class="form-group">
-                {!! ViewHelper::setInput('mitarbeiter_lohn_id',$data,old('mitarbeiter_lohn_id'),trans('mandantenForm.taxNumber') ) !!}
+                {!! ViewHelper::setInput('steuernummer',$data->mandantInfo,old('steuernummer'),trans('mandantenForm.taxNumber') ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
         <div class="col-lg-3">
             <div class="form-group">
-                {!! ViewHelper::setInput('ust_ident_number',$data,old('ust_ident_number'),trans('mandantenForm.userIdentNumber') ) !!}
+                {!! ViewHelper::setInput('ust_ident_number',$data->mandantInfo,old('ust_ident_number'),trans('mandantenForm.userIdentNumber') ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                {!! ViewHelper::setArea('zausatzinfo_steuer',$data,old('zausatzinfo_steuer'),trans('mandantenForm.infoControll') ) !!}
+                {!! ViewHelper::setArea('zausatzinfo_steuer',$data->mandantInfo,old('zausatzinfo_steuer'),trans('mandantenForm.infoControll') ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
         <div class="col-lg-3">
             <div class="form-group">
-                {!! ViewHelper::setInput('berufsgenossenschaft_number',$data,old('berufsgenossenschaft_number'),trans('mandantenForm.berufsgenossen') ) !!}
+                {!! ViewHelper::setInput('berufsgenossenschaft_number',$data->mandantInfo,old('berufsgenossenschaft_number'),trans('mandantenForm.berufsgenossen') ) !!}
             </div>   
         </div><!--End input box-->
 
@@ -241,14 +243,14 @@
           <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                {!! ViewHelper::setArea('berufsgenossenschaft_zusatzinfo',$data,old('berufsgenossenschaft_zusatzinfo'),trans('mandantenForm.infosBg') ) !!}
+                {!! ViewHelper::setArea('berufsgenossenschaft_zusatzinfo',$data->mandantInfo,old('berufsgenossenschaft_zusatzinfo'),trans('mandantenForm.infosBg') ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
         <div class="col-lg-3">
             <div class="form-group">
-                {!! ViewHelper::setInput('erlaubniss_gultig_ab',$data,old('erlaubniss_gultig_ab'),trans('mandantenForm.permissions') ) !!}
+                {!! ViewHelper::setInput('erlaubniss_gultig_ab',$data->mandantInfo,old('erlaubniss_gultig_ab'),trans('mandantenForm.permissions') ) !!}
             </div>   
         </div><!--End input box-->
 
@@ -257,14 +259,14 @@
           <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                {!! ViewHelper::setArea('erlaubniss_gultig_von',$data,old('erlaubniss_gultig_von'),trans('mandantenForm.permissionIssuer') ) !!}
+                {!! ViewHelper::setArea('erlaubniss_gultig_von',$data->mandantInfo,old('erlaubniss_gultig_von'),trans('mandantenForm.permissionIssuer') ) !!}
             </div>   
         </div><!--End input box-->
         
         <!-- input box-->
         <div class="col-lg-3">
             <div class="form-group">
-                {!! ViewHelper::setInput('heschaftsjahr',$data,old('heschaftsjahr'),trans('mandantenForm.fiscalYear') ) !!}
+                {!! ViewHelper::setInput('geschaftsjahr',$data->mandantInfo,old('geschaftsjahr'),trans('mandantenForm.fiscalYear') ) !!}
             </div>   
         </div><!--End input box-->
 
@@ -273,28 +275,28 @@
           <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                {!! ViewHelper::setArea('heschaftsjahr_info',$data,old('heschaftsjahr_info'),trans('mandantenForm.fiscalYear') ) !!}
+                {!! ViewHelper::setArea('geschaftsjahr_info',$data->mandantInfo,old('geschaftsjahr_info'),trans('mandantenForm.fiscalYear') ) !!}
             </div>   
         </div><!--End input box-->
         
           <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                {!! ViewHelper::setArea('bankverbindungen',$data,old('bankverbindungen'),trans('mandantenForm.bank') ) !!}
+                {!! ViewHelper::setArea('bankverbindungen',$data->mandantInfo,old('bankverbindungen'),trans('mandantenForm.bank') ) !!}
             </div>   
         </div><!--End input box-->
         
           <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                    {!! ViewHelper::setArea('info_wichtiges',$data,old('info_wichtiges'),trans('mandantenForm.importantInfo') ) !!}
+                    {!! ViewHelper::setArea('info_wichtiges',$data->mandantInfo,old('info_wichtiges'),trans('mandantenForm.importantInfo') ) !!}
             </div>   
         </div><!--End input box-->
         
           <!-- input box-->
         <div class="col-lg-12">
             <div class="form-group">
-                {!! ViewHelper::setArea('info_sonstiges',$data,old('info_sonstiges'),trans('mandantenForm.other') ) !!}
+                {!! ViewHelper::setArea('info_sonstiges',$data->mandantInfo,old('info_sonstiges'),trans('mandantenForm.other') ) !!}
             </div>   
         </div><!--End input box-->
         
@@ -305,7 +307,7 @@
             </div>
         </div>
         
-        
+    @endif
         <!-- input box-->
        <!-- <div class="col-lg-3"> 
             <div class="form-group">

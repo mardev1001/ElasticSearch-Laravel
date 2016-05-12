@@ -1,14 +1,15 @@
 .container-fluid.first{
     min-height: 95vh;
+    padding-bottom: 30px;
 }
-.panel-heading a:after {
+.panel-heading a:not(.no-arrow):after {
     font-family:'Glyphicons Halflings';
     content:"\e114";
     float: left;
     color: white;
     margin-right: 10px;
 }
-.panel-heading a.collapsed:after {
+.panel-heading a.collapsed:not(.no-arrow):after {
     content:"\e080";
 }
 .panel-heading span .btn{

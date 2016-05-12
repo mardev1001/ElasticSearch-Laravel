@@ -3,13 +3,19 @@
     <h1 class="text-primary">
         {{ $formWrapperData->buttonMethod }} {{ $formWrapperData->title }}
     </h1>
+    <!--CreateMandantInfosTable
+     <form action="{{$formWrapperData->controller.$formWrapperData->formUrl}}"
+        method="{{$formWrapperData->method}}"
+        class="horizontal-form'"
+        id="{{$formWrapperData->fileUpload}}" >
+              {{ csrf_field() }}-->
     {!! Form::open([
            'url' => $formWrapperData->controller.$formWrapperData->formUrl,
            'method' => $formWrapperData->method,
            'enctype' => 'multipart/form-data',
-           'class' => 'dropzone horizontal-form',
+           'class' => 'horizontal-form',
            'id' => $formWrapperData->fileUpload]) !!}
-            
+           
             @if( view()->exists($formWrapperData->controller.'.form') )
                 @include($formWrapperData->controller.'.form')
             @else
@@ -19,7 +25,7 @@
             @endif
            
             <div class="clearfix"></div>
-            <div class="form-buttons">
+            <div class="col-xs-12 form-buttons">
                 <button class="btn btn-white" type="reset">{{ trans('formWrapper.reset') }}</button>
                 <button class="btn btn-primary" type="submit">{{ $formWrapperData->buttonMethod }}</button>
             </div>
