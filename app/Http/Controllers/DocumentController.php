@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Request as AdditionalRequest;
+use Request as MergeRequest;
 
 use App\Http\Requests;
+use App\Http\Requests\DocumentRequest;
 
+use DB;
 use App\Document;
 use App\Role;
+use App\DocumentType;
+use App\IsoCategory;
+use App\User;
+use App\Adressat;
 use App\Http\Repositories\DocumentRepository;
 class DocumentController extends Controller
 {
@@ -39,9 +45,10 @@ class DocumentController extends Controller
      */
     public function create()
     {
-       $paginate  = Role::paginate(2, ['*'], 'customPaginate');
-       
-        return view('formWrapper');
+        $documentTypes = DocumentType::all();
+        $isoDocuments = IsoCategory::all();
+        $mandantUsers = User::all();
+        return view('formWrapper', compact('documentTypes','isoDocuments','mandantUsers') );
     }
 
     /**
@@ -52,12 +59,14 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        // merge user_id, manual AI version, version_parent ,upload_filename,document_replaced_id,date_approved
-        /*
-            For repository
-            - if owner ID not set, set current user
-        */
-        //*$this->dataRepo->dataChew($data,$data3,$data3);
+        
+        $adressats = Adressat::all();
+        //DB::enableQueryLog();
+        $data = Document::create($request->all() );
+        
+        //dd(DB::getQueryLog());
+        $form = $this->document->setDocumentForm($request->get('document_type_id'));
+        return view('dokumente.formWrapper', compact('data','form','adressats') );
     }
 
     /**

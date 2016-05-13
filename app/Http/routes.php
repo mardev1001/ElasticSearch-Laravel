@@ -22,17 +22,20 @@
         Route::get('dokumente/vorlagedokumente', 'DocumentController@documentTemplates');
         Route::get('dokumente/dokument-typen', 'DocumentController@documentType');
         Route::get('dokumente/iso-kategorien', 'DocumentController@isoCategories');
-        Route::get('dokumente/anlegen', 'DocumentController@anlegen');
-        Route::post('dokumente/anlegen', 'DocumentController@anlegenStore');
+        //Route::get('dokumente/anlegen', 'DocumentController@anlegen');//editor
+        //Route::post('dokumente/anlegen', 'DocumentController@anlegenStore');
         Route::get('dokumente/anlegen/rechte-und-freigabe', 'DocumentController@anlegenRechteFreigabe');
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/statistik/{id}', 'DocumentController@documentStats');
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');
-        Route::resource('dokumente', 'DocumentController');
+        Route::resource('dokumente', 'DocumentController');//documente editor in CRUD
         
         Route::post('mandanten/generate-user-role', 'MandantController@generateUserRole');
         Route::post('mandanten/search', 'MandantController@search');
         Route::resource('mandanten', 'MandantController');
+        
+        Route::get('benutzer/profile', 'UserController@profile');
+        Route::post('benutzer/profile', 'UserController@saveProfile');
         Route::resource('benutzer', 'UserController');
         Route::resource('rollen', 'RoleController');
         Route::resource('adressaten', 'AdressatController');

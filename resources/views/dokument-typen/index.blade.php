@@ -85,19 +85,14 @@
                                 </div>
                                 
                                 <div class="col-lg-2"> 
-                                    <strong>{{ trans('dokumentTypenForm.document_art') }}</strong>
-                                    <div class="radio no-margin-top">
-                                        <label>
-                                            <input type="radio" name="document_art" value="0" @if(!$documentType->document_art) checked @endif >
-                                            {{ trans('dokumentTypenForm.editor') }}
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="document_art" value="1" @if($documentType->document_art) checked @endif >
-                                            {{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}
-                                        </label>
-                                    </div>
+                                    <strong>{{ trans('dokumentTypenForm.document_art') }}</strong> <br>
+                                    
+                                    @if($documentType->document_art)    
+                                        {{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}
+                                    @else
+                                        {{ trans('dokumentTypenForm.editor') }}
+                                    @endif
+                            
                                 </div>
                                 
                                 <div class="col-lg-2">

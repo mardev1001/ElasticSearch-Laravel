@@ -4,11 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-use App\Mandant;
-
-
-
-class MandantRequest extends Request
+class IsoCategoryRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -37,9 +33,8 @@ class MandantRequest extends Request
                {
                
                return [
+                    // 'name' => 'required|unique:iso_categories',
                     'name' => 'required',
-                    'mandant_number'  => 'required|unique:mandants',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
                 ];
             }
             case 'PUT':
@@ -47,10 +42,6 @@ class MandantRequest extends Request
             {
                 return [
                     'name' => 'required',
-                    'mandant_number'  => 'required',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
-                    'mandant_id' => 'integer',
-                    'email' => 'email',
                 ];
             }
             default:break;

@@ -375,6 +375,9 @@ input[type="submit"] {
   .table.data-table th.no-sort:after {
     content: ""; }
 
+.parent-tabs {
+  margin-bottom: 20px; }
+
 .bordered {
   border: 1px solid #e6e6e6; }
 

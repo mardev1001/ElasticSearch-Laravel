@@ -27,6 +27,7 @@ var cmsScripts = [
     "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
     "bootstrap-treeview/public/js/bootstrap-treeview.js",
     "datatables/media/js/jquery.dataTables.js",
+    "twitter-bootstrap-wizard/jquery.bootstrap.wizard.js",
     "js/**",
     //frontend
     

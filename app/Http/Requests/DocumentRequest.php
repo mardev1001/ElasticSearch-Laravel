@@ -4,11 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-use App\Mandant;
-
-
-
-class MandantRequest extends Request
+class DocumentRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -37,23 +33,23 @@ class MandantRequest extends Request
                {
                
                return [
-                    'name' => 'required',
-                    'mandant_number'  => 'required|unique:mandants',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
+                   'document_type_id' => 'required|integer',
+                   'user_id' => 'required|integer',
+                   'name' => 'required',
+                   'owner_user_id' => 'integer',
+                   'document_status_id' => 'required|integer',
+                   'search_tags' => 'required',
+                   'date_expired' => 'required|date',
+                   'iso_category_id' => 'integer',
                 ];
             }
             case 'PUT':
             case 'PATCH':
             {
-                return [
-                    'name' => 'required',
-                    'mandant_number'  => 'required',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
-                    'mandant_id' => 'integer',
-                    'email' => 'email',
-                ];
+               //
             }
             default:break;
         }
+    
     }
 }

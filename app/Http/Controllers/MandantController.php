@@ -114,8 +114,6 @@ class MandantController extends Controller
         $mandantInfos->fill( $request->all() );
         if( $mandant->save() && $mandantInfos->save() )
           return back()->with(['message'=>trans('mandantenForm.saved')]);
-            //dd( $mandantInfos );
-            
         return back()->with(['message'=>trans('mandantenForm.error')]);
     }
 

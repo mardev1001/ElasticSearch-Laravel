@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\IsoCategoryRequest;
+
+use App\IsoCategory;
 
 class IsoCategoryController extends Controller
 {
@@ -15,7 +18,8 @@ class IsoCategoryController extends Controller
      */
     public function index()
     {
-        return view('iso-kategorien.index');
+        $isoCategories = $isoCategoryOptions = IsoCategory::all();
+        return view('iso-kategorien.index', compact('isoCategories', 'isoCategoryOptions'));
     }
 
     /**
@@ -25,7 +29,7 @@ class IsoCategoryController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -34,9 +38,14 @@ class IsoCategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(IsoCategoryRequest $request)
     {
-        //
+        $isoCategory = new IsoCategory();
+        if($request->has('category_id')) $isoCategory->iso_category_parent_id = $request->input('category_id');
+        $isoCategory->name = $request->input('name');
+        $isoCategory->active = true;
+        $isoCategory->save();
+        return back()->with('message', 'ISO Kategorie erfolgreich gespeichert.');
     }
 
     /**
@@ -68,9 +77,14 @@ class IsoCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(IsoCategoryRequest $request, $id)
     {
-        //
+        $isoCategory = IsoCategory::find($id);
+        if($request->has('activate')) $isoCategory->active = !$request->input('activate');
+        if($request->has('category_id')) $isoCategory->iso_category_parent_id = $request->input('category_id');
+        $isoCategory->name = $request->input('name');
+        $isoCategory->save();
+        return back()->with('message', 'ISO Kategorie erfolgreich aktualisiert.');
     }
 
     /**

@@ -15,6 +15,7 @@ class CreateEditorVariantsTable extends Migration
         Schema::create('editor_variants', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('document_id')->unsigned();
+            $table->integer('variant_number')->unsigned();
             $table->integer('document_status_id')->unsigned();
             $table->text('inhalt');
             $table->string('pdf_upload_filename');

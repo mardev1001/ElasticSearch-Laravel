@@ -10,7 +10,10 @@
                 <a href="#"><i class="fa fa-files-o fa-fw"></i> {{ ucfirst( trans('navigation.document') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
+                        <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }} {{ trans('navigation.editor') }}</a>
+                    </li>
+                    <li>
+                        <a href="{{ url('dokumente/datei-upload') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }} {{ trans('navigation.upload') }}</a>
                     </li>
                     <li>
                         <a href="#">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.document') }}

@@ -4,11 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-use App\Mandant;
-
-
-
-class MandantRequest extends Request
+class BenutzerRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -17,7 +13,7 @@ class MandantRequest extends Request
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -27,7 +23,7 @@ class MandantRequest extends Request
      */
     public function rules()
     {
-        switch( $this->method() ){
+            switch( $this->method() ){
             case 'GET':
             case 'DELETE':
             {
@@ -37,20 +33,14 @@ class MandantRequest extends Request
                {
                
                return [
-                    'name' => 'required',
-                    'mandant_number'  => 'required|unique:mandants',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
+                    //'name' => 'required|unique:mandants'
                 ];
             }
             case 'PUT':
             case 'PATCH':
             {
                 return [
-                    'name' => 'required',
-                    'mandant_number'  => 'required',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
-                    'mandant_id' => 'integer',
-                    'email' => 'email',
+                    //'name' => 'required'
                 ];
             }
             default:break;

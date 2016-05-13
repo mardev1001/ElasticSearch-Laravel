@@ -9,6 +9,8 @@ namespace App\Http\Repositories;
 
 use DB;
 
+use App\DocumentType;
+
 class DocumentRepository
 {
     /**
@@ -32,5 +34,19 @@ class DocumentRepository
          }
          return $array;
      }
+     
+      /**
+       * Get redirection form
+       *
+       * @return string $form
+       */
+       public function setDocumentForm($documentType){
+           $modelUpload = DocumentType::find($documentType);
+           $form = 'editor';
+           if( $modelUpload->document_art == true )
+             $form ='upload';
+           return $form;
+           
+       }
      
 }

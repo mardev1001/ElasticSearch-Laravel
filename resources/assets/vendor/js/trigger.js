@@ -108,7 +108,10 @@ $( function() {
 
         e.preventDefault();
     };
-    /*
+   
+    $('[data-adder]').on('click touch', addRow);
+    /*End copy new line*/
+     /*
      *Prevent accordion collapse trigger from adding hashtags at the address bar. 
      * This will prevent metisMenu (sidebar) from expanding
      */
@@ -132,8 +135,46 @@ $( function() {
         }
         
     });
-
-    $('[data-adder]').on('click touch', addRow);
-    /*End copy new line*/
+    
+    
+    
+    
+    /* Trigger tab switch*/
+    /*$('.nav-tabs li a').click(function (e) {
+      e.preventDefault()
+      $(this).tab('show')
+    })*/
+    /* End Trigger tab switch*/
+    
+    /* Trigger tab creation*/
+       $('.add-tab').on('click touch',function(){
+           	var parent =  $(this),
+           	prevNumber = $(this).closest('.parent-tabs').find('.nav-tabs li').size(),
+           	nextTab = $(this).closest('.parent-tabs').find('.nav-tabs li').size()+1,
+           	prevHTML = '';
+           	//Check if content exists to prevent undefined error
+           	if( $('.variant-'+prevNumber).length )
+                prevHTML = tinymce.get('variant-'+prevNumber).getContent();
+                
+      	// create the tab
+      	$('<li><a href="#variation'+nextTab+'" data-toggle="tab">Variation '+nextTab+'</a></li>').appendTo('#tabs');
+      	 
+      	// create the tab content
+      	$('<div class="tab-pane" id="variation'+nextTab+'"><div data-id="'+nextTab+'" id="variant-'+nextTab+'" class="editable variant-'+nextTab+'" >'+prevHTML+'</div></div>').appendTo('.tab-content');
+      	$('.editable').each(function(){
+      	    var id=$(this).data('id');
+      	     tinymce.init({
+                selector: '.variant-'+id,
+                skin_url: '/css/style'
+            });
+      	});
+      	if( $('.nav-tabs li.active').length < 1 ){
+      	    $('.nav-tabs li').first().addClass('active'); 
+      	    $('.tab-content .tab-pane').first().addClass('active'); 
+      	}
+       });
+    /* End trigger tab creation*/
+    
+    
     
 });

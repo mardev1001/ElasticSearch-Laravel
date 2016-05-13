@@ -18,7 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('user_id')->unsigned();//FK
             $table->integer('version');
             $table->string('name');
-            $table->integer('owner_user_id')->unsigned();//FK
+            $table->integer('owner_user_id')->unsigned()->nullable();//FK
             $table->integer('document_status_id')->unsigned();//FK
             $table->string('search_tags');
             $table->text('summary');
@@ -44,12 +44,14 @@ class CreateDocumentsTable extends Migration
             $table->foreign('user_id')
                   ->references('id')
                   ->on('users')
+                  ->onUpdate('cascade')
                   ->onDelete('cascade');
             
-            $table->foreign('owner_user_id')
+           /* $table->foreign('owner_user_id')
                   ->references('id')
                   ->on('users')
-                  ->onDelete('cascade');
+                  ->onUpdate('cascade')
+                  ->onDelete('cascade');*/
         });
     }
 

@@ -6,6 +6,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Http\Requests\BenutzerRequest;
+
+use App\User;
+use App\Role;
+use App\Mandant;
+
 class UserController extends Controller
 {
     /**
@@ -25,7 +31,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('formWrapper', compact('data'));
+        $mandants = Mandant::all();
+        $roles =  Role::all();
+        return view('formWrapper', compact('mandant','roles'));
     }
 
     /**
@@ -34,9 +42,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BenutzerRequest $request)
     {
-        //
+        
     }
 
     /**
@@ -58,7 +66,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = Users::find($id);
+        $mandants = Mandant::all();
+        $roles =  Role::all();
+        return view('formWrapper', compact('data','mandant','roles') );
     }
 
     /**
@@ -68,9 +79,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(BenutzerRequest $request, $id)
     {
-        //
+        $user= User::find($id);
     }
 
     /**
