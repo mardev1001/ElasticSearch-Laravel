@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Role;
+use App\User;
+
 class RoleController extends Controller
 {
     /**
@@ -15,7 +18,9 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return view('rollen.index');
+        $roles = Role::all();
+        $users = User::all();
+        return view('rollen.index', compact('roles', 'users'));
     }
 
     /**
@@ -36,7 +41,37 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $role = new Role();
+        
+        $role->name = $request->input('name');
+        
+        $role->active = true;
+        $role->system_role = false;
+        
+        $role->mandant_required = false;
+        $role->admin_role = false; 
+        $role->mandant_role = false;
+        $role->wiki_role = false; 
+        $role->phone_role = false;
+        
+        if($request->has('wiki')) $role->wiki_role = true;
+        
+        if($request->has('role')){
+            
+            $inputRoles =  $request->input('role');
+           
+            foreach($inputRoles as $inputRole){
+                if($inputRole == 'required') $role->mandant_required = true;
+                if($inputRole == 'admin') $role->admin_role = true; 
+                if($inputRole == 'mandant') $role->mandant_role = true;
+                if($inputRole == 'wiki') $role->wiki_role = true; 
+                if($inputRole == 'phone') $role->phone_role = true;
+            }
+        }
+        
+        // dd($request);
+        $role->save();
+        return back()->with('message', 'Rolle erfolgreich gespeichert.');
     }
 
     /**
@@ -70,7 +105,36 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $role = Role::find($id);
+        
+        $role->name = $request->input('name');
+        
+        if($request->has('activate')) $role->active = !$request->input('activate');
+        
+        $role->mandant_required = false;
+        $role->admin_role = false; 
+        $role->mandant_role = false;
+        $role->wiki_role = false; 
+        $role->phone_role = false;
+        
+        if($request->has('role')){
+            
+            $inputRoles =  $request->input('role');
+           
+            foreach($inputRoles as $inputRole){
+                if($inputRole == 'required') $role->mandant_required = true;
+                if($inputRole == 'admin') $role->admin_role = true; 
+                if($inputRole == 'mandant') $role->mandant_role = true;
+                if($inputRole == 'wiki') $role->wiki_role = true; 
+                if($inputRole == 'phone') $role->phone_role = true;
+            }
+        }
+        
+        if($request->has('wiki')) $role->wiki_role = true;
+        
+        // dd($request);
+        $role->save();
+        return back()->with('message', 'Rolle erfolgreich aktualisiert.');
     }
 
     /**

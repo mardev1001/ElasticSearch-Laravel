@@ -19,6 +19,7 @@ return [
     'name' => 'Name',
     'overview' => 'Übersicht',
     'add' => 'Hinzufügen',
+    'close' => 'Schlißen',
     'save' => 'Speichern',
     'active' => 'Aktiv',
     'inactive' => 'Inaktiv',

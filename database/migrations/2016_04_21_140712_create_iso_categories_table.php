@@ -17,6 +17,7 @@ class CreateIsoCategoriesTable extends Migration
             $table->integer('iso_category_parent_id');
             $table->string('name');
             $table->boolean('active');
+            $table->boolean('parent');
             $table->timestamps();
         });
     }

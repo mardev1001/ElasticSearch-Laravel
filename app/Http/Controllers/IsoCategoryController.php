@@ -42,6 +42,7 @@ class IsoCategoryController extends Controller
     {
         $isoCategory = new IsoCategory();
         if($request->has('category_id')) $isoCategory->iso_category_parent_id = $request->input('category_id');
+        $isoCategory->parent = $request->has('parent');
         $isoCategory->name = $request->input('name');
         $isoCategory->active = true;
         $isoCategory->save();
@@ -80,10 +81,20 @@ class IsoCategoryController extends Controller
     public function update(IsoCategoryRequest $request, $id)
     {
         $isoCategory = IsoCategory::find($id);
-        if($request->has('activate')) $isoCategory->active = !$request->input('activate');
-        if($request->has('category_id')) $isoCategory->iso_category_parent_id = $request->input('category_id');
+        
+        if($request->has('activate')){
+            $status = !$request->input('activate');
+            $isoCategory->active = $status;
+        } 
+        
+        if($request->has('category_id')){
+            if($isoCategory->parent) return back()->with('error', 'Hauptkategorie kann nicht als Unterkategorie gespeichert werden.');
+            $isoCategory->iso_category_parent_id = $request->input('category_id');
+        } 
+        
         $isoCategory->name = $request->input('name');
         $isoCategory->save();
+        
         return back()->with('message', 'ISO Kategorie erfolgreich aktualisiert.');
     }
 

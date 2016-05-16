@@ -21,6 +21,7 @@ class CreateRolesTable extends Migration
             $table->boolean('mandant_role');
             $table->boolean('wiki_role');
             $table->boolean('phone_role');
+            $table->boolean('active');
             $table->timestamps();
             $table->softDeletes();
         });

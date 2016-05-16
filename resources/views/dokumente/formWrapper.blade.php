@@ -4,8 +4,9 @@
         
     </h1>
     {!! Form::open([
-           'url' => '',
+           'url' => $url,
            'method' => 'POST',
+           'enctype' => 'multipart/form-data',
            'class' => 'horizontal-form']) !!}
            
             @if( view()->exists('dokumente.'.$form) )
@@ -15,13 +16,15 @@
                     <p> There is no form defined</p>      
                 </div>
             @endif
-           
-            <div class="clearfix"></div>
-            <div class="col-xs-12 form-buttons">
-                <button class="btn btn-white" type="reset">{{ trans('formWrapper.reset') }}</button>
-                <button class="btn btn-primary" type="submit">submitt</button>
-            </div>
-            <br/>
+            @if( view()->exists('dokumente.'.$form) )
+                <div class="clearfix"></div>
+                <div class="col-xs-12 form-buttons">
+                    <button class="btn btn-white" type="reset">{{ trans('formWrapper.reset') }}</button>
+                    <button class="btn btn-primary" type="submit">submitt</button>
+                    @yield('buttons')
+                </div>
+                <br/>
+            @endif
     </form>
     <div class="clearfix"></div>
       

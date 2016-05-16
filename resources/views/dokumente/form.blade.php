@@ -65,5 +65,11 @@
     </div>   
 </div><!--End input box-->
 
+<!-- input box-->
+<div class="col-lg-3"> 
+    <div class="form-group">
+        {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
+    </div>   
+</div><!--End input box-->
 
 <div class="clearfix"></div>

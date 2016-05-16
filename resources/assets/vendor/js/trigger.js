@@ -126,6 +126,7 @@ $( function() {
        
     });
    
+    // Show elements if checkbox is checked
     $('.trigger-inputs').on('change',function(e){
         if ( $(this).is(':checked') ){
             $('[data-hide='+$(this).data('second')+']' ).removeClass('hide').attr('required');
@@ -136,6 +137,18 @@ $( function() {
         
     });
     
+    // Hide elements if checkbox is checked
+    $('.hide-input').on('change', function(e){
+        if ( $(this).is(':checked') ){
+            $('[data-hide='+$(this).data('hide-target')+']' ).addClass('hide').removeAttr('required');
+            $('[data-disable='+$(this).data('disable-target')+']' ).attr('disabled', true);
+        }
+        else{
+            $('[data-hide='+$(this).data('hide-target')+']' ).removeClass('hide').attr('required');
+            $('[data-disable='+$(this).data('disable-target')+']' ).attr('disabled', false);
+        }
+        
+    });
     
     
     

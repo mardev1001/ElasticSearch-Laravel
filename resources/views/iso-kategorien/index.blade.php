@@ -15,19 +15,24 @@
         <div class="col-lg-4"> 
             {!! Form::open(['route' => 'iso-kategorien.store']) !!}
                 <div class="form-group">
+                    {!! ViewHelper::setInput('name', '', old('name'), trans('isoKategorienForm.name'), trans('isoKategorienForm.name'), true) !!} 
+                    
+                    <div class="checkbox">
+                        <label><input class="hide-input" data-hide-target="iso-categories" data-disable-target="iso-categories" type="checkbox" name="parent"/>
+                        {{ trans('isoKategorienForm.parent-category') }}</label>
+                    </div>
+                </div>
+                <div class="form-group" data-hide="iso-categories">
                     <label>{{ trans('isoKategorienForm.parent-category') }}</label>
                    
-                    <select name="category_id" class="form-control select" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
+                    <select name="category_id" class="form-control select" data-disable="iso-categories" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
                          <option value=""></option>
                          @foreach($isoCategories as $isoCategory)
-                             @if(empty($isoCategory->iso_category_parent_id))
+                             @if($isoCategory->parent)
                                  <option value="{{ $isoCategory->id }}"> {{ $isoCategory->name }} </option>
                              @endif
                          @endforeach
                     </select>
-                </div>
-                <div class="form-group">
-                    {!! ViewHelper::setInput('name', '', old('name'), trans('isoKategorienForm.name'), trans('isoKategorienForm.name'), true) !!} 
                 </div>
                 <button class="btn btn-primary">{{ trans('isoKategorienForm.add') }} </button>
             {!! Form::close() !!}
@@ -42,7 +47,7 @@
     <h4>{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.overview') }}</h4>
      
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-9">
             <table class="table">
                 <tr>
                     <th colspan="3">
@@ -53,19 +58,23 @@
                <tr>
                    {!! Form::open(['route' => ['iso-kategorien.update', 'iso-kategorien' => $isoCategory->id], 'method' => 'PATCH']) !!}
                     <td class="col-xs-5">
+                         <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $isoCategory->name }}" required/>
+                    </td>
+                    <td class="col-xs-4 vertical-center">
+                        @if($isoCategory->parent)
+                            {{ trans('isoKategorienForm.parent-category') }}
+                        @else
                          <select name="category_id" class="form-control select" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
                              <option value=""></option>
                              @foreach($isoCategories as $isoCategoryChild)
-                                 @if(empty($isoCategoryChild->iso_category_parent_id) && ($isoCategory->id != $isoCategoryChild->id))
+                                 @if($isoCategoryChild->parent)
                                      <option value="{{ $isoCategoryChild->id }}" @if($isoCategory->iso_category_parent_id == $isoCategoryChild->id) selected @endif > {{ $isoCategoryChild->name }} </option>
                                  @endif
                              @endforeach
                          </select>
+                        @endif
                     </td>
-                    <td class="col-xs-4">
-                         <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $isoCategory->name }}" required/>
-                    </td>
-                    <td class="col-xs-3 text-center table-options">
+                    <td class="col-xs-3 text-right table-options">
 
                         @if($isoCategory->active)
                         <button class="btn btn-success" type="submit" name="activate" value="1">{{ trans('adressatenForm.active') }}</button>

@@ -1,36 +1,15 @@
+<h3>Dokumente anlegen - Daten Eingabe - Dokumentenart - Upload</h3>
 
-<h3>Dokumente anlegen - Daten Eingabe - Dokumentenart - Editor</h3>
-<!-- input box-->
-<div class="col-lg-3"> 
-    <div class="form-group">
-        {!! ViewHelper::setCheckbox('show_name',$data,old('show_name'),trans('documentForm.showName') ) !!}
-    </div>   
-</div><!--End input box-->
-
-<div class="clearfix"></div>
-
-<!-- input box-->
-<div class="col-lg-3"> 
-    <div class="form-group">
-        {!! ViewHelper::setSelect($adressats,'adressat_id',$data,old('adressat_id'),
-                trans('documentForm.adressat'), trans('documentForm.adressat') ) !!}
-    </div>   
-</div><!--End input box-->
-
-
-<!-- input box-->
-<div class="col-lg-3"> 
-    <div class="form-group">
-        {!! ViewHelper::setInput('betreff',$data,old('betreff'),trans('documentForm.subject') , 
-               trans('documentForm.subject') , true  ) !!}
-    </div>   
-</div><!--End input box-->
-
-<div class="clearfix"></div>
-
+<br/>
 <!-- input box-->
 <div class="col-lg-6"> 
     <div class="form-group">
+        <label>Dokumentenupload</label>
         <input type="file" name="file" class="form-control" required />
     </div>   
 </div><!--End input box-->
+<br/>
+
+    @section('buttons')
+        <button class="btn btn-primary" name="rightsPublic" value="Rechte & Freigabe">Rechte & Freigabe</button>
+    @stop

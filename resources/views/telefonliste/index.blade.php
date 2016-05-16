@@ -71,7 +71,6 @@
                         <thead>
                         <tr>
                             <th class="no-sort">{{ trans('telefonListeForm.photo') }} </th>
-                            <th>{{ trans('telefonListeForm.mandant') }} </th>
                             <th>{{ trans('telefonListeForm.title') }} </th>
                             <th>{{ trans('telefonListeForm.firstname') }} </th>
                             <th>{{ trans('telefonListeForm.lastname') }} </th>
@@ -83,7 +82,6 @@
                         @for($j = 1; $j < 5; $j++)
                         <tr>
                             <td><img src="http://placehold.it/60x60"></td>
-                            <td>NEP {{$j}}</td>
                             <td>Herr</td>
                             <td>Max</td>
                             <td>Mustermann</td>

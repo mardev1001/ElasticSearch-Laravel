@@ -26,6 +26,7 @@ class DocumentController extends Controller
     public function __construct(DocumentRepository $docRepo)
     {
         $this->document =  $docRepo;
+        $this->pdfPath = public_path().'/document/pdf/';
      }
     
     
@@ -45,10 +46,11 @@ class DocumentController extends Controller
      */
     public function create()
     {
+        $url = '';
         $documentTypes = DocumentType::all();
         $isoDocuments = IsoCategory::all();
         $mandantUsers = User::all();
-        return view('formWrapper', compact('documentTypes','isoDocuments','mandantUsers') );
+        return view('formWrapper', compact('url','documentTypes','isoDocuments','mandantUsers') );
     }
 
     /**
@@ -59,14 +61,40 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        
         $adressats = Adressat::all();
         //DB::enableQueryLog();
         $data = Document::create($request->all() );
-        
         //dd(DB::getQueryLog());
-        $form = $this->document->setDocumentForm($request->get('document_type_id'));
-        return view('dokumente.formWrapper', compact('data','form','adressats') );
+        $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
+        $url = $setDocument->url;
+        $form = $setDocument->form;
+        session()->flash('message',trans('mandantForm.success'));
+        return view('dokumente.formWrapper', compact('data','form','url','adressats') );
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function pdfUpload(Request $request)
+    {
+       //dd( $request->all() );
+      //function or inFunction
+        $model = Document::find($request->get('model_id'));
+        $filename = '';
+        $path = $this->pdfPath;
+        if( $request->file() ){
+            $filename = $this->fileUpload($model,$path,$request->file() );
+            
+        }
+        $data = Document::findOrNew($request->get('model_id'));
+        //dd($data);
+        //dd(DB::getQueryLog());
+        session()->flash('message',trans('mandantForm.success'));
+        
+        return redirect()->action('DocumentController@anlegenRechteFreigabe',array('data'=>$data) );
     }
 
     /**
@@ -310,8 +338,9 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function anlegenRechteFreigabe()
+    public function anlegenRechteFreigabe($data)
     {
+        dd($data);
         $collections = array();
         $data = '';
         return view('dokumente.anlegenRechteFreigabe', compact('collections','data') );
@@ -340,6 +369,35 @@ class DocumentController extends Controller
         $history = $this->document->generateDummyData('Dokument', $documents);
         $data = json_encode($history);
         return view('dokumente.historie', compact('data') );
+    }
+    
+    private function fileUpload($model,$path,$files){
+      
+        $folder = str_slug($model->name);
+        $fullFolderPath = public_path().'/'.$folder;
+        if ( ! \File::exists( $fullFolderPath ) ) {
+			\File::makeDirectory( $fullFolderPath, $mod=0777,true,true); 
+		}
+		if( is_array($files) ){
+		    $uploadedNames = array();
+		    foreach($files as $file){
+		      $uploadedNames =  $this->moveUploaded($file,$folder,$model);
+		    }
+		}
+		else
+            $uploadedNames = $this->moveUploaded($files,$folder,$model);
+        return $uploadedNames;
+	
+    }
+    
+    private function moveUploaded($file,$folder,$model){
+        //$filename = $image->getClientOriginalName();
+		$newName = str_slug($model->name).'-'.date("d-m-Y-H_i_s").'.'.$file->getClientOriginalExtension();
+		$path = "$folder/$newName";
+        $filename = $file->getClientOriginalName();
+        $uploadSuccess = $file->move($folder, $newName );
+      	\File::delete($folder .'/'. $filename);
+      	return $newName;
     }
     
 }
