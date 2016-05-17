@@ -20,6 +20,7 @@
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
+        {{dd($mandantUsers)}}
         {!! ViewHelper::setSelect($mandantUsers,'owner_user_id',$data,old('owner_user_id'),
                 trans('documentForm.owner'), trans('documentForm.owner') ) !!}
     </div>   

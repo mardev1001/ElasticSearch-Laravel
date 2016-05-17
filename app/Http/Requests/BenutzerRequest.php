@@ -13,7 +13,7 @@ class BenutzerRequest extends Request
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -30,17 +30,28 @@ class BenutzerRequest extends Request
                 return [];
             }
             case 'POST':
-               {
-               
+            {
                return [
-                    //'name' => 'required|unique:mandants'
+                    'username' => 'required|unique:users',
+                    'password' => 'required|min:6',
+                    'password_repeat' => 'same:password',
+                    'vorname' => 'required',
+                    'nachname' => 'required',
+                    'email' => 'required|email|unique:users',
+                    'picture' => 'image',
                 ];
             }
             case 'PUT':
             case 'PATCH':
             {
                 return [
-                    //'name' => 'required'
+                    'username' => 'required|unique:users',
+                    'password' => 'required|min:6',
+                    'password_repeat' => 'same:password',
+                    'vorname' => 'required',
+                    'nachname' => 'required',
+                    'email' => 'required|email|unique:users',
+                    'picture' => 'image',
                 ];
             }
             default:break;

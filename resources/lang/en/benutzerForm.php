@@ -23,7 +23,9 @@ return [
     'assignment' => 'Zuweisung',
     'overview' => 'Übersicht',
     'add' => 'hinzufügen',
+    'edit' => 'bearbeiten',
     'search' => 'Suche',
+    'save' => 'Speichern',
     'reset' => 'Zurückstellen',
     
 ];

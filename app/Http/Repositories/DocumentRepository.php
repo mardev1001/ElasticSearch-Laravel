@@ -42,14 +42,14 @@ class DocumentRepository
         $data = new \StdClass();
         $modelUpload = DocumentType::find($documentType);
         $data->form = 'editor';
+        $data->url = 'editor';
         if( $modelUpload->document_art == true ){
             $data->form = 'upload';
             $data->url = 'document-upload';
         }
-            $data->form = 'upload';
         if( $pdf == 1 )
             $data = $this->checkUploadType($data,$modelUpload, $pdf);
-            
+        
         return $data;
     }    
     

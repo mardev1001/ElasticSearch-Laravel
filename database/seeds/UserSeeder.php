@@ -28,6 +28,34 @@ class UserSeeder extends Seeder
                 'active' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'email_reciever' => 1,
+                'email' => 'filip@webbite.de',
+                'username' => 'batman',
+                'username_sso' => 'batman',
+                'password' => bcrypt('webbite123'),
+                'title' => 'Herr',
+                'short_name' => 'Batman',
+                'first_name' => 'User',
+                'last_name' => 'Dokumentverfasser',
+                'active' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'email_reciever' => 1,
+                'email' => 'marijan.gudelj@webbite.de',
+                'username' => 'superman',
+                'username_sso' => 'superman',
+                'password' => bcrypt('webbite123'),
+                'title' => 'Herr',
+                'short_name' => 'Superman',
+                'first_name' => 'User',
+                'last_name' => 'Dokumentfreigeber',
+                'active' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
             ]
 
         );
@@ -42,6 +70,20 @@ class UserSeeder extends Seeder
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
 
+            ],
+            [
+                'mandant_id' => 1,
+                'user_id' => 2,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+
+            ],
+            [
+                'mandant_id' => 1,
+                'user_id' => 3,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+
             ]
 
         );
@@ -52,6 +94,30 @@ class UserSeeder extends Seeder
             [
                 'mandant_user_id' => 1,
                 'role_id' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 2,
+                'role_id' => 11,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 2,
+                'role_id' => 13,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 3,
+                'role_id' => 8,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 3,
+                'role_id' => 10,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ]

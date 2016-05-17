@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -14,6 +15,16 @@ use App\Mandant;
 
 class UserController extends Controller
 {
+    /**
+     * Class constructor
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function __construct() {
+        // Define file upload path
+        $this->fileUploadPath = public_path() . "/files/pictures/users";
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -31,9 +42,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $mandants = Mandant::all();
-        $roles =  Role::all();
-        return view('formWrapper', compact('mandant','roles'));
+        return view('benutzer.create');
     }
 
     /**
@@ -44,7 +53,7 @@ class UserController extends Controller
      */
     public function store(BenutzerRequest $request)
     {
-        
+        dd($request);
     }
 
     /**
@@ -66,10 +75,10 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $data = Users::find($id);
+        $user = Users::find($id);
         $mandants = Mandant::all();
         $roles =  Role::all();
-        return view('formWrapper', compact('data','mandant','roles') );
+        return view('benutzer.edit', compact('user','mandants','roles') );
     }
 
     /**

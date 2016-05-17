@@ -5,12 +5,12 @@
         </h1>
        
         {!! Form::open([
-        'url' => '/search',
+        'url' => 'dokumente/rechte-und-freigabe/'.$data->id,
         'method' => 'POST',
         'class' => 'horizontal-form' ]) !!}
             <div class="col-xs-12">
                     <div class="form-group">
-                        <select name="" class="form-control select" data-placeholder="{{ trans('rightsRelease.release') }}" multiple>
+                        <select name="fuuuu[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.release') }}" multiple>
                             <option value="0"></option>
                             <option value="Frau Engel">Frau Engel</option>
                             <option value="Herr Floßmann">Herr Floßmann</option>
@@ -61,62 +61,36 @@
                     </div>
                     
                     <div class="clearfix"></div>
-                    
-                    <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label>{{ trans('rightsRelease.variante') }} 1</label>
-                                <select name="" class="form-control select" data-placeholder="{{ trans('rightsRelease.variante') }} 1" multiple>
-                                    <option value="0"></option>
-                                    <option value="Frau">001</option>
-                                    <option value="Herr">002</option>
-                                    <option value="Herr">003</option>
-                                    <option value="Frau">004</option>
-                                    <option value="Herr">005</option>
-                                    <option value="Herr">099</option>
-                                </select>
+                    @if( count($variants) >0)
+                        @foreach( $variants as $variant) 
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label>{{ trans('rightsRelease.variante') }} 1</label>
+                                    <select name="" class="form-control select" 
+                                     data-placeholder="{{ trans('rightsRelease.variante') }} 1" multiple>
+                                        <option value="0"></option>
+                                        <option value="Frau">001</option>
+                                        <option value="Herr">002</option>
+                                        <option value="Herr">003</option>
+                                        <option value="Frau">004</option>
+                                        <option value="Herr">005</option>
+                                        <option value="Herr">099</option>
+                                    </select>
+                                </div>
                             </div>
-                    </div>
+                            
+                            <div class="clearfix"></div>
+                        @endforeach
+                    @endif
                     
-                    <div class="clearfix"></div>
-                    
-                    <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label>{{ trans('rightsRelease.variante') }} 2</label>
-                                <select name="" class="form-control select" data-placeholder="{{ trans('rightsRelease.variante') }} 2" multiple>
-                                    <option value="0"></option>
-                                    <option value="Frau">001</option>
-                                    <option value="Herr">002</option>
-                                    <option value="Herr">003</option>
-                                    <option value="Frau">004</option>
-                                    <option value="Herr">005</option>
-                                    <option value="Herr">099</option>
-                                </select>
-                            </div>
-                    </div>
-                    
-                    <div class="clearfix"></div>
-                    
-                    <div class="col-xs-12 col-md-6">
-                            <div class="form-group">
-                                <label>{{ trans('rightsRelease.variante') }} 3</label>
-                                <select name="" class="form-control select" data-placeholder="{{ trans('rightsRelease.variante') }} 3" multiple>
-                                    <option value="0"></option>
-                                    <option value="Frau">001</option>
-                                    <option value="Herr">002</option>
-                                    <option value="Herr">003</option>
-                                    <option value="Frau">004</option>
-                                    <option value="Herr">005</option>
-                                    <option value="Herr">099</option>
-                                </select>
-                            </div>
-                    </div>
                 </div>
             </div>
         <div class="clearfix"></div>
         <div class="col-md-6">
             <button class="btn btn-info"><span class="fa fa-exclamation-triangle"></span>  {{ trans('rightsRelease.fastPublish') }}</button>
             <button class="btn btn-primary"><span class="fa fa-share"></span>  {{ trans('rightsRelease.share') }}</button>
-            <button class="btn btn-primary"><span class="fa fa-floppy-o"></span>  {{ trans('rightsRelease.save') }}</button>
+            <button type="submit" class="btn btn-primary simulate-"><span class="fa fa-floppy-o"></span>  {{ trans('rightsRelease.save') }}</button>
         </div>
+        </form>
     @stop
     

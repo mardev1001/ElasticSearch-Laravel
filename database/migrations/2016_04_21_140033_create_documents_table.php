@@ -19,7 +19,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('version');
             $table->string('name');
             $table->integer('owner_user_id')->unsigned()->nullable();//FK
-            $table->integer('document_status_id')->unsigned();//FK
+            // $table->integer('document_status_id')->unsigned();//FK
             $table->string('search_tags');
             $table->text('summary');
             $table->timestamp('date_published');
@@ -27,7 +27,6 @@ class CreateDocumentsTable extends Migration
             $table->integer('version_parent');
             $table->integer('document_group_id');
             $table->integer('iso_category_id')->unsigned();//FK
-            $table->string('upload_filename');
             $table->boolean('show_name');
             $table->integer('adressat_id')->unsigned();//FK
             $table->string('betreff');
@@ -40,18 +39,6 @@ class CreateDocumentsTable extends Migration
             $table->timestamps();
             $table->softDeletes();
             
-            
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');
-            
-           /* $table->foreign('owner_user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onUpdate('cascade')
-                  ->onDelete('cascade');*/
         });
     }
 

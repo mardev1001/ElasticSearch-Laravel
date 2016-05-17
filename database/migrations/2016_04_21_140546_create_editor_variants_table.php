@@ -18,7 +18,6 @@ class CreateEditorVariantsTable extends Migration
             $table->integer('variant_number')->unsigned();
             $table->integer('document_status_id')->unsigned();
             $table->text('inhalt');
-            $table->string('pdf_upload_filename');
             $table->timestamps();
             $table->softDeletes();
         });

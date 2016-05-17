@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDocumentCoauthorsTable extends Migration
+class CreateDocumentUploadsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,10 @@ class CreateDocumentCoauthorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('document_coauthors', function (Blueprint $table) {
+        Schema::create('document_uploads', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('document_id')->unsigned();
-            $table->integer('user_id')->unsigned();
+            $table->integer('editor_variant_id')->unsigned();
+            $table->string('file_path');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -29,7 +29,7 @@ class CreateDocumentCoauthorsTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::drop('document_coauthors');
+        Schema::drop('document_uploads');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

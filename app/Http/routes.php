@@ -23,7 +23,8 @@
         Route::get('dokumente/dokument-typen', 'DocumentController@documentType');
         Route::get('dokumente/iso-kategorien', 'DocumentController@isoCategories');
         //Route::get('dokumente/anlegen', 'DocumentController@anlegen');//editor
-        Route::get('dokumente/rechte-und-freigabe', 'DocumentController@anlegenRechteFreigabe');
+        Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe');//document id
+        Route::post('dokumente/rechte-und-freigabe/{id}', 'DocumentController@saveRechteFreigabe');
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/statistik/{id}', 'DocumentController@documentStats');
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');

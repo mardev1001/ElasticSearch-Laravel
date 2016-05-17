@@ -1,3 +1,10 @@
+{{-- BENUTZER EDIT --}}
+
+@extends('master')
+
+@section('content')
+
+<h1 class="text-primary">{{ trans('benutzerForm.user') }} {{ trans('benutzerForm.edit') }}  </h1>
 
 <fieldset class="form-group">
     
@@ -33,7 +40,12 @@
         <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
-               {!! ViewHelper::setSelect($gender, 'title', $data, old('title'), trans('benutzerForm.title'), trans('benutzerForm.title'), false) !!}
+                <label>trans('benutzerForm.title')</label>
+                <select name="title"id="">
+                    <option value="0">Frau</option>
+                    <option value="0">Herr</option>
+                </select>
+                
             </div>   
         </div><!--End input box-->
 
@@ -84,7 +96,6 @@
         <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
-                <br>        
                {!! ViewHelper::setCheckbox('email_reciever', $data, old('email_reciever'), trans('benutzerForm.email_reciever')) !!}
             </div>   
         </div><!--End input box-->
@@ -93,11 +104,18 @@
     
     <div class="row">
         <!-- input box-->
-        <div class="col-lg-3"> 
+        <div class="col-lg-2"> 
             <div class="form-group">
                 <label>{{ trans('benutzerForm.picture') }}</label>
                 <input type="file" id="picture" name="picture" /><br/>
-                <img class="img-responsive" id="image-preview" src="http://placehold.it/200x200"/>
+                
+                @if(isset($user->picture))
+                    @if($user->picture)
+                    <img class="img-responsive" id="image-preview" src="http://placehold.it/150x150"/>
+                    @endif
+                @else
+                    <img class="img-responsive" id="image-preview" src="{{url('/files/pictures/users/default.png')}}"/>
+                @endif
             </div>   
         </div><!--End input box-->
 
@@ -190,4 +208,5 @@
 </fieldset>
 
 <div class="clearfix"></div> <br>
-   
+
+@stop

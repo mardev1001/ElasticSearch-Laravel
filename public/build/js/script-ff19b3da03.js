@@ -65700,7 +65700,13 @@ $( function() {
        });
     /* End trigger tab creation*/
     
-    
+    /* Simulate submit button*/
+        $('.simulate-submit').on('click touch',function(e){
+            e.preventDefault();
+            
+            $(this).closest('form').submit(); 
+        });
+    /* End Simulate submit button*/
     
 });
 //# sourceMappingURL=script.js.map
