@@ -35,8 +35,8 @@ class BenutzerRequest extends Request
                     'username' => 'required|unique:users',
                     'password' => 'required|min:6',
                     'password_repeat' => 'same:password',
-                    'vorname' => 'required',
-                    'nachname' => 'required',
+                    'first_name' => 'required',
+                    'last_name' => 'required',
                     'email' => 'required|email|unique:users',
                     'picture' => 'image',
                 ];
@@ -46,9 +46,9 @@ class BenutzerRequest extends Request
             {
                 return [
                     'username' => 'required|unique:users',
-                    'password' => 'required|min:6',
+                    'password' => 'min:6',
                     'password_repeat' => 'same:password',
-                    'vorname' => 'required',
+                    'first_name' => 'required',
                     'nachname' => 'required',
                     'email' => 'required|email|unique:users',
                     'picture' => 'image',

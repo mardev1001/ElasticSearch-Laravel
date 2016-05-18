@@ -9,16 +9,10 @@
         'method' => 'POST',
         'class' => 'horizontal-form' ]) !!}
             <div class="col-xs-12">
-                    <div class="form-group">
-                        <select name="fuuuu[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.release') }}" multiple>
-                            <option value="0"></option>
-                            <option value="Frau Engel">Frau Engel</option>
-                            <option value="Herr Floßmann">Herr Floßmann</option>
-                            <option value="Herr Bittner">Herr Bittner</option>
-                            <option value="Frau Sepp">Wiki</option>
-                            <option value="Frau Hoffmann">Frau Hoffmann</option>
-                        </select>
-                    </div>
+                
+                {!! ViewHelper::setUserSelect($mandantUsers,'glavonje[]',$data,old('glavonje[]'),
+                trans('rightsRelease.release'), trans('rightsRelease.release'), true, array(), array(), array(), array('multiple') ) !!}
+                   
                 <div class="clearfix"></div>
                 <div class="row">
                     <!-- input box-->
@@ -32,7 +26,6 @@
                     <!-- input box-->
                     <div class="col-xs-6 col-md-3">
                         <div class="form-group">
-                            <br/>
                             {!! ViewHelper::setCheckbox('email',$data,old('email'),
                             trans('rightsRelease.sendEmail') ) !!}
                         </div>   
@@ -62,12 +55,12 @@
                     
                     <div class="clearfix"></div>
                     @if( count($variants) >0)
-                        @foreach( $variants as $variant) 
+                        @foreach( $variants as $k=>$variant) 
                             <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
-                                    <label>{{ trans('rightsRelease.variante') }} 1</label>
-                                    <select name="" class="form-control select" 
-                                     data-placeholder="{{ trans('rightsRelease.variante') }} 1" multiple>
+                                    <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
+                                    <select name="variante-$k+1[]" class="form-control select" 
+                                     data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" multiple>
                                         <option value="0"></option>
                                         <option value="Frau">001</option>
                                         <option value="Herr">002</option>

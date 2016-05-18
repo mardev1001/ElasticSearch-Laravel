@@ -44,7 +44,12 @@ $( function() {
             }
         ]
     });
-    
+    if( $('.editable').length ){
+        $('.editable').each(function(){
+           if( $(this).data('id') )
+                $(this).attr('id', $(this).data('id') );
+        });
+    } 
     tinymce.init({
         selector: '.editable',
         skin_url: '/css/style'

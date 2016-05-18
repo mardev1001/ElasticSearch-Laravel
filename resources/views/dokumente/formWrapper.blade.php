@@ -5,7 +5,7 @@
     </h1>
     {!! Form::open([
            'url' => $url,
-           'method' => 'POST',
+           'method' => $method || 'POST',
            'enctype' => 'multipart/form-data',
            'class' => 'horizontal-form']) !!}
            
@@ -18,10 +18,14 @@
             @endif
             @if( view()->exists('dokumente.'.$form) )
                 <div class="clearfix"></div>
-                <div class="col-xs-12 form-buttons">
-                    <button class="btn btn-white" type="reset">{{ trans('formWrapper.reset') }}</button>
-                    <button class="btn btn-primary" type="submit">submitt</button>
-                    @yield('buttons')
+                <div class="row">
+                    <div class="col-xs-12 form-buttons">
+                        @if( isset($backButton) )
+                            <a href="{{$backButton}}" class="btn btn-info"><span class="fa fa-chevron-left"></span> Zurück</a>
+                        @endif
+                        <button class="btn btn-primary" type="submit"> Speichern</button>
+                        @yield('buttons')
+                    </div>
                 </div>
                 <br/>
             @endif

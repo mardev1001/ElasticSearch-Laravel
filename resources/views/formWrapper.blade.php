@@ -9,9 +9,10 @@
         class="horizontal-form'"
         id="{{$formWrapperData->fileUpload}}" >
               {{ csrf_field() }}-->
+              
     {!! Form::open([
            'url' => $formWrapperData->controller.$formWrapperData->formUrl,
-           'method' => $formWrapperData->method,
+           'method' => $method ||$formWrapperData->method,
            'enctype' => 'multipart/form-data',
            'class' => 'horizontal-form',
            'id' => $formWrapperData->fileUpload]) !!}

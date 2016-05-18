@@ -15,10 +15,10 @@ data-placeholder="{{ ucfirst($placeholder) }}"
     @if( count($collections) >0 ){
        @foreach($collections as $collection){
            <option value="{{$collection->id}}" 
-                @if( !empty($data->$inputName) && $collection->id == $data->$inputName)
+                @if( !empty( $value) && $collection->id == $value)
                     selected
                 @endif >
-               {{$collection->name}}
+               {{$collection->first_name}} {{$collection->last_name}}
            </option>
         @endforeach
     @endif

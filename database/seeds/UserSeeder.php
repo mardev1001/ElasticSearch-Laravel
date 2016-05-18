@@ -15,6 +15,7 @@ class UserSeeder extends Seeder
         // Add users
 
         DB::table('users')->insert(
+        [
             [
                 'email_reciever' => 1,
                 'email' => 'test@webbite.de',
@@ -57,13 +58,14 @@ class UserSeeder extends Seeder
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ]
+        ]
 
         );
 
         // Add users to mandants
 
         DB::table('mandant_users')->insert(
-
+        [
             [
                 'mandant_id' => 1,
                 'user_id' => 1,
@@ -85,12 +87,14 @@ class UserSeeder extends Seeder
                 'updated_at' => date("Y-m-d H:i:s")
 
             ]
+        ]
 
         );
 
         // Add mandant specific roles to users
 
         DB::table('mandant_user_roles')->insert(
+        [
             [
                 'mandant_user_id' => 1,
                 'role_id' => 1,
@@ -121,7 +125,7 @@ class UserSeeder extends Seeder
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
             ]
-
+        ]
         );
 
 

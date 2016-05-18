@@ -20,8 +20,15 @@
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
-        {{dd($mandantUsers)}}
-        {!! ViewHelper::setSelect($mandantUsers,'owner_user_id',$data,old('owner_user_id'),
+        {!! ViewHelper::setInput('betreff',$data,old('betreff'),trans('documentForm.subject') , 
+               trans('documentForm.subject') , true  ) !!}
+    </div>   
+</div><!--End input box-->
+
+<!-- input box-->
+<div class="col-lg-3"> 
+    <div class="form-group">
+        {!! ViewHelper::setUserSelect($mandantUsers,'owner_user_id',$data,old('owner_user_id'),
                 trans('documentForm.owner'), trans('documentForm.owner') ) !!}
     </div>   
 </div><!--End input box-->
@@ -33,13 +40,6 @@
                trans('documentForm.searchTags') , true  ) !!} <!-- add later data-role="tagsinput"-->
     </div>   
 </div><!--End input box-->
-
-<!-- input box-->
-<div class="col-lg-12">
-    <div class="form-group">
-        {!! ViewHelper::setArea('summary',$data,old('summary'),trans('documentForm.summary') ) !!}
-    </div>   
-</div><!--End input box-->  
 
 
 <!-- input box-->
@@ -66,6 +66,14 @@
     </div>   
 </div><!--End input box-->
 
+
+<!-- input box-->
+<div class="col-lg-12">
+    <div class="form-group">
+        {!! ViewHelper::setArea('summary',$data,old('summary'),trans('documentForm.summary') ) !!}
+    </div>   
+</div><!--End input box-->  
+
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
@@ -74,3 +82,4 @@
 </div><!--End input box-->
 
 <div class="clearfix"></div>
+<br/>

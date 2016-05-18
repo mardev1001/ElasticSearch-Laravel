@@ -11,4 +11,8 @@ class MandantUserRole extends Model
     
     protected $guarded = []; //blacklist
     protected $fillable = ['mandant_user_id','role_id']; //whitelist
+    
+    public function mandantUsers(){
+        $this->hasMany('App\MandantUser','mandant_user_id','id');
+    }
 }

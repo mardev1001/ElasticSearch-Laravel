@@ -109,6 +109,36 @@ class ViewHelper
     /**
      * Generate and check input type textarea
      *
+     * @param array $collections
+     * @param string $inputName
+     * @param array $data || string $data='' ( declared in FormViewComposer)
+     * @param string $old
+     * @param string $label
+     * @param string $placeholder
+     * @param bool $required
+     * @param array $classes
+     * @param array $dataAttr
+     * @return string $value || $old
+     */
+    static function setUserSelect($collections=array(), $inputName, $data , $old, $label='', $placeholder='', $required=false, $classes=array(), $dataTag=array(), $attributes=array()  ){
+        if( $placeholder == '')
+            $placeholder = $label;
+            
+        if( $old == '' &&  isset( $data->$inputName) && !empty($data->$inputName) )
+            $value = $data->$inputName;
+            
+        $string = '';
+        $string = view('partials.inputUserSelect',
+                    compact('collections','inputName','data','label','old','placeholder','required','classes','dataTag','attributes')
+                )->render();
+       
+     
+       echo $string;
+    }
+    
+    /**
+     * Generate and check input type textarea
+     *
      * @param object array $userValues
      * @param string $value
      * @echo string 'selected'

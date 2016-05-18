@@ -8,108 +8,120 @@
 
 <fieldset class="form-group">
     
-    {!! Form::open(['route' => 'benutzer.store']) !!}
+    {!! Form::open(['route' => 'benutzer.store', 'enctype' => 'multipart/form-data']) !!}
     
     <h4>{{ trans('benutzerForm.baseInfo') }}</h4>
     
     <div class="row">
 
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('username', '', old('username'), trans('benutzerForm.username'), trans('benutzerForm.username'), true) !!}
             </div>   
-        </div><!--End input box-->
+        </div>
 
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
-               {!! ViewHelper::setInput('password', '', old('password'), trans('benutzerForm.password'), trans('benutzerForm.password'), true, 'password') !!}
+               {!! ViewHelper::setInput('password', '', '', trans('benutzerForm.password'), trans('benutzerForm.password'), true, 'password') !!}
             </div>   
-        </div><!--End input box-->
+        </div>
 
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
-               {!! ViewHelper::setInput('password_repeat', '', old('password_repeat'), trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), true, 'password') !!}
+               {!! ViewHelper::setInput('password_repeat', '', '', trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), true, 'password') !!}
             </div>   
-        </div><!--End input box-->
+        </div>
+    
+        <div class="col-lg-3"> 
+            <div class="form-group">
+               {!! ViewHelper::setCheckbox('active', '', old('active'), trans('benutzerForm.active'), false) !!}
+            </div>   
+        </div>
     
     </div>
     
     <div class="row">
         
-        <!-- input box-->
+        
         <div class="col-lg-3"> 
             <div class="form-group">
                 <label class="control-label">{{trans('benutzerForm.title')}}</label>
-                <select name="title" class="form-control elect">
+                <select name="title" class="form-control select">
                     <option value="Frau">Frau</option>
                     <option value="Herr">Herr</option>
                 </select>
                 
             </div>   
-        </div><!--End input box-->
+        </div>
 
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('first_name', '', old('first_name'), trans('benutzerForm.first_name'), trans('benutzerForm.first_name'), true) !!}
             </div>   
-        </div><!--End input box-->
+        </div>
 
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('last_name', '', old('last_name'), trans('benutzerForm.last_name'), trans('benutzerForm.last_name'), true) !!}
             </div>   
-        </div><!--End input box-->
+        </div>
 
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('birthday', '', old('birthday'), trans('benutzerForm.birthday'), trans('benutzerForm.birthday'), false, 'text', ['datetimepicker']) !!}
             </div>   
-        </div><!--End input box-->
+        </div>
         
         <div class="clearfix"></div>
         
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('short_name', '', old('short_name'), trans('benutzerForm.short_name'), trans('benutzerForm.short_name'), false) !!}
             </div>   
-        </div><!--End input box-->
+        </div>
         
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('username_sso', '', old('username_sso'), trans('benutzerForm.username_sso'), trans('benutzerForm.username_sso'), false) !!}
             </div>   
-        </div><!--End input box-->
+        </div>
         
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setInput('email', '', old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), true, 'email') !!}
             </div>   
-        </div><!--End input box-->
+        </div>
         
-        <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
                {!! ViewHelper::setCheckbox('email_reciever', '', old('email_reciever'), trans('benutzerForm.email_reciever')) !!}
             </div>   
-        </div><!--End input box-->
+        </div>
         
     </div>
     
     <div class="row">
-        <!-- input box-->
+        
+        <div class="col-lg-3"> 
+            <div class="form-group">
+                {!! ViewHelper::setInput('active_from', '', old('active_from'), trans('benutzerForm.active_from'), trans('benutzerForm.active_from'), false, 'text', ['datetimepicker']) !!}
+            </div>   
+        </div>
+        
+        <div class="col-lg-3"> 
+            <div class="form-group">
+                {!! ViewHelper::setInput('active_to', '', old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
+            </div>   
+        </div>
+        
+    </div>
+    
+    <div class="row">
+        
         <div class="col-lg-2"> 
             <div class="form-group">
                 <label>{{ trans('benutzerForm.picture') }}</label>
-                <input type="file" id="picture" name="picture" /><br/>
+                <input type="file" id="picture" name="picture"/><br/>
                 
                 @if(isset($user->picture))
                     @if($user->picture)
@@ -119,7 +131,7 @@
                     <img class="img-responsive" id="image-preview" src="{{url('/img/user-default.png')}}"/>
                 @endif
             </div>   
-        </div><!--End input box-->
+        </div>
 
     </div>
     
