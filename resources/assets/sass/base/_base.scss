@@ -45,7 +45,7 @@ h2{
 }
 
 p{
-	font-size: 12px;
+
 }
 
 a:hover{
@@ -245,3 +245,7 @@ a:hover{
 .full-device-height{
     height: 100vh;
 } 
+input[type="file"].form-control{
+  padding: 15px;
+  height: auto;
+}

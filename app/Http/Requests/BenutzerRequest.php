@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\User;
 
 class BenutzerRequest extends Request
 {
@@ -23,6 +24,9 @@ class BenutzerRequest extends Request
      */
     public function rules()
     {
+            // Get user ID from url segment
+            $userId = $this->segment(2);
+        
             switch( $this->method() ){
             case 'GET':
             case 'DELETE':
@@ -45,12 +49,12 @@ class BenutzerRequest extends Request
             case 'PATCH':
             {
                 return [
-                    'username' => 'required|unique:users',
+                    'username' => 'required|unique:users,username,' . $userId,
                     'password' => 'min:6',
                     'password_repeat' => 'same:password',
                     'first_name' => 'required',
-                    'nachname' => 'required',
-                    'email' => 'required|email|unique:users',
+                    'last_name' => 'required',
+                    'email' => 'required|email|unique:users,email,' . $userId,
                     'picture' => 'image',
                 ];
             }

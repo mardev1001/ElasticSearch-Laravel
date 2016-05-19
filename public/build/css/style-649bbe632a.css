@@ -100,9 +100,6 @@ h2 {
   font-size: 30px;
   color: #5da112; }
 
-p {
-  font-size: 12px; }
-
 a:hover {
   text-decoration: none !important; }
 
@@ -309,6 +306,10 @@ a:hover {
 /*Social icons - end*/
 .full-device-height {
   height: 100vh; }
+
+input[type="file"].form-control {
+  padding: 15px;
+  height: auto; }
 
 /* Reset - style */
 .container {
@@ -615,6 +616,9 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 
 .navbar-toggle-big {
   margin-top: 5px; }
+
+.navbar-brand img {
+  max-height: 30px; }
 
 .footer {
   min-height: 30px; }

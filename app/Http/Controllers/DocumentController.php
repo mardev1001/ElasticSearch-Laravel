@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 use Request as RequestMerge;
 
@@ -98,7 +99,7 @@ class DocumentController extends Controller
      */
     public function pdfUpload(Request $request)
     {
-     
+        
         $model = Document::find($request->get('model_id'));
         $filename = '';
         $path = $this->pdfPath;
@@ -110,28 +111,38 @@ class DocumentController extends Controller
         $data->fill($request->all() );
         $data->save();
         $id = $data->id; 
-       
+        
+        //$input = Input::except(['_method', '_token']);
         RequestMerge::merge(['document_id' => $id,'variant_number' => 1,'document_status_id'=>1/*maybe auto*/] );
-        $editorVariantId = EditorVariant::create($request->all() )->id;
-        foreach( $fileNames as $fileName ){
-            $documentAttachment = new DocumentUpload();
-            $documentAttachment->editor_variant_id = $editorVariantId;
-            $documentAttachment->file_path = $fileName;
-            $documentAttachment->save();
-            
-        }
-        $editorVariant = EditorVariant::create($request->all() );
-        //dd($editorVariant);
-        //Merge additional variables to request and Create document upload entry
-       
-        
-        //Merge additional variables to request and Create document active variant
-        //  $editorVarinatDocument = EditoVariantDocument::create($request->all() );
-        
+        $inputs = $request->except(array('_token', '_method','save','next') );
+        $editorVariantId = EditorVariant::where('document_id',$id)->first();
+        if( $editorVariantId == null)
+            $editorVariantId == new EditoVariantDocument();
+        $editorVariantId->inhalt = $request->get('inhalt');
+        $editorVariantId->save();
+        $editorVariantId::where('document_id',$id)->first();
+        if(count($fileNames) )
+            foreach( $fileNames as $fileName ){
+                $documentAttachment = new DocumentUpload();
+                $documentAttachment->editor_variant_id = $editorVariantId;
+                $documentAttachment->file_path = $fileName;
+                $documentAttachment->save();
+                
+            }
+        //$editorVariant = EditorVariant::create($request->all() );
        
         
         session()->flash('message',trans('mandantForm.success'));
-        
+        if( $request->has('save') ){
+            $adressats = Adressat::all();
+            $setDocument = $this->document->setDocumentForm( $data->document_type_id, $data->pdf_upload  );
+            $url = $setDocument->url;
+            $form = $setDocument->form;
+            $backButton = 'dokumente/'.$data->id.'/edit';
+            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
+        }
+         
+            
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
     
@@ -218,12 +229,20 @@ class DocumentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // merge user_id, manual AI version, version_parent 
-        /*
-            For repository
-            - if owner ID not set, set current user
-        */
+        $adressats = Adressat::all();
+        RequestMerge::merge(['version' => 1] );
+        $data = Document::find( $id )->fill( $request->all() )->save();
+        $data = Document::find($id);
+        $variant = $data->editorVariant();
+        $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
+        $url = $setDocument->url;
+        $form = $setDocument->form;
+        $backButton = 'dokumente/'.$data->id.'/edit';
+        session()->flash('message',trans('mandantForm.success'));
+        return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
     }
+    
+    
 
     /**
      * Remove the specified resource from storage.
@@ -457,10 +476,12 @@ class DocumentController extends Controller
 		}
 		if( is_array($files) ){
 		    $uploadedNames = array();
-		   
+	
 		    foreach($files as $file){
-		        if( is_array($file) ){
+		        if( is_array($file)){
+		            	   
 		            foreach($file as $f){
+		                if($f !== NULL)
 		                 $uploadedNames[] =  $this->moveUploaded($f,$folder,$model);
 		            }
 		        }

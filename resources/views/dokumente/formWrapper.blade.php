@@ -5,7 +5,7 @@
     </h1>
     {!! Form::open([
            'url' => $url,
-           'method' => $method || 'POST',
+           'method' => 'POST',
            'enctype' => 'multipart/form-data',
            'class' => 'horizontal-form']) !!}
            
@@ -23,7 +23,14 @@
                         @if( isset($backButton) )
                             <a href="{{$backButton}}" class="btn btn-info"><span class="fa fa-chevron-left"></span> Zurück</a>
                         @endif
-                        <button class="btn btn-primary" type="submit"> Speichern</button>
+                        <button class="btn btn-primary" type="submit" name="save" value="save">
+                            <span class="fa fa-floppy-o"></span> Speichern
+                        </button>
+                        <button class="btn btn-primary" type="submit" name="next" value="next"> 
+                            <span class="fa fa-chevron-right"></span>
+                            Weiter
+                        </button>    
+                        
                         @yield('buttons')
                     </div>
                 </div>

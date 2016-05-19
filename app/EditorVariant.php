@@ -11,4 +11,8 @@ class EditorVariant extends Model
     
     protected $guarded = []; //blacklist
     protected $fillable = ['document_id','document_status_id','inhalt']; //whitelist
+
+    public function documentUpload(){
+        return $this->hasMany('App\DocumentUpload');
+    }
 }

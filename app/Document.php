@@ -20,4 +20,12 @@ class Document extends Model
         'date_approved','email_approval','approval_all_roles','approval_all_mandants',
         'approval_all_mandants','pdf_upload'
     ]; //whitelist
+    
+    public function editorVariant(){
+        return $this->hasMany('App\EditorVariant');
+    }
+    
+    public function documentUploads(){
+        return $this->hasManyThrough('App\DocumentUpload','App\EditorVariant') ;
+    }
 }

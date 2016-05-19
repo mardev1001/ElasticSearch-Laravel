@@ -170,12 +170,14 @@
 
 <fieldset class="form-group">
     
+    {!! Form::open(['action' => 'UserController@userRoleTransfer', 'method'=>'POST']) !!}
+    
     <h4>{{ trans('benutzerForm.user') }} {{ trans('benutzerForm.roleTransfer') }}</h4>
     
     <div class="row">
         <div class="col-lg-3">
             <div class="form-group">
-               {!! ViewHelper::setSelect(null, 'user_id', $user, old('user_id'), trans('benutzerForm.user'), trans('benutzerForm.user'), true) !!}
+               {!! ViewHelper::setUserSelect($usersAll, 'user_transfer_id', '', old('user_transfer_id'), trans('benutzerForm.user'), trans('benutzerForm.user'), true) !!}
             </div>
         </div>
         
@@ -189,33 +191,40 @@
         
     </div>
     
+    {!! Form::close() !!}
+    
 </fieldset>
     
 <fieldset class="form-group">
+    
+    {!! Form::open(['action' => 'UserController@userMandantRoleAdd', 'method'=>'POST']) !!}
     
     <!--<h4>{{ trans('benutzerForm.mandant') }}/{{ trans('benutzerForm.roles') }} {{ trans('benutzerForm.assignment') }}</h4>-->
     <h4>{{ trans('benutzerForm.roles') }} {{ trans('benutzerForm.assignment') }}</h4>
      
     <div class="row inline">
-        <div class="col-lg-3">
+        <div class="col-md-5">
             <div class="form-group">
-               {!! ViewHelper::setSelect(null, 'mandant_id', $user, old('mandant_id'), trans('benutzerForm.mandant'), trans('benutzerForm.mandant'), true, [], [], []) !!}
+               {!! ViewHelper::setSelect($mandantsAll, 'mandant_id', '', old('mandant_id'), trans('benutzerForm.mandant'), trans('benutzerForm.mandant'), true, [], [], []) !!}
             </div>
         </div>
-        <div class="col-lg-3">
+        <div class="col-md-5">
             <div class="form-group">
-               {!! ViewHelper::setSelect(null, 'role_id', $user, old('role_id'), trans('benutzerForm.role'), trans('benutzerForm.role'), true, [], [], ['multiple']) !!}
+               {!! ViewHelper::setSelect($rolesAll, 'role_id[]', '', old('role_id'), trans('benutzerForm.role'), trans('benutzerForm.role'), true, [], [], ['multiple']) !!}
             </div>
         </div>
         
-        <div class="col-lg-3 vertical-center">
+        <div class="col-md-2 vertical-center">
              <div class="form-group">
                 <label>&nbsp;</label><br>
-                <button class="btn btn-primary">{{ ucfirst(trans('benutzerForm.add')) }}</button>
+                <input type="hidden" name="user_id" value="{{$user->id}}">
+                <button class="btn btn-primary" type"submit">{{ ucfirst(trans('benutzerForm.add')) }}</button>
             </div>
         </div>
         
     </div>
+
+    {!! Form::close() !!}
 
     <div class="clearfix"></div>
 
@@ -233,29 +242,37 @@
                     </th>    
                     <th class="col-xs-4 col-md-2">{{ trans('benutzerForm.options') }}</th>    
                 </tr>
-                @for($i=1; $i < 5; $i++)
+                @foreach($user->mandantUsers as $mandantUser)
                 <tr>
+                    {!! Form::open(['action' => 'UserController@userMandantRoleEdit', 'method'=>'PATCH']) !!}
                     <td>
-                        Mandant {{ $i }}
+                        {{ $mandantUser->mandant->name }}
+                        <input type="hidden" name="mandant_id" value="{{$mandantUser->mandant->id}}">
+                        {{--dd($mandantUser->mandantUserRoles)--}}
                     </td>
                     <td>
-                        <select name="role_id" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
-                            <option value="1">Rolle 1</option>
-                            <option value="2">Rolle 2</option>
-                            <option value="3">Rolle 3</option>
-                            <option value="4">Rolle 4</option>
+                        <!-- 'mandantUserRoles' -->
+                        <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
+                            @foreach($rolesAll as $role)
+                                {{-- @if(in_array($role->id, $mandantUser->mandantUserRoles))
+                                    <option value="{{$role->id}}" selected>{{$role->name}}</option>
+                                @else
+                                    <option value="{{$role->id}}">{{$role->name}}</option>
+                                @endif --}}
+                            @endforeach
                         </select>
                     </td>
                     <td class="table-options">
                         <button class="btn btn-success" type="submit">{{ trans('benutzerForm.active') }}</button>
                         <button class="btn btn-primary" type="submit">{{ trans('benutzerForm.save') }}</button>
                     </td>
+                    {!! Form::close() !!}
                 </tr>
-                @endfor
+                @endforeach
             </table>
         </div>
     </div>
-    
+    {{--dd($user->mandantUsers)--}}
 </fieldset>
 
 <div class="clearfix"></div> <br>

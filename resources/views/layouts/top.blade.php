@@ -23,7 +23,7 @@
                 <span class="icon-bar"></span>
             </button>
             
-            <a class="navbar-brand" href="/"><strong>NEPTUN</strong></a>
+            <a class="navbar-brand" href="/"><strong><img class="img-responsive" src="/img/NeptunLogo.png" alt="Neptun logo"/></strong></a>
         
         </div>
         

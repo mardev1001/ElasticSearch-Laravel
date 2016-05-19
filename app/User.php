@@ -109,6 +109,9 @@ class User extends Authenticatable
        return $this->hasMany('App\MandantUser','user_id','id');
     }
     
+    public function mandantUsers(){
+       return $this->hasMany('App\MandantUser','user_id','id');
+    }
    
     public function is($roleName)
     {

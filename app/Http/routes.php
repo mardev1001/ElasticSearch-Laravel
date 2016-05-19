@@ -8,9 +8,9 @@
     
 //Route::group(['middleware' => ['web']], function () {
     
-    Route::auth();
+Route::auth();
     
-   Route::group( array('middleware' => ['auth']), function(){
+Route::group( array('middleware' => ['auth']), function(){
     
         Route::get('/', 'HomeController@index');
     
@@ -38,7 +38,11 @@
         
         Route::get('benutzer/profile', 'UserController@profile');
         Route::post('benutzer/profile', 'UserController@saveProfile');
+        Route::post('benutzer/role-transfer', 'UserController@userRoleTransfer');
+        Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
+        Route::patch('benutzer/roles-edit', 'UserController@userMandantRoleEdit');
         Route::resource('benutzer', 'UserController');
+        
         Route::resource('rollen', 'RoleController');
         Route::resource('adressaten', 'AdressatController');
         Route::resource('dokument-typen', 'DocumentTypeController');
@@ -52,6 +56,8 @@
         Route::post('suche/telefonliste', 'SearchController@searchPhoneList');
         Route::resource('suche', 'SearchController');
         
-  }); //end auth middleware
+
+    
+}); //end auth middleware
     
 //}); //end web middleware

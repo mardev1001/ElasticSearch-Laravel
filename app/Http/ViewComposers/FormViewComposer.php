@@ -69,7 +69,7 @@ class FormViewComposer
         $formWrapperData->fileUpload = '';
         if( Request::is('*/edit') ){
             $formWrapperData->action = 'update';
-            $formWrapperData->method = 'Patch';
+            $formWrapperData->method = 'PATCH';
             $formWrapperData->form = '';
             $formWrapperData->formUrl = '/'.Request::segment(2).'/'.Request::segment(4);
             $formWrapperData->title = trans( 'controller.'.$formWrapperData->controller );

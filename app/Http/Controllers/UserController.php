@@ -12,6 +12,8 @@ use Request as RequestMerge;
 use App\User;
 use App\Role;
 use App\Mandant;
+use App\MandantUser;
+use App\MandantUserRole;
 
 class UserController extends Controller
 {
@@ -89,9 +91,17 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = User::find($id);
-        $mandants = Mandant::all();
-        $roles = Role::all();
-        return view('benutzer.edit', compact('user', 'mandants', 'roles'));
+        $usersAll = User::all();
+        $mandantsAll = Mandant::all();
+        $rolesAll = Role::all();
+        
+        $mandantUsers = MandantUser::where('user_id', $id)->get();
+        $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
+        $mandantUserRoles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
+        $roles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
+        
+        // dd($mandantUserRoles);
+        return view('benutzer.edit', compact('user', 'usersAll', 'mandantsAll', 'rolesAll'));
     }
 
     /**
@@ -104,7 +114,64 @@ class UserController extends Controller
     public function update(BenutzerRequest $request, $id)
     {
         $user = User::find($id);
-        dd($request->all());
+        $user->update($request->all());
+        
+        if($request->has('active')) $user->update(['active' => true]);
+        else $user->update(['active' => false]);
+        
+        if($request->has('email_reciever')) $user->update(['email_reciever' => true]);
+        else $user->update(['email_reciever' => false]);
+        
+        if ($request->file()) {
+            $userModel = User::find($user->id);
+            $picture = $this->fileUpload($userModel, $this->fileUploadPath, $request->file());
+            $userModel->update(['picture' => $picture]);
+        }
+        
+        // dd($request->all());
+        return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
+    }
+    
+    /**
+     * Transfer roles from one user to another.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function userRoleTransfer(Request $request)
+    {
+        /*
+        Wird als zusästzlicher Ersteller bei den Dokumenten angelegt
+        Was wird übertragen?
+        - Rollen
+        - Gelesen/Ungelesen (Dokumente)
+        */
+        
+        // $user = User::find($id);
+        // dd($request->all());
+        
+        return back()->with('message', 'Rollenübertragung erfolgreich abgeschlossen.');
+    }
+    
+    /**
+     * Assign a mandant and roles for the user
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @paraaram  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function userMandantRoleAdd(Request $request)
+    {
+        $mandantUser  = MandantUser::create($request->all());
+        
+        foreach($request->input('role_id') as $roleId){
+            $mandantUserRole = new MandantUserRole();
+            $mandantUserRole->mandant_user_id = $mandantUser->id;
+            $mandantUserRole->role_id = $roleId;
+            $mandantUserRole->save();
+        }
+        return back()->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
     }
 
     /**

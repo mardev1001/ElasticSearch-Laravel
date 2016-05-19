@@ -45,14 +45,21 @@ $( function() {
         ]
     });
     if( $('.editable').length ){
+        var counter = 0;
         $('.editable').each(function(){
-           if( $(this).data('id') )
+            counter++;
+            if( $(this).data('id') )
                 $(this).attr('id', $(this).data('id') );
+            else
+                 $(this).attr('id', 'editor-'+counter);
+                
+             tinymce.init({
+                selector: '.editable',
+                skin_url: '/css/style',
+                
+            });        
         });
     } 
-    tinymce.init({
-        selector: '.editable',
-        skin_url: '/css/style'
-    });
+   
     
 });/*End function() wrapper*/
