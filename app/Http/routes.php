@@ -23,12 +23,14 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/dokument-typen', 'DocumentController@documentType');
         Route::get('dokumente/iso-kategorien', 'DocumentController@isoCategories');
         //Route::get('dokumente/anlegen', 'DocumentController@anlegen');//editor
-        Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe');//document id
-        Route::post('dokumente/rechte-und-freigabe/{id}', 'DocumentController@saveRechteFreigabe');
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/statistik/{id}', 'DocumentController@documentStats');
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');
         Route::post('document-upload', 'DocumentController@upload');
+        
+        Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe');//document id
+        Route::post('dokumente/rechte-und-freigabe/{id}', 'DocumentController@saveRechteFreigabe');
+        Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::resource('dokumente', 'DocumentController');//documente editor in CRUD
         

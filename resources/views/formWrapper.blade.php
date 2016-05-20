@@ -9,6 +9,21 @@
         class="horizontal-form'"
         id="{{$formWrapperData->fileUpload}}" >
               {{ csrf_field() }}-->
+    @if( isset($method) )
+     {!! Form::open([
+           'url' => $formWrapperData->controller.$formWrapperData->formUrl,
+           'method' => $method,
+           'enctype' => 'multipart/form-data',
+           'class' => 'horizontal-form',
+           'id' => $formWrapperData->fileUpload]) !!}
+    @else
+     {!! Form::open([
+           'url' => $formWrapperData->controller.$formWrapperData->formUrl,
+           'method' => $formWrapperData->method,
+           'enctype' => 'multipart/form-data',
+           'class' => 'horizontal-form',
+           'id' => $formWrapperData->fileUpload]) !!}
+    @endif
     {!! Form::open([
            'url' => $formWrapperData->controller.$formWrapperData->formUrl,
            'method' => $formWrapperData->method,

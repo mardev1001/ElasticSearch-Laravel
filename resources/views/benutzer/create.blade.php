@@ -34,7 +34,8 @@
     
         <div class="col-lg-3"> 
             <div class="form-group">
-               {!! ViewHelper::setCheckbox('active', '', old('active'), trans('benutzerForm.active'), false) !!}
+               {{-- !! ViewHelper::setCheckbox('active', '', old('active'), trans('benutzerForm.active'), false) !! --}}
+               <br><label><input type="checkbox" value="1" name="active" checked>{{ trans('benutzerForm.active') }}</label>
             </div>   
         </div>
     
@@ -94,7 +95,10 @@
         
         <div class="col-lg-3"> 
             <div class="form-group">
-               {!! ViewHelper::setCheckbox('email_reciever', '', old('email_reciever'), trans('benutzerForm.email_reciever')) !!}
+               {{--!! ViewHelper::setCheckbox('email_reciever', '', old('email_reciever'), trans('benutzerForm.email_reciever')) !!--}}
+                <div class="checkbox">
+                    <br><label><input type="checkbox" value="1" name="email_reciever" checked>{{ trans('benutzerForm.email_reciever') }}</label>
+                </div>
             </div>   
         </div>
         

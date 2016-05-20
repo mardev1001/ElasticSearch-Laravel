@@ -37,6 +37,18 @@ class ForeignKeysUpdate extends Migration
                 ->onDelete('cascade');
         });
 
+        Schema::table('mandant_user_roles', function (Blueprint $table) {
+            $table->foreign('mandant_user_id')
+                ->references('id')
+                ->on('mandant_users')
+                ->onDelete('cascade');
+
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('roles')
+                ->onDelete('cascade');
+        });
+
 
         Schema::table('document_comments', function (Blueprint $table) {
             $table->foreign('user_id')
@@ -99,18 +111,6 @@ class ForeignKeysUpdate extends Migration
             $table->foreign('document_id')
                 ->references('id')
                 ->on('documents')
-                ->onDelete('cascade');
-        });
-
-        Schema::table('mandant_user_roles', function (Blueprint $table) {
-            $table->foreign('mandant_user_id')
-                ->references('id')
-                ->on('mandant_users')
-                ->onDelete('cascade');
-
-            $table->foreign('role_id')
-                ->references('id')
-                ->on('roles')
                 ->onDelete('cascade');
         });
 

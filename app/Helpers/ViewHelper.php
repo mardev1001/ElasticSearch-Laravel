@@ -143,13 +143,12 @@ class ViewHelper
      * @param string $value
      * @echo string 'selected'
      */
-    static function setMultipleSelect( $userValues, $value ){
+    static function setMultipleSelect( $userValues, $value, $key='id'){
         
         foreach($userValues as $userValue){
-            if($userValue->id == $value )
+            if($userValue->$key == $value )
             echo 'selected';
         }
-       
      
     }
     

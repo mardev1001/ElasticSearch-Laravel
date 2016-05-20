@@ -95,6 +95,8 @@ class UserController extends Controller
         $mandantsAll = Mandant::all();
         $rolesAll = Role::all();
         
+        // dd($usersAll);
+        
         $mandantUsers = MandantUser::where('user_id', $id)->get();
         $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
         $mandantUserRoles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
@@ -163,7 +165,7 @@ class UserController extends Controller
      */
     public function userMandantRoleAdd(Request $request)
     {
-        $mandantUser  = MandantUser::create($request->all());
+        $mandantUser = MandantUser::create($request->all());
         
         foreach($request->input('role_id') as $roleId){
             $mandantUserRole = new MandantUserRole();
@@ -172,6 +174,34 @@ class UserController extends Controller
             $mandantUserRole->save();
         }
         return back()->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
+    }
+    
+    /**
+     * Update mandant roles for the user
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @paraaram  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function userMandantRoleEdit(Request $request)
+    {
+        if($request->has('save')){
+            MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
+            if($request->has('role_id')){
+                foreach($request->input('role_id') as $roleId){
+                    $mandantUserRole = new MandantUserRole();
+                    $mandantUserRole->mandant_user_id = $request->input('mandant_user_id');
+                    $mandantUserRole->role_id = $roleId;
+                    $mandantUserRole->save();
+                }
+            }
+            return back()->with('message', 'Rollen erfolgreich aktualisiert.');
+        }
+        
+        if($request->has('remove')){
+            MandantUser::where('id', $request->input('mandant_user_id'))->delete();
+            return back()->with('message', 'Rollen wurden entfernt.');
+        }
     }
 
     /**
@@ -182,7 +212,14 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $mandantUser = MandantUser::where('user_id', $id)->first();
+        $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->first();
+        $mandantUserRoles->delete();
+        $mandantUser->delete();
+        $user->delete();
+        
+        return redirect('mandanten')->with('message', 'Benutzer erfolgreich entfernt.');
     }
 
     private function fileUpload($model, $path, $files)

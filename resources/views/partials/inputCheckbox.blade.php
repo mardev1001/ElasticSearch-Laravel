@@ -1,5 +1,5 @@
 <div class="checkbox">
-    <br/><!-- added break to vcenter with bootstrap input.form-control -->
+    
     <label>
         <input type="checkbox" 
             value="1" 

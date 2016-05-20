@@ -15,11 +15,12 @@ class MandantUser extends Model
     public function user(){
         return $this->hasOne('App\User','id','user_id');
     }
+    
     public function mandant(){
         return $this->hasOne('App\Mandant','id','mandant_id');
     }
-     public function mandantUserRoles(){
+    
+    public function mandantUserRoles(){
         return $this->hasMany('App\MandantUserRole','mandant_user_id','id');
     }
-    
 }

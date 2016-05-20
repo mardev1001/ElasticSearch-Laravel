@@ -24,6 +24,7 @@ return [
     'overview' => 'Übersicht',
     'options' => 'Optionen',
     'add' => 'hinzufügen',
+    'remove' => 'Entfernen',
     'edit' => 'bearbeiten',
     'active' => 'Aktiv',
     'active_from' => 'Aktiv von',

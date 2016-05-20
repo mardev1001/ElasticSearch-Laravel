@@ -15,14 +15,16 @@ use Auth;
 
 use DB;
 use App\Document;
-use App\Role;
 use App\DocumentType;
+use App\DocumentMandant;
+use App\DocumentUpload;
+use App\Role;
 use App\IsoCategory;
 use App\User;
+use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
 use App\Adressat;
-use App\DocumentUpload;
 use App\EditorVariant;
 use App\EditoVariantDocument;//latest active document
 use App\Http\Repositories\DocumentRepository;
@@ -49,7 +51,8 @@ class DocumentController extends Controller
         //
     }
 
-    /**
+     /**
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
@@ -91,6 +94,23 @@ class DocumentController extends Controller
         return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
     }
     
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editPdfUpload($id)
+    {
+        $adressats = Adressat::all();
+        $data = Document::find($id);
+        $backButton = '/dokumente/'.$data->id.'/edit';
+        $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload );
+        $url = $setDocument->url;
+        $form = $setDocument->form;
+        session()->flash('message',trans('mandantForm.success'));
+        return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
+    }
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -101,37 +121,45 @@ class DocumentController extends Controller
     {
         
         $model = Document::find($request->get('model_id'));
+        if($model == null){
+            
+            return redirect('dokumente/create')->with( array('message'=>'No Document with that id') );
+        }
+            
         $filename = '';
         $path = $this->pdfPath;
+        //dd($request->get('model_id') );
         if( $request->file() )
             $fileNames = $this->fileUpload($model,$path,$request->file() );
             
            //not summary, it is inhalt + attachment
+         
         $data = Document::findOrNew($request->get('model_id'));
         $data->fill($request->all() );
         $data->save();
         $id = $data->id; 
         
-        //$input = Input::except(['_method', '_token']);
         RequestMerge::merge(['document_id' => $id,'variant_number' => 1,'document_status_id'=>1/*maybe auto*/] );
-        $inputs = $request->except(array('_token', '_method','save','next') );
+        //$inputs = $request->except(array('_token', '_method','save','next') );
         $editorVariantId = EditorVariant::where('document_id',$id)->first();
         if( $editorVariantId == null)
-            $editorVariantId == new EditoVariantDocument();
+            $editorVariantId = new EditorVariant();
+        $editorVariantId->document_id = $id;
+        $editorVariantId->variant_number = 1;
+        $editorVariantId->document_status_id = 1;
         $editorVariantId->inhalt = $request->get('inhalt');
         $editorVariantId->save();
         $editorVariantId::where('document_id',$id)->first();
+        
         if(count($fileNames) )
             foreach( $fileNames as $fileName ){
                 $documentAttachment = new DocumentUpload();
-                $documentAttachment->editor_variant_id = $editorVariantId;
+                $documentAttachment->editor_variant_id = 1;
                 $documentAttachment->file_path = $fileName;
                 $documentAttachment->save();
-                
             }
         //$editorVariant = EditorVariant::create($request->all() );
        
-        
         session()->flash('message',trans('mandantForm.success'));
         if( $request->has('save') ){
             $adressats = Adressat::all();
@@ -141,28 +169,40 @@ class DocumentController extends Controller
             $backButton = 'dokumente/'.$data->id.'/edit';
             return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
         }
-         
-            
+        $backButton = 'dokumente/pdf-upload/'.$data->id.'/edit';
+       
+         //return redirect()->action('DocumentController@anlegenRechteFreigabe',array($data->id, $data) );
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
+    
     
      /**
      * Display the specified resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function anlegenRechteFreigabe($id)
-    {
+    public function anlegenRechteFreigabe($id,$backButton=null)
+    {   
         $data = Document::find($id);
+        $backButton = '/dokumente/editor/'.$data->id.'/edit';
+        if($data->pdf_upload == true || $data->pdf_upload==1)
+            $backButton = '/dokumente/pdf-upload/'.$data->id.'/edit'; 
+        elseif( $data->pdf_upload == false &&  $data->document_type_id == 5 )  
+            $backButton = '/dokumente/dokumente-upload/'.$data->id.'/edit'; 
         $collections = array();
         $roles = Role::all();
+        //find variants
         $variants = EditorVariant::where('document_id',$data->id)->get();
         //
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
         $mandantUsersTable = MandantUser::whereIn('id',$mandantUserRoles)->pluck('user_id');
         $mandantUsers = User::whereIn('id',$mandantUsersTable)->get();
+        $mandants = Mandant::whereNull('deleted_at')->get();
+       
+        $documentMandats = DocumentMandant::where('document_id',$data->id)->get();
         
-        return view('dokumente.anlegenRechteFreigabe', compact('collections','mandantUsers','variants','roles','data') );
+        return view('dokumente.anlegenRechteFreigabe', compact('collections',
+        'mandants','mandantUsers','variants','roles','data','backButton') );
     }
     
     /**
@@ -172,7 +212,7 @@ class DocumentController extends Controller
      */
     public function saveRechteFreigabe(Request $request,$id)
     {
-        //dd($request->all() );
+        dd($request->all() );
         $data = Document::find($id);
         $collections = array();
         $approvalMandants = Mandant::all();
@@ -204,8 +244,12 @@ class DocumentController extends Controller
     public function edit($id)
     {
         $data = Document::find($id);
-        $data->date_expired = Carbon::parse($data->date_expired)->format('d.m.Y.');
-        $method = 'PATCH';
+        if($data == null)
+            return redirect('dokumente/create');
+            
+        if(isset($data->date_expired) && $data->date_expired !=null)
+            $data->date_expired = Carbon::parse($data->date_expired)->format('d.m.Y.');
+        $url = 'PATCH';
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
         $url = '';
         $documentTypes = DocumentType::all();
@@ -497,12 +541,16 @@ class DocumentController extends Controller
     
     private function moveUploaded($file,$folder,$model){
         //$filename = $image->getClientOriginalName();
-		$newName = str_slug($model->name).'-'.date("d-m-Y-H_i_s").'.'.$file->getClientOriginalExtension();
+		$newName = str_slug($model->name).'-'.date("d-m-Y-H:i:s").'-'.substr(time(),0,4).'.'.$file->getClientOriginalExtension();
 		$path = "$folder/$newName";
         $filename = $file->getClientOriginalName();
         $uploadSuccess = $file->move($folder, $newName );
       	\File::delete($folder .'/'. $filename);
       	return $newName;
+    }
+    
+    private function nextFormChecker($model,$linkMe=''){
+        
     }
     
 }

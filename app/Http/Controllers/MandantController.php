@@ -12,6 +12,7 @@ use App\Http\Requests\MandantRequest;
 
 use App\Mandant;
 use App\MandantInfo;
+use App\MandantUser;
 use App\User;
 use App\Role;
 
@@ -30,7 +31,16 @@ class MandantController extends Controller
     {
         $roles = Role::all();
         $mandants = Mandant::all();
-        return view('mandanten.administration', compact('roles','mandants') );
+        $users = User::all();
+        $mandantUsers = MandantUser::all();
+        
+        $unassignedUsers = array();
+        foreach($users as $user){
+            $result = MandantUser::where('user_id', $user->id)->get();
+            if($result->isEmpty()) $unassignedUsers[] = $user;
+        }
+        
+        return view('mandanten.administration', compact('roles','mandants','unassignedUsers') );
     }
     
     /**
@@ -68,9 +78,8 @@ class MandantController extends Controller
     {
         session()->flash('message',trans('mandantForm.success'));
         $data = Mandant::create( $request->all() );
-         
         
-         return redirect('mandanten/'.$data->id.'/edit')->with(['message'=>trans('mandantenForm.success')]);
+        return redirect('mandanten/'.$data->id.'/edit')->with(['message'=>trans('mandantenForm.success')]);
          
     }
 
