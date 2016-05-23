@@ -10,16 +10,16 @@
                 <a href="#"><i class="fa fa-files-o fa-fw"></i> {{ ucfirst( trans('navigation.document') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }} {{ trans('navigation.editor') }}</a>
+                        <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
                     </li>
+                    
                     <li>
-                        <a href="{{ url('dokumente/datei-upload') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }} {{ trans('navigation.upload') }}</a>
-                    </li>
-                    <li>
-                        <a href="#">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.document') }}
+                        <a href="#">{{ ucfirst( trans('navigation.iso') ) }} {{ ucfirst(trans('navigation.documents')) }}
                             <span class="fa arrow"></span>
                         </a>
+                    @if(!empty($isoCategories))
                         <ul class="nav nav-third-level">
+                            {{--
                             <li>
                                 <a href="{{ url('iso-dokumente/level-1') }}">Level 1</a>
                             </li>
@@ -43,20 +43,35 @@
                             <li>
                                 <a href="#">Third Level Item</a>
                             </li>
+                            --}}
+                            
+                            
+                            @foreach($isoCategories as $isoCategory)
+                                <li>
+                                    <a href="#">{{ $isoCategory->name }}</a>
+                                </li>
+                            @endforeach
                         </ul>
+                    @endif
                         <!-- /.nav-third-level -->
                     </li>
-                    <li>
-                        <a href="{{ url('dokumente/iso-dokumente') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
-                    </li>
+                    
                     <li>
                         <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }} {{ trans('navigation.qmr') }}</a>
                     </li>
+                    
                     <li>
-                        <a href="{{ url('dokumente/rundschreiben') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
+                        <!--<a href="{{ url('dokumente/rundschreiben-news') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}  {{ trans('navigation.news') }}</a>-->
+                        <a href="#">{{ ucfirst( trans('navigation.rundschreiben') ) }}  {{ trans('navigation.news') }}</a>
                     </li>
+                    
                     <li>
-                        <a href="{{ url('dokumente/rundschreiben-news') }}">{{ ucfirst( trans('navigation.vorlagendokument') ) }}  {{ trans('navigation.news') }}</a>
+                        <!--<a href="{{ url('dokumente/rundschreiben') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>-->
+                        <a href="#">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
+                    </li>
+                    
+                    <li>
+                        <a href="{{ url('dokumente/vorlagedokumente') }}">{{ ucfirst( trans('navigation.vorlagendokumente') ) }}</a>
                     </li>
 
                 </ul><!--End .nav-second-level -->

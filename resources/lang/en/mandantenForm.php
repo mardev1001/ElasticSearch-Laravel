@@ -51,6 +51,7 @@ return [
     'envWorkProtect' => 'Umwelt + Arbeitsschutz',
     'role' => 'Role',
     'user' => 'User',
+    'saved' => 'Mandant erfolgreich gespeichert.',
     
     /* Mandantenverwaltung*/
     'search' =>'Suche Mandant/Benutzer',

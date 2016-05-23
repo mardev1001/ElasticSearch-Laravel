@@ -19,6 +19,7 @@ class CreateMandantsTable extends Migration
             $table->string('mandant_number',10);  
             $table->boolean('rights_wiki');  
             $table->boolean('rights_admin');  
+            $table->boolean('active');  
             $table->string('logo');  
             $table->integer('mandant_id_hauptstelle');  
             $table->boolean('hauptstelle');  

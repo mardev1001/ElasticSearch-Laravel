@@ -18,6 +18,7 @@ use App\Document;
 use App\DocumentType;
 use App\DocumentMandant;
 use App\DocumentUpload;
+use App\DocumentApproval;
 use App\Role;
 use App\IsoCategory;
 use App\User;
@@ -212,15 +213,72 @@ class DocumentController extends Controller
      */
     public function saveRechteFreigabe(Request $request,$id)
     {
-        dd($request->all() );
-        $data = Document::find($id);
-        $collections = array();
-        $approvalMandants = Mandant::all();
-        $roles = Role::all();
-        $variants = EditorVariant::where('document_id',$data->id)->get();
+        $documentApproval = DocumentApproval::where('document_id',$id)->get();
+        $documentApprovalPluck = DocumentApproval::where('document_id',$id)->pluck('user_id');
+        //Process document approval users
+            $this->document->processOrSave($documentApproval,$documentApprovalPluck,$request->get('approval_users'),
+        'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('user_id'=>$request->get('approval_users') ) );
+         
+        //Process document approval users
+        if( in_array('Alle',$request->get('roles') ) ){
+            $document = Document::find($id);
+            $document->approval_all_roles = 1; 
+            $document-save();
+        }
+        //check if has variant
+        foreach($request->all() as $k => $v)
+            if (strpos($k, 'variant-') !== false){
+                $variantNumber = $this->document->variantNumber($k);
+                if( in_array('Alle',$request->get($k) ) ){
+                    $editorVariant = EditoVariantDocument::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                    $editorVariant->approval_all_mandants = 1; 
+                    $editorVariant-save();
+                }
+                else{
+                    $editorVariantId = EditoVariantDocument::where('document_id',$id)->where('variant_number',$variantNumber)->pluck('id');
+                    $documentMandats = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariantId)->get();
+                    $documentMandatsPluck = DocumentMandant::where('document_id',$id)
+                    ->where('editor_variant_id',$editorVariantId)->pluck('user_id');
+                    // var_dump('asd');
+                    foreach($k as $val){
+                        $this->document->processOrSave($editorVariant,$documentMandatsPluck,$request->get($k), 'DocumentMandant',
+                        array('document_id'=>$id,'editor_variant_id'=>$editorVariantId,'role_id'=>$val) ,
+                        array('document_id'=>$id,'editor_variant_id'=>$editorVariantId)  );
+                    }
+                    
+                }
+            }
+                
         
-        return view('dokumente.anlegenRechteFreigabe', compact('collections','variants','roles','approvalMandants',
-        'data') );
+        if( $request->has('fast_publish') ){
+            session()->flash('message', 'I will fast publish this' );
+            return redirect('/');
+        }
+        elseif( $request->has('ask_publishers') ){
+            session()->flash('message', 'I will ask someone to publish this' );
+            return redirect('/');
+        }
+        elseif( $request->has('save') ){
+            session()->flash('message', 'I will save this');
+            $collections = array();
+            $roles = Role::all();
+            //find variants
+            $variants = EditorVariant::where('document_id',$data->id)->get();
+            //
+            $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
+            $mandantUsersTable = MandantUser::whereIn('id',$mandantUserRoles)->pluck('user_id');
+            $mandantUsers = User::whereIn('id',$mandantUsersTable)->get();
+            $mandants = Mandant::whereNull('deleted_at')->get();
+           
+            $documentMandats = DocumentMandant::where('document_id',$data->id)->get();
+            return view('dokumente.anlegenRechteFreigabe', compact('collections',
+        'mandants','mandantUsers','variants','roles','data','backButton') );
+        }
+        else{
+            session()->flash('message', 'I will skip this');
+           return redirect('dokumente/rechte-und-freigabe/'.$id );        
+        }
+           
     }
     
 

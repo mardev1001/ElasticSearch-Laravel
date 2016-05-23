@@ -17,7 +17,7 @@ class Document extends Model
         'summary','date_published','date_modified','date_expired',
         'version_parent','document_group_id','iso_category_id',
         'show_name','adressat_id','betreff','document_replaced_id',
-        'date_approved','email_approval','approval_all_roles','approval_all_mandants',
+        'date_approved','email_approval','approval_all_roles',
         'approval_all_mandants','pdf_upload'
     ]; //whitelist
     

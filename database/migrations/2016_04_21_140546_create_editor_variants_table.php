@@ -18,6 +18,7 @@ class CreateEditorVariantsTable extends Migration
             $table->integer('variant_number')->unsigned();
             $table->integer('document_status_id')->unsigned();
             $table->text('inhalt');
+            $table->boolean('approval_all_mandants');
             $table->timestamps();
             $table->softDeletes();
         });

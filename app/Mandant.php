@@ -15,7 +15,7 @@ class Mandant extends Model
         'name','kurzname','mandant_number','rights_wiki',
         'rights_admin','logo','mandant_id_hauptstelle','hauptstelle',
         'adresszusatz','strasse','plz','hausnummer','ort','telefon',
-        'kurzwahl','fax','email','website','geschaftsfuhrer_history'
+        'kurzwahl','fax','email','website','geschaftsfuhrer_history','active'
     ]; //whitelist
     
     public function mandantInfo(){

@@ -6,6 +6,7 @@ use Illuminate\Contracts\View\View;
 use Request;
 
 use App\DocumentStatus;
+use App\IsoCategory;
 
 class FormViewComposer
 {
@@ -39,6 +40,7 @@ class FormViewComposer
         $gender = array($genderHerr,$genderFrau);
         $view->with('formWrapperData',$formWrapperData );
         $view->with('documentStatus', DocumentStatus::all() );
+        $view->with('isoCategories', IsoCategory::all() );
         $view->with('gender', $gender );
         $view->with('collections', array() );
         $view->with('counter', 0 );

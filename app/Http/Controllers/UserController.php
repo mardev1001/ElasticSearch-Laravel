@@ -160,7 +160,6 @@ class UserController extends Controller
      * Assign a mandant and roles for the user
      *
      * @param  \Illuminate\Http\Request $request
-     * @paraaram  int $id
      * @return \Illuminate\Http\Response
      */
     public function userMandantRoleAdd(Request $request)
@@ -180,7 +179,6 @@ class UserController extends Controller
      * Update mandant roles for the user
      *
      * @param  \Illuminate\Http\Request $request
-     * @paraaram  int $id
      * @return \Illuminate\Http\Response
      */
     public function userMandantRoleEdit(Request $request)
@@ -205,6 +203,19 @@ class UserController extends Controller
     }
 
     /**
+     * Activate or deactivate a user
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function userActivate(Request $request)
+    {
+        User::find($request->input('user_id'))->update(['active' => !$request->input('active')]);
+        return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
+    }
+    
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  int $id
@@ -214,8 +225,8 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
         $mandantUser = MandantUser::where('user_id', $id)->first();
-        $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->first();
-        $mandantUserRoles->delete();
+        $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->get();
+        foreach($mandantUserRoles as $mandantUserRole) $mandantUserRole->delete();
         $mandantUser->delete();
         $user->delete();
         

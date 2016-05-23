@@ -36,6 +36,7 @@ Route::group( array('middleware' => ['auth']), function(){
         
         Route::post('mandanten/generate-user-role', 'MandantController@generateUserRole');
         Route::post('mandanten/search', 'MandantController@search');
+        Route::patch('mandanten/activate', 'MandantController@mandantActivate');
         Route::resource('mandanten', 'MandantController');
         
         Route::get('benutzer/profile', 'UserController@profile');
@@ -43,6 +44,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('benutzer/role-transfer', 'UserController@userRoleTransfer');
         Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
         Route::patch('benutzer/roles-edit', 'UserController@userMandantRoleEdit');
+        Route::patch('benutzer/activate', 'UserController@userActivate');
         Route::resource('benutzer', 'UserController');
         
         Route::resource('rollen', 'RoleController');

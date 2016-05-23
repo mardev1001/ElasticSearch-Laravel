@@ -126,6 +126,19 @@ class MandantController extends Controller
         return back()->with(['message'=>trans('mandantenForm.error')]);
     }
 
+
+    /**
+     * Activate or deactivate a mandant
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function mandantActivate(Request $request)
+    {
+        Mandant::find($request->input('mandant_id'))->update(['active' => !(bool)$request->input('active')]);
+        return back()->with(['message'=>trans('mandantenForm.saved')]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -134,7 +147,12 @@ class MandantController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if($id!=1){
+            $mandant = Mandant::find($id);
+        }
+        
+        // dd($mandant);
+        return back()->with(['message'=>'Mandant kann nicht gelöscht werden.']);
     }
     
     /**

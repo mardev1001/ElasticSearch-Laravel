@@ -10,7 +10,7 @@ class EditorVariant extends Model
     use SoftDeletes;
     
     protected $guarded = []; //blacklist
-    protected $fillable = ['document_id','document_status_id','inhalt']; //whitelist
+    protected $fillable = ['document_id','document_status_id','inhalt','approval_all_mandants']; //whitelist
 
     public function documentUpload(){
         return $this->hasMany('App\DocumentUpload');

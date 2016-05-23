@@ -10,6 +10,7 @@ namespace App\Http\Repositories;
 use DB;
 
 use App\DocumentType;
+use App\DocumentApproval;
 
 class DocumentRepository
 {
@@ -65,6 +66,63 @@ class DocumentRepository
         }
         
         return $data;
+    }    
+    
+    /**
+     * Process save or update multiple select fiels
+     *
+     * @return bool
+     */
+    public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ){
+        $modelName = '\App\\'.$modelName;
+        if( count($collections) < 1 && count($pluckedCollection) < 1 ){
+            foreach($requests as $request){
+               $model = new $modelName();
+                foreach($fields as $k=>$field){
+                    if($field == 'inherit')
+                        $model->$k = $request;
+                    else    
+                        $model->$k = $field;
+                }
+                $model->save();
+            }
+        }
+        else{
+            //delete all where id not in RequestArray whereNotIn 
+           // $modelName::whereNotIn($notIn, $requests); 
+            $modelDelete = $modelName::where('id','>',0);
+            if( count($notIn) > 0 )
+                foreach($notIn as $n=>$in)
+                    $modelDelete->whereNotIn($n,$in);
+            
+            $modelDelete->delete();
+            foreach($requests as $request){
+               if( !is_array($pluckedCollection) )
+                $pluckedCollection = (array) $pluckedCollection;
+                if (  !in_array($request, $pluckedCollection)) {
+                    $model = new $modelName();
+                    foreach($fields as $k=>$field){
+                        if($field == 'inherit')
+                            $model->$k = $request;
+                        else    
+                            $model->$k = $field;
+                    }
+                    $model->save();
+                }
+            }
+        }
+        
+        return false;
+    }  
+    
+     /**
+     * Get variant number
+     *
+     * @return string $string
+     */
+    public function variantNumber($name){
+        $string = explode('-',$name);
+        return $string[1];
     }    
      
 }
