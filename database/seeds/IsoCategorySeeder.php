@@ -24,7 +24,8 @@ class IsoCategorySeeder extends Seeder
                 [
                     'iso_category_parent_id' => null,
                     'name' => 'Hauptkategorie',
-                    'active' => '1',
+                    'parent' => true,
+                    'active' => true,
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -32,7 +33,8 @@ class IsoCategorySeeder extends Seeder
                 [
                     'iso_category_parent_id' => 1,
                     'name' => 'Unterkategorie 1',
-                    'active' => '1',
+                    'parent' => false,
+                    'active' => true,
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -40,7 +42,8 @@ class IsoCategorySeeder extends Seeder
                 [
                     'iso_category_parent_id' => 1,
                     'name' => 'Unterkategorie 2',
-                    'active' => '1',
+                    'parent' => false,
+                    'active' => true,
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],

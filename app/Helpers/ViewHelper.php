@@ -144,10 +144,9 @@ class ViewHelper
      * @echo string 'selected'
      */
     static function setMultipleSelect( $userValues, $value, $key='id'){
-        
         foreach($userValues as $userValue){
             if($userValue->$key == $value )
-            echo 'selected';
+            echo 'selected ';
         }
      
     }

@@ -65447,6 +65447,9 @@ $(function() {
         }
 
     });
+    
+    // Sidebar navigation link click overrides
+    
 
 
 });
@@ -65462,7 +65465,9 @@ $( function() {
     });
     /*End Blank space fix for textareas*/
     
-    $('#side-menu').metisMenu();
+    $('#side-menu').metisMenu({
+        doubleTapToGo: true,
+    });
     
     $(".select").chosen({});
     

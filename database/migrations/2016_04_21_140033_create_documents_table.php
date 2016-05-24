@@ -19,7 +19,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('version');
             $table->string('name');
             $table->integer('owner_user_id')->unsigned()->nullable();//FK
-            // $table->integer('document_status_id')->unsigned();//FK
+            $table->integer('document_status_id')->unsigned()->default(1);//FK
             $table->string('search_tags');
             $table->text('summary');
             $table->timestamp('date_published');

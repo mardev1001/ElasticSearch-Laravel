@@ -15,11 +15,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-          //view()->composer('master', 'App\Http\ViewComposers\MasterViewComposer');
-          view()->composer('formWrapper', 'App\Http\ViewComposers\FormViewComposer');
-          
-          $isoCategories = IsoCategory::all();
-          view()->share(compact('isoCategories'));
+        //view()->composer('master', 'App\Http\ViewComposers\MasterViewComposer');
+        view()->composer('formWrapper', 'App\Http\ViewComposers\FormViewComposer');
+        
+        // Make categories available for all views
+        if(IsoCategory::all()){
+            $isoCategories = IsoCategory::all();
+            view()->share(compact('isoCategories'));
+        }
     }
 
     /**

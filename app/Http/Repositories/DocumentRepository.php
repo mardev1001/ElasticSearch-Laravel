@@ -73,9 +73,10 @@ class DocumentRepository
      *
      * @return bool
      */
-    public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ){
+    public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=null){
         $modelName = '\App\\'.$modelName;
         if( count($collections) < 1 && count($pluckedCollection) < 1 ){
+            // dd($fields);
             foreach($requests as $request){
                $model = new $modelName();
                 foreach($fields as $k=>$field){
@@ -84,22 +85,29 @@ class DocumentRepository
                     else    
                         $model->$k = $field;
                 }
+                
                 $model->save();
             }
         }
         else{
             //delete all where id not in RequestArray whereNotIn 
-           // $modelName::whereNotIn($notIn, $requests); 
+           // $modelName::whereNotIn($notIn, $requests); +
             $modelDelete = $modelName::where('id','>',0);
-            if( count($notIn) > 0 )
-                foreach($notIn as $n=>$in)
+            if( count($notIn) > 0 ){
+                             
+                foreach($notIn as $n=>$in){
+                            
                     $modelDelete->whereNotIn($n,$in);
+                }
+            }
             
             $modelDelete->delete();
+          
             foreach($requests as $request){
                if( !is_array($pluckedCollection) )
                 $pluckedCollection = (array) $pluckedCollection;
-                if (  !in_array($request, $pluckedCollection)) {
+                if ( !in_array($request, $pluckedCollection)) {
+                 
                     $model = new $modelName();
                     foreach($fields as $k=>$field){
                         if($field == 'inherit')
@@ -110,9 +118,10 @@ class DocumentRepository
                     $model->save();
                 }
             }
+            
         }
         
-        return false;
+        
     }  
     
      /**

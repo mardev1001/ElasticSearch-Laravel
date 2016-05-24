@@ -11,7 +11,7 @@ return [
     'dateExpired' => 'verfallsdatum',
     'isoCategory' => 'kategorie ISO Dokument',
     'showName' => 'namen anzeigen',
-    'adressat' => 'adressat_id',
-    'subject' => 'betreff',
+    'adressat' => 'Adressat',
+    'subject' => 'Betreff',
     'pdfUpload' => 'PDF upload',
 ];

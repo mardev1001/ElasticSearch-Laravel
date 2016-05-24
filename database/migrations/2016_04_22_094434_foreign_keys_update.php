@@ -13,9 +13,15 @@ class ForeignKeysUpdate extends Migration
     public function up()
     {
         Schema::table('documents', function (Blueprint $table) {
+            
             $table->foreign('document_type_id')
                 ->references('id')
                 ->on('document_types')
+                ->onDelete('cascade');
+                
+            $table->foreign('document_status_id')
+                ->references('id')
+                ->on('document_statuses')
                 ->onDelete('cascade');
 
             $table->foreign('user_id')
@@ -23,6 +29,17 @@ class ForeignKeysUpdate extends Migration
                 ->on('users')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
+
+            $table->foreign('iso_category_id')
+                ->references('id')
+                ->on('iso_categories')
+                ->onDelete('cascade');
+
+            $table->foreign('adressat_id')
+                ->references('id')
+                ->on('adressats')
+                ->onDelete('cascade');
+
         });
 
         Schema::table('mandant_users', function (Blueprint $table) {
@@ -89,11 +106,6 @@ class ForeignKeysUpdate extends Migration
             $table->foreign('document_id')
                 ->references('id')
                 ->on('documents')
-                ->onDelete('cascade');
-
-            $table->foreign('document_status_id')
-                ->references('id')
-                ->on('document_statuses')
                 ->onDelete('cascade');
         });
 

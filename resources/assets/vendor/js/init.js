@@ -9,7 +9,9 @@ $( function() {
     });
     /*End Blank space fix for textareas*/
     
-    $('#side-menu').metisMenu();
+    $('#side-menu').metisMenu({
+        doubleTapToGo: true,
+    });
     
     $(".select").chosen({});
     

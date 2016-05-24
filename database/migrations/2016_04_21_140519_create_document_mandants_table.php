@@ -16,8 +16,8 @@ class CreateDocumentMandantsTable extends Migration
             $table->increments('id');
             $table->integer('document_id')->unsigned(); //FK
             $table->integer('editor_variant_id')->unsigned();//FK 
-            $table->integer('mandant_id')->unsigned(); //FK
-            $table->integer('role_id')->unsigned(); //FK
+            $table->integer('mandant_id')->unsigned()->nullable(); //FK
+            $table->integer('role_id')->unsigned()->nullable(); //FK
             $table->timestamps();
             $table->softDeletes();
         });

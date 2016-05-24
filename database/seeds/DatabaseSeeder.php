@@ -18,5 +18,6 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
         $this->call(IsoCategorySeeder::class);
         $this->call(AdressatSeeder::class);
+        $this->call(DocumentSeeder::class);
     }
 }

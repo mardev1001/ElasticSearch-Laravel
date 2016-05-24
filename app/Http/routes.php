@@ -26,8 +26,11 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/statistik/{id}', 'DocumentController@documentStats');
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');
-        Route::post('document-upload', 'DocumentController@upload');
         
+        Route::get('dokumente/editor/{id}/edit', 'DocumentController@editDocumentEditor');
+        Route::post('editor', 'DocumentController@documentEditor');
+        Route::get('dokumente/dokumente-upload/{id}/edit', 'DocumentController@editDocumentUpload');
+        Route::post('document-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe');//document id
         Route::post('dokumente/rechte-und-freigabe/{id}', 'DocumentController@saveRechteFreigabe');
         Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');

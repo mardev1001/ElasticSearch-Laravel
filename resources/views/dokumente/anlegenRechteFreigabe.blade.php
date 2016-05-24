@@ -9,15 +9,23 @@
         'method' => 'POST',
         'class' => 'horizontal-form' ]) !!}
             <div class="col-xs-12">
-                {!! ViewHelper::setUserSelect($mandantUsers,'approval_users[]',$data,old('approval_users[]'),
-                trans('rightsRelease.release'), trans('rightsRelease.release'), true, array(), array(), array(), array('multiple') ) !!}
+                <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.release') }}" multiple>
+                    <option value="0"></option>
+                    @foreach($mandantUsers as $mandatUser)
+                    <option value="{{$mandatUser->id}}"
+                            {!! ViewHelper::setMultipleSelect($data->documentApprovals, $mandatUser->id, 'user_id') !!}
+                            >{{ $mandatUser->first_name }} {{ $mandatUser->last_name }}</option>
+                    @endforeach
+                </select>
+                {{-- ViewHelper::setUserSelect($mandantUsers,'approval_users[]',$data,old('approval_users[]'),
+                trans('rightsRelease.release'), trans('rightsRelease.release'), true, array(), array(), array(), array('multiple') ) --}}
                    
                 <div class="clearfix"></div>
                 <div class="row">
                     <!-- input box-->
                     <div class="col-xs-6 col-md-3">
                         <div class="form-group">
-                            {!! ViewHelper::setCheckbox('email',$data,old('email'),
+                            {!! ViewHelper::setCheckbox('email_approval',$data,old('email_approval'),
                             trans('rightsRelease.sendEmail') ) !!}
                         </div>   
                     </div><!--End input box-->
@@ -30,12 +38,23 @@
                     <div class="col-xs-12 col-md-6">
                            <div class="form-group">
                                 <select name="roles[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.roles') }}" multiple>
-                                    <option value="Alle">Alle</option>
-                                    @foreach($roles as $role)
-                                    <option value="{{$role->id}}"
-                                            {!! ViewHelper::setMultipleSelect($roles, $role->id, 'role_id') !!}
-                                            >{{ $role->name }}</option>
-                                    @endforeach
+                                    @if($data->approval_all_roles == true)
+                                        <option value="0"></option>
+                                        <option value="Alle" selected>Alle</option>
+                                        @foreach($roles as $role)
+                                        <option value="{{$role->id}}">{{ $role->name }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="0"></option>
+                                        <option value="Alle">Alle</option>
+                                        @foreach($roles as $role)
+                                        
+                                        <option value="{{$role->id}}"
+                                                {!! ViewHelper::setMultipleSelect($data->documentMandants, $role->id, 'role_id') !!}
+                                                >{{ $role->name }}</option>
+                                        @endforeach
+                                    @endif
+                                    
                                 </select>
                             </div>
                     </div>
@@ -43,24 +62,30 @@
                     <div class="clearfix"></div>
                     @if( count($variants) > 0)
                         @foreach( $variants as $k=>$variant) 
-                       
-                        @foreach( $variant->documentMantant($data->id, $variant->id) as $v )
-                         
-                        @endforeach
-                        
                         <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
                                     <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
+                                    
                                     <select name="variante-{{$k+1}}[]" class="form-control select" 
                                      data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" multiple>
+                                        @if($data->approval_all_roles == true)
+                                            <option value="0"></option>
+                                            <option value="Alle" selected>Alle</option>
+                                             @foreach( $mandants as $mandant)
+                                            <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
+                                            @endforeach
+                                        @else
+                                            <option value="0"></option>
+                                            <option value="Alle">Alle</option>
+                                        @foreach($mandants as $mandant)
+                                            <option value="{{$mandant->id}}"
+                                            {!! ViewHelper::setMultipleSelect($data->documentMandants, $mandant->id, 'mandant_id') !!}
+                                                >{{ $mandant->name }}</option>
+                                        @endforeach
+                                        @endif
                                         <option value="0"></option>
                                         <option value="Alle">Alle</option>
-                                        
-                                         @foreach( $mandants as $mandant)
-                                            <option value="{{$mandant->id}}"
-                                            {!! ViewHelper::setMultipleSelect($variant->documentMantant($data->id, $variant->id), $mandant->id, 'mandant_id') !!}
-                                            >{{ $mandant->name }}</option>
-                                        @endforeach
+                                       
                                     </select>
                                 </div>
                             </div>

@@ -19,37 +19,19 @@
                         </a>
                     @if(!empty($isoCategories))
                         <ul class="nav nav-third-level">
-                            {{--
-                            <li>
-                                <a href="{{ url('iso-dokumente/level-1') }}">Level 1</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('iso-dokumente/level-1') }}">Level 1</a>
-                            </li>
-                            <li>
-                                <a href="{{ url('iso-dokumente/level-1') }}">Level 1 <span class="fa arrow"></span></a>
-                                <ul class="nav nav-fourth-level">
-                                    <li>
-                                        <a href="{{ url('iso-dokumente/level-2') }}">Level 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('iso-dokumente/level-2') }}">Level 2</a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url('iso-dokumente/level-2') }}">Level 2</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="#">Third Level Item</a>
-                            </li>
-                            --}}
-                            
-                            
                             @foreach($isoCategories as $isoCategory)
+                                @if($isoCategory->parent)
                                 <li>
-                                    <a href="#">{{ $isoCategory->name }}</a>
+                                    <a href="{{ url('dokumente') }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-fourth-level">
+                                    @foreach($isoCategories as $isoCategoryChild)
+                                        @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
+                                            <li><a href="{{ url('dokumente') }}">{{$isoCategoryChild->name}}</a></li>
+                                        @endif
+                                    @endforeach
+                                    </ul>
                                 </li>
+                                @endif
                             @endforeach
                         </ul>
                     @endif

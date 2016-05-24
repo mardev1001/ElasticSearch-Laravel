@@ -140,14 +140,13 @@ class DocumentController extends Controller
         $data->save();
         $id = $data->id; 
         
-        RequestMerge::merge(['document_id' => $id,'variant_number' => 1,'document_status_id'=>1/*maybe auto*/] );
+        RequestMerge::merge(['document_id' => $id,'variant_number' => 1/*maybe auto*/] );
         //$inputs = $request->except(array('_token', '_method','save','next') );
         $editorVariantId = EditorVariant::where('document_id',$id)->first();
         if( $editorVariantId == null)
             $editorVariantId = new EditorVariant();
         $editorVariantId->document_id = $id;
         $editorVariantId->variant_number = 1;
-        $editorVariantId->document_status_id = 1;
         $editorVariantId->inhalt = $request->get('inhalt');
         $editorVariantId->save();
         $editorVariantId::where('document_id',$id)->first();
@@ -159,7 +158,6 @@ class DocumentController extends Controller
                 $documentAttachment->file_path = $fileName;
                 $documentAttachment->save();
             }
-        //$editorVariant = EditorVariant::create($request->all() );
        
         session()->flash('message',trans('mandantForm.success'));
         if( $request->has('save') ){
@@ -176,6 +174,130 @@ class DocumentController extends Controller
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
     
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function documentUpload(Request $request)
+    {
+        $model = Document::find($request->get('model_id'));
+        if($model == null){
+            return redirect('dokumente/create')->with( array('message'=>'No Document with that id') );
+        }
+            
+        $filename = '';
+        $path = $this->pdfPath;
+        //dd($request->get('model_id') );
+        if( $request->file() )
+            $fileNames = $this->fileUpload($model,$path,$request->file() );
+            
+           //not summary, it is inhalt + attachment
+         
+        $data = Document::findOrNew($request->get('model_id'));
+        $data->fill($request->all() );
+        $data->save();
+        $id = $data->id; 
+       
+        $counter = 0;
+        if( isset($fileNames) && count($fileNames) > 0)
+            foreach( $fileNames as $fileName ){
+                $counter++;
+                //Editor variant  upload
+                $editorVariantId = EditorVariant::where('document_id',$id)->where('variant_number',$counter)->first();
+                if( $editorVariantId == null)
+                    $editorVariantId = new EditorVariant();
+                $editorVariantId->document_id = $id;
+                $editorVariantId->variant_number = $counter;
+                $editorVariantId->document_status_id = 1;
+                $editorVariantId->inhalt = $request->get('inhalt');
+                $editorVariantId->save();
+                
+                //Upload documents
+                $documentAttachment = new DocumentUpload();
+                $documentAttachment->editor_variant_id = 1;
+                $documentAttachment->file_path = $fileName;
+                $documentAttachment->save();
+            }
+       
+        session()->flash('message',trans('mandantForm.success'));
+        if( $request->has('save') ){
+            $adressats = Adressat::all();
+            $setDocument = $this->document->setDocumentForm( $data->document_type_id, $data->pdf_upload  );
+            $url = $setDocument->url;
+            $form = $setDocument->form;
+            $backButton = 'dokumente/'.$data->id.'/edit';
+            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
+        }
+        return redirect('dokumente/rechte-und-freigabe/'.$id );
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function documentEditor(Request $request)
+    {
+        //dd($request->all() );
+        $model = Document::find($request->get('model_id'));
+        if($model == null){
+            
+            return redirect('dokumente/create')->with( array('message'=>'No Document with that id') );
+        }
+        
+         
+        $data = Document::findOrNew($request->get('model_id'));
+        $data->fill($request->all() );
+        $data->save();
+        $id = $data->id; 
+        
+        //check if has varianttfirstcount
+        foreach($request->all() as $k => $v)
+            if (strpos($k, 'variant-') !== false){
+              
+                $variantNumber = $this->document->variantNumber($k);
+                $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                 if( $editorVariant == null)
+                    $editorVariant = new EditorVariant();
+                $editorVariant->document_id = $id;
+                $editorVariant->variant_number = $variantNumber;
+                $editorVariant->inhalt = $v;
+                $editorVariant->save();
+            }
+        
+        
+       
+        session()->flash('message',trans('mandantForm.success'));
+        if( $request->has('save') ){
+            $adressats = Adressat::all();
+            $setDocument = $this->document->setDocumentForm( $data->document_type_id, $data->pdf_upload  );
+            $url = $setDocument->url;
+            $form = $setDocument->form;
+            $backButton = 'dokumente/'.$data->id.'/edit';
+            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
+        }
+        return redirect('dokumente/rechte-und-freigabe/'.$id );
+    }
+    
+      
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editDocumentEditor($id)
+    {
+        $adressats = Adressat::all();
+        $data = Document::find($id);
+        $backButton = '/dokumente/'.$data->id.'/edit';
+        $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload );
+        $url = $setDocument->url;
+        $form = $setDocument->form;
+        session()->flash('message',trans('mandantForm.success'));
+        return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
+    }
     
      /**
      * Display the specified resource.
@@ -213,68 +335,63 @@ class DocumentController extends Controller
      */
     public function saveRechteFreigabe(Request $request,$id)
     {
+        
+        $document = Document::find($id);
+        if( in_array('Alle',$request->get('roles') ) )
+            $document->approval_all_roles = 1; 
+        $document->email_approval = $request->get('email_approval');
+        $document->save();
+        
         $documentApproval = DocumentApproval::where('document_id',$id)->get();
         $documentApprovalPluck = DocumentApproval::where('document_id',$id)->pluck('user_id');
         //Process document approval users
+        
             $this->document->processOrSave($documentApproval,$documentApprovalPluck,$request->get('approval_users'),
         'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('user_id'=>$request->get('approval_users') ) );
-         
         //Process document approval users
-        if( in_array('Alle',$request->get('roles') ) ){
-            $document = Document::find($id);
-            $document->approval_all_roles = 1; 
-            $document-save();
-        }
+        
         //check if has variant
+        // dd($request->all());
         foreach($request->all() as $k => $v)
-            if (strpos($k, 'variant-') !== false){
+            if (strpos($k, 'variante-') !== false){
                 $variantNumber = $this->document->variantNumber($k);
                 if( in_array('Alle',$request->get($k) ) ){
-                    $editorVariant = EditoVariantDocument::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                    $editorVariant = EditoVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     $editorVariant->approval_all_mandants = 1; 
                     $editorVariant-save();
                 }
                 else{
-                    $editorVariantId = EditoVariantDocument::where('document_id',$id)->where('variant_number',$variantNumber)->pluck('id');
-                    $documentMandats = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariantId)->get();
-                    $documentMandatsPluck = DocumentMandant::where('document_id',$id)
-                    ->where('editor_variant_id',$editorVariantId)->pluck('user_id');
-                    // var_dump('asd');
-                    foreach($k as $val){
-                        $this->document->processOrSave($editorVariant,$documentMandatsPluck,$request->get($k), 'DocumentMandant',
-                        array('document_id'=>$id,'editor_variant_id'=>$editorVariantId,'role_id'=>$val) ,
-                        array('document_id'=>$id,'editor_variant_id'=>$editorVariantId)  );
+                    // dd($k);
+                    $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                   $editorVariantId = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first()->pluck('id');
+                   $documentMandats = DocumentMandant::where('document_id',$id)->whereIn('editor_variant_id',$editorVariantId)->get();
+                   $documentMandatsPluck = DocumentMandant::where('document_id',$id)
+                    ->where('editor_variant_id',$editorVariantId)->pluck('role_id');
+                    foreach($request->get('roles') as $val){
+                        $this->document->processOrSave($documentMandats,$documentMandatsPluck,$request->get($k), 'DocumentMandant',
+                        array('document_id'=>$id,'editor_variant_id'=>$editorVariant->id,'role_id'=>$val,) , //add mass variant users array() checl$request-get $K
+                        array('document_id'=>array($id),'editor_variant_id'=>array($editorVariant->id ))  );
                     }
-                    
+                    //$collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ){
                 }
             }
                 
         
         if( $request->has('fast_publish') ){
+            //save to Published documents
+            
             session()->flash('message', 'I will fast publish this' );
             return redirect('/');
         }
         elseif( $request->has('ask_publishers') ){
+            //change status to pedinging
+            //if send email-> send emails
+            //
             session()->flash('message', 'I will ask someone to publish this' );
             return redirect('/');
         }
-        elseif( $request->has('save') ){
-            session()->flash('message', 'I will save this');
-            $collections = array();
-            $roles = Role::all();
-            //find variants
-            $variants = EditorVariant::where('document_id',$data->id)->get();
-            //
-            $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
-            $mandantUsersTable = MandantUser::whereIn('id',$mandantUserRoles)->pluck('user_id');
-            $mandantUsers = User::whereIn('id',$mandantUsersTable)->get();
-            $mandants = Mandant::whereNull('deleted_at')->get();
-           
-            $documentMandats = DocumentMandant::where('document_id',$data->id)->get();
-            return view('dokumente.anlegenRechteFreigabe', compact('collections',
-        'mandants','mandantUsers','variants','roles','data','backButton') );
-        }
         else{
+            //just refresh the page
             session()->flash('message', 'I will skip this');
            return redirect('dokumente/rechte-und-freigabe/'.$id );        
         }
@@ -412,22 +529,6 @@ class DocumentController extends Controller
         return view('dokumente.rundschreibenPdf', compact('data','data2','counter') );
     }
     
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function documentUpload()
-    {
-        $counter = 0;
-       
-        $data = json_encode(  $this->document->generateDummyData('Anhag dokumente', array(),false ) );
-          
-        $comment = $this->document->generateDummyData('Lorem ipsum comment', array(), false );
-        $data2 = json_encode( $this->document->generateDummyData('Herr Engel - Betreff', $comment ) );
-        
-        return view('dokumente.documentUpload', compact('data','data2','counter') );
-    }
     
     /**
      * Display the specified resource.

@@ -10,13 +10,18 @@ class EditorVariant extends Model
     use SoftDeletes;
     
     protected $guarded = []; //blacklist
-    protected $fillable = ['document_id','document_status_id','inhalt','approval_all_mandants']; //whitelist
+    protected $fillable = ['document_id','variant_number','inhalt','approval_all_mandants']; //whitelist
 
     public function documentUpload(){
         return $this->hasMany('App\DocumentUpload');
     }
-
-    public function documentMantant($document_id,$variant_id){
-        return $this->hasMany('App\DocumentMandant')->whereIn($document_id,$variant_id);
-    }
+    
+    public function documentMandants(){
+        return $this->hasMany('App\DocumentMandant','editor_variant_id','id') ;
+    } 
+    
+    public function documentMandant(){
+        return $this->hasMany('App\DocumentMandant');
+       
+    } 
 }
