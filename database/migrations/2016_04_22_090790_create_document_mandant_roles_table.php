@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDocumentMandantsTable extends Migration
+class CreateDocumentMandantRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,12 +12,11 @@ class CreateDocumentMandantsTable extends Migration
      */
     public function up()
     {
-        Schema::create('document_mandants', function (Blueprint $table) {
+        Schema::create('document_mandant_roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('document_id')->unsigned(); //FK
-            $table->integer('editor_variant_id')->unsigned();//FK 
+            $table->integer('document_mandant_id')->unsigned();
+            $table->integer('role_id')->unsigned()->nullable();
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -29,7 +28,7 @@ class CreateDocumentMandantsTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::drop('document_mandants');
+        Schema::drop('document_mandant_roles');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

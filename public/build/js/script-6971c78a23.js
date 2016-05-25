@@ -65448,9 +65448,6 @@ $(function() {
 
     });
     
-    // Sidebar navigation link click overrides
-    
-
 
 });
 
@@ -65713,6 +65710,14 @@ $( function() {
       	if( $('.nav-tabs li.active').length < 1 ){
       	    $('.nav-tabs li').first().addClass('active'); 
       	    $('.tab-content .tab-pane').first().addClass('active'); 
+      	}
+      	else{
+      	    $('.nav-tabs li.active').removeClass('active');
+      	    $('.tab-content .tab-pane').removeClass('active');
+      	    //
+      	    $(document).find('a[href="#variation'+nextTab+'"]').closest('li').addClass('active');
+      	    $('#variation'+nextTab).addClass('active'); 
+      	    
       	}
        });
     /* End trigger tab creation*/

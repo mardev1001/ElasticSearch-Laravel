@@ -50,7 +50,7 @@
                                         @foreach($roles as $role)
                                         
                                         <option value="{{$role->id}}"
-                                                {!! ViewHelper::setMultipleSelect($data->documentMandants, $role->id, 'role_id') !!}
+                                                {!! ViewHelper::setComplexMultipleSelect($data->editorVariant,'documentMandantRoles', $role->id, 'role_id') !!}
                                                 >{{ $role->name }}</option>
                                         @endforeach
                                     @endif
@@ -79,13 +79,10 @@
                                             <option value="Alle">Alle</option>
                                         @foreach($mandants as $mandant)
                                             <option value="{{$mandant->id}}"
-                                            {!! ViewHelper::setMultipleSelect($data->documentMandants, $mandant->id, 'mandant_id') !!}
-                                                >{{ $mandant->name }}</option>
+                                            {!! ViewHelper::setComplexMultipleSelect($data->editorVariant,'documentMandantMandants', $mandant->id, 'mandant_id') !!}
+                                            >{{ $mandant->name }}</option>
                                         @endforeach
                                         @endif
-                                        <option value="0"></option>
-                                        <option value="Alle">Alle</option>
-                                       
                                     </select>
                                 </div>
                             </div>

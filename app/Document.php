@@ -30,7 +30,7 @@ class Document extends Model
     }
     
     public function documentAdressats(){
-        return $this->belongsTo('App\Adressat');
+        return $this->belongsTo('App\Adressat','adressat_id');
     }
     
     public function isoCategories(){
@@ -47,6 +47,12 @@ class Document extends Model
     
     public function documentMandants(){
         return $this->hasManyThrough('App\DocumentMandant','App\EditorVariant') ;
+    }
+    
+    
+    
+    public function documentMandantMandants(){
+        return $this->hasManyThrough('App\DocumentMandantMandant','App\DocumentMandant','App\EditorVariant') ;
     }
     
     public function documentCoauthors(){

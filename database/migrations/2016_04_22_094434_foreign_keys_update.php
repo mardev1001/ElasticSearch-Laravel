@@ -90,15 +90,21 @@ class ForeignKeysUpdate extends Migration
                 ->references('id')
                 ->on('editor_variants')
                 ->onDelete('cascade');
-
-            $table->foreign('mandant_id')
+        });
+        
+        Schema::table('document_mandant_mandants', function (Blueprint $table) {
+            $table->foreign('document_mandant_id')
                 ->references('id')
-                ->on('mandants')
+                ->on('document_mandants')
+                ->onUpdate('cascade')
                 ->onDelete('cascade');
-
-            $table->foreign('role_id')
+        });
+        
+        Schema::table('document_mandant_roles', function (Blueprint $table) {
+            $table->foreign('document_mandant_id')
                 ->references('id')
-                ->on('roles')
+                ->on('document_mandants')
+                ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
 

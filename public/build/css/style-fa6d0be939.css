@@ -16588,6 +16588,9 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
 html {
   overflow-y: hidden; }
 
+textarea {
+  max-width: 100%; }
+
 .navbar-toggle.big {
   margin-right: 0; }
 

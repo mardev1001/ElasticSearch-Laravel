@@ -9,11 +9,15 @@ namespace App\Http\Repositories;
 
 use DB;
 
+use App\Document;
 use App\DocumentType;
 use App\DocumentApproval;
 
 class DocumentRepository
 {
+    
+    
+    
    /**
     * Generate dummy data
     *
@@ -32,6 +36,72 @@ class DocumentRepository
             array_push($array, $data);
         }
          return $array;
+    }
+    
+   /**
+    * Generate documents treeview. If no array parameter is present, all documents are read.
+    *
+    * @param  object array $array
+    * @return object array $array
+    */
+    public function generateTreeview( $array = array(), $tags = false ){
+        
+        /*
+        // Bootstrap treeview JSON structure
+        {
+          text: "Node 1",
+          icon: "glyphicon glyphicon-stop",
+          selectedIcon: "glyphicon glyphicon-stop",
+          color: "#000000",
+          backColor: "#FFFFFF",
+          href: "#node-1",
+          selectable: true,
+          state: {
+            checked: true,
+            disabled: true,
+            expanded: true,
+            selected: true
+          },
+          tags: ['available'],
+          nodes: [
+            {},
+            ...
+          ]
+        }
+        */
+        
+        $treeView = array();
+        $documents = Document::all();
+        
+        if(sizeof($array)) $documents = $array;
+        
+        foreach ($documents as $document) {
+          
+            $node = new \StdClass();
+            $node->text = $document->name;
+            $node->icon = 'icon-parent';
+            $node->href = route('dokumente.show', $document->id);
+            
+            if(!$document->documentUploads->isEmpty()){
+                
+                $node->nodes = array();
+                if($tags) $node->tags = array(sizeof($document->documentUploads));  
+                
+                foreach ($document->documentUploads as $upload) {
+                    $subNode = new \StdClass();
+                    $subNode->text = basename($upload->file_path);
+                    $subNode->icon = 'fa fa-file-o';
+                    $subNode->href = "#".$upload->file_path;
+    
+                    array_push($node->nodes, $subNode);
+                }
+            }
+            
+            array_push($treeView, $node);
+        }
+        
+        return json_encode($treeView);
+        
     }
     
     /**
@@ -73,7 +143,7 @@ class DocumentRepository
      *
      * @return bool
      */
-    public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=null){
+    public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=false){
         $modelName = '\App\\'.$modelName;
         if( count($collections) < 1 && count($pluckedCollection) < 1 ){
             // dd($fields);
@@ -90,19 +160,19 @@ class DocumentRepository
             }
         }
         else{
-            //delete all where id not in RequestArray whereNotIn 
-           // $modelName::whereNotIn($notIn, $requests); +
+           \DB::enableQueryLog();
             $modelDelete = $modelName::where('id','>',0);
             if( count($notIn) > 0 ){
                              
                 foreach($notIn as $n=>$in){
-                            
-                    $modelDelete->whereNotIn($n,$in);
+                    $modelDelete->whereIn($n,$in);
                 }
             }
-            
             $modelDelete->delete();
-          
+            if($tester == true)
+            dd( \DB::getQueryLog() );
+            //dd($requests);
+            if( count($requests) > 0)
             foreach($requests as $request){
                if( !is_array($pluckedCollection) )
                 $pluckedCollection = (array) $pluckedCollection;

@@ -2,6 +2,10 @@ html{
     overflow-y: hidden;
 }
 
+textarea{
+    max-width: 100%;
+}
+
 .navbar-toggle.big{
     margin-right: 0;
 }

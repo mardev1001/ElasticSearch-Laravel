@@ -28,7 +28,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('document_group_id');
             $table->integer('iso_category_id')->unsigned();//FK
             $table->boolean('show_name');
-            $table->integer('adressat_id')->unsigned();//FK
+            $table->integer('adressat_id')->unsigned()->nullable();//FK
             $table->string('betreff');
             $table->integer('document_replaced_id');
             $table->timestamp('date_approved');

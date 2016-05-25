@@ -7,7 +7,7 @@
     <div class="col-lg-3"> 
         <div class="form-group">
             {!! ViewHelper::setSelect($adressats,'adressat_id',$data,old('adressat_id'),
-                    trans('documentForm.adressat'), trans('documentForm.adressat') ) !!}
+                    trans('documentForm.adressat'), trans('documentForm.adressat'), true ) !!}
         </div>   
     </div><!--End input box-->
     

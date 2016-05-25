@@ -146,8 +146,26 @@ class ViewHelper
     static function setMultipleSelect( $userValues, $value, $key='id'){
         foreach($userValues as $userValue){
             if($userValue->$key == $value )
-            echo 'selected ';
+                echo 'selected ';
         }
+     
+    }
+    
+    /**
+     * Generate and check input type textarea
+     *
+     * @param object array $userValues
+     * @param string $value
+     * @echo string 'selected'
+     */
+    static function setComplexMultipleSelect($collection,$relationship, $value, $key='id'){
+        foreach($collection as $col){
+            foreach($col->$relationship as $userValue){
+                if($userValue->$key == $value )
+                   echo 'selected ';
+            }    
+        }
+        
      
     }
     

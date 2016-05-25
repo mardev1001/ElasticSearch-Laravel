@@ -185,6 +185,14 @@ $( function() {
       	    $('.nav-tabs li').first().addClass('active'); 
       	    $('.tab-content .tab-pane').first().addClass('active'); 
       	}
+      	else{
+      	    $('.nav-tabs li.active').removeClass('active');
+      	    $('.tab-content .tab-pane').removeClass('active');
+      	    //
+      	    $(document).find('a[href="#variation'+nextTab+'"]').closest('li').addClass('active');
+      	    $('#variation'+nextTab).addClass('active'); 
+      	    
+      	}
        });
     /* End trigger tab creation*/
     

@@ -209,16 +209,53 @@ class DocumentSeeder extends Seeder
             `id` int(11),
             `document_id` int(11),
             `editor_variant_id` int(11),
-            `mandant_id` int(11),
-            `role_id` int(11)
+            
             */
             
             [
                 [
                     'document_id' => 2,
                     'editor_variant_id' => 2,
+                    
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+            ]
+        );
+        
+        DB::table('document_mandant_mandants')->insert(
+            
+            /*
+            `id` int(11),
+            `document_mandant_id` int(11),
+            `mandant_id` int(11)
+            */
+            
+            [
+                [
+                    'document_mandant_id' => 1,
                     'mandant_id' => 1,
-                    'role_id' => null, // if document->approval_all_roles == true
+                    
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+            ]
+        );
+        
+        DB::table('document_mandant_roles')->insert(
+            
+            /*
+            `id` int(11),
+            `document_mandant_id` int(11),
+            `role_id` int(11)
+            */
+            
+            [
+                [
+                    'document_mandant_id' => 1,
+                    'role_id' => null,
                     
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")

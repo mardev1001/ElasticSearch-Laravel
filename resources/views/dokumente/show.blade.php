@@ -1,0 +1,110 @@
+{{-- DOKUMENT DETAILS --}}
+
+@extends('master')
+
+@section('content')
+
+<h1 class="text-primary">{{ $document->documentType->name }} @if($document->pdf_upload) PDF @endif </h1>
+
+<div class="row">
+    <div class="col-lg-6">
+        <h3>{{ $document->name }} ({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{
+            trans('dokumentShow.status') }}: {{ $document->documentStatus->name }})</h3>
+    </div>
+    <div class="col-lg-6">
+        <div class="pull-right">
+            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary">{{ trans('dokumentShow.edit')
+                }}</a>
+            <button class="btn btn-primary">{{ trans('dokumentShow.deactivate') }}</button>
+            <button class="btn btn-primary">{{ trans('dokumentShow.new-version') }}</button>
+            <button class="btn btn-primary">{{ trans('dokumentShow.history') }}</button>
+            <button class="btn btn-primary"><i class="fa fa-star-o"></i> {{ trans('dokumentShow.favorite') }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div> <br>
+
+<div class="row">
+    <div class="col-xs-12">
+
+        <div class="header">
+            <h4>{{ trans('dokumentShow.adressat') }}: {{ $document->documentAdressats->name }}</h4>
+            <h4>{{ trans('dokumentShow.subject') }}: {{ $document->betreff }}</h4>
+        </div>
+        <br>
+        <div class="content">
+            @foreach($document->editorVariant as $variant)
+            <div class="variant-{{$variant->variant_number}}">
+                <strong>{{ trans('dokumentShow.variant') }} {{$variant->variant_number}}</strong><br>
+                {{ strip_tags($variant->inhalt) }}
+            </div>
+            <div class="clearfix"></div>
+            <br>
+            @endforeach
+        </div>
+        <div class="attachments">
+            <strong>{{ trans('dokumentShow.attachments') }}</strong><br>
+            @foreach($document->documentUploads as $attachment)
+                <a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>
+            @endforeach
+        </div>
+        
+    </div>
+</div>
+
+
+<div class="clearfix"></div> <br>
+
+<div class="row">
+    <div class="col-xs-12">
+        Kommentare kommen hier ...
+    </div>
+</div>
+
+<div class="clearfix"></div> <br>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="pull-right">
+            <button class="btn btn-primary" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+            <button class="btn btn-primary">{{ trans('dokumentShow.approve') }}</button>
+            <button class="btn btn-primary">{{ trans('dokumentShow.disapprove') }}</button>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div> <br>
+
+<div id="kommentieren" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">{{ trans('dokumentShow.commenting') }}</h4>
+            </div>
+
+            <form action="">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">{{ trans('dokumentShow.subject') }}</label>
+                        <input type="text" name="betreff" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">{{ trans('dokumentShow.comment') }}</label>
+                        <textarea name="comment" cols="30" rows="5" class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('dokumentShow.close') }}</button>
+                    <button type="button" class="btn btn-primary">{{ trans('dokumentShow.save') }}</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@stop

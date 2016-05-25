@@ -17,6 +17,8 @@ use DB;
 use App\Document;
 use App\DocumentType;
 use App\DocumentMandant;
+use App\DocumentMandantMandant;
+use App\DocumentMandantRole;
 use App\DocumentUpload;
 use App\DocumentApproval;
 use App\Role;
@@ -335,48 +337,70 @@ class DocumentController extends Controller
      */
     public function saveRechteFreigabe(Request $request,$id)
     {
-        
         $document = Document::find($id);
-        if( in_array('Alle',$request->get('roles') ) )
-            $document->approval_all_roles = 1; 
+        if( in_array('Alle',$request->get('roles') ) ){
+            
+        $document->approval_all_roles = 1; 
         $document->email_approval = $request->get('email_approval');
         $document->save();
         
+        //Process document approval users
+        
+        }
         $documentApproval = DocumentApproval::where('document_id',$id)->get();
         $documentApprovalPluck = DocumentApproval::where('document_id',$id)->pluck('user_id');
         //Process document approval users
         
             $this->document->processOrSave($documentApproval,$documentApprovalPluck,$request->get('approval_users'),
-        'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('user_id'=>$request->get('approval_users') ) );
-        //Process document approval users
-        
+        'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('user_id'=>$request->get('approval_users'),'document_id'=>array($id) ) );
+        //$collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=false){
         //check if has variant
-        // dd($request->all());
         foreach($request->all() as $k => $v)
             if (strpos($k, 'variante-') !== false){
                 $variantNumber = $this->document->variantNumber($k);
+                // dd($request->all() );
                 if( in_array('Alle',$request->get($k) ) ){
-                    $editorVariant = EditoVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                    $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     $editorVariant->approval_all_mandants = 1; 
                     $editorVariant-save();
                 }
                 else{
-                    // dd($k);
+                    //editorVariant insert/edit
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
-                   $editorVariantId = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first()->pluck('id');
-                   $documentMandats = DocumentMandant::where('document_id',$id)->whereIn('editor_variant_id',$editorVariantId)->get();
-                   $documentMandatsPluck = DocumentMandant::where('document_id',$id)
-                    ->where('editor_variant_id',$editorVariantId)->pluck('role_id');
-                    foreach($request->get('roles') as $val){
-                        $this->document->processOrSave($documentMandats,$documentMandatsPluck,$request->get($k), 'DocumentMandant',
-                        array('document_id'=>$id,'editor_variant_id'=>$editorVariant->id,'role_id'=>$val,) , //add mass variant users array() checl$request-get $K
-                        array('document_id'=>array($id),'editor_variant_id'=>array($editorVariant->id ))  );
-                    }
-                    //$collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ){
-                }
+                    
+                    /*Create DocumentManant */
+                    $documentMandant = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->first();
+                    if( count($documentMandant) < 1){
+                        $documentMandant = new DocumentMandant();
+                        $documentMandant->document_id = $id;
+                        $documentMandant->editor_variant_id = $editorVariant->id;
+                        $documentMandant->save();
+                         $documentMandant = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->first();
+                    } 
+                    /*End Create DocumentManant */
+                    // dd($documentMandant);
+                    /* Create DocumentManant mandant*/
+                    $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id',$documentMandant->id)->get();
+                    $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id',$documentMandant->id)->pluck('mandant_id');
+                    
+                    $this->document->processOrSave($documentMandantMandats,$documentMandantMandatsPluck,$request->get($k), 'DocumentMandantMandant',
+                        array('document_mandant_id'=>$documentMandant->id,'mandant_id'=>'inherit'),
+                        array('document_mandant_id'=>array($documentMandant->id) ,'mandant_id'=>$request->get($k) ) );
+                    //processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=null){
+                    /*End Create DocumentManant mandant*/
+                    
+                    /* Create DocumentManant roles*/
+                    $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->get();
+                    $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->pluck('role_id');
+                    $this->document->processOrSave($documentMandantMandats,$documentMandantMandatsPluck,$request->get('roles'), 'DocumentMandantRole',
+                        array('document_mandant_id'=>$documentMandant->id,'role_id'=>'inherit'),
+                        array('document_mandant_id'=>array($documentMandant->id) ,'role_id'=>$request->get('roles') ) );
+                    /*End Create DocumentManant roles*/
+                    
+                    
+                }//end else
             }
                 
-        
         if( $request->has('fast_publish') ){
             //save to Published documents
             
@@ -407,7 +431,8 @@ class DocumentController extends Controller
      */
     public function show($id)
     {
-        //
+        $document = Document::find($id);
+        return view('dokumente.show', compact('document') );
     }
 
     /**

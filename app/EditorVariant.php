@@ -22,6 +22,13 @@ class EditorVariant extends Model
     
     public function documentMandant(){
         return $this->hasMany('App\DocumentMandant');
-       
-    } 
+    }
+    
+    public function documentMandantRoles(){
+        return $this->hasManyThrough('App\DocumentMandantRole','App\DocumentMandant') ;
+    }
+    
+    public function documentMandantMandants(){
+        return $this->hasManyThrough('App\DocumentMandantMandant','App\DocumentMandant') ;
+    }
 }
