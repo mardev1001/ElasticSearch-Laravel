@@ -50,7 +50,6 @@ class Document extends Model
     }
     
     
-    
     public function documentMandantMandants(){
         return $this->hasManyThrough('App\DocumentMandantMandant','App\DocumentMandant','App\EditorVariant') ;
     }

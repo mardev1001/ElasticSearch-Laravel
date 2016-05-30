@@ -146,7 +146,7 @@ class DocumentRepository
     public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=false){
         $modelName = '\App\\'.$modelName;
         if( count($collections) < 1 && count($pluckedCollection) < 1 ){
-            // dd($fields);
+            //  dd($requests);
             foreach($requests as $request){
                $model = new $modelName();
                 foreach($fields as $k=>$field){
@@ -166,29 +166,42 @@ class DocumentRepository
                              
                 foreach($notIn as $n=>$in){
                     $modelDelete->whereIn($n,$in);
+                   /* if($tester == true){
+                        var_dump($n);
+                        var_dump($in);
+                        echo '<hr/>';
+                    }*/
+                        
                 }
             }
             $modelDelete->delete();
-            if($tester == true)
-            dd( \DB::getQueryLog() );
-            //dd($requests);
-            if( count($requests) > 0)
-            foreach($requests as $request){
-               if( !is_array($pluckedCollection) )
-                $pluckedCollection = (array) $pluckedCollection;
-                if ( !in_array($request, $pluckedCollection)) {
-                 
-                    $model = new $modelName();
-                    foreach($fields as $k=>$field){
-                        if($field == 'inherit')
-                            $model->$k = $request;
-                        else    
-                            $model->$k = $field;
-                    }
-                    $model->save();
-                }
+            if($tester == true){
+                // dd( \DB::getQueryLog() );
+                var_dump($requests);
+                //var_dump($modelDelete->get());
+                echo '<hr/>';
+                //echo '<hr/>';
             }
-            
+            if( count($requests) > 0){
+               
+                foreach($requests as $request){
+                   //if( !is_array($pluckedCollection) )
+                    //$pluckedCollection = (array) $pluckedCollection;
+                    //if ( !in_array($request, $pluckedCollection)) {
+                     
+                        $model = new $modelName();
+                        foreach($fields as $k=>$field){
+                            if($field == 'inherit')
+                                $model->$k = $request;
+                            else    
+                                $model->$k = $field;
+                        }
+                        $model->save();
+                    }
+                //}
+                /* if($tester == true)
+                    dd( \DB::getQueryLog() );*/
+            }
         }
         
         

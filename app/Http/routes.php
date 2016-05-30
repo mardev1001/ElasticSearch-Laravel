@@ -13,20 +13,17 @@ Route::auth();
 Route::group( array('middleware' => ['auth']), function(){
     
         Route::get('/', 'HomeController@index');
-    
-        Route::get('dokumente/iso-dokumente', 'DocumentController@isoDocument');
+        
         Route::get('dokumente/rundschreiben', 'DocumentController@rundschreiben');
         Route::get('dokumente/rundschreiben-pdf', 'DocumentController@rundschreibenPdf');
         Route::get('dokumente/rundschreiben-qmr', 'DocumentController@rundschreibenQmr');
         Route::get('dokumente/rundschreiben-news', 'DocumentController@rundschreibenNews');
         Route::get('dokumente/vorlagedokumente', 'DocumentController@documentTemplates');
         Route::get('dokumente/dokument-typen', 'DocumentController@documentType');
-        Route::get('dokumente/iso-kategorien', 'DocumentController@isoCategories');
-        //Route::get('dokumente/anlegen', 'DocumentController@anlegen');//editor
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/statistik/{id}', 'DocumentController@documentStats');
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');
-        
+        Route::get('iso-dokumente/{slug}', 'DocumentController@isoCategoriesBySlug');
         Route::get('dokumente/editor/{id}/edit', 'DocumentController@editDocumentEditor');
         Route::post('editor', 'DocumentController@documentEditor');
         Route::get('dokumente/dokumente-upload/{id}/edit', 'DocumentController@editDocumentUpload');
@@ -50,10 +47,10 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::patch('benutzer/activate', 'UserController@userActivate');
         Route::resource('benutzer', 'UserController');
         
+        Route::resource('iso-kategorien', 'IsoCategoryController');
         Route::resource('rollen', 'RoleController');
         Route::resource('adressaten', 'AdressatController');
         Route::resource('dokument-typen', 'DocumentTypeController');
-        Route::resource('iso-kategorien', 'IsoCategoryController');
         Route::resource('favoriten', 'FavoritesController');
         Route::resource('historie', 'HistoryController');
         Route::resource('statistik', 'StatsController');

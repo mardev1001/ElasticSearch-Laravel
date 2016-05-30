@@ -93,24 +93,7 @@ class DocumentController extends Controller
         $url = $setDocument->url;
         $form = $setDocument->form;
         $backButton = 'dokumente/'.$data->id.'/edit';
-        session()->flash('message',trans('mandantForm.success'));
-        return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
-    }
-    
-     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function editPdfUpload($id)
-    {
-        $adressats = Adressat::all();
-        $data = Document::find($id);
-        $backButton = '/dokumente/'.$data->id.'/edit';
-        $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload );
-        $url = $setDocument->url;
-        $form = $setDocument->form;
-        session()->flash('message',trans('mandantForm.success'));
+        session()->flash('message',trans('documentForm.documentCreateSuccess'));
         return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
     }
     
@@ -161,7 +144,7 @@ class DocumentController extends Controller
                 $documentAttachment->save();
             }
        
-        session()->flash('message',trans('mandantForm.success'));
+        session()->flash('message',trans('documentForm.documentPdfCreateSuccess'));
         if( $request->has('save') ){
             $adressats = Adressat::all();
             $setDocument = $this->document->setDocumentForm( $data->document_type_id, $data->pdf_upload  );
@@ -174,6 +157,23 @@ class DocumentController extends Controller
        
          //return redirect()->action('DocumentController@anlegenRechteFreigabe',array($data->id, $data) );
         return redirect('dokumente/rechte-und-freigabe/'.$id );
+    }
+    
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editPdfUpload($id)
+    {
+        $adressats = Adressat::all();
+        $data = Document::find($id);
+        $backButton = '/dokumente/'.$data->id.'/edit';
+        $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload );
+        $url = $setDocument->url;
+        $form = $setDocument->form;
+        session()->flash('message',trans('documentForm.documentPdfCreateSuccess'));
+        return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
     }
     
     /**
@@ -222,7 +222,7 @@ class DocumentController extends Controller
                 $documentAttachment->save();
             }
        
-        session()->flash('message',trans('mandantForm.success'));
+        session()->flash('message',trans('documentForm.documentUploadedCreateSuccess'));
         if( $request->has('save') ){
             $adressats = Adressat::all();
             $setDocument = $this->document->setDocumentForm( $data->document_type_id, $data->pdf_upload  );
@@ -271,7 +271,7 @@ class DocumentController extends Controller
         
         
        
-        session()->flash('message',trans('mandantForm.success'));
+        session()->flash('message',trans('documentForm.documentEditorCreateSuccess'));
         if( $request->has('save') ){
             $adressats = Adressat::all();
             $setDocument = $this->document->setDocumentForm( $data->document_type_id, $data->pdf_upload  );
@@ -297,7 +297,7 @@ class DocumentController extends Controller
         $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload );
         $url = $setDocument->url;
         $form = $setDocument->form;
-        session()->flash('message',trans('mandantForm.success'));
+        session()->flash('message',trans('documentForm.documentEditorEditSuccess'));
         return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
     }
     
@@ -338,27 +338,26 @@ class DocumentController extends Controller
     public function saveRechteFreigabe(Request $request,$id)
     {
         $document = Document::find($id);
-        if( in_array('Alle',$request->get('roles') ) ){
-            
-        $document->approval_all_roles = 1; 
-        $document->email_approval = $request->get('email_approval');
-        $document->save();
-        
-        //Process document approval users
-        
+        if($request->get('roles')!= null && in_array('Alle',$request->get('roles') ) ){
+            $document->approval_all_roles = 1; 
+            $document->email_approval = $request->get('email_approval');
+            $document->save();
+            //Process document approval users
         }
         $documentApproval = DocumentApproval::where('document_id',$id)->get();
         $documentApprovalPluck = DocumentApproval::where('document_id',$id)->pluck('user_id');
         //Process document approval users
         
-            $this->document->processOrSave($documentApproval,$documentApprovalPluck,$request->get('approval_users'),
-        'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('user_id'=>$request->get('approval_users'),'document_id'=>array($id) ) );
-        //$collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=false){
+        //do document approvals need soft delete
+        $this->document->processOrSave($documentApproval,$documentApprovalPluck,$request->get('approval_users'),
+        'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('document_id'=>array($id) ) );
+        
+        
         //check if has variant
         foreach($request->all() as $k => $v)
             if (strpos($k, 'variante-') !== false){
                 $variantNumber = $this->document->variantNumber($k);
-                // dd($request->all() );
+                
                 if( in_array('Alle',$request->get($k) ) ){
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     $editorVariant->approval_all_mandants = 1; 
@@ -369,54 +368,63 @@ class DocumentController extends Controller
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     
                     /*Create DocumentManant */
-                    $documentMandant = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->first();
-                    if( count($documentMandant) < 1){
+                    $documentMandants = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->get();
+                    if( count($documentMandants) < 1){
                         $documentMandant = new DocumentMandant();
                         $documentMandant->document_id = $id;
                         $documentMandant->editor_variant_id = $editorVariant->id;
                         $documentMandant->save();
-                         $documentMandant = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->first();
+                        $documentMandants = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->get();
                     } 
+                   
                     /*End Create DocumentManant */
-                    // dd($documentMandant);
-                    /* Create DocumentManant mandant*/
-                    $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id',$documentMandant->id)->get();
-                    $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id',$documentMandant->id)->pluck('mandant_id');
+                     //dd($documentMandant);
                     
-                    $this->document->processOrSave($documentMandantMandats,$documentMandantMandatsPluck,$request->get($k), 'DocumentMandantMandant',
-                        array('document_mandant_id'=>$documentMandant->id,'mandant_id'=>'inherit'),
-                        array('document_mandant_id'=>array($documentMandant->id) ,'mandant_id'=>$request->get($k) ) );
-                    //processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=null){
-                    /*End Create DocumentManant mandant*/
-                    
+                   
                     /* Create DocumentManant roles*/
-                    $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->get();
-                    $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->pluck('role_id');
-                    $this->document->processOrSave($documentMandantMandats,$documentMandantMandatsPluck,$request->get('roles'), 'DocumentMandantRole',
-                        array('document_mandant_id'=>$documentMandant->id,'role_id'=>'inherit'),
-                        array('document_mandant_id'=>array($documentMandant->id) ,'role_id'=>$request->get('roles') ) );
+                    foreach($documentMandants as $documentMandant){
+                        $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->get();
+                        $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->pluck('role_id');
+                        $this->document->processOrSave($documentMandantRoles,$documentMandantRolesPluck,$request->get('roles'), 'DocumentMandantRole',
+                            array('document_mandant_id'=>$documentMandant->id,'role_id'=>'inherit'),
+                            array('document_mandant_id'=>array($documentMandant->id) ) );
+                    }
                     /*End Create DocumentManant roles*/
                     
+                    /* Create DocumentManant mandant*/
+                    foreach($documentMandants as $documentMandant){
+                        
+                        $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id',$documentMandant->id)->get();
+                        $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id',$documentMandant->id)->pluck('mandant_id');
+                        
+                        //dd($request->get($k));
+                        //INSERTS LAST VALUES->check foreach!
+                        $this->document->processOrSave($documentMandantMandats,$documentMandantMandatsPluck,$request->get($k), 'DocumentMandantMandant',
+                            array('document_mandant_id'=>$documentMandant->id,'mandant_id'=>'inherit'),
+                            array('document_mandant_id'=>array($documentMandant->id)  ), true  );
+                    }
+                    /*End Create DocumentManant mandant*/
                     
                 }//end else
             }
                 
         if( $request->has('fast_publish') ){
             //save to Published documents
-            
-            session()->flash('message', 'I will fast publish this' );
+            // save document status as fast publish
+            session()->flash('message',trans('documentForm.fastPublished'));
             return redirect('/');
         }
         elseif( $request->has('ask_publishers') ){
             //change status to pedinging
-            //if send email-> send emails
-            //
-            session()->flash('message', 'I will ask someone to publish this' );
+            //save checkbox to dokumente
+            //if send email-> send emails || messages
+            
+            session()->flash('message',trans('documentForm.askPublishers'));
             return redirect('/');
         }
         else{
             //just refresh the page
-            session()->flash('message', 'I will skip this');
+            session()->flash('message',trans('documentForm.saved'));
            return redirect('dokumente/rechte-und-freigabe/'.$id );        
         }
            
@@ -459,7 +467,7 @@ class DocumentController extends Controller
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)
         ->whereNotIn('users.id',array(Auth::user()->id) )->get();
-         //dd($mandantUserRole2s);
+        session()->flash('message',trans('documentForm.documentEditSuccess'));
          
         return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments','mandantUsers') );
     }
@@ -527,14 +535,10 @@ class DocumentController extends Controller
      */
     public function rundschreiben()
     {
-        $counter = 0;
-       
-        $data = json_encode(  $this->document->generateDummyData('Anhag dokumente', array(),false ) );
-          
-        $comment = $this->document->generateDummyData('Lorem ipsum comment', array(), false );
-        $data2 = json_encode( $this->document->generateDummyData('Herr Engel - Betreff', $comment ) );
+        $rundschreibenAll = $this->document->generateTreeview(Document::where(['document_type_id' => 3])->orderBy('id', 'desc')->take(50)->get());
+        $rundschreibenMeine = $this->document->generateTreeview(Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 3])->orderBy('id', 'desc')->take(10)->get());
         
-        return view('dokumente.rundschreiben', compact('data','data2','counter') );
+        return view('dokumente.rundschreiben', compact('rundschreibenAll','rundschreibenMeine') );
     }
     
     /**
@@ -628,48 +632,6 @@ class DocumentController extends Controller
     }
     
     /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function isoCategories()
-    {
-        $counter = 0;
-        $document = $this->document->generateDummyData('document single');
-        $users = $this->document->generateDummyData('users', $document );
-        $data =  json_encode( $this->document->generateDummyData('dokumente', $users) );
-        
-        return view('dokumente.isoCategories', compact('data','counter') );
-    }
-    
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function anlegen()
-    {
-        $collections = array();
-        $counter = 0;
-        $document = $this->document->generateDummyData('document single');
-        $users = $this->document->generateDummyData('users', $document );
-        $data =  json_encode( $this->document->generateDummyData('dokumente', $users) );
-        
-        return view('dokumente.anlegen', compact('collections','data','counter') );
-    }
-    
-    /**
-    * Store a newly created resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
-    public function anlegenStore(Request $request)
-    {
-        
-    }
-    
-    /**
      * Display the statistics for the document with the passed ID parameter.
      *
      * @return \Illuminate\Http\Response
@@ -683,7 +645,7 @@ class DocumentController extends Controller
     /**
      * Display the history for the document with the passed ID parameter.
      *
-     * @return \Illuminate\Http\Response
+     * @return array $uploadedNames
      */
     public function documentHistory($id)
     {
@@ -694,10 +656,17 @@ class DocumentController extends Controller
         return view('dokumente.historie', compact('data') );
     }
     
+     /**
+     * Process files for upload
+     *
+     * @param DB Object(collection) $model
+     * @param string $path
+     * @param array $files
+     * @return \Illuminate\Http\Response
+     */
     private function fileUpload($model,$path,$files){
       
         $folder = $this->pdfPath.'/'.str_slug($model->name);
-        //$fullFolderPath = public_path().'/'.$folder;
         $uploadedNames = array();
         if ( ! \File::exists( $folder ) ) {
 			\File::makeDirectory( $folder, $mod=0777,true,true); 
@@ -723,6 +692,14 @@ class DocumentController extends Controller
 	
     }
     
+    /**
+     * Move files from temp folder and rename them
+     *
+     * @param file object $file
+     * @param string $folder
+     * @param DB object(collection) $model
+     * @return string $newName
+     */
     private function moveUploaded($file,$folder,$model){
         //$filename = $image->getClientOriginalName();
 		$newName = str_slug($model->name).'-'.date("d-m-Y-H:i:s").'-'.substr(time(),0,4).'.'.$file->getClientOriginalExtension();
@@ -733,7 +710,51 @@ class DocumentController extends Controller
       	return $newName;
     }
     
+    
+    /**
+     * Next form checker for 
+     *
+     * @return NON
+     */
     private function nextFormChecker($model,$linkMe=''){
+        
+    }
+    
+    /**
+     * Display the documents for the specified ISO category slug.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function isoCategoriesBySlug($slug)
+    {
+        
+        $documentsAll = Document::all();
+        $documentsIso = array();
+        $documentsBySlug = array();
+        
+        foreach ($documentsAll as $document) {
+            if($document->document_type_id == 4)
+                $documentsIso[] = $document;
+        }
+        
+        // dd($documentsIso);
+        
+        foreach ($documentsIso as $document) {
+            if($document->isoCategories()->where('slug', $slug)->first())
+                $documentsBySlug[] = $document;
+        }
+        
+        if(count($documentsIso))
+        $isoDocumentsAll = $this->document->generateTreeview($documentsIso);
+        else $isoDocumentsAll = null;
+        
+        if(count($documentsBySlug))
+        $isoDocumentsBySlug = $this->document->generateTreeview($documentsBySlug);
+        else $isoDocumentsBySlug = null;
+        
+        
+        return view('dokumente.isoDocument', compact('isoDocumentsAll', 'isoDocumentsBySlug') );
         
     }
     

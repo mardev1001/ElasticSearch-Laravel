@@ -1,0 +1,28 @@
+.login .page-title {
+  padding-top: 15px;
+  padding-bottom: 30px;
+}
+
+.login .panel {
+  border: none;
+  border-radius: 0;
+  background-color: $box-grey-wrapper;
+}
+
+.login .form-control {
+  font-family: $arial-font-family;
+  font-size: 12px;
+  line-height: 22px;
+  padding: 19px 15px;
+}
+
+.login .btn.btn-primary {
+  padding: 3.5px 48.5px;
+}
+
+.login .footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  min-height: 50px;
+}

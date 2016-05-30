@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DocumentApproval extends Model
 {
-    use SoftDeletes;
+    //use SoftDeletes;
     
     protected $guarded = []; //blacklist
     protected $fillable = ['user_id','document_id','date_approved','approved']; //whitelist

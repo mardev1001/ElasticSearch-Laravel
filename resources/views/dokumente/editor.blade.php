@@ -29,7 +29,7 @@
     <ul class="nav nav-tabs" id="tabs">
        @if( count($data->editorVariant) ) 
            @foreach( $data->editorVariant as $variant)
-               <li><a href="#variation{{$variant->variant_number}}" data-toggle="tab">Variation {{$variant->variant_number}}</a></li>
+               <li><a href="#variant{{$variant->variant_number}}" data-toggle="tab">Variation {{$variant->variant_number}}</a></li>
            @endforeach
        @endif
     </ul>
@@ -37,9 +37,9 @@
     <div class="tab-content">
        @if( count($data->editorVariant) ) 
            @foreach( $data->editorVariant as $variant)
-               <div class="tab-pane" id="variation{{$variant->variant_number}}">
-                   <div data-id="{{$variant->variant_number}}" 
-                    id="variant-{{$variant->variant_number}}" class="editable variant-{{$variant->variant_number}}" >{{{$variant->inhalt}}}
+               <div class="tab-pane" id="variant{{$variant->variant_number}}">
+                   <div id="variant-{{$variant->variant_number}}" class="editable variant-{{$variant->variant_number}}" data-id="{{$variant->variant_number}}">
+                       {{strip_tags($variant->inhalt)}}
                    </div>
                 </div>
            @endforeach
@@ -59,7 +59,7 @@
                $('.editable').each(function(){
               	    var id=$(this).data('id');
           	     tinymce.init({
-                        selector: '.variant-'+id,
+                        selector: '#variant-'+id,
                         skin_url: '/css/style'
                     });
               	}); 

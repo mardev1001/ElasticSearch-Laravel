@@ -11,6 +11,22 @@ class User extends Authenticatable
     use SoftDeletes;
     
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['username', 'username_sso', 'email', 'password', 'title', 'first_name', 'last_name', 'short_name', 'email_reciever', 'picture', 'active', 'active_from', 'active_to', 'birthday', 'created_by'];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+    
+    /**
      * Get the date format
      *
      * @param  string  $value
@@ -89,21 +105,6 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
     
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['username', 'username_sso', 'email', 'password', 'title', 'first_name', 'last_name', 'short_name', 'email_reciever', 'picture', 'active', 'active_from', 'active_to', 'birthday', 'created_by'];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
     
     public function countMandants(){
        return $this->hasMany('App\MandantUser','user_id','id');
@@ -111,6 +112,10 @@ class User extends Authenticatable
     
     public function mandantUsers(){
        return $this->hasMany('App\MandantUser','user_id','id');
+    }
+    
+    public function mandantRoles(){
+       return $this->hasManyThrough('App\MandantUserRole','App\MandantUser');
     }
    
     public function is($roleName)

@@ -18,7 +18,7 @@ return [
     'documents'             => 'dokumente',
     'kategorie'             => 'Kategorie',
     'kategorien'            => 'Kategorien',
-    'rundschreiben'         => 'runschreiben',
+    'rundschreiben'         => 'Rundschreiben',
     'qmr'                   => 'QMR',
     'news'                  => 'News',
     'iso'                   => 'ISO',
@@ -32,5 +32,6 @@ return [
     'types'                 => 'typen',
     'favorites'             => 'Favoriten',
     'search'                => 'Suche',
+    'advanced_search'       => 'Erweiterte Suche',
 
 ];

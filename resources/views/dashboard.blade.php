@@ -2,14 +2,23 @@
 
 @section('content')
 
-    <h1 class="text-primary">
-        Dashboard
-    </h1>
+    <div class="row">
+        <div class="col-xs-12 col-md-12 ">
+            <div class="fixed-row">
+                <div class="fixed-position ">
+                    <h1 class="page-title">
+                        Dashboard
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
 
     <div class="row">
         <div class="col-xs-12 col-md-6 ">
-            <div class="col-xs-12 bordered home">
-                <h4 class="text-info">Neue Dokumente/Rundschreiben</h3>
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Neue Dokumente/Rundschreiben</h1>
                 <div class="box home">
                     <div class="tree-view" data-selector="rundschreibenNeu">
                         <div class="rundschreibenNeu hide">
@@ -33,8 +42,8 @@
         </div>
     
         <div class="col-xs-12 col-md-6 ">
-            <div class="col-xs-12 bordered home">
-                <h4 class="text-info">Ersteller - Meine Rundschreiben</h3>
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Ersteller - Meine Rundschreiben</h1>
                 <div class="box home">
                     <div class="tree-view" data-selector="rundschreibenMeine">
                         <div class="rundschreibenMeine hide">
@@ -51,8 +60,8 @@
 
     <div class="row">
         <div class="col-xs-12 col-md-6 ">
-            <div class="col-xs-12 bordered home">
-                <h4 class="text-info">Neue Wiki-Einträge</h3>
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Neue Wiki-Einträge</h1>
                 <div class="box home">
                     <div class="tree-view" data-selector="wikiEntries">
                         <div class="wikiEntries hide">
@@ -68,8 +77,8 @@
         </div>
 
         <div class="col-xs-12 col-md-6 ">
-            <div class="col-xs-12 bordered home">
-                <h4 class="text-info">Ersteller - Meine Dokumente</h3>
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Ersteller - Meine Dokumente</h1>
                 <div class="box home">
                     <div class="tree-view" data-selector="documentsNew">
                         <div class="documentsNew hide">
@@ -87,8 +96,8 @@
     
     <div class="row">
         <div class="col-xs-12">
-            <div class="col-xs-12 bordered">
-                <h4 class="text-info">Neue Kommtare</h3>
+            <div class="col-xs-12 box-wrapper">
+               <h1 class="title">Neue Kommtare</h1>
                 <div class="tree-view" data-selector="commentsNew">
                     <div class="commentsNew hide">
                         {{ $commentsNew }}
@@ -102,8 +111,8 @@
 
     <div class="row">
         <div class="col-xs-12">
-            <div class="col-xs-12 bordered">
-                <h4 class="text-info">Meine letzten Kommentare</h3>
+            <div class="col-xs-12 box-wrapper">
+                <h1 class="title">Meine letzten Kommentare</h1>
                 <div class="tree-view" data-selector="commentsMy">
                     <div class="commentsMy hide">
                         {{ $commentsMy }}

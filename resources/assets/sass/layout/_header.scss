@@ -1,10 +1,44 @@
 .custom-search-form{
-    margin-top: 10px;
+    padding-top: 15px;
+    padding-left: 10px;
 }
 
-.navbar-toggle-big{
-    margin-top: 5px;
+.custom-search-form input.form-control {
+    padding: 19px 15px;
+    width: 280px;
+    color: $nav-grey;
+    border-color: $nav-grey;
 }
-.navbar-brand img{
-    max-height: 30px;
+
+nav.navbar.navbar-default.navbar-fixed-top {
+    padding-bottom: 10px;
+   /* background-color: transparent; */
+    background-color: #fff;
+    border: none !important;
 }
+.nav-brand {
+    display: block;
+    padding-top: 15px;
+}
+.nav.navbar-nav.icons a {
+    padding: 15px 5px 0 0;
+    text-transform: uppercase;
+    font-size: 8px;
+    color: #606060;
+
+}
+
+.nav-icon {
+    display: block;
+    width: 40px;
+    height: 40px;
+    background-repeat: no-repeat;
+}
+
+
+
+
+
+
+
+

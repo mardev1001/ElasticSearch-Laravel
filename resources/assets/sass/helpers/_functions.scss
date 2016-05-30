@@ -1,0 +1,14 @@
+/* icons - start */
+@each $nav-el in home, profil, logout, kontakt {
+  .icon-#{$nav-el} {
+    background: url('/img/icons/icon_#{$nav-el}.png') no-repeat;
+  }
+}
+
+@each $el in favorites, blocked, open, notread, read, notreleased, released, history, download, goto, comment, legend, arrow {
+  .icon-#{$el} {
+    background: url('/img/icons/icon_#{$el}.png') no-repeat;
+  }
+}
+
+/* icons - end */

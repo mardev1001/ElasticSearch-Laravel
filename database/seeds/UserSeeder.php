@@ -57,6 +57,20 @@ class UserSeeder extends Seeder
                 'active' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'email_reciever' => 1,
+                'email' => 'info@webbite.de',
+                'username' => 'info',
+                'username_sso' => 'info',
+                'password' => bcrypt('webbite123'),
+                'title' => 'Herr',
+                'short_name' => 'Max',
+                'first_name' => 'Max',
+                'last_name' => 'Mustermann',
+                'active' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
             ]
         ]
 
@@ -83,6 +97,13 @@ class UserSeeder extends Seeder
             [
                 'mandant_id' => 1,
                 'user_id' => 3,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+
+            ],
+            [
+                'mandant_id' => 1,
+                'user_id' => 4,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
 
@@ -121,6 +142,18 @@ class UserSeeder extends Seeder
             ],
             [
                 'mandant_user_id' => 3,
+                'role_id' => 10,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 4,
+                'role_id' => 8,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 4,
                 'role_id' => 10,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")

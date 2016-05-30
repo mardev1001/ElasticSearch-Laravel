@@ -3,7 +3,7 @@
         <h1 class="text-primary">
             {{ trans('controller.rightsRelease') }}
         </h1>
-
+                     
         {!! Form::open([
         'url' => 'dokumente/rechte-und-freigabe/'.$data->id,
         'method' => 'POST',
@@ -17,9 +17,7 @@
                             >{{ $mandatUser->first_name }} {{ $mandatUser->last_name }}</option>
                     @endforeach
                 </select>
-                {{-- ViewHelper::setUserSelect($mandantUsers,'approval_users[]',$data,old('approval_users[]'),
-                trans('rightsRelease.release'), trans('rightsRelease.release'), true, array(), array(), array(), array('multiple') ) --}}
-                   
+            
                 <div class="clearfix"></div>
                 <div class="row">
                     <!-- input box-->
@@ -37,6 +35,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
                            <div class="form-group">
+                              
                                 <select name="roles[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.roles') }}" multiple>
                                     @if($data->approval_all_roles == true)
                                         <option value="0"></option>
@@ -48,7 +47,6 @@
                                         <option value="0"></option>
                                         <option value="Alle">Alle</option>
                                         @foreach($roles as $role)
-                                        
                                         <option value="{{$role->id}}"
                                                 {!! ViewHelper::setComplexMultipleSelect($data->editorVariant,'documentMandantRoles', $role->id, 'role_id') !!}
                                                 >{{ $role->name }}</option>
@@ -72,16 +70,18 @@
                                             <option value="0"></option>
                                             <option value="Alle" selected>Alle</option>
                                              @foreach( $mandants as $mandant)
-                                            <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
+                                                <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
                                             @endforeach
                                         @else
                                             <option value="0"></option>
                                             <option value="Alle">Alle</option>
-                                        @foreach($mandants as $mandant)
-                                            <option value="{{$mandant->id}}"
-                                            {!! ViewHelper::setComplexMultipleSelect($data->editorVariant,'documentMandantMandants', $mandant->id, 'mandant_id') !!}
-                                            >{{ $mandant->name }}</option>
-                                        @endforeach
+                                            @foreach($mandants as $mandant)
+                                                <option value="{{$mandant->id}}"
+                                                     @foreach($data->editorVariant as $ev)
+                                                      {!! ViewHelper::setComplexMultipleSelect($ev,'documentMandantMandants', $mandant->id, 'mandant_id',true) !!}
+                                                     @endforeach
+                                               >{{ $mandant->name }}</option>
+                                            @endforeach
                                         @endif
                                     </select>
                                 </div>
@@ -98,10 +98,11 @@
             @if( isset($backButton) )
                 <a href="{{$backButton}}" class="btn btn-info"><span class="fa fa-chevron-left"></span> Zurück</a>
             @endif
-            
-            <button type="submit" class="btn btn-info" name="fast_publish">
-                <span class="fa fa-exclamation-triangle"></span>  {{ trans('rightsRelease.fastPublish') }}
-            </button>
+            @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8)
+                <button type="submit" class="btn btn-info" name="fast_publish">
+                    <span class="fa fa-exclamation-triangle"></span>  {{ trans('rightsRelease.fastPublish') }}
+                </button>
+            @endif
             <button type="submit" class="btn btn-primary"  name="ask_publishers">
                 <span class="fa fa-share"></span>  {{ trans('rightsRelease.share') }}
             </button>

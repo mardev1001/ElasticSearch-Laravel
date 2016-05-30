@@ -1,8 +1,17 @@
 @extends('master')
     @section('content')
-    <h1 class="text-primary">
-        {{  ucfirst( trans('controller.administration') ) }}
-    </h1>
+   <div class="row">
+        <div class="col-xs-12 col-md-12 ">
+            <div class="fixed-row">
+                <div class="fixed-position ">
+                    <h1 class="page-title">
+                        {{  ucfirst( trans('controller.administration') ) }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
     {!! Form::open([
            'url' => 'mandanten/search',
            'method' => 'POST',

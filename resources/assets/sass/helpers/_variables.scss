@@ -1,5 +1,5 @@
 /* Font family - start */
-@font-face {
+/*@font-face {
   font-family: 'Lato';
   src: url('../fonts/lato/lato-black.eot');
   src: url('../fonts/lato/lato-black.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-black.woff') format('woff'), url('../fonts/lato/lato-black.ttf') format('truetype'), url('../fonts/lato/lato-black.svg#latoblack') format('svg');
@@ -48,6 +48,12 @@
   font-weight: normal;
   font-style: normal;
 }
+*/
+@font-face {
+  font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
+  font-weight: normal;
+  font-style: normal;
+}
 /* Font family - end*/
 
 
@@ -81,23 +87,31 @@ $text-primary: $primary-color;
 $text-secondary: $secondary-color;
 $text-ivory: $third-color;
 
-
+$arial-font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
+$base-font-size: 14px;
+$h1-font-size: 40px;
+$h2-font-size: 24px;
 /* Colors variables - start */
+
+$primary-barney-color: #fff;
 
 $white-color: #fff;
 $black-color: #000;
 
 $body-background-color: #fff;
 $footer-background-color: #2f2f2f;
-$primary-barney-color: #a418c0;
-$primary-green-color: #5da112;
-$primary-gray-color: #9b9b9b;
-$primary-blue-color: #264eb3;
-$facebook-blue-color: #264eb3;
+$dark-blue: #0e1e6d;
+$grey: #606060;
+$nav-light-grey: #efefef;
+$nav-grey: #b6b6b6;
+$nav-blue-active: #0e1e6d;
+$box-grey-wrapper: #f4f4f4;
+
+$primary-btn-color: #394686;
 
 /* Select - color, style */
 
 /* Font - primary font family */
 
-$primary-font-family: $lato-font-family;
+$primary-font-family: $arial-font-family;
 

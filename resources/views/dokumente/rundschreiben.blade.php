@@ -1,68 +1,96 @@
+{{-- DOKUMENTE RUNDSCHREIBEN --}}
+
 @extends('master')
-    @section('content')
-        <h1 class="text-primary">
-            {{ trans('controller.rundschreiben') }}
-        </h1>
-        <div class="col-xs-12 col-md-6 box">
-            <h2>QMR 223 <small>({{ trans('rundschreiben.version') }}: 2 )</small> <small><b>{{ trans('rundschreiben.status') }}:</b> Veröffentlicht</small></h2>
-        </div>
-        <div class="col-xs-12 col-md-6 box">
-            
-                <a href="#" class="btn btn-primary"><span class="fa fa-edit"></span> {{ trans('rundschreiben.edit') }}</a> 
-                
-                <a href="#" class="btn btn-danger"><span class="fa fa-trash"></span> {{ trans('rundschreiben.delete') }}</a>
-            
-                <a href="#" class="btn btn-info"><span class="fa fa-files-o"></span> {{ trans('rundschreiben.newVersion') }}</a>
-           
-                <a href="#" class="btn btn-info"><span class="fa fa-history"></span> {{ trans('rundschreiben.history') }}</a>
-          
-                <a href="#" class="btn btn-info"><span class="fa fa-star"></span> {{ trans('rundschreiben.favorite') }}</a>
-        </div>
-        <div class="clearfix"></div>
-         <div class="col-xs-12 col-md-12 box">
-             <h3>Betreff </h3>
-             <h4>Headline</h4>
-             <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-             labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. 
-             Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, 
-             consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam 
-             voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
-             est Lorem ipsum dolor sit amet.
-             </p>
-         </div>
-        
-        <div class="col-xs-12 col-md-6 box">
-            <div class="tree-view" data-selector="test">
-             <div  class="test hide" >{{$data}}</div>
-            </div>
-        </div>
-        
-        
-        <div class="clearfix"></div>
-        <br/>
-            
-      
-        <div class="col-xs-12 col-md-12 box">
-            <h4>{{ trans('rundschreiben.userComments')}} 
-            <span class="pull-right">{!! ViewHelper::setCheckbox('deletedComments', $data, old('deletedComments'), trans('rundschreiben.deletedComments'), trans('rundschreiben.deletedComments'), false) !!}
-             </span>
-            </h4>
-            
-            <div class="tree-view" data-selector="test2">
-                <div class="test2 hide">{{$data2}}</div>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        <br/>
-         <div class="col-xs-12 col-md-6 box">
-            
-                <a href="#" class="btn btn-primary"><span class="fa fa-file-pdf-o"></span> {{ trans('rundschreiben.pdf') }}</a> 
-            
-                <a href="#" class="btn btn-primary"><span class="fa fa-comment-o"></span>  {{ trans('rundschreiben.comment') }}</a>
-           
-                <a href="#" class="btn btn-primary"><span class="fa fa-share-alt"></span>  {{ trans('rundschreiben.release') }}</a>
-          
-                <a href="#" class="btn btn-danger"><span class="fa fa-share-alt-square"></span> {{ trans('rundschreiben.noRelease') }}</a>
-        </div>
-    @stop
+
+@section('content')
+
+<h1 class="text-primary">Rundschreiben</h1>
+
+<div class="clearfix"></div> <br>
+
+<div class="row">
     
+    <div class="col-xs-12">
+        <div class="col-xs-12 bordered">
+            
+            <h4 class="text-info">Meine Rundschreiben</h3>
+            
+            <div class="box home">
+                <div class="tree-view" data-selector="rundschreibenMeine">
+                    <div class="rundschreibenMeine hide">
+                        {{ $rundschreibenMeine }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <ul class="pagination">
+                    <li><a href="#" aria-label="Next"><span aria-hidden="true">«</span></a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+<div class="clearfix"></div> <br>
+
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <form action="" method="GET">
+            <div class="col-lg-6">
+                <div class="input-group">
+                    {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
+                        </button>
+                    </span>
+                </div>   
+            </div>
+       </form>
+    </div>
+</div>
+
+<div class="clearfix"></div> <br>
+
+<div class="row">
+    
+    <div class="col-xs-12">
+        <div class="col-xs-12 bordered">
+            
+            <h4 class="text-info">Alle Rundschreiben</h3>
+            
+            <div class="box home">
+                <div class="tree-view" data-selector="rundschreibenMeine">
+                    <div class="rundschreibenMeine hide">
+                        {{ $rundschreibenAll }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <ul class="pagination">
+                    <li><a href="#" aria-label="Next"><span aria-hidden="true">«</span></a></li>
+                    <li class="active"><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                </ul>
+            </div>
+            
+        </div>
+    </div>
+    
+</div>
+
+<div class="clearfix"></div> <br>
+
+@stop

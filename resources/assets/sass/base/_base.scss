@@ -4,20 +4,6 @@
 /*Font import - start*/
 
 @font-face {
-  font-family: 'Lato';
-  src: url('../fonts/lato/lato-light.eot');
-  src: url('../fonts/lato/lato-light.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-light.woff') format('woff'), url('../fonts/lato/lato-light.ttf') format('truetype'), url('../fonts/lato/lato-light.svg#latolight') format('svg');
-  font-weight: 300;
-  font-style: normal;
-}
-@font-face {
-  font-family: 'Lato';
-  src: url('../fonts/lato/lato-regular.eot');
-  src: url('../fonts/lato/lato-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/lato/lato-regular.woff') format('woff'), url('../fonts/lato/lato-regular.ttf') format('truetype'), url('../fonts/lato/lato-regular.svg#latoregular') format('svg');
-  font-weight: normal;
-  font-style: normal;
-}
-@font-face {
   font-family: "Flat-UI-Icons";
   src: url('../fonts/flat-ui-icons-regular.eot');
   src: url('../fonts/flat-ui-icons-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/flat-ui-icons-regular.woff') format('woff'), url('../fonts/flat-ui-icons-regular.ttf') format('truetype'), url('../fonts/flat-ui-icons-regular.svg#flat-ui-icons-regular') format('svg');
@@ -29,19 +15,20 @@ html,
 body{
 	
 	font-size: $base-font-size;
-	background-color: $body-background-color;
 	overflow-y: scroll;
-	font-family: $lato-font-family;
+	font-family: $arial-font-family;
+	background-color: transparent !important;
+
 }
 
 h1{
 	font-size: $h1-font-size;
-	color: $primary-barney-color;
+	color: $dark-blue;
 }
 
 h2{
 	font-size: $h2-font-size;
-	color: $primary-green-color;
+	color: $dark-blue;
 }
 
 p{
@@ -61,51 +48,24 @@ a:hover{
 }
 
 /* Buttons - start */
-
-.green-btn{
-    height: 70px;
-    width: 100%;
-    color: #fff;
-    background-color: $primary-green-color;
-    text-align: center;
-    font-size: 20px;
-    border-radius: 0;
-    line-height: 62px;
-    vertical-align: middle;
+.btn {
+    cursor: pointer!important;
+    height: 25px;
 }
 
-.blue-btn{
-    height: 70px;
-    width: 100%;
-    color: #fff;
-    background-color: $facebook-blue-color;
-    font-size: 20px;
-    border-radius: 0;
-    font-family: 'Roboto', sans-serif;
-    line-height: 62px;
-    vertical-align: middle;
+.btn.btn-primary {
+    background-color: $primary-btn-color;
+    height: 25px;
+    padding: 8px 16px;
+    font-family: $arial-font-family;
+    font-size: 12px;
+    line-height: 16px;
+    border: none;
 }
 
-.barney-btn{
-    height: 70px;
-    width: 100%;
-    color: #fff;
-    background-color: $primary-barney-color;
-    font-size: 20px;
-    border-radius: 0;
-    font-family: 'Roboto', sans-serif;
-    line-height: 62px;
-    vertical-align: middle;
-}
-
-.btn:hover{
-	color: $white-color;
-}
-
-.phone-btn{
-	background-image: url('../../img/icons/phone-icon.png');
-	background-position: right 28px center;
-	background-repeat: no-repeat;
+.btn.btn-primary:hover, .btn.btn-primary:focus {
+    background-color: $primary-btn-color;
+    border: none;
 }
 
 /* Buttons - end */

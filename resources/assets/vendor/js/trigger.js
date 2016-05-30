@@ -166,8 +166,9 @@ $( function() {
            	nextTab = $(this).closest('.parent-tabs').find('.nav-tabs li').size()+1,
            	prevHTML = '';
            	//Check if content exists to prevent undefined error
-           	if( $('.variant-'+prevNumber).length )
-                prevHTML = tinymce.get('variant-'+prevNumber).getContent();
+           	if( $('#variant-'+prevNumber).length ){
+           	    prevHTML = tinymce.get('variant-'+prevNumber).getContent();
+           	}
                 
       	// create the tab
       	$('<li><a href="#variation'+nextTab+'" data-toggle="tab">Variation '+nextTab+'</a></li>').appendTo('#tabs');

@@ -1,5 +1,20 @@
 <div class="navbar-default sidebar" role="navigation">
-    <div class="sidebar-nav navbar-collapse">
+     <div class="">
+        <button type="button" id="nav-btn" class="navbar-toggle big hidden-xs" title="Navi Ein-/Ausblenden">
+            <span class="sr-only">Navi Ein-/Ausblenden</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+
+        <!--    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Navi Ein-/Ausblenden</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button> -->
+    </div>
+    <div class="sidebar-nav navbar-collapse" id="nav-collapse">
         <ul class="nav" id="side-menu">
 
             <li>
@@ -22,11 +37,11 @@
                             @foreach($isoCategories as $isoCategory)
                                 @if($isoCategory->parent)
                                 <li>
-                                    <a href="{{ url('dokumente') }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                    <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
                                     <ul class="nav nav-fourth-level">
                                     @foreach($isoCategories as $isoCategoryChild)
                                         @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
-                                            <li><a href="{{ url('dokumente') }}">{{$isoCategoryChild->name}}</a></li>
+                                            <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
                                         @endif
                                     @endforeach
                                     </ul>
@@ -48,8 +63,7 @@
                     </li>
                     
                     <li>
-                        <!--<a href="{{ url('dokumente/rundschreiben') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>-->
-                        <a href="#">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
+                        <a href="{{ url('dokumente/rundschreiben') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
                     </li>
                     
                     <li>
@@ -90,22 +104,6 @@
                 </ul><!--End .nav-second-level -->
             </li><!-- End menu item -->
 
-            {{--
-            <li class="">
-                <a href="#"><i class="fa fa-users fa-fw"></i> {{ ucfirst(trans('navigation.benutzerverwaltung')) }}<span
-                            class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a href="{{ url('benutzer') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
-                    </li>
-
-                    <li>
-                        <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
-                    </li>
-                </ul><!--End .nav-second-level -->
-            </li><!-- End menu item -->
-            --}}
-
             <li class="">
                 <a href="#">
                     <i class="fa fa-cogs fa-fw"></i> {{ ucfirst( trans('navigation.redaktion') )}} {{ ucfirst( trans('navigation.verwaltung') )}}
@@ -126,7 +124,61 @@
                     </li>
                 </ul><!--End .nav-second-level -->
             </li><!-- End menu item -->
+            
+            <li class="legend"> <!-- legend - start -->
+                <span class="legend-text">Legende</span>
+                <span id="btn-legend" class="icon-legend pull-right"></span>
+            </li> <!-- legend - end -->
+            <div class="legend-wrapper legend">
+                <ul class="legend-ul nav">
+                    <li>
+                        <span class="legend-text">Neuestes Dokument</span>
+                        <span class="legend-icons icon-favorites "></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Nicht Freigegeben</span>
+                        <span class="legend-icons icon-blocked"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Freigegeben</span>
+                        <span class="legend-icons icon-open"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Ungelesen</span>
+                        <span class="legend-icons icon-notread "></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Gelesen</span>
+                        <span class="legend-icons icon-read"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Unveröffentlicht</span>
+                        <span class="legend-icons icon-notreleased"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Veröffentlicht</span>
+                        <span class="legend-icons icon-released"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Historie vorhanden</span>
+                        <span class="legend-icons icon-history"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Download</span>
+                        <span class="legend-icons icon-download"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Link</span>
+                        <span class="legend-icons icon-goto"></span>
+                    </li>
+                    <li>
+                        <span class="legend-text">Kommentar</span>
+                        <span class="legend-icons icon-comment"></span>
+                    </li>
 
+                </ul><!--End .nav-second-level -->
+            </div>
+            <div class="clearfix"></div>
         </ul>
     </div>
     <!-- /.sidebar-collapse -->

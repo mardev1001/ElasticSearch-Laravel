@@ -19,7 +19,7 @@ class CreateDocumentApprovalsTable extends Migration
             $table->timestamp('date_approved');
             $table->boolean('approved');
             $table->timestamps();
-            $table->softDeletes();
+            //$table->softDeletes();
             
             $table->foreign('user_id')
                   ->references('id')

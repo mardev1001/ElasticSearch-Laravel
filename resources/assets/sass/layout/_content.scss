@@ -15,3 +15,44 @@
 .panel-heading span .btn{
     margin-top:-8px;
 }
+#page-wrapper {
+    padding: 0 5px !important;
+    margin-right: 10px !important;
+    border: none !important;
+    background-color: transparent !important;
+}
+.fixed-row {
+    margin-top: 85px;
+    padding-bottom: 65px;
+}
+.fixed-position {
+    position: fixed !important;
+    background-color: #fff; 
+    z-index: 999;
+    width: 72%;
+}
+.container-fluid {
+    padding-right: 0px !important;
+    padding-left: 63px !important;
+}
+
+.box-wrapper {
+    padding: 15px;
+    background-color: $box-grey-wrapper;
+}
+
+h1.page-title {
+    font-size: 40px;
+    line-height: 22px;
+    font-weight: bold;
+    margin-top: 5px;
+}
+.title {
+    font-size: 24px;
+    text-transform: uppercase;
+    line-height: 22px;
+    font-weight: bold;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    margin: 0;
+}

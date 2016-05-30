@@ -158,15 +158,29 @@ class ViewHelper
      * @param string $value
      * @echo string 'selected'
      */
-    static function setComplexMultipleSelect($collection,$relationship, $value, $key='id'){
-        foreach($collection as $col){
-            foreach($col->$relationship as $userValue){
-                if($userValue->$key == $value )
-                   echo 'selected ';
-            }    
+    static function setComplexMultipleSelect($collection,$relationship, $value, $key='id',$oneLessForeach=false){
+        if($oneLessForeach == false){
+            if( count($collection) )
+            foreach($collection as $col){
+                foreach($col->$relationship as $userValue){
+                    if( $userValue->$key == $value )
+                       echo 'selected ';
+                }  
+            }
+            
         }
-        
-     
+        else{
+            if( count($collection->$relationship) > 0 ){
+                //  dd($collection->$relationship);
+                foreach($collection->$relationship as $cr){
+                    // var_dump($cr->$key);
+                     if( $cr->$key == $value )
+                        echo 'selected '.$cr->$key;
+                     else
+                        echo 'not selected '.$cr->$key;
+                }
+            }
+        }
     }
     
     /**

@@ -13,11 +13,10 @@
     </div>
     <div class="col-lg-6">
         <div class="pull-right">
-            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary">{{ trans('dokumentShow.edit')
-                }}</a>
-            <button class="btn btn-primary">{{ trans('dokumentShow.deactivate') }}</button>
-            <button class="btn btn-primary">{{ trans('dokumentShow.new-version') }}</button>
-            <button class="btn btn-primary">{{ trans('dokumentShow.history') }}</button>
+            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary"><i class="fa fa-edit"></i> {{ trans('dokumentShow.edit')}} </a>
+            <button class="btn btn-primary"><i class="fa fa-power-off"></i> {{ trans('dokumentShow.deactivate') }}</button>
+            <button class="btn btn-primary"><i class="fa fa-files-o"></i> {{ trans('dokumentShow.new-version') }}</button>
+            <button class="btn btn-primary"><i class="fa fa-history"></i> {{ trans('dokumentShow.history') }}</button>
             <button class="btn btn-primary"><i class="fa fa-star-o"></i> {{ trans('dokumentShow.favorite') }}</button>
         </div>
     </div>
@@ -43,12 +42,15 @@
             <br>
             @endforeach
         </div>
+        
+        @if(count($document->documentUploads))
         <div class="attachments">
             <strong>{{ trans('dokumentShow.attachments') }}</strong><br>
             @foreach($document->documentUploads as $attachment)
                 <a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>
             @endforeach
         </div>
+        @endif
         
     </div>
 </div>
@@ -67,9 +69,9 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="pull-right">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
-            <button class="btn btn-primary">{{ trans('dokumentShow.approve') }}</button>
-            <button class="btn btn-primary">{{ trans('dokumentShow.disapprove') }}</button>
+            <button class="btn btn-primary" data-toggle="modal" data-target="#kommentieren"><i class="fa fa-comment-o"></i> {{ trans('dokumentShow.commenting') }}</button>
+            <button class="btn btn-primary"><i class="fa fa-check"></i> {{ trans('dokumentShow.approve') }}</button>
+            <button class="btn btn-primary"><i class="fa fa-times"></i> {{ trans('dokumentShow.disapprove') }}</button>
         </div>
     </div>
 </div>
