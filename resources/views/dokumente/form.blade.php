@@ -1,8 +1,10 @@
 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
 
+<div class="row">
+
 <!-- input box-->
 <div class="col-lg-3"> 
-    <div class="form-group">
+    <div class="form-group document-type-select">
         {!! ViewHelper::setSelect($documentTypes,'document_type_id',$data,old('document_type_id'),
                 trans('documentForm.documentType'), trans('documentForm.type'),true ) !!}
     </div>   
@@ -15,7 +17,6 @@
                trans('documentForm.documentName') , true  ) !!}
     </div>   
 </div><!--End input box-->
-
 
 <!-- input box-->
 <div class="col-lg-3"> 
@@ -34,6 +35,14 @@
 </div><!--End input box-->
 
 <!-- input box-->
+<div class="col-lg-3 iso-category-select"> 
+    <div class="form-group">
+        {!! ViewHelper::setSelect($isoDocuments,'iso_category_id',$data,old('iso_category_id'),
+                trans('documentForm.isoCategory'), trans('documentForm.isoCategory') ) !!}
+    </div>   
+</div><!--End input box-->
+
+<!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
         {!! ViewHelper::setInput('search_tags',$data,old('search_tags'),trans('documentForm.searchTags') , 
@@ -41,31 +50,27 @@
     </div>   
 </div><!--End input box-->
 
-
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
-        {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished') ) !!}
-    </div>   
-</div><!--End input box-->
-
-
-<!-- input box-->
-<div class="col-lg-3"> 
-    <div class="form-group">
-        {!! ViewHelper::setInput('date_expired',$data,old('date_expired'),trans('documentForm.dateExpired') , 
-               trans('documentForm.dateExpired') , true ,'text', ['datetimepicker'] ) !!}
+        {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
     </div>   
 </div><!--End input box-->
 
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
-        {!! ViewHelper::setSelect($isoDocuments,'iso_category_id',$data,old('iso_category_id'),
-                trans('documentForm.isoCategory'), trans('documentForm.isoCategory') ) !!}
+        {!! ViewHelper::setInput('date_expired',$data,old('date_expired'), trans('documentForm.dateExpired') , trans('documentForm.dateExpired') , true ,'text', ['datetimepicker'] ) !!}
     </div>   
 </div><!--End input box-->
 
+<!-- input box-->
+<div class="col-lg-3 pdf-checkbox"> 
+    <div class="form-group">
+        <br>
+        {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
+    </div>   
+</div><!--End input box-->
 
 <!-- input box-->
 <div class="col-lg-12">
@@ -74,12 +79,6 @@
     </div>   
 </div><!--End input box-->  
 
-<!-- input box-->
-<div class="col-lg-3"> 
-    <div class="form-group">
-        {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
-    </div>   
-</div><!--End input box-->
+</div>
 
-<div class="clearfix"></div>
-<br/>
+<div class="clearfix"></div> <br/>

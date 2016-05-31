@@ -34,7 +34,7 @@ class User extends Authenticatable
      */
     public function getBirthdayAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y.');
+        return Carbon::parse($value)->format('d.m.Y');
     }
     
     
@@ -46,7 +46,7 @@ class User extends Authenticatable
      */
     public function getActiveFromAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y.');
+        return Carbon::parse($value)->format('d.m.Y');
     }
     
     
@@ -58,7 +58,7 @@ class User extends Authenticatable
      */
     public function getActiveToAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y.');
+        return Carbon::parse($value)->format('d.m.Y');
     }
     
     /**

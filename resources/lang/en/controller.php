@@ -12,6 +12,7 @@ return [
     'favorites' => 'Meine Favoriten',
     'mandantenverwaltung' => 'Mandantenverwaltung',
     'qmr' => 'Rundschreiben QMR',
+    'attachment' => 'Dokumente anlegen -  Anhänge',
     'isoDocument' => 'ISO DOKUMENTE - Übersicht',
     'rundschreiben' => 'Rundschreiben',
     'rundschreiben' => 'Rundschreiben',

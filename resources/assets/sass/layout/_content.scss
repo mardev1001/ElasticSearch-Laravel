@@ -1,19 +1,20 @@
 .container-fluid.first{
     min-height: 95vh;
     padding-bottom: 30px;
+    margin-top: 85px;
 }
 .panel-heading a:not(.no-arrow):after {
     font-family:'Glyphicons Halflings';
     content:"\e114";
     float: left;
-    color: white;
+    color: $nav-grey;
     margin-right: 10px;
 }
 .panel-heading a.collapsed:not(.no-arrow):after {
     content:"\e080";
 }
 .panel-heading span .btn{
-    margin-top:-8px;
+    margin-top:-4px;
 }
 #page-wrapper {
     padding: 0 5px !important;
@@ -22,14 +23,14 @@
     background-color: transparent !important;
 }
 .fixed-row {
-    margin-top: 85px;
+    margin-top: 0;
     padding-bottom: 65px;
 }
 .fixed-position {
     position: fixed !important;
     background-color: #fff; 
     z-index: 999;
-    width: 72%;
+    width: 78%;
 }
 .container-fluid {
     padding-right: 0px !important;
@@ -42,12 +43,15 @@
 }
 
 h1.page-title {
+    color: $dark-blue;
     font-size: 40px;
     line-height: 22px;
     font-weight: bold;
     margin-top: 5px;
 }
 .title {
+    font-family: $arial-font-family;
+    color: $dark-blue;
     font-size: 24px;
     text-transform: uppercase;
     line-height: 22px;
@@ -56,3 +60,34 @@ h1.page-title {
     padding-bottom: 15px;
     margin: 0;
 }
+
+.form-buttons {
+    padding: 0;
+}
+
+.form-group .checkbox {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.custom-input-group-btn {
+    display: block;
+    margin-top: 15px;
+}
+
+.box-wrapper .node-:not(.node-disabled):hover {
+    background-color: $white-color;
+}
+
+#wrapper .panel-primary {
+    border: none;
+}
+#wrapper .panel-primary > .panel-heading {
+    background-color: $box-grey-wrapper;
+    border: none;
+    font-family: $arial-font-family;
+    font-weight: bold;
+    color: $dark-blue;
+    text-transform: uppercase;
+}
+

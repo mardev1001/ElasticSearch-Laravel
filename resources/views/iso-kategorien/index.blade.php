@@ -4,7 +4,18 @@
 
 @section('content')
 
-<h1 class="text-primary">{{ trans('isoKategorienForm.iso') }} {{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.management') }}</h1>
+<div class="row">
+    <div class="col-xs-12 col-md-12 ">
+        <div class="fixed-row">
+            <div class="fixed-position ">
+                <h1 class="page-title">
+                    {{ trans('isoKategorienForm.iso') }} {{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.management') }}
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
 
 <fieldset class="form-group">
     
@@ -57,7 +68,7 @@
                 @foreach($isoCategories as $isoCategory)
                <tr>
                    {!! Form::open(['route' => ['iso-kategorien.update', 'iso-kategorien' => $isoCategory->id], 'method' => 'PATCH']) !!}
-                    <td class="col-xs-5">
+                    <td class="col-xs-5 vertical-center">
                          <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $isoCategory->name }}" required/>
                     </td>
                     <td class="col-xs-4 vertical-center">

@@ -72,7 +72,40 @@ $(function() {
 
     });
     
+
+    // Hide or show PDF upload checkbox 
+
+    // if($(".document-type-select .select").val() == 3)
+    //     $('.pdf-checkbox').show();
+    // else
+    //     $('.pdf-checkbox').hide();
     
+    // $('.document-type-select .select').chosen().change(function(event){
+    //     if(event.target == this){
+    //         // console.log($(this).val());
+    //         if($(this).val() == 3)
+    //             $('.pdf-checkbox').show();
+    //         else
+    //             $('.pdf-checkbox').hide();
+    //     }
+    // });
+
+    // Hide or show ISO category selection based on selected value
     
+    if($(".document-type-select .select").val() == 4)
+        $('.iso-category-select').show();
+    else
+        $('.iso-category-select').hide();
+    
+    $('.document-type-select .select').chosen().change(function(event){
+        if(event.target == this){
+            // console.log($(this).val());
+            if($(this).val() == 4) 
+                $('.iso-category-select').show();
+            else
+                $('.iso-category-select').hide();
+        }
+    });
+
 
 });

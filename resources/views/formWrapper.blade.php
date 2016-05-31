@@ -1,8 +1,18 @@
 @extends('master')
     @section('content') 
-    <h1 class="text-primary">
-        {{ $formWrapperData->buttonMethod }} {{ $formWrapperData->title }}
-    </h1>
+      <div class="row">
+        <div class="col-xs-12 col-md-12 ">
+            <div class="fixed-row">
+                <div class="fixed-position ">
+                    <h1 class="page-title">
+                         {{ $formWrapperData->buttonMethod }} {{ $formWrapperData->title }}
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+   
     <!--CreateMandantInfosTable
      <form action="{{$formWrapperData->controller.$formWrapperData->formUrl}}"
         method="{{$formWrapperData->method}}"

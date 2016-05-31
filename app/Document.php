@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,6 +21,45 @@ class Document extends Model
         'date_approved','email_approval','approval_all_roles',
         'approval_all_mandants','pdf_upload'
     ]; //whitelist
+    
+     
+    public function getDatePublishedAttribute($value)
+    {
+        return Carbon::parse($value)->format('d.m.Y');
+    }
+    
+    public function setDatePublishedAttribute($value)
+    {
+        $this->attributes['date_published'] = Carbon::parse($value);
+    }
+     
+    public function getDateExpiredAttribute($value)
+    {
+        return Carbon::parse($value)->format('d.m.Y');
+    }
+    
+    public function setDateExpiredAttribute($value)
+    {
+        $this->attributes['date_expired'] = Carbon::parse($value);
+    }
+    
+    public function setAdressatIdAttribute($value){
+        if($value == null)
+            $this->attributes['adressat_id'] = null; 
+        elseif($value == "null" || empty($value) )
+            $this->attributes['adressat_id'] = null; 
+        else
+            $this->attributes['adressat_id'] = $value;
+    }
+    
+    public function setIsoCategoryIdAttribute($value){
+        if($value == null)
+            $this->attributes['iso_category_id'] = null; 
+        elseif($value == "null" || !empty($value) )
+            $this->attributes['iso_category_id'] = null; 
+        else
+            $this->attributes['iso_category_id'] = $value;
+    }
     
     public function documentType(){
         return $this->belongsTo('App\DocumentType');

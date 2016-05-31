@@ -25,5 +25,6 @@ return [
     'approve' => 'Freigeben',
     'disapprove' => 'Ablehnen',
     'attachments' => 'Anhänge',
+    'content' => 'Inhalte',
     
 ];

@@ -4,7 +4,18 @@
 
 @section('content')
 
-<h1 class="text-primary">{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.types') }} {{ trans('dokumentTypenForm.management') }}</h1>
+<div class="row">
+    <div class="col-xs-12 col-md-12 ">
+        <div class="fixed-row">
+            <div class="fixed-position ">
+                <h1 class="page-title">
+                   {{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.types') }} {{ trans('dokumentTypenForm.management') }}
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
 
 <fieldset class="form-group">
     

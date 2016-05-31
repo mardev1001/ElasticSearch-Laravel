@@ -8,6 +8,7 @@
            
         <!-- input box-->
         <div class="col-xs-3 col-lg-3">
+            <br>
             {!! ViewHelper::setCheckbox('hauptstelle',$data,old('hauptstelle'),trans('mandantenForm.hauptstelle')
             , false, array('trigger-inputs'), array(' data-first="mandatenNumber" ','data-second="mandanten" ' ) ) !!}
         </div><!--End input box-->

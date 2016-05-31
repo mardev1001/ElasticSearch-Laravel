@@ -44,6 +44,7 @@ class IsoCategoryController extends Controller
         if($request->has('category_id')) $isoCategory->iso_category_parent_id = $request->input('category_id');
         $isoCategory->parent = $request->has('parent');
         $isoCategory->name = $request->input('name');
+        $isoCategory->slug = str_slug($isoCategory->name);
         $isoCategory->active = true;
         $isoCategory->save();
         return back()->with('message', 'ISO Kategorie erfolgreich gespeichert.');
@@ -93,6 +94,7 @@ class IsoCategoryController extends Controller
         } 
         
         $isoCategory->name = $request->input('name');
+        $isoCategory->slug = str_slug($isoCategory->name);
         $isoCategory->save();
         
         return back()->with('message', 'ISO Kategorie erfolgreich aktualisiert.');

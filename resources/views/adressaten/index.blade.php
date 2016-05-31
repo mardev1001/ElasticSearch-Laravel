@@ -4,20 +4,31 @@
 
 @section('content') 
 
-<h1 class="text-primary">{{ trans('adressatenForm.adressats') }} {{ trans('adressatenForm.management') }}</h1>
+<div class="row">
+    <div class="col-xs-12 col-md-12 ">
+        <div class="fixed-row">
+            <div class="fixed-position ">
+                <h1 class="page-title">
+                    {{ trans('adressatenForm.adressats') }} {{ trans('adressatenForm.management') }}
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
 
 <fieldset class="form-group">
     
-    <h4>{{ trans('adressatenForm.adressat') }} {{ trans('adressatenForm.add') }}</h4>
+    <h4 class="title">{{ trans('adressatenForm.adressat') }} {{ trans('adressatenForm.add') }}</h4>
     
     <div class="row">
         <!-- input box-->
         <div class="col-lg-6"> 
             {!! Form::open(['route' => 'adressaten.store']) !!}
-            <div class="form-inline">
+            <div class="">
                 <label> {{ trans('adressatenForm.name') }} <i class="fa fa-asterisk text-info"></i></label>
                 <input type="text" class="form-control" name="name" placeholder="{{ trans('adressatenForm.name') }}" required/>
-                <button class="btn btn-primary"> {{ trans('adressatenForm.add') }} </button>
+                <div class="custom-input-group-btn"><button class="btn btn-primary"> {{ trans('adressatenForm.add') }} </button></div>
             </div>
             {!! Form::close() !!}
         </div><!--End input box-->

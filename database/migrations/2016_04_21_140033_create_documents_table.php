@@ -26,7 +26,7 @@ class CreateDocumentsTable extends Migration
             $table->timestamp('date_expired');
             $table->integer('version_parent');
             $table->integer('document_group_id');
-            $table->integer('iso_category_id')->unsigned();//FK
+            $table->integer('iso_category_id')->unsigned()->nullable();//FK
             $table->boolean('show_name');
             $table->integer('adressat_id')->unsigned()->nullable();//FK
             $table->string('betreff');

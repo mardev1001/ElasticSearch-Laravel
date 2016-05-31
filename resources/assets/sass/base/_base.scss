@@ -51,21 +51,22 @@ a:hover{
 .btn {
     cursor: pointer!important;
     height: 25px;
+    font-family: $arial-font-family !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    border: none !important;
+    padding: 5px 15px !important;
+    min-width: 100px;
+    
 }
 
 .btn.btn-primary {
     background-color: $primary-btn-color;
-    height: 25px;
-    padding: 8px 16px;
-    font-family: $arial-font-family;
-    font-size: 12px;
-    line-height: 16px;
-    border: none;
 }
 
-.btn.btn-primary:hover, .btn.btn-primary:focus {
-    background-color: $primary-btn-color;
-    border: none;
+.btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active {
+    background-color: $primary-btn-color !important;
+    border: none !important;
 }
 
 /* Buttons - end */
@@ -206,6 +207,6 @@ a:hover{
     height: 100vh;
 } 
 input[type="file"].form-control{
-  padding: 15px;
+  padding: 9px 15px;
   height: auto;
 }

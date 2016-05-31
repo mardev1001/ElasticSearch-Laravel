@@ -30,6 +30,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('document-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe');//document id
         Route::post('dokumente/rechte-und-freigabe/{id}', 'DocumentController@saveRechteFreigabe');
+        Route::get('dokumente/anhange/{id}', 'DocumentController@attachments');//document id
+        Route::post('dokumente/anhange/{id}', 'DocumentController@saveAttachments');
         Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::resource('dokumente', 'DocumentController');//documente editor in CRUD

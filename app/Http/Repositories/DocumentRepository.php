@@ -109,7 +109,7 @@ class DocumentRepository
      *
      * @return string $form
      */
-    public function setDocumentForm($documentType, $pdf = false ){
+    public function setDocumentForm($documentType, $pdf = false,$attachment=false ){
         $data = new \StdClass();
         $modelUpload = DocumentType::find($documentType);
         $data->form = 'editor';
@@ -118,6 +118,7 @@ class DocumentRepository
             $data->form = 'upload';
             $data->url = 'document-upload';
         }
+        
         if( $pdf == 1 )
             $data = $this->checkUploadType($data,$modelUpload, $pdf);
         
@@ -146,7 +147,10 @@ class DocumentRepository
     public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=false){
         $modelName = '\App\\'.$modelName;
         if( count($collections) < 1 && count($pluckedCollection) < 1 ){
-            //  dd($requests);
+            if($tester == true){
+                //  dd($requests);
+                $array = array();
+            }
             foreach($requests as $request){
                $model = new $modelName();
                 foreach($fields as $k=>$field){
@@ -157,7 +161,11 @@ class DocumentRepository
                 }
                 
                 $model->save();
+                if($tester == true)
+                    $array[] = $model;
             }
+            // if($tester == true)
+              //  var_dump($array);
         }
         else{
            \DB::enableQueryLog();
@@ -177,9 +185,9 @@ class DocumentRepository
             $modelDelete->delete();
             if($tester == true){
                 // dd( \DB::getQueryLog() );
-                var_dump($requests);
+                //var_dump($requests);
                 //var_dump($modelDelete->get());
-                echo '<hr/>';
+               // echo '<hr/>';
                 //echo '<hr/>';
             }
             if( count($requests) > 0){

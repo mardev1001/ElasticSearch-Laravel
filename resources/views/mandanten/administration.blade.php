@@ -16,44 +16,44 @@
            'url' => 'mandanten/search',
            'method' => 'POST',
            'class' => 'horizontal-form' ]) !!}
-                   
-        <!-- input box-->
-        <div class="col-lg-6"> 
-            <div class="form-group">
-                {!! ViewHelper::setInput('search','',old('search'),trans('mandantenForm.search') , 
-                       trans('mandantenForm.search') , true  ) !!}
-            </div>   
-        </div><!--End input box-->
-        <!-- input box-->
-        <div class="col-lg-6"> 
-            <div class="form-group">
-                <br>
-                {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
-                {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
-            </div>   
-        </div><!--End input box-->
-        
-            <div class="clearfix"></div>
-        
-        <!-- button div-->    
-        <div class="col-md-3">
-            <div class="form-wrapper">
-                <button type="submit" class="btn btn-primary">{{ trans('benutzerForm.search') }}</button>
-                <button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>
-            </div>
-        </div><!-- End button div-->    
-           
+        <div class="row">
+            <!-- input box-->
+            <div class="col-lg-6"> 
+                <div class="form-group">
+                    {!! ViewHelper::setInput('search','',old('search'),trans('mandantenForm.search') , 
+                           trans('mandantenForm.search') , true  ) !!}
+                </div>   
+            </div><!--End input box-->
+            <!-- input box-->
+            <div class="col-lg-6"> 
+                <div class="form-group">
+                    <br>
+                    {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
+                    {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+                <div class="clearfix"></div>
+            
+            <!-- button div-->    
+            <div class="col-md-3">
+                <div class="form-wrapper">
+                    <button type="submit" class="btn btn-primary">{{ trans('benutzerForm.search') }}</button>
+                    <button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>
+                </div>
+            </div><!-- End button div-->    
+        </div>           
     </form>
 
 
-    <div class="clearfix"></div>
+    <div class="clearfix"><br></div>
   
     @if( !empty($mandants)  ) 
         
         @if( !empty($search) && $search == true )
-            <h2>Suchergebnisse</h2>
+            <h2 class="title">Suchergebnisse</h2>
         @else
-            <h2>Übersicht</h2>
+            <h2 class="title">Übersicht</h2>
         @endif
         
         <div class="panel-group">
@@ -75,17 +75,17 @@
                                 {!! Form::open(['action' => 'MandantController@mandantActivate', 'method'=>'PATCH']) !!}
                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                     @if($mandant->active)
-                                        <button class="btn btn-default" type="submit" name="active" value="1"></span>Aktiv</button>
+                                        <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
                                     @else
-                                        <button class="btn btn-default" type="submit" name="active" value="0"></span>Inaktiv</button>
+                                        <button class="btn btn-primary" type="submit" name="active" value="0"></span>Inaktiv</button>
                                     @endif
                                 {!! Form::close() !!}
                                 
                                 {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
-                                    <button type="submit" class="btn btn-default">Entfernen</button>
+                                    <button type="submit" class="btn btn-primary">Entfernen</button>
                                 {!! Form::close() !!}
                                 
-                                <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-default no-arrow"> Bearbeiten </a> 
+                                <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
                             </span>
                         </h4>
                     </div>

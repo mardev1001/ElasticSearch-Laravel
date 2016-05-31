@@ -4,7 +4,18 @@
 
 @section('content')
 
-<h1 class="text-primary">{{ trans('statistikForm.stats') }} - Dokument QMR 123 - V2</h1>
+<div class="row">
+    <div class="col-xs-12 col-md-12 ">
+        <div class="fixed-row">
+            <div class="fixed-position ">
+                <h1 class="page-title">
+                    {{ trans('statistikForm.stats') }} - Dokument QMR 123 - V2
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
 
 <div class="row">
     <div class="col-xs-12">

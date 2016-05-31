@@ -17,7 +17,7 @@ $( function() {
     
     $(".datetimepicker").datetimepicker({
         locale:'de',
-        format:'DD.MM.YYYY.'
+        format:'DD.MM.YYYY'
     });
 
     if( $('.tree-view').length ){

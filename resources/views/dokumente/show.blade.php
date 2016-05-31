@@ -4,7 +4,19 @@
 
 @section('content')
 
-<h1 class="text-primary">{{ $document->documentType->name }} @if($document->pdf_upload) PDF @endif </h1>
+
+<div class="row">
+        <div class="col-xs-12 col-md-12 ">
+            <div class="fixed-row">
+                <div class="fixed-position ">
+                    <h1 class="page-title">
+                        {{ $document->documentType->name }} @if($document->pdf_upload) PDF @endif 
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
 
 <div class="row">
     <div class="col-lg-6">
@@ -28,11 +40,14 @@
     <div class="col-xs-12">
 
         <div class="header">
+            @if($document->documentAdressats)
             <h4>{{ trans('dokumentShow.adressat') }}: {{ $document->documentAdressats->name }}</h4>
+            @endif
             <h4>{{ trans('dokumentShow.subject') }}: {{ $document->betreff }}</h4>
         </div>
         <br>
         <div class="content">
+            <h4>{{ trans('dokumentShow.content') }}</h4>
             @foreach($document->editorVariant as $variant)
             <div class="variant-{{$variant->variant_number}}">
                 <strong>{{ trans('dokumentShow.variant') }} {{$variant->variant_number}}</strong><br>
@@ -45,7 +60,6 @@
         
         @if(count($document->documentUploads))
         <div class="attachments">
-            <strong>{{ trans('dokumentShow.attachments') }}</strong><br>
             @foreach($document->documentUploads as $attachment)
                 <a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>
             @endforeach

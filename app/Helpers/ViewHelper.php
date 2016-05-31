@@ -171,13 +171,9 @@ class ViewHelper
         }
         else{
             if( count($collection->$relationship) > 0 ){
-                //  dd($collection->$relationship);
                 foreach($collection->$relationship as $cr){
-                    // var_dump($cr->$key);
                      if( $cr->$key == $value )
-                        echo 'selected '.$cr->$key;
-                     else
-                        echo 'not selected '.$cr->$key;
+                        echo 'selected ';
                 }
             }
         }

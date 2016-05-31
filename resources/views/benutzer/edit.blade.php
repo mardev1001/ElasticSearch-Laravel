@@ -36,10 +36,8 @@
             <div class="form-group">
                 <div class="checkbox">
                     <br>
-                    <label>
-                        <input type="checkbox" name="active" @if($user->active) checked @endif >
-                        {{trans('benutzerForm.active')}}
-                    </label>
+                   {!! ViewHelper::setCheckbox('active',$user,old('active'),trans('benutzerForm.active') ) !!}
+                  
                 </div>
             </div>   
         </div>
@@ -107,10 +105,8 @@
             <div class="form-group">
                 <div class="checkbox">
                     <br>
-                    <label>
-                        <input type="checkbox" name="email_reciever" @if($user->email_reciever) checked @endif >
-                        {{trans('benutzerForm.email_reciever')}}
-                    </label>
+                    {!! ViewHelper::setCheckbox('email_reciever',$user,old('email_reciever'),trans('benutzerForm.email_reciever') ) !!}
+                 
                 </div>
             </div>   
         </div>

@@ -38,7 +38,7 @@
        @if( count($data->editorVariant) ) 
            @foreach( $data->editorVariant as $variant)
                <div class="tab-pane" id="variant{{$variant->variant_number}}">
-                   <div id="variant-{{$variant->variant_number}}" class="editable variant-{{$variant->variant_number}}" data-id="{{$variant->variant_number}}">
+                   <div id="variant-{{$variant->variant_number}}" class="editable">
                        {{strip_tags($variant->inhalt)}}
                    </div>
                 </div>
@@ -58,12 +58,10 @@
             $(document).ready(function(){
                $('.editable').each(function(){
               	    var id=$(this).data('id');
-          	     tinymce.init({
-                        selector: '#variant-'+id,
-                        skin_url: '/css/style'
-                    });
+              	    
+          	    
               	}); 
-              	
+              	tinymce.init({selector:'.editable'});
               	if( $('.nav-tabs li.active').length < 1 ){
               	    $('.nav-tabs li').first().addClass('active'); 
               	    $('.tab-content .tab-pane').first().addClass('active'); 

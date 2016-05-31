@@ -1,8 +1,18 @@
 @extends('master')
     @section('content')
-        <h1 class="text-primary">
-            {{ trans('controller.rightsRelease') }}
-        </h1>
+     
+        <div class="row">
+            <div class="col-xs-12 col-md-12 ">
+                <div class="fixed-row">
+                    <div class="fixed-position ">
+                        <h1 class="page-title">
+                            {{ trans('controller.rightsRelease') }}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
                      
         {!! Form::open([
         'url' => 'dokumente/rechte-und-freigabe/'.$data->id,
@@ -26,7 +36,7 @@
                             {!! ViewHelper::setCheckbox('email_approval',$data,old('email_approval'),
                             trans('rightsRelease.sendEmail') ) !!}
                         </div>   
-                    </div><!--End input box-->
+                    </div><!--End input box--> 
                 </div>
                 <div class="clearfix"></div>
             </div>
@@ -58,15 +68,18 @@
                     </div>
                     
                     <div class="clearfix"></div>
+                    
+                    
                     @if( count($variants) > 0)
                         @foreach( $variants as $k=>$variant) 
                         <div class="col-xs-12 col-md-6">
                                 <div class="form-group">
                                     <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
-                                    
+                                    <br/>
+                                   
                                     <select name="variante-{{$k+1}}[]" class="form-control select" 
                                      data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" multiple>
-                                        @if($data->approval_all_roles == true)
+                                        @if($variant->approval_all_mandants == true)
                                             <option value="0"></option>
                                             <option value="Alle" selected>Alle</option>
                                              @foreach( $mandants as $mandant)
@@ -77,10 +90,8 @@
                                             <option value="Alle">Alle</option>
                                             @foreach($mandants as $mandant)
                                                 <option value="{{$mandant->id}}"
-                                                     @foreach($data->editorVariant as $ev)
-                                                      {!! ViewHelper::setComplexMultipleSelect($ev,'documentMandantMandants', $mandant->id, 'mandant_id',true) !!}
-                                                     @endforeach
-                                               >{{ $mandant->name }}</option>
+                                                      {!! ViewHelper::setComplexMultipleSelect($variant,'documentMandantMandants', $mandant->id, 'mandant_id',true) !!}
+                                                >{{ $mandant->name }}</option>
                                             @endforeach
                                         @endif
                                     </select>
@@ -90,6 +101,7 @@
                             <div class="clearfix"></div>
                         @endforeach
                     @endif
+                  
                     
                 </div>
             </div>

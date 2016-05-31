@@ -1,8 +1,18 @@
 @extends('master')
     @section('content')
-        <h1 class="text-primary">
-            {{ trans('controller.documentUpload') }}
-        </h1>
+    
+        <div class="row">
+            <div class="col-xs-12 col-md-12 ">
+                <div class="fixed-row">
+                    <div class="fixed-position ">
+                        <h1 class="page-title">
+                            {{ trans('controller.documentUpload') }}
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
         <div class="col-xs-12 col-md-6 box">
             <h2>QMR 223 <small>({{ trans('dataUpload.version') }}: 2 )</small> <small><b>{{ trans('dataUpload.status') }}:</b> Veröffentlicht</small></h2>
         </div>

@@ -4,18 +4,29 @@
 
 @section('content')
 
-<h1 class="text-primary">Rundschreiben</h1>
+<div class="row">
+    <div class="col-xs-12 col-md-12 ">
+        <div class="fixed-row">
+            <div class="fixed-position ">
+                <h1 class="page-title">
+                    Rundschreiben
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
 
 <div class="clearfix"></div> <br>
 
 <div class="row">
     
     <div class="col-xs-12">
-        <div class="col-xs-12 bordered">
+        <div class="col-xs-12 box-wrapper">
             
-            <h4 class="text-info">Meine Rundschreiben</h3>
+            <h2 class="title">Meine Rundschreiben</h2>
             
-            <div class="box home">
+            <div class="box">
                 <div class="tree-view" data-selector="rundschreibenMeine">
                     <div class="rundschreibenMeine hide">
                         {{ $rundschreibenMeine }}
@@ -42,20 +53,20 @@
 <div class="clearfix"></div> <br>
 
 <div class="row">
-    <div class="col-xs-12 col-md-6">
-        <form action="" method="GET">
-            <div class="col-lg-6">
-                <div class="input-group">
-                    {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
-                    <span class="input-group-btn">
-                        <button type="submit" class="btn btn-primary">
-                            <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
-                        </button>
-                    </span>
-                </div>   
+    <form action="" method="GET">
+        <div class="input-group">
+            <div class="col-lg-12">
+                {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
             </div>
-       </form>
-    </div>
+            <div class="col-lg-12">
+                <span class="custom-input-group-btn">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
+                    </button>
+                </span>
+            </div>
+        </div>
+   </form>
 </div>
 
 <div class="clearfix"></div> <br>
@@ -63,11 +74,11 @@
 <div class="row">
     
     <div class="col-xs-12">
-        <div class="col-xs-12 bordered">
+        <div class="col-xs-12 box-wrapper">
             
-            <h4 class="text-info">Alle Rundschreiben</h3>
+            <h2 class="title">Alle Rundschreiben</h2>
             
-            <div class="box home">
+            <div class="box">
                 <div class="tree-view" data-selector="rundschreibenMeine">
                     <div class="rundschreibenMeine hide">
                         {{ $rundschreibenAll }}

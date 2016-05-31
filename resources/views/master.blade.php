@@ -34,12 +34,10 @@
             <div class="container-fluid first">
          
                 @if(Session::has('message'))
-                    <br>
                     <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
                 @endif
                 
                 @if (isset($errors) && count($errors) > 0)
-                    <br>
                     <div class="alert alert-danger">
                         <ul>
                             @foreach ($errors->all() as $error)

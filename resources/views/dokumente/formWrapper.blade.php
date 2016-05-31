@@ -1,8 +1,18 @@
 @extends('master')
     @section('content') 
-    <h1 class="text-primary">
-        
-    </h1>
+   <div class="row">
+        <div class="col-xs-12 col-md-12 ">
+            <div class="fixed-row">
+                <div class="fixed-position ">
+                    <h1 class="page-title">
+                        Title
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="clearfix"></div>
     {!! Form::open([
            'url' => $url,
            'method' => 'POST',
@@ -26,6 +36,10 @@
                         <button class="btn btn-primary" type="submit" name="save" value="save">
                             <span class="fa fa-floppy-o"></span> Speichern
                         </button>
+                        <button class="btn btn-primary" type="submit" name="attachment" value="attachment"> 
+                            <span class="fa fa-file-text-o"></span>
+                            Anhange
+                        </button>    
                         <button class="btn btn-primary" type="submit" name="next" value="next"> 
                             <span class="fa fa-chevron-right"></span>
                             Weiter
