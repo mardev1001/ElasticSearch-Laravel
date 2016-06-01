@@ -16,9 +16,16 @@ nav.navbar.navbar-default.navbar-fixed-top {
     background-color: #fff;
     border: none !important;
 }
+.navbar-nav.icons {
+    margin: 0;
+}
+ul.nav.navbar-nav.icons li {
+    display: inline-block;
+}
 .nav-brand {
-    display: block;
+    display: inline-block;
     padding-top: 15px;
+
 }
 .nav.navbar-nav.icons a {
     padding: 15px 5px 0 0;

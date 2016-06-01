@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-xs-12 col-md-12 ">
+    <div class="col-xs-12 col-md-12 white-bgrnd">
         <div class="fixed-row">
             <div class="fixed-position ">
                 <h1 class="page-title">
@@ -19,7 +19,7 @@
 
 <fieldset class="form-group">
     
-    <h4>{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.add') }}</h4>
+    <h4 class="title">{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.add') }}</h4>
     
     <div class="row">
         <!-- input box-->
@@ -29,8 +29,9 @@
                     {!! ViewHelper::setInput('name', '', old('name'), trans('isoKategorienForm.name'), trans('isoKategorienForm.name'), true) !!} 
                     
                     <div class="checkbox">
-                        <label><input class="hide-input" data-hide-target="iso-categories" data-disable-target="iso-categories" type="checkbox" name="parent"/>
-                        {{ trans('isoKategorienForm.parent-category') }}</label>
+                        <br>
+                        <input class="hide-input" id="hide-input" data-hide-target="iso-categories" data-disable-target="iso-categories" type="checkbox" name="parent"/>
+                        <label for="hide-input">{{ trans('isoKategorienForm.parent-category') }}</label>
                     </div>
                 </div>
                 <div class="form-group" data-hide="iso-categories">
@@ -55,7 +56,7 @@
 
 <fieldset class="form-group">
     
-    <h4>{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.overview') }}</h4>
+    <h4 class="title">{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.overview') }}</h4>
      
     <div class="row">
         <div class="col-md-9">
@@ -73,7 +74,7 @@
                     </td>
                     <td class="col-xs-4 vertical-center">
                         @if($isoCategory->parent)
-                            {{ trans('isoKategorienForm.parent-category') }}
+                           <p>{{ trans('isoKategorienForm.parent-category') }}</p>
                         @else
                          <select name="category_id" class="form-control select" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
                              <option value=""></option>

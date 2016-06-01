@@ -29,8 +29,8 @@
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
-        {!! ViewHelper::setUserSelect($mandantUsers,'owner_user_id',$data,old('owner_user_id'),
-                trans('documentForm.owner'), trans('documentForm.owner') ) !!}
+        {!! ViewHelper::setInput('search_tags',$data,old('search_tags'),trans('documentForm.searchTags') , 
+               trans('documentForm.searchTags') , true  ) !!} <!-- add later data-role="tagsinput"-->
     </div>   
 </div><!--End input box-->
 
@@ -45,8 +45,15 @@
 <!-- input box-->
 <div class="col-lg-3"> 
     <div class="form-group">
-        {!! ViewHelper::setInput('search_tags',$data,old('search_tags'),trans('documentForm.searchTags') , 
-               trans('documentForm.searchTags') , true  ) !!} <!-- add later data-role="tagsinput"-->
+        <label class="control-label"> {{ ucfirst(trans('documentForm.owner')) }} </label>
+        <select name="owner_user_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.owner')) }}">
+            <option value="0"></option>
+            @foreach($mandantUsers as $mandantUser)
+                <option value="{{$mandantUser->id}}" @if(isset($data->owner_user_id)) @if($mandantUser->id == $data->owner_user_id) selected @endif @endif> 
+                    {{ $mandantUser->first_name }} {{ $mandantUser->last_name }} 
+                </option>
+            @endforeach
+        </select>
     </div>   
 </div><!--End input box-->
 
@@ -69,6 +76,23 @@
     <div class="form-group">
         <br>
         {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
+    </div>   
+</div><!--End input box-->
+
+<div class="clearfix"></div>
+
+<!-- input box-->
+<div class="col-xs-6"> 
+    <div class="form-group">
+        <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
+        <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ trans('documentForm.coauthor') }}" multiple>
+            <option value="0"></option>
+            @foreach($mandantUsers as $mandantUser)
+                <option value="{{$mandantUser->id}}" @if(isset($documentCoauthor)) {!! ViewHelper::setMultipleSelect($documentCoauthor, $mandantUser->id, 'user_id') !!} @endif > 
+                    {{ $mandantUser->first_name }} {{ $mandantUser->last_name }} 
+                </option>
+            @endforeach
+        </select>
     </div>   
 </div><!--End input box-->
 

@@ -35,7 +35,7 @@
     <!-- input box-->
     <div class="col-lg-6"> 
         <div class="form-group">
-            <input type="file" name="files[]" class="form-control" multiple 
+            <input type="file" name="files[]" class="form-control"  
             @if( $data->documentUploads()->count() < 1 )
                 required
             @endif

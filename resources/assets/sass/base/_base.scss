@@ -15,7 +15,8 @@ html,
 body{
 	
 	font-size: $base-font-size;
-	overflow-y: scroll;
+	overflow-y: hidden;
+	height: 100%;
 	font-family: $arial-font-family;
 	background-color: transparent !important;
 

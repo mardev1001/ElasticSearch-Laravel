@@ -42,9 +42,11 @@ class DocumentRepository
     * Generate documents treeview. If no array parameter is present, all documents are read.
     *
     * @param  object array $array
+    * @param  bool $tags
+    * @param  bool $document
     * @return object array $array
     */
-    public function generateTreeview( $array = array(), $tags = false ){
+    public function generateTreeview( $array = array(), $tags = false, $document=true ){
         
         /*
         // Bootstrap treeview JSON structure
@@ -74,14 +76,13 @@ class DocumentRepository
         $documents = Document::all();
         
         if(sizeof($array)) $documents = $array;
-        
-        foreach ($documents as $document) {
+        if( $document == true )
+            foreach ($documents as $document) {
           
             $node = new \StdClass();
             $node->text = $document->name;
             $node->icon = 'icon-parent';
             $node->href = route('dokumente.show', $document->id);
-            
             if(!$document->documentUploads->isEmpty()){
                 
                 $node->nodes = array();
@@ -99,7 +100,16 @@ class DocumentRepository
             
             array_push($treeView, $node);
         }
-        
+        else
+            foreach ($documents as $data) {
+          
+            $node = new \StdClass();
+            $node->text = basename($data->file_path);
+            $node->icon = 'fa fa-file-o';
+            $node->href = "#".$data->file_path;
+            
+            array_push($treeView, $node);
+        }
         return json_encode($treeView);
         
     }

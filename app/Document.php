@@ -78,7 +78,10 @@ class Document extends Model
     }
     
     public function editorVariant(){
-        return $this->hasMany('App\EditorVariant');
+            return $this->hasMany('App\EditorVariant');
+    }
+    public function lastEditorVariant(){
+            return $this->hasMany('App\EditorVariant')->orderBy('variant_number','desc')->take(1);
     }
     
     public function documentApprovals(){

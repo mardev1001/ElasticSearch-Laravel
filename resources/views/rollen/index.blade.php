@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-xs-12 col-md-12 ">
+    <div class="col-xs-12 col-md-12 white-bgrnd">
         <div class="fixed-row">
             <div class="fixed-position ">
                 <h1 class="page-title">
@@ -19,7 +19,7 @@
 
 <fieldset class="form-group">
     
-    <h4>{{ trans('rollenForm.roles') }} {{ trans('rollenForm.add') }}</h4>
+    <h4 class="title">{{ trans('rollenForm.roles') }} {{ trans('rollenForm.add') }}</h4>
     
     <div class="row">
         <!-- input box-->
@@ -76,14 +76,14 @@
 
 <fieldset class="form-group">
     
-    <h4>{{ trans('rollenForm.roles') }} {{ trans('rollenForm.overview') }}</h4>
+    <h4 class="title">{{ trans('rollenForm.roles') }} {{ trans('rollenForm.overview') }}</h4>
      
     <div class="row">
         <div class="col-md-8">
             <table class="table">
                 <tr>
                     <th colspan="3">
-                        {{ trans('rollenForm.system') }} {{ trans('rollenForm.roles') }}
+                       {{ trans('rollenForm.system') }} {{ trans('rollenForm.roles') }}
                     </th>
                 </tr>
                     @foreach($roles as $role)
@@ -96,11 +96,13 @@
                                         <input class="form-control" type="text" name="name" value="{{ $role->name }}" placeholder="{{ trans('rollenForm.name') }}" required/>
                                     </div>
                                 </td>
-                                <td class="col-xs-4 vertical-center">
-                                    {{ trans('rollenForm.editing') }}
-                                    
-                                    <div class="checkbox-inline pull-right">
-                                        <label><input type="checkbox" name="wiki" @if($role->wiki_role) checked @endif>{{ trans('rollenForm.wiki') }}</label>
+                                <td class="col-xs-2 vertical-center">
+                                     <br> <p>{{ trans('rollenForm.editing') }}</p>
+                                </td> 
+                                 <td class="col-xs-2 vertical-center">
+                                    <div class="checkbox checkbox-inline pull-right">
+                                        <input type="checkbox" name="wiki" id="wiki-{{ $role->id }}" @if($role->wiki_role) checked @endif>
+                                        <label for="wiki-{{ $role->id }}">{{ trans('rollenForm.wiki') }}</label>
                                     </div>
                                 </td>
                                 <td class="col-xs-3 text-center table-options vertical-center">

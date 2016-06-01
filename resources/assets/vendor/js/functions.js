@@ -3,23 +3,23 @@
  */
 $(function() {
 
-    $('[data-hideswitch]').on('click', function(e) {
-        $(this).toggle();
-        console.log('trig');
-        console.log($(this).attr('checked'));
-        var $this = $(this),
-            yesClass = $('.' + $this.data('yes')),
-            noClass = $('.' + $this.data('no'));
-        if ($this.attr('checked', true) || $this.attr('checked', 'checked')) {
-            yesClass.removeClass('hidden');
-            noClass.addClass('hidden');
-        }
-        else {
-            noClass.removeClass('hidden');
-            yesClass.addClass('hidden');
-        }
+    // $('[data-hideswitch]').on('click', function(e) {
+    //     $(this).toggle();
+    //     console.log('trig');
+    //     console.log($(this).attr('checked'));
+    //     var $this = $(this),
+    //         yesClass = $('.' + $this.data('yes')),
+    //         noClass = $('.' + $this.data('no'));
+    //     if ($this.attr('checked', true) || $this.attr('checked', 'checked')) {
+    //         yesClass.removeClass('hidden');
+    //         noClass.addClass('hidden');
+    //     }
+    //     else {
+    //         noClass.removeClass('hidden');
+    //         yesClass.addClass('hidden');
+    //     }
 
-    });
+    // });
 
    // Toggle sidebar navigation
     $('button.navbar-toggle.big').on('click', function(e) {
@@ -73,22 +73,39 @@ $(function() {
     });
     
 
+    // Hide or show mandant selection if checkbox is checked
+    
+    var mandantHauptstelleCheckbox = $('input[type="checkbox"]#hauptstelle');
+    var mandantHauptstelleSelect = $('.select-mandants');
+
+    if(mandantHauptstelleCheckbox.prop('checked') == true)
+        mandantHauptstelleSelect.hide();
+    else
+        mandantHauptstelleSelect.show();
+        
+    mandantHauptstelleCheckbox.change(function(e){
+        if(mandantHauptstelleCheckbox.prop('checked') == true)
+            mandantHauptstelleSelect.hide();
+        else
+            mandantHauptstelleSelect.show();
+    });
+    
     // Hide or show PDF upload checkbox 
 
-    // if($(".document-type-select .select").val() == 3)
-    //     $('.pdf-checkbox').show();
-    // else
-    //     $('.pdf-checkbox').hide();
+    if($(".document-type-select .select").val() == 3)
+        $('.pdf-checkbox').show();
+    else
+        $('.pdf-checkbox').hide();
     
-    // $('.document-type-select .select').chosen().change(function(event){
-    //     if(event.target == this){
-    //         // console.log($(this).val());
-    //         if($(this).val() == 3)
-    //             $('.pdf-checkbox').show();
-    //         else
-    //             $('.pdf-checkbox').hide();
-    //     }
-    // });
+    $('.document-type-select .select').chosen().change(function(event){
+        if(event.target == this){
+            // console.log($(this).val());
+            if($(this).val() == 3)
+                $('.pdf-checkbox').show();
+            else
+                $('.pdf-checkbox').hide();
+        }
+    });
 
     // Hide or show ISO category selection based on selected value
     

@@ -1,7 +1,7 @@
 .container-fluid.first{
     min-height: 95vh;
     padding-bottom: 30px;
-    margin-top: 85px;
+    margin-top: 0px;
 }
 .panel-heading a:not(.no-arrow):after {
     font-family:'Glyphicons Halflings';
@@ -15,6 +15,10 @@
 }
 .panel-heading span .btn{
     margin-top:-4px;
+}
+#wrapper {
+    height: 100%;
+    overflow-y: scroll;
 }
 #page-wrapper {
     padding: 0 5px !important;
@@ -30,7 +34,9 @@
     position: fixed !important;
     background-color: #fff; 
     z-index: 999;
-    width: 78%;
+    left: 315px;
+    right: 30px;
+    height: 40px;
 }
 .container-fluid {
     padding-right: 0px !important;
@@ -89,5 +95,9 @@ h1.page-title {
     font-weight: bold;
     color: $dark-blue;
     text-transform: uppercase;
+}
+
+.white-bgrnd {
+    background-color: $white-color;
 }
 

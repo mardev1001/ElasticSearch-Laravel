@@ -39,7 +39,7 @@ class MandantRequest extends Request
                return [
                     'name' => 'required',
                     'mandant_number'  => 'required|unique:mandants',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
+                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,0',
                 ];
             }
             case 'PUT':
@@ -48,7 +48,7 @@ class MandantRequest extends Request
                 return [
                     'name' => 'required',
                     'mandant_number'  => 'required',
-                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,1',
+                    'mandant_id_hauptstelle' => 'required_if:hauptstelle,0',
                     'mandant_id' => 'integer',
                     'email' => 'email',
                 ];

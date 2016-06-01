@@ -63,7 +63,6 @@ return [
     /* end Mandantenverwaltung*/
     
     /*Controller messages*/
-    'saved' => 'Mandanten erfolgreich gespeichert',
-    'error' => 'Mandanten erfolgreich gespeichert'
+    'error' => 'Mandant erfolgreich gespeichert'
 
 ];

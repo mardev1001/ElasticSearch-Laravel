@@ -1,7 +1,7 @@
 @extends('master')
     @section('content')
         <div class="row">
-            <div class="col-xs-12 col-md-12 ">
+            <div class="col-xs-12 col-md-12 white-bgrnd">
                 <div class="fixed-row">
                     <div class="fixed-position ">
                         <h1 class="page-title">

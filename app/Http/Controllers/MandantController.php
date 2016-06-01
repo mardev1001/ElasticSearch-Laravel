@@ -65,7 +65,8 @@ class MandantController extends Controller
      */
     public function create()
     {
-        return view('formWrapper', compact('data'));
+        $mandantsAll = Mandant::all();
+        return view('formWrapper', compact('data', 'mandantsAll'));
     }
 
     /**
@@ -78,6 +79,8 @@ class MandantController extends Controller
     {
         session()->flash('message',trans('mandantForm.success'));
         $data = Mandant::create( $request->all() );
+        if($request->has('hauptstelle')) $data->mandant_id_hauptstelle = null;
+        $data->save();
         
         return redirect('mandanten/'.$data->id.'/edit')->with(['message'=>trans('mandantenForm.success')]);
          
@@ -104,7 +107,8 @@ class MandantController extends Controller
     {
         $roles = Role::all();
         $data = Mandant::find($id);
-        return view('formWrapper', compact('data','roles'));
+        $mandantsAll = Mandant::all();
+        return view('formWrapper', compact('data','roles', 'mandantsAll'));
     }
 
     /**
@@ -116,10 +120,15 @@ class MandantController extends Controller
      */
     public function update(MandantRequest $request, $id)
     {
+        
         RequestMerge::merge(['mandant_id' => $id ] );
         $mandant = Mandant::find($id);
         $mandantInfos = MandantInfo::firstOrNew( ['mandant_id' =>$id] );
         $mandant->fill( $request->all() );
+        
+        $mandant->hauptstelle = $request->has('hauptstelle');
+        if($mandant->hauptstelle) $mandant->mandant_id_hauptstelle = null;
+        
         $mandantInfos->fill( $request->all() );
         if( $mandant->save() && $mandantInfos->save() )
           return back()->with(['message'=>trans('mandantenForm.saved')]);

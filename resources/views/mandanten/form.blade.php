@@ -9,14 +9,13 @@
         <!-- input box-->
         <div class="col-xs-3 col-lg-3">
             <br>
-            {!! ViewHelper::setCheckbox('hauptstelle',$data,old('hauptstelle'),trans('mandantenForm.hauptstelle')
-            , false, array('trigger-inputs'), array(' data-first="mandatenNumber" ','data-second="mandanten" ' ) ) !!}
+            {!! ViewHelper::setCheckbox('hauptstelle',$data,old('hauptstelle'),trans('mandantenForm.hauptstelle'), false) !!}
         </div><!--End input box-->
         
         <div class="clearfix"></div>
         
         <!-- input box-->
-        <div class="col-lg-3 " data-hide="mandatenNumber"> <!-- add class hidden when activating js hidden -->
+        <div class="col-lg-3 "> <!-- add class hidden when activating js hidden -->
             <div class="form-group">
               {!! ViewHelper::setInput('mandant_number',$data,old('mandant_number'),trans('mandantenForm.mandantenNum') , 
                trans('mandantenForm.mandantenNum') , false  ) !!}
@@ -24,11 +23,9 @@
         </div><!--End input box-->
         
         <!-- input box-->
-        <div class="col-lg-3 hide" data-hide="mandanten"> 
+        <div class="col-lg-3 select-mandants"> 
             <div class="form-group">
-                {!! ViewHelper::setSelect($collections,'mandant_id_hauptstelle',$data,old('mandant_id_hauptstelle'),
-                trans('mandantenForm.mandanten') )  !!}
-                
+                {!! ViewHelper::setSelect($mandantsAll, 'mandant_id_hauptstelle', $data, old('mandant_id_hauptstelle'), trans('mandantenForm.mandanten')) !!}
             </div>   
         </div><!--End input box-->
       
@@ -47,7 +44,8 @@
         </div><!--End input box-->
         <!-- input box-->
         <div class="col-xs-6 col-lg-6">
-            <div class="checkbox no-margin-top no-margin-bottom">    
+            <div class=""> 
+                <br>
                 {!! ViewHelper::setCheckbox('rights_wiki',$data,old('rights_wiki'),trans('mandantenForm.rightsWiki') ) !!}
                 
                 {!! ViewHelper::setCheckbox('rights_admin',$data,old('rights_admin'),trans('mandantenForm.redaktion') ) !!}

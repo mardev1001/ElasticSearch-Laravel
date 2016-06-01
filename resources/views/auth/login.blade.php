@@ -41,9 +41,8 @@
                 <div class="form-group">
                     <div class="col-md-6">
                         <div class="checkbox">
-                            <input type="checkbox" name="remember" id="remember" />
-                            <label for="remember">merken</label>
-
+                            {{-- <input type="checkbox" name="remember" id="remember" /> --}}
+                            {{-- <label for="remember">merken</label> --}}
                         </div>
                     </div>
 

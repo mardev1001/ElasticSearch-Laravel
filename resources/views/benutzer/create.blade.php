@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-xs-12 col-md-12 ">
+    <div class="col-xs-12 col-md-12 white-bgrnd">
         <div class="fixed-row">
             <div class="fixed-position ">
                 <h1 class="page-title">
@@ -47,7 +47,7 @@
             <div class="form-group">
                {{-- !! ViewHelper::setCheckbox('active', '', old('active'), trans('benutzerForm.active'), false) !! --}}
                 <div class="checkbox">
-                   <br><br><input type="checkbox" value="1" name="active" id="active" checked><label for="active">{{ trans('benutzerForm.active') }}</label>
+                   <br><input type="checkbox" value="1" name="active" id="active" checked><label for="active">{{ trans('benutzerForm.active') }}</label>
                 </div>
             </div>   
         </div>
@@ -110,7 +110,7 @@
             <div class="form-group">
                <!--{!! ViewHelper::setCheckbox('email_reciever', '', old('email_reciever'), trans('benutzerForm.email_reciever')) !!}-->
                 <div class="checkbox">
-                    <br><br><input type="checkbox" value="1" name="email_reciever" id="email_reciever"  checked><label for="email_reciever">{{ trans('benutzerForm.email_reciever') }}</label>
+                    <br><input type="checkbox" value="1" name="email_reciever" id="email_reciever"  checked><label for="email_reciever">{{ trans('benutzerForm.email_reciever') }}</label>
                 </div>
             </div>   
         </div>

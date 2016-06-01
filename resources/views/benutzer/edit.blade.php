@@ -4,7 +4,18 @@
 
 @section('content')
 
-<h1 class="text-primary">{{ trans('benutzerForm.user') }} {{ trans('benutzerForm.edit') }}  </h1>
+<div class="row">
+    <div class="col-xs-12 col-md-12 white-bgrnd">
+        <div class="fixed-row">
+            <div class="fixed-position ">
+                <h1 class="page-title">
+                    {{ trans('benutzerForm.user') }} {{ trans('benutzerForm.edit') }}
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
 
 <fieldset class="form-group">
     

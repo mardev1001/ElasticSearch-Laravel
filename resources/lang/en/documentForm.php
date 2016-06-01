@@ -5,6 +5,7 @@ return [
     'type' => 'typ',
     'documentName' => 'dokument name',
     'owner' => 'eigentümer',
+    'coauthor' => 'Zusatz Ersteller',
     'searchTags' => 'suche Tags',
     'summary' => 'beschreibung',
     'datePublished' => 'veröffentlichungstermin',

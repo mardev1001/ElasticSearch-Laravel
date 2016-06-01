@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="row">
-    <div class="col-xs-12 col-md-12 ">
+    <div class="col-xs-12 col-md-12 white-bgrnd">
         <div class="fixed-row">
             <div class="fixed-position ">
                 <h1 class="page-title">
@@ -50,10 +50,10 @@
         <div class="col-lg-2">
             <br>
             <div class="checkbox no-margin-top">
-                <label><input type="checkbox" name="read_required">{{ trans('dokumentTypenForm.read_required') }}</label>
+               <input type="checkbox" name="read_required" id="read_required-0"><label for="read_required-0">{{ trans('dokumentTypenForm.read_required') }}</label>
             </div>
             <div class="checkbox">
-                <label><input type="checkbox" name="allow_comments">{{ trans('dokumentTypenForm.allow_comments') }}</label>
+                <input type="checkbox" name="allow_comments" id="allow_comments-0"><label for="allow_comments-0">{{ trans('dokumentTypenForm.allow_comments') }}</label>
             </div>
         </div>
         <div class="col-lg-3">
@@ -125,16 +125,12 @@
                                 <div class="col-lg-2">
                                     <br>
                                     <div class="checkbox no-margin-top">
-                                        <label>
-                                            <input type="checkbox" name="read_required" @if($documentType->read_required) checked @endif>
-                                            {{ trans('dokumentTypenForm.read_required') }}
-                                        </label>
+                                        <input type="checkbox" name="read_required" id="read_required-{{$documentType->id}}" @if($documentType->read_required) checked @endif>
+                                        <label for="read_required-{{$documentType->id}}">{{ trans('dokumentTypenForm.read_required') }}</label>
                                     </div>
                                     <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" name="allow_comments" @if($documentType->allow_comments) checked @endif>
-                                            {{ trans('dokumentTypenForm.allow_comments') }}
-                                        </label>
+                                        <input type="checkbox" name="allow_comments" id="allow_comments-{{$documentType->id}}" @if($documentType->allow_comments) checked @endif>
+                                        <label for="allow_comments-{{$documentType->id}}">{{ trans('dokumentTypenForm.allow_comments') }}</label>
                                     </div>
                                 </div>
                                 
