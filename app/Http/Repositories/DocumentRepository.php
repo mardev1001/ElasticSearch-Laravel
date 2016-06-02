@@ -78,11 +78,12 @@ class DocumentRepository
         if(sizeof($array)) $documents = $array;
         if( $document == true )
             foreach ($documents as $document) {
-          
+        //   dd($documents[2]->documentUploads);
             $node = new \StdClass();
             $node->text = $document->name;
             $node->icon = 'icon-parent';
             $node->href = route('dokumente.show', $document->id);
+            
             if(!$document->documentUploads->isEmpty()){
                 
                 $node->nodes = array();
@@ -100,15 +101,15 @@ class DocumentRepository
             
             array_push($treeView, $node);
         }
-        else
+        else{
             foreach ($documents as $data) {
-          
-            $node = new \StdClass();
-            $node->text = basename($data->file_path);
-            $node->icon = 'fa fa-file-o';
-            $node->href = "#".$data->file_path;
-            
-            array_push($treeView, $node);
+                 $node = new \StdClass();
+                  $node->text = basename($data->file_path);
+                 $node->icon = 'fa fa-file-o';
+                $node->href = "#".$data->file_path;
+                
+                array_push($treeView, $node);
+        }
         }
         return json_encode($treeView);
         

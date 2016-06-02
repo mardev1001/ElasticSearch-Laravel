@@ -145,14 +145,14 @@
         <div class="col-lg-2"> 
             <div class="form-group">
                 <label>{{ trans('benutzerForm.picture') }}</label>
-                <input type="file" id="picture" name="picture" /><br/>
+                <input type="file" id="image-upload" name="picture" /><br/>
                 
                 @if(isset($user->picture))
                     @if($user->picture)
-                    <img class="img-responsive" id="image-preview" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
+                    <img id="image-preview" class="img-responsive" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
                     @endif
                 @else
-                    <img class="img-responsive" id="image-preview" src="{{url('/img/user-default.png')}}"/>
+                    <img id="image-preview" class="img-responsive" src="{{url('/img/user-default.png')}}"/>
                 @endif
             </div>   
         </div><!--End input box-->

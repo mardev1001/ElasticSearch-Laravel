@@ -1,10 +1,25 @@
 <!-- Navigation -->
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
     <div class="">
-        <div class="col-xs-12 col-sm-4 col-md-6">
+        <div class="col-xs-12 col-sm-3">
             <a class="nav-brand" href="/"><strong><img src="/img/NeptunLogo.png" alt="Neptun logo"/></strong></a>
         </div>
-        <div class="col-xs-12 col-sm-8 col-md-6">
+        <div class="col-xs-12 col-sm-4 session-flash">
+            @if(Session::has('message'))
+                    <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
+            @endif
+            
+            @if (isset($errors) && count($errors) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+        </div>
+        <div class="col-xs-12 col-sm-5">
             <ul class="nav navbar-nav icons pull-right">
                 <li><a href="#"><span class="nav-icon icon-home"></span>Home</a></li>
                 <li><a href="#"><span class="nav-icon icon-profil"></span>Profil</a></li>

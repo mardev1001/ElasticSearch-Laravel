@@ -30,7 +30,7 @@ use App\MandantUser;
 use App\MandantUserRole;
 use App\Adressat;
 use App\EditorVariant;
-use App\EditoVariantDocument;//latest active document
+use App\EditorVariantDocument;//latest active document
 use App\Http\Repositories\DocumentRepository;
 class DocumentController extends Controller
 {
@@ -354,17 +354,44 @@ class DocumentController extends Controller
     {   
         $data = Document::find($id);
         $backButton = '/dokumente/editor/'.$data->id.'/edit';
-        
+        $url = '';
         //$variants, $documentAttachments, $existingDocuments
         $documents = Document::where('document_type_id',5)->get();// documentTypeId 5 = Vorlagedokument
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
         $attachmentArray = array();
+        /*Check if document has editorVariant*/
         if( count( $data->editorVariant) > 0 )
             foreach( $data->editorVariant as $variant){
-                $attachmentArray[$variant->id]['count'] =  DocumentUpload::where('editor_variant_id', $variant->id)->count();
-                $attachmentArray[$variant->id]['data'] =  $this->document->generateTreeview(DocumentUpload::where('editor_variant_id', $variant->id)->get(), false, false );
+                // var_dump('Varinat Id:'.$variant->id);
+                // echo '<br/>';
+                
+                        // dd($variant->editorVariantDocument);
+                foreach($variant->editorVariantDocument as $evd){
+                    if( $evd->document_id != null ){
+                        $secondDocumentVariants = EditorVariant::where('document_id',$evd->document_id)->get();
+                        // $additionalArray[] = $this->document->generateTreeview($secondDocumentVariants );
+                        
+                         
+                        // echo '<br/>';
+                       /* if( count( $secondDocumentVariants ) > 0 ){
+                            foreach($secondDocumentVariants as $secDocVariant){
+                                //  var_dump('$secDocVariant cnt:'.count( $secDocVariant ) );
+                                //  echo '<br/>';
+                                $additionalArray= array();
+                                if( count($secDocVariant->documentUpload) > 0){
+                                   $additionalArray[] = $this->document->generateTreeview($secDocVariant->documentUpload, false, false );
+                                $attachmentArray[$variant->id] = $additionalArray;  
+                                }
+                            }
+                        }*/
+                    }
+                  
+                }
+                // echo '<hr/>';
             }
+            // dd($attachmentArray);
+        /*End Check if document has attachments*/
         
         $url = '';
         $documentTypes = DocumentType::all();
@@ -376,7 +403,7 @@ class DocumentController extends Controller
         ->whereNotIn('users.id',array(Auth::user()->id) )->get();
          
         
-        if($data->pdf_upload == true || $data->pdf_upload==1)
+        //if($data->pdf_upload == true || $data->pdf_upload==1)
         //     $backButton = '/dokumente/pdf-upload/'.$data->id.'/edit'; 
         // elseif( $data->pdf_upload == false &&  $data->document_type_id == 5 )  
         //     $backButton = '/dokumente/dokumente-upload/'.$data->id.'/edit'; 
@@ -384,7 +411,7 @@ class DocumentController extends Controller
         $roles = Role::all();
         //find variants
         $variants = EditorVariant::where('document_id',$data->id)->get();
-        
+
         
         return view('dokumente.attachments', compact('collections','data','attachmentArray','documents','url','documentTypes',
         'isoDocuments','mandantUsers','backButton') );
@@ -397,60 +424,97 @@ class DocumentController extends Controller
      */
     public function saveAttachments(Request $request,$id)
     {
-         // option 1-> dodat dokument kao attachmet za trenutnu variantu i vorlage
+        // option 1-> dodat dokument kao attachmet za trenutnu variantu i vorlage
         // option 2-> kreira se skroz novi dokument, ali se dodaje kao attchment postojećem
         //document attachment is a record in editor_variants && editor_variant_document
-        // dd($request->all());
+        //  dd($request->all());
         $data = Document::find($id);
         
+        $currentEditorVariant = $request->get('variant_id');
+        $document = Document::find($request->get('document_id'));
         /*If option 1*/
-        if($request->has('attach')){
-            $currentDocumentLast =$data->lastEditorVariant[0];
-            $document = Document::find($request->get('document_id'));
-            
-            $foreignDocumentUploads = $document->documentUploads;
-            
-            if( !$foreignDocumentUploads->isEmpty() ){
-                $newEditorVariants = array();
-                foreach($foreignDocumentUploads as $documentUpload){
-                    $currentDocumentLast++;
-                    $currDocEv = new EditorVariant();
-                    $currDocEv->document_id = $id;
-                    $currDocEv->variant_number = $currentDocumentLast;
-                    $currDocEv->save();
-                    $newEditorVariants[]=$currDocEv->id;
-                    // $currDocEv->document_status_id = 1;
-                }
-                foreach($newEditorVariants as $nEV){
-                    $editorVariantDoc = new EditoVariantDocument();
-                    $editorVariantDoc->editor_variant_id = $nEV;
-                    $editorVariantDoc->document_status_id = 1;
-                    $editorVariantDoc->document_id = $id;
-                    $editorVariantDoc->save();
+            if($request->has('attach')){
+                $currentDocumentLast =$data->lastEditorVariant[0];
+                
+                $foreignDocumentUploads = $document->documentUploads;
+                 
+                if( !$foreignDocumentUploads->isEmpty() ){
+                    /*
+                        Opcija 1 razložena
+                        za svaki document upload od drugog documenta
+                        dodaj i editor_variant_documents --->Kako razlikovat attachmente od dokumenata ako je ista varijanta?
+                        document_id u editor_variant_documents je foreign key!
+                        i documentUploads uzmi path od drugog dokumenta i stavi editor_variant_id od trenutnog
+                    */
+                    $currDocEv = EditorVariant::find($currentEditorVariant);
                     
-                    $docUpload = new DocumentUpload();
-                    $docUpload->editor_variant_id = $nEV;
-                    //create a stdClass with id and path to save to database...
-                    
-                    
-                    $docUpload->save();
-                }
+                    $newAttachment = new EditorVariantDocument();
+                    $newAttachment->editor_variant_id = $currentEditorVariant;
+                    $newAttachment->document_id = $document->id;
+                    $newAttachment->document_status_id = 1;
+                    $newAttachment->save();
             }
-            dd($allEditorVariants);
         }
         
         /*If option 2*/
         else{
-            $adressats = Adressat::all();
-            //DB::enableQueryLog();
-            $docType = DocumentType::find( $request->get('document_type_id') );
+            /*
+                Opcija 2 razložena
+                kreira se skroz novi dokument i ponovni radnju iz prvog
+            */
+            RequestMerge::merge(['version' => 1,'document_type_id'=>1] );
             
-            RequestMerge::merge(['version' => 1] );
-            
+            /*Create a new document*/
             $data = Document::create($request->all() );
             $lastId = Document::orderBy('id','DESC')->first();
             $lastId->document_group_id = $lastId->id;
             $lastId->save();
+            
+            /*Upload document files*/
+            $filename = '';
+            $path = $this->pdfPath;
+            //dd($request->get('model_id') );
+            if( $request->file() )
+                $fileNames = $this->fileUpload($model,$path,$request->file() );
+                
+               //not summary, it is inhalt + attachment
+            
+            $counter = 0;
+            
+            if( isset($fileNames) && count($fileNames) > 0)
+                foreach( $fileNames as $fileName ){
+                    $counter++;
+                    //Editor variant  upload
+                    $editorVariantId = EditorVariant::where('document_id',$id)->where('variant_number',$counter)->first();
+                    if( $editorVariantId == null)
+                        $editorVariantId = new EditorVariant();
+                    $editorVariantId->document_id = $id;
+                    $editorVariantId->variant_number = $counter;
+                    // $editorVariantId->document_status_id = 1;
+                    $editorVariantId->inhalt = $request->get('inhalt');
+                    $editorVariantId->save();
+                    $dirty=$this->dirty($dirty,$editorVariantId);
+                    
+                    
+                    $documentAttachment = new DocumentUpload();
+                    $documentAttachment->editor_variant_id = $editorVariantId->id;
+                    $documentAttachment->file_path = $fileName;
+                    $documentAttachment->save();
+                    $dirty=$this->dirty($dirty,$documentAttachment);
+                }
+            /*end upload files*/
+                
+                $currDocEv = EditorVariant::find($currentEditorVariant);
+                $newAttachment = new EditorVariantDocument();
+                $newAttachment->editor_variant_id = $currentEditorVariant;
+                $newAttachment->document_id = $document->id;
+                $newAttachment->document_status_id = 1;
+                $newAttachment->save();
+            
+            
+            $adressats = Adressat::all();
+            $docType = DocumentType::find( $request->get('document_type_id') );
+            
             
             if($request->has('document_coauthor')){
                 $coauthors = $request->input('document_coauthor');
@@ -460,9 +524,12 @@ class DocumentController extends Controller
             
             $backButton = 'dokumente/'.$data->id.'/edit';
             session()->flash('message',trans('documentForm.documentCreateSuccess'));
-            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
         }
-       
+        
+        if($request->has('someMumbe') )
+            return redirect('dokumente/rechte-und-freigabe/'.$id );
+    
+       return redirect()->action('DocumentController@attachments', $id);
     }
     
      /**

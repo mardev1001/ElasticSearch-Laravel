@@ -4,14 +4,20 @@ body {
     padding-top: 85px;
 }
 h1, h2, h3 {
-    font-family: "Arial", Helvetica, sans-serif !important;
+    font-family: $primary-font-family !important;
     color: $dark-blue !important;
 }
 
-p, a {
-    font-family: "Arial", Helvetica, sans-serif;
+p, a, #page-wrapper label {
+    font-family: $primary-font-family;
     font-size: 14px;
     color: $grey;
+    line-height: 16px;
+    font-weight: normal;
+}
+
+#page-wrapper .text-info {
+    color: $primary-btn-color;
 }
 .form-control {
     border: 1px solid $nav-grey !important;
@@ -27,7 +33,7 @@ p, a {
 }
 
 /* custom checkbox - start */
-#page-wrapper .checkbox {
+#page-wrapper .checkbox, #page-wrapper .radio {
     padding: 0 !important;
     margin-top: 5px;
     margin-bottom: 5px;
@@ -43,7 +49,7 @@ p, a {
     position: relative;
     padding-left: 29px;
     cursor: pointer;
-    font-family: $arial-font-family;
+    font-family: $primary-font-family;
     font-weight: normal;
     font-size: 14px;
     line-height: 19px;
@@ -114,16 +120,16 @@ input.form-control, select.form-control {
 select.form-control {
     width: auto;
 }
-.form-control::-webkit-input-placeholder { /* WebKit browsers */
+input.form-control::-webkit-input-placeholder { /* WebKit browsers */
     text-transform: uppercase;
 }
-.form-control:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+input.form-control:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
     text-transform: uppercase;
 }
-.form-control::-moz-placeholder { /* Mozilla Firefox 19+ */
+input.form-control::-moz-placeholder { /* Mozilla Firefox 19+ */
     text-transform: uppercase;
 }
-.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
+input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     text-transform: uppercase;
 }
 /* inputs - end */
@@ -304,7 +310,7 @@ select.form-control + .chosen-container.chosen-container-single .chosen-single{
     padding: 8px 15px;
     font-size: 14px;
     line-height: 1.428571429;
-    color: #555;
+    // color: #555;
     vertical-align: middle;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -314,7 +320,12 @@ select.form-control + .chosen-container.chosen-container-single .chosen-single{
     -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
     background-image:none;
+   
 }
+
+/*select.form-control + .chosen-container-single .chosen-single.chosen-default span {
+    text-transform: uppercase;
+} */
  
 select.form-control + .chosen-container.chosen-container-single .chosen-single div {
     top:4px;
@@ -460,59 +471,181 @@ select.form-control + .chosen-container-single .chosen-single div b {
 
 
 /* custom radio button - start */
-.radio-custom {
-    opacity: 0;
-    position: absolute;   
-}
+$custom-radio-color:                #606060;
+$custom-radio-border-color:         #b6b6b6;
+$custom-radio-size:                 16px;
+$custom-radio-border-width:         1px;
+$custom-radio-transition-speed:     100ms;
+$custom-radio-inset-shadow:         inset 0 .1em 1px -.1em rgba(0,0,0,0);
 
-.radio-custom, .radio-custom-label {
-    display: inline-block;
-    vertical-align: middle;
-    cursor: pointer;
-    font-family: $arial-font-family;
-    font-weight: normal;
+$custom-radio-pip-color:            $primary-btn-color;
+$custom-radio-pip-size:             round($custom-radio-size * .6);
+
+// States
+$custom-radio-unchecked-bg:         white;
+$custom-radio-unchecked-border:     $custom-radio-border-color;
+
+$custom-radio-checked-bg:           white;
+$custom-radio-checked-border:       $custom-radio-border-color;
+
+$custom-radio-active-inset-shadow:  inset 0 0 2px 3px rgba(0,0,0,.1);
+
+$custom-radio-focus-shadow:         white;
+
+$custom-radio-disabled-bg:          lighten(black, 91.8%);
+$custom-radio-disabled-pip-color:   lighten(black, 80%);
+
+
+// Check variable values
+@if ($custom-radio-size % 2 == 1) { @error '$custom-radio-size must be even'; }
+// round to nearest even number
+@if ($custom-radio-pip-size % 2 == 1) { $custom-radio-pip-size: $custom-radio-pip-size - 1; }
+
+input[type="radio"] label {
+    font-family: $primary-font-family;
     font-size: 14px;
-    line-height: 19px;
-    color: #606060;
-    margin-bottom: 2px;
+    line-height: 18px;
+    font-weight: normal;
+    color: $custom-radio-color;
 }
 
-.radio-custom-label {
+input[type="radio"] {
+  position: relative;
+  display: inline-block;
+
+  width:  $custom-radio-size - 2;
+  height: $custom-radio-size - 2;
+
+  border-radius: 100%;
+  outline: none !important;
+  -webkit-appearance: none;
+  
+  margin-top: 3px !important;
+  // Radio
+  // -----
+
+  &::before {
     position: relative;
-}
-
- .radio-custom + .radio-custom-label:before {
+    top:  -$custom-radio-border-width;
+    left: -$custom-radio-border-width;
+    display: block;
     content: '';
-    background: #fff;
-    border: 1px solid #b6b6b6;
-    display: inline-block;
-    vertical-align: middle;
-    width: 16px;
-    height: 16px;
-    padding: 1px;
-    margin-right: 10px;
-    text-align: center;
-}
 
-.radio-custom + .radio-custom-label:before {
-    border-radius: 50%;
-}
 
-.radio-custom:checked + .radio-custom-label:before {
-    content: "\2022";
-    font-size: 34px;
-    line-height: 12px;
-    color: $dark-blue;
-    transition: all .3s;
-}
+    background: $custom-radio-unchecked-bg;
+    border: $custom-radio-border-width solid $custom-radio-unchecked-border;
+    border-radius: 100%;
+    box-shadow: $custom-radio-inset-shadow;
 
-/* checked mark aspect changes */
-.radio-custom:not(:checked) + label:after {
-    opacity: 0;
-    transform: scale(0);
-}
-.radio-custom:checked + label:after {
-    opacity: 1;
-    transform: scale(1);
+    width:  $custom-radio-size;
+    height: $custom-radio-size;
+  }
+
+  &:active::before {
+    box-shadow: $custom-radio-inset-shadow,
+                $custom-radio-active-inset-shadow;
+  }
+
+  &:focus::before {
+    box-shadow: $custom-radio-inset-shadow,
+                $custom-radio-focus-shadow;
+  }
+
+  &:checked::before {
+    background: $custom-radio-checked-bg;
+    border-color: $custom-radio-checked-border;
+  }
+
+  &:disabled::before {
+    cursor: not-allowed;
+    background-color: $custom-radio-disabled-bg;
+    border-color: transparentize($custom-radio-unchecked-border, .2);
+  }
+
+
+  // Radio Pip
+  // ---
+
+  &::after {
+    position: relative;
+    top: -($custom-radio-size / 2) - $custom-radio-border-width;
+    left: ($custom-radio-size / 2) - $custom-radio-border-width;
+
+    display: block;
+    content: '';
+
+    background: $custom-radio-pip-color;
+    border-radius: 100%;
+    box-shadow: 0 1px 1px rgba(0,0,0,.1);
+
+    width:  0;
+    height: 0;
+  }
+
+  &:checked::after {
+    transition: .2s ease-in-out;
+
+    top:  floor(
+            - ($custom-radio-size / 2)
+            - ($custom-radio-pip-size / 2)
+            - $custom-radio-border-width
+            - .6 + 1
+          );
+
+    left: floor(
+            + ($custom-radio-size / 2)
+            - ($custom-radio-pip-size / 2)
+            - $custom-radio-border-width
+            
+          );
+    
+    width:  $custom-radio-pip-size;
+    height: $custom-radio-pip-size;
+  }
+
+  &:disabled::after {
+    background: $custom-radio-disabled-pip-color;
+  }
 }
 /* custom radio button - end */
+
+/* scroll to top - start */
+#return-to-top {
+    position: fixed;
+    bottom: 10px;
+    right: 32px;
+    background: rgba(255,255,255, 0.7);
+    width: 50px;
+    height: 50px;
+    display: block;
+    text-decoration: none;
+    border-radius: 0;
+    display: none;
+    -webkit-transition: all 0.3s linear;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+#return-to-top i {
+    color: $nav-grey;
+    margin: 0;
+    position: relative;
+    left: 14px;
+    top: 10px;
+    font-size: 24px;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+}
+#return-to-top:hover {
+    background: rgba(0,0,0, 0.1);
+    
+}
+#return-to-top:hover i {
+    color: $white-color;
+    top: 5px;
+}
+/* scroll to top - end */

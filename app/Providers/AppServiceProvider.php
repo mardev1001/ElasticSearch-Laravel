@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\IsoCategory;
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -17,12 +15,7 @@ class AppServiceProvider extends ServiceProvider
     {
         //view()->composer('master', 'App\Http\ViewComposers\MasterViewComposer');
         view()->composer('formWrapper', 'App\Http\ViewComposers\FormViewComposer');
-        
-        // Make categories available for all views
-        if(IsoCategory::all()){
-            $isoCategories = IsoCategory::all();
-            view()->share(compact('isoCategories'));
-        }
+        view()->composer('layouts.sidebar', 'App\Http\ViewComposers\SidebarViewComposer');
     }
 
     /**

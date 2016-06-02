@@ -72,8 +72,8 @@ $( function() {
     
     
     /* Image preview before upload */
-    if( $('#logo').length ){
-        document.getElementById("logo").onchange = function () {
+    if( $('#image-upload').length ){
+        document.getElementById("image-upload").onchange = function () {
             var reader = new FileReader();
         
             reader.onload = function (e) {
@@ -204,4 +204,28 @@ $( function() {
         });
     /* End Simulate submit button*/
     
+    
+    $('#return-to-top').click(function() {      // When arrow is clicked
+        $('body,html,#wrapper').animate({
+            scrollTop : 0                       // Scroll to top of body
+        }, 500);
+    });
+    
+    /* Trigger scroll to top display on scroll */
+    $('#wrapper').on('scroll',function() {
+        if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
+            $('#return-to-top').fadeIn(200);    // Fade in the arrow
+        } else {
+            $('#return-to-top').fadeOut(200);   // Else fade out the arrow
+        }
+    });
+    /* End Trigger scroll to top display on scroll */
+    
+    /* Go to top */
+    $('#return-to-top').click(function() {      // When arrow is clicked
+        $('body,html,#wrapper').animate({
+            scrollTop : 0                       // Scroll to top of body
+        }, 500);
+    });
+    /* End Go to top */
 });

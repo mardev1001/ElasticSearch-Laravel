@@ -15,6 +15,10 @@ class EditorVariant extends Model
     public function documentUpload(){
         return $this->hasMany('App\DocumentUpload');
     }
+
+    public function editorVariantDocument(){
+        return $this->hasMany('App\EditorVariantDocument');
+    }
     
     public function documentMandants(){
         return $this->hasMany('App\DocumentMandant','editor_variant_id','id') ;

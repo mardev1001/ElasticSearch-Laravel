@@ -1,4 +1,4 @@
-<h3>Dokumente anlegen - Daten Eingabe - Dokumentenart - Editor</h3>
+<h3 class="title">Dokumente anlegen - Daten Eingabe - Dokumentenart - Editor</h3>
 
 <input type="hidden" name="model_id" value="{{$data->id}}" />
 
@@ -21,6 +21,7 @@
 </div>
 
 <div class="clearfix"></div>
+<div class="row">
     <div class="parent-tabs col-xs-12 col-md-12">
     <hr/>
       <!-- Tab panes -->
@@ -46,7 +47,7 @@
        @endif
     </div>
   </div>
-
+</div>
 
 
 	

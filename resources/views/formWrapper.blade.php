@@ -50,12 +50,17 @@
             @endif
            @if( view()->exists($formWrapperData->controller.'.form') )
                 <div class="clearfix"></div>
-                <div class="col-xs-12 form-buttons">
-                    <button class="btn btn-white" type="reset">{{ trans('formWrapper.reset') }}</button>
-                    <button class="btn btn-primary" type="submit">{{ $formWrapperData->buttonMethod }}</button>
+                <div class="row">
+                    <div class="col-xs-12 form-buttons">
+                        <button class="btn btn-white" type="reset">{{ trans('formWrapper.reset') }}</button>
+                        <button class="btn btn-primary" type="submit">{{ $formWrapperData->buttonMethod }}</button>
+                    </div>
                 </div>
                 <br/>
             @endif
+            
+            </div> <!-- end box -->
+        </div> <!--end box-wrapper-->
     </form>
     <div class="clearfix"></div>
       

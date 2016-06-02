@@ -22,7 +22,8 @@ return [
     'fax' => 'fax',
     'email' => 'email',
     'website' => 'website',
-    'geschaftsfuhrer' => 'geschäftsführer',
+    'geschaftsfuhrer' => 'Geschäftsführer',
+    'geschaftsfuhrer_infos' => 'Geschäftsführer Infos',
     'historyAddButton' => 'zur Histories hinzufügen',
     'managerHistory' => 'Geschäftsführer historie',
     'infos' => 'infos',
@@ -51,18 +52,14 @@ return [
     'envWorkProtect' => 'Umwelt + Arbeitsschutz',
     'role' => 'Role',
     'user' => 'User',
+    'success' => 'Mandant erfolgreich gespeichert.',
     'saved' => 'Mandant erfolgreich gespeichert.',
-    
-    /* Mandantenverwaltung*/
     'search' =>'Suche Mandant/Benutzer',
+    'von' =>'Von',
+    'bis' =>'Bis',
     'showDeletedUsers' =>'gelöschte Benutzer anzeigen',
     'showDeletedClients' =>'gelöschte Mandanten anzeigen',
-    
-    //'name'
-    
-    /* end Mandantenverwaltung*/
-    
-    /*Controller messages*/
-    'error' => 'Mandant erfolgreich gespeichert'
+    'error' => 'Fehler beim Dateneintrag.',
+    'add' => 'Hinzufügen',
 
 ];

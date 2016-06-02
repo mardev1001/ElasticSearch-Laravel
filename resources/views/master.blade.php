@@ -32,20 +32,7 @@
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid first">
-         
-                @if(Session::has('message'))
-                    <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
-                @endif
                 
-                @if (isset($errors) && count($errors) > 0)
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
                 <!-- Backend content -->
                 @yield('content')
     
@@ -59,7 +46,10 @@
         
         <!-- Right sidebar -->
        
-    @include('layouts.footer')
+        @include('layouts.footer')
+        
+        <!-- Return to Top -->
+        <a href="#" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
     </div>
  
     
@@ -69,6 +59,6 @@
     <!-- JS files - end -->
     
     @yield('script')
-    
+       
     </body>
 </html>

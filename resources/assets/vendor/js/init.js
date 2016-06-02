@@ -19,7 +19,7 @@ $( function() {
         locale:'de',
         format:'DD.MM.YYYY'
     });
-
+    
     if( $('.tree-view').length ){
         let counter = 0;
         let $treeview = [];

@@ -43,9 +43,14 @@
     padding-left: 63px !important;
 }
 
+.box-wrapper, .box {
+    padding: 16px;
+}
 .box-wrapper {
-    padding: 15px;
     background-color: $box-grey-wrapper;
+}
+.box {
+    background-color: $white-color;
 }
 
 h1.page-title {

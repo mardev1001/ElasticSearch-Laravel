@@ -70,7 +70,8 @@
                     </div>
                 </div>
                 <div class="buttons wiki">
-                    <a href="#" class="btn btn-default">Zum WIKI</a>
+                    <br>
+                    <a href="#" class="btn btn-primary">Zum WIKI</a>
                     <div class="clearfix"></div><br>
                 </div>
             </div>

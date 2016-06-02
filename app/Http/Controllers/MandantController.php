@@ -19,9 +19,18 @@ use App\Role;
 class MandantController extends Controller
 {
     
-    public function __construct(){
-        // 
+    /**
+     * Class constructor
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function __construct()
+    {
+        // Define file upload path
+        $this->fileUploadPath = public_path() . "/files/pictures/mandants";
     }
+
+    
     /**
      * Display a listing of the resource.
      *
@@ -120,14 +129,18 @@ class MandantController extends Controller
      */
     public function update(MandantRequest $request, $id)
     {
-        
         RequestMerge::merge(['mandant_id' => $id ] );
         $mandant = Mandant::find($id);
         $mandantInfos = MandantInfo::firstOrNew( ['mandant_id' =>$id] );
         $mandant->fill( $request->all() );
         
         $mandant->hauptstelle = $request->has('hauptstelle');
+        $mandant->rights_wiki = $request->has('rights_wiki');
+        $mandant->rights_admin = $request->has('rights_admin');
         if($mandant->hauptstelle) $mandant->mandant_id_hauptstelle = null;
+        
+        if ($request->file())
+            $mandant->logo = $this->fileUpload($mandant, $this->fileUploadPath, $request->file());
         
         $mandantInfos->fill( $request->all() );
         if( $mandant->save() && $mandantInfos->save() )
@@ -176,4 +189,27 @@ class MandantController extends Controller
         $data = '';
         return view('partials.userRole', compact('collections','data'))->render();
     }
+
+    private function fileUpload($model, $path, $files)
+    {
+        if (is_array($files)) {
+            $uploadedNames = array();
+            foreach ($files as $file) {
+                $uploadedNames = $this->moveUploaded($file, $path, $model);
+            }
+        } else
+            $uploadedNames = $this->moveUploaded($files, $path, $model);
+        return $uploadedNames;
+    }
+
+    private function moveUploaded($file, $folder, $model)
+    {
+        $newName = str_slug('mandant-'. $model->id) . '.' . $file->getClientOriginalExtension();
+        $path = $folder . '/' . $newName;
+        $filename = $file->getClientOriginalName();
+        $uploadSuccess = $file->move($folder, $newName);
+        \File::delete($folder . '/' . $filename);
+        return $newName;
+    }
+    
 }

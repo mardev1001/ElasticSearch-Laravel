@@ -80,6 +80,10 @@ class Document extends Model
     public function editorVariant(){
             return $this->hasMany('App\EditorVariant');
     }
+    
+    public function editorVariantDocument(){
+            return $this->hasManyThrough('App\EditorVariantDocument','App\EditorVariant');
+    }
     public function lastEditorVariant(){
             return $this->hasMany('App\EditorVariant')->orderBy('variant_number','desc')->take(1);
     }
