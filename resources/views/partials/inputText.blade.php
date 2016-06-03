@@ -1,6 +1,6 @@
-    <label class="control-label">
+    <!--<label class="control-label">
         {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif 
-    </label>
+    </label> -->
     <input type="{{ $type }}" class="form-control 
     @foreach( $classes as $class)
         {{ $class }}
@@ -12,7 +12,7 @@
         {{$dataTag}}
     @endforeach
     
-    placeholder="{{ ucfirst($placeholder) }}"  autocomplete="off"
+    placeholder="{{ ucfirst($placeholder) }}@if( $required !=false )* @endif "  autocomplete="off"
         @if( $required !=false ) 
             required 
         @endif

@@ -48,10 +48,18 @@
 }
 .box-wrapper {
     background-color: $box-grey-wrapper;
+    margin-bottom: 15px;
 }
 .box {
-    background-color: $white-color;
+    background-color: $box-inner-color;
 }
+
+.box-header {
+    border-bottom: 1px solid $border-color;
+    padding: 15px 0;
+    margin: 0 0 20px 0;
+}
+
 
 h1.page-title {
     color: $dark-blue;

@@ -21,6 +21,18 @@
     </head>
 
     <body>
+        <!-- loader div-->
+        <!-- This will be used later so don't remove it-->
+        <!--
+        <div id="page-loader">
+      	<div class="centered-columns">
+          	<div class="centered-column">
+              	<span class="fa fa-spin fa-spinner"></span>
+              </div>
+          </div>
+      </div>
+        -->
+        <!--End loader div-->
     <div id="wrapper">
         
         <!-- Header search -->

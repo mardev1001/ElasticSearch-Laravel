@@ -13,7 +13,6 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        
         <div class="box-wrapper col-md-12">
             <div class="box">
                 <div class="row">
@@ -30,24 +29,24 @@
                             @if( count($data->editorVariant) > 0) 
                                 @foreach( $data->editorVariant as $variant)
                                     <div class="tab-pane" id="variant{{$variant->variant_number}}">
-                                        
-                                        <div class="col-xs-6  home">
-                                            <h2 class="title">Anhänge für variant {{$variant->variant_number}}:</h2>
-                                            <div class="box home">
-                                                @if( array_key_exists( $variant->id,$attachmentArray ) )
-                                                    @foreach( $attachmentArray[$variant->id] as $k=>$ar)
-                                                    <div class="tree-view" data-selector="variant-tree-{{$variant->variant_number}}-{{$k}}">
-                                                        <div class="variant-tree-{{$variant->variant_number}}-{{$k}} hide">
-                                                            {{ $ar }}
+                                        <div class="row">
+                                            <div class="col-xs-6 ">
+                                                <h2 class="title">Anhänge für variant {{$variant->variant_number}}:</h2>
+                                                <div class="">
+                                                    @if( array_key_exists( $variant->id,$attachmentArray ) && $attachmentArray[$variant->id] != '[]'  )
+                                                          
+                                                        <div class="tree-view" data-selector="variant-tree-{{$variant->variant_number}}">
+                                                            <div class="variant-tree-{{$variant->variant_number}} hide">
+                                                                {{ ($attachmentArray[$variant->id]) }}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    @endforeach
-                                                @else
-                                                    <p class="text-danger">No attachments for variant {{$variant->variant_number}}</p>
-                                                @endif
+                                                      
+                                                    @else
+                                                        <p class="text-danger">No attachments for variant {{$variant->variant_number}}</p>
+                                                    @endif
+                                                </div>
                                             </div>
-                                        </div><!--end box-wrapper --> 
-                                   
+                                        </div>
                 
                                     <div class="clearfix"></div>  
                                     
@@ -91,7 +90,8 @@
                                         {!! Form::open([
                                         'url' => 'dokumente/anhange/'.$data->id,
                                         'method' => 'POST',
-                                        'class' => 'horizontal-form' ]) !!}
+                                        'enctype' => 'multipart/form-data',
+                                        'class' => 'horizontal-form form-check' ]) !!}
                                         <div class="col-xs-12">
                                             <h3>{{trans('documentForm.newDocument')}}</h3>
                                         </div>
@@ -231,7 +231,8 @@
                                                 <button class="btn btn-primary" type="submit" name="save" value="save">
                                                     <span class="fa fa-floppy-o"></span> Speichern
                                                 </button>
-                                                <button class="btn btn-primary" type="submit" name="next" value="next"> 
+                                                <button class="btn btn-primary" type="button" name="next" value="next"
+                                                @if( isset($nextButton) ) data-link="{{$nextButton}}" @endif  > 
                                                     <span class="fa fa-chevron-right"></span>
                                                     Weiter
                                                 </button>

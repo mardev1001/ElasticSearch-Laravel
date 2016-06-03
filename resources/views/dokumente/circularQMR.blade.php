@@ -64,11 +64,13 @@
         <br/>
             
       
-        <div class="col-xs-12 col-md-12 box box-wrapper">
-            <h4 class="title">{{ trans('rundschreibenQmr.allQmr')}}</h4>
-            
-            <div class="tree-view" data-selector="test2">
-                <div class="test2 hide">{{$data2}}</div>
+        <div class="col-xs-12 col-md-12 box-wrapper">
+            <div class="box">
+                <h4 class="title">{{ trans('rundschreibenQmr.allQmr')}}</h4>
+                
+                <div class="tree-view" data-selector="test2">
+                    <div class="test2 hide">{{$data2}}</div>
+                </div>
             </div>
         </div>
         <div class="clearfix"></div>

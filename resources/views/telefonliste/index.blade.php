@@ -66,7 +66,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <h4>{{ trans('telefonListeForm.overview') }}</h4>
+        <h4 class="title">{{ trans('telefonListeForm.overview') }}</h4>
         
         <div class="panel-group" role="tablist" data-multiselectable="true" aria-multiselectable="true">
         

@@ -8,12 +8,50 @@ h1, h2, h3 {
     color: $dark-blue !important;
 }
 
-p, a, #page-wrapper label {
+p, a, #page-wrapper label, b, strong,
+#page-wrapper .table > thead > tr > th,
+#page-wrapper .table > tbody > tr > th, 
+#page-wrapper .table > tfoot > tr > th,
+#page-wrapper .table > thead > tr > td, 
+#page-wrapper .table > tbody > tr > td,
+#page-wrapper .table > tfoot > tr > td {
     font-family: $primary-font-family;
     font-size: 14px;
     color: $grey;
     line-height: 16px;
+}
+
+p, a, #page-wrapper label {
     font-weight: normal;
+}
+
+
+#page-wrapper .table > thead > tr > th,
+#page-wrapper .table > tbody > tr > th, 
+#page-wrapper .table > tfoot > tr > th, 
+#page-wrapper .table > thead > tr > td, 
+#page-wrapper .table > tbody > tr > td,
+#page-wrapper .table > tfoot > tr > td {
+    padding: 15px;
+    vertical-align: middle;
+    border-top: none;
+    border-bottom: 1px solid $border-color;
+}
+
+#page-wrapper td .form-group,
+#page-wrapper td .radio,
+#page-wrapper td .checkbox {
+    margin: 0;
+}
+
+#page-wrapper .table > tbody > tr > th:first-child,
+#page-wrapper .table > tbody > tr > td:first-child {
+    padding-left: 0;
+}
+
+#page-wrapper .table > tbody > tr > th:last-child,
+#page-wrapper .table > tbody > tr > td:last-child {
+    padding-right: 0;
 }
 
 #page-wrapper .text-info {

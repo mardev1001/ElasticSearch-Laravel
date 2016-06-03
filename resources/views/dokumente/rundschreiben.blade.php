@@ -52,21 +52,23 @@
 
 <div class="clearfix"></div> <br>
 
-<div class="row">
-    <form action="" method="GET">
-        <div class="input-group">
-            <div class="col-lg-12">
-                {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
+<div class="col-xs-12 box-wrapper">
+    <div class="row">
+        <form action="" method="GET">
+            <div class="input-group">
+                <div class="col-lg-12">
+                    {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
+                </div>
+                <div class="col-lg-12">
+                    <span class="custom-input-group-btn">
+                        <button type="submit" class="btn btn-primary">
+                            <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
+                        </button>
+                    </span>
+                </div>
             </div>
-            <div class="col-lg-12">
-                <span class="custom-input-group-btn">
-                    <button type="submit" class="btn btn-primary">
-                        <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
-                    </button>
-                </span>
-            </div>
-        </div>
-   </form>
+       </form>
+    </div>
 </div>
 
 <div class="clearfix"></div> <br>

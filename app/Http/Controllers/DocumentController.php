@@ -141,8 +141,8 @@ class DocumentController extends Controller
         //  dd($fileNames);
         $data = Document::findOrNew($request->get('model_id'));
         $data->fill($request->all() );
-        $data->save();
         $dirty=$this->dirty($dirty,$data);
+        $data->save();
        
         $id = $data->id; 
       
@@ -154,8 +154,8 @@ class DocumentController extends Controller
         $editorVariantId->document_id = $id;
         $editorVariantId->variant_number = 1;
         $editorVariantId->inhalt = $request->get('inhalt');
-        $editorVariantId->save();
         $dirty=$this->dirty($dirty,$editorVariantId);
+        $editorVariantId->save();
         $editorVariantId::where('document_id',$id)->first();
         
         if(count($fileNames) > 0 ){
@@ -164,7 +164,7 @@ class DocumentController extends Controller
                 $documentAttachment->editor_variant_id = $editorVariantId->id;
                 $documentAttachment->file_path = $fileName;
                 $documentAttachment->save();
-                $dirty=$this->dirty($dirty,$documentAttachment);
+                $dirty = true;
             }
         }
         if($dirty == true)
@@ -224,8 +224,8 @@ class DocumentController extends Controller
          
         $data = Document::findOrNew($request->get('model_id'));
         $data->fill($request->all() );
-        $data->save();
         $dirty=$this->dirty(false,$data);
+        $data->save();
         $id = $data->id; 
        
         $counter = 0;
@@ -242,8 +242,8 @@ class DocumentController extends Controller
                 $editorVariantId->variant_number = $counter;
                 // $editorVariantId->document_status_id = 1;
                 $editorVariantId->inhalt = $request->get('inhalt');
-                $editorVariantId->save();
                 $dirty=$this->dirty($dirty,$editorVariantId);
+                $editorVariantId->save();
                 //  var_dump($editorVariantId);
                 //  echo '<br/>';
                 //Upload documents
@@ -252,10 +252,10 @@ class DocumentController extends Controller
                 $documentAttachment = new DocumentUpload();
                 $documentAttachment->editor_variant_id = $editorVariantId->id;
                 $documentAttachment->file_path = $fileName;
+                $dirty=$this->dirty($dirty,$documentAttachment);
                 $documentAttachment->save();
                 //  var_dump($documentAttachment);
                 //  echo '<hr/>';
-                $dirty=$this->dirty($dirty,$documentAttachment);
             }
         // dd($counter);
         if($dirty == true)
@@ -293,7 +293,7 @@ class DocumentController extends Controller
         $data = Document::findOrNew($request->get('model_id'));
         $data->fill($request->all() );
         $data->save();
-        $dirty=$this->dirty(false,$data);
+        $dirty=$this->dirty(false ,$data);
         $id = $data->id; 
         
         //check if has varianttfirstcount
@@ -307,8 +307,8 @@ class DocumentController extends Controller
                 $editorVariant->document_id = $id;
                 $editorVariant->variant_number = $variantNumber;
                 $editorVariant->inhalt = $v;
-                $editorVariant->save();
                 $dirty=$this->dirty($dirty,$editorVariant);
+                $editorVariant->save();
             }
         
         
@@ -353,7 +353,8 @@ class DocumentController extends Controller
     public function attachments($id,$backButton=null)
     {   
         $data = Document::find($id);
-        $backButton = '/dokumente/editor/'.$data->id.'/edit';
+        $backButton = '/dokumente/'.$data->id.'/edit';
+        $nextButton = '/dokumente/rechte-und-freigabe/'.$data->id;
         $url = '';
         //$variants, $documentAttachments, $existingDocuments
         $documents = Document::where('document_type_id',5)->get();// documentTypeId 5 = Vorlagedokument
@@ -363,32 +364,7 @@ class DocumentController extends Controller
         /*Check if document has editorVariant*/
         if( count( $data->editorVariant) > 0 )
             foreach( $data->editorVariant as $variant){
-                // var_dump('Varinat Id:'.$variant->id);
-                // echo '<br/>';
-                
-                        // dd($variant->editorVariantDocument);
-                foreach($variant->editorVariantDocument as $evd){
-                    if( $evd->document_id != null ){
-                        $secondDocumentVariants = EditorVariant::where('document_id',$evd->document_id)->get();
-                        // $additionalArray[] = $this->document->generateTreeview($secondDocumentVariants );
-                        
-                         
-                        // echo '<br/>';
-                       /* if( count( $secondDocumentVariants ) > 0 ){
-                            foreach($secondDocumentVariants as $secDocVariant){
-                                //  var_dump('$secDocVariant cnt:'.count( $secDocVariant ) );
-                                //  echo '<br/>';
-                                $additionalArray= array();
-                                if( count($secDocVariant->documentUpload) > 0){
-                                   $additionalArray[] = $this->document->generateTreeview($secDocVariant->documentUpload, false, false );
-                                $attachmentArray[$variant->id] = $additionalArray;  
-                                }
-                            }
-                        }*/
-                    }
-                  
-                }
-                // echo '<hr/>';
+                $attachmentArray[$variant->id] = $this->document->generateTreeview($variant,false,false,$id);
             }
             // dd($attachmentArray);
         /*End Check if document has attachments*/
@@ -414,7 +390,7 @@ class DocumentController extends Controller
 
         
         return view('dokumente.attachments', compact('collections','data','attachmentArray','documents','url','documentTypes',
-        'isoDocuments','mandantUsers','backButton') );
+        'isoDocuments','mandantUsers','backButton','nextButton') );
     }
     
     /**
@@ -435,10 +411,6 @@ class DocumentController extends Controller
         /*If option 1*/
             if($request->has('attach')){
                 $currentDocumentLast =$data->lastEditorVariant[0];
-                
-                $foreignDocumentUploads = $document->documentUploads;
-                 
-                if( !$foreignDocumentUploads->isEmpty() ){
                     /*
                         Opcija 1 razložena
                         za svaki document upload od drugog documenta
@@ -447,13 +419,16 @@ class DocumentController extends Controller
                         i documentUploads uzmi path od drugog dokumenta i stavi editor_variant_id od trenutnog
                     */
                     $currDocEv = EditorVariant::find($currentEditorVariant);
-                    
-                    $newAttachment = new EditorVariantDocument();
-                    $newAttachment->editor_variant_id = $currentEditorVariant;
-                    $newAttachment->document_id = $document->id;
-                    $newAttachment->document_status_id = 1;
-                    $newAttachment->save();
-            }
+                    $documentCheck = EditorVariantDocument::where('editor_variant_id',$currentEditorVariant)->where('document_id',$document->id)->count();
+                  
+                    if( $documentCheck < 1){
+                        $newAttachment = new EditorVariantDocument();
+                        $newAttachment->editor_variant_id = $currentEditorVariant;
+                        $newAttachment->document_id = $document->id;
+                        $newAttachment->document_status_id = 1;
+                        $newAttachment->save();
+                    }
+            
         }
         
         /*If option 2*/
@@ -475,41 +450,46 @@ class DocumentController extends Controller
             $path = $this->pdfPath;
             //dd($request->get('model_id') );
             if( $request->file() )
-                $fileNames = $this->fileUpload($model,$path,$request->file() );
+                 $fileNames = $this->fileUpload($lastId,$path,$request->file() );
                 
                //not summary, it is inhalt + attachment
             
             $counter = 0;
-            
             if( isset($fileNames) && count($fileNames) > 0)
                 foreach( $fileNames as $fileName ){
                     $counter++;
                     //Editor variant  upload
-                    $editorVariantId = EditorVariant::where('document_id',$id)->where('variant_number',$counter)->first();
-                    if( $editorVariantId == null)
-                        $editorVariantId = new EditorVariant();
-                    $editorVariantId->document_id = $id;
+                    $editorVariantId = new EditorVariant();
+                    $editorVariantId->document_id = $lastId->id;
                     $editorVariantId->variant_number = $counter;
                     // $editorVariantId->document_status_id = 1;
                     $editorVariantId->inhalt = $request->get('inhalt');
+                    $dirty=$this->dirty(false,$editorVariantId);
                     $editorVariantId->save();
-                    $dirty=$this->dirty($dirty,$editorVariantId);
+                    
                     
                     
                     $documentAttachment = new DocumentUpload();
                     $documentAttachment->editor_variant_id = $editorVariantId->id;
                     $documentAttachment->file_path = $fileName;
-                    $documentAttachment->save();
                     $dirty=$this->dirty($dirty,$documentAttachment);
+                    $documentAttachment->save();
+                
+                    
+                    
+                    
+                    
                 }
-            /*end upload files*/
+                /*end upload files*/
                 
                 $currDocEv = EditorVariant::find($currentEditorVariant);
                 $newAttachment = new EditorVariantDocument();
                 $newAttachment->editor_variant_id = $currentEditorVariant;
-                $newAttachment->document_id = $document->id;
+                $newAttachment->document_id = $lastId->id;
                 $newAttachment->document_status_id = 1;
                 $newAttachment->save();
+                
+               
             
             
             $adressats = Adressat::all();
@@ -523,10 +503,18 @@ class DocumentController extends Controller
             }
             
             $backButton = 'dokumente/'.$data->id.'/edit';
-            session()->flash('message',trans('documentForm.documentCreateSuccess'));
+            
+             $currDocEv = EditorVariant::find($currentEditorVariant);
+                    
+                    $newAttachment = new EditorVariantDocument();
+                    $newAttachment->editor_variant_id = $currentEditorVariant;
+                    $newAttachment->document_id = $document->id;
+                    $newAttachment->document_status_id = 1;
+                    $newAttachment->save();
+            
         }
         
-        if($request->has('someMumbe') )
+        if($request->has('next') )
             return redirect('dokumente/rechte-und-freigabe/'.$id );
     
        return redirect()->action('DocumentController@attachments', $id);
@@ -540,7 +528,7 @@ class DocumentController extends Controller
     public function anlegenRechteFreigabe($id,$backButton=null)
     {   
         $data = Document::find($id);
-        $backButton = '/dokumente/editor/'.$data->id.'/edit';
+        $backButton = '/dokumente/'.$data->id.'/edit';
         if($data->pdf_upload == true || $data->pdf_upload==1)
             $backButton = '/dokumente/pdf-upload/'.$data->id.'/edit'; 
         elseif( $data->pdf_upload == false &&  $data->document_type_id == 5 )  
@@ -572,8 +560,8 @@ class DocumentController extends Controller
         if($request->get('roles')!= null && in_array('Alle',$request->get('roles') ) ){
             $document->approval_all_roles = 1; 
             $document->email_approval = $request->get('email_approval');
-            $document->save();
             $dirty=$this->dirty(false,$document);
+            $document->save();
             //Process document approval users
         }
         else{
@@ -581,33 +569,35 @@ class DocumentController extends Controller
              $document->save();
              $dirty=$this->dirty(false,$document);
         }
+        
         $documentApproval = DocumentApproval::where('document_id',$id)->get();
         $documentApprovalPluck = DocumentApproval::where('document_id',$id)->pluck('user_id');
         //Process document approval users
         
         //do document approvals need soft delete
-        $this->document->processOrSave($documentApproval,$documentApprovalPluck,$request->get('approval_users'),
-        'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('document_id'=>array($id) ) );
+        if( !empty( $request->get('approval_users') ) )
+            $this->document->processOrSave($documentApproval,$documentApprovalPluck,$request->get('approval_users'),
+            'DocumentApproval',array('user_id'=>'inherit','document_id'=>$id),array('document_id'=>array($id) ) );
         
         
         //check if has variant
         foreach($request->all() as $k => $v)
-            if (strpos($k, 'variante-') !== false){
+            if (strpos($k, 'variante-') !== false && !empty($v) ){
                 $variantNumber = $this->document->variantNumber($k);
                 
                 if( in_array('Alle',$request->get($k) ) ){
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     $editorVariant->approval_all_mandants = 1; 
-                    $editorVariant->save();
                     $dirty=$this->dirty($dirty,$editorVariant);
+                    $editorVariant->save();
                     // dd($editorVariant);
                 }
                 else{
                     //editorVariant insert/edit
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     $editorVariant->approval_all_mandants = 0; 
-                    $editorVariant->save();
                     $dirty=$this->dirty($dirty,$editorVariant);
+                    $editorVariant->save();
                     
                     /*Create DocumentManant */
                     $documentMandants = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->get();
@@ -615,6 +605,7 @@ class DocumentController extends Controller
                         $documentMandant = new DocumentMandant();
                         $documentMandant->document_id = $id;
                         $documentMandant->editor_variant_id = $editorVariant->id;
+                        $dirty=$this->dirty($dirty,$documentMandant);
                         $documentMandant->save();
                         $documentMandants = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->get();
                     } 
@@ -659,11 +650,9 @@ class DocumentController extends Controller
             
             //save to Published documents
             $document->document_status_id = 2;
-            
-            
-            
-            $document->save();
             $dirty=$this->dirty($dirty,$document);
+            $document->save();
+            
             if($dirty == true)
                 session()->flash('message',trans('documentForm.fastPublished'));
             return redirect('/');
@@ -672,17 +661,18 @@ class DocumentController extends Controller
             $document->document_status_id = 2;
             
             //if send email-> send emails || messages
-            
-            $document->save();
             $dirty=$this->dirty($dirty,$document);
+            $document->save();
+            
             if($dirty == true)
-             session()->flash('message',trans('documentForm.askPublishers'));
+                session()->flash('message',trans('documentForm.askPublishers'));
             return redirect('/');
         }
         else{
             //just refresh the page 
-            $document->save();
             $dirty=$this->dirty($dirty,$document);
+            $document->save();
+            
             if($dirty == true)
                 session()->flash('message',trans('documentForm.saved'));
            return redirect('dokumente/rechte-und-freigabe/'.$id );        
@@ -747,6 +737,7 @@ class DocumentController extends Controller
         RequestMerge::merge(['version' => 1] );
         $data = Document::find( $id )->fill( $request->all() )->save();
         $data = Document::find($id);
+        
         $variant = $data->editorVariant();
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
         $url = $setDocument->url;
@@ -944,13 +935,14 @@ class DocumentController extends Controller
 		}
 		if( is_array($files) ){
 		    $uploadedNames = array();
-	
+	        $counter=0;
 		    foreach($files as $file){
 		        if( is_array($file)){
 		            	   
 		            foreach($file as $f){
+		                $counter++;
 		                if($f !== NULL)
-		                 $uploadedNames[] =  $this->moveUploaded($f,$folder,$model);
+		                 $uploadedNames[] =  $this->moveUploaded($f,$folder,$model,$counter);
 		            }
 		        }
 		        else
@@ -971,9 +963,10 @@ class DocumentController extends Controller
      * @param DB object(collection) $model
      * @return string $newName
      */
-    private function moveUploaded($file,$folder,$model){
+    private function moveUploaded($file,$folder,$model,$counter=0){
         //$filename = $image->getClientOriginalName();
-		$newName = str_slug($model->name).'-'.date("d-m-Y-H:i:s").'-'.substr(time(),0,4).'.'.$file->getClientOriginalExtension();
+        $diffMarker = time()+$counter;
+		$newName = str_slug($model->name).'-'.date("d-m-Y-H:i:s").'-'.$diffMarker.'.'.$file->getClientOriginalExtension();
 		$path = "$folder/$newName";
 // 		dd($path);
         $filename = $file->getClientOriginalName();
@@ -1043,10 +1036,7 @@ class DocumentController extends Controller
         if( $attachment == true ){
           
         }
-       
-        
-       
-        return $newName;
+       return $newName;
     }
     
     /**
@@ -1073,8 +1063,7 @@ class DocumentController extends Controller
      * @return bool 
      */
     private function dirty($dirty,$model){
-       
-        if( $model->isDirty() || $dirty == true )
+        if( $model->isDirty() ||  $dirty == true )
             return true;
         return false;
        

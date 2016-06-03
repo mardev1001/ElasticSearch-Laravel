@@ -12,39 +12,41 @@
         </div>
     </div>
     <div class="clearfix"></div>
-    {!! Form::open([
-           'url' => 'mandanten/search',
-           'method' => 'POST',
-           'class' => 'horizontal-form' ]) !!}
-        <div class="row">
-            <!-- input box-->
-            <div class="col-lg-6"> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('search','',old('search'),trans('mandantenForm.search') , 
-                           trans('mandantenForm.search') , true  ) !!}
-                </div>   
-            </div><!--End input box-->
-            <!-- input box-->
-            <div class="col-lg-6"> 
-                <div class="form-group">
-                    <br>
-                    {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
-                    {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
-                </div>   
-            </div><!--End input box-->
-            
-                <div class="clearfix"></div>
-            
-            <!-- button div-->    
-            <div class="col-md-3">
-                <div class="form-wrapper">
-                    <button type="submit" class="btn btn-primary">{{ trans('benutzerForm.search') }}</button>
-                    <button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>
-                </div>
-            </div><!-- End button div-->    
-        </div>           
-    </form>
-
+    
+    <div class="col-xs-12 box-wrapper">
+        {!! Form::open([
+               'url' => 'mandanten/search',
+               'method' => 'POST',
+               'class' => 'horizontal-form' ]) !!}
+            <div class="row">
+                <!-- input box-->
+                <div class="col-lg-6"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('search','',old('search'),trans('mandantenForm.search') , 
+                               trans('mandantenForm.search') , true  ) !!}
+                    </div>   
+                </div><!--End input box-->
+                <!-- input box-->
+                <div class="col-lg-6"> 
+                    <div class="form-group">
+                        <br>
+                        {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
+                        {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
+                    </div>   
+                </div><!--End input box-->
+                
+                    <div class="clearfix"></div>
+                
+                <!-- button div-->    
+                <div class="col-md-3">
+                    <div class="form-wrapper">
+                        <button type="submit" class="btn btn-primary">{{ trans('benutzerForm.search') }}</button>
+                        <button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>
+                    </div>
+                </div><!-- End button div-->    
+            </div>           
+        </form>
+    </div>
 
     <div class="clearfix"><br></div>
   

@@ -36,7 +36,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::resource('dokumente', 'DocumentController');//documente editor in CRUD
         
-        Route::post('mandanten/generate-user-role', 'MandantController@generateUserRole');
+        // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
+        Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles', 'uses' => 'MandantController@createInternalMandantUser']);
         Route::post('mandanten/search', 'MandantController@search');
         Route::patch('mandanten/activate', 'MandantController@mandantActivate');
         Route::resource('mandanten', 'MandantController');

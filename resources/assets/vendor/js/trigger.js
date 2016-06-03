@@ -96,10 +96,12 @@ $( function() {
             url: form.attr('action'),
             data: form.serialize(),
             success: function(data) {
+                // console.log(data);
               form.closest('.bind-before').before(data);
+              $('.select.mandant-roles').chosen();
             },
             error:function(data){
-               
+               console.log(data);
 
 
             },
@@ -109,7 +111,7 @@ $( function() {
         e.preventDefault();
     };
    
-    $('[data-adder]').on('click touch', addRow);
+    // $('[data-adder]').on('click touch', addRow);
     /*End copy new line*/
      /*
      *Prevent accordion collapse trigger from adding hashtags at the address bar. 
@@ -228,4 +230,10 @@ $( function() {
         }, 500);
     });
     /* End Go to top */
+    
+    /* On click check if form is empty and submit or go to URL*/
+     $('[data-link]').on('click touch',function(e){
+        window.location = $(this).data('link');
+    });
+    /* End On click check if form is empty and submit or go to URL*/
 });

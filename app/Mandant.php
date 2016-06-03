@@ -23,6 +23,10 @@ class Mandant extends Model
     }
     
     public function mandantUsers(){
-        return $this->hasMany('App\MandantUser','mandant_id','id');
+        return $this->hasMany('App\MandantUser', 'mandant_id', 'id');
+    }
+    
+    public function internalUsers(){
+        return $this->hasMany('App\InternalMandantUser', 'mandant_id', 'id');
     }
 }

@@ -15,6 +15,7 @@ use App\MandantInfo;
 use App\MandantUser;
 use App\User;
 use App\Role;
+use App\InternalMandantUser;
 
 class MandantController extends Controller
 {
@@ -116,8 +117,10 @@ class MandantController extends Controller
     {
         $roles = Role::all();
         $data = Mandant::find($id);
+        $mandantUsers = User::all();
+        $internalMandantUsers = InternalMandantUser::where('mandant_id', $id)->get();
         $mandantsAll = Mandant::all();
-        return view('formWrapper', compact('data','roles', 'mandantsAll'));
+        return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers'));
     }
 
     /**
@@ -169,25 +172,49 @@ class MandantController extends Controller
      */
     public function destroy($id)
     {
-        if($id!=1){
+        if($id != 1) {
             $mandant = Mandant::find($id);
         }
-        
-        // dd($mandant);
         return back()->with(['message'=>'Mandant kann nicht gelöscht werden.']);
     }
     
     /**
-     * Generate and return HTML row
+     * Create internal roles/users for the mandant
      *
+     * @param  Request  $request
      * @param  array  $id
      * @return \Illuminate\Http\Response
      */
-    public function generateUserRole()
+    public function createInternalMandantUser(Request $request, $id)
     {
-        $collections = array();
-        $data = '';
-        return view('partials.userRole', compact('collections','data'))->render();
+        InternalMandantUser::create(['mandant_id' => $id, 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id'),]);
+        return back()->with('message', trans('mandantenForm.role-added'));
+    }
+    
+    /**
+     * Update internal roles/users for the mandant
+     *
+     * @param  Request  $request
+     * @param  array  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateInternalMandantUser(Request $request, $id)
+    {
+        // InternalMandantUser::create(['mandant_id' => $id, 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id'),]);
+        // return back()->with('message', trans('mandantenForm.role-added'));
+    }
+    
+    /**
+     * Delete internal roles/users for the mandant
+     *
+     * @param  Request  $request
+     * @param  array  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteInternalMandantUser($id)
+    {
+        InternalMandantUser::destroy($id);
+        return back()->with('message', trans('mandantenForm.role-removed'));
     }
 
     private function fileUpload($model, $path, $files)

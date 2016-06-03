@@ -18,39 +18,44 @@
 <div class="clearfix"></div>
 
 <fieldset class="form-group">
-    
-    <h4 class="title">{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.add') }}</h4>
-    
-    <div class="row">
-        <!-- input box-->
-        <div class="col-lg-4"> 
+    <div class="box-wrapper">
+        <h4 class="title">{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.add') }}</h4>
+        
+        <div class="row">
+            <!-- input box-->
+            
             {!! Form::open(['route' => 'iso-kategorien.store']) !!}
-                <div class="form-group">
-                    {!! ViewHelper::setInput('name', '', old('name'), trans('isoKategorienForm.name'), trans('isoKategorienForm.name'), true) !!} 
-                    
-                    <div class="checkbox">
-                        <br>
+                <div class="col-lg-4"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('name', '', old('name'), trans('isoKategorienForm.name'), trans('isoKategorienForm.name'), true) !!} 
+                     </div> 
+                </div>
+                <div class="col-lg-2"> 
+                    <div class="checkbox no-margin-top">
                         <input class="hide-input" id="hide-input" data-hide-target="iso-categories" data-disable-target="iso-categories" type="checkbox" name="parent"/>
                         <label for="hide-input">{{ trans('isoKategorienForm.parent-category') }}</label>
                     </div>
                 </div>
                 <div class="form-group" data-hide="iso-categories">
-                    <label>{{ trans('isoKategorienForm.parent-category') }}</label>
-                   
-                    <select name="category_id" class="form-control select" data-disable="iso-categories" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
-                         <option value=""></option>
-                         @foreach($isoCategories as $isoCategory)
-                             @if($isoCategory->parent)
-                                 <option value="{{ $isoCategory->id }}"> {{ $isoCategory->name }} </option>
-                             @endif
-                         @endforeach
-                    </select>
+                     <div class="col-lg-4"> 
+                        <!--<label>{{ trans('isoKategorienForm.parent-category') }}</label>-->
+                       
+                        <select name="category_id" class="form-control select" data-disable="iso-categories" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
+                             <option value=""></option>
+                             @foreach($isoCategories as $isoCategory)
+                                 @if($isoCategory->parent)
+                                     <option value="{{ $isoCategory->id }}"> {{ $isoCategory->name }} </option>
+                                 @endif
+                             @endforeach
+                        </select>
+                    </div>
                 </div>
-                <button class="btn btn-primary">{{ trans('isoKategorienForm.add') }} </button>
-            {!! Form::close() !!}
-        </div><!--End input box-->
+                <div class="col-lg-2"> 
+                    <button class="btn btn-primary">{{ trans('isoKategorienForm.add') }} </button>
+                </div>
+                {!! Form::close() !!}
+            </div><!--End input box-->
     </div>
-    
 </fieldset>
 
 

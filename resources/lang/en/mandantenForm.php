@@ -50,8 +50,8 @@ return [
     'fieldService' => 'EDV-Außendienst',
     'distribution' => 'Vertrieb',
     'envWorkProtect' => 'Umwelt + Arbeitsschutz',
-    'role' => 'Role',
-    'user' => 'User',
+    'role' => 'Rolle',
+    'user' => 'Benutzer',
     'success' => 'Mandant erfolgreich gespeichert.',
     'saved' => 'Mandant erfolgreich gespeichert.',
     'search' =>'Suche Mandant/Benutzer',
@@ -61,5 +61,6 @@ return [
     'showDeletedClients' =>'gelöschte Mandanten anzeigen',
     'error' => 'Fehler beim Dateneintrag.',
     'add' => 'Hinzufügen',
+    'role-added' => 'Rolle/Benutzer efrolgreich gespeichert.',
 
 ];

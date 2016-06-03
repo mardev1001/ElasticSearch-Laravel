@@ -46,8 +46,7 @@ class DocumentRepository
     * @param  bool $document
     * @return object array $array
     */
-    public function generateTreeview( $array = array(), $tags = false, $document=true ){
-        
+    public function generateTreeview( $array = array(), $tags = false, $document=true,$documentId=0 ){
         /*
         // Bootstrap treeview JSON structure
         {
@@ -102,15 +101,36 @@ class DocumentRepository
             array_push($treeView, $node);
         }
         else{
-            foreach ($documents as $data) {
-                 $node = new \StdClass();
-                  $node->text = basename($data->file_path);
-                 $node->icon = 'fa fa-file-o';
-                $node->href = "#".$data->file_path;
+            foreach($documents->editorVariantDocument as $evd){
+                    if( $evd->document_id != null && $documentId != 0 && $evd->document_id != $documentId){
+                        $secondDoc = Document::find($evd->document_id);
+                        $node = new \StdClass();
+                        $node->text = $secondDoc->name;
+                        $node->icon = 'icon-parent';
+                        $node->href = route('dokumente.show', $secondDoc->id);
+                        
+                        if(!$secondDoc->documentUploads->isEmpty()){
+                            
+                            $node->nodes = array();
+                            if($tags) $node->tags = array(sizeof($secondDoc->documentUploads));  
+                            
+                            foreach ($secondDoc->documentUploads as $upload) {
+                                $subNode = new \StdClass();
+                                $subNode->text = basename($upload->file_path);
+                                $subNode->icon = 'fa fa-file-o';
+                                $subNode->href = "#".$upload->file_path;
                 
-                array_push($treeView, $node);
+                                array_push($node->nodes, $subNode);
+                            }
+                        }
+                        
+                        array_push($treeView, $node); 
+                    }
+                  
+                }
+                
         }
-        }
+        
         return json_encode($treeView);
         
     }

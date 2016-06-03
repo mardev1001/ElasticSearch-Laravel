@@ -92,10 +92,15 @@ $(function() {
     
     // Hide or show PDF upload checkbox 
 
-    if($(".document-type-select .select").val() == 3)
+    if($(".document-type-select .select").val() == 3){
         $('.pdf-checkbox').show();
-    else
+        $('.pdf-checkbox').find('input[name="pdf_upload"]').val(1);
+    }
+    else{
         $('.pdf-checkbox').hide();
+        $('.pdf-checkbox').find('input[name="pdf_upload"]').removeAttr('value');
+        
+    }
     
     $('.document-type-select .select').chosen().change(function(event){
         if(event.target == this){
