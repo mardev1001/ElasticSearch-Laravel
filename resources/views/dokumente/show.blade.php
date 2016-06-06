@@ -74,7 +74,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-        Kommentare kommen hier ...
+        <span class="text">Kommentare kommen hier ...</span>
     </div>
 </div>
 

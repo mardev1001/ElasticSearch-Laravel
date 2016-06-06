@@ -1,6 +1,6 @@
-    <!--<label class="control-label">
-        {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif 
-    </label> -->
+    <!--<label class="control-label">-->
+    <!--    {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif -->
+    <!--</label> -->
     <input type="{{ $type }}" class="form-control 
     @foreach( $classes as $class)
         {{ $class }}

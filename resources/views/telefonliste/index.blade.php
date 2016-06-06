@@ -37,7 +37,7 @@
                             </span> 
                            
                         </div>
-                        <div class="col-xs-12 col-md-3">
+                        <div class="col-xs-12 col-md-4">
                             <div class="checkbox no-margin-top">
                                 
                                 <input type="checkbox" name="deletedUsers" id="deletedUsers">
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                         {{ Form::close() }}
-                        <div class="col-xs-12 col-md-5 form-inline">
+                        <div class="col-xs-12 col-md-4 form-inline">
                             <div class="pull-right">
                                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
                                     <i class="fa fa-eye"></i> {{ trans('telefonListeForm.appearance') }}

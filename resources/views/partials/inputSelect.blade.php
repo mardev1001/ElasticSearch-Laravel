@@ -1,8 +1,8 @@
-  <label class="control-label">
-        {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif 
-    </label>
+  <!--<label class="control-label">-->
+  <!--      {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif -->
+  <!--  </label>-->
 <select name="{{$inputName}}" class="form-control select @foreach($classes as $class) {{$class}} @endforeach"
-data-placeholder="{{ ucfirst($placeholder) }}" 
+data-placeholder="{{ ucfirst($placeholder) }}@if( $required !=false )* @endif" 
 @foreach($dataTag as $tag) {{$tag}} @endforeach
 
 @foreach($attributes as $attr) {{$attr}} @endforeach

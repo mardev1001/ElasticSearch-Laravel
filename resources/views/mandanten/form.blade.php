@@ -10,7 +10,6 @@
     
         <!-- input box-->
         <div class="col-xs-3 col-lg-3">
-            <br>
             {!! ViewHelper::setCheckbox('hauptstelle',$data,old('hauptstelle'),trans('mandantenForm.hauptstelle'), false) !!}
         </div><!--End input box-->
     
@@ -50,9 +49,7 @@
             <!-- input box-->
             <div class="col-xs-6 col-lg-6">
                 <div class="">
-                    <br>
                     {!! ViewHelper::setCheckbox('rights_wiki',$data,old('rights_wiki'),trans('mandantenForm.rightsWiki') ) !!}
-    
                     {!! ViewHelper::setCheckbox('rights_admin',$data,old('rights_admin'),trans('mandantenForm.redaktion') ) !!}
                 </div>
             </div>
@@ -168,7 +165,7 @@
             <!-- input box-->
             <div class="col-lg-3">
                 <div class="form-group">
-                    {!! ViewHelper::setSelect($collections, 'asasasasasasa', $data, old('asasasasa'), trans('mandantenForm.geschaftsfuhrer') )  !!}
+                    {!! ViewHelper::setUserSelect($mandantUsers, 'geschaftsfuhrer', $data, old('geschaftsfuhrer'), trans('mandantenForm.geschaftsfuhrer') )  !!}
                 </div>
             </div><!--End input box-->
             
@@ -194,11 +191,11 @@
             </div><!--End input box-->
             
             <!-- input box-->
-            <div class="col-lg-2 label-button">
-                <button type="button" class="btn btn-primary"> {{ trans('mandantenForm.add') }} </button>
+            <div class="col-lg-2 padding-top-sm">
+                <button type="button" class="btn btn-primary history-add"> {{ trans('mandantenForm.add') }} </button>
             </div><!--End input box-->
     
-            <div class="clearfix"></div>
+            <div class="clearfix"></div> <br>
             
             <!-- input box-->
             <div class="col-lg-12">
@@ -349,36 +346,3 @@
         </div>
         
         <div class="clearfix"></div> <br>
-    
-    <!-- input box-->
-    <!-- <div class="col-lg-3"> 
-            <div class="form-group">
-                {!! ViewHelper::setSelect($collections,'mitarbeiter_finanz_id',$data,old('mitarbeiter_finanz_id'),
-                trans('mandantenForm.finantialAcc'), trans('mandantenForm.selectEmployees') ) !!}
-            </div>   
-        </div><!--End input box-->
-
-    <!-- input box-->
-    <!-- <div class="col-lg-3"> 
-            <div class="form-group">
-                {!! ViewHelper::setSelect($collections,'mitarbeiter_edv_id',$data,old('mitarbeiter_edv_id'),
-                trans('mandantenForm.fieldService'), trans('mandantenForm.selectEmployees') ) !!}
-            </div>   
-        </div><!--End input box-->
-
-    <!-- input box-->
-    <!-- <div class="col-lg-3"> 
-            <div class="form-group">
-                {!! ViewHelper::setSelect($collections,'mitarbeiter_vertrieb_id',$data,old('mitarbeiter_vertrieb_id'),
-                trans('mandantenForm.distribution'), trans('mandantenForm.selectEmployees') ) !!}
-            </div>   
-        </div><!--End input box-->
-
-    <!-- input box-->
-    <!--  <div class="col-lg-3"> 
-            <div class="form-group">
-                {!! ViewHelper::setSelect($collections,'mitarbeiter_umwelt_id',$data,old('mitarbeiter_umwelt_id'),
-                trans('mandantenForm.envWorkProtect'), trans('mandantenForm.selectEmployees') ) !!}
-            </div>   
-        </div><!--End input box-->
-        

@@ -84,3 +84,36 @@
     font-size: $sizeValue + px; //fallback for old browsers
     font-size: (0.125 * $sizeValue) + rem;
 }
+
+// create placeholder mixin
+@mixin placeholder($color, $size:"") {
+  &::-webkit-input-placeholder {
+    color: $color !important;
+    font-family: $primary-font-family !important;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+  &:-moz-placeholder {
+    color: $color !important;
+    font-family: $primary-font-family  !important;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+  &::-moz-placeholder {
+    color: $color !important;
+    font-family: $primary-font-family  !important;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+  &:-ms-input-placeholder {
+    color: $color !important;
+    font-family: $primary-font-family !important;
+    @if $size != "" {
+      font-size: $size;
+    }
+  }
+  
+}

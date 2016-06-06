@@ -13,12 +13,11 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        <div class="row">
-            <div class="col-xs-12 col-md-12 box">
-                <div class="box-wrapper">
-                    <div class="tree-view" data-selector="test">
-                         <div  class="test hide" >{{$data}}</div>
-                    </div>
+        
+        <div class="col-xs-12 col-md-12 box-wrapper">
+            <div class="box">
+                <div class="tree-view" data-selector="test">
+                     <div  class="test hide" >{{$data}}</div>
                 </div>
             </div>
         </div>
@@ -50,8 +49,8 @@
                             </div><!--End input box-->
                             <!-- input box-->
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <br/>
+                                <div class="">
+                                    
                                   
                                 </div> 
                             </div>

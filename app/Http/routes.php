@@ -28,16 +28,17 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('editor', 'DocumentController@documentEditor');
         Route::get('dokumente/dokumente-upload/{id}/edit', 'DocumentController@editDocumentUpload');
         Route::post('document-upload', 'DocumentController@documentUpload');
-        Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe');//document id
+        Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe'); //document id
         Route::post('dokumente/rechte-und-freigabe/{id}', 'DocumentController@saveRechteFreigabe');
-        Route::get('dokumente/anhange/{id}', 'DocumentController@attachments');//document id
+        Route::get('dokumente/anhange/{id}', 'DocumentController@attachments'); //document id
         Route::post('dokumente/anhange/{id?}', 'DocumentController@saveAttachments');
         Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
-        Route::resource('dokumente', 'DocumentController');//documente editor in CRUD
+        Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         
         // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
-        Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles', 'uses' => 'MandantController@createInternalMandantUser']);
+        Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles-add', 'uses' => 'MandantController@createInternalMandantUser']);
+        Route::post('mandanten/{id}/internal-roles-edit', ['as'=>'mandant.internal-roles-edit', 'uses' => 'MandantController@editInternalMandantUser']);
         Route::post('mandanten/search', 'MandantController@search');
         Route::patch('mandanten/activate', 'MandantController@mandantActivate');
         Route::resource('mandanten', 'MandantController');
@@ -62,9 +63,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('suche/erweitert', 'SearchController@searchAdvanced');
         Route::post('suche/telefonliste', 'SearchController@searchPhoneList');
         Route::resource('suche', 'SearchController');
-        
 
-    
 }); //end auth middleware
     
 //}); //end web middleware

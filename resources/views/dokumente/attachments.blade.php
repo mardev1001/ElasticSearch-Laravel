@@ -74,8 +74,6 @@
                                             <!--button box-->
                                             <div class="col-xs-8 col-md-6">
                                                 <div class="form-group">
-                                                    <br/>
-                                                    <br/>
                                                   <button class="btn btn-primary" type="submit" name="attach" value="attach">Hinzufügen</button>
                                                 </div>   
                                             </div>
@@ -103,9 +101,8 @@
                                             <!-- input box-->
                                             <div class="col-lg-3"> 
                                                 <div class="form-group">
-                                                <label class="control-label">{{ ucfirst(trans('documentForm.documentType')) }}  {!! ViewHelper::asterisk() !!}</label>
                                                 <select name="document_type_id" class="form-control select" 
-                                                data-placeholder="{{ ucfirst(trans('documentForm.documentType')) }}" required disabled>
+                                                data-placeholder="{{ ucfirst(trans('documentForm.documentType')) }} *" required disabled>
                                                 <option></option>
                                                 @if( count($documentTypes) >0 ){
                                                    @foreach($documentTypes as $collection){
@@ -155,7 +152,6 @@
                                             <!-- input box-->
                                             <div class="col-lg-3"> 
                                                 <div class="form-group">
-                                                    <label class="control-label"> {{ ucfirst(trans('documentForm.owner')) }} </label>
                                                     <select name="owner_user_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.owner')) }}">
                                                         <option value="0"></option>
                                                         @foreach($mandantUsers as $mandantUser)
@@ -194,7 +190,6 @@
                                             <!-- input box-->
                                             <div class="col-xs-6"> 
                                                 <div class="form-group">
-                                                    <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
                                                     <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ trans('documentForm.coauthor') }}" multiple>
                                                         <option value="0"></option>
                                                         @foreach($mandantUsers as $mandantUser)

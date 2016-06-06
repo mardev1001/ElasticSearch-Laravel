@@ -28,7 +28,7 @@
     <hr/>
       <!-- Tab panes -->
     <a href="#" class="btn btn-primary add-tab"><span class="fa fa-plus"></span> Neue Variante</a>
-    <br><br>
+
     <ul class="nav nav-tabs" id="tabs">
        
     </ul>

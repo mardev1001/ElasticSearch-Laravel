@@ -5,8 +5,9 @@
             <a class="nav-brand" href="/"><strong><img src="/img/NeptunLogo.png" alt="Neptun logo"/></strong></a>
         </div>
         <div class="col-xs-12 col-sm-4 session-flash">
+            <div class="clearfix"></div>
             @if(Session::has('message'))
-                    <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
+                <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
             @endif
             
             @if (isset($errors) && count($errors) > 0)

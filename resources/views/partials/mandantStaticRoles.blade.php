@@ -1,9 +1,9 @@
-{{ Form::open(['route' => ['mandant.internal-roles', $data->id], 'method'=>'POST', 'class' => 'add-internal-role']) }}
+{{ Form::open(['route' => ['mandant.internal-roles-add', $data->id], 'method'=>'POST', 'class' => 'add-internal-role']) }}
 
     <div class="col-lg-4"> 
         <div class="form-group">
-            <label class="control-label">{{ trans('mandantenForm.role') }} <i class="fa fa-asterisk text-info"></i></label>
-            <select name="role_id" class="form-control select" data-placeholder="{{ trans('mandantenForm.role') }}" required >
+            <!--<label class="control-label">{{ trans('mandantenForm.role') }} <i class="fa fa-asterisk text-info"></i></label>-->
+            <select name="role_id" class="form-control select" data-placeholder="{{ trans('mandantenForm.role') }}*" required >
                 <option></option>
                 <option value="1">Lohn</option>
                 <option value="2">EDV</option>
@@ -21,9 +21,8 @@
     </div>
     
     <div class="col-lg-4">
-        <label>&nbsp;</label>
-        <div class="form-group">
-            <button class="btn btn-primary" data-adder="userRole" action='generate-user-role'>{{ trans('mandantenForm.add') }}</button>
+        <div class="form-group padding-top-sm">
+            <button class="btn btn-primary" type="submit" name='role-create' value="1">{{ trans('mandantenForm.add') }}</button>
         </div>
     </div>
     
@@ -33,11 +32,12 @@
 @if(count($internalMandantUsers))
     @foreach($internalMandantUsers as $internalUser)
     <div class="clearfix"></div>
-    <!-- <form action=""> -->
+    
+    {{ Form::open(['route' => ['mandant.internal-roles-edit', $data->id], 'method'=>'POST', 'class' => 'edit-internal-role']) }}
         <div class="col-lg-4"> 
             <div class="form-group">
-                <label class="control-label">{{ trans('mandantenForm.role') }} <i class="fa fa-asterisk text-info"></i></label>
-                <select name="role_id" class="form-control select" data-placeholder="{{ trans('mandantenForm.role') }}" required >
+                <!--<label class="control-label">{{ trans('mandantenForm.role') }} <i class="fa fa-asterisk text-info"></i></label>-->
+                <select name="role_id" class="form-control select" data-placeholder="{{ trans('mandantenForm.role') }}*" required >
                     <option></option>
                     <option @if($internalUser->role_id == 1) selected @endif value="1">Lohn</option>
                     <option @if($internalUser->role_id == 2) selected @endif value="2">EDV</option>
@@ -50,8 +50,8 @@
         
         <div class="col-lg-4"> 
             <div class="form-group">
-                <label class="control-label">{{ trans('mandantenForm.user') }} <i class="fa fa-asterisk text-info"></i></label>
-                <select name="user_id" class="form-control select" data-placeholder="{{ trans('mandantenForm.user') }}">
+                <!--<label class="control-label">{{ trans('mandantenForm.user') }} <i class="fa fa-asterisk text-info"></i></label>-->
+                <select name="user_id" class="form-control select" data-placeholder="{{ trans('mandantenForm.user') }}*">
                     <option></option>
                     @foreach($mandantUsers as $mandantUser)
                         <option value="{{ $mandantUser->id }}"  @if($internalUser->user_id == $mandantUser->id) selected @endif>
@@ -63,11 +63,13 @@
         </div>
         
         <div class="col-lg-4">
-            <label>&nbsp;</label>
-            <div class="form-group">
-                <button class="btn btn-primary" data-adder="userRole" action='generate-user-role'>{{ trans('mandantenForm.add') }}</button>
+            <div class="form-group padding-top-sm">
+                <input type="hidden" name="internal_mandant_user_id" value="{{$internalUser->id}}">
+                <button class="btn btn-danger delete-prompt" type="submit" name='role-delete' value="1">{{ trans('mandantenForm.remove') }}</button>
+                <button class="btn btn-primary" type="submit" name='role-update' value="1">{{ trans('mandantenForm.save') }}</button>
             </div>
         </div>
-    <!-- </form> -->
+    {{ Form::close() }}
+    
     @endforeach
 @endif

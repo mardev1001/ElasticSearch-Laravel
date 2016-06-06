@@ -2,6 +2,15 @@
  * Created by Marijan on 27.04.2016..
  */
 $(function() {
+    
+    // Delete prompt for buttons and anchors
+    $('.delete-prompt').on('click touch', function(e) {
+        if (confirm("Eintrag entfernen?"))
+            return true;
+        else
+            return false;
+    });
+    
 
     // $('[data-hideswitch]').on('click', function(e) {
     //     $(this).toggle();
@@ -88,6 +97,21 @@ $(function() {
             mandantHauptstelleSelect.hide();
         else
             mandantHauptstelleSelect.show();
+    });
+    
+    // Mandant history add button
+    
+    $('.history-add').on('click touch', function(e) {
+        
+        var gfHistory = $('textarea[name="geschaftsfuhrer_history"]');
+        var gfSelect = $('select[name="geschaftsfuhrer"] option:selected').html().trim();
+        var gfInfo = $('input[name="geschaftsfuhrer_infos"]').val().trim();
+        var gfVon = $('input[name="geschaftsfuhrer_von"]').val().trim();
+        var gfBis = $('input[name="geschaftsfuhrer_bis"]').val().trim();
+        
+        // console.log("\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
+        gfHistory.val(gfHistory.val() + "\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
+        
     });
     
     // Hide or show PDF upload checkbox 

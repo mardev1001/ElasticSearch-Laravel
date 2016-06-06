@@ -58,7 +58,6 @@
                             <button class="btn btn-primary" type="submit">{{ $formWrapperData->buttonMethod }}</button>
                         </div>
                     </div>
-                <br/>
             @endif
         </div> <!--end box-wrapper-->
     </form>

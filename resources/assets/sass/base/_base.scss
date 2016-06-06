@@ -17,8 +17,9 @@ body{
 	font-size: $base-font-size;
 	overflow-y: hidden;
 	height: 100%;
-	font-family: $arial-font-family;
+	font-family: $primary-font-family !important;
 	background-color: transparent !important;
+	color: $text-primary;
 
 }
 
@@ -49,15 +50,16 @@ a:hover{
 }
 
 /* Buttons - start */
-.btn {
-    cursor: pointer!important;
+#page-wrapper .btn {
+    cursor: pointer;
     height: 25px;
-    font-family: $arial-font-family !important;
-    font-size: 12px !important;
-    line-height: 16px !important;
-    border: none !important;
-    padding: 5px 15px !important;
+    font-family: $primary-font-family;
+    font-size: 12px;
+    line-height: 16px;
+    border: none;
+    padding: 5px 15px;
     min-width: 100px;
+    margin-bottom: 15px;
     
 }
 

@@ -55,8 +55,8 @@ class Document extends Model
     public function setIsoCategoryIdAttribute($value){
         if($value == null)
             $this->attributes['iso_category_id'] = null; 
-        elseif($value == "null" || !empty($value) )
-            $this->attributes['iso_category_id'] = null; 
+        elseif($value == "null" || empty($value) )
+             $this->attributes['iso_category_id'] = null; 
         else
             $this->attributes['iso_category_id'] = $value;
     }

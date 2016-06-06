@@ -65439,6 +65439,15 @@ $.fn.bootstrapWizard.defaults = {
  * Created by Marijan on 27.04.2016..
  */
 $(function() {
+    
+    // Delete prompt for buttons and anchors
+    $('.delete-prompt').on('click touch', function(e) {
+        if (confirm("Eintrag entfernen?"))
+            return true;
+        else
+            return false;
+    });
+    
 
     // $('[data-hideswitch]').on('click', function(e) {
     //     $(this).toggle();
@@ -65525,6 +65534,21 @@ $(function() {
             mandantHauptstelleSelect.hide();
         else
             mandantHauptstelleSelect.show();
+    });
+    
+    // Mandant history add button
+    
+    $('.history-add').on('click touch', function(e) {
+        
+        var gfHistory = $('textarea[name="geschaftsfuhrer_history"]');
+        var gfSelect = $('select[name="geschaftsfuhrer"] option:selected').html().trim();
+        var gfInfo = $('input[name="geschaftsfuhrer_infos"]').val().trim();
+        var gfVon = $('input[name="geschaftsfuhrer_von"]').val().trim();
+        var gfBis = $('input[name="geschaftsfuhrer_bis"]').val().trim();
+        
+        // console.log("\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
+        gfHistory.val(gfHistory.val() + "\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
+        
     });
     
     // Hide or show PDF upload checkbox 
@@ -65633,6 +65657,23 @@ $( function() {
             });        
         });
     } 
+    if( $('.variant').length ){
+        var counter = 0;
+        $('.variant').each(function(){
+            counter++;
+            if( $(this).data('id') )
+                $(this).attr('id', $(this).data('id') );
+            else
+                 $(this).attr('id', 'variant-'+counter);
+                
+             tinymce.init({
+                selector: '.variant',
+                skin_url: '/css/style',
+                height: 300,
+                
+            });        
+        });
+    } 
    
     
 });/*End function() wrapper*/
@@ -65708,6 +65749,7 @@ $( function() {
         });
     }
     /* End Simulate tree view */
+    
     /* Simulate tree view2 */
     $('label.tree-toggler').click(function () {
 		$(this).parent().children('ul.tree').toggle(300);
@@ -65815,7 +65857,10 @@ $( function() {
            	if( $('#variant-'+prevNumber).length ){
            	    prevHTML = tinymce.get('variant-'+prevNumber).getContent();
            	}
-                
+           	if( $('#editor-'+prevNumber).length ){
+           	    prevHTML = tinymce.get('editor-'+prevNumber).getContent();
+           	}
+            console.log(prevHTML);
       	// create the tab
       	$('<li><a href="#variation'+nextTab+'" data-toggle="tab">Variation '+nextTab+'</a></li>').appendTo('#tabs');
       	 
@@ -65835,7 +65880,6 @@ $( function() {
       	else{
       	    $('.nav-tabs li.active').removeClass('active');
       	    $('.tab-content .tab-pane').removeClass('active');
-      	    //
       	    $(document).find('a[href="#variation'+nextTab+'"]').closest('li').addClass('active');
       	    $('#variation'+nextTab).addClass('active'); 
       	    

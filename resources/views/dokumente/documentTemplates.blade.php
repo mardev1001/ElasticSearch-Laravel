@@ -54,9 +54,9 @@
                                 </span>
                             </div><!--End input box-->
                             <!-- input box-->
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <br/>
+                            <div class="col-md-5">
+                                <div class="">
+                                   
                                   
                                 </div> 
                             </div>
@@ -72,7 +72,7 @@
             <div class="box">
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-                        <h4>{{ trans('documentTemplates.allDocuments')}}</h4>
+                        <h4 class="title">{{ trans('documentTemplates.allDocuments')}}</h4>
                         
                         <div class="tree-view" data-selector="test2">
                             <div class="test2 hide">{{$data2}}</div>

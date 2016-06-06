@@ -36,7 +36,7 @@ var cmsScripts = [
 elixir(function(mix) {
     mix
         .sass('app.scss', 'public/css/style.css')
-        .scripts(cmsScripts, 'public/js/script.js', bower)
+        .styles(cmsScripts, 'public/js/script.js', bower)
         .version(['public/js/script.js','public/css/style.css'])
         .copy(bower + 'bootstrap/fonts/', 'public/build/fonts/')
         .copy(bower + 'font-awesome/fonts/', 'public/build/fonts/')

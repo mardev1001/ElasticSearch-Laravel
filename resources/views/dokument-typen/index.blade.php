@@ -40,7 +40,7 @@
                         <div class="form-group">
                             <input type="text" name="name" class="form-control" placeholder="{{ trans('dokumentTypenForm.name') }}*" value="" required />
                         </div>
-                        <!--{!! ViewHelper::setInput('name', '', old('name'), trans('dokumentTypenForm.name'), trans('dokumentTypenForm.name'), true) !!} -->
+                       
                     </div>
                 </div><!--End input box-->
                 <div class="col-lg-2"> 
@@ -51,7 +51,7 @@
                         <label><input type="radio" name="document_art" value="1">{{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}</label>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="radio no-margin-top">
                         <label><input type="radio" name="document_role" value="0" checked>{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.verfasser') }}</label>
                     </div>
@@ -59,7 +59,7 @@
                         <label><input type="radio" name="document_role" value="1">{{ trans('dokumentTypenForm.rundschreiben') }} {{ trans('dokumentTypenForm.verfasser') }}</label>
                     </div>
                 </div>
-                <div class="col-lg-2">
+                <div class="col-lg-3">
                     <div class="checkbox no-margin-top">
                        <input type="checkbox" name="read_required" id="read_required-0"><label for="read_required-0">{{ trans('dokumentTypenForm.read_required') }}</label>
                     </div>
@@ -67,8 +67,11 @@
                         <input type="checkbox" name="allow_comments" id="allow_comments-0"><label for="allow_comments-0">{{ trans('dokumentTypenForm.allow_comments') }}</label>
                     </div>
                 </div>
-                <div class="col-lg-2">
-                    <br> <button class="btn btn-primary pull-right">{{ trans('dokumentTypenForm.add') }} </button>
+                
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <br> <button class="btn btn-primary">{{ trans('dokumentTypenForm.add') }} </button>
                 </div>
             </div>
         </div>

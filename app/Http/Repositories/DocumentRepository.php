@@ -149,8 +149,8 @@ class DocumentRepository
             $data->form = 'upload';
             $data->url = 'document-upload';
         }
-        
-        if( $pdf == 1 )
+        // dd($pdf);
+        if( $pdf == 1 || $pdf == "1"  || $pdf == true)
             $data = $this->checkUploadType($data,$modelUpload, $pdf);
         
         return $data;

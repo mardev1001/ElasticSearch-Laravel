@@ -1,10 +1,9 @@
 <h3 class="title">Dokumente anlegen - Daten Eingabe - Dokumentenart - Editor</h3>
-
 <input type="hidden" name="model_id" value="{{$data->id}}" />
 
 <div class="row">
     <!-- input box-->
-    <div class="col-lg-3"> 
+    <div class="col-lg-5"> 
         <div class="form-group">
             {!! ViewHelper::setSelect($adressats,'adressat_id',$data,old('adressat_id'),
                     trans('documentForm.adressat'), trans('documentForm.adressat'), true ) !!}
@@ -12,9 +11,8 @@
     </div><!--End input box-->
     
     <!-- input box-->
-    <div class="col-lg-3"> 
+    <div class="col-lg-5"> 
         <div class="form-group">
-            <br>
             {!! ViewHelper::setCheckbox('show_name',$data,old('show_name'),trans('documentForm.showName') ) !!}
         </div>   
     </div><!--End input box-->
@@ -26,7 +24,7 @@
     <hr/>
       <!-- Tab panes -->
     <a href="#" class="btn btn-primary add-tab"><span class="fa fa-plus"></span> Neue Variante</a>
-    <br><br>
+
     <ul class="nav nav-tabs" id="tabs">
        @if( count($data->editorVariant) ) 
            @foreach( $data->editorVariant as $variant)
@@ -39,7 +37,7 @@
        @if( count($data->editorVariant) ) 
            @foreach( $data->editorVariant as $variant)
                <div class="tab-pane" id="variant{{$variant->variant_number}}">
-                   <div id="variant-{{$variant->variant_number}}" class="editable">
+                   <div class="variant" id="variant-{{$variant->variant_number}}">
                        {{strip_tags($variant->inhalt)}}
                    </div>
                 </div>
@@ -59,9 +57,7 @@
             $(document).ready(function(){
                $('.editable').each(function(){
               	    var id=$(this).data('id');
-              	    
-          	    
-              	}); 
+              	 }); 
               	tinymce.init({selector:'.editable'});
               	if( $('.nav-tabs li.active').length < 1 ){
               	    $('.nav-tabs li').first().addClass('active'); 

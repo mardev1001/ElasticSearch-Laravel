@@ -52,7 +52,7 @@
                                 @yield('buttons')
                             </div>
                         </div>
-                        <br/>
+                      
                     @endif
             </form>
         </div>

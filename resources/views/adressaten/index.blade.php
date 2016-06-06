@@ -23,11 +23,11 @@
         
         <div class="row">
             <!-- input box-->
-            <div class="col-md-4"> 
+            <div class="col-md-5"> 
                 {!! Form::open(['route' => 'adressaten.store']) !!}
                 <div class="">
-                    <label> {{ trans('adressatenForm.name') }} <i class="fa fa-asterisk text-info"></i></label>
-                    <input type="text" class="form-control" name="name" placeholder="{{ trans('adressatenForm.name') }}" required/>
+                    <!--<label> {{ trans('adressatenForm.name') }} <i class="fa fa-asterisk text-info"></i></label>-->
+                    <input type="text" class="form-control" name="name" placeholder="{{ trans('adressatenForm.name') }}*" required/>
                     <div class="custom-input-group-btn"><button class="btn btn-primary"> {{ trans('adressatenForm.add') }} </button></div>
                     <br>
                 </div>
@@ -43,16 +43,16 @@
     <h4 class="title">{{ trans('adressatenForm.adressats') }} {{ trans('adressatenForm.overview') }}</h4> <br>
      <div class="box-wrapper">    
         <div class="row">
-            <div class="col-xs-12 col-lg-8">
+            <div class="col-xs-12">
                 <h4 class="title">{{ trans('adressatenForm.adressat') }}</h4>
               
                 @foreach($adressate as $adressat)
                 <div class="row">
                     {!! Form::open(['route' => ['adressaten.update', 'adressaten'=> $adressat->id], 'method' => 'PATCH']) !!}
-                    <div class="col-xs-12 col-md-8">
+                    <div class="col-xs-12 col-md-5">
                          <input type="text" class="form-control" name="name" value="{{ $adressat->name }}" placeholder="Name"/>
                     </div>
-                    <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12 col-md-5">
                         
                         @if($adressat->active)
                             <button class="btn btn-success" type="submit" name="activate" value="1">{{ trans('adressatenForm.active') }}</button>

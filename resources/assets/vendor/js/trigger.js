@@ -64,6 +64,7 @@ $( function() {
         });
     }
     /* End Simulate tree view */
+    
     /* Simulate tree view2 */
     $('label.tree-toggler').click(function () {
 		$(this).parent().children('ul.tree').toggle(300);
@@ -171,7 +172,10 @@ $( function() {
            	if( $('#variant-'+prevNumber).length ){
            	    prevHTML = tinymce.get('variant-'+prevNumber).getContent();
            	}
-                
+           	if( $('#editor-'+prevNumber).length ){
+           	    prevHTML = tinymce.get('editor-'+prevNumber).getContent();
+           	}
+            console.log(prevHTML);
       	// create the tab
       	$('<li><a href="#variation'+nextTab+'" data-toggle="tab">Variation '+nextTab+'</a></li>').appendTo('#tabs');
       	 
@@ -191,7 +195,6 @@ $( function() {
       	else{
       	    $('.nav-tabs li.active').removeClass('active');
       	    $('.tab-content .tab-pane').removeClass('active');
-      	    //
       	    $(document).find('a[href="#variation'+nextTab+'"]').closest('li').addClass('active');
       	    $('#variation'+nextTab).addClass('active'); 
       	    

@@ -29,7 +29,6 @@
                 <!-- input box-->
                 <div class="col-lg-6"> 
                     <div class="form-group">
-                        <br>
                         {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
                         {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
                     </div>   
@@ -38,7 +37,7 @@
                     <div class="clearfix"></div>
                 
                 <!-- button div-->    
-                <div class="col-md-3">
+                <div class="col-xs-12">
                     <div class="form-wrapper">
                         <button type="submit" class="btn btn-primary">{{ trans('benutzerForm.search') }}</button>
                         <button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>

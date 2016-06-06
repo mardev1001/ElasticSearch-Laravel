@@ -44,7 +44,7 @@
         <!-- input box-->
         <div class="col-lg-3"> 
             <div class="form-group">
-                <label class="control-label"> {{ ucfirst(trans('documentForm.owner')) }} </label>
+                <!--<label class="control-label"> {{ ucfirst(trans('documentForm.owner')) }} </label>-->
                 <select name="owner_user_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.owner')) }}">
                     <option value="0"></option>
                     @foreach($mandantUsers as $mandantUser)
@@ -73,7 +73,6 @@
         <!-- input box-->
         <div class="col-lg-3 pdf-checkbox"> 
             <div class="form-group">
-                <br>
                 {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
             </div>   
         </div><!--End input box-->
@@ -83,7 +82,7 @@
         <!-- input box-->
         <div class="col-xs-6"> 
             <div class="form-group">
-                <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
+                <!--<label class="control-label"> {{ trans('documentForm.coauthor') }} </label>-->
                 <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}" multiple>
                     <option value="0"></option>
                     @foreach($mandantUsers as $mandantUser)

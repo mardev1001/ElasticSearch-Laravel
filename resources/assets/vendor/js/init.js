@@ -62,6 +62,23 @@ $( function() {
             });        
         });
     } 
+    if( $('.variant').length ){
+        var counter = 0;
+        $('.variant').each(function(){
+            counter++;
+            if( $(this).data('id') )
+                $(this).attr('id', $(this).data('id') );
+            else
+                 $(this).attr('id', 'variant-'+counter);
+                
+             tinymce.init({
+                selector: '.variant',
+                skin_url: '/css/style',
+                height: 300,
+                
+            });        
+        });
+    } 
    
     
 });/*End function() wrapper*/

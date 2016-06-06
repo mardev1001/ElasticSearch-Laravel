@@ -52,72 +52,14 @@
 @font-face {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
   font-weight: normal;
-  font-style: normal;
-}
+  font-style: normal; }
 /* Font family - end*/
-
-
 /* Font variables - start */
-
-$lato-font-family: "Lato", sans-serif, "Helvetica Neue", Helvetica, Arial, sans-serif;
-$roboto-font-family: "Roboto", sans-serif, "Helvetica Neue", Helvetica, Arial, sans-serif;
-$bariol-font-family: "BariolRegular", Comic Sans, Comic Sans MS, cursive	;
-$grandhotel-font-family: "GrandHotel",Andale Mono, monospace;
-$base-font-size: 12px;
-$h1-font-size: 40px;
-$h2-font-size: 30px;
 /*$primary-color: #b06caf;
 $secondary-color: #8DB9CA;
 $third-color: #d3d3d3;*/
-$primary-color: #89CB97; //rgb(137, 203, 151);
-$secondary-color: #8CBFC9;
-$third-color: #F9F7E8;
-$third-color-rgba: rgba(249,247,232, 0.5);
-$fourth-color: #949896;
-$bigger-font: 16px;
-
-$nav-background: $primary-color;
-$nav-seconday-background : $secondary-color;
-
-$nav-background-opacity: rgba(137,203,151,0.95);
-$primary-border-color: $primary-color;
-$secondary-border-color: $secondary-color;
-
-$text-primary: #606060;
-$text-secondary: $secondary-color;
-$text-ivory: $third-color;
-
-$arial-font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
-$base-font-size: 14px;
-$h1-font-size: 40px;
-$h2-font-size: 24px;
 /* Colors variables - start */
-
-$primary-barney-color: #fff;
-
-$white-color: #fff;
-$black-color: #000;
-
-$body-background-color: #fff;
-$footer-background-color: #2f2f2f;
-$dark-blue: #0e1e6d;
-$grey: #606060;
-$nav-light-grey: #efefef;
-$nav-grey: #b6b6b6;
-$nav-blue-active: #0e1e6d;
-$box-grey-wrapper: #f4f4f4;
-
-$primary-btn-color: #394686;
-$border-color: #efefef;
-
-$box-inner-color: #fdfdfd;
-
-$border-form-control: #b6b6b6;
-$form-control-color: $grey;
-$placeholder-color: #b6b6b6;
 /* Select - color, style */
-
 /* Font - primary font family */
 
-$primary-font-family: $arial-font-family;
-
+/*# sourceMappingURL=_variables.css.map */

@@ -57,10 +57,14 @@ return [
     'search' =>'Suche Mandant/Benutzer',
     'von' =>'Von',
     'bis' =>'Bis',
-    'showDeletedUsers' =>'gelöschte Benutzer anzeigen',
-    'showDeletedClients' =>'gelöschte Mandanten anzeigen',
+    'showDeletedUsers' =>'Gelöschte Benutzer',
+    'showDeletedClients' =>'Gelöschte Mandanten',
     'error' => 'Fehler beim Dateneintrag.',
     'add' => 'Hinzufügen',
+    'save' => 'Speichern',
+    'remove' => 'Entfernen',
     'role-added' => 'Rolle/Benutzer efrolgreich gespeichert.',
+    'role-updated' => 'Rolle/Benutzer efrolgreich aktualisiert.',
+    'role-deleted' => 'Rolle/Benutzer efrolgreich entfernt.',
 
 ];

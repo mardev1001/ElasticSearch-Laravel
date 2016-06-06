@@ -49,7 +49,7 @@
             
             @else
             
-            <span>Keine Dokumente gefunden.</span>
+            <span class="text">Keine Dokumente gefunden.</span>
             
             @endif
             

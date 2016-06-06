@@ -1,4 +1,4 @@
-<div class="checkbox">
+<div class="checkbox no-margin-top">
     
         <input type="checkbox" 
             value="1" 

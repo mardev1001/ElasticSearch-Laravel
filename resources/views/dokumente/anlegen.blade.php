@@ -44,8 +44,8 @@
                 </div><!--End input box-->
                 <!-- input box-->
                 <div class="col-lg-6">
-                    <div class="form-group">
-                        <br/>
+                    <div class="">
+                      
                       
                     </div>   
                 </div><!--End input box-->
