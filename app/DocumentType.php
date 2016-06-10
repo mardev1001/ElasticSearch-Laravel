@@ -8,4 +8,9 @@ class DocumentType extends Model
 {
     protected $guarded = []; //blacklist
     protected $fillable = ['name','document_art','document_role','read_required','allow_comments']; //whitelist
+
+    public function documents(){
+        return $this->hasMany('App\Document');
+    }
+    
 }

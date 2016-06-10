@@ -1,17 +1,7 @@
 @extends('master')
-    @section('content') 
-   <div class="row">
-        <div class="col-xs-12 col-md-12 white-bgrnd">
-            <div class="fixed-row">
-                <div class="fixed-position ">
-                    <h1 class="page-title">
-                        Title
-                    </h1>
-                </div>
-            </div>
-        </div>
-    </div>
-    
+
+@section('content') 
+   
     <div class="clearfix"></div>
     
 
@@ -42,11 +32,11 @@
                                 </button>
                                 <button class="btn btn-primary" type="submit" name="attachment" value="attachment"> 
                                     <span class="fa fa-file-text-o"></span>
-                                    Anhange
+                                    Anlage hinzufügen
                                 </button>    
                                 <button class="btn btn-primary" type="submit" name="next" value="next"> 
                                     <span class="fa fa-chevron-right"></span>
-                                    Weiter
+                                    Freigabe & Verteiler
                                 </button>    
                                 
                                 @yield('buttons')
@@ -62,3 +52,22 @@
       
     @stop
    
+        @if( isset( $data->document_type_id ) )
+           @section('preScript')
+               <!-- variable for expanding document sidebar-->
+               <script type="text/javascript">
+                    var documentType = "{{ $data->documentType->name}}";
+                   
+                      
+               </script>
+               
+               <!--patch for checking iso category document-->
+                @if( isset($data->isoCategories->name) )
+                    <script type="text/javascript">   
+                        if( documentType == 'ISO Dokument')
+                            var isoCategoryName = '{{ $data->isoCategories->name}}';
+                    </script>
+                @endif
+               <!-- End variable for expanding document sidebar-->
+           @stop
+       @endif

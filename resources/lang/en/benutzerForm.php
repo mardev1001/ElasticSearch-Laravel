@@ -4,7 +4,7 @@ return [
     'baseInfo' => 'Basisinfos',
     'title' => 'Anrede',
     'username' => 'Benutzername',
-    'username_sso' => 'Single Sign-On',
+    'username_sso' => 'Single Sign ON - Name',
     'password' => 'Passwort',
     'password_repeat' => 'Passwort (Bestätigung)',
     'first_name' => 'Vorname',
@@ -32,5 +32,7 @@ return [
     'search' => 'Suche',
     'save' => 'Speichern',
     'reset' => 'Zurückstellen',
+    'phone' => 'Telefon',
+    'phone_short' => 'Kurzwahl',
     
 ];

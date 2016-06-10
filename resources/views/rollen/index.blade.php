@@ -1,21 +1,9 @@
 {{-- ROLLENVERWALTUNG --}}
 
 @extends('master')
-
+@section('page-title') {{ trans('rollenForm.role-management') }} @stop
 @section('content')
 
-<div class="row">
-    <div class="col-xs-12 col-md-12 white-bgrnd">
-        <div class="fixed-row">
-            <div class="fixed-position ">
-                <h1 class="page-title">
-                    {{ trans('rollenForm.role-management') }}
-                </h1>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="clearfix"></div>
 
 <fieldset class="form-group">
     <div class="box-wrapper">
@@ -32,7 +20,7 @@
                         </div>
                         <div class="col-lg-4"> 
                             <div class="form-group">
-                                <!--<label>{{ trans('rollenForm.rights') }}</label>-->
+                                <label>{{ trans('rollenForm.rights') }}</label>
                                 <select name="role[]" class="form-control select" data-placeholder="{{ trans('rollenForm.rights') }}" multiple>
                                     <option value="0"></option>
                                     <option value="required">Pflichtfeld</option>
@@ -48,7 +36,7 @@
                         <div class="col-xs-12"><div class="add-border-bottom"><strong>{{ trans('rollenForm.rights') }} {{ trans('rollenForm.copy') }}</strong><br></div></div>
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <!--<label>{{ trans('rollenForm.documents') }}</label>-->
+                                <label>{{ trans('rollenForm.documents') }}</label>
                                 <select name="role_copy" class="form-control select" data-placeholder="{{ trans('rollenForm.documents') }}">
                                     <option value=""></option>
                                 </select>
@@ -56,7 +44,7 @@
                         </div>
                         <div class="col-lg-4"> 
                             <div class="form-group">
-                                <!--<label>{{ trans('rollenForm.wiki') }}</label>-->
+                                <label>{{ trans('rollenForm.wiki') }}</label>
                                 <select name="wiki_copy" class="form-control select" data-placeholder="{{ trans('rollenForm.wiki') }}">
                                     <option value=""></option>
                                 </select>
@@ -96,7 +84,7 @@
                                    <tr>
                                         <td class="col-xs-12 col-md-5">
                                             <div class="form-group">
-                                                <!--<label class="control-label">{{ trans('rollenForm.name') }} <i class="fa fa-asterisk text-info"></i></label>-->
+                                                <label class="control-label">{{ trans('rollenForm.name') }}*</label>
                                                 <input class="form-control" type="text" name="name" value="{{ $role->name }}" placeholder="{{ trans('rollenForm.name') }}*" required/>
                                             </div>
                                         </td>
@@ -137,12 +125,12 @@
                                     <tr>
                                         <td class="col-xs-4">
                                             <div class="form-group">
-                                                <!--<label class="control-label">{{ trans('rollenForm.name') }} <i class="fa fa-asterisk text-info"></i></label>-->
+                                                <label class="control-label">{{ trans('rollenForm.name') }}*</label>
                                                 <input class="form-control" type="text" name="name" value="{{ $role->name }}" placeholder="{{ trans('rollenForm.name') }}*" required/>
                                             </div>
                                         </td>
                                         <td class="col-xs-4">
-                                            <!--<label>{{ trans('rollenForm.rights') }}</label>-->
+                                            <label>{{ trans('rollenForm.rights') }}</label>
                                             <select name="role[]" class="form-control select" data-placeholder="{{ trans('rollenForm.rights') }}" multiple>
                                                 <option value="0"></option>
                                                 <option value="required" @if($role->mandant_required) selected @endif > Pflichtfeld</option>
@@ -161,7 +149,7 @@
                                             <button class="btn btn-primary">{{ trans('rollenForm.save') }}</button>
                                         </td>
                                         <td class="col-xs-12 col-md-2 text-center table-options vertical-center">
-                                            <a href="javascript:void();" data-toggle="modal" data-target="#role-{{$role->id}}">{{ trans('rollenForm.active-users') }}: 0</a>
+                                            <a href="javascript:void();" data-toggle="modal" data-target="#role-{{$role->id}}" class="link">{{ trans('rollenForm.active-users') }}: 0</a>
                                         </td>
                                     </tr>
                                 {!! Form::close() !!}

@@ -3,11 +3,11 @@
 return [
     'documentType' => 'dokumente Typ',
     'type' => 'typ',
-    'documentName' => 'dokument name',
+    'documentName' => 'Titel',
     'owner' => 'eigentümer',
-    'coauthor' => 'Zusatz Ersteller',
-    'searchTags' => 'suche Tags',
-    'summary' => 'beschreibung',
+    'coauthor' => 'Co-Ersteller',
+    'searchTags' => 'Stichwörter',
+    'summary' => 'Beschreibung/ Zusammenfassung',
     'datePublished' => 'veröffentlichungstermin',
     'dateExpired' => 'verfallsdatum',
     'isoCategory' => 'kategorie ISO Dokument',
@@ -29,4 +29,5 @@ return [
     'saved' => 'Rechte und Freigabe wurden gespeichert.',
     'existingDocument' => 'Option 1: Vorhandenes Dokument auswählen',
     'newDocument' => 'Option 2: Neues Dokument anlegen',
+    'status' => 'Dokument Status',
 ];

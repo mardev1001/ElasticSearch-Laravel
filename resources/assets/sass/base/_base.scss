@@ -58,7 +58,7 @@ a:hover{
     line-height: 16px;
     border: none;
     padding: 5px 15px;
-    min-width: 100px;
+    min-width: 130px;
     margin-bottom: 15px;
     
 }
@@ -70,6 +70,14 @@ a:hover{
 .btn.btn-primary:hover, .btn.btn-primary:focus, .btn.btn-primary:active {
     background-color: $primary-btn-color !important;
     border: none !important;
+}
+
+.btn.btn-default {
+	color: $dark-blue; //0e1e6d
+}
+
+.btn:after {
+	content: ' >';
 }
 
 /* Buttons - end */

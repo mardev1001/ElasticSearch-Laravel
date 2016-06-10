@@ -2,20 +2,9 @@
 
 @extends('master')
 
-@section('content')
+@section('page-title') {{ trans('telefonListeForm.phone-list') }} @stop
 
-<div class="row">
-    <div class="col-xs-12 col-md-12 white-bgrnd">
-        <div class="fixed-row">
-            <div class="fixed-position ">
-                <h1 class="page-title">
-                    {{ trans('telefonListeForm.phone-list') }}
-                </h1>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="clearfix"></div>
+@section('content')
 
 <fieldset class="telefonliste forms">
     
@@ -24,36 +13,39 @@
             <div class="col-xs-12">
                 <div class="box-wrapper">
                     <h4 class="title">{{ trans('telefonListeForm.search-options') }}</h4>
-              
-                    <div class="clearfix"></div>
-                    <div class="row">
-                        <div class="col-xs-12 col-md-4 form-group">
-                           
-                            <input type="text" class="form-control" name="parameter" placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.mandants').'/'. trans('telefonListeForm.user') }}" required>
-                            <span class="custom-input-group-btn">
-                                <button type="submit" name="search" class="btn btn-primary" title="{{ trans('telefonListeForm.search') }}">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span> 
-                           
-                        </div>
-                        <div class="col-xs-12 col-md-4">
-                            <div class="checkbox no-margin-top">
-                                
-                                <input type="checkbox" name="deletedUsers" id="deletedUsers">
-                                <label for="deletedUsers">{{ trans('telefonListeForm.show-deleted-users') }}</label>
-                                <input type="checkbox" name="deletedMandants" id="deletedMandants"><label for="deletedMandants">{{ trans('telefonListeForm.show-deleted-mandants') }}</label>
+                     <div class="box">
+                        <div class="clearfix"></div>
+                        <div class="row">
+                            <div class="col-xs-12 col-md-5 form-group no-margin-bottom">
+                               
+                                <input type="text" class="form-control" name="parameter" placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.mandants').'/'. trans('telefonListeForm.user') }}" required>
+                                <span class="custom-input-group-btn">
+                                    <button type="submit" name="search" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
+                                        <!--<i class="fa fa-search"></i>-->Suche
+                                    </button>
+                                </span> 
+                               
                             </div>
-                        </div>
-                        {{ Form::close() }}
-                        <div class="col-xs-12 col-md-4 form-inline">
-                            <div class="pull-right">
-                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
-                                    <i class="fa fa-eye"></i> {{ trans('telefonListeForm.appearance') }}
-                                </a>
-                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#export">
-                                    <i class="fa fa-file-excel-o "></i> {{ trans('telefonListeForm.export') }}
-                                </a>
+                            <div class="col-xs-12 col-md-4">
+                                <div class="checkbox">
+                                    <input type="checkbox" name="deletedUsers" id="deletedUsers">
+                                    <label for="deletedUsers">{{ trans('telefonListeForm.show-deleted-users') }}</label>
+                                </div>
+                                 <div class="checkbox">  
+                                    <input type="checkbox" name="deletedMandants" id="deletedMandants">
+                                    <label for="deletedMandants">{{ trans('telefonListeForm.show-deleted-mandants') }}</label>
+                                </div>
+                            </div>
+                            {{ Form::close() }}
+                            <div class="col-xs-12 col-md-3 form-inline">
+                                <div>
+                                    <a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#darstellung">
+                                        <i class="fa fa-eye"></i> {{ trans('telefonListeForm.appearance') }}
+                                    </a>
+                                    <a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#export">
+                                        <i class="fa fa-file-excel-o "></i> {{ trans('telefonListeForm.export') }}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -76,7 +68,7 @@
                 <div class="panel-heading" role="tab" id="heading-{{$i}}">
                     <h4 class="panel-title">
                         <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-{{$i}}" aria-expanded="false" aria-controls="collapse-{{$i}}">
-                            {{ trans('telefonListeForm.mandant') }} #{{$i}} [8 Benutzer]
+                            {{ trans('telefonListeForm.mandant') }} #{{$i}} (8 Benutzer)
                         </a>
                         <span class="pull-right">
                             <button class="btn btn-primary" data-toggle="modal" data-target="#details">{{ trans('telefonListeForm.details') }}</button>

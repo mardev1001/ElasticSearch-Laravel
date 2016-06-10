@@ -18,16 +18,19 @@
         <ul class="nav" id="side-menu">
 
             <li>
-                <a href="/"><i class="fa fa-dashboard fa-fw"></i> Startseite</a>
+                <a href="/" class="home-class">Startseite</a>
             </li>
 
             <li class="">
-                <a href="#"><i class="fa fa-files-o fa-fw"></i> {{ ucfirst( trans('navigation.document') ) }} <span class="fa arrow"></span></a>
+                <a href="#">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
+                    
                     <li>
                         <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
                     </li>
                     
+                    <!--
+                    {{--
                     <li>
                         <a href="#">{{ ucfirst( trans('navigation.iso') ) }} {{ ucfirst(trans('navigation.documents')) }}
                             <span class="fa arrow"></span>
@@ -51,16 +54,6 @@
                             @endforeach
                         </ul>
                     @endif
-                        <!-- /.nav-third-level -->
-                    </li>
-                    
-                    <li>
-                        <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }} {{ trans('navigation.qmr') }}</a>
-                    </li>
-                    
-                    <li>
-                        <!--<a href="{{ url('dokumente/rundschreiben-news') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}  {{ trans('navigation.news') }}</a>-->
-                        <a href="#">{{ ucfirst( trans('navigation.rundschreiben') ) }}  {{ trans('navigation.news') }}</a>
                     </li>
                     
                     <li>
@@ -68,27 +61,86 @@
                     </li>
                     
                     <li>
+                        <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ ucfirst( trans('navigation.rundschreiben-qmr') ) }}</a>
+                    </li>
+                    
+                    <li>
                         <a href="{{ url('dokumente/vorlagedokumente') }}">{{ ucfirst( trans('navigation.vorlagendokumente') ) }}</a>
                     </li>
+                    
+                    <li>
+                        <a href="{{ url('dokumente/rundschreiben-news') }}">{{ trans('navigation.news') }}</a>
+                    </li>
+                    --}}
+                    -->
+                    
+                    @if(!empty($documentTypes))
+                        
+                        @foreach($documentTypes as $documentType)
+                        
+                            @if($documentType->active)
+                            
+                                @if($documentType->id == 1)
+                                    <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
+                                @elseif($documentType->id == 2)
+                                    <li> <a href="{{ url('dokumente/rundschreiben-news') }}">{{ $documentType->name }}</a> </li>
+                                @elseif($documentType->id == 3)
+                                    <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
+                                @elseif($documentType->id == 4)
+                                    <li>
+                                        <a href="#">{{ $documentType->name }}
+                                            @if(!empty($isoCategories)) <span class="fa arrow"></span> @endif
+                                        </a>
+                                        
+                                        @if(!empty($isoCategories))
+                                        <ul class="nav nav-third-level">
+                                            @foreach($isoCategories as $isoCategory)
+                                                @if($isoCategory->parent)
+                                                <li>
+                                                    <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                                    <ul class="nav nav-fourth-level">
+                                                    @foreach($isoCategories as $isoCategoryChild)
+                                                        @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
+                                                            <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
+                                                        @endif
+                                                    @endforeach
+                                                    </ul>
+                                                </li>
+                                                @endif
+                                            @endforeach
+                                        </ul>
+                                        @endif
+                                    </li>
+                                @elseif($documentType->id == 5)
+                                    <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentType->name }}</a> </li>
+                                @else
+                                    <li> <a href="{{ url('#dokumente/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
+                                @endif
+                            
+                            @endif
+                            
+                        @endforeach
+                        
+                    @endif
 
                 </ul><!--End .nav-second-level -->
 
             </li><!-- End menu item -->
 
             <li>
-                <a href="{{ url('favoriten') }}"><i class="fa fa-heart fa-fw"></i> {{ ucfirst( trans('navigation.favorites') ) }}</a>
+                <a href="{{ url('favoriten') }}">{{ ucfirst( trans('navigation.favorites') ) }}</a>
             </li>
 
             <li>
-                <a href="{{ url('telefonliste') }}"><i class="fa fa-phone fa-fw"></i> {{ ucfirst( trans('navigation.phonebook') ) }}</a>
+                <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>
 
             <li>
-                <a href="#"><i class="fa fa-wikipedia-w fa-fw"></i> {{ ucfirst( trans('navigation.wiki') ) }}</a>
+                <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>
             </li>
 
             <li class="">
-                <a href="#"><i class="fa fa-building fa-fw"></i> {{ ucfirst(trans('navigation.mandantenverwaltung')) }}
+                <a href="#">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                     <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
 
@@ -107,7 +159,7 @@
 
             <li class="">
                 <a href="#">
-                    <i class="fa fa-cogs fa-fw"></i> {{ ucfirst( trans('navigation.redaktion') )}} {{ ucfirst( trans('navigation.verwaltung') )}}
+                    NEPTUN {{ ucfirst( trans('navigation.verwaltung') )}}
                     <span class="fa arrow"></span>
                 </a>
                 <ul class="nav nav-second-level">
@@ -115,7 +167,7 @@
                         <a href="{{ url('adressaten') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
                     </li>
                     <li>
-                        <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.type') ) }}</a>
+                        <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.types') ) }}</a>
                     </li>
                     <li>
                         <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.kategorien') }} </a>

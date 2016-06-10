@@ -20,6 +20,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '1',
                     'wiki_role' => '1',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -31,6 +33,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '1',
                     'wiki_role' => '1',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -42,6 +46,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '1',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -53,6 +59,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '1',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -64,6 +72,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '1',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -75,6 +85,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -86,6 +98,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -97,6 +111,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -108,6 +124,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -119,6 +137,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -130,6 +150,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -141,6 +163,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -152,6 +176,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -163,6 +189,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -174,6 +202,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -185,6 +215,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -196,6 +228,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -207,6 +241,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -218,6 +254,8 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
@@ -229,9 +267,76 @@ class RoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
+                    'phone_role' => '0',
+                    'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
-                ]
+                ],
+
+                [
+                    'name' => 'EDV',
+                    'mandant_required' => '0',
+                    'admin_role' => '0',
+                    'system_role' => '0',
+                    'mandant_role' => '0',
+                    'wiki_role' => '0',
+                    'phone_role' => '1',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
+
+                [
+                    'name' => 'Finanzbuchaltung',
+                    'mandant_required' => '0',
+                    'admin_role' => '0',
+                    'system_role' => '0',
+                    'mandant_role' => '0',
+                    'wiki_role' => '0',
+                    'phone_role' => '1',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+                [
+                    'name' => 'Lohn',
+                    'mandant_required' => '0',
+                    'admin_role' => '0',
+                    'system_role' => '0',
+                    'mandant_role' => '0',
+                    'wiki_role' => '0',
+                    'phone_role' => '1',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+                [
+                    'name' => 'Umwelt',
+                    'mandant_required' => '0',
+                    'admin_role' => '0',
+                    'system_role' => '0',
+                    'mandant_role' => '0',
+                    'wiki_role' => '0',
+                    'phone_role' => '1',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+                [
+                    'name' => 'Vertrieb',
+                    'mandant_required' => '0',
+                    'admin_role' => '0',
+                    'system_role' => '0',
+                    'mandant_role' => '0',
+                    'wiki_role' => '0',
+                    'phone_role' => '1',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
 
             ]
         );

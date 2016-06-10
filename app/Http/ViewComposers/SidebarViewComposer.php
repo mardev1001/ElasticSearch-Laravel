@@ -5,6 +5,7 @@ namespace App\Http\ViewComposers;
 use Illuminate\Contracts\View\View;
 use Request;
 
+use App\DocumentType;
 use App\IsoCategory;
 
 class SidebarViewComposer
@@ -29,6 +30,7 @@ class SidebarViewComposer
      */
     public function compose(View $view)
     {   
+        $view->with('documentTypes', DocumentType::all() );
         $view->with('isoCategories', IsoCategory::all() );
     }
     

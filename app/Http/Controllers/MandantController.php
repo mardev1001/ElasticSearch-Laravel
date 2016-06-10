@@ -115,7 +115,7 @@ class MandantController extends Controller
      */
     public function edit($id)
     {
-        $roles = Role::all();
+        $roles = Role::where('phone_role', true)->get();
         $data = Mandant::find($id);
         $mandantUsers = User::all();
         $internalMandantUsers = InternalMandantUser::where('mandant_id', $id)->get();
@@ -187,8 +187,9 @@ class MandantController extends Controller
      */
     public function createInternalMandantUser(Request $request, $id)
     {
-        InternalMandantUser::create(['mandant_id' => $id, 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id'),]);
-        return back()->with('message', trans('mandantenForm.role-added'));
+        $internalMandantUser = InternalMandantUser::create(['mandant_id' => $id, 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id'),]);
+        // return back()->with('message', trans('mandantenForm.role-added'));
+        return redirect('mandanten/'.$id.'/edit#internal-role-'.$internalMandantUser->id)->with('message', trans('mandantenForm.role-added'));
     }
     
     /**
@@ -207,14 +208,19 @@ class MandantController extends Controller
             
             $id = $request->input('internal_mandant_user_id');
             
+            $internalMandantUser = InternalMandantUser::where('id', $id)->first();
+            $mandantId = $internalMandantUser->mandant_id;
+            
             if($request->has('role-update')){
                 InternalMandantUser::where('id', $id)->update([ 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id') ]);
-                return back()->with('message', trans('mandantenForm.role-updated'));
+                // return back()->with('message', trans('mandantenForm.role-updated'));
+                return redirect('mandanten/'.$mandantId.'/edit#internal-role-'.$id)->with('message', trans('mandantenForm.role-updated'));
             }
             
             if($request->has('role-delete')){
-                InternalMandantUser::destroy($id);
-                return back()->with('message', trans('mandantenForm.role-deleted'));
+                $internalMandantUser->delete();
+                // return back()->with('message', trans('mandantenForm.role-deleted'));
+                return redirect('mandanten/'.$mandantId.'/edit#internal-roles')->with('message', trans('mandantenForm.role-deleted'));
             }
         }
         

@@ -23,13 +23,13 @@ class CreateDocumentsTable extends Migration
             $table->string('search_tags');
             $table->text('summary');
             $table->timestamp('date_published');
-            $table->timestamp('date_expired');
+            $table->timestamp('date_expired')->nullable();
             $table->integer('version_parent');
             $table->integer('document_group_id');
             $table->integer('iso_category_id')->unsigned()->nullable();//FK
             $table->boolean('show_name');
             $table->integer('adressat_id')->unsigned()->nullable();//FK
-            $table->string('betreff');
+            $table->string('betreff')->nullable();
             $table->integer('document_replaced_id');
             $table->timestamp('date_approved');
             $table->boolean('email_approval');

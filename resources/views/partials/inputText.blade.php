@@ -1,6 +1,6 @@
-    <!--<label class="control-label">-->
-    <!--    {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif -->
-    <!--</label> -->
+    <label class="control-label">
+        {{ ucfirst($label) }}@if( $required !=false )* @endif 
+    </label> 
     <input type="{{ $type }}" class="form-control 
     @foreach( $classes as $class)
         {{ $class }}
@@ -17,7 +17,7 @@
             required 
         @endif
         
-        @if( Request::is('*/edit') && isset( $data->$inputName ) && !empty($data->$inputName ) )
+        @if( isset( $data->$inputName ) && !empty($data->$inputName ) )
     		 value="{{ $data->$inputName }}"
     	 @else
     	 	value="{{ $old }}"

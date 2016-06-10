@@ -5,7 +5,7 @@
 
 <div class="col-md-4 col-md-offset-4 login nopadding">
     <h1 class="page-title">
-        Intranet Login
+        Login
     </h1>
     <div class="panel panel-default">
        <!-- <div class="panel-heading">Login</div> -->
@@ -16,7 +16,7 @@
                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
 
                     <div class="col-md-12">
-                        <input type="email" class="form-control" name="email"  value="{{ old('email') }}" placeholder="Username">
+                        <input type="email" class="form-control" name="email"  value="{{ old('email') }}" placeholder="Benutzername">
 
                         @if ($errors->has('email'))
                             <span class="help-block">
@@ -42,7 +42,7 @@
                     <div class="col-md-6">
                         <div class="checkbox">
                             {{-- <input type="checkbox" name="remember" id="remember" /> --}}
-                            {{-- <label for="remember">merken</label> --}}
+                            {{-- <label for="remember">Angemeldet bleiben</label> --}}
                         </div>
                     </div>
 

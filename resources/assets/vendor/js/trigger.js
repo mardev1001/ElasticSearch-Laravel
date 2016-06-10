@@ -32,20 +32,47 @@ $( function() {
     var url = window.location;
     var element = $('ul.nav a').filter(function() {
         return this.href == url || url.href.indexOf(this.href) == 0;
-    }).addClass('active').parent().parent().addClass('in').parent();
+    }).parents("ul").not('#side-menu').addClass('in');
+    // }).addClass('active').parent().parent().addClass('in').parent();
         
     /*Fix the problem where the */    
-    if( (location.protocol + "//" + location.host+'/')  !=  url.href)
+    if( (location.protocol + "//" + location.host+'/')  !=  url.href){
         $('a[href="/"]').removeClass('active');
+    }
         $('a.active').each(function(){
             var url = window.location, currentLink = window.location.href 
             if( $(this).attr('href') != currentLink )
                 $(this).removeClass('active');
         });
         
+    if( (location.protocol + "//" + location.host+'/')  ==  url.href){
+        $('a[href="/"]').addClass('active');
+    }
+    else if(  typeof documentType !== 'undefined' && documentType.length){
+        var detectHref = '/dokumente/rundschreiben';
+        if(documentType == "Vorlagedokument")
+            detectHref = '/dokumente/vorlagedokumente';
+            
+        else if(documentType == "Rundschreiben QMR")
+            detectHref = '/dokumente/rundschreiben-qmr';
+            
+        else if(documentType == "Rundschreiben News")
+            detectHref = '/dokumente/rundschreiben-news';
+            
+        else if(documentType == "ISO Dokument"){
+             detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
+        }
+       $('a[href$="'+detectHref+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
+    }
+    else{
+         $('a[href="'+url.href+'"]').addClass('active');
+    }
     if (element.is('li')) {
         element.addClass('active');
     }
+    
+     
+    else
     /*End Exapand active class*/
     
     /* Simulate tree view */
@@ -71,6 +98,12 @@ $( function() {
 	});
     /* End Simulate tree view2 */
     
+    /* Prevent a.href=# from exec. Becouse of the nav.active script */
+    $('a').on('click touch',function(e){
+       if( $(this).attr('href') == "#" )
+            e.preventDefault();
+    });
+    /* End Prevent a.href=# from exec. Becouse of the nav.active script */
     
     /* Image preview before upload */
     if( $('#image-upload').length ){
@@ -123,8 +156,6 @@ $( function() {
     });
     
     $('.list-group').on('click touch',function(){
-        console.log('change');
-        console.log( $(this) );
         $(this).find('li.node-selected').find('.glyphicon').trigger('click');
        
     });

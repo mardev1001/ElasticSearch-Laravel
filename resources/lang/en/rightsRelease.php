@@ -5,7 +5,7 @@ return [
     'releasedTo' => 'Freigabe bis',
     'sendEmail' => 'E-Mail senden an Freigeber',
     'right' => 'Rechte Dokument/ Runschreiben',
-    'roles' => 'Rollen',
+    'roles' => 'Verteiler',
     'variante' => 'Variante',
     'fastPublish' => 'Schnell - Veröffentlichen',
     'share' => 'Freigabe starten',

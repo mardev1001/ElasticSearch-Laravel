@@ -14,7 +14,7 @@ class DocumentTypeSeeder extends Seeder
         DB::table('document_types')->insert(
             [
                 [
-                    'name' => 'Rundschreiben QMR',
+                    'name' => 'QM-Rundschreiben',
                     'document_art' => '0',
                     'document_role' => '1',
                     'read_required' => '1',
@@ -25,7 +25,7 @@ class DocumentTypeSeeder extends Seeder
                 ],
                 
                 [
-                    'name' => 'Rundschreiben News',
+                    'name' => 'News',
                     'document_art' => '0',
                     'document_role' => '1',
                     'read_required' => '1',
@@ -47,7 +47,7 @@ class DocumentTypeSeeder extends Seeder
                 ],
                 
                 [
-                    'name' => 'ISO Dokument',
+                    'name' => 'ISO Dokumente',
                     'document_art' => '0',
                     'document_role' => '0',
                     'read_required' => '1',
@@ -58,7 +58,7 @@ class DocumentTypeSeeder extends Seeder
                 ],
                 
                 [
-                    'name' => 'Vorlagedokument',
+                    'name' => 'Formulare',
                     'document_art' => '1',
                     'document_role' => '0',
                     'read_required' => '0',

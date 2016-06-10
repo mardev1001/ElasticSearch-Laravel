@@ -24,6 +24,8 @@ class CreateUsersTable extends Migration
             $table->string('short_name', 50);
             $table->string('email',200)->unique();
             $table->timestamp('birthday');
+            $table->string('phone', 30);
+            $table->string('phone_short', 10);
             $table->boolean('email_reciever');
             $table->string('picture', 200);
             $table->boolean('active');

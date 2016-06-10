@@ -90,6 +90,7 @@
   &::-webkit-input-placeholder {
     color: $color !important;
     font-family: $primary-font-family !important;
+    text-transform: uppercase;
     @if $size != "" {
       font-size: $size;
     }
@@ -97,6 +98,7 @@
   &:-moz-placeholder {
     color: $color !important;
     font-family: $primary-font-family  !important;
+    text-transform: uppercase;
     @if $size != "" {
       font-size: $size;
     }
@@ -104,6 +106,7 @@
   &::-moz-placeholder {
     color: $color !important;
     font-family: $primary-font-family  !important;
+    text-transform: uppercase;
     @if $size != "" {
       font-size: $size;
     }
@@ -111,9 +114,19 @@
   &:-ms-input-placeholder {
     color: $color !important;
     font-family: $primary-font-family !important;
+    text-transform: uppercase;
     @if $size != "" {
       font-size: $size;
     }
   }
   
+}
+
+// generic transform
+@mixin rotate( $val: 90deg ) {
+  -webkit-transform: rotate($val);
+  -moz-transform: rotate($val);
+  -ms-transform: rotate($val);
+  -o-transform: rotate($val);
+  transform: rotate($val);
 }

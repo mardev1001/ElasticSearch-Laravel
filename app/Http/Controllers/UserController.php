@@ -118,6 +118,11 @@ class UserController extends Controller
         $user = User::find($id);
         $user->update($request->all());
         
+        // Fix Carbon date parsing
+        if(!$request->has('birthday')) $user->update(['birthday' => '']);
+        if(!$request->has('active_from'))  $user->update(['active_from' => '']); 
+        if(!$request->has('active_to'))  $user->update(['active_to' => '']);
+        
         if($request->has('active')) $user->update(['active' => true]);
         else $user->update(['active' => false]);
         
@@ -172,7 +177,8 @@ class UserController extends Controller
             $mandantUserRole->role_id = $roleId;
             $mandantUserRole->save();
         }
-        return back()->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
+        // return back()->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
+        return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
     }
     
     /**
@@ -183,6 +189,7 @@ class UserController extends Controller
      */
     public function userMandantRoleEdit(Request $request)
     {
+        $mandantUser = MandantUser::where('id', $request->input('mandant_user_id'))->first();
         if($request->has('save')){
             MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
             if($request->has('role_id')){
@@ -193,12 +200,14 @@ class UserController extends Controller
                     $mandantUserRole->save();
                 }
             }
-            return back()->with('message', 'Rollen erfolgreich aktualisiert.');
+            // return back()->with('message', 'Rollen erfolgreich aktualisiert.');
+            return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', 'Rollen erfolgreich aktualisiert.');
         }
         
         if($request->has('remove')){
             MandantUser::where('id', $request->input('mandant_user_id'))->delete();
-            return back()->with('message', 'Rollen wurden entfernt.');
+            // return back()->with('message', 'Rollen wurden entfernt.');
+            return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandants-roles')->with('message', 'Rollen wurden entfernt.');
         }
     }
 
@@ -224,10 +233,16 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
-        $mandantUser = MandantUser::where('user_id', $id)->first();
-        $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->get();
-        foreach($mandantUserRoles as $mandantUserRole) $mandantUserRole->delete();
-        $mandantUser->delete();
+        $mandantUsers = MandantUser::where('user_id', $id)->get();
+        
+        foreach($mandantUsers as $mandantUser) {
+            $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->get();    
+            foreach($mandantUserRoles as $mandantUserRole) {
+                $mandantUserRole->delete();
+            }
+            $mandantUser->delete();
+        }
+        
         $user->delete();
         
         return redirect('mandanten')->with('message', 'Benutzer erfolgreich entfernt.');

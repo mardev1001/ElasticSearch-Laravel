@@ -38,6 +38,21 @@ class DocumentRepository
          return $array;
     }
     
+    public function generateDummyDataSingle($name ='',$collections=array(), $tags = true ){
+        $array = array();
+        for( $i=0; $i<1;$i++ ){
+            $data = new \StdClass();
+            $data->text = $name.'-'.rand(1,200);
+            if( $tags == true )
+                $data->tags = array(count( $collections ) );
+            
+            if( count($collections) > 0)
+                $data->nodes = $collections;
+            array_push($array, $data);
+        }
+         return $array;
+    }
+    
    /**
     * Generate documents treeview. If no array parameter is present, all documents are read.
     *
@@ -47,6 +62,7 @@ class DocumentRepository
     * @return object array $array
     */
     public function generateTreeview( $array = array(), $tags = false, $document=true,$documentId=0 ){
+        
         /*
         // Bootstrap treeview JSON structure
         {
@@ -71,6 +87,16 @@ class DocumentRepository
         }
         */
         
+        /*
+        @each $el in favorites, blocked, open, notread, read, notreleased, released, history, download, goto, comment, legend, arrow {
+          .icon-#{$el} {
+            background: url('/img/icons/icon_#{$el}.png') no-repeat;
+          }
+        }
+        */
+        
+        // dd(json_encode($this->generateDummyData('Mein Kommentar', $this->generateDummyDataSingle('Kommentar Text Lorem Ipsum Dolor Sit Amet'))));
+        
         $treeView = array();
         $documents = Document::all();
         
@@ -79,8 +105,22 @@ class DocumentRepository
             foreach ($documents as $document) {
         //   dd($documents[2]->documentUploads);
             $node = new \StdClass();
+            
             $node->text = $document->name;
-            $node->icon = 'icon-parent';
+            
+            $icon =  $icon2 = $icon3 ='';
+
+            // Define icon classes
+            if($document->document_status_id == 3){
+                $icon = 'icon-open ';
+                $icon2 = 'icon-released ';
+                // $icon3 = 'icon-history ';
+            }
+            
+            $node->icon = $icon;
+            $node->icon2 = $icon2;
+            $node->icon3 = $icon3 . 'last-node-icon ';
+            
             $node->href = route('dokumente.show', $document->id);
             
             if(!$document->documentUploads->isEmpty()){
@@ -91,8 +131,11 @@ class DocumentRepository
                 foreach ($document->documentUploads as $upload) {
                     $subNode = new \StdClass();
                     $subNode->text = basename($upload->file_path);
-                    $subNode->icon = 'fa fa-file-o';
-                    $subNode->href = "#".$upload->file_path;
+                    $subNode->icon = 'child-node ';
+                    $subNode->icon2 = 'icon-download ';
+                    $subNode->icon3 = 'last-node-icon ';
+                    $subNode->href = 'download/'.str_slug($document->name).'/'.$upload->file_path;
+                    
     
                     array_push($node->nodes, $subNode);
                 }
@@ -107,7 +150,7 @@ class DocumentRepository
                         $node = new \StdClass();
                         $node->text = $secondDoc->name;
                         $node->icon = 'icon-parent';
-                        $node->href = route('dokumente.show', $secondDoc->id);
+                        //$node->href = route('dokumente.show', $secondDoc->id);
                         
                         if(!$secondDoc->documentUploads->isEmpty()){
                             
@@ -118,7 +161,7 @@ class DocumentRepository
                                 $subNode = new \StdClass();
                                 $subNode->text = basename($upload->file_path);
                                 $subNode->icon = 'fa fa-file-o';
-                                $subNode->href = "#".$upload->file_path;
+                                $subNode->href = 'download/'.str_slug($secondDoc->name).'/'.$upload->file_path;
                 
                                 array_push($node->nodes, $subNode);
                             }

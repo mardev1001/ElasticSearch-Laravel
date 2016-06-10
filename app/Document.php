@@ -76,6 +76,9 @@ class Document extends Model
     public function isoCategories(){
         return $this->belongsTo('App\IsoCategory', 'iso_category_id', 'id');
     }
+    public function isoCategoriesWhereSlug($slug){
+        return $this->belongsToMany('App\IsoCategory', 'iso_category_id', 'id')->where('slug',$slug);
+    }
     
     public function editorVariant(){
             return $this->hasMany('App\EditorVariant');

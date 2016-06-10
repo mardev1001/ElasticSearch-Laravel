@@ -2,20 +2,11 @@
 
 @extends('master')
 
-@section('content')
+@section('page-title')
+    {{ trans('statistikForm.stats') }} - Dokument QMR 123 - V2
+@stop
 
-<div class="row">
-    <div class="col-xs-12 col-md-12 white-bgrnd">
-        <div class="fixed-row">
-            <div class="fixed-position ">
-                <h1 class="page-title">
-                    {{ trans('statistikForm.stats') }} - Dokument QMR 123 - V2
-                </h1>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="clearfix"></div>
+@section('content')
 
 <div class="row">
     <div class="col-xs-12">

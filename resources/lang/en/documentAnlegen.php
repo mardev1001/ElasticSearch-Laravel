@@ -14,4 +14,6 @@ return [
     'adressat' => 'adressat_id',
     'subject' => 'betreff',
     'pdfUpload' => 'PDF upload',
+    'anlageZuVariante' => 'Anlage zu Variante',
+ 
 ];

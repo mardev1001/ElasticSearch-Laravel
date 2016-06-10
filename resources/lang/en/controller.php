@@ -12,13 +12,15 @@ return [
     'favorites' => 'Meine Favoriten',
     'mandantenverwaltung' => 'Mandantenverwaltung',
     'qmr' => 'Rundschreiben QMR',
-    'attachment' => 'Dokumente anlegen -  Anhänge',
+    'attachment' => 'Dokument anlegen - Anlage/n',
     'isoDocument' => 'ISO DOKUMENTE - Übersicht',
     'rundschreiben' => 'Rundschreiben',
-    'rundschreiben' => 'Rundschreiben',
     'documentTemplates' => 'Vorlagendokument - Übersicht',
-    'documentTemplates' => 'Dokumente anlegen - Anhänge',
+    'create' => 'Dokumente anlegen',
+    'uploads' => 'Dokument hochladen',
     'rightsRelease' => 'Dokumente anlegen - Rechte & Freigabe',
     'documentUpload' => 'Dokument (Vorlagedokument/ Datei Upload)',
+    'pdfUpload' => 'Dokument erstellen',
+    'editor' => 'Dokument erstellen',
 
 ];

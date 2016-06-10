@@ -26,5 +26,6 @@ return [
     'disapprove' => 'Ablehnen',
     'attachments' => 'Anhänge',
     'content' => 'Inhalte',
+    'download' => 'Download',
     
 ];

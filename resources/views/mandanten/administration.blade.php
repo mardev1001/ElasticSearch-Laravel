@@ -1,50 +1,44 @@
 @extends('master')
+
+@section('page-title')
+    {{  ucfirst( trans('controller.administration') ) }} 
+@stop
+
     @section('content')
-   <div class="row">
-        <div class="col-xs-12 col-md-12 white-bgrnd">
-            <div class="fixed-row">
-                <div class="fixed-position ">
-                    <h1 class="page-title">
-                        {{  ucfirst( trans('controller.administration') ) }}
-                    </h1>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="clearfix"></div>
-    
     <div class="col-xs-12 box-wrapper">
-        {!! Form::open([
-               'url' => 'mandanten/search',
-               'method' => 'POST',
-               'class' => 'horizontal-form' ]) !!}
-            <div class="row">
-                <!-- input box-->
-                <div class="col-lg-6"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('search','',old('search'),trans('mandantenForm.search') , 
-                               trans('mandantenForm.search') , true  ) !!}
-                    </div>   
-                </div><!--End input box-->
-                <!-- input box-->
-                <div class="col-lg-6"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
-                        {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
-                    </div>   
-                </div><!--End input box-->
-                
-                    <div class="clearfix"></div>
-                
-                <!-- button div-->    
-                <div class="col-xs-12">
-                    <div class="form-wrapper">
-                        <button type="submit" class="btn btn-primary">{{ trans('benutzerForm.search') }}</button>
-                        <button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>
-                    </div>
-                </div><!-- End button div-->    
-            </div>           
-        </form>
+        <div class="box">
+            {!! Form::open([
+                   'url' => 'mandanten/search',
+                   'method' => 'POST',
+                   'class' => 'horizontal-form' ]) !!}
+                <div class="row">
+                    <!-- input box-->
+                    <div class="col-lg-6"> 
+                        <div class="form-group no-margin-bottom">
+                            {!! ViewHelper::setInput('search','',old('search'),trans('mandantenForm.search') , 
+                                   trans('mandantenForm.search') , true  ) !!}
+                        </div>   
+                    </div><!--End input box-->
+                    <!-- input box-->
+                    <div class="col-lg-6"> 
+                        <div class="form-group checkbox-form-group no-margin-bottom">
+                                {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
+                                {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
+                        </div>   
+                    </div><!--End input box-->
+                    
+                        <div class="clearfix"></div>
+                    
+                    <!-- button div-->    
+                    <div class="col-xs-12">
+                        <div class="form-group no-margin-bottom custom-input-group-btn">
+                           <button type="submit" class="btn btn-primary no-margin-bottom">{{ trans('benutzerForm.search') }}</button>
+                            <!--<button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>-->
+                        </div>
+                    </div><!-- End button div-->    
+                </div>           
+            </form>
+        </div>
     </div>
 
     <div class="clearfix"><br></div>
@@ -69,7 +63,7 @@
                         <h4 class="panel-title">
                             <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
                                href="#collapseMandant{{$mandant->id}}">
-                              {{$mandant->name}} [{{ count($mandant->mandantUsers) }} Benutzer]
+                              {{$mandant->name}} ({{ count($mandant->mandantUsers) }} Benutzer)
                             </a>
                             <span class="pull-right panel-options">
                                 
@@ -93,7 +87,7 @@
                     
                     <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse ">
                         <div class="panel-body">
-                            <table class="table table-hover">
+                            <table class="table">
                             <thead>
                                 <th>Name</th>
                                 <th class="col-md-8">Rollen</th>
@@ -103,7 +97,8 @@
                             <tbody>
                                 
                                 @foreach( $mandant->mandantUsers as $mandantUser )
-                                    @if( $mandantUser->deleted_at == null )
+                                
+                                    
                                         <tr>
                                         <td class="valign">{{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
                                         <td class="col-md-8 valign">
@@ -134,7 +129,7 @@
                                             <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
                                         </td>
                                     </tr>
-                                    @endif
+                                    
                                 @endforeach
                             </tbody>
                             </table>
@@ -177,7 +172,7 @@
                                     <tbody>
                                         
                                         @foreach( $unassignedUsers as $unassignedUser )
-                                            @if( $mandantUser->deleted_at == null )
+                                             {{-- @if( $mandantUser->deleted_at == null ) --}}
                                                 <tr>
                                                     <td class="valign">{{ $unassignedUser->first_name ." ". $unassignedUser->last_name }} </td>
                                                     <td class="valign table-options text-center">
@@ -196,7 +191,7 @@
                                                         <a href="{{route('benutzer.edit', ['id'=> $unassignedUser->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
                                                     </td>
                                                 </tr>
-                                            @endif
+                                            {{-- @endif --}}
                                         @endforeach
                                     </tbody>
                                 </table>

@@ -1,18 +1,9 @@
 @extends('master')
-    @section('content')
 
-        <div class="row">
-            <div class="col-xs-12 col-md-12 white-bgrnd">
-                <div class="fixed-row">
-                    <div class="fixed-position ">
-                        <h1 class="page-title">
-                            {{ trans('controller.qmr') }}
-                        </h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="clearfix"></div>
+@section('page-title') Dokument anlegen -  Anlage/n @stop
+
+@section('content')
+
         
         <div class="col-xs-12 col-md-12 box">
             <div class="tree-view" data-selector="test">
@@ -35,7 +26,7 @@
                         {!! ViewHelper::setSelect($collections,'document_type_id',$data,old('document_type_id'),
                                'QMR', 'QMR' ) !!}
                     
-                        <span class="input-group-btn">
+                        <span class="custom-input-group-btn">
                             <button type="submit" class="btn btn-primary">
                                 <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
                             </button>

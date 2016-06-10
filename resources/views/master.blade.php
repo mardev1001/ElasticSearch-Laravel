@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-        <link rel="shortcut icon" href="/img/favicon.png">
+        <link rel="shortcut icon" href="/img/NeptunFavicon.png">
         <title>@yield("title",'NEPTUN Intranet')</title>
     
         {!! Html::style(elixir('css/style.css')) !!}
@@ -33,6 +33,21 @@
       </div>
         -->
         <!--End loader div-->
+   
+    <div class="page-title"> 
+        <div class="">
+            <div class="col-xs-12 col-md-12 ">
+                <div class="fixed-row @yield('page-title-class')">
+                    <div class="fixed-position ">
+                        <h1 class="page-title">@yield('page-title')</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div class="clearfix"></div>
+        
+    </div>
+
     <div id="wrapper">
         
         <!-- Header search -->
@@ -40,6 +55,8 @@
     
         <!-- Sidebar navigation -->
         @include('layouts.sidebar')
+    
+        
     
         <!-- Page Content -->
         <div id="page-wrapper">

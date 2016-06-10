@@ -36,18 +36,21 @@ $(function() {
         var navSidebar = $('.sidebar-nav.navbar-collapse');
         var pageWrapper = $('#page-wrapper');
         var navbarToggle = $('#nav-btn');
+        var fixedTitle = $('.fixed-position');
 
         if (navSidebar.hasClass('hidden')) {
 
-            $.when(navSidebar.removeClass('hidden')).done(
+            $.when(navSidebar.removeClass('hidden',1000)).done(
                 pageWrapper.removeAttr('style'),
+                fixedTitle.css('left', '315px'),
                 navbarToggle.removeClass('pull-left')
             );
 
         }
         else {
-            $.when(navSidebar.addClass('hidden')).done(
+            $.when(navSidebar.addClass('hidden',1000)).done(
                 pageWrapper.css('margin-left', '65px'),
+                fixedTitle.css('left', '131px'),
                 navbarToggle.addClass('pull-left')
             );
         }
@@ -88,15 +91,15 @@ $(function() {
     var mandantHauptstelleSelect = $('.select-mandants');
 
     if(mandantHauptstelleCheckbox.prop('checked') == true)
-        mandantHauptstelleSelect.hide();
+        mandantHauptstelleSelect.hide(400);
     else
-        mandantHauptstelleSelect.show();
+        mandantHauptstelleSelect.show(400);
         
     mandantHauptstelleCheckbox.change(function(e){
         if(mandantHauptstelleCheckbox.prop('checked') == true)
-            mandantHauptstelleSelect.hide();
+            mandantHauptstelleSelect.hide(400);
         else
-            mandantHauptstelleSelect.show();
+            mandantHauptstelleSelect.show(400);
     });
     
     // Mandant history add button
@@ -116,40 +119,40 @@ $(function() {
     
     // Hide or show PDF upload checkbox 
 
-    if($(".document-type-select .select").val() == 3){
-        $('.pdf-checkbox').show();
+    if( $(".document-type-select .select").val() == 1 || $(".document-type-select .select").val() == 2 || $(".document-type-select .select").val() == 3){
+        $('.pdf-checkbox').show(400);
         $('.pdf-checkbox').find('input[name="pdf_upload"]').val(1);
     }
     else{
-        $('.pdf-checkbox').hide();
+        $('.pdf-checkbox').hide(400);
         $('.pdf-checkbox').find('input[name="pdf_upload"]').removeAttr('value');
         
     }
     
     $('.document-type-select .select').chosen().change(function(event){
         if(event.target == this){
-            // console.log($(this).val());
-            if($(this).val() == 3)
-                $('.pdf-checkbox').show();
+            //  console.log($(this).val());
+            if( $(this).val() == 3 || $(this).val() == 2 || $(this).val() == 1 )
+                $('.pdf-checkbox').show(400);
             else
-                $('.pdf-checkbox').hide();
+                $('.pdf-checkbox').hide(400);
         }
     });
 
     // Hide or show ISO category selection based on selected value
     
     if($(".document-type-select .select").val() == 4)
-        $('.iso-category-select').show();
+        $('.iso-category-select').show(400);
     else
-        $('.iso-category-select').hide();
+        $('.iso-category-select').hide(400);
     
     $('.document-type-select .select').chosen().change(function(event){
         if(event.target == this){
             // console.log($(this).val());
             if($(this).val() == 4) 
-                $('.iso-category-select').show();
+                $('.iso-category-select').show(400);
             else
-                $('.iso-category-select').hide();
+                $('.iso-category-select').hide(400);
         }
     });
 

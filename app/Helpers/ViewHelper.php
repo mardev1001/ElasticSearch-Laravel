@@ -62,13 +62,13 @@ class ViewHelper
      * @param array $dataAttr
      * @return string $value || $old
      */
-    static function setArea( $inputName ,$data , $old, $label='', $placeholder='', $required=false, $classes=array(), $dataTag=array()  ){
+    static function setArea( $inputName ,$data , $old, $label='', $placeholder='', $required=false, $classes=array(), $dataTag=array(), $readonly=false  ){
         $string = '';
         if( $placeholder == '')
             $placeholder = $label;
          
             $string = view('partials.inputTextarea',
-                    compact('inputName','data','label','old','placeholder','required')
+                    compact('inputName','data','label','old','placeholder','required','readonly')
                 )->render();
    
      

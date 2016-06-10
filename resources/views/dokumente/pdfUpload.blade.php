@@ -1,24 +1,32 @@
+@section('page-title') {{ trans('controller.create') }} @stop
+<h3 class="title">{{ trans('controller.editor') }}</h3>
 
-<h3>Dokumente anlegen - Daten Eingabe - Dokumentenart - Editor</h3>
 <div class="row">  
-    <!-- input box-->
-    <div class="col-lg-3"> 
-        <div class="form-group">
-            {!! ViewHelper::setCheckbox('show_name',$data,old('show_name'),trans('documentForm.showName')) !!}
-            
-            
-        </div>   
-    </div><!--End input box-->
-    
-    <div class="clearfix"></div>
     
     <!-- input box-->
-    <div class="col-lg-3"> 
+    <div class="col-lg-5"> 
         <div class="form-group">
             {!! ViewHelper::setSelect($adressats,'adressat_id',$data,old('adressat_id'),
                     trans('documentForm.adressat'), trans('documentForm.adressat') ) !!}
         </div>   
     </div><!--End input box-->
+    
+    <!-- input box-->
+    <div class="col-lg-5"> 
+        <div class="form-group">
+            {!! ViewHelper::setInput('betreff',$data,old('betreff'),trans('documentForm.subject') , 
+                   trans('documentForm.subject') , false  ) !!}
+        </div>   
+    </div><!--End input box-->
+    
+    <div class="clearfix"></div>
+    <!-- input box-->
+    <div class="col-lg-3"> 
+        <div class="form-group">
+            {!! ViewHelper::setCheckbox('show_name',$data,old('show_name'),trans('documentForm.showName')) !!}
+        </div>   
+    </div><!--End input box-->
+    
     </div>
 <div class="clearfix"></div>
 
@@ -51,4 +59,4 @@
       
         </div><!--End input box-->
     @endif
-</div>
+</div><br>

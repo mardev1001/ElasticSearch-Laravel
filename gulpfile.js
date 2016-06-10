@@ -25,7 +25,7 @@ var cmsScripts = [
     "bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js",
     "moment/min/moment-with-locales.min.js",
     "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",
-    "bootstrap-treeview/public/js/bootstrap-treeview.js",
+    // "bootstrap-treeview/public/js/bootstrap-treeview.js",
     "datatables/media/js/jquery.dataTables.js",
     "twitter-bootstrap-wizard/jquery.bootstrap.wizard.js",
     "js/**",

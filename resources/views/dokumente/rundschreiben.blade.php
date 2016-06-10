@@ -2,22 +2,12 @@
 
 @extends('master')
 
+@section('page-title')
+    {{ trans('controller.rundschreiben') }}
+@stop
+
+
 @section('content')
-
-<div class="row">
-    <div class="col-xs-12 col-md-12 white-bgrnd">
-        <div class="fixed-row">
-            <div class="fixed-position ">
-                <h1 class="page-title">
-                    Rundschreiben
-                </h1>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="clearfix"></div>
-
-<div class="clearfix"></div> <br>
 
 <div class="row">
     
@@ -29,21 +19,23 @@
             <div class="box">
                 <div class="tree-view" data-selector="rundschreibenMeine">
                     <div class="rundschreibenMeine hide">
-                        {{ $rundschreibenMeine }}
+                        {{ $rundschreibenMeineTree }}
                     </div>
                 </div>
             </div>
-            
-            <div class="text-center">
-                <ul class="pagination">
-                    <li><a href="#" aria-label="Next"><span aria-hidden="true">«</span></a></li>
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                </ul>
+             <div class="text-center">
+                    {!! $rundschreibenMeine->render() !!}
             </div>
+            <!--<div class="text-center">-->
+            <!--    <ul class="pagination">-->
+            <!--        <li class="pull-left"><a href="#" aria-label="Prev"><span aria-hidden="true">&lt; zurück</span></a></li>-->
+            <!--        <li class="active"><a href="#">1</a></li>-->
+            <!--        <li><a href="#">2</a></li>-->
+            <!--        <li><a href="#">3</a></li>-->
+            <!--        <li><a href="#">4</a></li>-->
+            <!--        <li class="pull-right"><a href="#" aria-label="Next"><span aria-hidden="true">weiter &gt;</span></a></li>-->
+            <!--    </ul>-->
+            <!--</div>-->
             
         </div>
     </div>
@@ -53,21 +45,23 @@
 <div class="clearfix"></div> <br>
 
 <div class="col-xs-12 box-wrapper">
-    <div class="row">
-        <form action="" method="GET">
-            <div class="input-group">
-                <div class="col-lg-12">
-                    {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
+    <div class="box">
+        <div class="row">
+            <form action="" method="GET">
+                <div class="input-group">
+                    <div class="col-lg-12">
+                        {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
+                    </div>
+                    <div class="col-lg-12">
+                        <span class="custom-input-group-btn">
+                            <button type="submit" class="btn btn-primary no-margin-bottom">
+                                <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
+                            </button>
+                        </span>
+                    </div>
                 </div>
-                <div class="col-lg-12">
-                    <span class="custom-input-group-btn">
-                        <button type="submit" class="btn btn-primary">
-                            <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
-                        </button>
-                    </span>
-                </div>
-            </div>
-       </form>
+           </form>
+        </div>
     </div>
 </div>
 
@@ -83,21 +77,23 @@
             <div class="box">
                 <div class="tree-view" data-selector="rundschreibenMeine">
                     <div class="rundschreibenMeine hide">
-                        {{ $rundschreibenAll }}
+                        {{ $rundschreibenAllTree }}
                     </div>
                 </div>
             </div>
-            
-            <div class="text-center">
-                <ul class="pagination">
-                    <li><a href="#" aria-label="Next"><span aria-hidden="true">«</span></a></li>
-                    <li class="active"><a href="#">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                </ul>
+             <div class="text-center">
+                    {!! $rundschreibenAll->render() !!}
             </div>
+            <!--<div class="text-center">-->
+            <!--    <ul class="pagination">-->
+            <!--        <li class="pull-left"><a href="#" aria-label="Prev"><span aria-hidden="true">&lt; zurück</span></a></li>-->
+            <!--        <li class="active"><a href="#">1</a></li>-->
+            <!--        <li><a href="#">2</a></li>-->
+            <!--        <li><a href="#">3</a></li>-->
+            <!--        <li><a href="#">4</a></li>-->
+            <!--        <li class="pull-right"><a href="#" aria-label="Next"><span aria-hidden="true">weiter &gt;</span></a></li>-->
+            <!--    </ul>-->
+            <!--</div>-->
             
         </div>
     </div>
