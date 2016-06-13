@@ -2,6 +2,7 @@
 
 return [
 
-    'allDocuments' => 'Alle Dokumente',
+    'myDocuments' => 'Meine Formulare',
+    'allDocuments' => 'Alle Formulare',
     
 ];

@@ -36,7 +36,7 @@
             <!-- input box-->
             <div class="col-lg-4 select-mandants">
                 <div class="form-group">
-                    {!! ViewHelper::setSelect($mandantsAll, 'mandant_id_hauptstelle', $data, old('mandant_id_hauptstelle'), trans('mandantenForm.mandanten')) !!}
+                    {!! ViewHelper::setSelect($mandantsAll, 'mandant_id_hauptstelle', $data, old('mandant_id_hauptstelle'), trans('mandantenForm.num-hauptstelle')) !!}
                 </div>
             </div><!--End input box-->
         </div>
@@ -174,7 +174,7 @@
     <div class="clearfix"><br/></div>
 
     <div class="box-wrapper">
-        <h3 class="title">Geschäftsführer Infos</h3>
+        <h3 class="title">Geschäftsführer-Informationen</h3>
         <div class="box">
             <div class="row">
         
@@ -229,7 +229,7 @@
 
    
     <div class="box-wrapper">
-        <h3 class="title">Zusätzliche Infos</h3>
+        <h3 class="title">Zusätzliche Informationen</h3>
         <div class="box">
             <div class="row">
         
@@ -358,15 +358,23 @@
           </div>
         </div>
         <div class="clearfix"></div> 
-            {{ Form::close() }}
-            
-            @include('partials.mandantStaticRoles')
+         
+             
             
         @endif
         @if( Request::is('*/create') )
             @section('beforeButtons')
-                <div class="button-box box-wrapper"><br>
+                <div class="button-box box-wrapper">
             @stop
-         
+        @elseif( Request::is('*/edit') )
+            @section('beforeButtons')
+                <div class="button-box box-wrapper">
+            @stop
         @endif
-      
+     
+     @if( Request::is('*/edit') )
+         @section('closingElementsAfterForm')
+                @include('partials.mandantStaticRoles')
+        @stop
+     @endif
+ 

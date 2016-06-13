@@ -2,7 +2,7 @@
 
 @extends('master')
 
-@section('page-title') ISO Kategorien - Übersicht @stop
+@section('page-title') NEPTUN - ISO Kategorie @stop
 
 @section('content')
 
@@ -58,7 +58,7 @@
     <div class="box-wrapper">
         <div class="row">
             <div class="col-md-12">
-                <h4 class="title">{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.overview') }}</h4>
+                <h4 class="title">{{ trans('isoKategorienForm.overview') }}</h4>
                 <div class="box">
                     <table class="table">
                         <tr>

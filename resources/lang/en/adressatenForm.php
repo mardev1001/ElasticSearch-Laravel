@@ -2,6 +2,7 @@
 
 return [
     
+    'adressats-title' => 'NEPTUN - Adressat',
     'adressat' => 'Adressat',
     'adressats' => 'Adressaten',
     'management' => 'Verwalten',

@@ -8,7 +8,7 @@
             <div class="col-lg-4"> 
                 <div class="form-group document-type-select">
                     {!! ViewHelper::setSelect($documentTypes,'document_type_id',$data,old('document_type_id'),
-                            trans('documentForm.documentType'), trans('documentForm.type'),true ) !!}
+                            trans('documentForm.type'), trans('documentForm.type'),true ) !!}
                 </div>   
             </div><!--End input box-->
             

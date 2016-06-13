@@ -19,4 +19,13 @@ class Role extends Model
     public function isManager(){
         
     }
+    
+    public function mandantUserRoles(){ 
+        return $this->belongsTo('App\MandantUserRole');
+    }
+    
+    public function internalMandantUsers(){
+        return $this->belongsTo('App\InternalMandantUser');
+        // return $this->hasManyThrough('App\InternalMandantUser','App\User');
+    }
 }

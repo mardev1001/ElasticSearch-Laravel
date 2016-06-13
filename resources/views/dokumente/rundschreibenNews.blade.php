@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    {{ trans('controller.rundschreiben') }}
+    {{ trans('controller.rundschreibenNews') }}
 @stop
 
 
@@ -14,7 +14,7 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper">
             
-            <h2 class="title">Meine Rundschreiben</h2>
+            <h2 class="title">Meine Rundschreiben News</h2>
             
             <div class="box">
                 <div class="tree-view" data-selector="rundschreibenMeine">
@@ -50,7 +50,7 @@
             <form action="" method="GET">
                 <div class="input-group">
                     <div class="col-lg-12">
-                        {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
+                        {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
                     </div>
                     <div class="col-lg-12">
                         <span class="custom-input-group-btn">
@@ -72,7 +72,7 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper">
             
-            <h2 class="title">Alle Rundschreiben</h2>
+            <h2 class="title">Alle Rundschreiben News</h2>
             
             <div class="box">
                 <div class="tree-view" data-selector="rundschreibenMeine">

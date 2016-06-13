@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-     {{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.types') }} {{ trans('dokumentTypenForm.management') }}
+     {{ trans('dokumentTypenForm.document-types-management') }}
 @stop
 
 @section('content')
@@ -78,7 +78,7 @@
     <div class="box-wrapper">
         <div class="row">
             <div class="col-md-12">
-                <h4 class="title"> {{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.types') }}</h4>
+                <h4 class="title"> {{ trans('dokumentTypenForm.overview') }}</h4>
                 <div class="box">
                     <table class="table">
                         <tr>

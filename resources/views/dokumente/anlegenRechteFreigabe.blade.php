@@ -10,11 +10,12 @@
         'method' => 'POST',
         'class' => 'horizontal-form' ]) !!}
             <div class="box-wrapper">
+                <h2 class="title">{{ trans('rightsRelease.release') }}</h2>
                 <div class="box">
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
-                            <label>{{ trans('rightsRelease.release') }} *</label>
-                            <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.release') }}" multiple>
+                            <label>{{ trans('rightsRelease.approver') }} *</label>
+                            <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.approver') }}" multiple>
                                 <option value="0"></option>
                                 @foreach($mandantUsers as $mandatUser)
                                 <option value="{{$mandatUser->id}}"

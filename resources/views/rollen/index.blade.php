@@ -24,7 +24,7 @@
                                 <select name="role[]" class="form-control select" data-placeholder="{{ trans('rollenForm.rights') }}" multiple>
                                     <option value="0"></option>
                                     <option value="required">Pflichtfeld</option>
-                                    <option value="admin">Redaktion</option>
+                                    <option value="admin">NEPTUN</option>
                                     <option value="mandant">Mandant</option>
                                     <option value="wiki">Wiki</option>
                                     <option value="phone">Telefonliste</option>
@@ -65,7 +65,7 @@
 
 <fieldset class="form-group">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('rollenForm.roles') }} {{ trans('rollenForm.overview') }}</h4>
+        <h4 class="title">{{ trans('rollenForm.overview') }}</h4>
          <div class="box">
             <div class="row">
                 <div class="col-xs-12">
@@ -134,7 +134,7 @@
                                             <select name="role[]" class="form-control select" data-placeholder="{{ trans('rollenForm.rights') }}" multiple>
                                                 <option value="0"></option>
                                                 <option value="required" @if($role->mandant_required) selected @endif > Pflichtfeld</option>
-                                                <option value="admin" @if($role->admin_role) selected @endif > Redaktion</option>
+                                                <option value="admin" @if($role->admin_role) selected @endif > NEPTUN</option>
                                                 <option value="mandant" @if($role->mandant_role) selected @endif > Mandant</option>
                                                 <option value="wiki" @if($role->wiki_role) selected @endif > Wiki</option>
                                                 <option value="phone" @if($role->phone_role) selected @endif > Telefonliste</option>

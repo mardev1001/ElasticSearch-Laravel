@@ -2,11 +2,11 @@
 
 @extends('master')
 
-@section('page-title') {{ $document->documentType->name }} @if($document->pdf_upload) PDF @endif - Übersicht @stop
+@section('page-title') {{ $document->documentType->name }} - Übersicht @stop
 
 @section('content')
 
-<div class="box-wrapper">
+<div class="box-wrapper ">
     <div class="row">
         <div class="col-lg-12">
            <h3 class="title">{{ $document->name }}

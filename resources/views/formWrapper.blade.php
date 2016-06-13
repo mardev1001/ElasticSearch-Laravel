@@ -66,7 +66,7 @@
             @endif
         </div> <!--end box-wrapper-->
     </form>
-    @yield('closingElements')
+    @yield('closingElementsAfterForm')
     <div class="clearfix"></div>
       
     @stop

@@ -25,7 +25,7 @@ class CreateMandantInfosTable extends Migration
             $table->text('zausatzinfo_steuer');  
             $table->string('berufsgenossenschaft_number',30);  
             $table->text('berufsgenossenschaft_zusatzinfo');  
-            $table->timestamp('erlaubniss_gultig_ab');  
+            $table->timestamp('erlaubniss_gultig_ab')->nullable();  
             $table->string('erlaubniss_gultig_von');  
             $table->string('geschaftsjahr',30);
             $table->text('geschaftsjahr_info');  

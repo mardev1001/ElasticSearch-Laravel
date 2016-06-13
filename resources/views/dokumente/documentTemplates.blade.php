@@ -8,6 +8,7 @@
             <div class="box">
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
+                        <h4 class="title">{{ trans('documentTemplates.myDocuments')}}</h4>
                         <div class="tree-view hide-icons" data-selector="test">
                              <div class="test hide" >{{$data}}</div>
                         </div>
@@ -30,8 +31,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        {!! ViewHelper::setInput('search',$data,old('search'),trans('navigation.search'),
-                                        trans('navigation.search'), true) !!}
+                                        {!! ViewHelper::setInput('search',$data,old('search'),trans('navigation.search_placeholder'),
+                                        trans('navigation.search_placeholder'), true) !!}
                         
                                     </div>   
                                 </div>

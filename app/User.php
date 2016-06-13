@@ -32,9 +32,10 @@ class User extends Authenticatable
      * @param  string  $value
      * @return string
      */
-    public function getBirthdayAttribute($value)
-    {
-        return Carbon::parse($value)->format('d.m.Y');
+    public function getBirthdayAttribute($value)    {
+        
+        if (empty($value)) return null;
+        else return Carbon::parse($value)->format('d.m.Y');
     }
     
     
@@ -46,7 +47,8 @@ class User extends Authenticatable
      */
     public function getActiveFromAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        if (empty($value)) return null;
+        else return Carbon::parse($value)->format('d.m.Y');
     }
     
     
@@ -58,7 +60,8 @@ class User extends Authenticatable
      */
     public function getActiveToAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        if (empty($value)) return null;
+        else return Carbon::parse($value)->format('d.m.Y');
     }
     
     /**
@@ -69,7 +72,8 @@ class User extends Authenticatable
      */
     public function setBirthdayAttribute($value)
     {
-        $this->attributes['birthday'] = Carbon::parse($value);
+        if (empty($value)) $this->attributes['birthday'] = null;
+        else $this->attributes['birthday'] = Carbon::parse($value);
     }
      
     /**
@@ -80,7 +84,8 @@ class User extends Authenticatable
      */
     public function setActiveFromAttribute($value)
     {
-        $this->attributes['active_from'] = Carbon::parse($value);
+        if (empty($value)) $this->attributes['active_from'] = null;
+        else $this->attributes['active_from'] = Carbon::parse($value);
     }
     
     /**
@@ -91,7 +96,8 @@ class User extends Authenticatable
      */
     public function setActiveToAttribute($value)
     {
-        $this->attributes['active_to'] = Carbon::parse($value);
+        if (empty($value)) $this->attributes['active_to'] = null;
+        else $this->attributes['active_to'] = Carbon::parse($value);
     }
     
     /**

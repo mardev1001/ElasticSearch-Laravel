@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    ISO Dokumente 
+    ISO Dokumente - Übersicht
 @stop
 
 @section('content')
@@ -57,7 +57,7 @@
             <form action="" method="GET">
                 <div class="input-group">
                     <div class="col-lg-12">
-                        {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search'), trans('navigation.search'), true) !!}
+                        {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
                     </div>
                     <div class="col-lg-12">
                         <span class="custom-input-group-btn">

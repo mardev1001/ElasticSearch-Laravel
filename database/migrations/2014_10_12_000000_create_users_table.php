@@ -23,14 +23,14 @@ class CreateUsersTable extends Migration
             $table->string('last_name', 200);
             $table->string('short_name', 50);
             $table->string('email',200)->unique();
-            $table->timestamp('birthday');
+            $table->timestamp('birthday')->nullable();
             $table->string('phone', 30);
             $table->string('phone_short', 10);
             $table->boolean('email_reciever');
             $table->string('picture', 200);
             $table->boolean('active');
-            $table->timestamp('active_from');
-            $table->timestamp('active_to');
+            $table->timestamp('active_from')->nullable();
+            $table->timestamp('active_to')->nullable();
             $table->integer('created_by');
             $table->rememberToken();
             $table->timestamps();

@@ -66,7 +66,7 @@ class RoleSeeder extends Seeder
                 ],
 
                 [
-                    'name' => 'Neptun Fachkraft',
+                    'name' => 'NEPTUN Fachkraft',
                     'mandant_required' => '0',
                     'admin_role' => '0',
                     'system_role' => '1',
@@ -79,7 +79,7 @@ class RoleSeeder extends Seeder
                 ],
 
                 [
-                    'name' => 'Neptun Verwalter',
+                    'name' => 'NEPTUN Verwalter',
                     'mandant_required' => '0',
                     'admin_role' => '1',
                     'system_role' => '1',
@@ -92,7 +92,7 @@ class RoleSeeder extends Seeder
                 ],
 
                 [
-                    'name' => 'Neptun Mitarbeiter',
+                    'name' => 'NEPTUN Mitarbeiter',
                     'mandant_required' => '0',
                     'admin_role' => '1',
                     'system_role' => '1',
@@ -105,7 +105,7 @@ class RoleSeeder extends Seeder
                 ],
 
                 [
-                    'name' => 'Schnellfreigeber',//id 8
+                    'name' => 'Schnell-Freigeber',//id 8
                     'mandant_required' => '0',
                     'admin_role' => '1',
                     'system_role' => '1',
@@ -170,7 +170,7 @@ class RoleSeeder extends Seeder
                 ],
 
                 [
-                    'name' => 'Dokument Verfasser',
+                    'name' => 'Dokumenten Verfasser',
                     'mandant_required' => '0',
                     'admin_role' => '1',
                     'system_role' => '1',

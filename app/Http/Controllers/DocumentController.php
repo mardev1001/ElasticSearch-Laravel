@@ -92,14 +92,13 @@ class DocumentController extends Controller
         //DB::enableQueryLog();
         $docType = DocumentType::find( $request->get('document_type_id') );
         
+        //fix if document type not iso category -> don't save iso_category_id
+        if( $request->get('document_type_id') != 3 )
+            RequestMerge::merge(['iso_category_id' => null] );
+            
         RequestMerge::merge(['version' => 1] );
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
         
-        // dd($setDocument);
-        // if($request->get('pdf_upload') &&  (strpos( strtolower($docType->name ) , 'rundschreiben') !== true) )
-        //       RequestMerge::merge(['pdf_upload' => 0] );
-            
-
         $data = Document::create( $request->all() );
        
         $lastId = Document::orderBy('id','DESC')->first();
@@ -861,6 +860,11 @@ class DocumentController extends Controller
     public function update(Request $request, $id)
     {
         $adressats = Adressat::where('active',1)->get();
+        
+        //fix if document type not iso category -> don't save iso_category_id
+        if( $request->get('document_type_id') != 3 )
+            RequestMerge::merge(['iso_category_id' => null] );
+            
         RequestMerge::merge(['version' => 1] );
         $data = Document::find( $id )->fill( $request->all() )->save();
         $data = Document::find($id);
@@ -976,16 +980,15 @@ class DocumentController extends Controller
      */
     public function rundschreibenNews()
     {
-        $counter = 0;
-        $document = $this->document->generateDummyData('document single');
-        $users = $this->document->generateDummyData('users', $document );
-        $data = $this->document->generateDummyData('dokumente', $users );
+        $rundschreibenAll = Document::where(['document_type_id' => 2])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben-news');
+        $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
+        $rundschreibenMeine = Document::where('user_id',Auth::user()->id)
+        ->where('document_type_id', 2)->orderBy('id', 'desc')
+        ->take(10)->paginate(10, ['*'], 'meine-rundschreiben-news');
+        $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
-        $document2 = $this->document->generateDummyData('document single',array(), false);
-        $users2 = $this->document->generateDummyData('users', $document2 );
-        $data2 = json_encode( $this->document->generateDummyData('dokumente', $users2 ) );
+        return view('dokumente.rundschreibenNews', compact('rundschreibenAll','rundschreibenAllTree','rundschreibenMeine','rundschreibenMeineTree') );
         
-        return view('dokumente.rundschreibenNews', compact('data','data2','counter') );
     }
     
     /**
@@ -1055,7 +1058,8 @@ class DocumentController extends Controller
      * @param array $files
      * @return \Illuminate\Http\Response
      */
-    private function fileUpload($model,$path,$files){
+    private function fileUpload($model,$path,$files)
+    {
       
         $folder = $this->pdfPath.str_slug($model->name);
         $uploadedNames = array();
@@ -1092,7 +1096,8 @@ class DocumentController extends Controller
      * @param DB object(collection) $model
      * @return string $newName
      */
-    private function moveUploaded($file,$folder,$model,$counter=0){
+    private function moveUploaded($file,$folder,$model,$counter=0)
+    {
         //$filename = $image->getClientOriginalName();
         $diffMarker = time()+$counter;
 		$newName = str_slug($model->name).'-'.date("d-m-Y-H:i:s").'-'.$diffMarker.'.'.$file->getClientOriginalExtension();
@@ -1129,16 +1134,20 @@ class DocumentController extends Controller
         ->where('document_type_id',4)
         ->where('slug',$slug)->get();//->paginate(10, ['*'], 'alle-iso-documents');
         
-        /*
-        
         $documentsIso = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         ->join('editor_variants','documents.id','=','editor_variants.document_id')
-        ->join('document_uploads','editor_variants.id','document_uploads.editor_variant_id')
-        ->where('document_type_id',4)
-        ->where('slug',$slug)->get();//->paginate(10, ['*'], 'alle-iso-documents');
-        dd($documentsIso);*/
-        $myIsoDocuments = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')->where('document_type_id',4)
-        ->where('slug',$slug)->where('user_id',$loggedInUser->id)->paginate(10, ['*'], 'my-iso-documents');
+        ->where('documents.document_type_id',4)
+        ->where('slug',$slug)
+        //->get();
+        ->paginate(10, ['*','iso_categories.name as isoCatName','documents.name as name'], 'alle-iso-documents');
+        //  dd($documentsIso);
+        
+        $myIsoDocuments = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
+        ->join('editor_variants','documents.id','=','editor_variants.document_id')
+        ->where('documents.document_type_id',4)
+        ->where('slug',$slug)
+        ->where('user_id',$loggedInUser->id)
+        ->paginate(10, ['*','iso_categories.name as isoCatName','documents.name as name'], 'my-iso-documents');
             
         $documentsIsoTree = $this->document->generateTreeview($documentsIso);
         $myIsoDocumentsTree = $this->document->generateTreeview($myIsoDocuments);

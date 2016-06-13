@@ -14,12 +14,14 @@ class MandantInfo extends Model
     
     public function getErlaubnissGultigAbAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        if (empty($value)) return null;
+        else return Carbon::parse($value)->format('d.m.Y');
     }
 
     public function setErlaubnissGultigAbAttribute($value)
     {
-        $this->attributes['erlaubniss_gultig_ab'] = Carbon::parse($value);
+        if (empty($value)) $this->attributes['erlaubniss_gultig_ab'] = null;
+        else $this->attributes['erlaubniss_gultig_ab'] = Carbon::parse($value);
     }
      
     

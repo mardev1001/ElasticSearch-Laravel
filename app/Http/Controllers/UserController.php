@@ -93,7 +93,8 @@ class UserController extends Controller
         $user = User::find($id);
         $usersAll = User::all();
         $mandantsAll = Mandant::all();
-        $rolesAll = Role::all();
+        // $rolesAll = Role::all();
+        $rolesAll = Role::where('phone_role', false)->get();
         
         // dd($usersAll);
         

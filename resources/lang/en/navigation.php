@@ -32,7 +32,8 @@ return [
     'type'                  => 'typ',
     'types'                 => 'typen',
     'favorites'             => 'Favoriten',
-    'search'                => 'Suche',
+    'search'                => 'Suchen',
     'advanced_search'       => 'Erweiterte Suche',
+    'search_placeholder'    => 'Betreff, Titel',
 
 ];

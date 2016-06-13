@@ -1,12 +1,13 @@
 @extends('master')
 
 @section('page-title')
-     {{ trans('controller.qmr') }}
+     QM-Runschreiben - Übersicht
 @stop
 
     @section('content')
 
         <div class="col-xs-12 col-md-12 box-wrapper">
+            <h4 class="title">{{ trans('rundschreibenQmr.myQmr')}}</h4>
             <div class="box">
                 <div class="tree-view hide-icons" data-selector="test">
                      <div  class="test hide" >{{$data}}</div>

@@ -2,6 +2,7 @@
 
 return [
 
-    'allQmr' => 'Alle Rundschreiben QMR',
+    'myQmr' => 'Meine QM-Rundschreiben',
+    'allQmr' => 'Alle QM-Rundschreiben',
     
 ];

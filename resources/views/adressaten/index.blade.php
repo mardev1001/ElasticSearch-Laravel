@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-     {{ trans('adressatenForm.adressats') }} {{ trans('adressatenForm.management') }}
+     {{ trans('adressatenForm.adressats-title') }}
 @stop
 
 @section('content') 
@@ -37,7 +37,7 @@
      <div class="box-wrapper">    
         <div class="row">
             <div class="col-xs-12">
-                <h4 class="title">{{ trans('adressatenForm.adressat') }}</h4>
+                <h4 class="title">{{ trans('adressatenForm.overview') }}</h4>
                  <div class="box">
                     @foreach($adressate as $adressat)
                     <div class="row">

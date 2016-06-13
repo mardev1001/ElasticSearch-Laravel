@@ -2,6 +2,7 @@
 
 return [
 
+    'document-types-management' => 'NEPTUN - Dokumenten Typ/ Kategorie',
     'document' => 'Dokument',
     'documents' => 'Dokumente',
     'type' => 'Typ',
