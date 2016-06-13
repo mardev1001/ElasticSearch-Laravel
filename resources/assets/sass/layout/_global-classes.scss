@@ -1,8 +1,14 @@
 body {
-    background: url('/img/bgrnd.jpg') $white-color no-repeat !important;
+    background: url('/img/NeptunBG.png') $white-color no-repeat !important;
     background-position: center top;
     padding-top: 148px;
     padding-bottom: 10px;
+}
+
+@media screen and (max-width: 1400px) { 
+    body {
+        background: url('/img/bgrnd.jpg') $white-color no-repeat !important;
+    }
 }
 h1, h2, h3, h4 {
     font-family: $primary-font-family !important;

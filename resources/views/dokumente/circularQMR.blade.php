@@ -28,8 +28,8 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        {!! ViewHelper::setInput('search',$data,old('search'),trans('navigation.search'),
-                                        trans('navigation.search'), true) !!}
+                                        {!! ViewHelper::setInput('search',$data,old('search'),trans('navigation.search_placeholder'),
+                                        trans('navigation.search_placeholder'), true) !!}
                         
                                     </div>   
                                 </div>
