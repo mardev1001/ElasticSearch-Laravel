@@ -99,9 +99,9 @@ class DocumentRepository
         
         $treeView = array();
         $documents = Document::all();
-        
+        $documents = array();
         if(sizeof($array)) $documents = $array;
-        if( $document == true )
+        if( $document == true  && count($documents) > 0)
             foreach ($documents as $document) {
         //   dd($documents[2]->documentUploads);
             $node = new \StdClass();
@@ -143,7 +143,7 @@ class DocumentRepository
             
             array_push($treeView, $node);
         }
-        else{
+        elseif( $document == false  && count($documents) > 0){
             foreach($documents->editorVariantDocument as $evd){
                     if( $evd->document_id != null && $documentId != 0 && $evd->document_id != $documentId){
                         $secondDoc = Document::find($evd->document_id);
