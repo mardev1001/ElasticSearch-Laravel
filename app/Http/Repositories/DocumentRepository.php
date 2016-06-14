@@ -15,9 +15,6 @@ use App\DocumentApproval;
 
 class DocumentRepository
 {
-    
-    
-    
    /**
     * Generate dummy data
     *

@@ -1,5 +1,5 @@
     <label class="control-label">
-        {{ ucfirst($label) }}@if( $required !=false )* @endif 
+        {{ ucfirst($label) }}@if( $required !=false && $label != '' )* @endif 
     </label> 
     <input type="{{ $type }}" class="form-control 
     @foreach( $classes as $class)

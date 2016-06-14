@@ -21,6 +21,8 @@
     background-color: $nav-light-grey;
     position:relative;
     min-height: 320px;
+    
+    height: 100vh;
 }
 
 .navbar-toggle.big {
@@ -73,11 +75,19 @@ li.legend-absolute {
     width: 100%;
 }
 
+li.legend {
+    position: fixed !important;
+    bottom: 0;
+    border-top: 1px solid $white-color;
+}
+
 .legend .icon-legend {
     width: 38px;
     height: 38px;
     border-left: 1px solid $white-color;
     cursor: pointer;
+    
+    margin-left: 83px;
 }
 
 .legend-shadow {
@@ -88,10 +98,12 @@ li.legend-absolute {
 
 .legend-wrapper {
     position: absolute;
-    bottom: 40px;
+    // bottom: 40px;
     background-color: $nav-light-grey;
     width: 100%;
     display: none;
+    
+    bottom: 125px;
 }
 
 .legend-wrapper .legend-icons {

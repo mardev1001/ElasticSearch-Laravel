@@ -69,13 +69,14 @@
                 
                 <!--search results-->
                 @yield('searchResults')<!-- End search results-->
-                    
+            
+                @include('layouts.footer')    
             </div> <!-- End container fluid-->
         </div> <!-- End #wrapper-->
         
         <!-- Right sidebar -->
        
-        @include('layouts.footer')
+        
         
         <!-- Return to Top -->
         <a href="#" id="return-to-top"><i class="fa fa-chevron-up"></i></a>

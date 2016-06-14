@@ -3,8 +3,8 @@ body#app-layout {
 }
 
 .login .page-title {
-  padding-top: 15px;
-  padding-bottom: 30px;
+  padding-top: 2px;
+  padding-bottom: 20px;
 }
 
 .login .panel {
@@ -13,11 +13,20 @@ body#app-layout {
   background-color: $box-grey-wrapper;
 }
 
+.login .panel-body {
+  background-color: $box-grey-wrapper;
+}
+
 .login .form-control {
-  font-family: $arial-font-family;
+  font-family: $primary-font-family;
   font-size: 12px;
   line-height: 22px;
   padding: 5px 15px;
+}
+
+.login .btn {
+   font-family: $primary-font-family;
+   font-size: 12px;
 }
 
 .login .btn.btn-primary {

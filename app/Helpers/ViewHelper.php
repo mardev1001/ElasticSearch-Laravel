@@ -196,5 +196,29 @@ class ViewHelper
     static function incrementCounter($counter){
        return $counter++;
     }
+    
+    /**
+     * Highlight keywords in string
+     *
+     * @param string $needle
+     * @param string $haystack
+     * @return string $newstring
+     */
+    static function highlightKeyword($needle, $haystack) {
+        $occurrences = substr_count(strtolower($haystack), strtolower($needle));
+        $newstring = $haystack;
+        $match = array();
+     
+        for ($i=0;$i<$occurrences;$i++) {
+            $match[$i] = stripos($haystack, $needle, $i);
+            $match[$i] = substr($haystack, $match[$i], strlen($needle));
+            $newstring = str_replace($match[$i], '[#]'.$match[$i].'[@]', strip_tags($newstring));
+        }
+     
+        $newstring = str_replace('[#]', '<span class="highlight">', $newstring);
+        $newstring = str_replace('[@]', '</span>', $newstring);
+        return $newstring;    
+    }
+    
 }
 

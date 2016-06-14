@@ -5,7 +5,7 @@ body {
     padding-bottom: 10px;
 }
 
-@media screen and (max-width: 1400px) { 
+@media screen and (max-width: 1360px) { 
     body {
         background: url('/img/bgrnd.jpg') $white-color no-repeat !important;
     }
@@ -572,12 +572,20 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     padding-right: 0 !important;
 }
 
+.nopadding-top {
+    padding-top: 0 !important;
+}
+
 .table .valign{
     vertical-align: middle;
 }
 
 .iso-category-select{
     display: none;
+}
+
+span.highlight{
+    color: #4094dc;
 }
 
 /*Chosen*/

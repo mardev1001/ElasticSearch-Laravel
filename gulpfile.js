@@ -2,8 +2,8 @@ var elixir = require('laravel-elixir');
 var bower = './resources/assets/vendor/';
 
 //elixir.config.registerWatcher("default", "resources/assets/**");
-//elixir.config.sourcemaps = false; //for live version
-elixir.config.sourcemaps = true; //for dev version
+elixir.config.sourcemaps = false; //for live version
+// elixir.config.sourcemaps = true; //for dev version
 
 var gulp = require('gulp'),
     watch = require('gulp-watch');

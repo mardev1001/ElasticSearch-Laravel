@@ -40,15 +40,15 @@
 
                 <div class="form-group">
                     <div class="col-md-6">
-                        <div class="checkbox">
-                            {{-- <input type="checkbox" name="remember" id="remember" /> --}}
-                            {{-- <label for="remember">Angemeldet bleiben</label> --}}
+                        <div class="checkbox nopadding-top">
+                            <input type="checkbox" name="remember" id="remember" /> 
+                            <label for="remember">Angemeldet bleiben</label> 
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <button type="submit" class="btn btn-primary pull-right">
-                           Anmelden >
+                           Anmelden
                         </button>
 
                         <!--<a class="btn btn-link" href="{{ url('/password/reset') }}">Forgot Your Password?</a>-->

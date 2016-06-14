@@ -6,6 +6,7 @@
 
     @section('content')
     <div class="col-xs-12 box-wrapper">
+        <h2 class="title">{{ trans('mandantenForm.search') }} </h2>
         <div class="box">
             {!! Form::open([
                    'url' => 'mandanten/search',
@@ -15,7 +16,7 @@
                     <!-- input box-->
                     <div class="col-lg-6"> 
                         <div class="form-group no-margin-bottom">
-                            {!! ViewHelper::setInput('search','',old('search'),trans('mandantenForm.search') , 
+                            {!! ViewHelper::setInput('search','',old('search'),'', 
                                    trans('mandantenForm.search') , true  ) !!}
                         </div>   
                     </div><!--End input box-->

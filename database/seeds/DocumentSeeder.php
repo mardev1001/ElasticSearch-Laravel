@@ -167,13 +167,8 @@ class DocumentSeeder extends Seeder
             ]
         );
         
+        /*
         DB::table('document_uploads')->insert(
-            
-            /*
-            `id` int(11),
-            `editor_variant_id` int(11),
-            `file_path` int(11)
-            */
             
             [
                 [
@@ -202,6 +197,7 @@ class DocumentSeeder extends Seeder
                 
             ]
         );
+        */
         
         DB::table('document_mandants')->insert(
             

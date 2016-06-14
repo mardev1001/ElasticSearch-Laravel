@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('page-title')
-     QM-Runschreiben - Übersicht
+     QM-Rundschreiben - Übersicht
 @stop
 
     @section('content')

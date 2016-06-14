@@ -96,6 +96,9 @@ class DocumentController extends Controller
         if( $request->get('document_type_id') != 3 )
             RequestMerge::merge(['iso_category_id' => null] );
             
+        if( $request->get('document_type_id') != 1 || $request->get('document_type_id') != 2 || $request->get('document_type_id') != 3 && $request->has('pdf_upload') )
+            RequestMerge::merge(['pdf_upload' => null] );
+            
         RequestMerge::merge(['version' => 1] );
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
         
@@ -864,6 +867,9 @@ class DocumentController extends Controller
         //fix if document type not iso category -> don't save iso_category_id
         if( $request->get('document_type_id') != 3 )
             RequestMerge::merge(['iso_category_id' => null] );
+            
+        if( $request->get('document_type_id') != 1 || $request->get('document_type_id') != 2 || $request->get('document_type_id') != 3 && $request->has('pdf_upload') )
+            RequestMerge::merge(['pdf_upload' => null] );    
             
         RequestMerge::merge(['version' => 1] );
         $data = Document::find( $id )->fill( $request->all() )->save();

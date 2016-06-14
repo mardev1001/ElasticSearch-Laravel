@@ -2,11 +2,13 @@
 namespace App\Http\Repositories;
 /**
  * User: Marijan
- * Date: 10.05.2016.
- * Time: 09:51
+ * Date: 14.06.2016.
+ * Time: 08:11
  */
 
 use DB;
+use App\Mandant;
+use App\User;
 
 class MandantRepository
 {
@@ -15,9 +17,11 @@ class MandantRepository
      *
      * @return object array $array
      */
-     public function generateDummyData($collectionOne, $collectionTwo ){
-        $collectionOne->merger($collectionOne);
-        return $collectionOne;
+     public function phonelistSearch($request ){
+        $query = Mandant::where('id','>',0); 
+        
+        
+        return $query->get();
      }
      
 }

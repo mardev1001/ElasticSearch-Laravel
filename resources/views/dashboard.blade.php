@@ -3,7 +3,7 @@
 @section('page-title-class') home @stop
 
 @section('page-title')
-    Guten Tag {{ auth()->user()->title ." ". auth()->user()->first_name ." ". auth()->user()->last_name }}. 
+    Guten Tag {{ auth()->user()->title ." ". auth()->user()->first_name ." ". auth()->user()->last_name }}
     <br> Herzlich willkommen im NEPTUN Intranet
 @stop
 
@@ -79,7 +79,7 @@
                 </div>
                 <div class="buttons wiki">
                     <br>
-                    <a href="#" class="btn btn-primary">Zum WIKI</a>
+                    <a href="#" class="btn btn-primary pull-right">Zum WIKI</a>
                     <div class="clearfix"></div>
                 </div>
             </div>

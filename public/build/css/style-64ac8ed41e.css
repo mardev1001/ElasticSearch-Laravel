@@ -406,12 +406,15 @@ body#app-layout {
   padding-top: 0 !important; }
 
 .login .page-title {
-  padding-top: 15px;
-  padding-bottom: 30px; }
+  padding-top: 2px;
+  padding-bottom: 20px; }
 
 .login .panel {
   border: none;
   border-radius: 0;
+  background-color: #f4f4f4; }
+
+.login .panel-body {
   background-color: #f4f4f4; }
 
 .login .form-control {
@@ -419,6 +422,10 @@ body#app-layout {
   font-size: 12px;
   line-height: 22px;
   padding: 5px 15px; }
+
+.login .btn {
+  font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
+  font-size: 12px; }
 
 .login .btn.btn-primary {
   padding: 3.5px 48.5px; }
@@ -436,7 +443,7 @@ body {
   padding-top: 148px;
   padding-bottom: 10px; }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 1360px) {
   body {
     background: url("/img/bgrnd.jpg") #fff no-repeat !important; } }
 
@@ -883,11 +890,17 @@ input.form-control:-ms-input-placeholder {
 .nopadding-right {
   padding-right: 0 !important; }
 
+.nopadding-top {
+  padding-top: 0 !important; }
+
 .table .valign {
   vertical-align: middle; }
 
 .iso-category-select {
   display: none; }
+
+span.highlight {
+  color: #4094dc; }
 
 /*Chosen*/
 .chosen-container {
@@ -1126,10 +1139,9 @@ ul.nav.navbar-nav.icons li {
   position: absolute; }
 
 .footer p {
-  font-size: 12px; }
-
-.footer-wrapper {
-  padding: 5px 130px; }
+  font-size: 12px;
+  text-align: left;
+  line-height: 22px; }
 
 .sidebar {
   margin-top: 10px !important;
@@ -1148,7 +1160,8 @@ ul.nav.navbar-nav.icons li {
   display: block;
   background-color: #efefef;
   position: relative;
-  min-height: 320px; }
+  min-height: 320px;
+  height: 100vh; }
 
 .navbar-toggle.big {
   margin: 0; }
@@ -1192,21 +1205,27 @@ li.legend-absolute {
   bottom: 0px;
   width: 100%; }
 
+li.legend {
+  position: fixed !important;
+  bottom: 0;
+  border-top: 1px solid #fff; }
+
 .legend .icon-legend {
   width: 38px;
   height: 38px;
   border-left: 1px solid #fff;
-  cursor: pointer; }
+  cursor: pointer;
+  margin-left: 83px; }
 
 .legend-shadow {
   box-shadow: -5px -5px 5.7px 0.3px rgba(0, 0, 0, 0.15); }
 
 .legend-wrapper {
   position: absolute;
-  bottom: 40px;
   background-color: #efefef;
   width: 100%;
-  display: none; }
+  display: none;
+  bottom: 125px; }
 
 .legend-wrapper .legend-icons {
   width: 25px;
