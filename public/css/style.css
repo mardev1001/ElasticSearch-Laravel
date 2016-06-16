@@ -440,8 +440,7 @@ body#app-layout {
 body {
   background: url("/img/NeptunBG.png") #fff no-repeat !important;
   background-position: center top;
-  padding-top: 148px;
-  padding-bottom: 10px; }
+  padding-top: 148px; }
 
 @media screen and (max-width: 1360px) {
   body {
@@ -459,7 +458,7 @@ hr {
   color: #606060;
   line-height: 22px; }
 
-p, a, #page-wrapper label, b, strong, .text,
+p, a, #page-wrapper label, b, strong, .text, .box span:not(.fa):not(.glyphicon),
 #page-wrapper .table > thead > tr > th,
 #page-wrapper .table > tbody > tr > th,
 #page-wrapper .table > tfoot > tr > th,
@@ -900,7 +899,8 @@ input.form-control:-ms-input-placeholder {
   display: none; }
 
 span.highlight {
-  color: #4094dc; }
+  color: #4094dc !important;
+  font-weight: bold; }
 
 /*Chosen*/
 .chosen-container {
@@ -910,7 +910,7 @@ select.form-control + .chosen-container.chosen-container-single .chosen-single {
   display: block;
   width: 100%;
   height: 40px;
-  padding: 8px 15px;
+  padding: 11px 15px;
   font-size: 14px;
   line-height: 1.428571429;
   color: #606060;
@@ -1138,10 +1138,14 @@ ul.nav.navbar-nav.icons li {
   bottom: 0;
   position: absolute; }
 
-.footer p {
+.footer p, .footer b {
   font-size: 12px;
   text-align: left;
   line-height: 22px; }
+
+.footer-wrapper {
+  padding-left: 62px;
+  padding-right: 40px; }
 
 .sidebar {
   margin-top: 10px !important;
@@ -1150,18 +1154,21 @@ ul.nav.navbar-nav.icons li {
 
 .navbar-default.sidebar {
   width: auto !important;
-  background-color: transparent !important; }
+  background-color: transparent !important;
+  top: 72px;
+  bottom: 10px; }
 
 .sidebar-nav.navbar-collapse {
   margin-right: 41px;
-  width: 200px; }
+  width: 200px;
+  height: 100%; }
 
 #side-menu {
   display: block;
   background-color: #efefef;
   position: relative;
   min-height: 320px;
-  height: 100vh; }
+  height: 100%; }
 
 .navbar-toggle.big {
   margin: 0; }
@@ -1207,8 +1214,9 @@ li.legend-absolute {
 
 li.legend {
   position: fixed !important;
-  bottom: 0;
-  border-top: 1px solid #fff; }
+  bottom: 10px;
+  border-top: 1px solid #fff;
+  background-color: #efefef; }
 
 .legend .icon-legend {
   width: 38px;
@@ -1222,10 +1230,10 @@ li.legend {
 
 .legend-wrapper {
   position: absolute;
+  bottom: 40px;
   background-color: #efefef;
   width: 100%;
-  display: none;
-  bottom: 125px; }
+  display: none; }
 
 .legend-wrapper .legend-icons {
   width: 25px;
@@ -1329,7 +1337,7 @@ h1.page-title {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
   color: #0e1e6d;
   font-size: 24px;
-  text-transform: uppercase;
+  text-transform: normal;
   line-height: 22px;
   font-weight: bold;
   padding-top: 15px;
@@ -7800,8 +7808,6 @@ button.close {
 @media print {
   .hidden-print {
     display: none !important; } }
-
-/*# sourceMappingURL=bootstrap.css.map */
 /*
  * metismenu - v1.1.3
  * Easy menu jQuery plugin for Twitter Bootstrap 3
@@ -17420,6 +17426,9 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:las
   padding-right: 0; }
 
 /* Layout and general style overrides */
+body.home-page {
+  padding-bottom: 10px; }
+
 .home.fixed-row {
   padding-bottom: 10px; }
 
@@ -17486,5 +17495,3 @@ textarea {
     margin-top: 1px; }
   .navbar-toggle.big {
     display: block; } }
-
-/*# sourceMappingURL=style.css.map */

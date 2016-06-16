@@ -7,6 +7,8 @@
     <br> Herzlich willkommen im NEPTUN Intranet
 @stop
 
+@section('bodyClass') home-page @stop
+
 @section('content')
     <div class="row">
         <div class="col-xs-12 col-md-6 ">
@@ -79,7 +81,7 @@
                 </div>
                 <div class="buttons wiki">
                     <br>
-                    <a href="#" class="btn btn-primary pull-right">Zum WIKI</a>
+                    <a href="#" class="btn btn-primary pull-right">Wiki aufrufen</a>
                     <div class="clearfix"></div>
                 </div>
             </div>

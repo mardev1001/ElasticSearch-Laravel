@@ -13,7 +13,7 @@ return [
     'documents' => 'Dokumente',
     'management' => 'Verwalten',
     'editing' => 'NEPTUN',
-    'role-management' => 'Neptun - Rollenverwaltung',
+    'role-management' => 'NEPTUN - Rollenverwaltung',
     'user-defined' => 'Benutzerdefinierte',
     'active-users' => 'Aktive Benutzer',
     'name' => 'Name',

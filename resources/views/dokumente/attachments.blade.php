@@ -92,9 +92,9 @@
                                             <!-- input box-->
                                             <div class="col-lg-3"> 
                                                 <div class="form-group">
-                                                <label class="control-label">{{ ucfirst( trans('documentForm.documentType')) }} *</label>     
+                                                <label class="control-label">{{ ucfirst( trans('documentForm.documentType')) }}*</label>     
                                                 <select name="document_type_id" class="form-control select" 
-                                                data-placeholder="{{ ucfirst(trans('documentForm.documentType')) }} *" required disabled>
+                                                data-placeholder="{{ ucfirst(trans('documentForm.documentType')) }}*" required disabled>
                                                 <option></option>
                                                 @if( count($documentTypes) >0 ){
                                                    @foreach($documentTypes as $collection){
@@ -136,7 +136,7 @@
                                             <!-- input box-->
                                             <div class="col-lg-3"> 
                                                 <div class="form-group">
-                                                    <label class="control-label">{{ ucfirst( trans('documentForm.owner') ) }} *</label> 
+                                                    <label class="control-label">{{ ucfirst( trans('documentForm.owner') ) }}*</label> 
                                                     <select name="owner_user_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.owner')) }}">
                                                         @foreach($mandantUsers as $mandantUser)
                                                             <option value="{{$mandantUser->id}}" 

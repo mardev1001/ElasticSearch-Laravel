@@ -16,7 +16,7 @@
                      <div class="box">
                         <div class="clearfix"></div>
                         <div class="row">
-                            <div class="col-xs-12 col-md-5 form-group no-margin-bottom">
+                            <div class="col-xs-12 col-md-4 form-group no-margin-bottom">
                                
                                 <input type="text" class="form-control" name="parameter" placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.mandants').'/'. trans('telefonListeForm.user') }}" required>
                                 <span class="custom-input-group-btn">
@@ -37,12 +37,12 @@
                                 </div>
                             </div>
                             {{ Form::close() }}
-                            <div class="col-xs-12 col-md-3 form-inline">
-                                <div>
-                                    <a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#darstellung">
+                            <div class="col-xs-12 col-md-4 form-inline">
+                                <div class="pull-right">
+                                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
                                         <i class="fa fa-eye"></i> {{ trans('telefonListeForm.appearance') }}
                                     </a>
-                                    <a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#export">
+                                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#export">
                                         <i class="fa fa-file-excel-o "></i> {{ trans('telefonListeForm.export') }}
                                     </a>
                                 </div>
@@ -58,25 +58,26 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <h4 class="title">{{ trans('telefonListeForm.overview') }}</h4>
+        @if( count($mandants) > 0 )
+            <h4 class="title">{{ trans('telefonListeForm.overview') }}</h4>
+            <div class="panel-group" role="tablist" data-multiselectable="true" aria-multiselectable="true">
         
-        <div class="panel-group" role="tablist" data-multiselectable="true" aria-multiselectable="true">
-        
-        @for($i = 1; $i < 5; $i++)
-            <div id="panel-{{$i}}" class="panel panel-primary">
+        @foreach($mandants as $mandant)
+            <div id="panel-{{$mandant->id}}" class="panel panel-primary">
                 
-                <div class="panel-heading" role="tab" id="heading-{{$i}}">
+                <div class="panel-heading" role="tab" id="heading-{{$mandant->id}}">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-{{$i}}" aria-expanded="false" aria-controls="collapse-{{$i}}">
-                            {{ trans('telefonListeForm.mandant') }} #{{$i}} (8 Benutzer)
+                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-{{$mandant->id}}" aria-expanded="false"
+                        aria-controls="collapse-{{$mandant->id}}">
+                            {{-- trans('telefonListeForm.mandant') --}} {{ $mandant->name }} ({{count($mandant->usersInMandants) }} Benutzer)
                         </a>
                         <span class="pull-right">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#details">{{ trans('telefonListeForm.details') }}</button>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#details-{{$mandant->id}}">{{ trans('telefonListeForm.details') }}</button>
                         </span>
                     </h4>
                 </div>
                 
-                <div id="collapse-{{$i}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$i}}">
+                <div id="collapse-{{$mandant->id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$mandant->id}}">
                     <table class="table data-table">
                         <thead>
                         <tr>
@@ -89,24 +90,29 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @for($j = 1; $j < 5; $j++)
+                        @foreach($mandant->usersInMandants as $user)
                         <tr>
                             <td><img src="http://placehold.it/60x60"></td>
-                            <td>Herr</td>
-                            <td>Max</td>
-                            <td>Mustermann</td>
-                            <td>+123 45 678 9000</td>
-                            <td>+123 45 678 9999</td>
+                            <td>{{ $user->title }}</td>
+                            <td>{{ $user->first_name }}</td>
+                            <td>{{ $user->last_name }}</td>
+                            <td>{{ $user->phone }}</td>
+                            <td>{{ $user->phone_short }}</td>
                         </tr>
-                        @endfor
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
                 
             </div>
-        @endfor
+        @endforeach
         
         </div>
+        @else
+            <h4 class="title">{{ trans('telefonListeForm.noResults') }}</h4>
+        @endif
+        
+        
         
     </div>
 </div>
@@ -201,14 +207,14 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="fa fa-close"></span></button>
-                <h4 class="modal-title" id="myModalLabel">Details: Neptun GmbH</h4>
+                <h4 class="modal-title" id="myModalLabel">Details: NEPTUN GmbH</h4>
             </div>
             
             <div class="modal-body">
                 
                 <div class="row general">
                     <div class="col-xs-12">
-                        <h4>Allgemeine Infos</h4>
+                        <h4>Allgemeine Informationen</h4>
                         <p>Bacon ipsum dolor amet prosciutto doner pork loin ham chicken. Tail andouille beef, 
                         turducken pork loin biltong corned beef tenderloin t-bone brisket short loin. Beef ribs alcatra jerky ham ribeye tri-tip, 
                         doner tail ground round shoulder filet mignon cow meatloaf bresaola flank. Biltong chicken boudin jerky t-bone. 
@@ -218,7 +224,7 @@
                 
                 <div class="row general">
                     <div class="col-xs-12">
-                        <h4>Allgemeine Infos</h4>
+                        <h4>Allgemeine Informationen</h4>
                         <p>Bacon ipsum dolor amet prosciutto doner pork loin ham chicken. Tail andouille beef, 
                         turducken pork loin biltong corned beef tenderloin t-bone brisket short loin. Beef ribs alcatra jerky ham ribeye tri-tip, 
                         doner tail ground round shoulder filet mignon cow meatloaf bresaola flank. Biltong chicken boudin jerky t-bone. 
@@ -228,7 +234,7 @@
                 
                 <div class="row general">
                     <div class="col-xs-12">
-                        <h4>Allgemeine Infos</h4>
+                        <h4>Allgemeine Informationen</h4>
                         <p>Bacon ipsum dolor amet prosciutto doner pork loin ham chicken. Tail andouille beef, 
                         turducken pork loin biltong corned beef tenderloin t-bone brisket short loin. Beef ribs alcatra jerky ham ribeye tri-tip, 
                         doner tail ground round shoulder filet mignon cow meatloaf bresaola flank. Biltong chicken boudin jerky t-bone. 

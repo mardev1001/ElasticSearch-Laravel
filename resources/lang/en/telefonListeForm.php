@@ -24,5 +24,6 @@ return [
     'export' => 'Export',
     'search' => 'Suche',
     'save' => 'Speichern', 
+    'noResults' => 'Keine Mandanten/Benutzer gefunden.', 
     
 ];

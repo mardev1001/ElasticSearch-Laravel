@@ -38,7 +38,12 @@
     <hr/>
       <!-- Tab panes -->
     <a href="#" class="btn btn-primary add-tab"><span class="fa fa-plus"></span> Neue Variante</a>
-
+   
+    <div class="pull-right">
+        <a href="#" class="btn btn-primary">Seiten Vorschau</a>
+        <a href="#" class="btn btn-primary">PDF Vorschau</a>
+    </div>
+    
     <ul class="nav nav-tabs" id="tabs">
        @if( count($data->editorVariant) ) 
            @foreach( $data->editorVariant as $variant)
@@ -52,7 +57,7 @@
            @foreach( $data->editorVariant as $variant)
                <div class="tab-pane" id="variant{{$variant->variant_number}}">
                    <div class="variant" id="variant-{{$variant->variant_number}}">
-                       {{strip_tags($variant->inhalt)}}
+                       {!!($variant->inhalt)!!}
                    </div>
                 </div>
            @endforeach
@@ -73,6 +78,7 @@
               	    var id=$(this).data('id');
               	 }); 
               	tinymce.init({selector:'.editable',removed_menuitems: 'newdocument',});
+              	
               	if( $('.nav-tabs li.active').length < 1 ){
               	    $('.nav-tabs li').first().addClass('active'); 
               	    $('.tab-content .tab-pane').first().addClass('active'); 
@@ -80,4 +86,20 @@
             });//end document ready
         </script>
       @stop
-  @endif
+    @else
+        @section('script')
+            <script type="text/javascript">
+                $(document).ready(function(){
+                   if( $('#variant-1').length == 0 ){
+              	        $('.add-tab').click();
+              	    }
+                  	
+                  	if( $('.nav-tabs li.active').length < 1 ){
+                  	    $('.nav-tabs li').first().addClass('active'); 
+                  	    $('.tab-content .tab-pane').first().addClass('active'); 
+          	        }
+                });//end document ready
+               
+            </script>
+        @stop
+    @endif

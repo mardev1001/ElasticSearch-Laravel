@@ -35,7 +35,7 @@ class CreateDocumentsTable extends Migration
             $table->boolean('email_approval');
             $table->boolean('approval_all_roles');
             // $table->boolean('approval_all_mandants');
-            $table->boolean('pdf_upload');
+            $table->boolean('pdf_upload')->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
             

@@ -44,7 +44,7 @@
                                 @foreach($document->editorVariant as $variant)
                                 <div class="variant-{{$variant->variant_number}}">
                                     <p class="title-small">{{ trans('dokumentShow.variant') }} {{$variant->variant_number}}</p>
-                                    <p>{{ strip_tags($variant->inhalt) }}</p>
+                                    <p>{!! ($variant->inhalt) !!}</p>
                                 </div>
                                 <div class="clearfix"></div>
                                
@@ -89,6 +89,7 @@
                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</button>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.disapprove') }}</button>
+                <a href="#" class="btn btn-primary pull-right">PDF ansehen</a>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.download') }}</button>
                 
                 <!--<a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right"><i class="fa fa-edit"></i> {{ trans('dokumentShow.edit')}} </a>-->

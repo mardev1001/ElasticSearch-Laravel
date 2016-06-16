@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -9,6 +10,7 @@ use App\Http\Requests;
 use App\Http\Repositories\SearchRepository;
 
 use App\Document;
+use App\DocumentType;
 use App\EditorVariant;
 
 class SearchController extends Controller
@@ -43,6 +45,7 @@ class SearchController extends Controller
         $parameter = null;
         $results = array();
         $variants = array();
+        $documentTypes = DocumentType::all();
         
         if($request->has('parameter')){
             $parameter = $request->input('parameter');
@@ -57,11 +60,17 @@ class SearchController extends Controller
             
             foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
             
-            foreach ($variants as $variant) if(!in_array($variant->document, $results)) array_push($results, $variant->document);
-            
+            if(count($variants)){
+                foreach ($variants as $variant){
+                    if(!in_array($variant->document, $results)) 
+                        array_push($results, $variant->document);
+                }
+            } else {
+                $variants = EditorVariant::all();
+            }
         }
         
-        return view('suche.erweitert', compact('parameter','results', 'variants'));
+        return view('suche.erweitert', compact('parameter','results', 'variants','documentTypes'));
     }
 
     /**
@@ -138,7 +147,55 @@ class SearchController extends Controller
      */
     public function searchAdvanced(Request $request)
     {
-        return view('suche.erweitert');
+     
+        $results = array();
+        $variants = array();
+        $documentTypes = DocumentType::all();
+        
+        $name = $request->input('name');
+        $betreff = $request->input('betreff');
+        $summary = $request->input('beschreibung');
+        $inhalt = $request->input('inhalt');
+        $search_tags = $request->input('tags');
+        // $date_from = $request->input('datum_von');
+        $date_from = strlen($request->input('datum_von')) ? Carbon::parse($request->input('datum_von'))->toDateTimeString()  : null;
+        // $date_to = $request->input('datum_bis');
+        $date_to = strlen($request->input('datum_bis')) ? Carbon::parse($request->input('datum_bis'))->toDateTimeString()  : null;
+        $document_type = $request->input('document_type');
+        $wiki = $request->has('wiki');
+        $history =  $request->has('history');
+        
+        // dd($request->all());
+        
+        $documents = Document::where('id', '>', 0);
+        
+        if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
+        if(!empty($betreff))  $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
+        if(!empty($summary))  $documents->where('summary', 'LIKE', '%'.$summary.'%' );
+        if(!empty($search_tags))  $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
+        if(!empty($date_from))  $documents->whereDate('created_at', '>=', $date_from );
+        if(!empty($date_to))  $documents->whereDate('created_at', '<=', $date_to );
+        
+        $documents = $documents->get();
+              
+        // dd($documents);
+        
+        // $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
+        
+        // foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+        
+        // if(count($variants)){
+        //     foreach ($variants as $variant){
+        //         if(!in_array($variant->document, $results)) 
+        //             array_push($results, $variant->document);
+        //     }
+        // } else {
+        //     $variants = EditorVariant::all();
+        // }
+        
+        // dd($request);
+        // return view('suche.erweitert')->withInput($request->all());
+        return view('suche.erweitert', compact('results','documentTypes'))->withInput($request->all());
     }
 
     /**
@@ -149,9 +206,11 @@ class SearchController extends Controller
      */
     public function searchPhoneList(Request $request)
     {
-        $results = $this->search->phonelistSearch($request);
-        
-        return redirect('telefonliste');
+        $mandants = $this->search->phonelistSearch($request);
+    
+        return view('telefonliste.index', compact('mandants') );
+      // return redirect()->action('TelephoneListController@index', array('array'=>$results) );
+        // return redirect('telefonliste');
     }
     
 }

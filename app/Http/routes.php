@@ -53,6 +53,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::patch('benutzer/activate', 'UserController@userActivate');
         Route::resource('benutzer', 'UserController');
         
+        Route::resource('wiki', 'WikiController');
+        
         Route::resource('iso-kategorien', 'IsoCategoryController');
         Route::resource('rollen', 'RoleController');
         Route::resource('adressaten', 'AdressatController');

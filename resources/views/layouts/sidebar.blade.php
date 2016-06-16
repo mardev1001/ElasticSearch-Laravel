@@ -20,14 +20,16 @@
             <li>
                 <a href="/" class="home-class">Startseite</a>
             </li>
+            
+            <li>
+                <a href="{{ url('favoriten') }}">{{ ucfirst( trans('navigation.favorites') ) }}</a>
+            </li>
 
             <li class="">
                 <a href="#">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     
-                    <li>
-                        <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
-                    </li>
+                    
                     
                     <!--
                     {{--
@@ -81,11 +83,11 @@
                             @if($documentType->active)
                             
                                 @if($documentType->id == 1)
-                                    <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
-                                @elseif($documentType->id == 2)
                                     <li> <a href="{{ url('dokumente/rundschreiben-news') }}">{{ $documentType->name }}</a> </li>
-                                @elseif($documentType->id == 3)
+                                @elseif($documentType->id == 2)
                                     <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
+                                @elseif($documentType->id == 3)
+                                    <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
                                 @elseif($documentType->id == 4)
                                     <li>
                                         <a href="#">{{ $documentType->name }}
@@ -123,13 +125,13 @@
                         
                     @endif
 
+                    <li>
+                        <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
+                    </li>
                 </ul><!--End .nav-second-level -->
 
             </li><!-- End menu item -->
 
-            <li>
-                <a href="{{ url('favoriten') }}">{{ ucfirst( trans('navigation.favorites') ) }}</a>
-            </li>
 
             <li>
                 <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
@@ -185,7 +187,7 @@
             <div class="legend-wrapper legend">
                 <ul class="legend-ul nav">
                     <li>
-                        <span class="legend-text">Neuestes Dokument</span>
+                        <span class="legend-text">Neueste Dokument</span>
                         <span class="legend-icons icon-favorites "></span>
                     </li>
                     <li>
@@ -239,4 +241,3 @@
 </div>
 <!-- /.navbar-static-side -->
 
-</nav>

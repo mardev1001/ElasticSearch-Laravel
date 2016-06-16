@@ -22,7 +22,7 @@
                 
                     <div class="col-lg-4">
                         <div class="form-group">
-                            {!! ViewHelper::setInput('description', '', old('description'), trans('sucheForm.description'), trans('sucheForm.description'), false) !!} 
+                            {!! ViewHelper::setInput('beschreibung', '', old('beschreibung'), trans('sucheForm.description'), trans('sucheForm.description'), false) !!} 
                         </div>
                     </div>
                 
@@ -50,13 +50,13 @@
                     
                     <div class="col-lg-2">
                         <div class="form-group">
-                            {!! ViewHelper::setInput('date_from', '', old('date_from'), trans('sucheForm.date_from'), trans('sucheForm.date_from'), false, '', ['datetimepicker']) !!} 
+                            {!! ViewHelper::setInput('datum_von', '', old('datum_von'), trans('sucheForm.date_from'), trans('sucheForm.date_from'), false, '', ['datetimepicker']) !!} 
                         </div>
                     </div>
                     
                     <div class="col-lg-2">
                         <div class="form-group">
-                            {!! ViewHelper::setInput('date_to', '', old('date_to'), trans('sucheForm.date_to'), trans('sucheForm.date_to'), false, '', ['datetimepicker']) !!} 
+                            {!! ViewHelper::setInput('datum_bis', '', old('datum_bis'), trans('sucheForm.date_to'), trans('sucheForm.date_to'), false, '', ['datetimepicker']) !!} 
                         </div>
                     </div>
                   
@@ -66,7 +66,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="form-group">
-                            {!! ViewHelper::setSelect(null, 'document_type', '', old('document_type'), trans('sucheForm.document-type'), trans('sucheForm.document-type'), false) !!}
+                            {!! ViewHelper::setSelect($documentTypes, 'document_type', '', old('document_type'), trans('sucheForm.document-type'), trans('sucheForm.document-type'), false) !!}
                         </div>
                     </div>
                     
@@ -122,7 +122,7 @@
                                             @if($document->id == $variant->document_id)
                                                 <div class="document-variant">
                                                     <span class="number">Variante {{ $variant->variant_number }}:</span>
-                                                    {!! ViewHelper::highlightKeyword($parameter, strip_tags($variant->inhalt)) !!}
+                                                    {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
                                                 </div>
                                             @endif
                                         @endforeach
@@ -144,6 +144,8 @@
             @endif
         
         </div>
+    </div>
+</div>
 
 <div class="clearfix"></div> <br>
 

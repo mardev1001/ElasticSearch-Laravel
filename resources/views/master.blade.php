@@ -20,7 +20,7 @@
         <meta name="csrf-token" content="{{csrf_token()}}"/>
     </head>
 
-    <body>
+    <body class="@yield('bodyClass')">
         <!-- loader div-->
         <!-- This will be used later so don't remove it-->
         <!--
@@ -70,8 +70,8 @@
                 <!--search results-->
                 @yield('searchResults')<!-- End search results-->
             
-                @include('layouts.footer')    
             </div> <!-- End container fluid-->
+            @include('layouts.footer')    
         </div> <!-- End #wrapper-->
         
         <!-- Right sidebar -->

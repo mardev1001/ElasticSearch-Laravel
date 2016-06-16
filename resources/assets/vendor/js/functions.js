@@ -40,7 +40,8 @@ $(function() {
 
         if (navSidebar.hasClass('hidden')) {
 
-            $.when(navSidebar.removeClass('hidden',1000)).done(
+            $.when(navSidebar.removeClass('hidden')).done(
+                
                 pageWrapper.removeAttr('style'),
                 fixedTitle.css('left', '315px'),
                 navbarToggle.removeClass('pull-left')
@@ -48,7 +49,8 @@ $(function() {
 
         }
         else {
-            $.when(navSidebar.addClass('hidden',1000)).done(
+            $.when(navSidebar.addClass('hidden')).done(
+              
                 pageWrapper.css('margin-left', '65px'),
                 fixedTitle.css('left', '131px'),
                 navbarToggle.addClass('pull-left')
@@ -116,6 +118,21 @@ $(function() {
         gfHistory.val(gfHistory.val() + "\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
         
     });
+    
+    // Mandant Gewerbeanmeldung history add button
+    
+    $('.history-gewerbeanmeldung-add').on('click touch', function(e) {
+        
+        var gwHistory = $('textarea[name="gewerbeanmeldung_history"]');
+        var gwInfoAngemeldet = $('input[name="angemeldet_am"]').val().trim();
+        var gwInfoUmgemeldet = $('input[name="umgemeldet_am"]').val().trim();
+        var gwInfoAbgemeldet = $('input[name="abgemeldet_am"]').val().trim();
+        
+        // console.log("\n" + "Angemeldet am: " + gwInfoAngemeldet + "; " +  "Umgemeldet am: " + gwInfoUmgemeldet + "; " + "Abgemeldet am: " + gwInfoAbgemeldet + "; " );
+        gwHistory.val(gwHistory.val() + "\n" + "Angemeldet am: " + gwInfoAngemeldet + "; " +  "Umgemeldet am: " + gwInfoUmgemeldet + "; " + "Abgemeldet am: " + gwInfoAbgemeldet + "; " );
+        
+    });
+    
     
     // Hide or show PDF upload checkbox 
 

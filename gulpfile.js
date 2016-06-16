@@ -16,7 +16,7 @@ var gulp = require('gulp'),
 
 var cmsScripts = [
     "jquery/dist/jquery.min.js",
-    // "jquery-ui/jquery-ui.min.js",
+     "jquery-ui/jquery-ui.min.js",
     "bootstrap/dist/js/bootstrap.min.js",
     "metisMenu/dist/metisMenu.min.js",
     "chosen/chosen.jquery.js",

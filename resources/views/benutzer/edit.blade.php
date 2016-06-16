@@ -237,52 +237,58 @@ Benutzer bearbeiten
     {!! Form::close() !!}
 
     <div class="clearfix"></div>
-    <div class="box-wrapper">
-        <h4 class="title">{{ trans('benutzerForm.roles') }} {{ trans('benutzerForm.overview') }}</h4>
-         
-         <div class="box">
-            <div class="row">
-                <div class="col-lg-12">
-                    <table class="table">
-                        <tr>
-                            <th class="col-xs-4 col-md-5">
-                                {{ trans('benutzerForm.mandants') }}
-                            </th>
-                            <th class="col-xs-4 col-md-5">
-                                {{ trans('benutzerForm.roles') }}
-                            </th>    
-                            <th class="col-xs-4 col-md-2">{{ trans('benutzerForm.options') }}</th>    
-                        </tr>
-                        @foreach($user->mandantUsers as $mandantUser)
-                            @if($mandantUser->deleted_at == null)
-                          
-                            {!! Form::open(['action' => 'UserController@userMandantRoleEdit', 'method'=>'PATCH']) !!}
-                                <tr id="mandant-role-{{$mandantUser->id}}">
-                                    <td>
-                                        {{ $mandantUser->mandant->name }}
-                                        <input type="hidden" name="mandant_user_id" value="{{$mandantUser->id}}">
-                                    </td>
-                                    <td>
-                                        <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
-                                            @foreach($rolesAll as $role)
-                                                <option value="{{$role->id}}" {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}> {{$role->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </td>
-                                    <td class="table-options text-right">
-                                        <button class="btn btn-danger" name="remove" value="1" type="submit">{{ trans('benutzerForm.remove') }}</button>
-                                        <button class="btn btn-primary" name="save" value="1" type="submit">{{ trans('benutzerForm.save') }}</button>
-                                    </td>
-                                </tr>
-                            {!! Form::close() !!}
-                            
-                            @endif
-                        @endforeach
-                    </table>
+    
+    @if(count($user->mandantUsers))
+    
+        <div class="box-wrapper">
+            <h4 class="title">{{ trans('benutzerForm.roles') }} {{ trans('benutzerForm.overview') }}</h4>
+             
+             <div class="box">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <table class="table">
+                            <tr>
+                                <th class="col-xs-4 col-md-5">
+                                    {{ trans('benutzerForm.mandants') }}
+                                </th>
+                                <th class="col-xs-4 col-md-5">
+                                    {{ trans('benutzerForm.roles') }}
+                                </th>    
+                                <th class="col-xs-4 col-md-2">{{ trans('benutzerForm.options') }}</th>    
+                            </tr>
+                            @foreach($user->mandantUsers as $mandantUser)
+                                @if($mandantUser->deleted_at == null)
+                              
+                                {!! Form::open(['action' => 'UserController@userMandantRoleEdit', 'method'=>'PATCH']) !!}
+                                    <tr id="mandant-role-{{$mandantUser->id}}">
+                                        <td>
+                                            {{ $mandantUser->mandant->name }}
+                                            <input type="hidden" name="mandant_user_id" value="{{$mandantUser->id}}">
+                                        </td>
+                                        <td>
+                                            <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
+                                                @foreach($rolesAll as $role)
+                                                    <option value="{{$role->id}}" {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}> {{$role->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td class="table-options text-right">
+                                            <button class="btn btn-danger" name="remove" value="1" type="submit">{{ trans('benutzerForm.remove') }}</button>
+                                            <button class="btn btn-primary" name="save" value="1" type="submit">{{ trans('benutzerForm.save') }}</button>
+                                        </td>
+                                    </tr>
+                                {!! Form::close() !!}
+                                
+                                @endif
+                            @endforeach
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    
+    @endif
+    
 </fieldset>
 
 <div id="mandants-roles" class="clearfix"></div> <br>

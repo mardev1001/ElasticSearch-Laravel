@@ -1,9 +1,26 @@
-@section('page-title') {{ trans('controller.create') }} @stop
+@section('page-title') {{ trans('controller.wiki') }} @stop
 
 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
+
 <div class="col-md-12 box-wrapper"> 
     <div class="box">
         <div class="row">
+            <!-- input box-->
+            <div class="col-lg-4"> 
+                <div class="form-group">
+                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+            <!-- input box-->
+            <div class="col-lg-4"> 
+                <div class="form-group">
+                    {!! ViewHelper::setInput('date_expired',$data,old('date_expired'), trans('documentForm.dateExpired') , trans('documentForm.dateExpired') , false ,'text', ['datetimepicker'] ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+            
+            ******
             <!-- input box-->
             <div class="col-lg-4"> 
                 <div class="form-group document-type-select">
@@ -57,19 +74,7 @@
                 </div>   
             </div><!--End input box-->
             
-            <!-- input box-->
-            <div class="col-lg-4"> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
-                </div>   
-            </div><!--End input box-->
             
-            <!-- input box-->
-            <div class="col-lg-4"> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('date_expired',$data,old('date_expired'), trans('documentForm.dateExpired') , trans('documentForm.dateExpired') , false ,'text', ['datetimepicker'] ) !!}
-                </div>   
-            </div><!--End input box-->
             
             <!-- input box-->
             <div class="col-lg-4"> 

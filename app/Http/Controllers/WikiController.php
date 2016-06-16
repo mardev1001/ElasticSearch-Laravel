@@ -6,9 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Mandant;
-
-class TelephoneListController extends Controller
+class WikiController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,11 +15,7 @@ class TelephoneListController extends Controller
      */
     public function index()
     {
-        $mandants = Mandant::all();
-            foreach($mandants as $mandant)
-                $mandant->usersInMandants = $mandant->users;
-        
-        return view('telefonliste.index', compact('mandants') );
+        //
     }
 
     /**
@@ -31,7 +25,8 @@ class TelephoneListController extends Controller
      */
     public function create()
     {
-        //
+        $data = array();
+        return view('formWrapper', compact('data') );
     }
 
     /**

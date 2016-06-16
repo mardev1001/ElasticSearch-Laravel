@@ -14,7 +14,7 @@ class ForeignKeysUpdate extends Migration
     {
         Schema::table('documents', function (Blueprint $table) {
             
-            $table->foreign('document_type_id')
+            $table->foreign('document_type_id','fk_documents-document_type_id1')
                 ->references('id')
                 ->on('document_types')
                 ->onDelete('cascade');
@@ -174,6 +174,7 @@ class ForeignKeysUpdate extends Migration
                 ->on('editor_variants')
                 ->onDelete('cascade');
         });
+        
 
     }
 

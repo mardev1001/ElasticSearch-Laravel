@@ -18,8 +18,7 @@ class MandantRepository
      * @return object array $array
      */
      public function phonelistSearch($request ){
-        $query = Mandant::where('id','>',0); 
-        
+        $query = Mandant::join('mandant_users','',0); 
         
         return $query->get();
      }

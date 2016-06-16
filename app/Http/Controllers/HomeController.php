@@ -28,10 +28,10 @@ class HomeController extends Controller
      */
     public function index() 
     {
-        $documentsNew = Document::whereNotIn('document_type_id', array('5'))->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
+        $documentsNew = Document::whereNotIn('document_type_id', array('1'))->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview( $documentsNew );
         // $dokumenteNeu = $this->document->generateTreeview(Document::where(['document_status_id' => 3])->orderBy('id', 'desc')->get()); // Where last login < document create date
-        $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 3, 'document_status_id' => 3])->orderBy('id', 'desc')->paginate(10, ['*'], 'my-roundschrieben');
+        $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])->orderBy('id', 'desc')->paginate(10, ['*'], 'my-roundschrieben');
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy );
         
         $documentsMy = Document::where(['user_id' => Auth::user()->id, 'document_status_id' => 3])->orderBy('id', 'desc')->paginate(10, ['*'], 'my-dokumente');

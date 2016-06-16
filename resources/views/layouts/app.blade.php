@@ -11,7 +11,7 @@
    
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
     <link rel="shortcut icon" href="/img/favicon.png">
-        <title>@yield("title",'Neptun intranet')</title>
+        <title>@yield("title",'NEPTUN intranet')</title>
         
         {!! Html::style(elixir('css/style.css')) !!}
 

@@ -111,7 +111,6 @@ class User extends Authenticatable
         $this->attributes['password'] = bcrypt($value);
     }
     
-    
     public function countMandants(){
        return $this->hasMany('App\MandantUser','user_id','id');
     }

@@ -42,7 +42,7 @@ class DocumentSeeder extends Seeder
             
             [
                 [
-                    'document_type_id' => 3,
+                    'document_type_id' => 2,
                     'document_status_id' => 3,
                     'user_id' => 1,
                     'version' => 1,
@@ -69,7 +69,7 @@ class DocumentSeeder extends Seeder
                 ],
                 
                 [
-                    'document_type_id' => 3,
+                    'document_type_id' => 2,
                     'document_status_id' => 3,
                     'user_id' => 1,
                     'version' => 1,

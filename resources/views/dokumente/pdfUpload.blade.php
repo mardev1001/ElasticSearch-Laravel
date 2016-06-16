@@ -27,12 +27,24 @@
         </div>   
     </div><!--End input box-->
     
-    </div>
+      
+    
+</div>
+    
 <div class="clearfix"></div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="pull-right">
+            <a href="#" class="btn btn-primary">Seiten Vorschau</a>
+            <a href="#" class="btn btn-primary">PDF Vorschau</a>
+        </div>
+    </div>
+</div>
+
 
 <input type="hidden" name="model_id" value="{{$data->id}}" />
 <div class="col-xs-12 editable" data-id='inhalt'>
-   
     @foreach($data->editorVariant as $variant)
         {!! $variant->inhalt  !!}
     @endforeach

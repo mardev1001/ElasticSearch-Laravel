@@ -43,6 +43,11 @@ class DocumentController extends Controller
     {
         $this->document =  $docRepo;
         $this->pdfPath = public_path().'/files/documents/';
+        $this->newsId = 1;
+        $this->rundId = 2;
+        $this->qmRundId = 3;
+        $this->isoDocumentId = 4;
+        $this->formulareId = 5;
      }
     
     
@@ -93,11 +98,13 @@ class DocumentController extends Controller
         $docType = DocumentType::find( $request->get('document_type_id') );
         
         //fix if document type not iso category -> don't save iso_category_id
-        if( $request->get('document_type_id') != 3 )
+        if( $request->get('document_type_id') != $this->isoDocumentId )
             RequestMerge::merge(['iso_category_id' => null] );
             
-        if( $request->get('document_type_id') != 1 || $request->get('document_type_id') != 2 || $request->get('document_type_id') != 3 && $request->has('pdf_upload') )
-            RequestMerge::merge(['pdf_upload' => null] );
+        if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
+            && $request->get('document_type_id') != $this->qmRundId && $request->has('pdf_upload') )
+            RequestMerge::merge(['pdf_upload' => 0] );    
+    
             
         RequestMerge::merge(['version' => 1] );
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
@@ -382,11 +389,11 @@ class DocumentController extends Controller
     public function attachments($id,$backButton=null)
     {   
         $data = Document::find($id);
-        $dt = DocumentType::find(5);//vorlage document
-        
+        $dt = DocumentType::find($this->formulareId);//vorlage document
+         
         $backButton = '/dokumente/editor/'.$data->id.'/edit';
-        if( ($data->document_type_id == 3 && $data->pdf_upload == true ) || ($data->document_type_id == 2 && $data->pdf_upload == true ) 
-        || ($data->document_type_id == 1 && $data->pdf_upload == true ))
+        if( ($data->document_type_id ==  $this->newsId && $data->pdf_upload == true ) || ($data->document_type_id == $this->rundId 
+        && $data->pdf_upload == true ) || ($data->document_type_id == $this->qmRundId && $data->pdf_upload == true ))
             $backButton = '/dokumente/pdf-upload/'.$id.'/edit';
         elseif($data->document_type_id ==  $dt->id)    
             $backButton = '/dokumente/dokumente-upload/'.$id.'/edit';  
@@ -395,7 +402,7 @@ class DocumentController extends Controller
         $url = '';
         $documents = Document::where('document_type_id',$dt->id)->where('document_status_id',1)->orWhere('document_status_id',3)->whereNotIn('id',array($id))->get();// documentTypeId 5 = Vorlagedokument
         foreach($documents as $document){
-            $document->name = $document->name.'( '.$document->documentStatus->name.' )';    
+            $document->name = $document->name.' ('.$document->documentStatus->name.')';    
         }
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
@@ -467,7 +474,7 @@ class DocumentController extends Controller
             /*
                 Option 2: create a new Vorlagedokument and add it as an attachment
             */
-            $dt = DocumentType::find(5);//vorlage document
+            $dt = DocumentType::find(  $this->formulareId = $this->formulareId);//vorlage document
             RequestMerge::merge(['version' => 1, 'document_type_id' => $dt->id] );
             
             /*Create a new document*/
@@ -475,6 +482,7 @@ class DocumentController extends Controller
             $lastId = Document::orderBy('id','DESC')->first();
             $lastId->document_group_id = $lastId->id;
             $lastId->save();
+            
             
             /*Upload document files*/
             $filename = '';
@@ -495,8 +503,6 @@ class DocumentController extends Controller
                     $editorVariantId->inhalt = $request->get('inhalt');
                     $dirty=$this->dirty(false,$editorVariantId);
                     $editorVariantId->save();
-                    
-                    
                     
                     $documentAttachment = new DocumentUpload();
                     $documentAttachment->editor_variant_id = $editorVariantId->id;
@@ -552,20 +558,25 @@ class DocumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function anlegenRechteFreigabe($id,$backButton=null)
-    {   
+    {
+        
+        
         $data = Document::find($id);
-        $dt = DocumentType::find(5);//vorlage document
+        $dt = DocumentType::find($this->formulareId);//vorlage document
         
         $backButton = '/dokumente/editor/'.$data->id.'/edit';
-        if( ($data->document_type_id == 3 && $data->pdf_upload == true ) || ($data->document_type_id == 2 && $data->pdf_upload == true ) 
-        || ($data->document_type_id == 1 && $data->pdf_upload == true ))
+        if( ($data->document_type_id == $this->rundId  && $data->pdf_upload == true ) || ($data->document_type_id == $this->qmRundId && $data->pdf_upload == true ) 
+        || ($data->document_type_id == $this->newsId && $data->pdf_upload == true ))
             $backButton = '/dokumente/pdf-upload/'.$id.'/edit';
+       
         elseif($data->document_type_id ==  $dt->id)    
             $backButton = '/dokumente/dokumente-upload/'.$id.'/edit';  
+        
         if($data->pdf_upload == true || $data->pdf_upload==1)
             $backButton = '/dokumente/pdf-upload/'.$data->id.'/edit'; 
-        elseif( $data->pdf_upload == false &&  $data->document_type_id == 5 )  
+        elseif( $data->pdf_upload == false &&  $data->document_type_id == $this->formulareId )  
             $backButton = '/dokumente/dokumente-upload/'.$data->id.'/edit'; 
+            
         $collections = array();
         $roles = Role::all();
         //find variants
@@ -865,12 +876,14 @@ class DocumentController extends Controller
         $adressats = Adressat::where('active',1)->get();
         
         //fix if document type not iso category -> don't save iso_category_id
-        if( $request->get('document_type_id') != 3 )
+        if( $request->get('document_type_id') !=  $this->isoDocumentId )
             RequestMerge::merge(['iso_category_id' => null] );
             
-        if( $request->get('document_type_id') != 1 || $request->get('document_type_id') != 2 || $request->get('document_type_id') != 3 && $request->has('pdf_upload') )
-            RequestMerge::merge(['pdf_upload' => null] );    
-            
+        if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
+            && $request->get('document_type_id') !=  $this->qmRundId  && $request->has('pdf_upload') )
+            RequestMerge::merge(['pdf_upload' => 0] );    
+    
+        // dd($request->all());        
         RequestMerge::merge(['version' => 1] );
         $data = Document::find( $id )->fill( $request->all() )->save();
         $data = Document::find($id);
@@ -906,37 +919,16 @@ class DocumentController extends Controller
         //
     }
     
-    /**
-     * Display the specified resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function isoDocument()
-    {
-        $counter = 0;
-       
-        $users = $this->document->generateDummyData('users', array(),false );
-        $data = json_encode( $this->document->generateDummyData('document 5.4.2016', $users, false ) );
-          
-        $files = $this->document->generateDummyData('anhang', array(), false );
-        $data2 = json_encode( $this->document->generateDummyData('document 06.5.2016', $files, false ) );
-        
-        $files2 = $this->document->generateDummyData('anhang', array(), false );
-        $data3 = json_encode( $this->document->generateDummyData('document 11.5.2016', $files2, false ) );
-        
-        return view('dokumente.isoDocument', compact('data','data2','data3','counter') );
-    }
-    
-    /**
+       /**
      * Display the specified resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function rundschreiben()
     {
-        $rundschreibenAll = Document::where(['document_type_id' => 3])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
+        $rundschreibenAll = Document::where(['document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
-        $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 3])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
+        $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
         $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
         return view('dokumente.rundschreiben', compact('rundschreibenAll','rundschreibenAllTree','rundschreibenMeine','rundschreibenMeineTree') );
@@ -986,10 +978,10 @@ class DocumentController extends Controller
      */
     public function rundschreibenNews()
     {
-        $rundschreibenAll = Document::where(['document_type_id' => 2])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben-news');
+        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben-news');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
         $rundschreibenMeine = Document::where('user_id',Auth::user()->id)
-        ->where('document_type_id', 2)->orderBy('id', 'desc')
+        ->where('document_type_id', $this->newsId )->orderBy('id', 'desc')
         ->take(10)->paginate(10, ['*'], 'meine-rundschreiben-news');
         $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
@@ -1137,12 +1129,12 @@ class DocumentController extends Controller
         $loggedInUser = \Auth::User();
        
         $documentsIso = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
-        ->where('document_type_id',4)
+        ->where('document_type_id', $this->isoDocumentId)
         ->where('slug',$slug)->get();//->paginate(10, ['*'], 'alle-iso-documents');
         
         $documentsIso = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         ->join('editor_variants','documents.id','=','editor_variants.document_id')
-        ->where('documents.document_type_id',4)
+        ->where('documents.document_type_id',$this->isoDocumentId)
         ->where('slug',$slug)
         //->get();
         ->paginate(10, ['*','iso_categories.name as isoCatName','documents.name as name'], 'alle-iso-documents');
@@ -1150,7 +1142,7 @@ class DocumentController extends Controller
         
         $myIsoDocuments = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         ->join('editor_variants','documents.id','=','editor_variants.document_id')
-        ->where('documents.document_type_id',4)
+        ->where('documents.document_type_id',$this->isoDocumentId)
         ->where('slug',$slug)
         ->where('user_id',$loggedInUser->id)
         ->paginate(10, ['*','iso_categories.name as isoCatName','documents.name as name'], 'my-iso-documents');

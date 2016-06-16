@@ -75,7 +75,8 @@ class MandantController extends Controller
      */
     public function create()
     {
-        $mandantsAll = Mandant::all();
+        // $mandantsAll = Mandant::all();
+        $mandantsAll = Mandant::where('hauptstelle', true)->get();
         return view('formWrapper', compact('data', 'mandantsAll'));
     }
 
@@ -119,7 +120,8 @@ class MandantController extends Controller
         $data = Mandant::find($id);
         $mandantUsers = User::all();
         $internalMandantUsers = InternalMandantUser::where('mandant_id', $id)->get();
-        $mandantsAll = Mandant::all();
+        // $mandantsAll = Mandant::all();
+        $mandantsAll = Mandant::where('hauptstelle', true)->where('id', '!=', $id)->get();
         return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers'));
     }
 
@@ -140,7 +142,9 @@ class MandantController extends Controller
         $mandant->hauptstelle = $request->has('hauptstelle');
         $mandant->rights_wiki = $request->has('rights_wiki');
         $mandant->rights_admin = $request->has('rights_admin');
+        $mandantInfos->unbefristet = $request->has('unbefristet');
         if($mandant->hauptstelle) $mandant->mandant_id_hauptstelle = null;
+        
         
         if ($request->file())
             $mandant->logo = $this->fileUpload($mandant, $this->fileUploadPath, $request->file());

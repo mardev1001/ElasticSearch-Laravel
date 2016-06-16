@@ -50,16 +50,16 @@ $( function() {
     }
     else if(  typeof documentType !== 'undefined' && documentType.length){
         var detectHref = '/dokumente/rundschreiben';
-        if(documentType == "Vorlagedokument")
+        if(documentType == "Formulare")
             detectHref = '/dokumente/vorlagedokumente';
             
-        else if(documentType == "Rundschreiben QMR")
+        else if(documentType == "QM-Rundschreiben")
             detectHref = '/dokumente/rundschreiben-qmr';
             
-        else if(documentType == "Rundschreiben News")
+        else if(documentType == "News")
             detectHref = '/dokumente/rundschreiben-news';
             
-        else if(documentType == "ISO Dokument"){
+        else if(documentType == "ISO Dokumente"){
              detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
         }
        $('a[href$="'+detectHref+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
@@ -270,4 +270,16 @@ $( function() {
         window.location = $(this).data('link');
     });
     /* End On click check if form is empty and submit or go to URL*/
+    
+    /* Attachment option 2 - if file selected and  option dosent' have title, and isset 3 hidden fields*/
+        $('input[type=file]').on('change',function(){
+            var fileName = $('input[type=file]')[0].files[0].name, title =$(this).closest('form').find("input[name='name']").val(),
+            fileNameWithoutExtension =fileName.replace(/\.[^/.]+$/, "");
+            
+            if( $( "input[name='user_id']" ).length && $( "input[name='document_id']" ) && $( "input[name='variant_id']" ) && title =='' ){
+                $(this).closest('form').find("input[name='name']").val(fileNameWithoutExtension);
+            }
+        });
+    /* EndAttachment option 2 - if file selected and  option dosent' have title, and isset 3 hidden fields*/
+    
 });

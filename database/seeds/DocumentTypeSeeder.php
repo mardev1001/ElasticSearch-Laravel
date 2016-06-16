@@ -13,16 +13,6 @@ class DocumentTypeSeeder extends Seeder
     {
         DB::table('document_types')->insert(
             [
-                [
-                    'name' => 'QM-Rundschreiben',
-                    'document_art' => '0',
-                    'document_role' => '1',
-                    'read_required' => '1',
-                    'allow_comments' => '0',
-                    'active' => '1',
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'updated_at' => date("Y-m-d H:i:s")
-                ],
                 
                 [
                     'name' => 'News',
@@ -37,6 +27,17 @@ class DocumentTypeSeeder extends Seeder
                 
                 [
                     'name' => 'Rundschreiben',
+                    'document_art' => '0',
+                    'document_role' => '1',
+                    'read_required' => '1',
+                    'allow_comments' => '0',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+                [
+                    'name' => 'QM-Rundschreiben',
                     'document_art' => '0',
                     'document_role' => '1',
                     'read_required' => '1',

@@ -34,7 +34,7 @@
             </div><!--End input box-->
         
             <!-- input box-->
-            <div class="col-lg-4 select-mandants">
+            <div class="col-lg-5 select-mandants">
                 <div class="form-group">
                     {!! ViewHelper::setSelect($mandantsAll, 'mandant_id_hauptstelle', $data, old('mandant_id_hauptstelle'), trans('mandantenForm.num-hauptstelle')) !!}
                 </div>
@@ -179,14 +179,14 @@
             <div class="row">
         
                 <!-- input box-->
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="form-group">
                         {!! ViewHelper::setUserSelect($mandantUsers, 'geschaftsfuhrer', $data, old('geschaftsfuhrer'), trans('mandantenForm.geschaftsfuhrer') )  !!}
                     </div>
                 </div><!--End input box-->
                 
                 <!-- input box-->
-                <div class="col-lg-3">
+                <div class="col-lg-4">
                     <div class="form-group">
                         {!! ViewHelper::setInput('geschaftsfuhrer_infos', $data, old('geschaftsfuhrer_infos'), trans('mandantenForm.geschaftsfuhrer_infos') ) !!}
                     </div>
@@ -207,7 +207,7 @@
                 </div><!--End input box-->
                 
                 <!-- input box-->
-                <div class="col-lg-2 custom-input-group-btn">
+                <div class="col-lg-4">
                     <button type="button" class="btn btn-primary history-add"> {{ trans('mandantenForm.add') }} </button>
                 </div><!--End input box-->
         
@@ -229,7 +229,7 @@
 
    
     <div class="box-wrapper">
-        <h3 class="title">Zusätzliche Informationen</h3>
+        <h3 class="title">{{ trans('mandantenForm.zusInfos') }}</h3>
         <div class="box">
             <div class="row">
         
@@ -238,7 +238,7 @@
                     <div class="form-group">
                         {!! ViewHelper::setInput('prokura',$data->mandantInfo,old('prokura'),trans('mandantenForm.procuration') ) !!}
                     </div>
-                </div><!--End input box-->
+                </div>
         
                 <div class="clearfix"></div>
         
@@ -247,19 +247,55 @@
                     <div class="form-group">
                         {!! ViewHelper::setInput('betriebsnummmer',$data->mandantInfo,old('betriebsnummmer'),trans('mandantenForm.operationNum') ) !!}
                     </div>
-                </div><!--End input box-->
+                </div>
         
                 <!-- input box-->
                 <div class="col-lg-4">
                     <div class="form-group">
                         {!! ViewHelper::setInput('handelsregister',$data->mandantInfo,old('handelsregister'),trans('mandantenForm.commercialRegister') ) !!}
                     </div>
-                </div><!--End input box-->
+                </div>
         
-                <!-- input box-->
                 <div class="col-lg-12">
                     <div class="form-group">
                         {!! ViewHelper::setArea('handelsregister_sitz',$data->mandantInfo,old('handelsregister_sitz'),trans('mandantenForm.hrSitz') ) !!}
+                    </div>
+                </div>
+        
+                <div class="clearfix"></div>
+        
+                <!-- input box-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('angemeldet_am', '', '', trans('mandantenForm.gewerbeanmeldung'), trans('mandantenForm.angemeldetAm'), false, '', ['datetimepicker']) !!}
+                    </div>
+                </div><!--End input box-->
+                
+                <!-- input box-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('umgemeldet_am', '', '', '&nbsp;', trans('mandantenForm.umgemeldetAm'), false, '', ['datetimepicker'] ) !!}
+                    </div>
+                </div><!--End input box-->
+                
+                <!-- input box-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('abgemeldet_am', '', '', '&nbsp;', trans('mandantenForm.abgemeldetAm'), false, '', ['datetimepicker']) !!}
+                    </div>
+                </div><!--End input box-->
+                
+                <div class="clearfix"></div>
+                
+                <!-- input box-->
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-primary history-gewerbeanmeldung-add"> {{ trans('mandantenForm.add') }} </button>
+                </div><!--End input box-->
+                
+                <!-- input box-->
+                <div class="col-lg-12">
+                    <div class="form-group">
+                        {!! ViewHelper::setArea('gewerbeanmeldung_history', $data->mandantInfo, old('gewerbeanmeldung_history'),trans('mandantenForm.history'),trans('mandantenForm.history'), false, null, null, true ) !!}
                     </div>
                 </div><!--End input box-->
         
@@ -272,6 +308,15 @@
                     </div>
                 </div><!--End input box-->
         
+                @if(!$data->hauptstelle)
+                <!-- input box-->
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('steuernummer_lohn', $data->mandantInfo, old('steuernummer_lohn'), trans('mandantenForm.taxNumberWage') ) !!}
+                    </div>
+                </div><!--End input box-->
+                @endif
+                
                 <!-- input box-->
                 <div class="col-lg-4">
                     <div class="form-group">
@@ -306,6 +351,19 @@
                 <div class="col-lg-4">
                     <div class="form-group">
                         {!! ViewHelper::setInput('erlaubniss_gultig_ab', $data->mandantInfo, old('erlaubniss_gultig_ab'), trans('mandantenForm.permissions'), trans('mandantenForm.permissionsPlaceholder'), false, '', ['datetimepicker'] ) !!}
+                    </div>
+                </div><!--End input box-->
+        
+                <!-- input box-->
+                <div class="col-lg-4">
+                    <div class="checkbox-form-group">
+                        {!! ViewHelper::setCheckbox('unbefristet', $data->mandantInfo, old('unbefristet'),trans('mandantenForm.unbefristet') ) !!}
+                    </div>
+                </div><!--End input box-->
+        
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('befristet_bis', $data->mandantInfo, old('befristet_bis'), trans('mandantenForm.befristetBis'), trans('Datum'), false, '', ['datetimepicker'] ) !!}
                     </div>
                 </div><!--End input box-->
         
@@ -375,6 +433,7 @@
      @if( Request::is('*/edit') )
          @section('closingElementsAfterForm')
                 @include('partials.mandantStaticRoles')
+                </div>
         @stop
      @endif
  

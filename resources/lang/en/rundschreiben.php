@@ -16,5 +16,7 @@ return [
     'release' => 'Freigeben',
     'noRelease' => 'Nicht freigeben',
     'download' => 'Download',
+    'meineNews' => 'meine News',
+    'allNews' => 'alle News',
    
 ];

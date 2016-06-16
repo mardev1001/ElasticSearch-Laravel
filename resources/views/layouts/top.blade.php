@@ -45,7 +45,8 @@
                 </li>
             </ul>
         </div>
+     </div>
 
     <!-- /.navbar-top-links -->
-
+</nav>
     <div class="clearfix"></div>

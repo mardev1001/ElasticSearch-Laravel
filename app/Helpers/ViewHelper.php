@@ -220,5 +220,25 @@ class ViewHelper
         return $newstring;    
     }
     
+    
+    
+    /**
+     * Return shortened text extract with keyword parameter
+     *
+     * @param string $needle
+     * @param string $haystack
+     * @return string $newstring
+     */
+    static function extractText($needle, $haystack) {
+        $newstring = '';
+        $haystack = html_entity_decode(strip_tags($haystack));
+        $extractLenght = 128;
+        $needlePosition = strpos($haystack , $needle);
+        $newstring = '... ' . substr($haystack, $needlePosition, 128) . ' ...';
+        return $newstring;    
+    }
+    
+    
+    
 }
 

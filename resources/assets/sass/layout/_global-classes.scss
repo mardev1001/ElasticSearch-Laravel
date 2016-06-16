@@ -2,7 +2,6 @@ body {
     background: url('/img/NeptunBG.png') $white-color no-repeat !important;
     background-position: center top;
     padding-top: 148px;
-    padding-bottom: 10px;
 }
 
 @media screen and (max-width: 1360px) { 
@@ -25,7 +24,7 @@ hr {
     line-height: 22px;
 }
 
-p, a, #page-wrapper label, b, strong, .text,
+p, a, #page-wrapper label, b, strong, .text, .box span:not(.fa):not(.glyphicon),
 #page-wrapper .table > thead > tr > th,
 #page-wrapper .table > tbody > tr > th, 
 #page-wrapper .table > tfoot > tr > th,
@@ -585,7 +584,8 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 span.highlight{
-    color: #4094dc;
+    color: #4094dc !important;
+    font-weight: bold;
 }
 
 /*Chosen*/
@@ -597,7 +597,7 @@ select.form-control + .chosen-container.chosen-container-single .chosen-single{
     display: block;
     width: 100%;
     height: 40px;
-    padding: 8px 15px;
+    padding: 11px 15px;
     font-size: 14px;
     line-height: 1.428571429;
     color: $form-control-color;

@@ -27,7 +27,7 @@ class Mandant extends Model
     }
     
     public function users(){
-        return $this->hasManyThrough('App\Users', 'App\MandantUser');
+        return $this->hasManyThrough('App\User', 'App\MandantUser','mandant_id','id');
     }
     
     public function internalUsers(){
