@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class IsoCategorySeeder extends Seeder
+class DummyIsoCategorySeeder extends Seeder
 {
     /**
      * Run the database seeds.

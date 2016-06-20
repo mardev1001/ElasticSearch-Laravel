@@ -8,6 +8,29 @@
             <!-- input box-->
             <div class="col-lg-4"> 
                 <div class="form-group">
+                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.headline'),
+                    trans('wiki.headline') ,true  ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+            
+            <!-- input box-->
+            <div class="col-lg-4"> 
+                <div class="form-group">
+                    <label class="control-label"> {{ ucfirst(trans('documentForm.status')) }} </label>
+                    <select name="status" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.status')) }}" disabled>
+                        @foreach($documentStatus as $status)
+                            <option value="{{$status->id}}"> 
+                                {{ $status->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>   
+            </div><!--End input box-->
+            
+            <!-- input box-->
+            <div class="col-lg-4"> 
+                <div class="form-group">
                     {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
                 </div>   
             </div><!--End input box-->
@@ -19,110 +42,44 @@
                 </div>   
             </div><!--End input box-->
             
-            
-            ******
             <!-- input box-->
-            <div class="col-lg-4"> 
-                <div class="form-group document-type-select">
-                    {!! ViewHelper::setSelect($documentTypes,'document_type_id',$data,old('document_type_id'),
-                            trans('documentForm.type'), trans('documentForm.type'),true ) !!}
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-lg-4 "> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('name',$data,old('name'),trans('documentForm.documentName') , 
-                           trans('documentForm.documentName') , true  ) !!}
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-lg-4 "> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('search_tags',$data,old('search_tags'),trans('documentForm.searchTags') , 
-                           trans('documentForm.searchTags') , true  ) !!} <!-- add later data-role="tagsinput"-->
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-lg-4 iso-category-select"> 
-                <div class="form-group">
-                    {!! ViewHelper::setSelect($isoDocuments,'iso_category_id',$data,old('iso_category_id'),
-                            trans('documentForm.isoCategory'), trans('documentForm.isoCategory') ) !!}
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-lg-4 "> 
-                <div class="form-group">
-                    <label class="control-label"> {{ ucfirst(trans('documentForm.owner')) }}*</label>
-                    <select name="owner_user_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.owner')) }}">
-                        @foreach($mandantUsers as $mandantUser)
-                            <option value="{{$mandantUser->id}}" 
-                            @if(isset($data->owner_user_id)) 
-                                @if($mandantUser->id == $data->owner_user_id) 
-                                    selected  
-                                @endif 
-                            @elseif( isset( Auth::user()->id )  )
-                                @if($mandantUser->id ==  Auth::user()->id ) selected @endif 
-                            @endif> 
-                                {{ $mandantUser->first_name }} {{ $mandantUser->last_name }} 
-                            </option>
-                        @endforeach
-                    </select>
-                </div>   
-            </div><!--End input box-->
-            
-            
-            
-            <!-- input box-->
-            <div class="col-lg-4"> 
-                <div class="form-group">
-                    <label class="control-label"> {{ ucfirst(trans('documentForm.status')) }} </label>
-                    <select name="status" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.status')) }}" disabled>
-                        <option value="0"></option>
-                        @foreach($documentStatus as $status)
-                            <option value="{{$status->id}}"  @if($status->id == 1) selected @endif > 
-                                {{ $status->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-lg-4"> 
-                <div class="form-group">
-                    <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
-                    <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">
-                        <option value="0"></option>
-                        @foreach($mandantUsers as $mandantUser)
-                            <option value="{{$mandantUser->id}}" @if(isset($documentCoauthor)) {!! ViewHelper::setMultipleSelect($documentCoauthor, $mandantUser->id, 'user_id') !!} @endif > 
-                                {{ $mandantUser->first_name }} {{ $mandantUser->last_name }} 
-                            </option>
-                        @endforeach
-                    </select>
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-lg-4 pdf-checkbox"> 
+            <div class="col-lg-4 wiki-parent-checkbox"> 
                 <div class="form-group checkbox-form-group">
-                    {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
+                    {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('wiki.menuParent') ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+            <!-- input box-->
+            <div class="col-lg-4"> 
+                <div class="form-group">
+                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.parentId'),
+                    trans('wiki.headline') ,true  ) !!}
+                </div>   
+            </div><!--End input box-->
+            <div class="clearfix"></div>
+            
+            <!-- input box-->
+            <div class="col-lg-4"> 
+                <div class="form-group">
+                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.subject'),
+                    trans('wiki.subject'), true  ) !!}
                 </div>   
             </div><!--End input box-->
             
             <div class="clearfix"></div>
-
-            <!-- input box-->
-            <div class="col-lg-12">
-                <div class="form-group">
-                    {!! ViewHelper::setArea('summary',$data,old('summary'),trans('documentForm.summary') ) !!}
-                </div>   
-            </div><!--End input box-->  
-        </div>
-    </div>
-
-
-<div class="clearfix"></div> <br/>
+            <div class="col-xs-12 editable" data-id='content'>
+                
+            </div>
+            <div class="clearfix"></div>
+            
+            <div class="col-xs-12 col-md-6">
+                <label>{{ trans('rightsRelease.approver') }}*</label>
+                <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.approver') }}" multiple>
+                    <option value="0"></option>
+                    @foreach($mandantUsers as $mandatUser)
+                    <option value="{{$mandatUser->id}}"
+                            {!! ViewHelper::setMultipleSelect($data->documentApprovals, $mandatUser->id, 'user_id') !!}
+                            >{{ $mandatUser->first_name }} {{ $mandatUser->last_name }}</option>
+                    @endforeach
+                </select>
+            </div>

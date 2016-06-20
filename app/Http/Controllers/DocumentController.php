@@ -639,7 +639,23 @@ class DocumentController extends Controller
                     $editorVariant->approval_all_mandants = 1; 
                     $dirty=$this->dirty($dirty,$editorVariant);
                     $editorVariant->save();
-                    // dd($editorVariant);
+                    
+                    /*Fix where where variant is Alle and roles different from All*/
+                    $documentMandants = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->get();
+                     foreach($documentMandants as $documentMandant){
+                        $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->get();
+                        $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->pluck('role_id');
+                        
+                        if( $request->has('roles') )
+                            $this->document->processOrSave($documentMandantRoles,$documentMandantRolesPluck,$request->get('roles'), 'DocumentMandantRole',
+                                array('document_mandant_id'=>$documentMandant->id,'role_id'=>'inherit'),
+                                array('document_mandant_id'=>array($documentMandant->id) ) ); 
+                        
+                        elseif( !$request->has('roles') ){
+                             $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->delete();
+                        }
+                     }//end foreach
+                     /* End Fix where where variant is Alle and roles different from All*/
                 }
                 else{
                     //editorVariant insert/edit
@@ -661,12 +677,12 @@ class DocumentController extends Controller
                     } 
                    /*End Create DocumentManant */
                    
-                    
+                      
                     /* Create DocumentManant roles*/
                     foreach($documentMandants as $documentMandant){
                         $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->get();
                         $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->pluck('role_id');
-                         
+                       
                        if( $request->has('roles') )
                         $this->document->processOrSave($documentMandantRoles,$documentMandantRolesPluck,$request->get('roles'), 'DocumentMandantRole',
                             array('document_mandant_id'=>$documentMandant->id,'role_id'=>'inherit'),

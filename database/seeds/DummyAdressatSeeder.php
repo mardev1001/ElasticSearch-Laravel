@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class AdressatSeeder extends Seeder
+class DummyAdressatSeeder extends Seeder
 {
     /**
      * Run the database seeds.

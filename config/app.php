@@ -160,6 +160,7 @@ return [
          * Custom Service providers
          */
         Collective\Html\HtmlServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
 
     ],
 
