@@ -14,8 +14,8 @@ class CreateWikiPageRolesTable extends Migration
     {
         Schema::create('wiki_page_roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('role_id')->unsigned();//FK
             $table->integer('wiki_page_id')->unsigned();//FK
+            $table->integer('role_id')->unsigned();//FK
             $table->timestamps();
         });
     }

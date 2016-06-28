@@ -3,7 +3,9 @@
 @section('page-title')
     {{  ucfirst( trans('controller.administration') ) }} 
 @stop
-
+    @section('bodyClass')
+    mandant-administration
+    @stop
     @section('content')
     <div class="col-xs-12 box-wrapper">
         <h2 class="title">{{ trans('mandantenForm.search') }} </h2>
@@ -14,15 +16,16 @@
                    'class' => 'horizontal-form' ]) !!}
                 <div class="row">
                     <!-- input box-->
-                    <div class="col-lg-6"> 
+                    <div class="col-md-6 col-lg-6"> 
                         <div class="form-group no-margin-bottom">
                             {!! ViewHelper::setInput('search','',old('search'),'', 
                                    trans('mandantenForm.search') , true  ) !!}
                         </div>   
                     </div><!--End input box-->
                     <!-- input box-->
-                    <div class="col-lg-6"> 
-                        <div class="form-group checkbox-form-group no-margin-bottom">
+      
+                    <div class="col-md-6 col-lg-6"> 
+                        <div class="form-group label-form-group  no-margin-bottom">
                                 {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
                                 {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
                         </div>   
@@ -56,38 +59,55 @@
             
             @foreach( $mandants as $mandant)
             
-                @if(count($mandant->mandantUsers) > 0)
+                {{-- @if(count($mandant->mandantUsers) > 0) --}}
                 
                 <div class="panel panel-primary" id="panelMandant{{$mandant->id}}">
                     
                     <div class="panel-heading">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
-                               href="#collapseMandant{{$mandant->id}}">
-                              {{$mandant->name}} ({{ count($mandant->mandantUsers) }} Benutzer)
-                            </a>
-                            <span class="pull-right panel-options">
-                                
-                                {!! Form::open(['action' => 'MandantController@mandantActivate', 'method'=>'PATCH']) !!}
-                                    <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                    @if($mandant->active)
-                                        <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
-                                    @else
-                                        <button class="btn btn-primary" type="submit" name="active" value="0"></span>Inaktiv</button>
-                                    @endif
-                                {!! Form::close() !!}
-                                
-                                {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
-                                    <button type="submit" class="btn btn-primary">Entfernen</button>
-                                {!! Form::close() !!}
-                                
-                                <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
-                            </span>
+                        <h4 class="panel-title col-xs-12">
+                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
+                                   href="#collapseMandant{{$mandant->id}}">
+                                  {{$mandant->name}}
+                                </a>
+                            
                         </h4>
+                                <span class="panel-options col-xs-12">
+                                     <span class="panel-title">({{ count($mandant->mandantUsers) }} Benutzer)</span>
+                                     <span class="pull-right">
+                                    {!! Form::open(['action' => 'MandantController@mandantActivate', 
+                                    'method'=>'PATCH']) !!}
+                                        <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
+                                        @if($mandant->active)
+                                            <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
+                                        @else
+                                            <button class="btn btn-primary" type="submit" name="active" value="0"></span>Inaktiv</button>
+                                        @endif
+                                    {!! Form::close() !!}
+                                    
+                                    {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
+                                        <button type="submit" class="btn btn-primary delete-prompt">Entfernen</button>
+                                    {!! Form::close() !!}
+                                    
+                                    <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
+                                    </span>
+                                </span>
                     </div>
-                    
-                    <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse ">
+                   
+                    <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse  
+                    @if(Session::has('mandantChanged'))
+                        @if( Session::get('mandantChanged') == $mandant->id )
+                            in
+                        @endif
+                    @endif">
                         <div class="panel-body">
+                             @if(Session::has('mandantChanged'))
+                                @if( Session::get('mandantChanged') == $mandant->id )
+                                    <input type="hidden" class="scrollTo" value="#panelMandant{{ $mandant->id }}" />
+                                @endif
+                            @endif
+                            
+                            
+                            
                             <table class="table">
                             <thead>
                                 <th>Name</th>
@@ -96,50 +116,58 @@
                                 <th class="text-center">Optionen</th>
                             </thead>
                             <tbody>
-                                
-                                @foreach( $mandant->mandantUsers as $mandantUser )
-                                
+                            
+                                @if(count($mandant->mandantUsers) > 0)
                                     
+                                    @foreach( $mandant->mandantUsers as $mandantUser )
                                         <tr>
-                                        <td class="valign">{{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
-                                        <td class="col-md-8 valign">
-                                            <select disabled="true" name="role_id" class="form-control select col-md-8" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
-                                                <option value=""></option>
-                                                @foreach( $roles as $role)
-                                                    <option value="{{$role->id}}"
-                                                    {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}
-                                                    >{{ $role->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </td>
-                                        <td class="text-center valign">{{ count($mandantUser->user->countMandants) }}</td>
-                                        <td class="valign table-options text-center">
-                                            {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
-                                                <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
-                                                @if($mandantUser->user->active)
-                                                    <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
-                                                @else
-                                                    <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
-                                                @endif
-                                            {!! Form::close() !!}
-                                            
-                                            {!! Form::open(['route'=>['benutzer.destroy', 'id'=> $mandantUser->user->id], 'method'=>'DELETE']) !!}
-                                                <button type="submit" class="btn btn-xs btn-warning">Entfernen</button><br>
-                                            {!! Form::close() !!}
-                                            
-                                            <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
-                                        </td>
-                                    </tr>
+                                            <td class="valign">{{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
+                                            <td class="col-md-8 valign">
+                                                <select disabled="true" name="role_id" class="form-control select col-md-8" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
+                                                    <option value=""></option>
+                                                    @foreach( $roles as $role)
+                                                        <option value="{{$role->id}}"
+                                                        {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}
+                                                        >{{ $role->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+                                            <td class="text-center valign">{{ count($mandantUser->user->countMandants) }}</td>
+                                            <td class="valign table-options text-center">
+                                                {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
+                                                    <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
+                                                    <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
+                                                    @if($mandantUser->user->active)
+                                                        <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
+                                                    @else
+                                                        <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
+                                                    @endif
+                                                {!! Form::close() !!}
+                                                
+                                                {!! Form::open(['route'=>['benutzer.destroy', 'id'=> $mandantUser->user->id], 'method'=>'DELETE']) !!}
+                                                    <button type="submit" class="btn btn-xs btn-warning delete-prompt">Entfernen</button><br>
+                                                {!! Form::close() !!}
+                                                
+                                                <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
+                                            </td>
+                                        </tr>
+                                        
+                                    @endforeach
                                     
-                                @endforeach
+                                    
+                                @else
+                                    <tr><td colspan="4"> Keine Daten vorhanden. </td></tr>
+                                @endif
+                            
                             </tbody>
                             </table>
+
                         </div>
                     </div>
                     
                 </div>
                 
-                @endif
+                {{-- @endif --}}
                 
             @endforeach
             
@@ -154,21 +182,23 @@
                 
             <div class="panel panel-primary" id="noMandant">
                 <div class="panel-heading">
-                     <h4 class="panel-title">
-                <a data-toggle="collapse" data-target="#collapseNoMandant" class="collapsed" href="#collapseNoMandant">
-                    Kein Mandant [{{ count($unassignedUsers) }} Benutzer]
-                </a>
-              </h4>
-        
+                     <h4 class="panel-title col-xs-12">
+                         <a data-toggle="collapse" data-target="#collapseNoMandant" class="collapsed" href="#collapseNoMandant">
+                            Kein Mandant
+                         </a>
+                     </h4>
+                      <span class="panel-options col-xs-12">
+                            <span class="panel-title">({{ count($unassignedUsers) }} Benutzer)</span>
+                       </span>             
                 </div>
                 <div id="collapseNoMandant" class="panel-collapse collapse ">
                     <div class="panel-body">
                         
                             @if(count($unassignedUsers) > 0)
-                                    <table class="table table-hover">
+                                    <table class="table">
                                     <thead>
-                                        <th>Name</th>
-                                        <th class="col-lg-1 text-center">Optionen</th>
+                                        <th class="col-md-10">Name</th>
+                                        <th class="col-md-2 text-center">Optionen</th>
                                     </thead>
                                     <tbody>
                                         
@@ -179,6 +209,7 @@
                                                     <td class="valign table-options text-center">
                                                         {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                             <input type="hidden" name="user_id" value="{{ $unassignedUser->id }}">
+                                                            
                                                             @if($unassignedUser->active)
                                                                 <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
                                                             @else

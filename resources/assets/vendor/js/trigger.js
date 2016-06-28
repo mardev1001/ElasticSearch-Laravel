@@ -44,9 +44,12 @@ $( function() {
             if( $(this).attr('href') != currentLink )
                 $(this).removeClass('active');
         });
-        
     if( (location.protocol + "//" + location.host+'/')  ==  url.href){
         $('a[href="/"]').addClass('active');
+    }
+    else if( url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1){
+        $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
+            console.log('has benuzer')        
     }
     else if(  typeof documentType !== 'undefined' && documentType.length){
         var detectHref = '/dokumente/rundschreiben';
@@ -57,7 +60,7 @@ $( function() {
             detectHref = '/dokumente/rundschreiben-qmr';
             
         else if(documentType == "News")
-            detectHref = '/dokumente/rundschreiben-news';
+            detectHref = '/dokumente/news';
             
         else if(documentType == "ISO Dokumente"){
              detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
@@ -193,22 +196,46 @@ $( function() {
     })*/
     /* End Trigger tab switch*/
     
+    /* Trigger tab destroy*/
+        $(document).on('click touch','[data-delete-variant]',function(){
+            var variantId = $(this).data('delete-variant');
+            tinymce.execCommand('mceRemoveControl', true, 'variant-'+variantId);
+            $('#variant'+variantId).remove();
+            $(this).closest('li').remove();
+             $('.nav-tabs li.active').removeClass('active');
+      	    $('.tab-content .tab-pane').removeClass('active');
+            $('.nav-tabs li').first().addClass('active'); 
+      	    $('.tab-content .tab-pane').first().addClass('active'); 
+           
+         
+        });
+    /* End Trigger tab destroy*/
+    
     /* Trigger tab creation*/
        $('.add-tab').on('click touch',function(){
            	var parent =  $(this),
            	prevNumber = $(this).closest('.parent-tabs').find('.nav-tabs li').size(),
            	nextTab = $(this).closest('.parent-tabs').find('.nav-tabs li').size()+1,
            	prevHTML = '';
+           	if( $(this).closest('.parent-tabs').find('.nav-tabs li').last().length ){
+           	    var last =$(this).closest('.parent-tabs').find('.nav-tabs li').last().data('variant');
+           	    
+           	   
+           	    if( isNaN( parseInt(last) ) == true)
+           	        nextTab = $(this).closest('.parent-tabs').find('.nav-tabs li').size()+1;
+           	    else
+           	         nextTab = parseInt(last)+1;
+           	}
            	//Check if content exists to prevent undefined error
            	if( $('#variant-'+prevNumber).length ){
            	    prevHTML = tinymce.get('variant-'+prevNumber).getContent();
            	}
            	if( $('#editor-'+prevNumber).length ){
-           	    prevHTML = tinymce.get('editor-'+prevNumber).getContent();
+           	    prevHTML = tinymce.get('editor-'+prevNumber).getContent(); 
            	}
-            console.log(prevHTML);
       	// create the tab
-      	$('<li><a href="#variation'+nextTab+'" data-toggle="tab">Variation '+nextTab+'</a></li>').appendTo('#tabs');
+      	$('<li data-variation="'+nextTab+'"><a href="#variation'+nextTab+'" data-toggle="tab">Variation '+nextTab+' <span class="fa fa-close remove-editor" data-delete-variant="'+nextTab+'"></span></a></li>')
+      	.appendTo('#tabs');
       	 
       	// create the tab content
       	$('<div class="tab-pane" id="variation'+nextTab+'"><div data-id="'+nextTab+'" id="variant-'+nextTab+'" class="editable variant-'+nextTab+'" >'+prevHTML+'</div></div>').appendTo('.tab-content');

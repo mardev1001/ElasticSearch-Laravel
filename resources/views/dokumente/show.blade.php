@@ -2,14 +2,18 @@
 
 @extends('master')
 
-@section('page-title') {{ $document->documentType->name }} - Übersicht @stop
+@section('page-title') @if( isset($document->documentType->name) ){{ $document->documentType->name }}@endif - Übersicht @stop
 
 @section('content')
 
 <div class="box-wrapper ">
     <div class="row">
-        <div class="col-lg-12">
-           <h3 class="title">{{ $document->name }}
+        <div class="col-md-12 col-lg-12">
+            @if( isset($document->name_long) && $document->name_long != '' )
+               <h3 class="title">{{ $document->name_long }}
+            @else
+               <h3 class="title">{{ $document->name }}
+            @endif
                <span class="text"><b>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{
                 trans('dokumentShow.status') }}: {{ $document->documentStatus->name }})
                 </b>
@@ -19,7 +23,7 @@
     </div>
     <div class="box">
         <div class="row">
-            <div class="col-lg-10">
+            <div class="col-sm-8 col-md-9 col-lg-10">
                 
                 <div class="clearfix"></div> 
                 
@@ -41,16 +45,28 @@
                             <p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>
                             
                             @if(!$document->pdf_upload)
-                                @foreach($document->editorVariant as $variant)
-                                <div class="variant-{{$variant->variant_number}}">
-                                    <p class="title-small">{{ trans('dokumentShow.variant') }} {{$variant->variant_number}}</p>
-                                    <p>{!! ($variant->inhalt) !!}</p>
+                                <ul class="nav nav-tabs" id="tabs">
+                                   @if( count($document->editorVariantOrderBy) ) 
+                                       @foreach( $document->editorVariantOrderBy as $k=>$variant)
+                                           <li @if($k == 0) class="active" @endif><a href="#variant{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}</a></li>
+                                       @endforeach
+                                   @endif
+                                </ul>
+                                
+                                <div class="tab-content">
+                                   @if( count($document->editorVariant) ) 
+                                       @foreach( $document->editorVariant as $v => $variant)
+                                           <div class="tab-pane @if($v == 0) active @endif" id="variant{{$variant->variant_number}}">
+                                               <div>
+                                                   {!! ($variant->inhalt) !!}
+                                               </div>
+                                            </div>
+                                       @endforeach
+                                   @endif
                                 </div>
-                                <div class="clearfix"></div>
                                
-                                @endforeach
                             @endif
-                            
+                          
                             <!-- <p>-->
                             <!--   Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi  -->
                             <!-- </p> -->
@@ -75,12 +91,22 @@
                             </div>
                             @endif
                         </div>
-                    </div>
-                </div>
-                <div class="clearfix"></div> <br>
+                      @if( count( $documentComments ) )
+                            <h3> {{ trans('dokumentShow.userCommentTitle') }} </h3>
+                             @foreach( $documentComments as $comment ) 
+                                 <b>{{ $comment->user->title }} {{ $comment->user->last_name }} -
+                                  {{ $comment->betreff }} - {{$comment->created_at}}</b><br/>
+                                 <p>{!! $comment->comment !!}</p>
+                             @endforeach
+                        
+                        @endif
+                    </div><!--end col-xs-12-->
+                </div><!--end row-->
+                <div class="clearfix"></div> 
+               
             </div>
 
-            <div class="col-lg-2 btns">
+            <div class="col-sm-4 col-md-3 col-lg-2 btns">
                 <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.deactivate') }}</button>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</button>
@@ -90,7 +116,7 @@
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</button>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.disapprove') }}</button>
                 <a href="#" class="btn btn-primary pull-right">PDF ansehen</a>
-                <button class="btn btn-primary pull-right">{{ trans('dokumentShow.download') }}</button>
+                <!--<button class="btn btn-primary pull-right">{{ trans('dokumentShow.download') }}</button>-->
                 
                 <!--<a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right"><i class="fa fa-edit"></i> {{ trans('dokumentShow.edit')}} </a>-->
                 <!--<button class="btn btn-primary pull-right"><i class="fa fa-power-off"></i> {{ trans('dokumentShow.deactivate') }}</button>-->
@@ -114,7 +140,10 @@
                             <h4 class="modal-title">{{ trans('dokumentShow.commenting') }}</h4>
                         </div>
             
-                        <form action="">
+                        {!! Form::open([
+                           'url' => '/comment/'.$document->id,
+                           'method' => 'POST',
+                           'class' => 'horizontal-form']) !!}
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label class="form-label">{{ trans('dokumentShow.subject') }}</label>
@@ -127,7 +156,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('dokumentShow.close') }}</button>
-                                <button type="button" class="btn btn-primary">{{ trans('dokumentShow.save') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ trans('dokumentShow.save') }}</button>
                             </div>
                         </form>
             

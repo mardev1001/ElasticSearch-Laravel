@@ -6,7 +6,6 @@
 
 @section('content')
 
-
 <fieldset class="form-group">
     <div class="box-wrapper">
         <h4 class="title">{{ trans('sucheForm.options') }}</h4>
@@ -111,18 +110,56 @@
                         <div class="col-xs-12 text result">
                             <div class="healine"> 
                                 <a href="{{route('dokumente.show', $document)}}" class="link">
-                                    <strong>#{{$key+1}} {{$document->documentType->name}} - {!! ViewHelper::highlightKeyword($parameter, $document->name) !!} - {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - {{ $document->date_published }} </strong> 
+                                    <strong>
+                                    @if(isset($parameter)) 
+                                        #{{$key+1}} {{$document->documentType->name}} - {!! ViewHelper::highlightKeyword($parameter, $document->name) !!} - {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - {{ $document->date_published }}
+                                    @else
+                                        #{{$key+1}} {{$document->documentType->name}} - 
+                                        
+                                        @if(old('name')) 
+                                        {!! ViewHelper::highlightKeyword(old('name'), $document->name) !!} -
+                                        @else
+                                        {!! $document->name !!} - 
+                                        @endif
+                                        
+                                        @if(old('betreff')) 
+                                        {!! ViewHelper::highlightKeyword(old('betreff'), $document->betreff) !!} -
+                                        @else
+                                        {!! $document->betreff !!} - 
+                                        @endif
+                                        
+                                        {{ $document->date_published }} 
+                                    @endif
+                                    </strong> 
                                 </a>
                             </div>
                             <div class="document-text"> 
-                                <strong class="summary">{!! ViewHelper::highlightKeyword($parameter, $document->summary) !!}</strong>
+                                <strong class="summary">
+                                    @if(isset($parameter)) 
+                                        {!! ViewHelper::highlightKeyword($parameter, $document->summary) !!}
+                                    @else
+                                        @if(old('beschreibung')) 
+                                            {!! ViewHelper::highlightKeyword(old('beschreibung'), $document->summary) !!}
+                                        @else
+                                            {!! $document->summary !!}
+                                        @endif
+                                    @endif
+                                </strong>
                                 <div class="content">
                                     @if(count($variants))
                                         @foreach($variants as $variant)
                                             @if($document->id == $variant->document_id)
                                                 <div class="document-variant">
                                                     <span class="number">Variante {{ $variant->variant_number }}:</span>
-                                                    {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
+                                                    @if(isset($parameter)) 
+                                                        {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
+                                                    @else
+                                                        @if(old('inhalt')) 
+                                                            {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
+                                                        @else
+                                                            {!! $variant->inhalt !!}
+                                                        @endif
+                                                    @endif
                                                 </div>
                                             @endif
                                         @endforeach

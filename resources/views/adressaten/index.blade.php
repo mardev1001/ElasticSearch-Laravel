@@ -42,10 +42,10 @@
                     @foreach($adressate as $adressat)
                     <div class="row">
                         {!! Form::open(['route' => ['adressaten.update', 'adressaten'=> $adressat->id], 'method' => 'PATCH']) !!}
-                        <div class="col-xs-12 col-md-5">
+                        <div class="col-xs-12 col-md-6 col-lg-5">
                              <input type="text" class="form-control" name="name" value="{{ $adressat->name }}" placeholder="Name"/>
                         </div>
-                        <div class="col-xs-12 col-md-5">
+                        <div class="col-xs-12 col-md-6 col-lg-5">
                             
                             @if($adressat->active)
                                 <button class="btn btn-success" type="submit" name="activate" value="1">{{ trans('adressatenForm.active') }}</button>

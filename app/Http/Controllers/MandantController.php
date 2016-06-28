@@ -43,7 +43,6 @@ class MandantController extends Controller
         $mandants = Mandant::all();
         $users = User::all();
         $mandantUsers = MandantUser::all();
-        
         $unassignedUsers = array();
         foreach($users as $user){
             $result = MandantUser::where('user_id', $user->id)->get();
@@ -164,7 +163,18 @@ class MandantController extends Controller
      */
     public function mandantActivate(Request $request)
     {
-        Mandant::find($request->input('mandant_id'))->update(['active' => !(bool)$request->input('active')]);
+        
+        $mandant = Mandant::find($request->input('mandant_id'))->update(['active' => !(bool)$request->input('active')]);
+        $users = Mandant::find($request->input('mandant_id'))->users;
+        /*Deactivate all users which are not in another company*/
+        foreach($users as $user){
+            $userMandants = MandantUser::where('user_id',$user->id)->count();
+            if($userMandants < 2){
+                $user->active = 0;
+                $user->save();
+            }
+        }
+        /* End Deactivate all users which are not in another company*/
         return back()->with(['message'=>trans('mandantenForm.saved')]);
     }
 

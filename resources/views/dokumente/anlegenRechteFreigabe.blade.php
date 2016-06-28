@@ -48,12 +48,19 @@
                                <div class="form-group">
                                   <label>{{ trans('rightsRelease.roles') }}</label>
                                     <select name="roles[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.roles') }}" multiple>
-                                        @if($data->approval_all_roles == true)
+                                        @if( $data->approval_all_roles == true )
                                             <option value="0"></option>
                                             <option value="Alle" selected>Alle</option>
                                             @foreach($roles as $role)
                                             <option value="{{$role->id}}">{{ $role->name }}</option>
                                             @endforeach
+                                        @elseif(ViewHelper::countComplexMultipleSelect($data->editorVariant,'documentMandantRoles')  == false)
+                                            <option value="0"></option>
+                                            <option value="Alle" selected>Alle</option>
+                                            @foreach($roles as $role)
+                                            <option value="{{$role->id}}">{{ $role->name }}</option>
+                                            @endforeach
+                                      
                                         @else
                                             <option value="0"></option>
                                             <option value="Alle">Alle</option>
@@ -76,11 +83,15 @@
                             <div class="col-xs-12 col-md-6">
                                     <div class="form-group">
                                         <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
-                                      
-                                       
                                         <select name="variante-{{$k+1}}[]" class="form-control select" 
                                          data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" multiple>
                                             @if($variant->approval_all_mandants == true)
+                                                <option value="0"></option>
+                                                <option value="Alle" selected>Alle</option>
+                                                 @foreach( $mandants as $mandant)
+                                                    <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
+                                                @endforeach
+                                            @elseif( ViewHelper::countComplexMultipleSelect($variant,'documentMandantMandants',true) == false )
                                                 <option value="0"></option>
                                                 <option value="Alle" selected>Alle</option>
                                                  @foreach( $mandants as $mandant)

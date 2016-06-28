@@ -170,6 +170,10 @@ class UserController extends Controller
      */
     public function userMandantRoleAdd(Request $request)
     {
+        $checkMandant =  MandantUser::where('mandant_id',$request->get('mandant_id'))->count();
+        if( $checkMandant > 0)
+             return back()->with('message', 'Dieser Mandant ist dem Benutzer bereits zugeordnet.');
+        
         $mandantUser = MandantUser::create($request->all());
         
         foreach($request->input('role_id') as $roleId){
@@ -220,8 +224,9 @@ class UserController extends Controller
      */
     public function userActivate(Request $request)
     {
+      
         User::find($request->input('user_id'))->update(['active' => !$request->input('active')]);
-        return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
+        return back()->with('message', 'Benutzer erfolgreich aktualisiert.')->with('mandantChanged',$request->get('mandant_id'));
     }
     
 

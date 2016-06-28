@@ -69,7 +69,45 @@
     <br>
 
     <div class="row">
+        
         <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Meine Dokumente</h1>
+                <div class="box home">
+                    <div class="tree-view" data-selector="documentsMy">
+                        <div class="documentsMy hide">
+                            {{ $documentsMyTree }}
+                        </div>
+                    </div>
+                </div>
+                  <div class="text-center">
+                    {!! $documentsMy->render() !!}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Dokumente im Freigabeprozess</h1>
+                <div class="box home">
+                    <div class="tree-view" data-selector="freigabeEntries">
+                        <div class="freigabeEntries hide">
+                            {{ $freigabeEntriesTree }}
+                        </div>
+                    </div>
+                </div>
+                  <div class="text-center">
+                    {!! $freigabeEntries->render() !!}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    
+    <div class="clearfix"></div><br>
+    
+    <div class="row">
+        <div class="col-xs-12">
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Neue Wiki-Einträge</h1>
                 <div class="box home">
@@ -86,27 +124,8 @@
                 </div>
             </div>
         </div>
-
-        <div class="col-xs-12 col-md-6 ">
-            <div class="col-xs-12 box-wrapper home">
-                <h1 class="title">Meine Dokumente</h1>
-                <div class="box home">
-                    <div class="tree-view" data-selector="documentsMy">
-                        <div class="documentsMy hide">
-                            {{ $documentsMyTree }}
-                        </div>
-                    </div>
-                </div>
-                  <div class="text-center">
-                    {!! $documentsMy->render() !!}
-                </div>
-            </div>
-        </div>
     </div>
-    
-    
     <div class="clearfix"></div><br>
-    
     
     <div class="row">
         <div class="col-xs-12">

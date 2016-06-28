@@ -83,7 +83,7 @@
                             @if($documentType->active)
                             
                                 @if($documentType->id == 1)
-                                    <li> <a href="{{ url('dokumente/rundschreiben-news') }}">{{ $documentType->name }}</a> </li>
+                                    <li> <a href="{{ url('dokumente/news') }}">{{ $documentType->name }}</a> </li>
                                 @elseif($documentType->id == 2)
                                     <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
                                 @elseif($documentType->id == 3)
@@ -207,7 +207,7 @@
                         <span class="legend-icons icon-read"></span>
                     </li>
                     <li>
-                        <span class="legend-text">Unveröffentlicht</span>
+                        <span class="legend-text">Nicht veröffentlicht</span>
                         <span class="legend-icons icon-notreleased"></span>
                     </li>
                     <li>

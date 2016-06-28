@@ -14,7 +14,7 @@ class CreateWikiPageStatusesTable extends Migration
     {
         Schema::create('wiki_page_statuses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('menu_name',50);  
+            $table->string('name',50);  
             $table->timestamps();
         });
     }

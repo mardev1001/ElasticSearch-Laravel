@@ -27,5 +27,7 @@ return [
     'attachments' => 'Anhänge',
     'content' => 'Inhalte',
     'download' => 'Download',
+    'userCommentTitle' => 'Kommentare Benutzer',
+    'CommentTitle' => 'Kommentare Freigeber',
     
 ];

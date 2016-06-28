@@ -17,16 +17,16 @@
          <div class="box">
               <div class="box-header">
                   <div class="row">
-                    <div class="col-lg-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></div>
-                    <div class="col-lg-3"><strong>{{ trans('dokumentTypenForm.document_art') }}</strong></div>
-                    <div class="col-lg-3"><strong>{{ trans('dokumentTypenForm.document_role') }}</strong></div>
-                    <div class="col-lg-3"></div>
-                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></div>
+                    <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.document_art') }}</strong></div>
+                    <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.document_role') }}</strong></div>
+                    <div class="col-lg-3 col-md-3"></div>
+                    <div class="col-lg-12"></div>
                 </div>
              </div>
             <div class="row">
                 <!-- input box-->
-                <div class="col-lg-3"> 
+                <div class="col-md-3 col-lg-3"> 
                     <div class="form-group">
                         <div class="form-group">
                             <input type="text" name="name" class="form-control" placeholder="{{ trans('dokumentTypenForm.name') }}*" value="" required />
@@ -34,7 +34,7 @@
                        
                     </div>
                 </div><!--End input box-->
-                <div class="col-lg-3"> 
+                <div class="col-md-3 col-lg-3"> 
                     <div class="radio no-margin-top">
                         <label><input type="radio" name="document_art" value="0" checked>{{ trans('dokumentTypenForm.editor') }}</label>
                     </div>
@@ -42,7 +42,7 @@
                         <label><input type="radio" name="document_art" value="1">{{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}</label>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-md-3 col-lg-3">
                     <div class="radio no-margin-top">
                         <label><input type="radio" name="document_role" value="0" checked>{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.verfasser') }}</label>
                     </div>
@@ -50,7 +50,7 @@
                         <label><input type="radio" name="document_role" value="1">{{ trans('dokumentTypenForm.rundschreiben') }} {{ trans('dokumentTypenForm.verfasser') }}</label>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-md-3 col-lg-3">
                     <div class="checkbox no-margin-top">
                        <input type="checkbox" name="read_required" id="read_required-0"><label for="read_required-0">{{ trans('dokumentTypenForm.read_required') }}</label>
                     </div>

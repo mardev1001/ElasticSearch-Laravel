@@ -180,6 +180,33 @@ class ViewHelper
     }
     
     /**
+     * Function that sets "Alle" if no database records found
+     *
+     * @param object array $userValues
+     * @param string $value
+     * @return bool $hasRecords
+     */ 
+    static function countComplexMultipleSelect($collection,$relationship,$oneLessForeach=false){
+        $hasRecords = false;
+        if($oneLessForeach == false){
+            if( count($collection) )
+            foreach($collection as $col){
+                if( count($col->$relationship) > 0 ){
+                      $hasRecords = true;
+                }  
+            }
+        }
+        else{
+            if( count($collection->$relationship) > 0 ){
+                     
+                        $hasRecords = true;
+                
+            }
+        }
+        return $hasRecords;
+    }
+    
+    /**
      * Echo required font awesome asterisk 
      *
      * @echo string 

@@ -23,6 +23,8 @@ use App\DocumentMandantRole;
 use App\DocumentUpload;
 use App\DocumentApproval;
 use App\DocumentStatus;
+use App\DocumentComment;
+use App\PublishedDocument;
 use App\Role;
 use App\IsoCategory;
 use App\User;
@@ -313,6 +315,7 @@ class DocumentController extends Controller
      */
     public function documentEditor(Request $request)
     {
+        
         $model = Document::find($request->get('model_id'));
         if($model == null){
             
@@ -331,6 +334,7 @@ class DocumentController extends Controller
             $model->save();
         }
         
+        $savedVariantIds= array();
         //check if has varianttfirstcount
         foreach($request->all() as $k => $v)
             if (strpos($k, 'variant-') !== false){
@@ -344,11 +348,21 @@ class DocumentController extends Controller
                 $editorVariant->inhalt = $v;
                 $dirty=$this->dirty($dirty,$editorVariant);
                 $editorVariant->save();
+                $savedVariantIds[] = $editorVariant->variant_number;
             }
-        
-        
+            
+            /*If some variant are removed*/
+             $removeEditors = EditorVariant::where('document_id',$id)->whereNotIn('variant_number',$savedVariantIds)->get();
+            //  dd($removeEditors);
+            foreach( $removeEditors as $editor){
+                if($editor->deleted_at == null)
+                    $editor->delete();
+            }
+            
+            /*end some variant are removed*/
          if($dirty == true)
             session()->flash('message',trans('documentForm.documentEditorCreateSuccess'));
+        
         if( $request->has('save') ){
             $adressats = Adressat::where('active',1)->get();
             $setDocument = $this->document->setDocumentForm( $data->document_type_id, $data->pdf_upload  );
@@ -475,8 +489,18 @@ class DocumentController extends Controller
                 Option 2: create a new Vorlagedokument and add it as an attachment
             */
             $dt = DocumentType::find(  $this->formulareId = $this->formulareId);//vorlage document
-            RequestMerge::merge(['version' => 1, 'document_type_id' => $dt->id] );
+            RequestMerge::merge(['version' => 1, 'document_type_id' => $dt->id,'is_attachment'=> 1] );
             
+            
+            if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0" ){
+                $coauthors = $request->input('document_coauthor');
+                foreach($coauthors as $coauthor)
+                    if( $coauthor != '0');
+                        DocumentCoauthor::create(['document_id'=> $lastId->id, 'user_id'=> $coauthor]);
+            }
+          
+            
+        
             /*Create a new document*/
             $data = Document::create($request->all() );
             $lastId = Document::orderBy('id','DESC')->first();
@@ -527,12 +551,7 @@ class DocumentController extends Controller
             $docType = DocumentType::find( $request->get('document_type_id') );
             
             
-            if($request->has('document_coauthor')){
-                $coauthors = $request->input('document_coauthor');
-                foreach($coauthors as $coauthor)
-                   if( $coauthor != '0');
-                    DocumentCoauthor::create(['document_id'=> $lastId->id, 'user_id'=> $coauthor]);
-            }
+            
             
             $backButton = '/dokumente/'.$data->id.'/edit';
             
@@ -600,6 +619,7 @@ class DocumentController extends Controller
      */
     public function saveRechteFreigabe(Request $request,$id)
     {
+        // dd($request->all());
         $document = Document::find($id);
         if($request->get('roles')!= null && in_array('Alle',$request->get('roles') ) ){
             $document->approval_all_roles = 1; 
@@ -655,6 +675,7 @@ class DocumentController extends Controller
                              $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->delete();
                         }
                      }//end foreach
+                     
                      /* End Fix where where variant is Alle and roles different from All*/
                 }
                 else{
@@ -824,6 +845,14 @@ class DocumentController extends Controller
             $dirty=$this->dirty($dirty,$document);
             $document->save();
             
+            if( $request->has('approval_users') ){
+                $approvals = DocumentApproval::where('document_id',$id)->delete();
+                foreach( $request->get('approval_users') as $approvalUser ){
+                    $approvalUser = DocumentApproval::create( array('document_id'=>$id,'user_id'=>$approvalUser ) );
+                    $dirty = true;
+                }
+            }
+            
             if($dirty == true)
                 session()->flash('message',trans('documentForm.askPublishers'));
             return redirect('/');
@@ -840,7 +869,7 @@ class DocumentController extends Controller
            
     }
     
-
+    
     /**
      * Display the specified resource.
      *
@@ -850,7 +879,8 @@ class DocumentController extends Controller
     public function show($id)
     {
         $document = Document::find($id);
-        return view('dokumente.show', compact('document') );
+        $documentComments = DocumentComment::where('document_id',$id)->get();
+        return view('dokumente.show', compact('document','documentComments') );
     }
 
     /**
@@ -935,7 +965,53 @@ class DocumentController extends Controller
         //
     }
     
-       /**
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function saveComment(Request $request, $id)
+    {
+        RequestMerge::merge(['document_id'=>$id,'user_id' => Auth::user()->id,'active' => null,'freigeber'=>null] );
+        // dd( $request->all() );
+        $comment =  DocumentComment::create( $request->all() );
+        
+        session()->flash('message',trans('documentForm.savedComment'));
+        
+        return redirect('dokumente/'.$id);
+       
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function authorizeDocument($id)
+    {
+        $document = Document::find($id);
+        $user = Auth::user()->id;
+        $document->document_status_id = 3; 
+        $document->save();
+        $continue = true;
+        $uniqeUrl = '';
+        while ($continue) {
+            $uniqeUrl = $this->generateUniqeLink();
+            if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                $continue = false;
+        }
+        $documentApproval = DocumentApproval::where('document_id', $id)->where('user_id',$user)->first();
+        $documentApproval->approved = 1;
+        $documentApproval->date_approved = Carbon::now();
+        $documentApproval->save();
+        $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,'url_unique'=>$uniqeUrl]);
+        session()->flash('message',trans('documentForm.authorized'));
+        return redirect('/');
+    }
+    
+     /**
      * Display the specified resource.
      *
      * @return \Illuminate\Http\Response
@@ -994,11 +1070,11 @@ class DocumentController extends Controller
      */
     public function rundschreibenNews()
     {
-        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben-news');
+        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-news');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
         $rundschreibenMeine = Document::where('user_id',Auth::user()->id)
         ->where('document_type_id', $this->newsId )->orderBy('id', 'desc')
-        ->take(10)->paginate(10, ['*'], 'meine-rundschreiben-news');
+        ->take(10)->paginate(10, ['*'], 'meine-news');
         $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
         return view('dokumente.rundschreibenNews', compact('rundschreibenAll','rundschreibenAllTree','rundschreibenMeine','rundschreibenMeineTree') );
@@ -1221,12 +1297,18 @@ class DocumentController extends Controller
      * detect if model is dirty or not
      * @return bool 
      */
-    private function generateUniqeLink($dirty,$model){
-        if( $model->isDirty() ||  $dirty == true )
-            return true;
-        return false;
+    private function generateUniqeLink($length=6){
+        $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+    $pass = array(); //remember to declare $pass as an array
+    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+    for ($i = 0; $i < $length; $i++) {
+        $n = rand(0, $alphaLength);
+        $pass[] = $alphabet[$n];
+    }
+    return implode($pass); //turn the array into a string
+// 	return $randStr; // Return the string
        
     }
     
-    
+   
 }

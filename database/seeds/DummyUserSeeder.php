@@ -71,6 +71,20 @@ class DummyUserSeeder extends Seeder
                 'active' => 1,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'email_reciever' => 1,
+                'email' => 'verena@webbite.de',
+                'username' => 'verena',
+                'username_sso' => 'verena',
+                'password' => bcrypt('webbite123'),
+                'title' => 'Frau',
+                'short_name' => 'Verena',
+                'first_name' => 'Verena',
+                'last_name' => 'Rometsch',
+                'active' => 1,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
             ]
         ]
 
@@ -104,6 +118,13 @@ class DummyUserSeeder extends Seeder
             [
                 'mandant_id' => 1,
                 'user_id' => 4,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+
+            ],
+            [
+                'mandant_id' => 1,
+                'user_id' => 5,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")
 
@@ -154,6 +175,18 @@ class DummyUserSeeder extends Seeder
             ],
             [
                 'mandant_user_id' => 4,
+                'role_id' => 10,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 5,
+                'role_id' => 8,
+                'created_at' => date("Y-m-d H:i:s"),
+                'updated_at' => date("Y-m-d H:i:s")
+            ],
+            [
+                'mandant_user_id' => 5,
                 'role_id' => 10,
                 'created_at' => date("Y-m-d H:i:s"),
                 'updated_at' => date("Y-m-d H:i:s")

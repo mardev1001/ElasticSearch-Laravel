@@ -14,6 +14,6 @@
         	 @endif
             >
     <label for="{{$inputName}}">
-        {{ ucfirst($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif
+        {{ ($label) }} @if( $required !=false ) {!! ViewHelper::asterisk() !!} @endif
     </label>
 </div>

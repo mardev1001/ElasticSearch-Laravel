@@ -16,10 +16,11 @@ Route::group( array('middleware' => ['auth']), function(){
         
         Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
         
+        Route::get('dokumente/authorize/{id}', 'DocumentController@authorizeDocument');
         Route::get('dokumente/rundschreiben', 'DocumentController@rundschreiben');
         Route::get('dokumente/rundschreiben-pdf', 'DocumentController@rundschreibenPdf');
         Route::get('dokumente/rundschreiben-qmr', 'DocumentController@rundschreibenQmr');
-        Route::get('dokumente/rundschreiben-news', 'DocumentController@rundschreibenNews');
+        Route::get('dokumente/news', 'DocumentController@rundschreibenNews');
         Route::get('dokumente/vorlagedokumente', 'DocumentController@documentTemplates');
         Route::get('dokumente/dokument-typen', 'DocumentController@documentType');
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
@@ -37,6 +38,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
+        Route::post('comment/{id}', 'DocumentController@saveComment');
         
         // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
         Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles-add', 'uses' => 'MandantController@createInternalMandantUser']);

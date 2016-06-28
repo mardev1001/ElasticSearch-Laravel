@@ -18,9 +18,9 @@
             <div class="col-lg-4"> 
                 <div class="form-group">
                     <label class="control-label"> {{ ucfirst(trans('documentForm.status')) }} </label>
-                    <select name="status" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.status')) }}" disabled>
+                    <select name="status_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.status')) }}" disabled>
                         @foreach($documentStatus as $status)
-                            <option value="{{$status->id}}"> 
+                            <option value="{{$status->id}}" @if($status->id == 1) selected @endif> 
                                 {{ $status->name }}
                             </option>
                         @endforeach
@@ -73,13 +73,14 @@
             <div class="clearfix"></div>
             
             <div class="col-xs-12 col-md-6">
-                <label>{{ trans('rightsRelease.approver') }}*</label>
-                <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.approver') }}" multiple>
-                    <option value="0"></option>
-                    @foreach($mandantUsers as $mandatUser)
-                    <option value="{{$mandatUser->id}}"
-                            {!! ViewHelper::setMultipleSelect($data->documentApprovals, $mandatUser->id, 'user_id') !!}
-                            >{{ $mandatUser->first_name }} {{ $mandatUser->last_name }}</option>
+                <label>{{ trans('wiki.roles') }}*</label>
+                <select name="wiki_roles[]" class="form-control select" data-placeholder="{{ trans('wiki.roles') }}">
+                    @foreach($wikiStatuses as $status)
+                    <option value="{{$status->id}}">
+                        {{ $status->name }}</option>
                     @endforeach
                 </select>
             </div>
+            
+            <div class="clearfix"></div>
+            <br/>

@@ -23,5 +23,6 @@ return [
     'documentUpload' => 'Dokument (Vorlagedokument/ Datei Upload)',
     'pdfUpload' => 'Dokument erstellen',
     'editor' => 'Dokument erstellen',
+    'wiki' => 'Wiki',
 
 ];

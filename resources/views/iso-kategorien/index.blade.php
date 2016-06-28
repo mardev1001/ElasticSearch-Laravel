@@ -15,12 +15,12 @@
             
             {!! Form::open(['route' => 'iso-kategorien.store']) !!}
                 <div class="row">
-                    <div class="col-lg-4"> 
+                    <div class="col-md-6 col-lg-4"> 
                         <div class="form-group">
                             {!! ViewHelper::setInput('name', '', old('name'), trans('isoKategorienForm.name'), trans('isoKategorienForm.name'), true) !!} 
                          </div> 
                     </div>
-                    <div class="col-lg-4"> 
+                    <div class="col-md-6 col-lg-4"> 
                         <div class="checkbox">
                             <input class="hide-input" id="hide-input" data-hide-target="iso-categories" data-disable-target="iso-categories" type="checkbox" name="parent"/>
                             <label for="hide-input">{{ trans('isoKategorienForm.parent-category') }}</label>
@@ -29,7 +29,7 @@
                 </div>
                 <div class="row">
                     <div class="form-group no-margin-bottom" data-hide="iso-categories">
-                         <div class="col-lg-4"> 
+                         <div class="col-md-6 col-lg-4"> 
                             <label>{{ trans('isoKategorienForm.parent-category') }}</label>
                            
                             <select name="category_id" class="form-control select" data-disable="iso-categories" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
@@ -42,7 +42,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-2 custom-input-group-btn"> 
+                    <div class="col-md-6 col-lg-2 custom-input-group-btn"> 
                        <button class="btn btn-primary no-margin-bottom">{{ trans('isoKategorienForm.add') }} </button>
                     </div>
                 </div>

@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-
 use App\Http\Repositories\SearchRepository;
 
 use App\Document;
@@ -147,7 +146,11 @@ class SearchController extends Controller
      */
     public function searchAdvanced(Request $request)
     {
-     
+        // dd($request);
+        $emptySearch = true;
+        $inputs = $request->all();
+        foreach ($inputs as $input) if(!empty($input)) $emptySearch = false;
+        
         $results = array();
         $variants = array();
         $documentTypes = DocumentType::all();
@@ -172,30 +175,31 @@ class SearchController extends Controller
         if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
         if(!empty($betreff))  $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
         if(!empty($summary))  $documents->where('summary', 'LIKE', '%'.$summary.'%' );
+        if(!empty($document_type))  $documents->where('document_type_id', 'LIKE', '%'.$document_type.'%' );
         if(!empty($search_tags))  $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
         if(!empty($date_from))  $documents->whereDate('created_at', '>=', $date_from );
         if(!empty($date_to))  $documents->whereDate('created_at', '<=', $date_to );
         
         $documents = $documents->get();
-              
-        // dd($documents);
+         
+        if(!empty($inhalt)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
         
-        // $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
+        foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
         
-        // foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+        if(count($variants)){
+            foreach ($variants as $variant){
+                if(!in_array($variant->document, $results)) 
+                    array_push($results, $variant->document);
+            }
+        } else {
+            $variants = EditorVariant::all();
+        }
         
-        // if(count($variants)){
-        //     foreach ($variants as $variant){
-        //         if(!in_array($variant->document, $results)) 
-        //             array_push($results, $variant->document);
-        //     }
-        // } else {
-        //     $variants = EditorVariant::all();
-        // }
+        $request->flash();
         
-        // dd($request);
-        // return view('suche.erweitert')->withInput($request->all());
-        return view('suche.erweitert', compact('results','documentTypes'))->withInput($request->all());
+        if($emptySearch) $results = null;
+        
+        return view('suche.erweitert', compact('results', 'variants', 'documentTypes'));
     }
 
     /**

@@ -35,5 +35,6 @@ return [
     'search'                => 'Suchen',
     'advanced_search'       => 'Erweiterte Suche',
     'search_placeholder'    => 'Betreff, Titel',
+    'newsSearchPlaceholder' => 'Titel, Stichwörter',
 
 ];

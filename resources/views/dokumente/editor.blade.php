@@ -8,7 +8,7 @@
             <div class="col-lg-5"> 
                 <div class="form-group">
                     {!! ViewHelper::setSelect($adressats,'adressat_id',$data,old('adressat_id'),
-                            trans('documentForm.adressat'), trans('documentForm.adressat'), true ) !!}
+                            trans('documentForm.adressat'), trans('documentForm.adressat') ) !!}
                 </div>   
             </div><!--End input box-->
             
@@ -45,9 +45,10 @@
     </div>
     
     <ul class="nav nav-tabs" id="tabs">
-       @if( count($data->editorVariant) ) 
-           @foreach( $data->editorVariant as $variant)
-               <li><a href="#variant{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}</a></li>
+       @if( count($data->editorVariantOrderBy) ) 
+           @foreach( $data->editorVariantOrderBy as $variant)
+               <li data-variant="{{$variant->variant_number}}"><a href="#variant{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}
+               <span class="fa fa-close remove-editor" data-delete-variant="{{ $variant->variant_number }}"></span> </a></li>
            @endforeach
        @endif
     </ul>
@@ -69,7 +70,6 @@
 
 	
 <div class="clearfix"></div>
-
   @if( count($data->editorVariant) ) 
       @section('script')
         <script type="text/javascript">

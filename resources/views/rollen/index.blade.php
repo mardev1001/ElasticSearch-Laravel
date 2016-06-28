@@ -13,12 +13,12 @@
                 <!-- input box-->
                     {!! Form::open(['route' => 'rollen.store']) !!}
                         <div class="col-xs-12"><div class="add-border-bottom"><strong>Rolle Anlegen</strong></div></div>
-                        <div class="col-lg-4">
+                        <div class="col-md-5 col-lg-4">
                             <div class="form-group">
                                 {!! ViewHelper::setInput('name', '', old('name'), trans('rollenForm.name'), trans('rollenForm.name'), true) !!} 
                             </div>
                         </div>
-                        <div class="col-lg-4"> 
+                        <div class="col-md-5 col-lg-4"> 
                             <div class="form-group">
                                 <label>{{ trans('rollenForm.rights') }}</label>
                                 <select name="role[]" class="form-control select" data-placeholder="{{ trans('rollenForm.rights') }}" multiple>
@@ -34,7 +34,7 @@
                         <div class="clearfix"></div>
                         
                         <div class="col-xs-12"><div class="add-border-bottom"><strong>{{ trans('rollenForm.rights') }} {{ trans('rollenForm.copy') }}</strong><br></div></div>
-                        <div class="col-lg-4">
+                        <div class="col-md-5 col-lg-4">
                             <div class="form-group">
                                 <label>{{ trans('rollenForm.documents') }}</label>
                                 <select name="role_copy" class="form-control select" data-placeholder="{{ trans('rollenForm.documents') }}">
@@ -42,7 +42,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-lg-4"> 
+                        <div class="col-md-5 col-lg-4"> 
                             <div class="form-group">
                                 <label>{{ trans('rollenForm.wiki') }}</label>
                                 <select name="wiki_copy" class="form-control select" data-placeholder="{{ trans('rollenForm.wiki') }}">
@@ -52,7 +52,7 @@
                         </div>
                         <div class="clearfix"></div>
                         
-                        <div class="col-lg-3">     
+                        <div class="col-md-3 col-lg-3">     
                             <br><button class="btn btn-primary">{{ trans('rollenForm.add') }} </button>
                         </div>
                     {!! Form::close() !!}

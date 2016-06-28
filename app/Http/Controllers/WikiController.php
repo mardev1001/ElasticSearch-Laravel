@@ -5,6 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Requests\DocumentRequest;
+
+use App\WikiPage;
+use App\WikiPageStatus;
+use App\WikiPageRole;
+use App\WikiPageHistory;
 
 class WikiController extends Controller
 {
@@ -26,7 +32,9 @@ class WikiController extends Controller
     public function create()
     {
         $data = array();
-        return view('formWrapper', compact('data') );
+        $wikiStatuses = WikiPageStatus::all();
+        $wikiRoles = WikiPageRole::all();
+        return view('formWrapper', compact('data','wikiStatuses','wikiRoles') );
     }
 
     /**
@@ -37,7 +45,11 @@ class WikiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //auto date
+        //auto update
+        dd( $request->all() );
+        $wiki = WikiPage::create( $request->all() );
+        
     }
 
     /**

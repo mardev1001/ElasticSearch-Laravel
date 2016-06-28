@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'baseInfo' => 'Basisinfos',
+    'baseInfo' => 'Basis Informationen',
     'title' => 'Anrede',
     'username' => 'Benutzername',
     'username_sso' => 'Single Sign ON - Name',
@@ -12,7 +12,7 @@ return [
     'short_name' => 'Kurzname',
     'birthday' => 'Geburtsdatum',
     'email' => 'E-Mail',
-    'email_reciever' => 'E-Mail Empfang',
+    'email_reciever' => 'E-Mails empfangen',
     'picture' => 'Foto',
     'roleTransfer' => 'Rollenübertragung',
     'mandant' => 'Mandant',
@@ -31,7 +31,7 @@ return [
     'active_to' => 'Aktiv bis',
     'search' => 'Suche',
     'save' => 'Speichern',
-    'reset' => 'Zurückstellen',
+    'reset' => 'Zurücksetzen',
     'phone' => 'Telefon',
     'phone_short' => 'Kurzwahl',
     

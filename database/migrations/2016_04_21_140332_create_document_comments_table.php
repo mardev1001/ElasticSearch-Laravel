@@ -16,10 +16,10 @@ class CreateDocumentCommentsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();//FK
             $table->integer('document_id')->unsigned();//FL
-            $table->boolean('freigeber');
+            $table->boolean('freigeber')->nullable()->default(0);
             $table->string('betreff');
             $table->text('comment');
-            $table->boolean('active');
+            $table->boolean('active')->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

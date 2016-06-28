@@ -3,7 +3,7 @@
             <div class="row">
             {{ Form::open(['route' => ['mandant.internal-roles-add', $data->id], 'method'=>'POST', 'class' => 'add-internal-role']) }}
             
-                <div class="col-lg-4"> 
+                <div class="col-md-6 col-lg-4"> 
                     <div class="form-group">
                         
                         <label>{{ trans('mandantenForm.role-zuordnung') }}</label>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 
-                <div class="col-lg-4"> 
+                <div class="col-md-6 col-lg-4"> 
                     <div class="form-group">
                         <label>&nbsp;</label>
                         <select name="user_id" class="form-control select" data-placeholder="Mitarbeiter auswählen *">
@@ -30,7 +30,7 @@
                     </div>   
                 </div>
                 
-                <div class="col-lg-4">
+                <div class="col-md-6 col-lg-4">
                     <div class="form-group custom-input-group-btn">
                         <button class="btn btn-primary" type="submit" name='role-create' value="1">{{ trans('mandantenForm.add') }}</button>
                     </div>
@@ -43,7 +43,7 @@
     <div class="clearfix"></div>
     
     {{ Form::open(['route' => ['mandant.internal-roles-edit', $data->id], 'method'=>'POST', 'id' => 'internal-role-'.$internalUser->id, 'class' => 'edit-internal-role']) }}
-        <div class="col-lg-4"> 
+        <div class="col-md-6 col-lg-4"> 
             <div class="form-group">
                 <!--<label class="control-label">{{ trans('mandantenForm.role') }}*</label>-->
                 <select name="role_id" class="form-control select" data-placeholder="Rolle wählen *" required >
@@ -55,7 +55,7 @@
             </div>   
         </div>
         
-        <div class="col-lg-4"> 
+        <div class="col-md-6 col-lg-4"> 
             <div class="form-group">
                 <!--<label class="control-label">{{ trans('mandantenForm.user') }}*</label>-->
                 <select name="user_id" class="form-control select" data-placeholder="Mitarbeiter auswählen *">
@@ -69,7 +69,7 @@
             </div>   
         </div>
         
-        <div class="col-lg-4">
+        <div class="col-md-6 col-lg-4">
             <div class="form-group">
                 <input type="hidden" name="internal_mandant_user_id" value="{{$internalUser->id}}">
                 <button class="btn btn-danger delete-prompt" type="submit" name='role-delete' value="1">{{ trans('mandantenForm.remove') }}</button>

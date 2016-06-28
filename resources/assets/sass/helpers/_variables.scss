@@ -83,12 +83,13 @@ $nav-background-opacity: rgba(137,203,151,0.95);
 $primary-border-color: $primary-color;
 $secondary-border-color: $secondary-color;
 
-$text-primary: #606060;
+// $text-primary: #606060; old
+$text-primary: #575756;
 $text-secondary: $secondary-color;
 $text-ivory: $third-color;
 
 $arial-font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
-$base-font-size: 14px;
+$base-font-size: 12px;
 $h1-font-size: 40px;
 $h2-font-size: 24px;
 /* Colors variables - start */
@@ -100,21 +101,27 @@ $black-color: #000;
 
 $body-background-color: #fff;
 $footer-background-color: #2f2f2f;
-$dark-blue: #0e1e6d;
-$grey: #606060;
+$dark-blue: #0154BB; // $dark-blue: #0e1e6d; old
+// $grey: #606060; old
+$grey: #575756;
 $nav-light-grey: #efefef;
-$nav-grey: #b6b6b6;
-$nav-blue-active: #0e1e6d;
+// $nav-grey: #b6b6b6; old
+$nav-grey: #575756;
+// $nav-blue-active: #0e1e6d; old
+$nav-blue-active: $dark-blue;
 $box-grey-wrapper: #f4f4f4;
 
-$primary-btn-color: #394686;
+// $primary-btn-color: #394686; old
+$primary-btn-color: #0154BB;
 $border-color: #efefef;
 
 $box-inner-color: #fdfdfd;
 
 $border-form-control: #b6b6b6;
 $form-control-color: $grey;
-$placeholder-color: #b6b6b6;
+// $placeholder-color: #b6b6b6;
+$placeholder-color: #9d9d9c;
+$nav-light-color: #9d9d9c;
 /* Select - color, style */
 
 /* Font - primary font family */

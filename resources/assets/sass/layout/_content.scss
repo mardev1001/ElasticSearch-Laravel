@@ -3,6 +3,9 @@
     padding-bottom: 30px;
     margin-top: 0px;
 }
+
+
+
 .panel-heading a:not(.no-arrow):after {
     content: " ";
     background: url("/img/icons/arrow_dark_down.png") no-repeat;
@@ -20,10 +23,13 @@
     height: 21px;
     margin-top: 0px;
 }
-.panel-heading span .btn{
-    margin-top:-4px;
-}
+// .panel-heading span .btn{
+//     margin-top:-4px;
+// }
 
+.panel-heading a {
+    line-height: 22px;
+}
 .panel-collapse {
     background-color: $box-grey-wrapper;
     padding: 0 15px 15px 15px;
@@ -98,7 +104,7 @@ h1.page-title {
 .title, .modal-title {
     font-family: $arial-font-family;
     color: $dark-blue;
-    font-size: 24px;
+    font-size: 20px;
     text-transform: normal;
     line-height: 22px;
     font-weight: bold;
@@ -146,13 +152,18 @@ h1.page-title {
 ,
 #page-wrapper .panel-title > a, #page-wrapper .panel-title > small, 
 #page-wrapper .panel-title > .small, #page-wrapper .panel-title > small > a,
-#page-wrapper .panel-title > .small > a {
+#page-wrapper .panel-title > .small > a, #page-wrapper .panel-title .col-xs-6 > a , #page-wrapper .panel-title .col-xs-7 > a {
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
-    color: #0e1e6d;
-    font-size: 24px;
+    color: $dark-blue;// color: #0e1e6d;
+    font-size: 20px;
     text-transform: uppercase;
     font-weight: bold;
+    word-wrap: break-word;
 }
+
+// #page-wrapper .panel-title > a {
+//     padding-left: 15px;
+// }
 
 .white-bgrnd {
     background-color: $white-color;
@@ -267,3 +278,64 @@ h1.page-title {
     margin-bottom: 0;
 }
 /* modal dialog - end */
+
+/*mandant-administration */
+.mandant-administration #page-wrapper .panel-title > a{
+    // padding-left: 30px;
+}
+.mandant-administration #page-wrapper .panel .panel-options .btn{
+    min-width:100px;
+    margin-bottom:initial;
+}
+.mandant-administration .panel-heading{
+    display:inline-block;
+    width: 100%;
+    padding-left: 30px;
+}
+.mandant-administration .panel-options{
+    margin-top: 5px;
+}
+.mandant-administration .panel-options form{
+    // padding-top: 10px;
+}
+
+.mandant-administration h4.panel-title {
+    line-height: 28px;
+}
+
+.mandant-administration .panel-title a{
+    padding-left: 0px;
+  
+}
+
+.mandant-administration .panel-heading a:not(.no-arrow):after, 
+.mandant-administration .panel-heading a.collapsed:not(.no-arrow):after {
+    margin-left: -31px;
+}
+
+.panel.panel-primary {
+    box-shadow: none;
+}
+
+.mandant-administration .collapsing , .mandant-administration .collapse.in {
+    margin-top: -4px;
+}
+/* end mandant-administration */
+
+
+/* tabs - start */
+.content .tab-content {
+    padding: 10px;
+    border: 1px solid $border-color; 
+    border-width: 0px 1px 1px 1px;
+    min-height: 227px;
+}
+
+#page-wrapper .mce-panel {
+    border-color: $border-color;
+}
+
+// #page-wrapper .mce-container, #page-wrapper .mce-container *, #page-wrapper .mce-widget, #page-wrapper .mce-widget *, #page-wrapper .mce-reset {
+//     background: $white-color;
+// }
+/* tabs - end */

@@ -48,13 +48,13 @@
                 <div class="row">
                     <form action="" method="GET">
                         <div class="input-group">
-                            <div class="col-lg-12">
-                                {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
+                            <div class="col-md-12 col-lg-12">
+                                {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.newsSearchPlaceholder'), trans('navigation.newsSearchPlaceholder'), true) !!}
                             </div>
-                            <div class="col-lg-12">
+                            <div class="col-md-12 col-lg-12">
                                 <span class="custom-input-group-btn">
                                     <button type="submit" class="btn btn-primary no-margin-bottom">
-                                        <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
+                                        {{ trans('navigation.search') }} 
                                     </button>
                                 </span>
                             </div>

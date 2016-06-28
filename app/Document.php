@@ -14,12 +14,12 @@ class Document extends Model
     protected $fillable = 
     [
         'document_type_id', 'document_status_id', 'user_id','date_created','version',
-        'name','owner_user_id','search_tags',
+        'name','name_long','owner_user_id','search_tags',
         'summary','date_published','date_modified','date_expired',
         'version_parent','document_group_id','iso_category_id',
         'show_name','adressat_id','betreff','document_replaced_id',
         'date_approved','email_approval','approval_all_roles',
-        'approval_all_mandants','pdf_upload'
+        'approval_all_mandants','pdf_upload','is_attachment'
     ]; //whitelist
     
      
@@ -82,6 +82,9 @@ class Document extends Model
     
     public function editorVariant(){
             return $this->hasMany('App\EditorVariant');
+    }
+    public function editorVariantOrderBy(){
+            return $this->hasMany('App\EditorVariant')->orderBy('variant_number');
     }
     
     public function editorVariantDocument(){

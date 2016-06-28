@@ -4,11 +4,12 @@
 
 @section('content')
     
-        <div class="col-xs-12 box-wrapper">  
+        <div class="col-xs-12 box-wrapper">
+            <h4 class="title">{{ trans('documentTemplates.myDocuments')}}</h4>  
             <div class="box">
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-                        <h4 class="title">{{ trans('documentTemplates.myDocuments')}}</h4>
+                        
                         <div class="tree-view hide-icons" data-selector="test">
                              <div class="test hide" >{{$data}}</div>
                         </div>
@@ -30,7 +31,7 @@
                         <!-- input box-->
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="input-group">
+                                    <div class="input-group col-md-3">
                                         {!! ViewHelper::setInput('search',$data,old('search'),trans('navigation.search_placeholder'),
                                         trans('navigation.search_placeholder'), true) !!}
                         
@@ -62,10 +63,9 @@
         <br/>
         <div class="col-xs-12 box-wrapper">  
             <div class="box">
+                <h4 class="title">{{ trans('documentTemplates.allDocuments')}}</h4>
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-                        <h4 class="title">{{ trans('documentTemplates.allDocuments')}}</h4>
-                        
                         <div class="tree-view hide-icons" data-selector="test2">
                             <div class="test2 hide">{{$data2}}</div>
                         </div>

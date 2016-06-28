@@ -53,6 +53,29 @@ $(function() {
         searching: false,
         paging: false,
         info: false,
+        language: {
+        	"sEmptyTable":   	"Keine Daten vorhanden.",
+        	"sInfo":         	"_START_ bis _END_ von _TOTAL_ EintrÃ¤gen",
+        	"sInfoEmpty":    	"0 bis 0 von 0 EintrÃ¤gen",
+        	"sInfoFiltered": 	"(gefiltert von _MAX_ EintrÃ¤gen)",
+        	"sInfoPostFix":  	"",
+        	"sInfoThousands":  	".",
+        	"sLengthMenu":   	"_MENU_ EintrÃ¤ge anzeigen",
+        	"sLoadingRecords": 	"Wird geladen...",
+        	"sProcessing":   	"Bitte warten...",
+        	"sSearch":       	"Suchen",
+        	"sZeroRecords":  	"Keine EintrÃ¤ge vorhanden.",
+        	"oPaginate": {
+        		"sFirst":    	"Erste",
+        		"sPrevious": 	"ZurÃ¼ck",
+        		"sNext":     	"NÃ¤chste",
+        		"sLast":     	"Letzte"
+        	},
+        	"oAria": {
+        		"sSortAscending":  ": aktivieren, um Spalte aufsteigend zu sortieren",
+        		"sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
+        	}
+        },
         columnDefs: [{
             targets: 'no-sort',
             orderable: false
@@ -93,6 +116,18 @@ $(function() {
             });
         });
     }
+    /*Scroll to element id*/
+    if( $('.scrollTo').length ){
+        var element = $('.scrollTo').val(), navHeight = $('.navbar-fixed-top').height()+10;
+        var contactTopPosition = $(element).position().top;
+       
+      /*   $('html,body').animate({
+            scrollTop: $('#page-wrapper').find(element).offset().top
+        }, 2000); */
+      
+        // $('#page-wrapper').css('margin-top',navHeight);
+    }
+    /*End Scroll to element id*/
 
 
 }); /*End function() wrapper*/

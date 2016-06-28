@@ -37,7 +37,7 @@
                                 <div class="col-md-12">
                                     <span class="custom-input-group-btn">
                                         <button type="submit" class="btn btn-primary">
-                                            <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
+                                            {{ trans('navigation.search') }} 
                                         </button>
                                     </span>
                                 </div><!--End input box-->

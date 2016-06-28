@@ -1,17 +1,18 @@
 <?php
 
 return [
-    'documentType' => 'dokumente Typ',
-    'type' => 'typ',
+    'documentType' => 'Dokumente Typ',
+    'type' => 'Typ',
     'documentName' => 'Titel',
+    'documentNameLong' => 'Titel lang',
     'owner' => 'Autor',
     'coauthor' => 'Co-Ersteller',
     'searchTags' => 'Stichwörter',
     'summary' => 'Beschreibung/ Zusammenfassung',
-    'datePublished' => 'veröffentlichungstermin',
-    'dateExpired' => 'verfallsdatum',
-    'isoCategory' => 'kategorie ISO Dokument',
-    'showName' => 'namen anzeigen',
+    'datePublished' => 'Veröffentlichungstermin',
+    'dateExpired' => 'Verfallsdatum',
+    'isoCategory' => 'Kategorie ISO Dokument',
+    'showName' => 'Namen anzeigen',
     'adressat' => 'Adressat',
     'subject' => 'Betreff',
     'pdfUpload' => 'PDF Rundschreiben',
@@ -30,4 +31,6 @@ return [
     'existingDocument' => 'Option 1: Vorhandenes Dokument auswählen',
     'newDocument' => 'Option 2: Neues Dokument anlegen',
     'status' => 'Dokument Status',
+    'savedComment' => 'Kommentar gespeichert',
+    'authorized' => 'Dokument wurde erfolgreich veröffentlicht.',
 ];

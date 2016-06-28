@@ -23,7 +23,8 @@ class Mandant extends Model
     }
     
     public function mandantUsers(){
-        return $this->hasMany('App\MandantUser', 'mandant_id', 'id');
+        
+        return $this->hasMany('App\MandantUser', 'mandant_id', 'id')->groupBy('user_id');
     }
     
     public function users(){

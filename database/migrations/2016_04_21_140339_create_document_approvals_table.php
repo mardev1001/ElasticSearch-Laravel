@@ -16,8 +16,8 @@ class CreateDocumentApprovalsTable extends Migration
             $table->increments('id');
             $table->integer('user_id')->unsigned();//FK
             $table->integer('document_id')->unsigned();//FK
-            $table->timestamp('date_approved');
-            $table->boolean('approved');
+            $table->timestamp('date_approved')->nullable()->default(null);
+            $table->boolean('approved')->default(0);
             $table->timestamps();
             //$table->softDeletes();
             

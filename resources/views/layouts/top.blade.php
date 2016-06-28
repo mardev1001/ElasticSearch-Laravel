@@ -4,7 +4,7 @@
         <div class="col-xs-12 col-sm-3">
             <a class="nav-brand" href="/"><strong><img src="/img/NeptunLogo.png" alt="Neptun logo"/></strong></a>
         </div>
-        <div class="col-xs-12 col-sm-4 session-flash">
+        <div class="col-xs-12 col-sm-2 col-md-3 session-flash">
             <div class="clearfix"></div>
             @if(Session::has('message'))
                 <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
@@ -20,7 +20,7 @@
                 </div>
             @endif
         </div>
-        <div class="col-xs-12 col-sm-5">
+        <div class="col-xs-12 col-sm-7 col-md-6">
             <ul class="nav navbar-nav icons pull-right">
                 <li><a href="#"><span class="nav-icon icon-home"></span>Home</a></li>
                 <li><a href="#"><span class="nav-icon icon-profil"></span>Profil</a></li>

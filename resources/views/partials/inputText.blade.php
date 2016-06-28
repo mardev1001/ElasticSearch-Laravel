@@ -1,5 +1,5 @@
     <label class="control-label">
-        {{ ucfirst($label) }}@if( $required !=false && $label != '' )* @endif 
+        {{ ($label) }}@if( $required !=false && $label != '' )* @endif 
     </label> 
     <input type="{{ $type }}" class="form-control 
     @foreach( $classes as $class)
@@ -12,7 +12,7 @@
         {{$dataTag}}
     @endforeach
     
-    placeholder="{{ ucfirst($placeholder) }}@if( $required !=false )* @endif "  autocomplete="off"
+    placeholder="{{ $placeholder }}@if( $required !=false )* @endif "  autocomplete="off"
         @if( $required !=false ) 
             required 
         @endif

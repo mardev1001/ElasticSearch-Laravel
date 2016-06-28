@@ -18,6 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('user_id')->unsigned();//FK
             $table->integer('version');
             $table->string('name');
+            $table->string('name_long');
             $table->integer('owner_user_id')->unsigned()->nullable();//FK
             $table->integer('document_status_id')->unsigned()->default(1);//FK
             $table->string('search_tags');
@@ -36,6 +37,7 @@ class CreateDocumentsTable extends Migration
             $table->boolean('approval_all_roles');
             // $table->boolean('approval_all_mandants');
             $table->boolean('pdf_upload')->nullable()->default(0);
+            $table->boolean('is_attachment')->nullable()->default(0);
             $table->timestamps();
             $table->softDeletes();
             

@@ -2,7 +2,9 @@ body {
     background: url('/img/NeptunBG.png') $white-color no-repeat !important;
     background-position: center top;
     padding-top: 148px;
+    font: 12px !important;
 }
+
 
 @media screen and (max-width: 1360px) { 
     body {
@@ -32,7 +34,7 @@ p, a, #page-wrapper label, b, strong, .text, .box span:not(.fa):not(.glyphicon),
 #page-wrapper .table > tbody > tr > td,
 #page-wrapper .table > tfoot > tr > td {
     font-family: $primary-font-family;
-    font-size: 14px;
+    font-size: 12px;
     color: $grey;
     line-height: 16px;
     text-transform: initial;
@@ -71,8 +73,14 @@ p, a, #page-wrapper label {
 
 #page-wrapper .table > thead > tr > th:last-child,
 #page-wrapper .table > tbody > tr > th:last-child,
-#page-wrapper .table > tbody > tr > td:last-child {
+#page-wrapper .table > tbody > tr > td:last-child{
     padding-right: 0;
+}
+.npr{
+    padding-right: 0 !important;
+}
+.npl{
+    padding-left: 0 !important;
 }
 #page-wrapper .table .btn {
     margin: 0;
@@ -84,12 +92,14 @@ p, a, #page-wrapper label {
 #page-wrapper .text-info {
     color: $primary-btn-color;
 }
+
 .form-control {
     border: 1px solid $border-form-control !important;
     text-transform: none;
     border-radius: 0 !important;
     color: $form-control-color !important;
     padding: 5px 15px !important;
+    font-size: 12px !important;
 }
 .btn, input, select,textarea,.chosen-default,.navbar-toggle{
     border-radius: 0 !important;
@@ -226,7 +236,7 @@ $custom-radio-disabled-pip-color:   lighten(black, 80%);
 
 input[type="radio"] label {
     font-family: $primary-font-family;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 18px;
     font-weight: normal;
     color: $custom-radio-color;
@@ -409,6 +419,34 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     margin-bottom: 20px;
 }
 
+.box .nav-tabs {
+    // border-color: $border-form-control;
+    border-color: $border-color;
+}
+
+.parent-tabs .nav-tabs {
+    border: none;
+}
+.box .nav-tabs > li > a {
+    border-radius: 0;
+}
+
+.box .nav-tabs > li > a {
+    color: $grey;
+    border-color: $border-color !important;
+    border-bottom: none !important;
+}
+.box .nav-tabs > li.active > a, .box .nav-tabs > li.active > a:hover, .box .nav-tabs > li.active > a:focus {
+      color: #337ab7;  
+}
+
+.box .nav-tabs > li > a > span {
+    padding-left: 10px;
+    width: 15px;
+    height: 15px; 
+    cursor: pointer;
+}
+
 .bordered{
     border: 1px solid rgb(230, 230, 230);
 }
@@ -589,6 +627,14 @@ span.highlight{
 }
 
 /*Chosen*/
+.chosen-disabled .search-choice{
+    padding-right: 5px !important;
+}
+.chosen-disabled .search-choice .search-choice-close{
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+}
 .chosen-container{
     width: 100% !important;    
 }
@@ -597,8 +643,8 @@ select.form-control + .chosen-container.chosen-container-single .chosen-single{
     display: block;
     width: 100%;
     height: 40px;
-    padding: 11px 15px;
-    font-size: 14px;
+    padding: 12px 15px;
+    font-size: 12px;
     line-height: 1.428571429;
     color: $form-control-color;
     vertical-align: middle;
@@ -639,7 +685,7 @@ select.form-control + .chosen-container .chosen-search input[type=text] {
     width: 100%;
     height: 34px;
     padding: 6px 12px;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.428571429;
     color: #555;
     vertical-align: middle;
@@ -673,7 +719,7 @@ select.form-control + .chosen-container-multi .chosen-choices li.search-field in
 select.form-control + .chosen-container .chosen-results {
     margin: 2px 0 0;
     padding: 5px 0;
-    font-size: 14px;
+    font-size: 12px;
     list-style: none;
     background-color: #fff;
     margin-bottom: 5px;
@@ -705,7 +751,7 @@ select.form-control + .chosen-container-multi .chosen-choices {
     display: block;
     width: 100%;
     padding: 5px 15px;
-    font-size: 14px;
+    font-size: 12px;
     line-height: 1.428571429;
     color: #555;
     vertical-align: middle;
@@ -730,7 +776,7 @@ select.form-control + .chosen-container-multi .chosen-choices li.search-choice {
     background-image: none;
     padding: 3px 24px 3px 5px;
     margin: 2px 4px 2px 0;
-    font-size: 14px;
+    font-size: 12px;
     font-weight: normal;
     line-height: 1.428571429;
     text-align: center;
@@ -745,7 +791,7 @@ select.form-control + .chosen-container-multi .chosen-choices li.search-choice {
 }
  
 select.form-control + .chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
-    top:8px;
+    top:6px;
     right:6px;
 }
  
@@ -787,6 +833,8 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 }
 /*Image preview end*/
 
+
+
 /* scroll to top - start */
 #return-to-top {
     position: fixed;
@@ -827,3 +875,16 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
     top: 5px;
 }
 /* scroll to top - end */
+
+
+.label-form-group {
+    margin-top: 15px;
+}
+
+#page-wrapper table.dataTable thead .sorting:after, 
+#page-wrapper table.dataTable thead .sorting_asc:after,
+#page-wrapper table.dataTable thead .sorting_desc:after, 
+#page-wrapper table.dataTable thead .sorting_asc_disabled:after, 
+#page-wrapper table.dataTable thead .sorting_desc_disabled:after {
+   bottom: 15px;
+}

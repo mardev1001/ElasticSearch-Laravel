@@ -28,21 +28,33 @@ class HomeController extends Controller
      */
     public function index() 
     {
-        $documentsNew = Document::whereNotIn('document_type_id', array('1'))->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
+        $documentsNew = Document::whereNotIn('document_status_id', array(1,4,5,6))->where('is_attachment',0)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview( $documentsNew );
-        // $dokumenteNeu = $this->document->generateTreeview(Document::where(['document_status_id' => 3])->orderBy('id', 'desc')->get()); // Where last login < document create date
-        $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])->orderBy('id', 'desc')->paginate(10, ['*'], 'my-roundschrieben');
+        
+        $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy );
         
-        $documentsMy = Document::where(['user_id' => Auth::user()->id, 'document_status_id' => 3])->orderBy('id', 'desc')->paginate(10, ['*'], 'my-dokumente');
+        $documentsMy = Document::where('user_id', Auth::user()->id)
+        ->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-dokumente');
         $documentsMyTree = $this->document->generateTreeview($documentsMy);
         
-        $wikiEntries = '[{"text":"Wiki Eintrag-74","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-79","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-25","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-166","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-19","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]}]';
+        $freigabeEntries = Document::where('document_status_id', 6)->where(
+            function($query){
+                $query->where('user_id', Auth::user()->id)
+                      ->orWhere('owner_user_id', Auth::user()->id);
+                    //   ->documentCoauthors('',);
+            }
+        )->orderBy('id', 'desc')->paginate(10, ['*'], 'freigabe-dokumente');
         
+        $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries);
+        
+        $wikiEntries = '[{"text":"Wiki Eintrag-74","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-79","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-25","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-166","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-19","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]}]';
         $commentsNew = '[{"text":"Neuer Kommentar-135","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-95","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-38","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]}]';
         $commentsMy = '[{"text":"Mein Kommentar-84","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]},{"text":"Mein Kommentar-51","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]}]';
         
-        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'documentsMy','documentsMyTree', 'wikiEntries', 'commentsNew', 'commentsMy'));
+        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'documentsMy','documentsMyTree', 'wikiEntries', 'commentsNew', 'commentsMy'));
     }
 
     /**

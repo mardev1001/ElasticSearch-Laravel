@@ -5,7 +5,7 @@ $(function() {
     
     // Delete prompt for buttons and anchors
     $('.delete-prompt').on('click touch', function(e) {
-        if (confirm("Eintrag entfernen?"))
+        if (confirm("Wollen Sie diesen Eintrag wirklich entfernen?"))
             return true;
         else
             return false;
@@ -92,16 +92,24 @@ $(function() {
     var mandantHauptstelleCheckbox = $('input[type="checkbox"]#hauptstelle');
     var mandantHauptstelleSelect = $('.select-mandants');
 
-    if(mandantHauptstelleCheckbox.prop('checked') == true)
+    if(mandantHauptstelleCheckbox.prop('checked') == true) {
+        $('select[name="mandant_id_hauptstelle"]').prop('required', false);
         mandantHauptstelleSelect.hide(400);
-    else
+    } else {
+        $('select[name="mandant_id_hauptstelle"]').prop('required', true)
         mandantHauptstelleSelect.show(400);
+    }
+        
         
     mandantHauptstelleCheckbox.change(function(e){
-        if(mandantHauptstelleCheckbox.prop('checked') == true)
+        console.log(mandantHauptstelleSelect.prop('required'));
+        if(mandantHauptstelleCheckbox.prop('checked') == true){
+            $('select[name="mandant_id_hauptstelle"]').prop('required', false);
             mandantHauptstelleSelect.hide(400);
-        else
+        } else {
+            $('select[name="mandant_id_hauptstelle"]').prop('required', true);
             mandantHauptstelleSelect.show(400);
+        }
     });
     
     // Mandant history add button

@@ -118,6 +118,9 @@ class User extends Authenticatable
     public function mandantUsers(){
        return $this->hasMany('App\MandantUser','user_id','id');
     }
+    public function mandantUsersDistinct(){
+       return $this->hasMany('App\MandantUser','user_id','id')->groupBy('mandant_id');
+    }
     
     public function mandantRoles(){
        return $this->hasManyThrough('App\MandantUserRole','App\MandantUser');

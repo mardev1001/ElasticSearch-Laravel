@@ -9,6 +9,10 @@ namespace App\Http\Repositories;
 
 use DB;
 
+
+use Auth;
+use Carbon\Carbon;
+
 use App\Document;
 use App\DocumentType;
 use App\DocumentApproval;
@@ -108,10 +112,19 @@ class DocumentRepository
             $icon =  $icon2 = $icon3 ='';
 
             // Define icon classes
+            // var_dump(Carbon::parse(Auth::user()->last_login)->gt(Carbon::parse($document->created_at)));
             if($document->document_status_id == 3){
-                $icon = 'icon-open ';
-                $icon2 = 'icon-released ';
-                // $icon3 = 'icon-history ';
+                if(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)))
+                    $icon = 'icon-favorites ';
+                // $icon2 = 'icon-open ';
+                $icon3 = 'icon-history ';
+            }
+            
+            // dd(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)));
+            if($document->document_status_id == 6){
+                $icon = 'icon-blocked ';
+                $icon2 = 'icon-notreleased ';
+                // $icon3 = 'icon-history ';w
             }
             
             $node->icon = $icon;
@@ -120,21 +133,24 @@ class DocumentRepository
             
             $node->href = route('dokumente.show', $document->id);
             
-            if(!$document->documentUploads->isEmpty()){
-                
-                $node->nodes = array();
-                if($tags) $node->tags = array(sizeof($document->documentUploads));  
-                
-                foreach ($document->documentUploads as $upload) {
-                    $subNode = new \StdClass();
-                    $subNode->text = basename($upload->file_path);
-                    $subNode->icon = 'child-node ';
-                    $subNode->icon2 = 'icon-download ';
-                    $subNode->icon3 = 'last-node-icon ';
-                    $subNode->href = 'download/'.str_slug($document->name).'/'.$upload->file_path;
+            
+            if($document->document_status_id != 6){
+                if(!$document->documentUploads->isEmpty()){
                     
-    
-                    array_push($node->nodes, $subNode);
+                    $node->nodes = array();
+                    if($tags) $node->tags = array(sizeof($document->documentUploads));  
+                    
+                    foreach ($document->documentUploads as $upload) {
+                        $subNode = new \StdClass();
+                        $subNode->text = basename($upload->file_path);
+                        $subNode->icon = 'child-node ';
+                        $subNode->icon2 = 'icon-download ';
+                        $subNode->icon3 = 'last-node-icon ';
+                        $subNode->href = 'download/'.str_slug($document->name).'/'.$upload->file_path;
+                        
+        
+                        array_push($node->nodes, $subNode);
+                    }
                 }
             }
             
@@ -202,7 +218,8 @@ class DocumentRepository
      * @return string $form
      */
     public function checkUploadType($data,$model, $pdf){
-        if( (strpos( strtolower($model->name) , 'rundschreiben') !== false) && ( $pdf == true || $pdf == 1) ){
+        if( ( (strpos( strtolower($model->name) , 'rundschreiben') !== false) || (strpos( strtolower($model->name) , 'news') !== false) ) 
+        && ( $pdf == true || $pdf == 1) ){
             $data->form = 'pdfUpload';
             $data->url = 'pdf-upload';
         }
