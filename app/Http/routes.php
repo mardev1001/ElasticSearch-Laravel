@@ -37,6 +37,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('dokumente/anhange/{id?}', 'DocumentController@saveAttachments');
         Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
+        Route::get('dokumente/new-version/{id}', 'DocumentController@newVersion');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         Route::post('comment/{id}', 'DocumentController@saveComment');
         

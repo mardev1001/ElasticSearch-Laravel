@@ -952,6 +952,94 @@ class DocumentController extends Controller
         //->with('message', trans('documentForm.documentCreateSuccess'));
     }
     
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function newVersion($id)
+    {
+        //find if document has version higher than one
+        $version = 0;
+        $document = Document::find($id);
+        $version = $document->version;
+        if( $document->document_group_id == null || $document->document_group_id == 0){
+            $document->document_group_id = $document->id;
+            $document->save();
+        }
+        else{
+            $highestVersion = Document::where('document_group_id',$document->document_group_id)->orderBy('version','DESC')->first();
+            $version = $highestVersion->version;
+        }
+        $newDocument = $document->replicate();
+        $newDocument->version = $version+1;
+        $newDocument->version_parent = $version;
+        $newDocument->document_status_id = 1;
+        $newDocument->date_expired = null;
+        $newDocument->date_published = null;
+        $newDocument->date_approved = null;
+        $newDocument->save();
+        // dd($newDocument);
+        
+        /*Duplicate document variants*/
+        foreach($document->editorVariant as $variant){
+            $newVariant = $variant->replicate();
+            $newVariant->document_id = $newDocument->id;
+            $newVariant->save();
+            
+            /*Duplicate document uploads*/
+            foreach( $variant->documentUpload as $upload){
+                $newUpload = $upload->replicate();
+                $newUpload->editor_variant_id = $newVariant->id;
+                $newUpload->save();
+            }
+            /*End Duplicate document uploads*/
+            
+            /*Duplicate editor_variant_documents*/
+            foreach( $variant->editorVariantDocument as $editorVariantDocument){
+                $newEditorVariantDocument = $editorVariantDocument->replicate();
+                $newEditorVariantDocument->editor_variant_id = $newVariant->id;
+                $newEditorVariantDocument->document_status_id = $newDocument->document_status_id;
+                $newEditorVariantDocument->document_group_id = $newDocument->document_group_id;
+                $newEditorVariantDocument->document_id = $newDocument->id;
+                $newEditorVariantDocument->save();
+            }
+            /*End Duplicate editor_variant_documents*/
+            
+            /*Duplicate document mandants*/
+            foreach( $variant->documentMandants as $documentMandant){
+                $newDocumentMandant = $documentMandant->replicate();
+                $newDocumentMandant->document_id = $newDocument->id;
+                $newDocumentMandant->editor_variant_id = $newVariant->id;
+                $newDocumentMandant->save();
+                
+                /*Duplicate document mandant mandants*/
+                foreach($documentMandant->documentMandantMandants as $docMandantMandant){
+                    $newDMM = $docMandantMandant->replicate();
+                    $newDMM->document_mandant_id = $newDocumentMandant->id;
+                    $newDMM->save();
+                }
+                /*End Duplicate document mandant mandants*/
+                
+                /*Duplicate document mandant roles*/
+                 foreach($documentMandant->documentMandantRole as $docMandantRole){
+                    $newDMR = $docMandantRole->replicate();
+                    $newDMR->document_mandant_id = $newDocumentMandant->id;
+                    $newDMR->save();
+                }
+                /*End Duplicate document mandant roles*/
+            }   
+            /*End Duplicate  document mandants*/
+        }
+        /* End Duplicate document variants*/
+        dd($newDocument);
+         session()->flash('message',trans('documentForm.newVersionSuccess'));
+        return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
+        
+    }
+    
     
 
     /**

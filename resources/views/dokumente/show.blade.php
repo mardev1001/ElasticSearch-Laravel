@@ -109,7 +109,7 @@
             <div class="col-sm-4 col-md-3 col-lg-2 btns">
                 <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.deactivate') }}</button>
-                <button class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</button>
+                <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</button>
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.favorite') }}</button>
                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>

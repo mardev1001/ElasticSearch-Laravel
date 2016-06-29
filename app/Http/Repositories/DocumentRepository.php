@@ -146,7 +146,7 @@ class DocumentRepository
                         $subNode->icon = 'child-node ';
                         $subNode->icon2 = 'icon-download ';
                         $subNode->icon3 = 'last-node-icon ';
-                        $subNode->href = 'download/'.str_slug($document->name).'/'.$upload->file_path;
+                        $subNode->href = '/download/'.str_slug($document->name).'/'.$upload->file_path;
                         
         
                         array_push($node->nodes, $subNode);
@@ -174,7 +174,7 @@ class DocumentRepository
                                 $subNode = new \StdClass();
                                 $subNode->text = basename($upload->file_path);
                                 $subNode->icon = 'fa fa-file-o';
-                                $subNode->href = 'download/'.str_slug($secondDoc->name).'/'.$upload->file_path;
+                                $subNode->href = '/download/'.str_slug($secondDoc->name).'/'.$upload->file_path;
                 
                                 array_push($node->nodes, $subNode);
                             }

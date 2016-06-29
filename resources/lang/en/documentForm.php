@@ -33,4 +33,5 @@ return [
     'status' => 'Dokument Status',
     'savedComment' => 'Kommentar gespeichert',
     'authorized' => 'Dokument wurde erfolgreich veröffentlicht.',
+    'newVersionSuccess' => 'Neue Version wurde erstellt',
 ];
