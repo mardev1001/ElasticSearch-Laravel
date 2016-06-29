@@ -44,6 +44,7 @@ class DocumentController extends Controller
     public function __construct(DocumentRepository $docRepo)
     {
         $this->document =  $docRepo;
+        $this->movePath = public_path().'/files/documents';
         $this->pdfPath = public_path().'/files/documents/';
         $this->newsId = 1;
         $this->rundId = 2;
@@ -931,8 +932,46 @@ class DocumentController extends Controller
     
         // dd($request->all());        
         RequestMerge::merge(['version' => 1] );
-        $data = Document::find( $id )->fill( $request->all() )->save();
+        $data = Document::find( $id );
+        $prevName = $data->name;
+        if( $request->get('name') != $prevName ){
+            $oldSlug= str_slug($prevName);
+            $newSlug= str_slug($request->get('name'));
+            // Storage::move('hodor/oldfile-name.jpg', 'hodor/newfile-name.jpg'); // keep the same folder to just rename 
+            foreach($data->documentUploads as $upload){
+                $oldPath = $upload->file_path;
+                $newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
+               
+               if ( ! \File::exists( $this->movePath.'/'.$newSlug.'/' ) ) {
+        			\File::makeDirectory( $this->movePath.'/'.$newSlug.'/', $mod=0777,true,true); 
+        		}
+               copy($this->movePath.'/'.$oldSlug.'/'.$oldPath, $this->movePath.'/'.$newSlug.'/'.$newFileName);
+               $upload->file_path = $newFileName;
+               $upload->save();
+            }
+            //rename folder to new name
+            //rename files to new name
+            //rename documentUploads
+            $dirname= $this->movePath.'/'.$oldSlug;
+              if (is_dir($dirname))
+           $dir_handle = opendir($dirname);
+        	 if (!$dir_handle)
+        	      return false;
+        	 while($file = readdir($dir_handle)) {
+        	       if ($file != "." && $file != "..") {
+        	            if (!is_dir($dirname."/".$file))
+        	                 unlink($dirname."/".$file);
+        	            else
+        	                 delete_directory($dirname.'/'.$file);
+        	       }
+        	 }
+        	 closedir($dir_handle);
+        	 rmdir($dirname);
+        }
+            
+        $data->fill( $request->all() )->save();
         $data = Document::find($id);
+        
         
         $variant = $data->editorVariant();
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
@@ -959,86 +998,88 @@ class DocumentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function newVersion($id)
-    {
-        //find if document has version higher than one
-        $version = 0;
-        $document = Document::find($id);
-        $version = $document->version;
-        if( $document->document_group_id == null || $document->document_group_id == 0){
-            $document->document_group_id = $document->id;
-            $document->save();
-        }
-        else{
-            $highestVersion = Document::where('document_group_id',$document->document_group_id)->orderBy('version','DESC')->first();
-            $version = $highestVersion->version;
-        }
-        $newDocument = $document->replicate();
-        $newDocument->version = $version+1;
-        $newDocument->version_parent = $version;
-        $newDocument->document_status_id = 1;
-        $newDocument->date_expired = null;
-        $newDocument->date_published = null;
-        $newDocument->date_approved = null;
-        $newDocument->save();
-        // dd($newDocument);
+    // public function newVersion($id)
+    // {
+    //     //find if document has version higher than one
+    //     $version = 0;
+    //     $document = Document::find($id);
+    //     $version = $document->version;
+    //     if( $document->document_group_id == null || $document->document_group_id == 0){
+    //         $document->document_group_id = $document->id;
+    //         $document->save();
+    //     }
+    //     else{
+    //         $highestVersion = Document::where('document_group_id',$document->document_group_id)->orderBy('version','DESC')->first();
+    //         $version = $highestVersion->version;
+    //     }
+    //     /*Set all previous versions to arhived*/
+    //     /*End Set all previous versions to arhived*/
+    //     $newDocument = $document->replicate();
+    //     $newDocument->version = $version+1;
+    //     $newDocument->version_parent = $version;
+    //     $newDocument->document_status_id = 1;
+    //     $newDocument->date_expired = null;
+    //     $newDocument->date_published = null;
+    //     $newDocument->date_approved = null;
+    //     $newDocument->save();
+    //     // dd($newDocument);
         
-        /*Duplicate document variants*/
-        foreach($document->editorVariant as $variant){
-            $newVariant = $variant->replicate();
-            $newVariant->document_id = $newDocument->id;
-            $newVariant->save();
+    //     /*Duplicate document variants*/
+    //     foreach($document->editorVariant as $variant){
+    //         $newVariant = $variant->replicate();
+    //         $newVariant->document_id = $newDocument->id;
+    //         $newVariant->save();
             
-            /*Duplicate document uploads*/
-            foreach( $variant->documentUpload as $upload){
-                $newUpload = $upload->replicate();
-                $newUpload->editor_variant_id = $newVariant->id;
-                $newUpload->save();
-            }
-            /*End Duplicate document uploads*/
+    //         /*Duplicate document uploads*/
+    //         foreach( $variant->documentUpload as $upload){
+    //             $newUpload = $upload->replicate();
+    //             $newUpload->editor_variant_id = $newVariant->id;
+    //             $newUpload->save();
+    //         }
+    //         /*End Duplicate document uploads*/
             
-            /*Duplicate editor_variant_documents*/
-            foreach( $variant->editorVariantDocument as $editorVariantDocument){
-                $newEditorVariantDocument = $editorVariantDocument->replicate();
-                $newEditorVariantDocument->editor_variant_id = $newVariant->id;
-                $newEditorVariantDocument->document_status_id = $newDocument->document_status_id;
-                $newEditorVariantDocument->document_group_id = $newDocument->document_group_id;
-                $newEditorVariantDocument->document_id = $newDocument->id;
-                $newEditorVariantDocument->save();
-            }
-            /*End Duplicate editor_variant_documents*/
+    //         /*Duplicate editor_variant_documents*/
+    //         foreach( $variant->editorVariantDocument as $editorVariantDocument){
+    //             $newEditorVariantDocument = $editorVariantDocument->replicate();
+    //             $newEditorVariantDocument->editor_variant_id = $newVariant->id;
+    //             $newEditorVariantDocument->document_status_id = $newDocument->document_status_id;
+    //             $newEditorVariantDocument->document_group_id = $newDocument->document_group_id;
+    //             $newEditorVariantDocument->document_id = $newDocument->id;
+    //             $newEditorVariantDocument->save();
+    //         }
+    //         /*End Duplicate editor_variant_documents*/
             
-            /*Duplicate document mandants*/
-            foreach( $variant->documentMandants as $documentMandant){
-                $newDocumentMandant = $documentMandant->replicate();
-                $newDocumentMandant->document_id = $newDocument->id;
-                $newDocumentMandant->editor_variant_id = $newVariant->id;
-                $newDocumentMandant->save();
+    //         /*Duplicate document mandants*/
+    //         foreach( $variant->documentMandants as $documentMandant){
+    //             $newDocumentMandant = $documentMandant->replicate();
+    //             $newDocumentMandant->document_id = $newDocument->id;
+    //             $newDocumentMandant->editor_variant_id = $newVariant->id;
+    //             $newDocumentMandant->save();
                 
-                /*Duplicate document mandant mandants*/
-                foreach($documentMandant->documentMandantMandants as $docMandantMandant){
-                    $newDMM = $docMandantMandant->replicate();
-                    $newDMM->document_mandant_id = $newDocumentMandant->id;
-                    $newDMM->save();
-                }
-                /*End Duplicate document mandant mandants*/
+    //             /*Duplicate document mandant mandants*/
+    //             foreach($documentMandant->documentMandantMandants as $docMandantMandant){
+    //                 $newDMM = $docMandantMandant->replicate();
+    //                 $newDMM->document_mandant_id = $newDocumentMandant->id;
+    //                 $newDMM->save();
+    //             }
+    //             /*End Duplicate document mandant mandants*/
                 
-                /*Duplicate document mandant roles*/
-                 foreach($documentMandant->documentMandantRole as $docMandantRole){
-                    $newDMR = $docMandantRole->replicate();
-                    $newDMR->document_mandant_id = $newDocumentMandant->id;
-                    $newDMR->save();
-                }
-                /*End Duplicate document mandant roles*/
-            }   
-            /*End Duplicate  document mandants*/
-        }
-        /* End Duplicate document variants*/
-        dd($newDocument);
-         session()->flash('message',trans('documentForm.newVersionSuccess'));
-        return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
+    //             /*Duplicate document mandant roles*/
+    //              foreach($documentMandant->documentMandantRole as $docMandantRole){
+    //                 $newDMR = $docMandantRole->replicate();
+    //                 $newDMR->document_mandant_id = $newDocumentMandant->id;
+    //                 $newDMR->save();
+    //             }
+    //             /*End Duplicate document mandant roles*/
+    //         }   
+    //         /*End Duplicate  document mandants*/
+    //     }
+    //     /* End Duplicate document variants*/
+    //     // dd($newDocument);
+    //      session()->flash('message',trans('documentForm.newVersionSuccess'));
+    //     return redirect('dokumente/'.$newDocument->id.'/edit' );
         
-    }
+    // }
     
     
 
