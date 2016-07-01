@@ -51,6 +51,7 @@
 		searchResultBackColor: undefined, //'#FFFFFF',
 
 		enableLinks: false,
+		enableDelete: false,
 		highlightSelected: true,
 		highlightSearchResults: true,
 		showBorder: true,
@@ -631,6 +632,18 @@
 				treeItem
 					.append(node.text);
 			}
+			
+			// Add hyperlink for deleting
+			if (_this.options.enableDelete) {
+				if(node.hrefDelete != undefined){
+					treeItem
+						.append($(_this.template.linkDelete)
+							.attr('href', node.hrefDelete)
+							.append(node.textDelete)
+						);
+				}
+			}
+
 
 			// Add tags as badges
 			if (_this.options.showTags && node.tags) {
@@ -729,6 +742,7 @@
 		icon: '<span class="icon"></span>',
 		icon2: '<span class="icon2"></span>',
 		icon3: '<span class="icon3"></span>',
+		linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'
 	};

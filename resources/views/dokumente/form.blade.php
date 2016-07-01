@@ -24,7 +24,7 @@
             <div class="col-md-4 col-lg-4 "> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('name_long',$data,old('name_long'),trans('documentForm.documentNameLong') , 
-                           trans('documentForm.documentNameLong') , true  ) !!}
+                           trans('documentForm.documentNameLong')   ) !!}
                 </div>   
             </div><!--End input box-->
             
@@ -68,7 +68,8 @@
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
-                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
+                        {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
+                    
                 </div>   
             </div><!--End input box-->
             

@@ -3,20 +3,35 @@
 @extends('master')
 
 @section('page-title')
-     {{ trans('controller.history') }} - Dokument QMR 123 - V2
+     {{ trans('controller.history') }} - {{$document->name}}
 @stop
+
 @section('content')
 
-<div class="row">
-    <div class="col-xs-12">
+    <div class="row">
         
-        <h4>{{ trans('controller.overview') }}</h4>
-        
-        <div class="tree-view" data-selector="history">
-            <div class="history hide">{{$data}}</div>
+        <div class="col-xs-12">
+            <div class="col-xs-12 box-wrapper">
+                
+                <h2 class="title">{{ trans('controller.overview') }}</h2>
+                
+                <div class="box">
+                    <div class="tree-view" data-selector="dokumentHistorie">
+                        <div class="dokumentHistorie hide">
+                            {{ $documentHistoryTree }}
+                        </div>
+                    </div>
+                </div>
+                 <div class="text-center">
+                        {{ $documentHistory->render() }}
+                </div>
+    
+                
+            </div>
         </div>
         
     </div>
-</div>
-
+    
+    <div class="clearfix"></div> <br>
+    
 @stop

@@ -123,14 +123,15 @@
                                         <tr>
                                             <td class="valign">{{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
                                             <td class="col-md-8 valign">
-                                                <select disabled="true" name="role_id" class="form-control select col-md-8" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
-                                                    <option value=""></option>
-                                                    @foreach( $roles as $role)
-                                                        <option value="{{$role->id}}"
-                                                        {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}
-                                                        >{{ $role->name }}</option>
+                                                
+                                                @foreach( $roles as $role)
+                                                    @foreach( $mandantUser->mandantUserRoles as $mandantUserRole)
+                                                        @if($mandantUserRole->role_id == $role->id)
+                                                            {{ $role->name }};
+                                                        @endif
                                                     @endforeach
-                                                </select>
+                                                @endforeach
+
                                             </td>
                                             <td class="text-center valign">{{ count($mandantUser->user->countMandants) }}</td>
                                             <td class="valign table-options text-center">

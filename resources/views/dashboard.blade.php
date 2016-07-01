@@ -40,7 +40,7 @@
     
         <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
-                <h1 class="title">Meine Rundschreiben</h1>
+                <h1 class="title">Meine Dokumente/Rundschreiben</h1>
                 <div class="box home">
                     <div class="tree-view" data-selector="rundschreibenMy">
                         <div class="rundschreibenMy hide">
@@ -51,16 +51,6 @@
                   <div class="text-center">
                     {!! $rundschreibenMy->render() !!}
                 </div>
-                <!-- <div class="text-center">-->
-                <!--    <ul class="pagination">-->
-                <!--        <li class="pull-left"><a href="#" aria-label="Prev"><span aria-hidden="true">&lt; zurück</span></a></li>-->
-                <!--            <li class="active"><a href="#">1</a></li>-->
-                <!--            @for($i=2; $i < 10; $i++)-->
-                <!--                <li class=""><a href="#">{{$i}}</a></li>-->
-                <!--            @endfor-->
-                <!--        <li class="pull-right"><a href="#" aria-label="Next"><span aria-hidden="true">weiter &gt;</span></a></li>-->
-                <!--    </ul>-->
-                <!--</div>-->
             </div>
         </div>
 
@@ -71,6 +61,26 @@
     <div class="row">
         
         <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Neue Wiki-Einträge</h1>
+                <div class="box home">
+                    <div class="tree-view hide-icons" data-selector="wikiEntries">
+                        <div class="wikiEntries hide">
+                            {{ $wikiEntries }}
+                        </div>
+                    </div>
+                </div>
+                <div class="buttons wiki">
+                    <br>
+                    <a href="#" class="btn btn-primary pull-right">Wiki aufrufen</a>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    
+        <!--<div class="clearfix"></div><br>-->
+        
+        {{-- <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Meine Dokumente</h1>
                 <div class="box home">
@@ -84,7 +94,7 @@
                     {!! $documentsMy->render() !!}
                 </div>
             </div>
-        </div>
+        </div> --}}
         
         <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
@@ -104,27 +114,6 @@
         
     </div>
     
-    <div class="clearfix"></div><br>
-    
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="col-xs-12 box-wrapper home">
-                <h1 class="title">Neue Wiki-Einträge</h1>
-                <div class="box home">
-                    <div class="tree-view hide-icons" data-selector="wikiEntries">
-                        <div class="wikiEntries hide">
-                            {{ $wikiEntries }}
-                        </div>
-                    </div>
-                </div>
-                <div class="buttons wiki">
-                    <br>
-                    <a href="#" class="btn btn-primary pull-right">Wiki aufrufen</a>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="clearfix"></div><br>
     
     <div class="row">

@@ -625,6 +625,29 @@ span.highlight{
     color: #4094dc !important;
     font-weight: bold;
 }
+.fa-1-5x{
+     font-size: 1.3em;
+
+}
+
+/*A4 paper simulation*/¸
+page {
+  background: white;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+}
+page[size="A4"],.a4{  
+  width: 21cm;
+  height: 29.7cm; 
+}
+page[size="A4"][layout="portrait"] {
+  width: 29.7cm;
+  height: 21cm;  
+}
+/*End A4 paper simulation*/
+
 
 /*Chosen*/
 .chosen-disabled .search-choice{

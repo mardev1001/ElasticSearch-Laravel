@@ -114,4 +114,8 @@ class Document extends Model
     public function documentUploads(){
         return $this->hasManyThrough('App\DocumentUpload','App\EditorVariant') ;
     }
+    
+    public function publishedDocuments(){
+        return $this->hasMany('App\PublishedDocument');
+    }
 }

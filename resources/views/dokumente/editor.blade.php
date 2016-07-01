@@ -47,7 +47,7 @@
     <ul class="nav nav-tabs" id="tabs">
        @if( count($data->editorVariantOrderBy) ) 
            @foreach( $data->editorVariantOrderBy as $variant)
-               <li data-variant="{{$variant->variant_number}}"><a href="#variant{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}
+               <li data-variant="{{$variant->variant_number}}"><a href="#variation{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}
                <span class="fa fa-close remove-editor" data-delete-variant="{{ $variant->variant_number }}"></span> </a></li>
            @endforeach
        @endif
@@ -56,8 +56,8 @@
     <div class="tab-content">
        @if( count($data->editorVariant) ) 
            @foreach( $data->editorVariant as $variant)
-               <div class="tab-pane" id="variant{{$variant->variant_number}}">
-                   <div class="variant" id="variant-{{$variant->variant_number}}">
+               <div class="tab-pane " id="variation{{$variant->variant_number}}" data-id="{{$variant->variant_number}}">
+                   <div class="variant" id="variant-{{$variant->variant_number}}" >
                        {!!($variant->inhalt)!!}
                    </div>
                 </div>
@@ -74,11 +74,23 @@
       @section('script')
         <script type="text/javascript">
             $(document).ready(function(){
-               $('.editable').each(function(){
-              	    var id=$(this).data('id');
-              	 }); 
-              	tinymce.init({selector:'.editable',removed_menuitems: 'newdocument',});
-              	
+               if ($('.editable').length) {
+                    var counter = 0;
+                    $('.editable').each(function() {
+                        counter++;
+                        if ($(this).data('id'))
+                            $(this).attr('id', 'variant-'+$(this).data('id'));
+                        else
+                            $(this).attr('id', 'variant-' + counter);
+                        tinymce.init({
+                            selector: '.editable',
+                            skin_url: '/css/style',
+                            width: 794,
+                            height: 1122,
+                            removed_menuitems: 'newdocument',
+                        });
+                    });
+               }
               	if( $('.nav-tabs li.active').length < 1 ){
               	    $('.nav-tabs li').first().addClass('active'); 
               	    $('.tab-content .tab-pane').first().addClass('active'); 

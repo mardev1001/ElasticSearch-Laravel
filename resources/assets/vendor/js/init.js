@@ -33,6 +33,7 @@ $(function() {
                 color: "#428bca",
                 showTags: false,
                 enableLinks: true,
+                enableDelete: true,
                 levels: 0,
             });
         });
@@ -89,10 +90,15 @@ $(function() {
                 $(this).attr('id', $(this).data('id'));
             else
                 $(this).attr('id', 'editor-' + counter);
-
+            var classes = '';
+            if( $(this).data('classes') )
+                classes = $(this).data('classes');
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
+                body_class: classes,
+                width: 794,
+                height: 1122,
                 removed_menuitems: 'newdocument',
 
             });
@@ -106,11 +112,15 @@ $(function() {
                 $(this).attr('id', $(this).data('id'));
             else
                 $(this).attr('id', 'variant-' + counter);
-
+            var classes = '';
+            if( $(this).data('classes') )
+                classes = $(this).data('classes');
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
-                height: 300,
+                body_class: classes,
+                width: 794,
+                height: 1122,
                 removed_menuitems: 'newdocument',
 
             });

@@ -29,6 +29,24 @@ class MandantController extends Controller
     {
         // Define file upload path
         $this->fileUploadPath = public_path() . "/files/pictures/mandants";
+        $this->bundeslandList = [
+            'Baden-Württemberg',
+            'Bayern',
+            'Berlin', 
+            'Brandenburg',
+            'Bremen',
+            'Hamburg',
+            'Hessen',
+            'Mecklenburg-Vorpommern',
+            'Niedersachsen',
+            'Nordrhein-Westfalen',
+            'Rheinland-Pfalz',
+            'Saarland',
+            'Sachsen',
+            'Sachsen-Anhalt',
+            'Schleswig-Holstein',
+            'Thüringen',
+        ];
     }
 
     
@@ -75,8 +93,9 @@ class MandantController extends Controller
     public function create()
     {
         // $mandantsAll = Mandant::all();
+        $bundeslander = $this->bundeslandList;
         $mandantsAll = Mandant::where('hauptstelle', true)->get();
-        return view('formWrapper', compact('data', 'mandantsAll'));
+        return view('formWrapper', compact('data', 'mandantsAll', 'bundeslander'));
     }
 
     /**
@@ -118,10 +137,11 @@ class MandantController extends Controller
         $roles = Role::where('phone_role', true)->get();
         $data = Mandant::find($id);
         $mandantUsers = User::all();
+        $bundeslander = $this->bundeslandList;
         $internalMandantUsers = InternalMandantUser::where('mandant_id', $id)->get();
         // $mandantsAll = Mandant::all();
         $mandantsAll = Mandant::where('hauptstelle', true)->where('id', '!=', $id)->get();
-        return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers'));
+        return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers','bundeslander'));
     }
 
     /**

@@ -15,7 +15,7 @@
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <label>{{ trans('rightsRelease.approver') }}*</label>
-                            <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.approver') }}" multiple>
+                            <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.approver') }}" multiple required>
                                 <option value="0"></option>
                                 @foreach($mandantUsers as $mandatUser)
                                 <option value="{{$mandatUser->id}}"

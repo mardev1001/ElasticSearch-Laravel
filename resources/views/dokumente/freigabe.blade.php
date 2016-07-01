@@ -23,7 +23,7 @@
     </div>
     <div class="box">
         <div class="row">
-            <div class="col-sm-8 col-md-9 col-lg-10">
+            <div class="col-sm-12 col-md-12 col-lg-12">
                 
                 <div class="clearfix"></div> 
                 
@@ -44,7 +44,8 @@
                         <div class="content">
                             <p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>
                             
-                            @if(!$document->pdf_upload)
+                            @if($document->pdf_upload || count($document->editorVariantOrderBy) )
+                            
                                 <ul class="nav nav-tabs" id="tabs">
                                    @if( count($document->editorVariantOrderBy) ) 
                                        @foreach( $document->editorVariantOrderBy as $k=>$variant)
@@ -57,6 +58,16 @@
                                    @if( count($document->editorVariant) ) 
                                        @foreach( $document->editorVariant as $v => $variant)
                                            <div class="tab-pane @if($v == 0) active @endif" id="variant{{$variant->variant_number}}">
+                                               @if(count($document->documentUploads))
+                                                <div class="attachments">
+                                                    <span class="text">Dokument Anlage/n: </span>
+                                                    @foreach($document->documentUploads as $attachment)
+                                                        <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
+                                                       <a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">{{basename($attachment->file_path)}}</a>
+                                                       <br><span class="indent"></span>
+                                                    @endforeach
+                                                </div>
+                                                @endif
                                                <div>
                                                    {!! ($variant->inhalt) !!}
                                                </div>
@@ -80,7 +91,7 @@
                         <div class="clearfix"></div> <br>
                         
                          <div class="footer">
-                            @if(count($document->documentUploads))
+                            @if(count($document->documentUploads)  && !$document->pdf_upload)
                             <div class="attachments">
                                 <span class="text">Dokument Anlage/n: </span>
                                 @foreach($document->documentUploads as $attachment)
@@ -101,33 +112,14 @@
                         
                         @endif
                     </div><!--end col-xs-12-->
+                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                    
                 </div><!--end row-->
                 <div class="clearfix"></div> 
                
             </div>
 
-            <div class="col-sm-4 col-md-3 col-lg-2 btns">
-                <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
-                <button class="btn btn-primary pull-right">{{ trans('dokumentShow.deactivate') }}</button>
-                <!--<a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>-->
-                <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>
-                <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
-                <button class="btn btn-primary pull-right">{{ trans('dokumentShow.favorite') }}</button>
-                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
-                <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
-                <button class="btn btn-primary pull-right">{{ trans('dokumentShow.disapprove') }}</button>
-                <a href="#" class="btn btn-primary pull-right">PDF ansehen</a>
-                <!--<button class="btn btn-primary pull-right">{{ trans('dokumentShow.download') }}</button>-->
-                
-                <!--<a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right"><i class="fa fa-edit"></i> {{ trans('dokumentShow.edit')}} </a>-->
-                <!--<button class="btn btn-primary pull-right"><i class="fa fa-power-off"></i> {{ trans('dokumentShow.deactivate') }}</button>-->
-                <!--<button class="btn btn-primary pull-right"><i class="fa fa-files-o"></i> {{ trans('dokumentShow.new-version') }}</button>-->
-                <!--<button class="btn btn-primary pull-right"><i class="fa fa-history"></i> {{ trans('dokumentShow.history') }}</button>-->
-                <!--<button class="btn btn-primary pull-right"><i class="fa fa-star-o"></i> {{ trans('dokumentShow.favorite') }}</button>-->
-                <!--<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren"><i class="fa fa-comment-o"></i> {{ trans('dokumentShow.commenting') }}</button>-->
-                <!--<button class="btn btn-primary pull-right"><i class="fa fa-check"></i> {{ trans('dokumentShow.approve') }}</button>-->
-                <!--<button class="btn btn-primary pull-right"><i class="fa fa-times"></i> {{ trans('dokumentShow.disapprove') }}</button>-->
-            </div>
+            
             
             <div class="clearfix"></div> 
          <!-- modal start -->   

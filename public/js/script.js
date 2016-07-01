@@ -64419,6 +64419,7 @@ $(function() {
                 color: "#428bca",
                 showTags: false,
                 enableLinks: true,
+                enableDelete: true,
                 levels: 0,
             });
         });
@@ -64475,10 +64476,15 @@ $(function() {
                 $(this).attr('id', $(this).data('id'));
             else
                 $(this).attr('id', 'editor-' + counter);
-
+            var classes = '';
+            if( $(this).data('classes') )
+                classes = $(this).data('classes');
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
+                body_class: classes,
+                width: 794,
+                height: 1122,
                 removed_menuitems: 'newdocument',
 
             });
@@ -64492,11 +64498,15 @@ $(function() {
                 $(this).attr('id', $(this).data('id'));
             else
                 $(this).attr('id', 'variant-' + counter);
-
+            var classes = '';
+            if( $(this).data('classes') )
+                classes = $(this).data('classes');
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
-                height: 300,
+                body_class: classes,
+                width: 794,
+                height: 1122,
                 removed_menuitems: 'newdocument',
 
             });
@@ -64723,15 +64733,18 @@ $( function() {
     
     /* Trigger tab destroy*/
         $(document).on('click touch','[data-delete-variant]',function(){
-            var variantId = $(this).data('delete-variant');
-            tinymce.execCommand('mceRemoveControl', true, 'variant-'+variantId);
-            $('#variant'+variantId).remove();
-            $(this).closest('li').remove();
-             $('.nav-tabs li.active').removeClass('active');
-      	    $('.tab-content .tab-pane').removeClass('active');
-            $('.nav-tabs li').first().addClass('active'); 
-      	    $('.tab-content .tab-pane').first().addClass('active'); 
-           
+           var tabsNumber =  $('#tabs li').size()-1;
+           if(tabsNumber >= 1){
+                var variantId = $(this).data('delete-variant');
+                tinymce.execCommand('mceRemoveControl', true, 'variant-'+variantId);
+                $('#variant'+variantId).remove();
+                $('#variation'+variantId).remove();
+                $(this).closest('li').remove();
+                 $('.nav-tabs li.active').removeClass('active');
+          	    $('.tab-content .tab-pane').removeClass('active');
+                $('.nav-tabs li').first().addClass('active'); 
+          	    $('.tab-content .tab-pane').first().addClass('active'); 
+           }
          
         });
     /* End Trigger tab destroy*/
@@ -64745,11 +64758,12 @@ $( function() {
            	if( $(this).closest('.parent-tabs').find('.nav-tabs li').last().length ){
            	    var last =$(this).closest('.parent-tabs').find('.nav-tabs li').last().data('variant');
            	    
-           	   
            	    if( isNaN( parseInt(last) ) == true)
            	        nextTab = $(this).closest('.parent-tabs').find('.nav-tabs li').size()+1;
-           	    else
+           	    else{
+         	         prevNumber = parseInt(last);
            	         nextTab = parseInt(last)+1;
+           	    }
            	}
            	//Check if content exists to prevent undefined error
            	if( $('#variant-'+prevNumber).length ){
@@ -64759,18 +64773,31 @@ $( function() {
            	    prevHTML = tinymce.get('editor-'+prevNumber).getContent(); 
            	}
       	// create the tab
-      	$('<li data-variation="'+nextTab+'"><a href="#variation'+nextTab+'" data-toggle="tab">Variation '+nextTab+' <span class="fa fa-close remove-editor" data-delete-variant="'+nextTab+'"></span></a></li>')
+      	$('<li data-variation="'+nextTab+'"><a href="#variation'+nextTab+'" data-toggle="tab">Variante '+nextTab+' <span class="fa fa-close remove-editor" data-delete-variant="'+nextTab+'"></span></a></li>')
       	.appendTo('#tabs');
       	 
       	// create the tab content
-      	$('<div class="tab-pane" id="variation'+nextTab+'"><div data-id="'+nextTab+'" id="variant-'+nextTab+'" class="editable variant-'+nextTab+'" >'+prevHTML+'</div></div>').appendTo('.tab-content');
-      	$('.editable').each(function(){
-      	    var id=$(this).data('id');
-      	     tinymce.init({
-                selector: '.variant-'+id,
-                skin_url: '/css/style'
-            });
-      	});
+      	$('<div class="tab-pane" id="variation'+nextTab+'" data-id="'+nextTab+'"><div data-id="'+nextTab+'" id="variant-'+nextTab+'" class="editable variant-'+nextTab+'" >'+prevHTML+'</div></div>').appendTo('.tab-content');
+      	var counter = 0;
+      	
+      	/*
+      	
+      	*/
+      	$('.editable').each(function() {
+                        counter++;
+                        
+                        if ($(this).data('id'))
+                            $(this).attr('id', 'variant-'+$(this).data('id'));
+                        else
+                            $(this).attr('id', 'variant-' + counter);
+                       tinymce.init({
+                            selector: '.editable',
+                            skin_url: '/css/style',
+                            width: 794,
+                            height: 1122,
+                            removed_menuitems: 'newdocument',
+                        });
+        });
       	if( $('.nav-tabs li.active').length < 1 ){
       	    $('.nav-tabs li').first().addClass('active'); 
       	    $('.tab-content .tab-pane').first().addClass('active'); 
@@ -64888,6 +64915,7 @@ $( function() {
 		searchResultBackColor: undefined, //'#FFFFFF',
 
 		enableLinks: false,
+		enableDelete: false,
 		highlightSelected: true,
 		highlightSearchResults: true,
 		showBorder: true,
@@ -65468,6 +65496,18 @@ $( function() {
 				treeItem
 					.append(node.text);
 			}
+			
+			// Add hyperlink for deleting
+			if (_this.options.enableDelete) {
+				if(node.hrefDelete != undefined){
+					treeItem
+						.append($(_this.template.linkDelete)
+							.attr('href', node.hrefDelete)
+							.append(node.textDelete)
+						);
+				}
+			}
+
 
 			// Add tags as badges
 			if (_this.options.showTags && node.tags) {
@@ -65566,6 +65606,7 @@ $( function() {
 		icon: '<span class="icon"></span>',
 		icon2: '<span class="icon2"></span>',
 		icon3: '<span class="icon3"></span>',
+		linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'
 	};

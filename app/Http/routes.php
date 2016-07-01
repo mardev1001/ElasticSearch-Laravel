@@ -38,6 +38,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::get('dokumente/new-version/{id}', 'DocumentController@newVersion');
+        Route::get('dokumente/{id}/freigabe', 'DocumentController@freigabeApproval');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         Route::post('comment/{id}', 'DocumentController@saveComment');
         
@@ -63,7 +64,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('adressaten', 'AdressatController');
         Route::resource('dokument-typen', 'DocumentTypeController');
         Route::resource('favoriten', 'FavoritesController');
-        Route::resource('historie', 'HistoryController');
+        // Route::resource('historie', 'HistoryController');
         Route::resource('statistik', 'StatsController');
         Route::resource('telefonliste', 'TelephoneListController');
         Route::resource('einstellungen', 'SettingsController');

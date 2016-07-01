@@ -72,8 +72,6 @@ class DocumentController extends Controller
     public function create()
     {
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
-        
-        $url = '';
         $documentCoauthors = DocumentCoauthor::all();
         $documentTypes = DocumentType::all();
         $isoDocuments = IsoCategory::all();
@@ -82,7 +80,7 @@ class DocumentController extends Controller
        
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
-        // dd($mandantUsers);
+        //  dd($data);
          
         return view('formWrapper', compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentCoauthors') );
     }
@@ -95,9 +93,7 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
         $adressats = Adressat::where('active',1)->get();
-        //DB::enableQueryLog();
         $docType = DocumentType::find( $request->get('document_type_id') );
         
         //fix if document type not iso category -> don't save iso_category_id
@@ -108,7 +104,9 @@ class DocumentController extends Controller
             && $request->get('document_type_id') != $this->qmRundId && $request->has('pdf_upload') )
             RequestMerge::merge(['pdf_upload' => 0] );    
     
-            
+        if(!$request->has('date_published'))    
+            RequestMerge::merge(['date_published' => Carbon::now()->addDay()] );
+        
         RequestMerge::merge(['version' => 1] );
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
         
@@ -317,6 +315,7 @@ class DocumentController extends Controller
     public function documentEditor(Request $request)
     {
         
+        //  dd($request->all());   
         $model = Document::find($request->get('model_id'));
         if($model == null){
             
@@ -425,7 +424,16 @@ class DocumentController extends Controller
         /*Check if document has editorVariant*/
         if( count( $data->editorVariant) > 0 )
             foreach( $data->editorVariant as $variant){
-                $attachmentArray[$variant->id] = $this->document->generateTreeview($variant,false,false,$id);
+                $attachmentArray[$variant->id] = 
+                $this->document->generateTreeview($variant, 
+                    array(
+                        'tags' => false, 
+                        'document' => false, 
+                        'documentId' => $id, 
+                        'showDelete'=> true ,
+                        'showHistoryIcon' => true
+                        )
+                    );
             }
         /*End Check if document has attachments*/
         
@@ -443,7 +451,7 @@ class DocumentController extends Controller
         $variants = EditorVariant::where('document_id',$data->id)->get();
         $documentStatus = DocumentStatus::all();
         
-        return view('dokumente.attachments', compact('collections','data','attachmentArray','documents','documentStatus','url','documentTypes',
+        return view('dokumente.attachments', compact('collections','data','data2','attachmentArray','documents','documentStatus','url','documentTypes',
         'isoDocuments','mandantUsers','backButton','nextButton') );
     }
     
@@ -459,6 +467,8 @@ class DocumentController extends Controller
         //document attachment is a record in editor_variants && editor_variant_document
         $data = Document::find($id);
         
+        if(!$request->has('date_published'))    
+            RequestMerge::merge(['date_published' => Carbon::now()->addDay()] );
         $currentEditorVariant = $request->get('variant_id');
         $document = Document::find($request->get('document_id'));
         /*If option 1*/
@@ -656,7 +666,9 @@ class DocumentController extends Controller
                 $variantNumber = $this->document->variantNumber($k);
                 
                 if( in_array('Alle',$request->get($k) ) ){
+                   
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                    if($editorVariant){
                     $editorVariant->approval_all_mandants = 1; 
                     $dirty=$this->dirty($dirty,$editorVariant);
                     $editorVariant->save();
@@ -677,6 +689,7 @@ class DocumentController extends Controller
                         }
                      }//end foreach
                      
+                    }
                      /* End Fix where where variant is Alle and roles different from All*/
                 }
                 else{
@@ -835,6 +848,15 @@ class DocumentController extends Controller
             $dirty=$this->dirty($dirty,$document);
             $document->save();
             
+            $continue = true;
+            $uniqeUrl = '';
+            while ($continue) {
+                $uniqeUrl = $this->generateUniqeLink();
+                if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                    $continue = false;
+            }
+            $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
+                            'url_unique'=>$uniqeUrl]);
             if($dirty == true)
                 session()->flash('message',trans('documentForm.fastPublished'));
             return redirect('/');
@@ -907,7 +929,7 @@ class DocumentController extends Controller
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
         // session()->flash('message',trans('documentForm.documentEditSuccess'));
-         
+       
         return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments','documentStatus','mandantUsers', 'documentCoauthor') );
     }
 
@@ -930,8 +952,12 @@ class DocumentController extends Controller
             && $request->get('document_type_id') !=  $this->qmRundId  && $request->has('pdf_upload') )
             RequestMerge::merge(['pdf_upload' => 0] );    
     
+        if(!$request->has('date_published'))    
+            RequestMerge::merge(['date_published' => Carbon::now()->addDay()] );
         // dd($request->all());        
-        RequestMerge::merge(['version' => 1] );
+       
+        
+        
         $data = Document::find( $id );
         $prevName = $data->name;
         if( $request->get('name') != $prevName ){
@@ -953,20 +979,22 @@ class DocumentController extends Controller
             //rename files to new name
             //rename documentUploads
             $dirname= $this->movePath.'/'.$oldSlug;
-              if (is_dir($dirname))
-           $dir_handle = opendir($dirname);
-        	 if (!$dir_handle)
-        	      return false;
-        	 while($file = readdir($dir_handle)) {
-        	       if ($file != "." && $file != "..") {
-        	            if (!is_dir($dirname."/".$file))
-        	                 unlink($dirname."/".$file);
-        	            else
-        	                 delete_directory($dirname.'/'.$file);
-        	       }
-        	 }
-        	 closedir($dir_handle);
-        	 rmdir($dirname);
+           if (  \File::exists( $dirname ) ) {
+            if (is_dir($dirname))
+                $dir_handle = opendir($dirname);
+            	if ($dir_handle){
+            	while($file = readdir($dir_handle)) {
+            	    if ($file != "." && $file != "..") {
+            	        if (!is_dir($dirname."/".$file))
+            	            unlink($dirname."/".$file);
+            	        else
+            	            delete_directory($dirname.'/'.$file);
+        	        }
+            	 }
+            	 closedir($dir_handle);
+            	 rmdir($dirname);
+               }
+           }//end if folder dirname exists
         }
             
         $data->fill( $request->all() )->save();
@@ -998,88 +1026,91 @@ class DocumentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    // public function newVersion($id)
-    // {
-    //     //find if document has version higher than one
-    //     $version = 0;
-    //     $document = Document::find($id);
-    //     $version = $document->version;
-    //     if( $document->document_group_id == null || $document->document_group_id == 0){
-    //         $document->document_group_id = $document->id;
-    //         $document->save();
-    //     }
-    //     else{
-    //         $highestVersion = Document::where('document_group_id',$document->document_group_id)->orderBy('version','DESC')->first();
-    //         $version = $highestVersion->version;
-    //     }
-    //     /*Set all previous versions to arhived*/
-    //     /*End Set all previous versions to arhived*/
-    //     $newDocument = $document->replicate();
-    //     $newDocument->version = $version+1;
-    //     $newDocument->version_parent = $version;
-    //     $newDocument->document_status_id = 1;
-    //     $newDocument->date_expired = null;
-    //     $newDocument->date_published = null;
-    //     $newDocument->date_approved = null;
-    //     $newDocument->save();
-    //     // dd($newDocument);
+    public function newVersion($id)
+    {
+        //find if document has version higher than one
+        $document = Document::find($id);
+        $highestVersion = Document::where('document_group_id',$document->document_group_id)->orderBy('version','DESC')->first();
+        $version = $highestVersion->version;
+      
+        /*Set all previous versions to arhived*/
+        /*End Set all previous versions to arhived*/
+        $newDocument = $document->replicate();
+        $newDocument->version = $version+1;
+        $newDocument->version_parent = $version;
+        $newDocument->document_status_id = 1;
+        $newDocument->date_expired = null;
+        $newDocument->date_published = null;
+        $newDocument->date_approved = null;
+        $newDocument->save();
         
-    //     /*Duplicate document variants*/
-    //     foreach($document->editorVariant as $variant){
-    //         $newVariant = $variant->replicate();
-    //         $newVariant->document_id = $newDocument->id;
-    //         $newVariant->save();
+        /*Duplicate document variants*/
+        foreach($document->editorVariant as $variant){
+            $newVariant = $variant->replicate();
+            $newVariant->document_id = $newDocument->id;
+            $newVariant->save();
             
-    //         /*Duplicate document uploads*/
-    //         foreach( $variant->documentUpload as $upload){
-    //             $newUpload = $upload->replicate();
-    //             $newUpload->editor_variant_id = $newVariant->id;
-    //             $newUpload->save();
-    //         }
-    //         /*End Duplicate document uploads*/
-            
-    //         /*Duplicate editor_variant_documents*/
-    //         foreach( $variant->editorVariantDocument as $editorVariantDocument){
-    //             $newEditorVariantDocument = $editorVariantDocument->replicate();
-    //             $newEditorVariantDocument->editor_variant_id = $newVariant->id;
-    //             $newEditorVariantDocument->document_status_id = $newDocument->document_status_id;
-    //             $newEditorVariantDocument->document_group_id = $newDocument->document_group_id;
-    //             $newEditorVariantDocument->document_id = $newDocument->id;
-    //             $newEditorVariantDocument->save();
-    //         }
-    //         /*End Duplicate editor_variant_documents*/
-            
-    //         /*Duplicate document mandants*/
-    //         foreach( $variant->documentMandants as $documentMandant){
-    //             $newDocumentMandant = $documentMandant->replicate();
-    //             $newDocumentMandant->document_id = $newDocument->id;
-    //             $newDocumentMandant->editor_variant_id = $newVariant->id;
-    //             $newDocumentMandant->save();
+            /*Duplicate document uploads*/
+            foreach( $variant->documentUpload as $upload){
+                $oldSlug= str_slug($document->name);
+                $newSlug= str_slug($newDocument->name);
+        		$newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
+                $newUpload = $upload->replicate();
+                $newUpload->editor_variant_id = $newVariant->id;
+                $newUpload->file_path = $newFileName;
+                $newUpload->save();
                 
-    //             /*Duplicate document mandant mandants*/
-    //             foreach($documentMandant->documentMandantMandants as $docMandantMandant){
-    //                 $newDMM = $docMandantMandant->replicate();
-    //                 $newDMM->document_mandant_id = $newDocumentMandant->id;
-    //                 $newDMM->save();
-    //             }
-    //             /*End Duplicate document mandant mandants*/
+                 if ( ! \File::exists( $this->movePath.'/'.$newSlug.'/' ) ) {
+        			\File::makeDirectory( $this->movePath.'/'.$newSlug.'/', $mod=0777,true,true); 
+        		}
+               copy($this->movePath.'/'.$oldSlug.'/'.$upload->file_path, $this->movePath.'/'.$newSlug.'/'.$newFileName);
+            //   $upload->file_path = $newFileName;
                 
-    //             /*Duplicate document mandant roles*/
-    //              foreach($documentMandant->documentMandantRole as $docMandantRole){
-    //                 $newDMR = $docMandantRole->replicate();
-    //                 $newDMR->document_mandant_id = $newDocumentMandant->id;
-    //                 $newDMR->save();
-    //             }
-    //             /*End Duplicate document mandant roles*/
-    //         }   
-    //         /*End Duplicate  document mandants*/
-    //     }
-    //     /* End Duplicate document variants*/
-    //     // dd($newDocument);
-    //      session()->flash('message',trans('documentForm.newVersionSuccess'));
-    //     return redirect('dokumente/'.$newDocument->id.'/edit' );
+            }
+            /*End Duplicate document uploads*/
+            
+            /*Duplicate editor_variant_documents*/
+            foreach( $variant->editorVariantDocument as $editorVariantDocument){
+                $newEditorVariantDocument = $editorVariantDocument->replicate();
+                $newEditorVariantDocument->editor_variant_id = $newVariant->id;
+                $newEditorVariantDocument->document_status_id = $newDocument->document_status_id;
+                $newEditorVariantDocument->document_group_id = $newDocument->document_group_id;
+                $newEditorVariantDocument->document_id = $newDocument->id;
+                $newEditorVariantDocument->save();
+            }
+            /*End Duplicate editor_variant_documents*/
+            
+            /*Duplicate document mandants*/
+            foreach( $variant->documentMandants as $documentMandant){
+                $newDocumentMandant = $documentMandant->replicate();
+                $newDocumentMandant->document_id = $newDocument->id;
+                $newDocumentMandant->editor_variant_id = $newVariant->id;
+                $newDocumentMandant->save();
+                
+                /*Duplicate document mandant mandants*/
+                foreach($documentMandant->documentMandantMandants as $docMandantMandant){
+                    $newDMM = $docMandantMandant->replicate();
+                    $newDMM->document_mandant_id = $newDocumentMandant->id;
+                    $newDMM->save();
+                }
+                /*End Duplicate document mandant mandants*/
+                
+                /*Duplicate document mandant roles*/
+                 foreach($documentMandant->documentMandantRole as $docMandantRole){
+                    $newDMR = $docMandantRole->replicate();
+                    $newDMR->document_mandant_id = $newDocumentMandant->id;
+                    $newDMR->save();
+                }
+                /*End Duplicate document mandant roles*/
+            }   
+            /*End Duplicate  document mandants*/
+        }
+        /* End Duplicate document variants*/
+        // dd($newDocument);
+         session()->flash('message',trans('documentForm.newVersionSuccess'));
+        return redirect('dokumente/'.$newDocument->id.'/edit' );
         
-    // }
+    }
     
     
 
@@ -1111,6 +1142,18 @@ class DocumentController extends Controller
         
         return redirect('dokumente/'.$id);
        
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function freigabeApproval($id)
+    {
+        $document = Document::find($id);
+        $documentComments = DocumentComment::where('document_id',$id)->get();
+        return view('dokumente.freigabe',compact('document','documentComments'));
     }
     
     /**
@@ -1262,11 +1305,11 @@ class DocumentController extends Controller
      */
     public function documentHistory($id)
     {
-        $variants = $this->document->generateDummyData('Anhang');
-        $documents = $this->document->generateDummyData('Variante', $variants);
-        $history = $this->document->generateDummyData('Dokument', $documents);
-        $data = json_encode($history);
-        return view('dokumente.historie', compact('data') );
+        $document = Document::find($id);
+        $documentHistory = Document::where('document_group_id', $document->document_group_id)->orderBy('id', 'desc')->paginate(10, ['*'], 'dokument-historie');
+        $documentHistoryTree = $this->document->generateTreeview( $documentHistory, array('pageHistory' => true, 'showHistoryIcon' => false) );
+        // dd($documentHistory);
+        return view('dokumente.historie', compact('document', 'documentHistory', 'documentHistoryTree') );
     }
     
      /**

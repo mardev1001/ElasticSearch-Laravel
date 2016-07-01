@@ -28,6 +28,7 @@ class CreateMandantsTable extends Migration
             $table->string('hausnummer',10);
             $table->string('plz',10);
             $table->string('ort',100);
+            $table->string('bundesland',100);
             $table->string('telefon',30);  
             $table->string('kurzwahl',30);  
             $table->string('fax',30);  

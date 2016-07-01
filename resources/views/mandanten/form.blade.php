@@ -112,7 +112,21 @@
                                 {!! ViewHelper::setInput('ort',$data,old('ort'),trans('mandantenForm.ort') ) !!}
                             </div>
                         </div><!--End input box-->
-                
+                        
+                        <div class="col-md-6 col-lg-6"> 
+                            <div class="form-group">
+                                <label class="control-label">{{ trans('mandantenForm.bundesland') }}</label>
+                                <select name="bundesland" class="form-control select" data-placeholder="Bundesland auswählen">
+                                    <option></option>
+                                    @foreach($bundeslander as $bundesland)
+                                        <option value="{{ $bundesland }}"  @if($data->bundesland == $bundesland) selected @endif>
+                                            {{ $bundesland }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>   
+                        </div>
+                        
                         <!-- input box-->
                         <div class="col-md-6 col-lg-6">
                             <div class="form-group">
@@ -271,14 +285,14 @@
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('umgemeldet_am', '', '', '&nbsp;', trans('mandantenForm.umgemeldetAm'), false, '', ['datetimepicker'] ) !!}
+                        {!! ViewHelper::setInput('umgemeldet_am', '', '', trans('mandantenForm.umgemeldetAm'), trans('mandantenForm.umgemeldetAm'), false, '', ['datetimepicker'] ) !!}
                     </div>
                 </div><!--End input box-->
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('abgemeldet_am', '', '', '&nbsp;', trans('mandantenForm.abgemeldetAm'), false, '', ['datetimepicker']) !!}
+                        {!! ViewHelper::setInput('abgemeldet_am', '', '', trans('mandantenForm.abgemeldetAm'), trans('mandantenForm.abgemeldetAm'), false, '', ['datetimepicker']) !!}
                     </div>
                 </div><!--End input box-->
                 

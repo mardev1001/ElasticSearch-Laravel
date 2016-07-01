@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Document;
 use App\DocumentType;
 use App\DocumentApproval;
+use App\PublishedDocument;
 
 class DocumentRepository
 {
@@ -62,8 +63,20 @@ class DocumentRepository
     * @param  bool $document
     * @return object array $array
     */
-    public function generateTreeview( $array = array(), $tags = false, $document=true,$documentId=0 ){
+    // public function generateTreeview( $items = array(), $tags = false, $document=true, $documentId=0, $hrefDelete=false ){
+    public function generateTreeview( $items = array(), $options = array() ){
         
+        $optionsDefault = [
+            'tags' => false, 
+            'document' => true,
+            'documentId' => 0, 
+            'showDelete'=> false, 
+            'showHistoryIcon' => true,
+            'pageHistory' => false,
+        ];
+        
+        $options = array_merge($optionsDefault, $options);
+
         /*
         // Bootstrap treeview JSON structure
         {
@@ -101,78 +114,84 @@ class DocumentRepository
         $treeView = array();
         $documents = Document::all();
         $documents = array();
-        if(sizeof($array)) $documents = $array;
-        if( $document == true  && count($documents) > 0)
-            foreach ($documents as $document) {
-        //   dd($documents[2]->documentUploads);
-            $node = new \StdClass();
-            
-            $node->text = $document->name;
-            
-            $icon =  $icon2 = $icon3 ='';
-
-            // Define icon classes
-            // var_dump(Carbon::parse(Auth::user()->last_login)->gt(Carbon::parse($document->created_at)));
-            if($document->document_status_id == 3){
-                if(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)))
-                    $icon = 'icon-favorites ';
-                // $icon2 = 'icon-open ';
-                $icon3 = 'icon-history ';
-            }
-            
-            // dd(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)));
-            if($document->document_status_id == 6){
-                $icon = 'icon-blocked ';
-                $icon2 = 'icon-notreleased ';
-                // $icon3 = 'icon-history ';w
-            }
-            
-            $node->icon = $icon;
-            $node->icon2 = $icon2;
-            $node->icon3 = $icon3 . 'last-node-icon ';
-            
-            $node->href = route('dokumente.show', $document->id);
-            
-            
-            if($document->document_status_id != 6){
-                if(!$document->documentUploads->isEmpty()){
-                    
-                    $node->nodes = array();
-                    if($tags) $node->tags = array(sizeof($document->documentUploads));  
-                    
-                    foreach ($document->documentUploads as $upload) {
-                        $subNode = new \StdClass();
-                        $subNode->text = basename($upload->file_path);
-                        $subNode->icon = 'child-node ';
-                        $subNode->icon2 = 'icon-download ';
-                        $subNode->icon3 = 'last-node-icon ';
-                        $subNode->href = '/download/'.str_slug($document->name).'/'.$upload->file_path;
-                        
+        if(sizeof($items)) $documents = $items;
         
-                        array_push($node->nodes, $subNode);
+        if( $options['document'] == true  && count($documents) > 0)
+            foreach ($documents as $document) {
+            //   dd($documents[2]->documentUploads);
+                $node = new \StdClass();
+                
+                $node->text = $document->name;
+                if($options['pageHistory'] == true) $node->text = "Version " . $document->version . " - " . $node->text ." - ". $document->updated_at;
+                
+                $icon =  $icon2 = $icon3 ='';
+    
+                // Define icon classes
+                // var_dump(Carbon::parse(Auth::user()->last_login)->gt(Carbon::parse($document->created_at)));
+                if($document->document_status_id == 3){
+                    if(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)))
+                        $icon = 'icon-favorites ';
+                    // $icon2 = 'icon-open ';
+                    
+                    if($options['showHistoryIcon'] == true){
+                        if(PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1)
+                            $icon3 = 'icon-history ';
                     }
                 }
-            }
+                
+                // dd(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)));
+                if($document->document_status_id == 6){
+                    $icon = 'icon-blocked ';
+                    $icon2 = 'icon-notreleased ';
+                    // $icon3 = 'icon-history ';w
+                }
+                
+                $node->icon = $icon;
+                $node->icon2 = $icon2;
+                $node->icon3 = $icon3 . 'last-node-icon ';
+                $node->href = route('dokumente.show', $document->id);
+                
+                if($document->document_status_id != 6){
+                    if(!$document->documentUploads->isEmpty()){
+                        
+                        $node->nodes = array();
+                        if($options['tags']) $node->tags = array(sizeof($document->documentUploads));  
+                        
+                        foreach ($document->documentUploads as $upload) {
+                            $subNode = new \StdClass();
+                            $subNode->text = basename($upload->file_path);
+                            $subNode->icon = 'child-node ';
+                            $subNode->icon2 = 'icon-download ';
+                            $subNode->icon3 = 'last-node-icon ';
+                            $subNode->href = '/download/'.str_slug($document->name).'/'.$upload->file_path;
+                            
             
-            array_push($treeView, $node);
+                            array_push($node->nodes, $subNode);
+                        }
+                    }
+                }
+                
+                array_push($treeView, $node);
         }
-        elseif( $document == false  && count($documents) > 0){
+        elseif( $options['document'] == false  && count($documents) > 0){
             foreach($documents->editorVariantDocument as $evd){
-                    if( $evd->document_id != null && $documentId != 0 && $evd->document_id != $documentId){
+                    if( $evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']){
                         $secondDoc = Document::find($evd->document_id);
                         $node = new \StdClass();
                         $node->text = $secondDoc->name;
                         $node->icon = 'icon-parent';
+                        if($options['showDelete'])
+                            $node->hrefDelete = url('anhang-delete/'.$secondDoc->id);
                         //$node->href = route('dokumente.show', $secondDoc->id);
                         
                         if(!$secondDoc->documentUploads->isEmpty()){
                             
                             $node->nodes = array();
-                            if($tags) $node->tags = array(sizeof($secondDoc->documentUploads));  
+                            if($options['tags']) $node->tags = array(sizeof($secondDoc->documentUploads));  
                             
                             foreach ($secondDoc->documentUploads as $upload) {
                                 $subNode = new \StdClass();
-                                $subNode->text = basename($upload->file_path);
+                                $subNode->text =  basename($upload->file_path);
                                 $subNode->icon = 'fa fa-file-o';
                                 $subNode->href = '/download/'.str_slug($secondDoc->name).'/'.$upload->file_path;
                 

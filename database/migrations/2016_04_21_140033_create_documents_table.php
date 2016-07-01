@@ -18,7 +18,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('user_id')->unsigned();//FK
             $table->integer('version');
             $table->string('name');
-            $table->string('name_long');
+            $table->string('name_long')->nullable();
             $table->integer('owner_user_id')->unsigned()->nullable();//FK
             $table->integer('document_status_id')->unsigned()->default(1);//FK
             $table->string('search_tags');
