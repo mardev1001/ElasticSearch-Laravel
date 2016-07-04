@@ -34,4 +34,10 @@ return [
     'savedComment' => 'Kommentar gespeichert',
     'authorized' => 'Dokument wurde erfolgreich veröffentlicht.',
     'newVersionSuccess' => 'Neue Version wurde erstellt',
+    
+    /* Freigabe process */
+    'freigeben' => 'Freigeben',
+    'noFreigeben' => 'Nicht freigeben',
+    'publish' => 'Veröffentlichen',
+    /* End Freigabe process */
 ];

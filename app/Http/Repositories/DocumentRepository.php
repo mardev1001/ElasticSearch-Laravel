@@ -74,7 +74,6 @@ class DocumentRepository
             'showHistoryIcon' => true,
             'pageHistory' => false,
         ];
-        
         $options = array_merge($optionsDefault, $options);
 
         /*
@@ -122,7 +121,7 @@ class DocumentRepository
                 $node = new \StdClass();
                 
                 $node->text = $document->name;
-                if($options['pageHistory'] == true) $node->text = "Version " . $document->version . " - " . $node->text ." - ". $document->updated_at;
+                if($options['pageHistory'] == true) $node->text = "Version " . $document->version . "- " . $node->text ." - ". $document->updated_at;
                 
                 $icon =  $icon2 = $icon3 ='';
     
@@ -152,7 +151,33 @@ class DocumentRepository
                 $node->href = route('dokumente.show', $document->id);
                 
                 if($document->document_status_id != 6){
-                    if(!$document->documentUploads->isEmpty()){
+                    
+                    // 
+                    if ($options['pageHistory'] == true) {
+
+                        $node->nodes = array();
+
+                        foreach ($document->editorVariantOrderBy as $variant) {
+                            $subNode = new \StdClass();
+                            $subNode->text = "Variante " . $variant->variant_number;
+                            $subNode->icon = 'child-node ';
+                            $subNode->icon2 = 'fa fa-2x fa-file-o ';
+                            $subNode->icon3 = $icon3 . 'last-node-icon ';
+
+                            $subNode->nodes = array();
+                            foreach ($variant->documentUpload as $upload) {
+                                $subSubNode = new \StdClass();
+                                $subSubNode->text = basename($upload->file_path);
+                                $subSubNode->icon = 'sub-child-node ';
+                                $subSubNode->icon2 = 'icon-download ';
+                                $subSubNode->icon3 = 'last-node-icon ';
+                                $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+
+                                array_push($subNode->nodes, $subSubNode);
+                            }
+                            array_push($node->nodes, $subNode);
+                        }
+                    } elseif(!$document->documentUploads->isEmpty()){
                         
                         $node->nodes = array();
                         if($options['tags']) $node->tags = array(sizeof($document->documentUploads));  
@@ -175,13 +200,15 @@ class DocumentRepository
         }
         elseif( $options['document'] == false  && count($documents) > 0){
             foreach($documents->editorVariantDocument as $evd){
+                if( Document::find($evd->document_id) != null)
                     if( $evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']){
                         $secondDoc = Document::find($evd->document_id);
+                        // if($secondDoc != null){
                         $node = new \StdClass();
                         $node->text = $secondDoc->name;
                         $node->icon = 'icon-parent';
                         if($options['showDelete'])
-                            $node->hrefDelete = url('anhang-delete/'.$secondDoc->id);
+                            $node->hrefDelete = url('anhang-delete/'.$secondDoc->id.'/'.$options['documentId']);
                         //$node->href = route('dokumente.show', $secondDoc->id);
                         
                         if(!$secondDoc->documentUploads->isEmpty()){
@@ -201,7 +228,7 @@ class DocumentRepository
                         
                         array_push($treeView, $node); 
                     }
-                  
+                    // }//if second doc not null
                 }
                 
         }

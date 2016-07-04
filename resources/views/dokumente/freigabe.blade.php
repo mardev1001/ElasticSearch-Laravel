@@ -23,7 +23,7 @@
     </div>
     <div class="box">
         <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="col-sm-8 col-md-9 col-lg-10">
                 
                 <div class="clearfix"></div> 
                 
@@ -102,22 +102,43 @@
                             </div>
                             @endif
                         </div>
-                      @if( count( $documentComments ) )
-                            <h3> {{ trans('dokumentShow.userCommentTitle') }} </h3>
-                             @foreach( $documentComments as $comment ) 
+                        @if( count( $documentCommentsFreigabe ) )
+                        <div class="col-xs-12 box-wrapper">    
+                            <h3> {{ trans('dokumentShow.freigabeCommentTitle') }} </h3>
+                             @foreach( $documentCommentsFreigabe as $comment ) 
                                  <b>{{ $comment->user->title }} {{ $comment->user->last_name }} -
                                   {{ $comment->betreff }} - {{$comment->created_at}}</b><br/>
                                  <p>{!! $comment->comment !!}</p>
                              @endforeach
                         
+                        </div>
+                        @endif
+                      
+                      @if( count( $documentCommentsUser ) )
+                          <div class="col-xs-12 box-wrapper">
+                            <h3> {{ trans('dokumentShow.userCommentTitle') }} </h3>
+                             @foreach( $documentCommentsUser as $comment ) 
+                                 <b>{{ $comment->user->title }} {{ $comment->user->last_name }} -
+                                  {{ $comment->betreff }} - {{$comment->created_at}}</b><br/>
+                                 <p>{!! $comment->comment !!}</p>
+                             @endforeach
+                        </div>    
                         @endif
                     </div><!--end col-xs-12-->
-                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
                     
-                </div><!--end row-->
-                <div class="clearfix"></div> 
-               
+                </div>  
+            </div>  
+   
+            <div class="col-sm-4 col-md-3 col-lg-2 btns">
+                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                <a href="#" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
+                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
             </div>
+        </div><!--end row-->
+        <div class="clearfix"></div> 
+               
+          
 
             
             
@@ -128,7 +149,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
+                                <span aria-hiddetn="true">&times;</span>
                             </button>
                             <h4 class="modal-title">{{ trans('dokumentShow.commenting') }}</h4>
                         </div>
@@ -137,6 +158,78 @@
                            'url' => '/comment/'.$document->id,
                            'method' => 'POST',
                            'class' => 'horizontal-form']) !!}
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label class="form-label">{{ trans('dokumentShow.subject') }}</label>
+                                    <input type="text" name="betreff" class="form-control" placeholder="{{ trans('dokumentShow.subject') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">{{ trans('dokumentShow.comment') }}</label>
+                                    <textarea name="comment" cols="30" rows="5" class="form-control" placeholder="{{ trans('dokumentShow.comment') }}"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('dokumentShow.close') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ trans('dokumentShow.save') }}</button>
+                            </div>
+                        </form>
+            
+                    </div>
+                </div>
+            </div>  <!-- modal end -->  
+            
+            <!-- modal start -->   
+            <div id="freigeben" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hiddetn="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">{{ trans('documentForm.freigeben') }}</h4>
+                        </div>
+            
+                        {!! Form::open([
+                           'url' => '/dokumente/authorize/'.$document->id,
+                           'method' => 'POST',
+                           'class' => 'horizontal-form']) !!}
+                           <input type="hidden" value="1" name="validation_status" />
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label class="form-label">{{ trans('dokumentShow.subject') }}</label>
+                                    <input type="text" name="betreff" class="form-control" placeholder="{{ trans('dokumentShow.subject') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">{{ trans('dokumentShow.comment') }}</label>
+                                    <textarea name="comment" cols="30" rows="5" class="form-control" placeholder="{{ trans('dokumentShow.comment') }}"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('dokumentShow.close') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ trans('dokumentShow.save') }}</button>
+                            </div>
+                        </form>
+            
+                    </div>
+                </div>
+            </div>  <!-- modal end -->  
+            
+            <!-- modal start -->   
+            <div id="noFreigeben" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hiddetn="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">{{ trans('documentForm.noFreigeben') }}</h4>
+                        </div>
+            
+                        {!! Form::open([
+                           'url' => '/dokumente/authorize/'.$document->id,
+                           'method' => 'POST',
+                           'class' => 'horizontal-form']) !!}
+                           <input type="hidden" value="2" name="validation_status" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label class="form-label">{{ trans('dokumentShow.subject') }}</label>

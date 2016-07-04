@@ -16,7 +16,8 @@ Route::group( array('middleware' => ['auth']), function(){
         
         Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
         
-        Route::get('dokumente/authorize/{id}', 'DocumentController@authorizeDocument');
+        Route::post('dokumente/authorize/{id}', 'DocumentController@authorizeDocument');
+        Route::get('anhang-delete/{id}/{parent_id}', 'DocumentController@destroyByLink');
         Route::get('dokumente/rundschreiben', 'DocumentController@rundschreiben');
         Route::get('dokumente/rundschreiben-pdf', 'DocumentController@rundschreibenPdf');
         Route::get('dokumente/rundschreiben-qmr', 'DocumentController@rundschreibenQmr');

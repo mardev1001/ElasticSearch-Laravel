@@ -273,7 +273,7 @@ Benutzer bearbeiten
                                             </select>
                                         </td>
                                         <td class="table-options text-right">
-                                            <button class="btn btn-danger" name="remove" value="1" type="submit">{{ trans('benutzerForm.remove') }}</button>
+                                            <button class="btn btn-danger delete-prompt" name="remove" value="1" type="submit">{{ trans('benutzerForm.remove') }}</button>
                                             <button class="btn btn-primary" name="save" value="1" type="submit">{{ trans('benutzerForm.save') }}</button>
                                         </td>
                                     </tr>

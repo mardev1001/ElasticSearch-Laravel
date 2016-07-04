@@ -80,7 +80,7 @@
                                         @if($mandant->active)
                                             <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
                                         @else
-                                            <button class="btn btn-primary" type="submit" name="active" value="0"></span>Inaktiv</button>
+                                            <button class="btn btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button>
                                         @endif
                                     {!! Form::close() !!}
                                     

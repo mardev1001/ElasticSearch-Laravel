@@ -28,6 +28,7 @@ return [
     'content' => 'Inhalte',
     'download' => 'Download',
     'userCommentTitle' => 'Kommentare Benutzer',
+    'freigabeCommentTitle' => 'Kommentare Freigeber',
     'CommentTitle' => 'Kommentare Freigeber',
     
 ];

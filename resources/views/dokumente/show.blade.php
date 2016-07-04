@@ -31,7 +31,7 @@
                     <div class="col-xs-12">
                 
                         <div class="header">
-                            <p class="text-small">11.05.16</p> <!-- date placeholder -->
+                            <p class="text-small">{{ $document->created_at }}</p> <!-- date placeholder -->
                             @if($document->documentAdressats)
                             <p><b>{{ trans('dokumentShow.adressat') }}:</b> {{ $document->documentAdressats->name }}</p> <!-- Adressat optional -->
                             @endif
@@ -82,10 +82,11 @@
                          <div class="footer">
                             @if(count($document->documentUploads))
                             <div class="attachments">
-                                <span class="text">Dokument Anlage/n: </span>
-                                @foreach($document->documentUploads as $attachment)
+                                <span class="text">Dokument Anhäng/e: </span>
+                                @foreach($document->documentUploads as $k =>$attachment)
                                     <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
-                                   <a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">{{basename($attachment->file_path)}}</a>
+                                   <a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">
+                                {{-- basename($attachment->file_path) --}} PDF download</a>
                                    <br><span class="indent"></span>
                                 @endforeach
                             </div>
@@ -145,6 +146,7 @@
                            'url' => '/comment/'.$document->id,
                            'method' => 'POST',
                            'class' => 'horizontal-form']) !!}
+                           <input type="hidden" name="page" value="/dokumente/{{$document->id}}" />
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label class="form-label">{{ trans('dokumentShow.subject') }}</label>

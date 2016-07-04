@@ -22,9 +22,11 @@
                         <select name="user_id" class="form-control select" data-placeholder="Mitarbeiter auswählen *">
                             <option></option>
                             @foreach($mandantUsers as $mandantUser)
-                                <option value="{{ $mandantUser->id }}" required>
-                                    {{ $mandantUser->first_name }} {{ $mandantUser->last_name }}
-                                </option>
+                                @if($mandantUser->active)
+                                    <option value="{{ $mandantUser->id }}" required>
+                                        {{ $mandantUser->first_name }} {{ $mandantUser->last_name }}
+                                    </option>
+                                @endif
                             @endforeach
                         </select>
                     </div>   
@@ -62,7 +64,9 @@
                     <option></option>
                     @foreach($mandantUsers as $mandantUser)
                         <option value="{{ $mandantUser->id }}"  @if($internalUser->user_id == $mandantUser->id) selected @endif>
-                            {{ $mandantUser->first_name }} {{ $mandantUser->last_name }}
+                            @if($mandantUser->active)
+                                {{ $mandantUser->first_name }} {{ $mandantUser->last_name }}
+                            @endif
                         </option>
                     @endforeach
                 </select>

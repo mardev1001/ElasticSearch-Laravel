@@ -422,8 +422,9 @@ class DocumentController extends Controller
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
         $attachmentArray = array();
         /*Check if document has editorVariant*/
-        if( count( $data->editorVariant) > 0 )
-            foreach( $data->editorVariant as $variant){
+        if( count( $data->editorVariantNoDeleted) > 0 )
+            foreach( $data->editorVariantNoDeleted as $variant){
+                
                 $attachmentArray[$variant->id] = 
                 $this->document->generateTreeview($variant, 
                     array(
@@ -857,6 +858,13 @@ class DocumentController extends Controller
             }
             $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
                             'url_unique'=>$uniqeUrl]);
+                            
+            $otherDocuments = Document::where('document_group_id',$document->document_group_id)
+                                ->whereNotIn('id',array($document->id))->get();
+            foreach($otherDocuments as $oDoc){
+                $oDoc->document_status_id = 5;
+                $oDoc->save();
+            }                                
             if($dirty == true)
                 session()->flash('message',trans('documentForm.fastPublished'));
             return redirect('/');
@@ -902,7 +910,7 @@ class DocumentController extends Controller
     public function show($id)
     {
         $document = Document::find($id);
-        $documentComments = DocumentComment::where('document_id',$id)->get();
+        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
         return view('dokumente.show', compact('document','documentComments') );
     }
 
@@ -1120,9 +1128,25 @@ class DocumentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function destroyByLink($id,$parentId)
+    {
+        $document = Document::findOrFail($id);
+        $document->delete();
+        
+        return redirect('/dokumente/anhange/'.$parentId)->with('message', 'Dokument wurde entfernt.');
+    }
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
-        //
+        $user = User::findOrFail($id);
+        $user->delete();
+        
+        return redirect('mandanten')->with('message', 'Benutzer erfolgreich entfernt.');
     }
     
      /**
@@ -1134,14 +1158,16 @@ class DocumentController extends Controller
      */
     public function saveComment(Request $request, $id)
     {
-        RequestMerge::merge(['document_id'=>$id,'user_id' => Auth::user()->id,'active' => null,'freigeber'=>null] );
-        // dd( $request->all() );
+        RequestMerge::merge(['document_id'=>$id,'user_id' => Auth::user()->id,'active' => 1,'freigeber'=>0] );
+        //  dd( $request->all() );
         $comment =  DocumentComment::create( $request->all() );
-        
+        // dd($comment);
+        // dd('break');
         session()->flash('message',trans('documentForm.savedComment'));
-        
-        return redirect('dokumente/'.$id);
-       
+        if( $request->has('page') )
+            return redirect('dokumente/'.$id);
+        else
+             return redirect('dokumente/'.$id.'/freigabe');
     }
     
     /**
@@ -1152,8 +1178,9 @@ class DocumentController extends Controller
     public function freigabeApproval($id)
     {
         $document = Document::find($id);
-        $documentComments = DocumentComment::where('document_id',$id)->get();
-        return view('dokumente.freigabe',compact('document','documentComments'));
+        $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
+        $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->get();
+        return view('dokumente.freigabe',compact('document','documentCommentsUser','documentCommentsFreigabe'));
     }
     
     /**
@@ -1161,11 +1188,21 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function authorizeDocument($id)
+    public function authorizeDocument(Request $request, $id)
     {
+        // dd($request->all());
+        if($request->get('validation_status') == 1){
+            $approved = true;
+            $dateApproved = Carbon::now();
+        }
+        else{
+            $approved = false;
+            $dateApproved = null;
+        } 
+         
         $document = Document::find($id);
         $user = Auth::user()->id;
-        $document->document_status_id = 3; 
+        $document->document_status_id = 2; 
         $document->save();
         $continue = true;
         $uniqeUrl = '';
@@ -1174,13 +1211,23 @@ class DocumentController extends Controller
             if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
                 $continue = false;
         }
-        $documentApproval = DocumentApproval::where('document_id', $id)->where('user_id',$user)->first();
-        $documentApproval->approved = 1;
-        $documentApproval->date_approved = Carbon::now();
+        $documentApproval = DocumentApproval::firstOrCreate( array('document_id' => $id, 'user_id' => $user) );
+        $documentApproval->approved = $approved;
+        $documentApproval->date_approved = $dateApproved;
         $documentApproval->save();
-        $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,'url_unique'=>$uniqeUrl]);
+        
+        $otherDocuments = Document::where('document_group_id',$document->document_group_id)->whereNotIn('id',array($document->id))->get();
+        foreach($otherDocuments as $oDoc){
+            $oDoc->document_status_id = 5;
+            $oDoc->save();
+        }                 
+        
+        if($request->has('comment')){
+            RequestMerge::merge(['freigeber' => 1,'active' => 1,'document_id'=>$document->id,'user_id' => $user] );
+            $comment = DocumentComment::create( $request->all() );
+        }$publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,'url_unique'=>$uniqeUrl]);
         session()->flash('message',trans('documentForm.authorized'));
-        return redirect('/');
+        return redirect('/dokumente/'.$id.'/freigabe');
     }
     
      /**

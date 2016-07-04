@@ -28,6 +28,16 @@ class Document extends Model
         return Carbon::parse($value)->format('d.m.Y');
     }
     
+    // public function getCreatedAtDttribute($value)
+    // {
+    //     return Carbon::parse($value)->format('d.m.Y H:m:s');
+    // }
+    
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('d.m.Y H:m:s');
+    }
+    
     public function setDatePublishedAttribute($value)
     {
         $this->attributes['date_published'] = Carbon::parse($value);
@@ -41,6 +51,12 @@ class Document extends Model
     public function setDateExpiredAttribute($value)
     {
         $this->attributes['date_expired'] = Carbon::parse($value);
+    }
+    
+    public function getCreatedAtAttribute($value)
+    {
+        
+      return  $this->attributes['created_at'] = Carbon::parse($value)->format('d.m.Y');
     }
     
     public function setAdressatIdAttribute($value){
@@ -82,6 +98,9 @@ class Document extends Model
     
     public function editorVariant(){
             return $this->hasMany('App\EditorVariant');
+    }
+    public function editorVariantNoDeleted(){
+            return $this->hasMany('App\EditorVariant')->where('deleted_at',null);
     }
     public function editorVariantOrderBy(){
             return $this->hasMany('App\EditorVariant')->orderBy('variant_number');
