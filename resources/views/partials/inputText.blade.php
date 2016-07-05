@@ -1,3 +1,4 @@
+
     <label class="control-label">
         {{ ($label) }}@if( $required !=false && $label != '' )* @endif 
     </label> 
@@ -16,8 +17,8 @@
         @if( $required !=false ) 
             required 
         @endif
-        
-        @if( isset( $data->$inputName ) && !empty($data->$inputName ) )
+         
+        @if( isset( $data->$inputName ) && !empty($data->$inputName ) &&$data->$inputName != NULL )
     		 value="{{ $data->$inputName }}"
     	 @else
     	 	value="{{ $old }}"

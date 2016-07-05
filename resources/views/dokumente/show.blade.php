@@ -42,7 +42,7 @@
                   
                          <br>
                         <div class="content">
-                            <p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>
+                            <!--<p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>-->
                             
                             @if(!$document->pdf_upload)
                                 <ul class="nav nav-tabs" id="tabs">

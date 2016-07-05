@@ -46,6 +46,7 @@ Route::group( array('middleware' => ['auth']), function(){
         // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
         Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles-add', 'uses' => 'MandantController@createInternalMandantUser']);
         Route::post('mandanten/{id}/internal-roles-edit', ['as'=>'mandant.internal-roles-edit', 'uses' => 'MandantController@editInternalMandantUser']);
+        Route::post('mandanten/user-delete', 'MandantController@destroyMandantUser');
         Route::post('mandanten/search', 'MandantController@search');
         Route::patch('mandanten/activate', 'MandantController@mandantActivate');
         Route::resource('mandanten', 'MandantController');

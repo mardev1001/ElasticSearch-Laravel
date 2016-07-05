@@ -326,4 +326,29 @@ $( function() {
         });
     /* EndAttachment option 2 - if file selected and  option dosent' have title, and isset 3 hidden fields*/
     
+    
+    /*Rechte and Freigabe form on click check is it a slow freigabe and add the required field */
+    // $('.freigabe-process').submit(function(e){
+    //     e.preventDefault();
+    //     console.log('prevented');
+    //     var allPost = $(this).serialize();
+    //     console.log(allPost); 
+    // })
+    $('.freigabe-process .no-validate').on('click touch', function(e){
+        e.preventDefault();
+        var input = $("<input>").attr("type", "hidden").attr("name", $(this).attr('name')).val( $(this).val() );
+        $('.freigabe-process').append($(input));
+        $('.freigabe-process').find('.approval-users').removeAttr('required');
+        $('.freigabe-process').submit(); 
+    });
+    
+    $('.freigabe-process .validate').on('click touch', function(e){
+        var input = $("<input>").attr("type", "hidden").attr("name", $(this).attr('name')).val( $(this).val() );
+            $('.freigabe-process').append($(input));
+            if( $('.approval-users')[0].checkValidity() == true ){
+                $('.freigabe-process').submit(); 
+            }
+    });
+    
+    /*End Rechte and Freigabe form on click check is it a slow freigabe and add the required field */
 });

@@ -170,7 +170,7 @@ class UserController extends Controller
      */
     public function userMandantRoleAdd(Request $request)
     {
-        $checkMandant =  MandantUser::where('mandant_id',$request->get('mandant_id'))->count();
+        $checkMandant =  MandantUser::where('mandant_id', $request->get('mandant_id'))->where('user_id', $request->get('user_id'))->count();
         if( $checkMandant > 0)
              return back()->with('message', 'Dieser Mandant ist dem Benutzer bereits zugeordnet.');
         

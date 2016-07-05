@@ -33,7 +33,7 @@
                                                         </div>
                                                       
                                                     @else
-                                                        <p class="text-danger">No attachments for variant {{$variant->variant_number}}</p>
+                                                        <p class="text-danger">Es wurden keine Anhänge gefunden {{--$variant->variant_number --}}</p>
                                                     @endif
                                                 </div>
                                             </div>

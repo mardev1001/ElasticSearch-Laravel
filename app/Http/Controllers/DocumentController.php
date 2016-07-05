@@ -93,6 +93,7 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
+        
         $adressats = Adressat::where('active',1)->get();
         $docType = DocumentType::find( $request->get('document_type_id') );
         
@@ -105,13 +106,19 @@ class DocumentController extends Controller
             RequestMerge::merge(['pdf_upload' => 0] );    
     
         if(!$request->has('date_published'))    
-            RequestMerge::merge(['date_published' => Carbon::now()->addDay()] );
+            RequestMerge::merge(['date_published' => Carbon::now()->addDay()->format('d.m.Y')] );
         
         RequestMerge::merge(['version' => 1] );
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
         
-        $data = Document::create( $request->all() );
-       
+        if( !$request->has('name_long') )
+            RequestMerge::merge(['name_long' => $request->get('name')] );
+        
+        if( !$request->has('betreff') )   
+            RequestMerge::merge(['betreff' => $request->get('name_long')] );
+        
+        $data = Document::create( $request->all() );     
+        
         $lastId = Document::orderBy('id','DESC')->first();
         $lastId->document_group_id = $lastId->id;
         $lastId->save();
@@ -470,6 +477,7 @@ class DocumentController extends Controller
         
         if(!$request->has('date_published'))    
             RequestMerge::merge(['date_published' => Carbon::now()->addDay()] );
+            
         $currentEditorVariant = $request->get('variant_id');
         $document = Document::find($request->get('document_id'));
         /*If option 1*/
@@ -511,7 +519,11 @@ class DocumentController extends Controller
                         DocumentCoauthor::create(['document_id'=> $lastId->id, 'user_id'=> $coauthor]);
             }
           
-            
+            if( !$request->has('name_long') )
+                RequestMerge::merge(['name_long' => $request->get('name')] );
+        
+            if( !$request->has('betreff') )   
+                RequestMerge::merge(['betreff' => $request->get('name_long')] );
         
             /*Create a new document*/
             $data = Document::create($request->all() );
@@ -923,6 +935,7 @@ class DocumentController extends Controller
     public function edit($id)
     {
         $data = Document::find($id);
+        // dd($data);
         if($data == null)
             return redirect('dokumente/create');
 
@@ -951,27 +964,36 @@ class DocumentController extends Controller
     public function update(Request $request, $id)
     {
         $adressats = Adressat::where('active',1)->get();
-        
         //fix if document type not iso category -> don't save iso_category_id
         if( $request->get('document_type_id') !=  $this->isoDocumentId )
             RequestMerge::merge(['iso_category_id' => null] );
+        
+        //fix pdf checkbox
+        if( !$request->has('pdf_upload') )
+            RequestMerge::merge(['pdf_upload' => 0] );
             
         if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
             && $request->get('document_type_id') !=  $this->qmRundId  && $request->has('pdf_upload') )
-            RequestMerge::merge(['pdf_upload' => 0] );    
+            RequestMerge::merge(['pdf_upload' => 0] );  
+            
+        if( !$request->has('name_long') )
+            RequestMerge::merge(['name_long' => $request->get('name')] );
+        
+        if( !$request->has('betreff') )   
+            RequestMerge::merge(['betreff' => $request->get('name_long')] );
     
-        if(!$request->has('date_published'))    
-            RequestMerge::merge(['date_published' => Carbon::now()->addDay()] );
-        // dd($request->all());        
-       
-        
-        
+         if(!$request->has('date_published') || $request->get('date_expired') == 'date_published')    
+             RequestMerge::merge(['date_published' => null] );
+         
+         if(!$request->has('date_expired') || $request->get('date_expired') == '' )    
+             RequestMerge::merge(['date_expired' => null] );
+             
+        // dd($request->all() );
         $data = Document::find( $id );
         $prevName = $data->name;
         if( $request->get('name') != $prevName ){
             $oldSlug= str_slug($prevName);
             $newSlug= str_slug($request->get('name'));
-            // Storage::move('hodor/oldfile-name.jpg', 'hodor/newfile-name.jpg'); // keep the same folder to just rename 
             foreach($data->documentUploads as $upload){
                 $oldPath = $upload->file_path;
                 $newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
@@ -1004,7 +1026,8 @@ class DocumentController extends Controller
                }
            }//end if folder dirname exists
         }
-            
+        
+        // dd( $request->all() );        
         $data->fill( $request->all() )->save();
         $data = Document::find($id);
         
@@ -1307,16 +1330,13 @@ class DocumentController extends Controller
      */
     public function documentTemplates()
     {
-        $counter = 0;
-        $document = $this->document->generateDummyData('document single',array(), false);
-        $users = $this->document->generateDummyData('users', $document );
-        $data = json_encode( $this->document->generateDummyData('dokumente', $users ) );
+        $formulareAll = Document::where(['document_type_id' =>  $this->formulareId])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
+        $formulareAllTree = $this->document->generateTreeview( $formulareAll );
+        $formulareMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->formulareId])
+        ->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-formulare');
+        $formulareMeineTree = $this->document->generateTreeview( $formulareMeine );
         
-        $document2 = $this->document->generateDummyData('document single',array(), false);
-        $users2 = $this->document->generateDummyData('users', $document2 );
-        $data2 = json_encode( $this->document->generateDummyData('dokumente', $users2 ) );
-        
-        return view('dokumente.documentTemplates', compact('data','data2','counter') );
+        return view('dokumente.documentTemplates', compact('formulareAll','formulareAllTree','formulareMeine','formulareMeineTree') );
     }
     
     /**

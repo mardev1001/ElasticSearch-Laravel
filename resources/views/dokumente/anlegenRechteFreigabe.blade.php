@@ -8,14 +8,14 @@
         {!! Form::open([
         'url' => 'dokumente/rechte-und-freigabe/'.$data->id,
         'method' => 'POST',
-        'class' => 'horizontal-form' ]) !!}
+        'class' => 'horizontal-form freigabe-process' ]) !!}
             <div class="box-wrapper">
                 <h2 class="title">{{ trans('rightsRelease.release') }}</h2>
                 <div class="box">
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <label>{{ trans('rightsRelease.approver') }}*</label>
-                            <select name="approval_users[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.approver') }}" multiple required>
+                            <select name="approval_users[]" class="form-control select approval-users" required data-placeholder="{{ trans('rightsRelease.approver') }}" multiple>
                                 <option value="0"></option>
                                 @foreach($mandantUsers as $mandatUser)
                                 <option value="{{$mandatUser->id}}"
@@ -120,14 +120,14 @@
                                 <a href="{{$backButton}}" class="btn btn-info no-margin-bottom"><span class="fa fa-chevron-left"></span> Zurück</a>
                             @endif
                             @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8)
-                                <button type="submit" class="btn btn-info no-margin-bottom" name="fast_publish" value="fast_publish">
+                                <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
                                     <span class="fa fa-exclamation-triangle"></span>  {{ trans('rightsRelease.fastPublish') }}
                                 </button>
                             @endif
-                            <button type="submit" class="btn btn-primary no-margin-bottom"  name="ask_publishers" value="ask_publishers">
+                            <button type="submit" class="btn btn-primary no-margin-bottom validate"  name="ask_publishers" value="ask_publishers">
                                 <span class="fa fa-share"></span>  {{ trans('rightsRelease.share') }}
                             </button>
-                            <button type="submit" class="btn btn-primary no-margin-bottom"  name="save" value="save">
+                            <button type="submit" class="btn btn-primary no-margin-bottom no-validate"  name="save" value="save">
                                 <span class="fa fa-floppy-o"></span>  {{ trans('rightsRelease.save') }}
                             </button>
                         </div>

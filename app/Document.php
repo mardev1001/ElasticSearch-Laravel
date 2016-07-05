@@ -40,17 +40,29 @@ class Document extends Model
     
     public function setDatePublishedAttribute($value)
     {
-        $this->attributes['date_published'] = Carbon::parse($value);
+        // dd($value);
+        if(empty($value))
+            $this->attributes['date_published'] = Carbon::parse($value)->addDay();
+        else
+            $this->attributes['date_published'] = Carbon::parse($value);
+        
     }
      
     public function getDateExpiredAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        if(empty($value) || $value == null || $value == '')
+            return null;
+        else
+            return Carbon::parse($value)->format('d.m.Y');
+            
     }
     
     public function setDateExpiredAttribute($value)
     {
-        $this->attributes['date_expired'] = Carbon::parse($value);
+         if(empty($value) || $value == null || $value == '')
+            $this->attributes['date_expired'] = null;
+        else
+            $this->attributes['date_expired'] = Carbon::parse($value);
     }
     
     public function getCreatedAtAttribute($value)

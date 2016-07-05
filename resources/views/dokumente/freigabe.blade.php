@@ -31,7 +31,7 @@
                     <div class="col-xs-12">
                 
                         <div class="header">
-                            <p class="text-small">11.05.16</p> <!-- date placeholder -->
+                            <p class="text-small">{{ $document->created_at }}</p> <!-- date placeholder -->
                             @if($document->documentAdressats)
                             <p><b>{{ trans('dokumentShow.adressat') }}:</b> {{ $document->documentAdressats->name }}</p> <!-- Adressat optional -->
                             @endif

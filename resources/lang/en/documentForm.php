@@ -25,7 +25,7 @@ return [
     'documentUploadedEditSuccess' => 'Dokument erfolgreich hochgeladen.',
     'documentEditorCreateSuccess' => 'Dokument erfolgreich erstellt.',
     'documentEditorEditSuccess' => 'Dokument wurde aktualisiert.',
-    'fastPublished' => 'Dokument wurde schnell-veröffentlicht.',
+    'fastPublished' => 'Dokument wurde Veröffentlicht.',
     'askPublishers' => 'Freigabe Prozess wurde gestartet.',
     'saved' => 'Rechte und Freigabe wurden gespeichert.',
     'existingDocument' => 'Option 1: Vorhandenes Dokument auswählen',

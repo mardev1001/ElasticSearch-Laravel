@@ -13,10 +13,10 @@ class MandantUserRole extends Model
     protected $fillable = ['mandant_user_id','role_id']; //whitelist
     
     public function mandantUsers(){
-        $this->hasMany('App\MandantUser','mandant_user_id','id');
+        return $this->hasMany('App\MandantUser','mandant_user_id','id');
     }
     
     public function roles(){
-        $this->hasMany('App\Role','role_id','id');
+        return $this->hasMany('App\Role','id','role_id');
     }
 }

@@ -20,6 +20,12 @@ class MandantUser extends Model
         return $this->hasOne('App\Mandant','id','mandant_id');
     }
     
+    public function role(){
+        return $this->belongsToMany('App\Role', 'mandant_user_roles', 'mandant_user_id', 'role_id')->where('mandant_user_roles.deleted_at', null);
+        // return $this->hasManyThrough('App\Role', 'App\MandantUserRole', 'role_id', 'id');
+        // return $this->hasMany('App\MandantUserRole', 'mandant_user_id', 'id')->belongsTo('App\Role','id','role_id');
+    }
+    
     public function mandantUserRoles(){
         return $this->hasMany('App\MandantUserRole','mandant_user_id','id');
     }

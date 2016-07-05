@@ -146,6 +146,9 @@
                                                 {!! Form::close() !!}
                                                 
                                                 {!! Form::open(['route'=>['benutzer.destroy', 'id'=> $mandantUser->user->id], 'method'=>'DELETE']) !!}
+                                                {{-- Form::open(['action' => 'MandantController@destroyMandantUser', 'method'=>'POST']) --}}
+                                                    <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
+                                                    <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                                     <button type="submit" class="btn btn-xs btn-warning delete-prompt">Entfernen</button><br>
                                                 {!! Form::close() !!}
                                                 
