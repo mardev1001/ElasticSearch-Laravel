@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Repositories;
+
 /**
  * Created by PhpStorm.
  * User: Marijan
@@ -20,59 +21,64 @@ use App\PublishedDocument;
 
 class DocumentRepository
 {
-   /**
-    * Generate dummy data
-    *
-    * @return object array $array
-    */
-    public function generateDummyData($name ='',$collections=array(), $tags = true ){
+    /**
+     * Generate dummy data
+     *
+     * @return object array $array
+     */
+    public function generateDummyData($name = '', $collections = array(), $tags = true)
+    {
         $array = array();
-        for( $i=0; $i<rand(1,10);$i++ ){
+        for ($i = 0; $i < rand(1, 10); $i++) {
             $data = new \StdClass();
-            $data->text = $name.'-'.rand(1,200);
-            if( $tags == true )
-                $data->tags = array(count( $collections ) );
-            
-            if( count($collections) > 0)
+            $data->text = $name . '-' . rand(1, 200);
+            if ($tags == true)
+                $data->tags = array(count($collections));
+
+            if (count($collections) > 0)
                 $data->nodes = $collections;
             array_push($array, $data);
         }
-         return $array;
+        return $array;
     }
-    
-    public function generateDummyDataSingle($name ='',$collections=array(), $tags = true ){
+
+    public function generateDummyDataSingle($name = '', $collections = array(), $tags = true)
+    {
         $array = array();
-        for( $i=0; $i<1;$i++ ){
+        for ($i = 0; $i < 1; $i++) {
             $data = new \StdClass();
-            $data->text = $name.'-'.rand(1,200);
-            if( $tags == true )
-                $data->tags = array(count( $collections ) );
-            
-            if( count($collections) > 0)
+            $data->text = $name . '-' . rand(1, 200);
+            if ($tags == true)
+                $data->tags = array(count($collections));
+
+            if (count($collections) > 0)
                 $data->nodes = $collections;
             array_push($array, $data);
         }
-         return $array;
+        return $array;
     }
-    
-   /**
-    * Generate documents treeview. If no array parameter is present, all documents are read.
-    *
-    * @param  object array $array
-    * @param  bool $tags
-    * @param  bool $document
-    * @return object array $array
-    */
+
+    /**
+     * Generate documents treeview. If no array parameter is present, all documents are read.
+     *
+     * @param  object array $array
+     * @param  bool $tags
+     * @param  bool $document
+     * @return object array $array
+     */
     // public function generateTreeview( $items = array(), $tags = false, $document=true, $documentId=0, $hrefDelete=false ){
-    public function generateTreeview( $items = array(), $options = array() ){
-        
+    public function generateTreeview($items = array(), $options = array())
+    {
+
         $optionsDefault = [
-            'tags' => false, 
+            'tags' => false,
             'document' => true,
-            'documentId' => 0, 
-            'showDelete'=> false, 
+            'documentId' => 0,
+            'showDelete' => false,
             'showHistoryIcon' => true,
+            'pageHome' => false,
             'pageHistory' => false,
+            'pageWiki' => false,
         ];
         $options = array_merge($optionsDefault, $options);
 
@@ -99,7 +105,7 @@ class DocumentRepository
           ]
         }
         */
-        
+
         /*
         @each $el in favorites, blocked, open, notread, read, notreleased, released, history, download, goto, comment, legend, arrow {
           .icon-#{$el} {
@@ -107,256 +113,269 @@ class DocumentRepository
           }
         }
         */
-        
+
         // dd(json_encode($this->generateDummyData('Mein Kommentar', $this->generateDummyDataSingle('Kommentar Text Lorem Ipsum Dolor Sit Amet'))));
-        
+
         $treeView = array();
-        $documents = Document::all();
         $documents = array();
-        if(sizeof($items)) $documents = $items;
         
-        if( $options['document'] == true  && count($documents) > 0)
+        if (sizeof($items)) $documents = $items;
+
+        if ($options['document'] == true && count($documents) > 0) {
             foreach ($documents as $document) {
-            //   dd($documents[2]->documentUploads);
+                
                 $node = new \StdClass();
-                
                 $node->text = $document->name;
-                if($options['pageHistory'] == true) $node->text = "Version " . $document->version . "- " . $node->text ." - ". $document->updated_at;
                 
-                $icon =  $icon2 = $icon3 ='';
-    
+                if ($options['pageHome'] == true) {
+                    $node->beforeText = $document->created_at;
+                    $node->afterText = $document->documentType->name;
+                }
+                
+                if ($options['pageHistory'] == true) {
+                    $node->text = "Version " . $document->version . "- " . $node->text . " - " . $document->updated_at;
+                }
+
+                $icon = $icon2 = $icon3 = '';
+
                 // Define icon classes
                 // var_dump(Carbon::parse(Auth::user()->last_login)->gt(Carbon::parse($document->created_at)));
-                if($document->document_status_id == 3){
-                    if(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)))
+                if ($document->document_status_id == 3) {
+                    if (Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)))
                         $icon = 'icon-favorites ';
                     // $icon2 = 'icon-open ';
-                    
-                    if($options['showHistoryIcon'] == true){
-                        if(PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1)
+
+                    if ($options['showHistoryIcon'] == true) {
+                        if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1)
                             $icon3 = 'icon-history ';
                     }
                 }
-                
+
                 // dd(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)));
-                if($document->document_status_id == 6){
+                if ($document->document_status_id == 6) {
                     $icon = 'icon-blocked ';
                     $icon2 = 'icon-notreleased ';
                     // $icon3 = 'icon-history ';w
                 }
-                
+
                 $node->icon = $icon;
                 $node->icon2 = $icon2;
                 $node->icon3 = $icon3 . 'last-node-icon ';
                 $node->href = route('dokumente.show', $document->id);
-                
-                if($document->document_status_id != 6){
-                    
-                    // 
+
+                if ($document->document_status_id != 6) {
+
+                    //
                     if ($options['pageHistory'] == true) {
 
                         $node->nodes = array();
 
                         foreach ($document->editorVariantOrderBy as $variant) {
                             $subNode = new \StdClass();
+                            // $subNode->href = url('dokumente/editor/' . $document->id . '/edit#variation' . $variant->variant_number);
                             $subNode->text = "Variante " . $variant->variant_number;
                             $subNode->icon = 'child-node ';
                             $subNode->icon2 = 'fa fa-2x fa-file-o ';
                             $subNode->icon3 = $icon3 . 'last-node-icon ';
 
-                            $subNode->nodes = array();
-                            foreach ($variant->documentUpload as $upload) {
-                                $subSubNode = new \StdClass();
-                                $subSubNode->text = basename($upload->file_path);
-                                $subSubNode->icon = 'sub-child-node ';
-                                $subSubNode->icon2 = 'icon-download ';
-                                $subSubNode->icon3 = 'last-node-icon ';
-                                $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
-
-                                array_push($subNode->nodes, $subSubNode);
+                            if(count($variant->documentUpload)){
+                                $subNode->nodes = array();
+                                foreach ($variant->documentUpload as $upload) {
+                                    $subSubNode = new \StdClass();
+                                    $subSubNode->text = basename($upload->file_path);
+                                    $subSubNode->icon = 'sub-child-node ';
+                                    $subSubNode->icon2 = 'icon-download ';
+                                    $subSubNode->icon3 = 'last-node-icon ';
+                                    $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+                                    
+                                    array_push($subNode->nodes, $subSubNode);
+                                }
                             }
                             array_push($node->nodes, $subNode);
                         }
-                    } elseif(!$document->documentUploads->isEmpty()){
-                        
+                    } elseif (!$document->documentUploads->isEmpty()) {
+
                         $node->nodes = array();
-                        if($options['tags']) $node->tags = array(sizeof($document->documentUploads));  
-                        
+                        if ($options['tags']) $node->tags = array(sizeof($document->documentUploads));
+
                         foreach ($document->documentUploads as $upload) {
                             $subNode = new \StdClass();
                             $subNode->text = basename($upload->file_path);
                             $subNode->icon = 'child-node ';
                             $subNode->icon2 = 'icon-download ';
                             $subNode->icon3 = 'last-node-icon ';
-                            $subNode->href = '/download/'.str_slug($document->name).'/'.$upload->file_path;
-                            
-            
+                            $subNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+
+
                             array_push($node->nodes, $subNode);
                         }
                     }
                 }
-                
                 array_push($treeView, $node);
-        }
-        elseif( $options['document'] == false  && count($documents) > 0){
-            foreach($documents->editorVariantDocument as $evd){
-                if( Document::find($evd->document_id) != null)
-                    if( $evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']){
+            }
+        } elseif ($options['document'] == false && count($documents) > 0) {
+            foreach ($documents->editorVariantDocument as $evd) {
+                if (Document::find($evd->document_id) != null)
+                    if ($evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']) {
                         $secondDoc = Document::find($evd->document_id);
                         // if($secondDoc != null){
                         $node = new \StdClass();
                         $node->text = $secondDoc->name;
                         $node->icon = 'icon-parent';
-                        if($options['showDelete'])
-                            $node->hrefDelete = url('anhang-delete/'.$secondDoc->id.'/'.$options['documentId']);
+                        if ($options['showDelete'])
+                            $node->hrefDelete = url('anhang-delete/' . $secondDoc->id . '/' . $options['documentId']);
                         //$node->href = route('dokumente.show', $secondDoc->id);
-                        
-                        if(!$secondDoc->documentUploads->isEmpty()){
-                            
+
+                        if (!$secondDoc->documentUploads->isEmpty()) {
+
                             $node->nodes = array();
-                            if($options['tags']) $node->tags = array(sizeof($secondDoc->documentUploads));  
-                            
+                            if ($options['tags']) $node->tags = array(sizeof($secondDoc->documentUploads));
+
                             foreach ($secondDoc->documentUploads as $upload) {
                                 $subNode = new \StdClass();
-                                $subNode->text =  basename($upload->file_path);
+                                $subNode->text = basename($upload->file_path);
                                 $subNode->icon = 'fa fa-file-o';
-                                $subNode->href = '/download/'.str_slug($secondDoc->name).'/'.$upload->file_path;
-                
+                                $subNode->href = '/download/' . str_slug($secondDoc->name) . '/' . $upload->file_path;
+
                                 array_push($node->nodes, $subNode);
                             }
                         }
-                        
-                        array_push($treeView, $node); 
+
+                        array_push($treeView, $node);
                     }
-                    // }//if second doc not null
-                }
-                
+                // }//if second doc not null
+            }
+
         }
-        
+
         return json_encode($treeView);
-        
+
     }
-    
+
     /**
      * Get redirection form
      *
      * @return string $form
      */
-    public function setDocumentForm($documentType, $pdf = false,$attachment=false ){
+    public function setDocumentForm($documentType, $pdf = false, $attachment = false)
+    {
         $data = new \StdClass();
         $modelUpload = DocumentType::find($documentType);
         $data->form = 'editor';
         $data->url = 'editor';
-        if( $modelUpload->document_art == true ){
+        if ($modelUpload->document_art == true) {
             $data->form = 'upload';
             $data->url = 'document-upload';
         }
         // dd($pdf);
-        if( $pdf == 1 || $pdf == "1"  || $pdf == true)
-            $data = $this->checkUploadType($data,$modelUpload, $pdf);
-        
+        if ($pdf == 1 || $pdf == "1" || $pdf == true)
+            $data = $this->checkUploadType($data, $modelUpload, $pdf);
+
         return $data;
-    }    
-    
+    }
+
     /**
      * Check if document type Round
      *
      * @return string $form
      */
-    public function checkUploadType($data,$model, $pdf){
-        if( ( (strpos( strtolower($model->name) , 'rundschreiben') !== false) || (strpos( strtolower($model->name) , 'news') !== false) ) 
-        && ( $pdf == true || $pdf == 1) ){
+    public function checkUploadType($data, $model, $pdf)
+    {
+        if (((strpos(strtolower($model->name), 'rundschreiben') !== false) || (strpos(strtolower($model->name), 'news') !== false))
+            && ($pdf == true || $pdf == 1)
+        ) {
             $data->form = 'pdfUpload';
             $data->url = 'pdf-upload';
         }
-        
+
         return $data;
-    }    
-    
+    }
+
     /**
      * Process save or update multiple select fiels
      *
      * @return bool
      */
-    public function processOrSave($collections,$pluckedCollection,$requests,$modelName,$fields=array(),$notIn=array() ,$tester=false){
-        $modelName = '\App\\'.$modelName;
-        if( count($collections) < 1 && count($pluckedCollection) < 1 ){
-            if($tester == true){
+    public function processOrSave($collections, $pluckedCollection, $requests, $modelName, $fields = array(), $notIn = array(), $tester = false)
+    {
+        $modelName = '\App\\' . $modelName;
+        if (count($collections) < 1 && count($pluckedCollection) < 1) {
+            if ($tester == true) {
                 //  dd($requests);
                 $array = array();
             }
-            foreach($requests as $request){
-               $model = new $modelName();
-                foreach($fields as $k=>$field){
-                    if($field == 'inherit')
+            foreach ($requests as $request) {
+                $model = new $modelName();
+                foreach ($fields as $k => $field) {
+                    if ($field == 'inherit')
                         $model->$k = $request;
-                    else    
+                    else
                         $model->$k = $field;
                 }
-                
+
                 $model->save();
-                if($tester == true)
+                if ($tester == true)
                     $array[] = $model;
             }
             // if($tester == true)
-              //  var_dump($array);
-        }
-        else{
-           \DB::enableQueryLog();
-            $modelDelete = $modelName::where('id','>',0);
-            if( count($notIn) > 0 ){
-                             
-                foreach($notIn as $n=>$in){
-                    $modelDelete->whereIn($n,$in);
-                   /* if($tester == true){
-                        var_dump($n);
-                        var_dump($in);
-                        echo '<hr/>';
-                    }*/
-                        
+            //  var_dump($array);
+        } else {
+            \DB::enableQueryLog();
+            $modelDelete = $modelName::where('id', '>', 0);
+            if (count($notIn) > 0) {
+
+                foreach ($notIn as $n => $in) {
+                    $modelDelete->whereIn($n, $in);
+                    /* if($tester == true){
+                         var_dump($n);
+                         var_dump($in);
+                         echo '<hr/>';
+                     }*/
+
                 }
             }
             $modelDelete->delete();
-            if($tester == true){
+            if ($tester == true) {
                 // dd( \DB::getQueryLog() );
                 //var_dump($requests);
                 //var_dump($modelDelete->get());
-               // echo '<hr/>';
+                // echo '<hr/>';
                 //echo '<hr/>';
             }
-            if( count($requests) > 0){
-               
-                foreach($requests as $request){
-                   //if( !is_array($pluckedCollection) )
+            if (count($requests) > 0) {
+
+                foreach ($requests as $request) {
+                    //if( !is_array($pluckedCollection) )
                     //$pluckedCollection = (array) $pluckedCollection;
                     //if ( !in_array($request, $pluckedCollection)) {
-                     
-                        $model = new $modelName();
-                        foreach($fields as $k=>$field){
-                            if($field == 'inherit')
-                                $model->$k = $request;
-                            else    
-                                $model->$k = $field;
-                        }
-                        $model->save();
+
+                    $model = new $modelName();
+                    foreach ($fields as $k => $field) {
+                        if ($field == 'inherit')
+                            $model->$k = $request;
+                        else
+                            $model->$k = $field;
                     }
+                    $model->save();
+                }
                 //}
                 /* if($tester == true)
                     dd( \DB::getQueryLog() );*/
             }
         }
-        
-        
-    }  
-    
-     /**
+
+
+    }
+
+    /**
      * Get variant number
      *
      * @return string $string
      */
-    public function variantNumber($name){
-        $string = explode('-',$name);
+    public function variantNumber($name)
+    {
+        $string = explode('-', $name);
         return $string[1];
-    }    
-     
+    }
+
 }

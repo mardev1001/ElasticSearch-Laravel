@@ -486,7 +486,8 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     display: inline-block;
     float: left;
     width: 21px;
-    height: 25px;
+    // height: 25px;
+    height: 60px;
 }
 
 #page-wrapper .treeview span.node-icon {
@@ -500,15 +501,30 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #page-wrapper .custom-expand-icon {
-    background: url("/img/icons/arrow_select.png") no-repeat;
+    background: url("/img/icons/arrow_select.png") no-repeat center center ;
 }
 
 #page-wrapper .custom-collapse-icon {
-    background: url("/img/icons/arrow_select_down.png") no-repeat;
+    background: url("/img/icons/arrow_select_down.png") no-repeat center center ;
 }
 
 #page-wrapper .treeview span.indent {
     display: none;
+}
+
+#page-wrapper .treeview span.icon.node-icon.fa:before{
+    line-height: 60px;
+}
+
+#page-wrapper .treeview span.item-after-text.btn-block,
+#page-wrapper .treeview span.item-before-text.btn-block {
+    font-size: 14px !important;
+    font-weight: normal !important;
+}
+
+#page-wrapper .treeview span.item-text.btn-block {
+    font-size: 14px !important;
+    line-height: 20px !important;
 }
 
 #page-wrapper .hide-icons .node-icon {

@@ -620,12 +620,18 @@
 
 			// Add text
 			if (_this.options.enableLinks) {
+				
+				if (node.beforeText == undefined) node.beforeText = '&nbsp;';
+				if (node.afterText == undefined) node.afterText = '&nbsp;';
+				
 				// Add hyperlink
 				treeItem
-					.append($(_this.template.link)
-						.attr('href', node.href)
-						.append(node.text)
+					.append($(_this.template.link).attr('href', node.href)
+						.prepend('<span class="item-before-text btn-block">' + node.beforeText + '</span>')
+						.append('<span class="item-text btn-block">' + node.text + '</span>')
+						.append('<span class="item-after-text btn-block">' + node.afterText + '</span>')
 					);
+					
 			}
 			else {
 				// otherwise just text

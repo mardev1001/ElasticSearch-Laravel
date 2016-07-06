@@ -79,27 +79,37 @@
                         
                         
                         @if( count($variants) > 0)
+                   
                             @foreach( $variants as $k=>$variant) 
                             <div class="col-xs-12 col-md-6">
                                     <div class="form-group">
                                         <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
                                         <select name="variante-{{$k+1}}[]" class="form-control select" 
-                                         data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" multiple>
-                                            @if($variant->approval_all_mandants == true)
+                                         data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" 
+                                         @if( count($variants) > 1)
+                                            required
+                                        @endif multiple>
+                                            @if($variant->approval_all_mandants == true )
+                                                
                                                 <option value="0"></option>
                                                 <option value="Alle" selected>Alle</option>
                                                  @foreach( $mandants as $mandant)
                                                     <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
                                                 @endforeach
-                                            @elseif( ViewHelper::countComplexMultipleSelect($variant,'documentMandantMandants',true) == false )
+                                            @elseif( ViewHelper::countComplexMultipleSelect($variant,'documentMandantMandants',true) == false)
+                                               
                                                 <option value="0"></option>
-                                                <option value="Alle" selected>Alle</option>
+                                                    @if( count($variants) <= 1)
+                                                        <option value="Alle" selected>Alle</option>
+                                                    @endif
                                                  @foreach( $mandants as $mandant)
                                                     <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
                                                 @endforeach
                                             @else
                                                 <option value="0"></option>
-                                                <option value="Alle">Alle</option>
+                                                 @if( count($variants) < 2 )
+                                                    <option value="Alle">Alle</option>
+                                                 @endif
                                                 @foreach($mandants as $mandant)
                                                     <option value="{{$mandant->id}}"
                                                           {!! ViewHelper::setComplexMultipleSelect($variant,'documentMandantMandants', $mandant->id, 'mandant_id',true) !!}

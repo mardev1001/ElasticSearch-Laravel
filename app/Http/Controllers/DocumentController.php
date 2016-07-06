@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use Request as RequestMerge;
+use App\Helpers\ViewHelper;
 
 use App\Http\Requests;
 use App\Http\Requests\DocumentRequest;
@@ -71,8 +72,8 @@ class DocumentController extends Controller
      */
     public function create()
     {
-        $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
-        $documentCoauthors = DocumentCoauthor::all();
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+     
         $documentTypes = DocumentType::all();
         $isoDocuments = IsoCategory::all();
         $documentStatus = DocumentStatus::all();
@@ -80,7 +81,10 @@ class DocumentController extends Controller
        
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
-        //  dd($data);
+        $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
+
+        $documentCoauthors = $mandantUsers;
+        //   dd($documentCoauthors[0]->user);
          
         return view('formWrapper', compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentCoauthors') );
     }
@@ -629,8 +633,17 @@ class DocumentController extends Controller
         $mandantUsersTable = MandantUser::whereIn('id',$mandantUserRoles)->pluck('user_id');
         $mandantUsers = User::whereIn('id',$mandantUsersTable)->get();
         $mandants = Mandant::whereNull('deleted_at')->get();
-       
+        
         $documentMandats = DocumentMandant::where('document_id',$data->id)->get();
+        foreach($variants as $variant){
+            $variant->hasPreviousData = false;        
+                foreach($mandants as $mandant){
+                   
+                    $selected = ViewHelper::setComplexMultipleSelect($variant,'documentMandantMandants', $mandant->id, 'mandant_id',true);
+                    
+                       
+                }
+        }
         
         return view('dokumente.anlegenRechteFreigabe', compact('collections',
         'mandants','mandantUsers','variants','roles','data','backButton') );
@@ -923,6 +936,22 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
+        $variants = EditorVariant::where('document_id',$id)->get();
+        
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+        $hasPermission = false;
+        if($document->approval_all_roles == true)
+            $hasPermission = true;
+        foreach($variants as $variant){
+            if($variant->approval_all_mandants == true)
+                $hasPermission = true;
+            if($hasPermission == false){
+                foreach($variant->documentMandantRoles as $role){
+                    // dd($variant->documentMandantRoles);
+                }
+            }
+        }
         return view('dokumente.show', compact('document','documentComments') );
     }
 
@@ -940,15 +969,16 @@ class DocumentController extends Controller
             return redirect('dokumente/create');
 
         $url = 'PATCH';
-        $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
+        
         $url = '';
         $documentCoauthor = DocumentCoauthor::where('document_id', $id)->get();
         $documentTypes = DocumentType::all();
         $isoDocuments = IsoCategory::all();
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
         $documentStatus = DocumentStatus::all();
-        $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
-        ->where('mandant_id', $mandantId)->get();
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
+        $documentCoauthor = $mandantUsers;
         // session()->flash('message',trans('documentForm.documentEditSuccess'));
        
         return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments','documentStatus','mandantUsers', 'documentCoauthor') );

@@ -45,7 +45,7 @@
     </div>
     
     <ul class="nav nav-tabs" id="tabs">
-       @if( count($data->editorVariantOrderBy) ) 
+       @if( count($data->editorVariantOrderBy) )
            @foreach( $data->editorVariantOrderBy as $variant)
                <li data-variant="{{$variant->variant_number}}"><a href="#variation{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}
                <span class="fa fa-close remove-editor" data-delete-variant="{{ $variant->variant_number }}"></span> </a></li>

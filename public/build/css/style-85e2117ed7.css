@@ -78,67 +78,67 @@ $third-color: #d3d3d3;*/
   background: url("/img/icons/icon_kontakt.png") no-repeat; }
 
 .icon-favorites {
-  background: url("/img/icons/icon_favorites.png") no-repeat;
+  background: url("/img/icons/icon_favorites.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-blocked {
-  background: url("/img/icons/icon_blocked.png") no-repeat;
+  background: url("/img/icons/icon_blocked.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-open {
-  background: url("/img/icons/icon_open.png") no-repeat;
+  background: url("/img/icons/icon_open.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-notread {
-  background: url("/img/icons/icon_notread.png") no-repeat;
+  background: url("/img/icons/icon_notread.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-read {
-  background: url("/img/icons/icon_read.png") no-repeat;
+  background: url("/img/icons/icon_read.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-notreleased {
-  background: url("/img/icons/icon_notreleased.png") no-repeat;
+  background: url("/img/icons/icon_notreleased.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-released {
-  background: url("/img/icons/icon_released.png") no-repeat;
+  background: url("/img/icons/icon_released.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-history {
-  background: url("/img/icons/icon_history.png") no-repeat;
+  background: url("/img/icons/icon_history.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-download {
-  background: url("/img/icons/icon_download.png") no-repeat;
+  background: url("/img/icons/icon_download.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-goto {
-  background: url("/img/icons/icon_goto.png") no-repeat;
+  background: url("/img/icons/icon_goto.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-comment {
-  background: url("/img/icons/icon_comment.png") no-repeat;
+  background: url("/img/icons/icon_comment.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-legend {
-  background: url("/img/icons/icon_legend.png") no-repeat;
+  background: url("/img/icons/icon_legend.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
 .icon-arrow {
-  background: url("/img/icons/icon_arrow.png") no-repeat;
+  background: url("/img/icons/icon_arrow.png") no-repeat center center;
   width: 25px;
   height: 25px; }
 
@@ -825,7 +825,7 @@ input.form-control:-ms-input-placeholder {
   display: inline-block;
   float: left;
   width: 21px;
-  height: 25px; }
+  height: 60px; }
 
 #page-wrapper .treeview span.node-icon {
   width: 25px;
@@ -836,13 +836,25 @@ input.form-control:-ms-input-placeholder {
   margin-right: 0; }
 
 #page-wrapper .custom-expand-icon {
-  background: url("/img/icons/arrow_select.png") no-repeat; }
+  background: url("/img/icons/arrow_select.png") no-repeat center center; }
 
 #page-wrapper .custom-collapse-icon {
-  background: url("/img/icons/arrow_select_down.png") no-repeat; }
+  background: url("/img/icons/arrow_select_down.png") no-repeat center center; }
 
 #page-wrapper .treeview span.indent {
   display: none; }
+
+#page-wrapper .treeview span.icon.node-icon.fa:before {
+  line-height: 60px; }
+
+#page-wrapper .treeview span.item-after-text.btn-block,
+#page-wrapper .treeview span.item-before-text.btn-block {
+  font-size: 14px !important;
+  font-weight: normal !important; }
+
+#page-wrapper .treeview span.item-text.btn-block {
+  font-size: 14px !important;
+  line-height: 20px !important; }
 
 #page-wrapper .hide-icons .node-icon {
   display: none !important; }

@@ -25,11 +25,11 @@ class SearchRepository
         else
             $query = Mandant::where('mandants.id','>',0);
         
-         if( $request->has('parameter') )
-            $query->where('name',$request->get('parameter'));
+         if( $request->has('search') )
+            $query->where('name','LIKE', '%'.$request->get('search').'%');
             
         $mandants = $query->get();   
-            
+            // dd($mandants);
         if( count($mandants) ){
             
             foreach($mandants as $mandant){
@@ -47,8 +47,8 @@ class SearchRepository
        else{
             $query = User::where('users.id','>',0);
                 
-            if( $request->has('parameter') )
-                $query->where('first_name',$request->get('parameter') )->orWhere('first_name',$request->get('parameter') );
+            if( $request->has('search') )
+                $query->where('first_name',$request->get('search') )->orWhere('first_name',$request->get('search') );
             
             if($request->has('deletedUsers') )
                 $query ->withTrashed();        
@@ -62,8 +62,8 @@ class SearchRepository
                 
                 foreach($mandants as $mandant){
                     $userQuery = User::whereIn('id',$usersIds);
-                     if( $request->has('parameter') )
-                        $userQuery->where('first_name',$request->get('parameter') )->orWhere('last_name',$request->get('parameter') );
+                     if( $request->has('search') )
+                        $userQuery->where('first_name',$request->get('search') )->orWhere('last_name',$request->get('search') );
                      if($request->has('deletedUsers') )
                         $userQuery ->withTrashed();    
                         

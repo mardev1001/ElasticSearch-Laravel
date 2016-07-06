@@ -9,10 +9,12 @@ use Request as RequestMerge;
 use App\Http\Requests;
 
 use App\Http\Requests\MandantRequest;
+use App\Http\Repositories\SearchRepository;
 
 use App\Mandant;
 use App\MandantInfo;
 use App\MandantUser;
+use App\MandantUserRole;
 use App\User;
 use App\Role;
 use App\InternalMandantUser;
@@ -25,8 +27,9 @@ class MandantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
+    public function __construct(SearchRepository $searchRepo)
     {
+         $this->search =  $searchRepo;
         // Define file upload path
         $this->fileUploadPath = public_path() . "/files/pictures/mandants";
         $this->bundeslandList = [
@@ -82,6 +85,7 @@ class MandantController extends Controller
         $roles = Role::all();
         //$users = User::where('name',$request->get('search'))->get();   
         $mandants = Mandant::where('name','LIKE',$request->get('search'))->get();  
+        $mandants = $this->search->phonelistSearch($request);
         return view('mandanten.administration', compact('search','mandants','roles') );
     }
 
@@ -272,28 +276,27 @@ class MandantController extends Controller
         $requiredUsers = array();
         $requiredRoles = array();
         $requiredRolesResult = array();
+        
         $mandantUser = MandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->first();
         $mandantUserAll = MandantUser::where('mandant_id', $request->input('mandant_id'))->get();
         
         foreach($mandantUser->role as $role)
             if($role->mandant_required) array_push($requiredRoles, $role);
         
+        /* 
         
+        select all roles where role is required and user_id = uid, mandant_id = mid -> count
         
-        // dd($requiredRoles);
+        get the current user role_ids
+        foreach user role, select all mandant roles, and count the users for the required roles 
+        if user count is !(>=1) dont delete
         
-        
-        /* select all roles where role is required and user_id = uid, mandant_id = mid -> count*/
-        /*
-            get the current user role_ids
-            foreach user role, select all mandant roles, and count the users for the required roles 
-            if user count is !(>=1) dont delete
+        get the current user role_id
+        check if the role is required 
+        it the role is required, check the number of users for the role_id and mandant_id
+        check if role_ids are the same AND that the count of users with that role is >= 1
+         
         */
-        // get the current user role_id
-        // check if the role is required 
-        // it the role is required, check the number of users for the role_id and mandant_id
-        // check if role_ids are the same AND that the count of users with that role is >= 1
-        
         
         foreach($requiredRoles as $requiredRole){
             
@@ -309,29 +312,23 @@ class MandantController extends Controller
             }
             $requiredRolesResult[] = array('role_id' => $requiredRole->id, 'user_count' => count($roleUsers));
         }
+        
         // dd($requiredRolesResult);
 
-            
-            
-            
-        
-
-        
-        
-        /*
-        foreach($mandantUsers as $mandantUser) {
-            $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->get();
-            foreach($mandantUserRoles as $mandantUserRole) {
-                // dd($mandantUserRole->roles);
-                $mandantUserRole->delete();
-            }
-            $mandantUser->delete();
+        foreach($requiredRolesResult as $reqRole){
+            if($reqRole['user_count'] == 1 )
+                return redirect('mandanten')->with('message', 'Benutzer kann nicht entfernt werden.');
         }
         
-        $user->delete();
         
+        $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->get();
+        foreach($mandantUserRoles as $mandantUserRole) {
+            // dd($mandantUserRole->roles);
+            $mandantUserRole->delete();
+        }
+        $mandantUser->delete();
         return redirect('mandanten')->with('message', 'Benutzer erfolgreich entfernt.');
-        */
+        
     }
     
 
