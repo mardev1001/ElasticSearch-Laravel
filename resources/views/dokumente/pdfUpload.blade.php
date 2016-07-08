@@ -36,8 +36,9 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="pull-right">
-            <a href="#" class="btn btn-primary">Seiten Vorschau</a>
-            <a href="#" class="btn btn-primary">PDF Vorschau</a>
+            <button href="#" class="btn btn-primary preview" name="preview" value="preview" type="submit">Seiten Vorschau</button>
+            <button href="#" class="btn btn-primary preview" name="pdf_preview" value="pdf_preview" type="submit">PDF Vorschau</button>
+            <input type="hidden" name="current_variant" value="1" />
         </div>
     </div>
 </div>
@@ -72,3 +73,14 @@
         </div><!--End input box-->
     @endif
 </div><br>
+
+@section('script')
+        <script type="text/javascript">
+            $(document).ready(function(){
+                  @if( isset($previewUrl) && $previewUrl != '')
+                    var url="{{$previewUrl}}", win = window.open(url, '_blank');
+                        win.focus();
+                  @endif
+            });//end document ready
+        </script>
+      @stop

@@ -71,8 +71,11 @@
                                 </a>
                             
                         </h4>
-                                <span class="panel-options col-xs-12">
-                                     <span class="panel-title">({{ count($mandant->mandantUsers) }} Benutzer)</span>
+                        
+                            <span class="panel-options col-xs-12">
+                                     <span class="panel-title">
+                                          {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
+                                     </span>
                                      <span class="pull-right">
                                     {!! Form::open(['action' => 'MandantController@mandantActivate', 
                                     'method'=>'PATCH']) !!}
@@ -192,7 +195,9 @@
                          </a>
                      </h4>
                       <span class="panel-options col-xs-12">
-                            <span class="panel-title">({{ count($unassignedUsers) }} Benutzer)</span>
+                            <span class="panel-title">
+                                {!! ViewHelper::showUserCount($unassignedActiveUsers, $unassignedInactiveUsers) !!}
+                            </span>
                        </span>             
                 </div>
                 <div id="collapseNoMandant" class="panel-collapse collapse ">

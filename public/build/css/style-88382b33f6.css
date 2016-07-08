@@ -831,6 +831,9 @@ input.form-control:-ms-input-placeholder {
   width: 25px;
   margin-right: 10px; }
 
+#page-wrapper .treeview span.node-icon.icon-download {
+  margin-left: 35px; }
+
 #page-wrapper .treeview span.last-node-icon {
   float: right;
   margin-right: 0; }

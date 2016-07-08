@@ -40,8 +40,9 @@
     <a href="#" class="btn btn-primary add-tab"><span class="fa fa-plus"></span> Neue Variante</a>
    
     <div class="pull-right">
-        <a href="#" class="btn btn-primary">Seiten Vorschau</a>
-        <a href="#" class="btn btn-primary">PDF Vorschau</a>
+        <button href="#" class="btn btn-primary preview" name="preview" value="preview" type="submit">Seiten Vorschau</button>
+        <button href="#" class="btn btn-primary preview" name="pdf_preview"name="preview" value="pdf_preview" type="submit">PDF Vorschau</button>
+        <input type="hidden" name="current_variant" value="1" />
     </div>
     
     <ul class="nav nav-tabs" id="tabs">
@@ -74,6 +75,10 @@
       @section('script')
         <script type="text/javascript">
             $(document).ready(function(){
+                  @if( isset($previewUrl) && $previewUrl != '')
+                    var url="{{$previewUrl}}", win = window.open(url, '_blank');
+                        win.focus();
+                  @endif
                if ($('.editable').length) {
                     var counter = 0;
                     $('.editable').each(function() {
@@ -102,6 +107,11 @@
         @section('script')
             <script type="text/javascript">
                 $(document).ready(function(){
+                  @if( isset($previewUrl) && $previewUrl != '')
+                    var url="{{$previewUrl}}", win = window.open(url, '_blank');
+                        win.focus();
+                  @endif
+                    
                    if( $('#variant-1').length == 0 ){
               	        $('.add-tab').click();
               	    }

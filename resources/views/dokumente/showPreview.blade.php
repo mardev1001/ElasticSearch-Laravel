@@ -55,15 +55,6 @@
                                @endforeach
                                
                             @endif
-                          
-                            <!-- <p>-->
-                            <!--   Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi  -->
-                            <!-- </p> -->
-                            <!-- <p>-->
-                            <!--    Lorem ipsum qum dare etiamsi  Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare  -->
-                            <!--    Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsu Lorem ipsum qum dare etiamsi del cumsequr.-->
-                            <!--</p>-->
-                            
                         </div>
                         
                         <div class="clearfix"></div> <br>
@@ -97,32 +88,7 @@
             </div>
 
             <div class="col-sm-4 col-md-3 col-lg-2 btns">
-                <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
-                <button class="btn btn-primary pull-right">{{ trans('dokumentShow.deactivate') }}</button>
-                <!--<a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>-->
-                <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>
-                <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
-                
-                <a href="/dokumente/{{$document->id}}/favorit" class="btn btn-primary pull-right">
-                @if( $document->hasFavorite == false)
-                    {{ trans('dokumentShow.favorite') }}
-                @else
-                    {{ trans('dokumentShow.unFavorite') }}
-                @endif</a>
-                
-                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
-                
-             
-                
-                @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
-              
-                    <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
-               
-                    <a href="#" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
-                @endif
-                
-                
-                <a href="/dokumente/{{$document->id}}/pdf" class="btn btn-primary pull-right">PDF ansehen</a>
+                <a href="/dokumente/ansicht-pdf/{{$document->id}}/{{$variants[0]->variant_number}}" class="btn btn-primary pull-right">PDF ansehen</a>
             </div>
             
             <div class="clearfix"></div> 

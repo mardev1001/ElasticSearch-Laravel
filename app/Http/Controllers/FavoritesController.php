@@ -6,8 +6,19 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use Auth;
+use App\Document;
+use App\PublishedDocument;
+use App\FavoriteDocument;
+use App\Http\Repositories\DocumentRepository;
+
 class FavoritesController extends Controller
 {
+    
+    public function __construct(DocumentRepository $docRepo){
+        $this->favorites =  $docRepo;
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +26,18 @@ class FavoritesController extends Controller
      */
     public function index()
     {
-        $data = '[{"text":"Dokument-197","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]},{"text":"Dokument-161","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]},{"text":"Dokument-4","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]},{"text":"Dokument-90","tags":[4],"nodes":[{"text":"Variante-51","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-197","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-190","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]},{"text":"Variante-50","tags":[3],"nodes":[{"text":"Anhang-170","tags":[0]},{"text":"Anhang-8","tags":[0]},{"text":"Anhang-135","tags":[0]}]}]}]'; 
-        return view('favoriten.index', compact('data'));
+        $favorites = $favoriteDocuments = $favoritesTreeview = $favoritesPaginated = array();
+        $favoriteDocuments = FavoriteDocument::where('user_id', Auth::user()->id)->get();
+        
+        foreach($favoriteDocuments as $fav){
+            $published = PublishedDocument::where('document_group_id', $fav->document_group_id)->orderBy('id', 'desc')->first();
+            if(isset($published)) array_push($favorites, $published->document);
+        }
+
+        $favoritesPaginated = Document::whereIn('id', array_pluck($favorites, 'id'))->orderBy('id', 'desc')->paginate(10, ['*'], 'seite');
+        $favoritesTreeview = $this->favorites->generateTreeview($favoritesPaginated, array('pageFavorites' => true, 'showUniqueURL' => true));
+        
+        return view('favoriten.index', compact('favoritesTreeview', 'favoritesPaginated'));
     }
 
     /**

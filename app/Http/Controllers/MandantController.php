@@ -65,12 +65,20 @@ class MandantController extends Controller
         $users = User::all();
         $mandantUsers = MandantUser::all();
         $unassignedUsers = array();
+        $unassignedActiveUsers = array();
+        $unassignedInactiveUsers = array();
         foreach($users as $user){
             $result = MandantUser::where('user_id', $user->id)->get();
-            if($result->isEmpty()) $unassignedUsers[] = $user;
+            if($result->isEmpty()) {
+                $unassignedUsers[] = $user;
+                if($user->active)
+                    $unassignedActiveUsers[] = $user;
+                else
+                    $unassignedInactiveUsers[] = $user;
+            }   
         }
         
-        return view('mandanten.administration', compact('roles','mandants','unassignedUsers') );
+        return view('mandanten.administration', compact('roles','mandants','unassignedUsers', 'unassignedActiveUsers', 'unassignedInactiveUsers') );
     }
     
     /**

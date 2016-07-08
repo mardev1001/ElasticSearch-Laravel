@@ -23,7 +23,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/rundschreiben-qmr', 'DocumentController@rundschreibenQmr');
         Route::get('dokumente/news', 'DocumentController@rundschreibenNews');
         Route::get('dokumente/vorlagedokumente', 'DocumentController@documentTemplates');
-        Route::get('dokumente/dokument-typen', 'DocumentController@documentType');
+        Route::get('dokumente/typ/{type}', 'DocumentController@documentType');
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/statistik/{id}', 'DocumentController@documentStats');
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');
@@ -40,6 +40,10 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::get('dokumente/new-version/{id}', 'DocumentController@newVersion');
         Route::get('dokumente/{id}/freigabe', 'DocumentController@freigabeApproval');
+        Route::get('dokumente/{id}/favorit', 'DocumentController@favorites');
+        Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');
+         Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
+        Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         Route::post('comment/{id}', 'DocumentController@saveComment');
         

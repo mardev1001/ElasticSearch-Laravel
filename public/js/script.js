@@ -64773,7 +64773,7 @@ $( function() {
            	    prevHTML = tinymce.get('editor-'+prevNumber).getContent(); 
            	}
       	// create the tab
-      	$('<li data-variation="'+nextTab+'"><a href="#variation'+nextTab+'" data-toggle="tab">Variante '+nextTab+' <span class="fa fa-close remove-editor" data-delete-variant="'+nextTab+'"></span></a></li>')
+      	$('<li data-variant="'+nextTab+'"><a href="#variation'+nextTab+'" data-toggle="tab">Variante '+nextTab+' <span class="fa fa-close remove-editor" data-delete-variant="'+nextTab+'"></span></a></li>')
       	.appendTo('#tabs');
       	 
       	// create the tab content
@@ -64807,6 +64807,7 @@ $( function() {
       	    $('.tab-content .tab-pane').removeClass('active');
       	    $(document).find('a[href="#variation'+nextTab+'"]').closest('li').addClass('active');
       	    $('#variation'+nextTab).addClass('active'); 
+      	    $(document).find('a[href="#variation'+nextTab+'"]').click();//for preview hidden input change
       	    
       	}
        });
@@ -64884,8 +64885,19 @@ $( function() {
                 $('.freigabe-process').submit(); 
             }
     });
-    
     /*End Rechte and Freigabe form on click check is it a slow freigabe and add the required field */
+    
+    /* Change the hidden input value on sites with .preview */
+    if( $('.preview').length ){
+        $(document).on('click touch','[data-variant] a',function(){
+           if( $(this).closest('li').hasClass('active') ){
+                $( 'input[name="current_variant"]' ).val( $(this).closest('li').data('variant') );
+            }
+         
+        });
+       
+    }
+    /* End Change the hidden input value on sites with .preview */
 });
 /* =========================================================
  * bootstrap-treeview.js v1.2.0

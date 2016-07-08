@@ -28,7 +28,16 @@ class Mandant extends Model
     }
     
     public function users(){
-        return $this->hasManyThrough('App\User', 'App\MandantUser','mandant_id','id');
+        // return $this->hasManyThrough('App\User', 'App\MandantUser','mandant_id','id');
+        return $this->belongsToMany('App\User', 'mandant_users', 'mandant_id', 'user_id')->where('mandant_users.deleted_at', null);
+    }
+    
+    public function usersActive(){
+        return $this->belongsToMany('App\User', 'mandant_users', 'mandant_id', 'user_id')->where('mandant_users.deleted_at', null)->where('active', true);
+    }
+    
+    public function usersInactive(){
+        return $this->belongsToMany('App\User', 'mandant_users', 'mandant_id', 'user_id')->where('mandant_users.deleted_at', null)->where('active', false);
     }
     
     public function internalUsers(){

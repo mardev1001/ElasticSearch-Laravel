@@ -116,7 +116,7 @@
                                 @elseif($documentType->id == 5)
                                     <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentType->name }}</a> </li>
                                 @else
-                                    <li> <a href="{{ url('#dokumente/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
+                                    <li> <a href="{{ url('dokumente/typ/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
                                 @endif
                             
                             @endif

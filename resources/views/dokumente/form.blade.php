@@ -50,15 +50,15 @@
                     <label class="control-label"> {{ ucfirst(trans('documentForm.owner')) }}*</label>
                     <select name="owner_user_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.owner')) }}">
                         @foreach($mandantUsers as $mandantUser)
-                            <option value="{{$mandantUser->id}}" 
+                            <option value="{{$mandantUser->user->id}}" 
                             @if(isset($data->owner_user_id)) 
-                                @if($mandantUser->id == $data->owner_user_id) 
+                                @if($mandantUser->user->id == $data->owner_user_id) 
                                     selected  
                                 @endif 
                             @elseif( isset( Auth::user()->id )  )
-                                @if($mandantUser->id ==  Auth::user()->id ) selected @endif 
+                                @if($mandantUser->user->id ==  Auth::user()->id ) selected @endif 
                             @endif> 
-                                {{ $mandantUser->first_name }} {{ $mandantUser->last_name }} 
+                                {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
                             </option>
                         @endforeach
                     </select>

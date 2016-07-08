@@ -26,6 +26,7 @@ use App\DocumentApproval;
 use App\DocumentStatus;
 use App\DocumentComment;
 use App\PublishedDocument;
+use App\FavoriteDocument;
 use App\Role;
 use App\IsoCategory;
 use App\User;
@@ -76,16 +77,15 @@ class DocumentController extends Controller
      
         $documentTypes = DocumentType::all();
         $isoDocuments = IsoCategory::all();
-        $documentStatus = DocumentStatus::all();
+        $documentStatus = DocumentStatus::all(); 
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
        
-        $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
+        $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
         $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
-
+        
         $documentCoauthors = $mandantUsers;
         //   dd($documentCoauthors[0]->user);
-         
         return view('formWrapper', compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentCoauthors') );
     }
 
@@ -113,6 +113,7 @@ class DocumentController extends Controller
             RequestMerge::merge(['date_published' => Carbon::now()->addDay()->format('d.m.Y')] );
         
         RequestMerge::merge(['version' => 1] );
+        
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
         
         if( !$request->has('name_long') )
@@ -326,7 +327,7 @@ class DocumentController extends Controller
     public function documentEditor(Request $request)
     {
         
-        //  dd($request->all());   
+        //   dd( $request->all() );
         $model = Document::find($request->get('model_id'));
         if($model == null){
             
@@ -346,7 +347,7 @@ class DocumentController extends Controller
         }
         
         $savedVariantIds= array();
-        //check if has varianttfirstcount
+        //check if has variant first count
         foreach($request->all() as $k => $v)
             if (strpos($k, 'variant-') !== false){
               
@@ -382,7 +383,31 @@ class DocumentController extends Controller
             $backButton = '/dokumente/'.$data->id.'/edit';
             return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
         }
-         if($request->has('attachment'))
+        /* Preview link preparation */
+        $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload );
+        $url = $setDocument->url;
+        $form = $setDocument->form;
+        $backButton = '/dokumente/'.$data->id.'/edit';
+        $adressats = Adressat::where('active',1)->get();
+        $currentVariant = 0;
+        $previewUrl = '';
+        if( $request->has('current_variant') ){
+            $currentVariant = $request->get('current_variant');
+        }
+            
+        if($request->has('preview') && $currentVariant != 0){
+            $previewUrl = url('dokumente/ansicht/'.$id.'/'.$currentVariant);
+            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats','previewUrl') );
+        }
+        
+        if($request->has('pdf_preview') && $currentVariant != 0){
+            $previewUrl = url('dokumente/ansicht-pdf/'.$id.'/'.$currentVariant);
+            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats','previewUrl') );
+        }
+        /* End Preview link preparation */
+        
+        
+        if($request->has('attachment'))
             return redirect('dokumente/anhange/'.$id );
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
@@ -874,15 +899,23 @@ class DocumentController extends Controller
             $dirty=$this->dirty($dirty,$document);
             $document->save();
             
-            $continue = true;
-            $uniqeUrl = '';
-            while ($continue) {
-                $uniqeUrl = $this->generateUniqeLink();
-                if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
-                    $continue = false;
-            }
-            $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
+          
+            $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
+            if($publishedDocs == null){
+                $continue = true;
+                $uniqeUrl = '';
+                while ($continue) {
+                    $uniqeUrl = $this->generateUniqeLink();
+                    if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                        $continue = false;
+                }
+                 $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
                             'url_unique'=>$uniqeUrl]);
+            }
+            else
+                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
+            
+           
                             
             $otherDocuments = Document::where('document_group_id',$document->document_group_id)
                                 ->whereNotIn('id',array($document->id))->get();
@@ -934,25 +967,69 @@ class DocumentController extends Controller
      */
     public function show($id)
     {
-        $document = Document::find($id);
+        if( ctype_alnum($id) && !is_numeric($id) ){
+            $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
+            $id = $publishedDocs->document_id;
+            $document = Document::find($id);
+        }
+        else{
+            $document = Document::find($id);
+        }
+        $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
+        if( $favorite == null )
+            $document->hasFavorite = false;
+        else
+            $document->hasFavorite = true;
         $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
         $variants = EditorVariant::where('document_id',$id)->get();
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantId->toArray();
         $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+        $mandantRolesArr =  $mandantRoles->toArray();
+        
         $hasPermission = false;
-        if($document->approval_all_roles == true)
-            $hasPermission = true;
+        // dd($mandantId);
+        
+            
         foreach($variants as $variant){
-            if($variant->approval_all_mandants == true)
-                $hasPermission = true;
             if($hasPermission == false){
-                foreach($variant->documentMandantRoles as $role){
-                    // dd($variant->documentMandantRoles);
+                if($variant->approval_all_mandants == true){
+                    if($document->approval_all_roles == true){
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                        }
+                        else{
+                            foreach($variant->documentMandantRoles as $role){
+                                if( in_array($role->role_id, $mandantRolesArr) ){
+                                 $variant->hasPermission = true;
+                                 $hasPermission = true;
+                                }
+                            }//end foreach documentMandantRoles
+                        }
+                }
+                else{
+                    foreach( $variant->documentMandantMandants as $mandant){
+                        if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                            if($document->approval_all_roles == true){
+                                $hasPermission = true;
+                                $variant->hasPermission = true;
+                            }
+                            else{
+                                foreach($variant->documentMandantRoles as $role){
+                                    if( in_array($role->role_id, $mandantRolesArr) ){
+                                     $variant->hasPermission = true;
+                                     $hasPermission = true;
+                                    }
+                                }//end foreach documentMandantRoles
+                            }
+                        }
+                    }//end foreach documentMandantMandants
                 }
             }
         }
-        return view('dokumente.show', compact('document','documentComments') );
+        return view('dokumente.show', compact('document','documentComments','variants') );
     }
 
     /**
@@ -1236,6 +1313,230 @@ class DocumentController extends Controller
         return view('dokumente.freigabe',compact('document','documentCommentsUser','documentCommentsFreigabe'));
     }
     
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function favorites($id)
+    {
+        $document = Document::find($id);
+        $favoriteCheck = FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
+        // dd($document->published);
+        if( $favoriteCheck == null )
+            $favorite = FavoriteDocument::create( ['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id ]);
+        else
+            $favoriteCheck->delete();
+        if($document->published->url_unique)    
+            return redirect('dokumente/'.$document->published->url_unique);
+        else
+            return redirect('dokumente/'.$id);
+    }
+    
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function generatePdf($id)
+    {
+        if( ctype_alnum($id) && !is_numeric($id) ){
+            $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
+            $id = $publishedDocs->document_id;
+            $document = Document::find($id);
+        }
+        else{
+            $document = Document::find($id);
+        }
+        $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
+        if( $favorite == null )
+            $document->hasFavorite = false;
+        else
+            $document->hasFavorite = true;
+        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
+        $variants = EditorVariant::where('document_id',$id)->get();
+        
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantId->toArray();
+        $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+        $mandantRolesArr =  $mandantRoles->toArray();
+        
+        $hasPermission = false;
+        // dd($mandantId);
+        
+            
+        foreach($variants as $variant){
+            if($hasPermission == false){
+                if($variant->approval_all_mandants == true){
+                    if($document->approval_all_roles == true){
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                        }
+                        else{
+                            foreach($variant->documentMandantRoles as $role){
+                                if( in_array($role->role_id, $mandantRolesArr) ){
+                                 $variant->hasPermission = true;
+                                 $hasPermission = true;
+                                }
+                            }//end foreach documentMandantRoles
+                        }
+                }
+                else{
+                    foreach( $variant->documentMandantMandants as $mandant){
+                        if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                            if($document->approval_all_roles == true){
+                                $hasPermission = true;
+                                $variant->hasPermission = true;
+                            }
+                            else{
+                                foreach($variant->documentMandantRoles as $role){
+                                    if( in_array($role->role_id, $mandantRolesArr) ){
+                                     $variant->hasPermission = true;
+                                     $hasPermission = true;
+                                    }
+                                }//end foreach documentMandantRoles
+                            }
+                        }
+                    }//end foreach documentMandantMandants
+                }
+            }
+        }
+        
+        $document = Document::find($id);
+        // $pdf = \App::make('dompdf.wrapper');
+          $pdf = \PDF::loadView('pdf.document', compact('document','variants'));
+        
+        return $pdf->stream();
+    }
+    
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function generatePdfPreview($id,$editorId)
+    {
+        if( ctype_alnum($id) && !is_numeric($id) ){
+            $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
+            $id = $publishedDocs->document_id;
+            $document = Document::find($id);
+        }
+        else
+            $document = Document::find($id);
+        $variants = EditorVariant::where('document_id',$id)->where('variant_number',$editorId)->get();
+        foreach($variants as $variant)
+            $variant->hasPermission = true;
+        
+        $pdf = \PDF::loadView('pdf.document', compact('document','variants'));
+        
+        return $pdf->stream();
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function previewDocument($id,$editorId)
+    {
+        if( ctype_alnum($id) && !is_numeric($id) ){
+            $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
+            $id = $publishedDocs->document_id;
+            $document = Document::find($id);
+        }
+        else
+            $document = Document::find($id);
+        
+        $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
+        if( $favorite == null )
+            $document->hasFavorite = false;
+        else
+            $document->hasFavorite = true;
+        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
+        $variants = EditorVariant::where('document_id',$id)->where('variant_number',$editorId)->get();
+        
+            
+        foreach($variants as $variant)
+            $variant->hasPermission = true;
+        
+        return view('dokumente.showPreview', compact('document','documentComments','variants') );
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function previewPdf($id)
+    {
+        if( ctype_alnum($id) && !is_numeric($id) ){
+            $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
+            $id = $publishedDocs->document_id;
+            $document = Document::find($id);
+        }
+        else{
+            $document = Document::find($id);
+        }
+        $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
+        if( $favorite == null )
+            $document->hasFavorite = false;
+        else
+            $document->hasFavorite = true;
+        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
+        $variants = EditorVariant::where('document_id',$id)->get();
+        
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantId->toArray();
+        $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+        $mandantRolesArr =  $mandantRoles->toArray();
+        
+        $hasPermission = false;
+        // dd($mandantId);
+        
+            
+        foreach($variants as $variant){
+            if($hasPermission == false){
+                if($variant->approval_all_mandants == true){
+                    if($document->approval_all_roles == true){
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                        }
+                        else{
+                            foreach($variant->documentMandantRoles as $role){
+                                if( in_array($role->role_id, $mandantRolesArr) ){
+                                 $variant->hasPermission = true;
+                                 $hasPermission = true;
+                                }
+                            }//end foreach documentMandantRoles
+                        }
+                }
+                else{
+                    foreach( $variant->documentMandantMandants as $mandant){
+                        if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                            if($document->approval_all_roles == true){
+                                $hasPermission = true;
+                                $variant->hasPermission = true;
+                            }
+                            else{
+                                foreach($variant->documentMandantRoles as $role){
+                                    if( in_array($role->role_id, $mandantRolesArr) ){
+                                     $variant->hasPermission = true;
+                                     $hasPermission = true;
+                                    }
+                                }//end foreach documentMandantRoles
+                            }
+                        }
+                    }//end foreach documentMandantMandants
+                }
+            }
+        }
+        return view('dokumente.show', compact('document','documentComments','variants') );
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -1278,7 +1579,23 @@ class DocumentController extends Controller
         if($request->has('comment')){
             RequestMerge::merge(['freigeber' => 1,'active' => 1,'document_id'=>$document->id,'user_id' => $user] );
             $comment = DocumentComment::create( $request->all() );
-        }$publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,'url_unique'=>$uniqeUrl]);
+        }
+        
+        
+        $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
+            if($publishedDocs == null){
+                $continue = true;
+                $uniqeUrl = '';
+                while ($continue) {
+                    $uniqeUrl = $this->generateUniqeLink();
+                    if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                        $continue = false;
+                }
+                 $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
+                            'url_unique'=>$uniqeUrl]);
+            }
+            else
+                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
         session()->flash('message',trans('documentForm.authorized'));
         return redirect('/dokumente/'.$id.'/freigabe');
     }
@@ -1374,14 +1691,25 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function documentType()
+    public function documentType($type)
     {
-        $counter = 0;
-        $document = $this->document->generateDummyData('document single');
-        $users = $this->document->generateDummyData('users', $document );
-        $data = $this->document->generateDummyData('dokumente', $users );
+        $documentType = null;
+        $documentsByTypePaginated = array();
+        $documentsByTypeTree = array();
         
-        return view('dokumente.documentType', compact('data','counter') );
+        foreach(DocumentType::all() as $docType){
+            if(str_slug($docType->name) == $type){
+                $documentType = $docType;
+                break;
+            }
+        }
+        
+        if(isset($documentType)){
+            $documentsByTypePaginated = Document::where('document_type_id', $documentType->id)->where('deleted_at', null)->orderBy('id', 'desc')->paginate(10, ['*'], 'seite');
+            $documentsByTypeTree = $this->document->generateTreeview($documentsByTypePaginated);
+        }
+        
+        return view('dokumente.documentType', compact('documentType', 'documentsByTypeTree', 'documentsByTypePaginated' ) );
     }
     
     /**
@@ -1575,9 +1903,10 @@ class DocumentController extends Controller
         $pass[] = $alphabet[$n];
     }
     return implode($pass); //turn the array into a string
-// 	return $randStr; // Return the string
        
     }
+    
+   
     
    
 }

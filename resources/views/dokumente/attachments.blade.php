@@ -92,9 +92,9 @@
                                             <!-- input box-->
                                             <div class="col-lg-4"> 
                                                 <div class="form-group">
-                                                <label class="control-label">{{ ucfirst( trans('documentForm.documentType')) }}*</label>     
+                                                <label class="control-label">{{ ucfirst( trans('documentForm.type')) }}*</label>     
                                                 <select name="document_type_id" class="form-control select" 
-                                                data-placeholder="{{ ucfirst(trans('documentForm.documentType')) }}*" required disabled>
+                                                data-placeholder="{{ ucfirst(trans('documentForm.type')) }}*" required disabled>
                                                 <option></option>
                                                 @if( count($documentTypes) >0 ){
                                                    @foreach($documentTypes as $collection){

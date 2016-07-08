@@ -101,6 +101,10 @@ class Document extends Model
         return $this->belongsTo('App\Adressat','adressat_id');
     }
     
+    public function published(){
+        return $this->hasOne('App\PublishedDocument','document_id','id');
+    }
+    
     public function isoCategories(){
         return $this->belongsTo('App\IsoCategory', 'iso_category_id', 'id');
     }

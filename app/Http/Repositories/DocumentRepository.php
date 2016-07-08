@@ -74,11 +74,13 @@ class DocumentRepository
             'tags' => false,
             'document' => true,
             'documentId' => 0,
+            'showUniqueURL' => false,
             'showDelete' => false,
             'showHistoryIcon' => true,
             'pageHome' => false,
             'pageHistory' => false,
             'pageWiki' => false,
+            'pageFavorites' => false,
         ];
         $options = array_merge($optionsDefault, $options);
 
@@ -139,7 +141,6 @@ class DocumentRepository
                 $icon = $icon2 = $icon3 = '';
 
                 // Define icon classes
-                // var_dump(Carbon::parse(Auth::user()->last_login)->gt(Carbon::parse($document->created_at)));
                 if ($document->document_status_id == 3) {
                     if (Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)))
                         $icon = 'icon-favorites ';
@@ -151,17 +152,19 @@ class DocumentRepository
                     }
                 }
 
-                // dd(Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)));
+                
                 if ($document->document_status_id == 6) {
                     $icon = 'icon-blocked ';
                     $icon2 = 'icon-notreleased ';
-                    // $icon3 = 'icon-history ';w
+                    // $icon3 = 'icon-history ';
                 }
 
                 $node->icon = $icon;
                 $node->icon2 = $icon2;
                 $node->icon3 = $icon3 . 'last-node-icon ';
-                $node->href = route('dokumente.show', $document->id);
+                if ($options['showUniqueURL'] == true)
+                    $node->href = route('dokumente.show', $document->published->url_unique);
+                else $node->href = route('dokumente.show', $document->id);
 
                 if ($document->document_status_id != 6) {
 
@@ -182,7 +185,8 @@ class DocumentRepository
                                 $subNode->nodes = array();
                                 foreach ($variant->documentUpload as $upload) {
                                     $subSubNode = new \StdClass();
-                                    $subSubNode->text = basename($upload->file_path);
+                                    // $subSubNode->text = basename($upload->file_path);
+                                    $subSubNode->text = 'PDF Rundschreiben';
                                     $subSubNode->icon = 'sub-child-node ';
                                     $subSubNode->icon2 = 'icon-download ';
                                     $subSubNode->icon3 = 'last-node-icon ';
@@ -200,7 +204,8 @@ class DocumentRepository
 
                         foreach ($document->documentUploads as $upload) {
                             $subNode = new \StdClass();
-                            $subNode->text = basename($upload->file_path);
+                            // $subNode->text = basename($upload->file_path);
+                            $subNode->text = 'PDF Rundschreiben';;
                             $subNode->icon = 'child-node ';
                             $subNode->icon2 = 'icon-download ';
                             $subNode->icon3 = 'last-node-icon ';
@@ -233,7 +238,8 @@ class DocumentRepository
 
                             foreach ($secondDoc->documentUploads as $upload) {
                                 $subNode = new \StdClass();
-                                $subNode->text = basename($upload->file_path);
+                                // $subNode->text = basename($upload->file_path);
+                                $subNode->text = 'PDF Rundschreiben';;
                                 $subNode->icon = 'fa fa-file-o';
                                 $subNode->href = '/download/' . str_slug($secondDoc->name) . '/' . $upload->file_path;
 

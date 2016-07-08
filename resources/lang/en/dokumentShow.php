@@ -15,6 +15,7 @@ return [
     'new-version' => 'Neue Version',
     'history' => 'Historie',
     'favorite' => 'Favorit',
+    'unFavorite' => 'Favorit entfernen',
     'version' => 'Version',
     'status' => 'Status',
     'subject' => 'Betreff',

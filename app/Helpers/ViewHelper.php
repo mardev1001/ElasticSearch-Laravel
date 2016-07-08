@@ -265,6 +265,18 @@ class ViewHelper
         return $newstring;    
     }
     
+    /**
+     * Show active/inactive user count 
+     *
+     * @param array $usersActive
+     * @param array $usersInactive
+     * @return string $newstring
+     */
+    static function showUserCount($usersActive, $usersInactive) {
+        $newString = view('partials.showUserCount', compact('usersActive','usersInactive'))->render();
+        return $newString;
+    }
+    
     
     
 }
