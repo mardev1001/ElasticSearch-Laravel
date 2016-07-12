@@ -307,7 +307,7 @@ class DummyDocumentSeeder extends Seeder
                 [
                     'document_id' => 1,
                     'document_group_id' => 1,
-                    'url_unique' => 'dummy-document-1-1',
+                    'url_unique' => 'asd123',
                     
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
@@ -316,7 +316,7 @@ class DummyDocumentSeeder extends Seeder
                 [
                     'document_id' => 2,
                     'document_group_id' => 2,
-                    'url_unique' => 'dummy-document-2-2',
+                    'url_unique' => 'asd456',
                     
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")

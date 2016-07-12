@@ -104,6 +104,27 @@ $(function() {
             });
         });
     }
+    if ($('.content-editor').length) {
+        var counter = 0;
+        $('.content-editor').each(function() {
+            counter++;
+            if ($(this).data('id'))
+                $(this).attr('id', $(this).data('id'));
+            else
+                $(this).attr('id', 'content-editor-' + counter);
+            var classes = '';
+            if( $(this).data('classes') )
+                classes = $(this).data('classes');
+            tinymce.init({
+                selector: '.content-editor',
+                skin_url: '/css/style',
+                body_class: classes,
+                height: 350,
+                removed_menuitems: 'newdocument',
+
+            });
+        });
+    }
     if ($('.variant').length) {
         var counter = 0;
         $('.variant').each(function() {

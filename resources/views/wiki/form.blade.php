@@ -6,7 +6,7 @@
     <div class="box">
         <div class="row">
             <!-- input box-->
-            <div class="col-lg-4"> 
+            <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.headline'),
                     trans('wiki.headline') ,true  ) !!}
@@ -15,7 +15,7 @@
             
             
             <!-- input box-->
-            <div class="col-lg-4"> 
+            <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
                     <label class="control-label"> {{ ucfirst(trans('documentForm.status')) }} </label>
                     <select name="status_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.status')) }}" disabled>
@@ -28,15 +28,22 @@
                 </div>   
             </div><!--End input box-->
             
+            <div class="col-md-4 col-lg-4"> 
+                <div class="form-group document-type-select">
+                    {!! ViewHelper::setSelect($documentTypes,'document_type_id',$data,old('document_type_id'),
+                            trans('documentForm.type'), trans('documentForm.type'),true ) !!}
+                </div>   
+            </div><!--End input box-->
+            
             <!-- input box-->
-            <div class="col-lg-4"> 
+            <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
                 </div>   
             </div><!--End input box-->
             
             <!-- input box-->
-            <div class="col-lg-4"> 
+            <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('date_expired',$data,old('date_expired'), trans('documentForm.dateExpired') , trans('documentForm.dateExpired') , false ,'text', ['datetimepicker'] ) !!}
                 </div>   
@@ -50,7 +57,7 @@
             </div><!--End input box-->
             
             <!-- input box-->
-            <div class="col-lg-4"> 
+            <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.parentId'),
                     trans('wiki.headline') ,true  ) !!}
@@ -59,7 +66,7 @@
             <div class="clearfix"></div>
             
             <!-- input box-->
-            <div class="col-lg-4"> 
+            <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.subject'),
                     trans('wiki.subject'), true  ) !!}
@@ -67,11 +74,11 @@
             </div><!--End input box-->
             
             <div class="clearfix"></div>
-            <div class="col-xs-12 editable" data-id='content'>
-                
+            <div class="col-xs-12">
+                <div class="content-editor" data-id='content'></div>
             </div>
             <div class="clearfix"></div>
-            
+            <br>
             <div class="col-xs-12 col-md-6">
                 <label>{{ trans('wiki.roles') }}*</label>
                 <select name="wiki_roles[]" class="form-control select" data-placeholder="{{ trans('wiki.roles') }}">
@@ -81,6 +88,9 @@
                     @endforeach
                 </select>
             </div>
+        </div>
+    </div>
+
             
             <div class="clearfix"></div>
             <br/>

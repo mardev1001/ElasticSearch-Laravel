@@ -23,7 +23,7 @@ class CreateDocumentsTable extends Migration
             $table->integer('document_status_id')->unsigned()->default(1);//FK
             $table->string('search_tags');
             $table->text('summary');
-            $table->timestamp('date_published');
+            $table->timestamp('date_published')->nullable()->default(null);
             $table->timestamp('date_expired')->nullable();
             $table->integer('version_parent');
             $table->integer('document_group_id');

@@ -132,6 +132,9 @@ class Document extends Model
     public function documentApprovals(){
         return $this->hasMany('App\DocumentApproval');
     }
+    public function documentApprovalsApprovedDateNotNull(){
+        return $this->hasMany('App\DocumentApproval')->whereNotNull('date_approved');
+    }
     
     public function documentMandants(){
         return $this->hasManyThrough('App\DocumentMandant','App\EditorVariant') ;
@@ -151,6 +154,6 @@ class Document extends Model
     }
     
     public function publishedDocuments(){
-        return $this->hasMany('App\PublishedDocument');
+        return $this->hasMany('App\PublishedDocument','document_id','id');
     }
 }

@@ -74,6 +74,7 @@ class DocumentRepository
             'tags' => false,
             'document' => true,
             'documentId' => 0,
+            'showApproval' => false,
             'showUniqueURL' => false,
             'showDelete' => false,
             'showHistoryIcon' => true,
@@ -162,7 +163,8 @@ class DocumentRepository
                 $node->icon = $icon;
                 $node->icon2 = $icon2;
                 $node->icon3 = $icon3 . 'last-node-icon ';
-                if ($options['showUniqueURL'] == true)
+                // if ($options['showUniqueURL'] == true)
+                if ($document->document_status_id == 3)
                     $node->href = route('dokumente.show', $document->published->url_unique);
                 else $node->href = route('dokumente.show', $document->id);
 
@@ -227,8 +229,9 @@ class DocumentRepository
                         $node = new \StdClass();
                         $node->text = $secondDoc->name;
                         $node->icon = 'icon-parent';
-                        if ($options['showDelete'])
-                            $node->hrefDelete = url('anhang-delete/' . $secondDoc->id . '/' . $options['documentId']);
+                        if ($options['showDelete']){
+                            $node->hrefDelete = url('anhang-delete/' . $options['documentId']. '/' .$evd->editor_variant_id . '/' .$evd->document_id );
+                        }
                         //$node->href = route('dokumente.show', $secondDoc->id);
 
                         if (!$secondDoc->documentUploads->isEmpty()) {

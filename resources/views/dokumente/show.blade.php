@@ -97,7 +97,9 @@
             </div>
 
             <div class="col-sm-4 col-md-3 col-lg-2 btns">
-                <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
+                @if( $document->document_status_id  != 3)
+                    <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
+                @endif
                 <button class="btn btn-primary pull-right">{{ trans('dokumentShow.deactivate') }}</button>
                 <!--<a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>-->
                 <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>
@@ -115,10 +117,12 @@
              
                 
                 @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
-              
-                    <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
-               
-                    <a href="#" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                    @if( $authorised == false && $canPublish ==false && $published == false)
+                        <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                    @elseif( ($authorised == false && $canPublish == true && $published == false ) ||  
+                       ($authorised == true && $published == false ) )
+                        <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                    @endif
                 @endif
                 
                 

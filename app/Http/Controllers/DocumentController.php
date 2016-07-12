@@ -911,6 +911,8 @@ class DocumentController extends Controller
                 }
                  $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
                             'url_unique'=>$uniqeUrl]);
+                $document->date_published = Carbon::now();
+                $document->save();
             }
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
@@ -988,11 +990,38 @@ class DocumentController extends Controller
         $mandantIdArr = $mandantId->toArray();
         $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
         $mandantRolesArr =  $mandantRoles->toArray();
+        $auth = DocumentApproval::where('document_id',$id)->get(); 
+        
+        /* Button check */
+        $published = false;
+        $canPublish = false;
+        $authorised = false;
+        $authorisedPositive = false;
+             //  je li date expired manji od now
+        if($document->date_expired != null){
+            $dateExpired = new Carbon($document->date_expired);
+            $now = new Carbon( Carbon::now() );    
+            $datePassed = $dateExpired->lt( Carbon::now() );
+            if( $datePassed == true)
+                $canPublish = true;
+        }
+             
+        if( count($document->documentApprovalsApprovedDateNotNull) > 0){
+            $authorised = true;
+           
+            foreach($document->documentApprovals->pluck('approved') as $approved){
+                if($approved == true)
+                    $authorisedPositive = true;
+            }
+        }
+       
+        if( count( $document->publishedDocuments->first() ) > 0)
+            $published = true;
+        // dd($authorised);
+        // dd($canPublish);
+        /* End Button check */
         
         $hasPermission = false;
-        // dd($mandantId);
-        
-            
         foreach($variants as $variant){
             if($hasPermission == false){
                 if($variant->approval_all_mandants == true){
@@ -1029,7 +1058,7 @@ class DocumentController extends Controller
                 }
             }
         }
-        return view('dokumente.show', compact('document','documentComments','variants') );
+        return view('dokumente.show', compact('document', 'documentComments', 'variants', 'published', 'canPublish', 'authorised') );
     }
 
     /**
@@ -1258,12 +1287,17 @@ class DocumentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroyByLink($id,$parentId)
+    public function destroyByLink($documentId,$editorId,$editorDocumentId)
     {
-        $document = Document::findOrFail($id);
-        $document->delete();
+        /*document id, editor id, editor-document id*/
+        // $document = EditorVariant::where('document_id',$parentId)->where('variant_number',$id)->first();+
+        // $currDocEv = EditorVariant::where('document_id',$parentId)->where('variant_number',$id)->first();
+        $documentCheck = EditorVariantDocument::where('editor_variant_id',$editorId)->where('document_id',$editorDocumentId)->first();
         
-        return redirect('/dokumente/anhange/'.$parentId)->with('message', 'Dokument wurde entfernt.');
+        if($documentCheck != null)
+            $documentCheck->delete();
+       
+        return redirect('/dokumente/anhange/'.$documentId)->with('message', 'Dokument wurde entfernt.');
     }
     /**
      * Remove the specified resource from storage.
@@ -1310,7 +1344,67 @@ class DocumentController extends Controller
         $document = Document::find($id);
         $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->get();
-        return view('dokumente.freigabe',compact('document','documentCommentsUser','documentCommentsFreigabe'));
+        /* Button check */
+        $published = false;
+        $canPublish = false;
+        $authorised = false;
+        $authorisedPositive = false;
+        if($document->date_expired != null){
+            $dateExpired = new Carbon($document->date_expired);
+            $now = new Carbon( Carbon::now() );     
+            $datePassed = $dateExpired->lt( Carbon::now() );
+            if( $datePassed == true)
+                $canPublish = true;
+        }
+        if( count($document->documentApprovalsApprovedDateNotNull ) > 0){
+            $authorised = true;
+            
+        }
+        
+        if( count( $document->publishedDocuments->first() ) > 0)
+            $published = true;
+        
+        /* End Button check */
+        return view('dokumente.freigabe',compact('document','documentCommentsUser','documentCommentsFreigabe','published','canPublish','authorised','authorisedPositive'));
+    }
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function publishApproval($id)
+    {
+        $document = Document::find($id);
+        $document->document_status_id = 3;
+        $document->date_published = Carbon::now();
+        $document->save();
+        $continue = true;
+        $uniqeUrl = '';
+        while ($continue) {
+            $uniqeUrl = $this->generateUniqeLink();
+            if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                $continue = false;
+        }
+        $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
+            if($publishedDocs == null){
+                $continue = true;
+                $uniqeUrl = '';
+                while ($continue) {
+                    $uniqeUrl = $this->generateUniqeLink();
+                    if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                        $continue = false;
+                }
+                $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
+                            'url_unique'=>$uniqeUrl]);
+                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
+            }
+            else
+                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
+                
+         if($document->published->url_unique)    
+            return redirect('dokumente/'.$document->published->url_unique);
+        else
+            return redirect('dokumente/'.$id);
     }
     
      /**
@@ -1404,7 +1498,6 @@ class DocumentController extends Controller
         }
         
         $document = Document::find($id);
-        // $pdf = \App::make('dompdf.wrapper');
           $pdf = \PDF::loadView('pdf.document', compact('document','variants'));
         
         return $pdf->stream();
@@ -1551,7 +1644,7 @@ class DocumentController extends Controller
         }
         else{
             $approved = false;
-            $dateApproved = null;
+            $dateApproved = Carbon::now();
         } 
          
         $document = Document::find($id);
@@ -1593,6 +1686,9 @@ class DocumentController extends Controller
                 }
                  $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
                             'url_unique'=>$uniqeUrl]);
+            
+                $document->date_published = Carbon::now();
+                $document->save();
             }
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
@@ -1607,12 +1703,13 @@ class DocumentController extends Controller
      */
     public function rundschreiben()
     {
-        $rundschreibenAll = Document::where(['document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
+        $docType = $this->rundId;
+        $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
         $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
         $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
-        return view('dokumente.rundschreiben', compact('rundschreibenAll','rundschreibenAllTree','rundschreibenMeine','rundschreibenMeineTree') );
+        return view('dokumente.rundschreiben', compact('docType', 'rundschreibenAll', 'rundschreibenAllTree', 'rundschreibenMeine', 'rundschreibenMeineTree') );
     }
     
     /**
@@ -1623,9 +1720,7 @@ class DocumentController extends Controller
     public function rundschreibenPdf()
     {
         $counter = 0;
-       
         $data = json_encode(  $this->document->generateDummyData('Anhag dokumente', array(),false ) );
-          
         $comment = $this->document->generateDummyData('Lorem ipsum comment', array(), false );
         $data2 = json_encode( $this->document->generateDummyData('Herr Engel - Betreff', $comment ) );
         
@@ -1640,16 +1735,13 @@ class DocumentController extends Controller
      */
     public function rundschreibenQmr()
     {
-        $counter = 0;
-        $document = $this->document->generateDummyData('document single',array(), false);
-        $users = $this->document->generateDummyData('users', $document );
-        $data = json_encode( $this->document->generateDummyData('dokumente', $users ) );
+        $qmrMyPaginated = Document::where('document_type_id' , $this->qmRundId )->where('user_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-qmr');
+        $qmrMyTree = $this->document->generateTreeview( $qmrMyPaginated );
         
-        $document2 = $this->document->generateDummyData('document single',array(), false);
-        $users2 = $this->document->generateDummyData('users', $document2 );
-        $data2 = json_encode( $this->document->generateDummyData('dokumente', $users2 ) );
+        $qmrAllPaginated = Document::where('document_type_id' , $this->qmRundId )->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
+        $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated );
         
-        return view('dokumente.circularQMR', compact('data','data2','counter') );
+        return view('dokumente.circularQMR', compact('qmrMyTree', 'qmrMyPaginated', 'qmrAllTree', 'qmrAllPaginated'));
     }
     
     /**
@@ -1798,15 +1890,6 @@ class DocumentController extends Controller
     
     
     /**
-     * Next form checker for 
-     *
-     * @return NON
-     */
-    private function nextFormChecker($model,$linkMe=''){
-        
-    }
-    
-    /**
      * Display the documents for the specified ISO category slug.
      *
      * @param  string  $slug
@@ -1843,6 +1926,35 @@ class DocumentController extends Controller
         return view('dokumente.isoDocument', compact('documentsIso','documentsIsoTree','myIsoDocuments', 'myIsoDocumentsTree') );
         
     }
+    
+     /**
+     * Search documents by request parameters.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        if(empty($request->all())) return redirect('/');
+        
+        $docType = $request->input('document_type_id');
+        $docTypeName = DocumentType::find($docType)->name;
+        $search = $request->input('search');
+        
+        $resultAllPaginated = Document::where(['document_type_id' =>  $docType])
+        ->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc')
+        ->paginate(10, ['*'], 'results-all');
+        $resultAllTree = $this->document->generateTreeview($resultAllPaginated);
+        
+        $resultMyPaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => $docType])
+        ->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc')
+        ->paginate(10, ['*'], 'results-my');
+        $resultMyTree = $this->document->generateTreeview($resultMyPaginated);
+        
+        // return back()->withInput()->with(compact('docType', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
+        return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeName', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
+    }
+    
     
     /**
      * Set back button
@@ -1906,7 +2018,5 @@ class DocumentController extends Controller
        
     }
     
-   
     
-   
 }

@@ -17,7 +17,9 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
         
         Route::post('dokumente/authorize/{id}', 'DocumentController@authorizeDocument');
-        Route::get('anhang-delete/{id}/{parent_id}', 'DocumentController@destroyByLink');
+        Route::get('anhang-delete/{document_id}/{editor_id}/{editor_document_id}', 'DocumentController@destroyByLink');
+        Route::any('dokumente/suche', 'DocumentController@search');
+        // Route::get('dokumente/suchergebnisse', 'DocumentController@searchResults');
         Route::get('dokumente/rundschreiben', 'DocumentController@rundschreiben');
         Route::get('dokumente/rundschreiben-pdf', 'DocumentController@rundschreibenPdf');
         Route::get('dokumente/rundschreiben-qmr', 'DocumentController@rundschreibenQmr');
@@ -40,6 +42,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::get('dokumente/new-version/{id}', 'DocumentController@newVersion');
         Route::get('dokumente/{id}/freigabe', 'DocumentController@freigabeApproval');
+        Route::get('dokumente/{id}/publish', 'DocumentController@publishApproval');
         Route::get('dokumente/{id}/favorit', 'DocumentController@favorites');
         Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');
          Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');

@@ -30,15 +30,15 @@ class HomeController extends Controller
     {
         $documentsNew = Document::whereNotIn('document_status_id', array(1,4,5,6))->where('is_attachment',0)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
-        $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showUniqueURL' => true));
+        $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true));
         
         $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
-        $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showUniqueURL' => true));
+        $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true));
         
         $documentsMy = Document::where('user_id', Auth::user()->id)
         ->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-dokumente');
-        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true, 'showUniqueURL' => true));
+        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true));
         
         $freigabeEntries = Document::where('document_status_id', 6)->where(
             function($query){
@@ -48,7 +48,7 @@ class HomeController extends Controller
             }
         )->orderBy('id', 'desc')->paginate(10, ['*'], 'freigabe-dokumente');
         
-        $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true, 'showUniqueURL' => true));
+        $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
         $wikiEntries = '[{"text":"Wiki Eintrag-74","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-79","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-25","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-166","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-19","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]}]';
         $commentsNew = '[{"text":"Neuer Kommentar-135","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-95","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-38","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]}]';

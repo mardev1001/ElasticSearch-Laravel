@@ -9,10 +9,19 @@
         <div class="col-xs-12 col-md-12 box-wrapper">
             <h4 class="title">{{ trans('rundschreibenQmr.myQmr')}}</h4>
             <div class="box">
-                <div class="tree-view hide-icons" data-selector="test">
-                     <div  class="test hide" >{{$data}}</div>
-                </div>
+                @if(count($qmrMyTree))
+                    <div class="tree-view hide-icons" data-selector="qmrMyTree">
+                         <div  class="qmrMyTree hide" >{{ $qmrMyTree }}</div>
+                    </div>
+                @else
+                    Keine Daten gefunden.
+                @endif
             </div>
+            @if(count($qmrMyPaginated))
+                <div class="text-center box box-pagination">
+                    {!! $qmrMyPaginated->render() !!}
+                </div>
+            @endif
         </div>
         <div class="clearfix"></div>
         
@@ -20,17 +29,13 @@
             <div class="col-xs-12 col-md-12">
                 <div class="box-wrapper">
                     <div class="box">
-                        {!! Form::open([
-                       'url' => '/search',
-                       'method' => 'POST',
-                       'class' => 'horizontal-form' ]) !!}
+                        <form method="GET" action="">
                             <!-- input box-->
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="input-group">
-                                        {!! ViewHelper::setInput('search',$data,old('search'),trans('navigation.search_placeholder'),
+                                        {!! ViewHelper::setInput('search', '', old('search'),trans('navigation.search_placeholder'),
                                         trans('navigation.search_placeholder'), true) !!}
-                        
                                     </div>   
                                 </div>
                                
@@ -61,11 +66,19 @@
         <div class="col-xs-12 col-md-12 box-wrapper">
             <h4 class="title">{{ trans('rundschreibenQmr.allQmr')}}</h4>
             <div class="box">
-                
-                <div class="tree-view hide-icons" data-selector="test2">
-                    <div class="test2 hide">{{$data2}}</div>
-                </div>
+                @if(count($qmrMyTree))
+                    <div class="tree-view hide-icons" data-selector="qmrAllTree">
+                         <div  class="qmrAllTree hide" >{{ $qmrAllTree }}</div>
+                    </div>
+                @else
+                    Keine Daten gefunden.
+                @endif
             </div>
+            @if(count($qmrMyPaginated))
+                <div class="text-center box box-pagination">
+                    {!! $qmrAllPaginated->render() !!}
+                </div>
+            @endif
         </div>
         <div class="clearfix"></div>
     @stop

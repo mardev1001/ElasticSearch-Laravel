@@ -131,9 +131,14 @@
    
             <div class="col-sm-4 col-md-3 col-lg-2 btns">
                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
-                <a href="#" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
-                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
-                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
+                @if( $authorised == false && $canPublish ==false)
+                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
+                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
+                @elseif( ($authorised == false && $canPublish == true && $published == false ) ||  
+                       ($authorised == true && $published == false ) )
+                        <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                @endif
+                
             </div>
         </div><!--end row-->
         <div class="clearfix"></div> 
