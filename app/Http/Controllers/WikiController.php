@@ -47,6 +47,7 @@ class WikiController extends Controller
     {
         //auto date
         //auto update
+        //user_id
         dd( $request->all() );
         $wiki = WikiPage::create( $request->all() );
         

@@ -90,6 +90,7 @@
                                     <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
                                 @elseif($documentType->id == 4)
                                     <li>
+                                        <!--<a href="{{url('iso-dokumente')}}">{{ $documentType->name }}-->
                                         <a href="#">{{ $documentType->name }}
                                             @if(!empty($isoCategories)) <span class="fa arrow"></span> @endif
                                         </a>

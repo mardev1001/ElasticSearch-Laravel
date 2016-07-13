@@ -226,8 +226,7 @@
                                                 <div class="col-lg-6"> 
                                                     <div class="form-group">
                                                         <label>Dokumentenupload</label>
-                                                        <input type="file" name="file[]" class="form-control" multiple 
-                                                            required />
+                                                        <input type="file" name="file[]" class="form-control" required />
                                                     </div>   
                                                 </div><!--End input box-->
                                             <div class="clearfix"></div>

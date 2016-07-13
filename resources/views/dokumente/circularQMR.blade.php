@@ -29,32 +29,21 @@
             <div class="col-xs-12 col-md-12">
                 <div class="box-wrapper">
                     <div class="box">
-                        <form method="GET" action="">
-                            <!-- input box-->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="input-group">
-                                        {!! ViewHelper::setInput('search', '', old('search'),trans('navigation.search_placeholder'),
-                                        trans('navigation.search_placeholder'), true) !!}
-                                    </div>   
+                        {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                            <div class="input-group">
+                                <div class="col-md-12 col-lg-12">
+                                    {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
+                                    <input type="hidden" name="document_type_id" value="{{ $docType }}">
                                 </div>
-                               
-                                <div class="col-md-12">
+                                <div class="col-md-12 col-lg-12">
                                     <span class="custom-input-group-btn">
-                                        <button type="submit" class="btn btn-primary">
+                                        <button type="submit" class="btn btn-primary no-margin-bottom">
                                             {{ trans('navigation.search') }} 
                                         </button>
                                     </span>
-                                </div><!--End input box-->
-                                <!-- input box-->
-                                <div class="col-md-6">
-                                    <div class="">
-                                        
-                                      
-                                    </div> 
                                 </div>
-                            </div><!--End input box-->
-                       </form>
+                            </div>
+                        {!! Form::close() !!}
                     </div>
                 </div>
             </div>

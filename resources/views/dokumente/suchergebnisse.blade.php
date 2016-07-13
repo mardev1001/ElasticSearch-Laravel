@@ -19,7 +19,7 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper">
             
-            <h2 class="title">Meine Rundschreiben</h2>
+            <h2 class="title"> Meine @if($docTypeName) {{$docTypeName}} @else Dokumente @endif </h2>
             
             <div class="box">
                 @if(isset($resultMyTree))
@@ -74,7 +74,7 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper">
             
-            <h2 class="title">Alle Rundschreiben</h2>
+            <h2 class="title">Alle @if($docTypeName) {{$docTypeName}} @elseDokumente @endif </h2>
             
             <div class="box">
                 @if(isset($resultAllTree))

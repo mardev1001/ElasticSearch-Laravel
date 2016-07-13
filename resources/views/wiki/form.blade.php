@@ -8,7 +8,7 @@
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
-                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.headline'),
+                    {!! ViewHelper::setInput('name',$data,old('name'),trans('wiki.headline'),
                     trans('wiki.headline') ,true  ) !!}
                 </div>   
             </div><!--End input box-->

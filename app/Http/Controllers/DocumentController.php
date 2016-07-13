@@ -1735,13 +1735,14 @@ class DocumentController extends Controller
      */
     public function rundschreibenQmr()
     {
+        $docType = $this->qmRundId;
         $qmrMyPaginated = Document::where('document_type_id' , $this->qmRundId )->where('user_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-qmr');
         $qmrMyTree = $this->document->generateTreeview( $qmrMyPaginated );
         
         $qmrAllPaginated = Document::where('document_type_id' , $this->qmRundId )->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
         $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated );
         
-        return view('dokumente.circularQMR', compact('qmrMyTree', 'qmrMyPaginated', 'qmrAllTree', 'qmrAllPaginated'));
+        return view('dokumente.circularQMR', compact('docType', 'qmrMyTree', 'qmrMyPaginated', 'qmrAllTree', 'qmrAllPaginated'));
     }
     
     /**
@@ -1925,6 +1926,17 @@ class DocumentController extends Controller
         
         return view('dokumente.isoDocument', compact('documentsIso','documentsIsoTree','myIsoDocuments', 'myIsoDocumentsTree') );
         
+    }
+    
+    /**
+     * Display the documents for the specified ISO category slug.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function isoCategoriesIndex()
+    {
+        return view('dokumente.isoCategoriesIndex');
     }
     
      /**

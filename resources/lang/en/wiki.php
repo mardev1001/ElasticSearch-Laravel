@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'name' => 'Name',
     'datePublished' => 'Veröffentlichungstermin',
     'dateExpired' => 'Verfallsdatum',
     'headline' => 'Überschrift',

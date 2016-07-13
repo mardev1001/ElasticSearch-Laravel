@@ -19,5 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DummyIsoCategorySeeder::class);
         $this->call(DummyAdressatSeeder::class);
         $this->call(DummyDocumentSeeder::class);
+        $this->call(DummyWikiCategorySeeder::class);
+        
     }
 }

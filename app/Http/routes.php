@@ -29,6 +29,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/datei-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/statistik/{id}', 'DocumentController@documentStats');
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');
+        Route::get('iso-dokumente', 'DocumentController@isoCategoriesIndex');
         Route::get('iso-dokumente/{slug}', 'DocumentController@isoCategoriesBySlug');
         Route::get('dokumente/editor/{id}/edit', 'DocumentController@editDocumentEditor');
         Route::post('editor', 'DocumentController@documentEditor');
@@ -45,7 +46,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/{id}/publish', 'DocumentController@publishApproval');
         Route::get('dokumente/{id}/favorit', 'DocumentController@favorites');
         Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');
-         Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
+        Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
         Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         Route::post('comment/{id}', 'DocumentController@saveComment');

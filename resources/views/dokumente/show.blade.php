@@ -69,6 +69,29 @@
                         <div class="clearfix"></div> <br>
                         
                          <div class="footer">
+                              
+                            @foreach( $variants as $v => $variant)
+                                   @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
+                               
+                                        @if( count( $variant->EditorVariantDocument ) )
+                                            <div class="attachments document-attachments">
+                                                <span class="text">Dokument Anlage/n: </span>
+                                                @foreach($variant->EditorVariantDocument as $k =>$docAttach)
+                                                    @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
+                                                        @if( $key == 0 )
+                                                           <a target="_blank" href="{{ url('download/'.str_slug($docAttach->document->name).'/'.$docUpload->file_path) }}" class="link">
+                                                           {{$docAttach->document->name_long }}</a>
+                                                           <br><span class="indent"></span>
+                                                        @endif
+                                                    @endforeach
+                                                @endforeach
+                                            </div>
+                                        @endif
+                                   @endif
+                               @endforeach
+                            
+                           
+                            
                             @if(count($document->documentUploads))
                             <div class="attachments">
                                 <span class="text">Dokument Anhäng/e: </span>
