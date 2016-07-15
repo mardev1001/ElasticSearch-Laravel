@@ -19,7 +19,7 @@ class Document extends Model
         'version_parent','document_group_id','iso_category_id',
         'show_name','adressat_id','betreff','document_replaced_id',
         'date_approved','email_approval','approval_all_roles',
-        'approval_all_mandants','pdf_upload','is_attachment'
+        'approval_all_mandants','pdf_upload','is_attachment','active','iso_category_number','qmr_number','landscape'
     ]; //whitelist
     
      
@@ -103,6 +103,10 @@ class Document extends Model
     
     public function published(){
         return $this->hasOne('App\PublishedDocument','document_id','id');
+    }
+    
+    public function user(){
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
     
     public function isoCategories(){

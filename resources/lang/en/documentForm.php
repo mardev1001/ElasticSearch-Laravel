@@ -3,6 +3,8 @@
 return [
     'documentType' => 'Dokumente Typ',
     'type' => 'Typ',
+    'qmr' => 'QMR Nummer',
+    'isoNumber' => 'ISO Dokument Nummer',
     'documentName' => 'Titel',
     'documentNameLong' => 'Titel lang',
     'owner' => 'Autor',
@@ -34,6 +36,7 @@ return [
     'savedComment' => 'Kommentar gespeichert',
     'authorized' => 'Dokument wurde erfolgreich veröffentlicht.',
     'newVersionSuccess' => 'Neue Version wurde erstellt',
+    'landscape' => 'Dokumente Querformat',
     
     /* Freigabe process */
     'freigeben' => 'Freigeben',

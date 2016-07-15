@@ -1,6 +1,8 @@
 @section('page-title') {{ trans('controller.create') }} @stop
 <h3 class="title">{{ trans('controller.editor') }}</h3>
-
+@if($data->landscape == true)
+    <input type="hidden" class="document-orientation" name="document-orientation" value="landscape" />
+@endif
 <div class="row">  
     
     <!-- input box-->

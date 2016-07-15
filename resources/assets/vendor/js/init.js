@@ -93,13 +93,21 @@ $(function() {
             var classes = '';
             if( $(this).data('classes') )
                 classes = $(this).data('classes');
+            
+             var docWidth = 794, docHeight =1122;
+             
+            if( $('.document-orientation').length ){
+                 docWidth = 'auto', docHeight = 794;
+            }    
+                
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
                 body_class: classes,
-                width: 794,
-                height: 1122,
+                width: docWidth,
+                height: docHeight,
                 removed_menuitems: 'newdocument',
+                elementpath: false,
 
             });
         });
@@ -121,6 +129,7 @@ $(function() {
                 body_class: classes,
                 height: 350,
                 removed_menuitems: 'newdocument',
+                elementpath: false,
 
             });
         });
@@ -136,13 +145,19 @@ $(function() {
             var classes = '';
             if( $(this).data('classes') )
                 classes = $(this).data('classes');
+            
+            var docWidth = 794, docHeight =1122;
+            if( $('.document-orientation').length )
+                  docWidth = 'auto', docHeight = 794;
+                
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
                 body_class: classes,
-                width: 794,
-                height: 1122,
+                width: docWidth,
+                height: docHeight,
                 removed_menuitems: 'newdocument',
+                elementpath: false,
 
             });
         });

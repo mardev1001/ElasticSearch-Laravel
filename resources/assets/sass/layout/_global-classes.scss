@@ -1,16 +1,16 @@
 body {
-    background: url('/img/NeptunBG.png') $white-color no-repeat !important;
+    background: url('/img/bgrnd-light-1920.png') $white-color no-repeat;
     background-position: center top;
     padding-top: 148px;
     font: 12px !important;
 }
 
 
-@media screen and (max-width: 1360px) { 
+/*@media screen and (max-width: 1360px) { 
     body {
-        background: url('/img/bgrnd.jpg') $white-color no-repeat !important;
+        background: url('/img/bgrnd-light-1200.png') $white-color no-repeat !important;
     }
-}
+}*/
 h1, h2, h3, h4 {
     font-family: $primary-font-family !important;
     color: $dark-blue !important;

@@ -67,7 +67,7 @@
                         <h4 class="panel-title col-xs-12">
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
                                    href="#collapseMandant{{$mandant->id}}">
-                                  {{$mandant->name}}
+                                  ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
                                 </a>
                             
                         </h4>

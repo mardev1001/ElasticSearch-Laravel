@@ -18,26 +18,25 @@
             
             <div class="box">
                 
-                <ul>
-                    
-                    <li class="first-level">
-                        
-                        <a href="#">Test 1</a>
-                        
-                        <ul>
-                            <li class="second-level">
-                                <a href="#">Test 2</a>
+                
+                @if(!empty($isoCategories))
+                    <ul class="level-1">
+                        @foreach($isoCategories as $isoCategory)
+                            @if($isoCategory->parent)
+                            <li>
+                                <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                <ul class="level-2">
+                                @foreach($isoCategories as $isoCategoryChild)
+                                    @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
+                                        <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
+                                    @endif
+                                @endforeach
+                                </ul>
                             </li>
-                            <li class="second-level">
-                                <a href="#">Test 2</a>
-                            </li>
-                            <li class="second-level">
-                                <a href="#">Test 2</a>
-                            </li>
-                        </ul>
-                    </li>
-                    
-                </ul>
+                            @endif
+                        @endforeach
+                    </ul>
+                @endif
                 
             </div>
 

@@ -24,14 +24,29 @@
                                             <div class="col-xs-6 ">
                                                 <h2 class="title">{{ trans('documentAnlegen.anlageZuVariante') }} {{$variant->variant_number}}:</h2>
                                                 <div class="">
-                                                    @if( array_key_exists( $variant->id,$attachmentArray ) && $attachmentArray[$variant->id] != '[]'  )
-                                                          
+                                                    {{-- @if( array_key_exists( $variant->id,$attachmentArray ) && $attachmentArray[$variant->id] != '[]'  ) --}}
+                                                    @if(count($attachmentArray[$variant->id]))
+                                                    
+                                                        {{--  
                                                         <div class="tree-view hide-icons" data-selector="variant-tree-{{$variant->variant_number}}">
                                                             <div class="variant-tree-{{$variant->variant_number}} hide">
                                                                 {{ ($attachmentArray[$variant->id]) }}
                                                             </div>
                                                         </div>
-                                                      
+                                                        --}}
+                                                    
+                                                        @foreach($attachmentArray[$variant->id] as $attachedDoc)
+                                                            @if(isset($attachedDoc->files))
+                                                                <div class="attached-document">
+                                                                    <a class="attached-document-download pull-left" href="{{$attachedDoc->files[0]->downloadUrl}}"> 
+                                                                    {{$attachedDoc->name}} </a>
+                                                                    <a class="attached-document-download pull-right" href="{{$attachedDoc->deleteUrl}}"> 
+                                                                    <i class="fa fa-1-5x fa-trash text-danger"></i> </a>
+                                                                </div> 
+                                                                <div class="clearfix"></div> <br>
+                                                            @endif
+                                                        @endforeach
+                                                    
                                                     @else
                                                         <p class="text-danger">Es wurden keine Anhänge gefunden {{--$variant->variant_number --}}</p>
                                                     @endif
@@ -44,7 +59,7 @@
                                     <!--Select existing document-->         
                                     <div class="row">
                                         {!! Form::open([
-                                        'url' => 'dokumente/anhange/'.$data->id,
+                                        'url' => 'dokumente/anlagen/'.$data->id,
                                         'method' => 'POST',
                                         'class' => 'horizontal-form' ]) !!}
                                         <div class="col-xs-12">
@@ -56,7 +71,7 @@
                                             <!--option box-->
                                             <div class="col-xs-8 col-md-6">
                                                 <div class="form-group">
-                                                    {!! ViewHelper::setSelect($documents,'document_id',$data,old('document_id'),
+                                                    {!! ViewHelper::setSelect($documentsFormulare,'document_id',$data,old('document_id'),
                                                             trans('documentForm.documents'), trans('documentForm.documents'),true ) !!}
                                                 </div>   
                                             </div>
@@ -77,7 +92,7 @@
                                     <!--create new document-->
                                     <div class="row">
                                         {!! Form::open([
-                                        'url' => 'dokumente/anhange/'.$data->id,
+                                        'url' => 'dokumente/anlagen/'.$data->id,
                                         'method' => 'POST',
                                         'enctype' => 'multipart/form-data',
                                         'class' => 'horizontal-form form-check' ]) !!}

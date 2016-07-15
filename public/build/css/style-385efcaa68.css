@@ -440,15 +440,16 @@ body#app-layout {
 
 /* Layout - Header, footer, forms, sidebar */
 body {
-  background: url("/img/NeptunBG.png") #fff no-repeat !important;
+  background: url("/img/bgrnd-light-1920.png") #fff no-repeat;
   background-position: center top;
   padding-top: 148px;
   font: 12px !important; }
 
-@media screen and (max-width: 1360px) {
-  body {
-    background: url("/img/bgrnd.jpg") #fff no-repeat !important; } }
-
+/*@media screen and (max-width: 1360px) { 
+    body {
+        background: url('/img/bgrnd-light-1200.png') $white-color no-repeat !important;
+    }
+}*/
 h1, h2, h3, h4 {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
   color: #0154BB !important; }
@@ -17621,6 +17622,9 @@ textarea {
   .panel-group .panel .panel-heading {
     border-top-left-radius: 0;
     border-top-right-radius: 0; }
+
+.mce-path.mce-flow-layout-item.mce-first {
+  visibility: hidden !important; }
 
 @media (min-width: 768px) {
   .sidebar {

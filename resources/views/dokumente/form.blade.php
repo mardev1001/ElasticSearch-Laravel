@@ -13,6 +13,31 @@
             </div><!--End input box-->
             
             <!-- input box-->
+            <div class="col-md-4 col-lg-4 qmr-select"> 
+                <div class="form-group">
+                    {!! ViewHelper::setInput('qmr_number',$data,$incrementedQmr,trans('documentForm.qmr') , 
+                           trans('documentForm.qmr') , true, 'number', array(), array() )!!}
+                </div>   
+            </div><!--End input box-->
+            
+            <!-- input box-->
+            <div class="col-md-4 col-lg-4 iso-category-select"> 
+                <div class="form-group">
+                    {!! ViewHelper::setInput('iso_category_number',$data,$incrementedIso,trans('documentForm.isoNumber') , 
+                           trans('documentForm.isoNumber') , true, 'number', array(), array() ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+             
+            <!-- input box-->
+            <div class="col-md-4 col-lg-4 iso-category-select"> 
+                <div class="form-group">
+                    {!! ViewHelper::setSelect($isoDocuments,'iso_category_id',$data,old('iso_category_id'),
+                            trans('documentForm.isoCategory'), trans('documentForm.isoCategory') ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+            <!-- input box-->
             <div class="col-md-4 col-lg-4 "> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('name',$data,old('name'),trans('documentForm.documentName') , 
@@ -33,14 +58,6 @@
                 <div class="form-group">
                     {!! ViewHelper::setInput('search_tags',$data,old('search_tags'),trans('documentForm.searchTags') , 
                            trans('documentForm.searchTags') , true  ) !!} <!-- add later data-role="tagsinput"-->
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-md-4 col-lg-4 iso-category-select"> 
-                <div class="form-group">
-                    {!! ViewHelper::setSelect($isoDocuments,'iso_category_id',$data,old('iso_category_id'),
-                            trans('documentForm.isoCategory'), trans('documentForm.isoCategory') ) !!}
                 </div>   
             </div><!--End input box-->
             
@@ -114,6 +131,13 @@
             <div class="col-md-4 col-lg-4 pdf-checkbox"> 
                 <div class="form-group ">
                     {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+            <!-- input box-->
+            <div class="col-md-4 col-lg-4"> 
+                <div class="form-group ">
+                    {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
                 </div>   
             </div><!--End input box-->
             

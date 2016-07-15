@@ -192,7 +192,8 @@ class DocumentRepository
                                     $subSubNode->icon = 'sub-child-node ';
                                     $subSubNode->icon2 = 'icon-download ';
                                     $subSubNode->icon3 = 'last-node-icon ';
-                                    $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+                                    // $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+                                    $subSubNode->href = '/download/' . $document->id . '/' . $upload->file_path;
                                     
                                     array_push($subNode->nodes, $subSubNode);
                                 }
@@ -211,7 +212,8 @@ class DocumentRepository
                             $subNode->icon = 'child-node ';
                             $subNode->icon2 = 'icon-download ';
                             $subNode->icon3 = 'last-node-icon ';
-                            $subNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+                            // $subNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+                            $subNode->href = '/download/' . $document->id . '/' . $upload->file_path;
 
 
                             array_push($node->nodes, $subNode);
@@ -244,7 +246,8 @@ class DocumentRepository
                                 // $subNode->text = basename($upload->file_path);
                                 $subNode->text = 'PDF Rundschreiben';;
                                 $subNode->icon = 'fa fa-file-o';
-                                $subNode->href = '/download/' . str_slug($secondDoc->name) . '/' . $upload->file_path;
+                                // $subNode->href = '/download/' . str_slug($secondDoc->name) . '/' . $upload->file_path;
+                                $subNode->href = '/download/' . $secondDoc->id . '/' . $upload->file_path;
 
                                 array_push($node->nodes, $subNode);
                             }
@@ -259,6 +262,63 @@ class DocumentRepository
 
         return json_encode($treeView);
 
+    }
+    
+    /**
+     * Generate link list of attached documents for the passed item(s)
+     *
+     * @param  object array $items
+     * @param  int $id
+     * @return object array $resultArray
+     */
+    
+    public function getAttachedDocumentLinks($items = array(), $id = 0)
+    {
+        $options = [
+            'document' => false,
+            'documentId' => $id,
+        ];
+    
+        $documents = array();
+        $resultArray = array();
+    
+        if (sizeof($items)) $documents = $items;
+    
+        if (count($documents) > 0) {
+            foreach ($documents->editorVariantDocument as $evd) {
+                if (Document::find($evd->document_id) != null) {
+                    if ($evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']) {
+    
+                        $secondDoc = Document::find($evd->document_id);
+                        $node = new \StdClass();
+                        $node->name = $secondDoc->name;
+                        $node->documentId = $secondDoc->id;
+                        $node->deleteUrl = url('anhang-delete/' . $options['documentId'] . '/' . $evd->editor_variant_id . '/' . $evd->document_id);
+    
+                        //$node->href = route('dokumente.show', $secondDoc->id);
+    
+                        if (!$secondDoc->documentUploads->isEmpty()) {
+                            
+                            $node->files = array();
+                            
+                            foreach ($secondDoc->documentUploads as $upload) {
+                                $subNode = new \StdClass();
+                                // $subNode->text = basename($upload->file_path);
+                                // $subNode->downloadUrl = '/download/' . str_slug($secondDoc->name) . '/' . $upload->file_path;
+                                $subNode->downloadUrl = '/download/' . $secondDoc->id . '/' . $upload->file_path;
+                                array_push($node->files, $subNode);
+                            }
+                            
+                            array_push($resultArray, $node);
+                        }
+                    }                
+                }
+            }
+        }
+        
+        // dd($resultArray);
+        return $resultArray;
+    
     }
 
     /**

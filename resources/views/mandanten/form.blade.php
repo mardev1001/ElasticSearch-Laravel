@@ -192,7 +192,8 @@
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setUserSelect($mandantUsers, 'geschaftsfuhrer', $data, old('geschaftsfuhrer'), trans('mandantenForm.geschaftsfuhrer') )  !!}
+                        {{-- ViewHelper::setUserSelect($mandantUsers, 'geschaftsfuhrer', $data, old('geschaftsfuhrer'), trans('mandantenForm.geschaftsfuhrer') )  --}}
+                        {!! ViewHelper::setInput('geschaftsfuhrer', $data, old('geschaftsfuhrer'), trans('mandantenForm.geschaftsfuhrer') )  !!}
                     </div>
                 </div><!--End input box-->
                 
@@ -206,14 +207,15 @@
                 <!-- input box-->
                 <div class="col-md-2 col-lg-2">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('geschaftsfuhrer_von', $data, old('geschaftsfuhrer_von'), trans('mandantenForm.von'), trans('mandantenForm.von'), false, '', ['datetimepicker']) !!}
+                        {{-- ViewHelper::setInput('geschaftsfuhrer_von', $data, old('geschaftsfuhrer_von'), trans('mandantenForm.von'), trans('mandantenForm.von'), false, '', ['datetimepicker']) --}}
+                        {!! ViewHelper::setInput('geschaftsfuhrer_von', $data, old('geschaftsfuhrer_von'), trans('mandantenForm.von'), trans('mandantenForm.von'), false, '') !!}
                     </div>
                 </div><!--End input box-->
                 
                 <!-- input box-->
                 <div class="col-md-2 col-lg-2">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('geschaftsfuhrer_bis', $data, old('geschaftsfuhrer_bis'), trans('mandantenForm.bis'), trans('mandantenForm.bis'), false, '', ['datetimepicker']) !!}
+                        {!! ViewHelper::setInput('geschaftsfuhrer_bis', $data, old('geschaftsfuhrer_bis'), trans('mandantenForm.bis'), trans('mandantenForm.bis'), false, '') !!}
                     </div>
                 </div><!--End input box-->
                 
@@ -278,21 +280,21 @@
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('angemeldet_am', '', '', trans('mandantenForm.gewerbeanmeldung'), trans('mandantenForm.angemeldetAm'), false, '', ['datetimepicker']) !!}
+                        {!! ViewHelper::setInput('angemeldet_am', '', '', trans('mandantenForm.gewerbeanmeldung'), trans('mandantenForm.angemeldetAm'), false, '') !!}
                     </div>
                 </div><!--End input box-->
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('umgemeldet_am', '', '', trans('mandantenForm.umgemeldetAm'), trans('mandantenForm.umgemeldetAm'), false, '', ['datetimepicker'] ) !!}
+                        {!! ViewHelper::setInput('umgemeldet_am', '', '', trans('mandantenForm.umgemeldetAm'), trans('mandantenForm.umgemeldetAm'), false, '' ) !!}
                     </div>
                 </div><!--End input box-->
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('abgemeldet_am', '', '', trans('mandantenForm.abgemeldetAm'), trans('mandantenForm.abgemeldetAm'), false, '', ['datetimepicker']) !!}
+                        {!! ViewHelper::setInput('abgemeldet_am', '', '', trans('mandantenForm.abgemeldetAm'), trans('mandantenForm.abgemeldetAm'), false, '') !!}
                     </div>
                 </div><!--End input box-->
                 
@@ -361,7 +363,7 @@
                 <!-- input box-->
                 <div class="col-md-6 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('erlaubniss_gultig_ab', $data->mandantInfo, old('erlaubniss_gultig_ab'), trans('mandantenForm.permissions'), trans('mandantenForm.permissionsPlaceholder'), false, '', ['datetimepicker'] ) !!}
+                        {!! ViewHelper::setInput('erlaubniss_gultig_ab', $data->mandantInfo, old('erlaubniss_gultig_ab'), trans('mandantenForm.permissions'), trans('mandantenForm.permissionsPlaceholder'), false, '' ) !!}
                     </div>
                 </div><!--End input box-->
         
@@ -375,7 +377,7 @@
         
                 <div class="col-md-6 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('befristet_bis', $data->mandantInfo, old('befristet_bis'), trans('mandantenForm.befristetBis'), trans('Datum'), false, '', ['datetimepicker'] ) !!}
+                        {!! ViewHelper::setInput('befristet_bis', $data->mandantInfo, old('befristet_bis'), trans('mandantenForm.befristetBis'), trans('Datum'), false, '' ) !!}
                     </div>
                 </div><!--End input box-->
         

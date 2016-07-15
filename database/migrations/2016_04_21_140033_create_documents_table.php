@@ -28,6 +28,8 @@ class CreateDocumentsTable extends Migration
             $table->integer('version_parent');
             $table->integer('document_group_id');
             $table->integer('iso_category_id')->unsigned()->nullable();//FK
+            $table->integer('iso_category_number')->nullable();
+            $table->integer('qmr_number')->nullable();
             $table->boolean('show_name');
             $table->integer('adressat_id')->unsigned()->nullable();//FK
             $table->string('betreff')->nullable();
@@ -35,9 +37,10 @@ class CreateDocumentsTable extends Migration
             $table->timestamp('date_approved');
             $table->boolean('email_approval');
             $table->boolean('approval_all_roles');
-            // $table->boolean('approval_all_mandants');
             $table->boolean('pdf_upload')->nullable()->default(0);
+            $table->boolean('landscape')->nullable()->default(0);
             $table->boolean('is_attachment')->nullable()->default(0);
+            $table->boolean('active')->nullable()->default(1);
             $table->timestamps();
             $table->softDeletes();
             

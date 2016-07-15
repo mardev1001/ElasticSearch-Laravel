@@ -19,13 +19,14 @@ class CreateMandantInfosTable extends Migration
             $table->string('betriebsnummmer',30);  
             $table->string('handelsregister',30);
             $table->text('handelsregister_sitz');  
-            $table->text('steuernummer',30);  
-            $table->text('steuernummer_lohn',30);  
-            $table->text('ust_ident_number',30);  
+            $table->text('steuernummer', 30);  
+            $table->text('steuernummer_lohn', 30);  
+            $table->text('ust_ident_number', 30);  
             $table->text('zausatzinfo_steuer');  
-            $table->string('berufsgenossenschaft_number',30);  
+            $table->string('berufsgenossenschaft_number', 30);  
             $table->text('berufsgenossenschaft_zusatzinfo');  
-            $table->timestamp('erlaubniss_gultig_ab')->nullable();
+            // $table->timestamp('erlaubniss_gultig_ab')->nullable();
+            $table->string('erlaubniss_gultig_ab', 50);
             $table->string('erlaubniss_gultig_von');  
             $table->string('geschaftsjahr',30);
             $table->text('geschaftsjahr_info');  
@@ -34,7 +35,8 @@ class CreateMandantInfosTable extends Migration
             $table->text('info_sonstiges');
             $table->text('gewerbeanmeldung_history');
             $table->boolean('unbefristet');
-            $table->timestamp('befristet_bis')->nullable();
+            // $table->timestamp('befristet_bis')->nullable();
+            $table->string('befristet_bis', 50);
             $table->timestamps();
             $table->softDeletes();
             

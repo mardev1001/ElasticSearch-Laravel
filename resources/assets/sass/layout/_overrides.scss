@@ -28,6 +28,10 @@ textarea{
     }
 }
 
+.mce-path.mce-flow-layout-item.mce-first{
+    visibility: hidden !important;
+}
+
 @media(min-width:768px) {
     
     .sidebar {

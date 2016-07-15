@@ -15,6 +15,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('/', 'HomeController@index');
         
         Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
+        Route::get('/open/{path_part_one}/{path_part_two}', 'HomeController@open');
         
         Route::post('dokumente/authorize/{id}', 'DocumentController@authorizeDocument');
         Route::get('anhang-delete/{document_id}/{editor_id}/{editor_document_id}', 'DocumentController@destroyByLink');
@@ -37,12 +38,13 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('document-upload', 'DocumentController@documentUpload');
         Route::get('dokumente/rechte-und-freigabe/{id}', 'DocumentController@anlegenRechteFreigabe'); //document id
         Route::post('dokumente/rechte-und-freigabe/{id}', 'DocumentController@saveRechteFreigabe');
-        Route::get('dokumente/anhange/{id}', 'DocumentController@attachments'); //document id
-        Route::post('dokumente/anhange/{id?}', 'DocumentController@saveAttachments');
+        Route::get('dokumente/anlagen/{id}', 'DocumentController@attachments'); //document id
+        Route::post('dokumente/anlagen/{id?}', 'DocumentController@saveAttachments');
         Route::get('dokumente/pdf-upload/{id}/edit', 'DocumentController@editPdfUpload');
         Route::post('pdf-upload', 'DocumentController@pdfUpload');
         Route::get('dokumente/new-version/{id}', 'DocumentController@newVersion');
         Route::get('dokumente/{id}/freigabe', 'DocumentController@freigabeApproval');
+        Route::get('dokumente/{id}/activate', 'DocumentController@documentActivation');
         Route::get('dokumente/{id}/publish', 'DocumentController@publishApproval');
         Route::get('dokumente/{id}/favorit', 'DocumentController@favorites');
         Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');

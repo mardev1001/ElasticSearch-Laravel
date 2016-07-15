@@ -1,6 +1,9 @@
 @section('page-title') {{ trans('controller.create') }} @stop
 <h3 class="title">{{ trans('controller.editor') }}</h3>
 <input type="hidden" name="model_id" value="{{$data->id}}" />
+@if($data->landscape == true)
+    <input type="hidden" class="document-orientation" name="document-orientation" value="landscape" />
+@endif
 <!--<div class="box-wrapper">-->
 <!--    <div class="box">-->
         <div class="row">

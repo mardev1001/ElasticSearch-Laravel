@@ -1,6 +1,8 @@
 <div class="header">
-    <div class="div-pusher"></div>
+    <div class="div-pusher">
+        <p></p>
+    </div>
     <div class="image-div">
-        <img src={{url("/img/NeptunLogo.png")}} alt="Neptun logo" style="width:auto; height:100%; display:block;"/>
+        <img src={{url("/img/Neptun-document-logo.jpg")}} alt="Neptun logo"/>
     </div>
 </div>

@@ -6,6 +6,8 @@ use App\Http\Requests;
 use Illuminate\Http\Request;
 
 use Auth;
+use File;
+
 use App\Document;
 use App\Http\Repositories\DocumentRepository;
 
@@ -69,5 +71,19 @@ class HomeController extends Controller
     {
         $file= public_path(). '/files/'.$subDir.'/'.$partOne.'/'.$partTwo;
         return response()->download($file);
+    }
+    
+    /**
+     * Open document (PDF)
+     * @param string $partOne
+     * @param string $partTwo
+     * @param string $subDir
+     *
+     * @return \Illuminate\Http\Response download
+     */
+    public function open($partOne, $partTwo, $subDir='documents')
+    {
+        $file = File::get(public_path(). '/files/'.$subDir.'/'.$partOne.'/'.$partTwo);
+        return response($file, 200)->header('Content-Type', 'application/pdf');
     }
 }

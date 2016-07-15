@@ -64317,7 +64317,8 @@ $(function() {
     $('.history-add').on('click touch', function(e) {
         
         var gfHistory = $('textarea[name="geschaftsfuhrer_history"]');
-        var gfSelect = $('select[name="geschaftsfuhrer"] option:selected').html().trim();
+        // var gfSelect = $('select[name="geschaftsfuhrer"] option:selected').html().trim();
+        var gfSelect = $('input[name="geschaftsfuhrer"]').val().trim();
         var gfInfo = $('input[name="geschaftsfuhrer_infos"]').val().trim();
         var gfVon = $('input[name="geschaftsfuhrer_von"]').val().trim();
         var gfBis = $('input[name="geschaftsfuhrer_bis"]').val().trim();
@@ -64347,6 +64348,7 @@ $(function() {
     if( $(".document-type-select .select").val() == 1 || $(".document-type-select .select").val() == 2 || $(".document-type-select .select").val() == 3){
         $('.pdf-checkbox').show(400);
         $('.pdf-checkbox').find('input[name="pdf_upload"]').val(1);
+        
     }
     else{
         $('.pdf-checkbox').hide(400);
@@ -64366,18 +64368,56 @@ $(function() {
 
     // Hide or show ISO category selection based on selected value
     
-    if($(".document-type-select .select").val() == 4)
+    if($(".document-type-select .select").val() == 4){
         $('.iso-category-select').show(400);
-    else
+        $('#landscape').closest('.checkbox').addClass('no-margin-top');
+    }
+    else{
         $('.iso-category-select').hide(400);
+        $('#landscape').closest('.checkbox').removeClass('no-margin-top');
+    }
     
     $('.document-type-select .select').chosen().change(function(event){
         if(event.target == this){
             // console.log($(this).val());
-            if($(this).val() == 4) 
+            if($(this).val() == 4){
                 $('.iso-category-select').show(400);
-            else
+                $('#landscape').closest('.checkbox').addClass('no-margin-top');
+                
+            } 
+            else{
                 $('.iso-category-select').hide(400);
+                $('#landscape').closest('.checkbox').removeClass('no-margin-top');
+            }
+        }
+    });
+    
+    // Hide or show QMR field selection based on selected value
+    
+    if($(".document-type-select .select").val() == 3){
+        $('.qmr-select').show(400);
+        $('#landscape').closest('.checkbox').removeClass('no-margin-top');
+        $('#pdf_upload').closest('.checkbox').removeClass('no-margin-top');
+    }
+    else{
+        $('.qmr-select').hide(400);
+        $('#landscape').closest('.checkbox').addClass('no-margin-top');
+        $('#pdf_upload').closest('.checkbox').addClass('no-margin-top');
+    }
+    
+    $('.document-type-select .select').chosen().change(function(event){
+        if(event.target == this){
+            // console.log($(this).val());
+            if($(this).val() == 3) {
+                $('.qmr-select').show(400);
+                $('#landscape').closest('.checkbox').removeClass('no-margin-top');
+                $('#pdf_upload').closest('.checkbox').removeClass('no-margin-top');
+            }
+            else{
+                $('.qmr-select').hide(400);
+                $('#landscape').closest('.checkbox').addClass('no-margin-top');
+                $('#pdf_upload').closest('.checkbox').addClass('no-margin-top');
+            }
         }
     });
 
@@ -64479,13 +64519,21 @@ $(function() {
             var classes = '';
             if( $(this).data('classes') )
                 classes = $(this).data('classes');
+            
+             var docWidth = 794, docHeight =1122;
+             
+            if( $('.document-orientation').length ){
+                 docWidth = 'auto', docHeight = 794;
+            }    
+                
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
                 body_class: classes,
-                width: 794,
-                height: 1122,
+                width: docWidth,
+                height: docHeight,
                 removed_menuitems: 'newdocument',
+                elementpath: false,
 
             });
         });
@@ -64507,6 +64555,7 @@ $(function() {
                 body_class: classes,
                 height: 350,
                 removed_menuitems: 'newdocument',
+                elementpath: false,
 
             });
         });
@@ -64522,13 +64571,19 @@ $(function() {
             var classes = '';
             if( $(this).data('classes') )
                 classes = $(this).data('classes');
+            
+            var docWidth = 794, docHeight =1122;
+            if( $('.document-orientation').length )
+                  docWidth = 'auto', docHeight = 794;
+                
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
                 body_class: classes,
-                width: 794,
-                height: 1122,
+                width: docWidth,
+                height: docHeight,
                 removed_menuitems: 'newdocument',
+                elementpath: false,
 
             });
         });

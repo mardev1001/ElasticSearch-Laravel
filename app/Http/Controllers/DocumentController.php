@@ -83,10 +83,27 @@ class DocumentController extends Controller
         $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
         $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
+        $mandantUsers = $this->clearUsers($mandantUsers);
+        $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
+        if( count($incrementedQmr) < 1 )
+            $incrementedQmr = 1;
+        else{
+            $incrementedQmr = $incrementedQmr->qmr_number;
+            $incrementedQmr = $incrementedQmr+1;
+        }
         
+        $incrementedIso = Document::where('document_type_id',$this->isoDocumentId )->orderBy('iso_category_number','desc')->first();
+        if( count($incrementedIso) < 1 )
+            $incrementedIso = 1;
+        else{
+            $incrementedIso = $incrementedIso->iso_category_number;
+            $incrementedIso = $incrementedIso+1;
+        }
+            //$this->qmRundId = 3;
+        //$this->isoDocumentId = 4;
         $documentCoauthors = $mandantUsers;
-        //   dd($documentCoauthors[0]->user);
-        return view('formWrapper', compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentCoauthors') );
+        return view('formWrapper', 
+        compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentCoauthors','incrementedQmr','incrementedIso') );
     }
 
     /**
@@ -162,15 +179,16 @@ class DocumentController extends Controller
         }
             
             // dd($request->get('adressat_id') );
+            // dd($model->documentUploads );
+            
         $filename = '';
         $path = $this->pdfPath;
         //   dd($path);
-        //dd($request->get('model_id') );
+        // dd($request->all() );
         if( $request->file() )
             $fileNames = $this->fileUpload($model,$path,$request->file() );
             
            //not summary, it is inhalt + attachment
-        //  dd($fileNames);
          RequestMerge::merge(['pdf_upload' => 1/*maybe auto*/] );
         $data = Document::findOrNew($request->get('model_id'));
         
@@ -192,6 +210,15 @@ class DocumentController extends Controller
         $editorVariantId::where('document_id',$id)->first();
         
         if(count($fileNames) > 0 ){
+            
+            $folderName = $this->movePath."/".str_slug($model->name);
+            
+            foreach( $model->documentUploads as $oldUpload ){
+                $filePath = $folderName."/".$oldUpload->file_path;
+                // dd($filePath);
+                \File::delete($filePath);
+                $oldUpload->delete();
+            }
             foreach( $fileNames as $fileName ){
                 $documentAttachment = new DocumentUpload();
                 $documentAttachment->editor_variant_id = $editorVariantId->id;
@@ -213,7 +240,7 @@ class DocumentController extends Controller
         $backButton = '/dokumente/pdf-upload/'.$data->id.'/edit';
        
         if($request->has('attachment'))
-            return redirect('dokumente/anhange/'.$id );
+            return redirect('dokumente/anlagen/'.$id );
             
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
@@ -297,7 +324,7 @@ class DocumentController extends Controller
             return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
         }
         if($request->has('attachment'))
-            return redirect('dokumente/anhange/'.$id );
+            return redirect('dokumente/anlagen/'.$id );
             
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
@@ -408,7 +435,7 @@ class DocumentController extends Controller
         
         
         if($request->has('attachment'))
-            return redirect('dokumente/anhange/'.$id );
+            return redirect('dokumente/anlagen/'.$id );
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
     
@@ -450,34 +477,45 @@ class DocumentController extends Controller
             
         $nextButton = '/dokumente/rechte-und-freigabe/'.$data->id;
         $url = '';
-        $documents = Document::where('document_type_id',$dt->id)->where('document_status_id',1)->orWhere('document_status_id',3)->whereNotIn('id',array($id))->get();// documentTypeId 5 = Vorlagedokument
+        $documents = Document::where('document_type_id', $this->formulareId)
+        ->where('document_status_id',1)->orWhere('document_status_id',3)->whereNotIn('id',array($id))->get();// documentTypeId 5 = Vorlagedokument
         foreach($documents as $document){
             $document->name = $document->name.' ('.$document->documentStatus->name.')';    
         }
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
         $attachmentArray = array();
+        
         /*Check if document has editorVariant*/
-        if( count( $data->editorVariantNoDeleted) > 0 )
+        if( count( $data->editorVariantNoDeleted) > 0 ){
             foreach( $data->editorVariantNoDeleted as $variant){
                 
-                $attachmentArray[$variant->id] = 
-                $this->document->generateTreeview($variant, 
-                    array(
-                        'tags' => false, 
-                        'document' => false, 
-                        'documentId' => $id, 
-                        'showDelete'=> true ,
-                        'showHistoryIcon' => true
-                        )
-                    );
+                $attachmentArray[$variant->id] = $this->document->getAttachedDocumentLinks($variant, $id);
+                
+                // dd($attachmentArray);
+                // $attachmentArray[$variant->id] = 
+                // $this->document->generateTreeview($variant, 
+                //     array(
+                //         'tags' => false, 
+                //         'document' => false, 
+                //         'documentId' => $id, 
+                //         'showDelete'=> true ,
+                //         'showHistoryIcon' => true
+                //         )
+                //     );
+                
             }
+        }
         /*End Check if document has attachments*/
         
         $url = '';
         $documentTypes = DocumentType::all();
         $isoDocuments = IsoCategory::all();
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
+        
+        $documentsFormulare = Document::where('document_type_id', $this->formulareId)->get();
+       
+        // dd($documentsFormulare);
        
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
@@ -488,7 +526,7 @@ class DocumentController extends Controller
         $variants = EditorVariant::where('document_id',$data->id)->get();
         $documentStatus = DocumentStatus::all();
         
-        return view('dokumente.attachments', compact('collections','data','data2','attachmentArray','documents','documentStatus','url','documentTypes',
+        return view('dokumente.attachments', compact('collections','data','data2','attachmentArray','documents', 'documentsFormulare', 'documentStatus', 'url', 'documentTypes',
         'isoDocuments','mandantUsers','backButton','nextButton') );
     }
     
@@ -537,29 +575,29 @@ class DocumentController extends Controller
             /*
                 Option 2: create a new Vorlagedokument and add it as an attachment
             */
+            // dd($request->all());
             $dt = DocumentType::find(  $this->formulareId = $this->formulareId);//vorlage document
             RequestMerge::merge(['version' => 1, 'document_type_id' => $dt->id,'is_attachment'=> 1] );
             
-            
-            if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0" ){
-                $coauthors = $request->input('document_coauthor');
-                foreach($coauthors as $coauthor)
-                    if( $coauthor != '0');
-                        DocumentCoauthor::create(['document_id'=> $lastId->id, 'user_id'=> $coauthor]);
-            }
-          
             if( !$request->has('name_long') )
                 RequestMerge::merge(['name_long' => $request->get('name')] );
         
             if( !$request->has('betreff') )   
                 RequestMerge::merge(['betreff' => $request->get('name_long')] );
-        
+                
             /*Create a new document*/
             $data = Document::create($request->all() );
             $lastId = Document::orderBy('id','DESC')->first();
             $lastId->document_group_id = $lastId->id;
             $lastId->save();
             
+            
+             if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0" ){
+                $coauthors = $request->input('document_coauthor');
+                foreach($coauthors as $coauthor)
+                    if( $coauthor != '0');
+                        DocumentCoauthor::create(['document_id'=> $lastId->id, 'user_id'=> $coauthor]);
+            }
             
             /*Upload document files*/
             $filename = '';
@@ -591,6 +629,7 @@ class DocumentController extends Controller
                 /*end upload files*/
                 
                 $currDocEv = EditorVariant::find($currentEditorVariant);
+               
                 $newAttachment = new EditorVariantDocument();
                 $newAttachment->editor_variant_id = $currentEditorVariant;
                 $newAttachment->document_id = $lastId->id;
@@ -608,13 +647,13 @@ class DocumentController extends Controller
             
             $backButton = '/dokumente/'.$data->id.'/edit';
             
-             $currDocEv = EditorVariant::find($currentEditorVariant);
+            //  $currDocEv = EditorVariant::find($currentEditorVariant);
                     
-                    $newAttachment = new EditorVariantDocument();
-                    $newAttachment->editor_variant_id = $currentEditorVariant;
-                    $newAttachment->document_id = $document->id;
-                    $newAttachment->document_status_id = 1;
-                    $newAttachment->save();
+            //         $newAttachment = new EditorVariantDocument();
+            //         $newAttachment->editor_variant_id = $currentEditorVariant;
+            //         $newAttachment->document_id = $document->id;
+            //         $newAttachment->document_status_id = 1;
+            //         $newAttachment->save();
             
         }
         
@@ -969,9 +1008,11 @@ class DocumentController extends Controller
      */
     public function show($id)
     {
+        $datePublished = null;
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
+            $datePublished = $publishedDocs->created_at;
             $document = Document::find($id);
         }
         else{
@@ -1058,7 +1099,7 @@ class DocumentController extends Controller
                 }
             }
         }
-        return view('dokumente.show', compact('document', 'documentComments', 'variants', 'published', 'canPublish', 'authorised') );
+        return view('dokumente.show', compact('document', 'documentComments', 'variants', 'published', 'datePublished', 'canPublish', 'authorised') );
     }
 
     /**
@@ -1083,11 +1124,27 @@ class DocumentController extends Controller
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
         $documentStatus = DocumentStatus::all();
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
-        $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
+        $mandantUsers =  MandantUser::distinct('user_id')->whereIn('mandant_id',$mandantId)->get();  
+        $mandantUsers = $this->clearUsers($mandantUsers);
         $documentCoauthor = $mandantUsers;
-        // session()->flash('message',trans('documentForm.documentEditSuccess'));
+        $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
+        if( $incrementedQmr == null || $incrementedQmr->qmr_number == null )
+            $incrementedQmr = 1;
+        else{
+            $incrementedQmr = $incrementedQmr->qmr_number;
+            $incrementedQmr = $incrementedQmr+1;
+        }
+        
+        $incrementedIso = Document::where('document_type_id',$this->isoDocumentId )->orderBy('iso_category_number','desc')->first();
+        if( count($incrementedIso) < 1   || $data == null)
+            $incrementedIso = 1;
+        else{
+            $incrementedIso = $incrementedIso->iso_category_number;
+            $incrementedIso = $incrementedIso+1;
+        }
        
-        return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments','documentStatus','mandantUsers', 'documentCoauthor') );
+        return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments',
+        'documentStatus','mandantUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
     }
 
     /**
@@ -1107,6 +1164,9 @@ class DocumentController extends Controller
         //fix pdf checkbox
         if( !$request->has('pdf_upload') )
             RequestMerge::merge(['pdf_upload' => 0] );
+        
+        if( !$request->has('landscape') )
+            RequestMerge::merge(['landscape' => 0] );
             
         if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
             && $request->get('document_type_id') !=  $this->qmRundId  && $request->has('pdf_upload') )
@@ -1127,7 +1187,7 @@ class DocumentController extends Controller
         // dd($request->all() );
         $data = Document::find( $id );
         $prevName = $data->name;
-        if( $request->get('name') != $prevName ){
+        /*if( $request->get('name') != $prevName ){
             $oldSlug= str_slug($prevName);
             $newSlug= str_slug($request->get('name'));
             foreach($data->documentUploads as $upload){
@@ -1161,7 +1221,7 @@ class DocumentController extends Controller
             	 rmdir($dirname);
                }
            }//end if folder dirname exists
-        }
+        }*/
         
         // dd( $request->all() );        
         $data->fill( $request->all() )->save();
@@ -1289,15 +1349,12 @@ class DocumentController extends Controller
      */
     public function destroyByLink($documentId,$editorId,$editorDocumentId)
     {
-        /*document id, editor id, editor-document id*/
-        // $document = EditorVariant::where('document_id',$parentId)->where('variant_number',$id)->first();+
-        // $currDocEv = EditorVariant::where('document_id',$parentId)->where('variant_number',$id)->first();
         $documentCheck = EditorVariantDocument::where('editor_variant_id',$editorId)->where('document_id',$editorDocumentId)->first();
         
         if($documentCheck != null)
             $documentCheck->delete();
        
-        return redirect('/dokumente/anhange/'.$documentId)->with('message', 'Dokument wurde entfernt.');
+        return redirect('/dokumente/anlagen/'.$documentId)->with('message', 'Dokument wurde entfernt.');
     }
     /**
      * Remove the specified resource from storage.
@@ -1325,8 +1382,6 @@ class DocumentController extends Controller
         RequestMerge::merge(['document_id'=>$id,'user_id' => Auth::user()->id,'active' => 1,'freigeber'=>0] );
         //  dd( $request->all() );
         $comment =  DocumentComment::create( $request->all() );
-        // dd($comment);
-        // dd('break');
         session()->flash('message',trans('documentForm.savedComment'));
         if( $request->has('page') )
             return redirect('dokumente/'.$id);
@@ -1426,6 +1481,26 @@ class DocumentController extends Controller
         else
             return redirect('dokumente/'.$id);
     }
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function documentActivation($id)
+    {
+        $document = Document::find($id);
+        if($document->active == true)
+            $document->active = false;
+        else
+            $document->active = true;
+            
+        $document->save();
+        
+        if($document->published->url_unique)    
+            return redirect('dokumente/'.$document->published->url_unique);
+        else
+            return redirect('dokumente/'.$id);
+    }
     
      /**
      * Display a listing of the resource.
@@ -1434,6 +1509,7 @@ class DocumentController extends Controller
      */
     public function generatePdf($id)
     {
+        $dateNow = Carbon::now()->format('M Y');
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
@@ -1498,8 +1574,13 @@ class DocumentController extends Controller
         }
         
         $document = Document::find($id);
-          $pdf = \PDF::loadView('pdf.document', compact('document','variants'));
-        
+         $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
+         if($document->document_type_id == $this->isoDocumentId)
+            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
+            
+          if($document->landscape == true)
+            $pdf->setPaper('A4', 'landscape');
+        // $pdf->set_option('isHtml5ParserEnabled', true);
         return $pdf->stream();
     }
     
@@ -1510,6 +1591,7 @@ class DocumentController extends Controller
      */
     public function generatePdfPreview($id,$editorId)
     {
+        $dateNow = Carbon::now()->format('M Y');
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
@@ -1521,8 +1603,13 @@ class DocumentController extends Controller
         foreach($variants as $variant)
             $variant->hasPermission = true;
         
-        $pdf = \PDF::loadView('pdf.document', compact('document','variants'));
-        
+        $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
+        if($document->document_type_id == $this->isoDocumentId)
+            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
+            
+        if($document->landscape == true)
+            $pdf->setPaper('A4', 'landscape');
+            
         return $pdf->stream();
     }
     
@@ -1841,7 +1928,7 @@ class DocumentController extends Controller
     private function fileUpload($model,$path,$files)
     {
       
-        $folder = $this->pdfPath.str_slug($model->name);
+        $folder = $this->pdfPath.str_slug($model->id);
         $uploadedNames = array();
         if ( ! \File::exists( $folder ) ) {
 			\File::makeDirectory( $folder, $mod=0777,true,true); 
@@ -1880,7 +1967,7 @@ class DocumentController extends Controller
     {
         //$filename = $image->getClientOriginalName();
         $diffMarker = time()+$counter;
-		$newName = str_slug($model->name).'-'.date("d-m-Y-H:i:s").'-'.$diffMarker.'.'.$file->getClientOriginalExtension();
+		$newName = str_slug($model->id).'-'.date("d-m-Y-H:i:s").'-'.$diffMarker.'.'.$file->getClientOriginalExtension();
 		$path = "$folder/$newName";
 // 		dd($path);
         $filename = $file->getClientOriginalName();
@@ -1936,7 +2023,8 @@ class DocumentController extends Controller
      */
     public function isoCategoriesIndex()
     {
-        return view('dokumente.isoCategoriesIndex');
+        $isoCategories = IsoCategory::all();
+        return view('dokumente.isoCategoriesIndex', compact('isoCategories'));
     }
     
      /**
@@ -2011,6 +2099,22 @@ class DocumentController extends Controller
         if( $model->isDirty() ||  $dirty == true )
             return true;
         return false;
+       
+    }
+    
+    /**
+     * detect if model is dirty or not
+     * @return bool 
+     */
+    private function clearUsers($users){
+        $clearedArray = array();
+            foreach($users as $k => $user){
+                if( !in_array($user->user_id, $clearedArray ) )
+                    $clearedArray[] = $user->user_id;
+                else
+                    unset($users[$k]);
+            }
+        return $users;
        
     }
     

@@ -12,29 +12,29 @@ class MandantInfo extends Model
     
     //
     
-    public function getErlaubnissGultigAbAttribute($value)
-    {
-        if (empty($value)) return null;
-        else return Carbon::parse($value)->format('d.m.Y');
-    }
+    // public function getErlaubnissGultigAbAttribute($value)
+    // {
+    //     if (empty($value)) return null;
+    //     else return Carbon::parse($value)->format('d.m.Y');
+    // }
 
-    public function setErlaubnissGultigAbAttribute($value)
-    {
-        if (empty($value)) $this->attributes['erlaubniss_gultig_ab'] = null;
-        else $this->attributes['erlaubniss_gultig_ab'] = Carbon::parse($value);
-    }
+    // public function setErlaubnissGultigAbAttribute($value)
+    // {
+    //     if (empty($value)) $this->attributes['erlaubniss_gultig_ab'] = null;
+    //     else $this->attributes['erlaubniss_gultig_ab'] = Carbon::parse($value);
+    // }
     
-    public function getBefristetBisAttribute($value)
-    {
-        if (empty($value)) return null;
-        else return Carbon::parse($value)->format('d.m.Y');
-    }
+    // public function getBefristetBisAttribute($value)
+    // {
+    //     if (empty($value)) return null;
+    //     else return Carbon::parse($value)->format('d.m.Y');
+    // }
 
-    public function setBefristetBisAttribute($value)
-    {
-        if (empty($value)) $this->attributes['befristet_bis'] = null;
-        else $this->attributes['befristet_bis'] = Carbon::parse($value);
-    }
+    // public function setBefristetBisAttribute($value)
+    // {
+    //     if (empty($value)) $this->attributes['befristet_bis'] = null;
+    //     else $this->attributes['befristet_bis'] = Carbon::parse($value);
+    // }
     
     protected $guarded = []; //blacklist
     protected $fillable = 
