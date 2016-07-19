@@ -133,7 +133,8 @@
                     {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
                 </div>   
             </div><!--End input box-->
-            @if($data->document_type_id != 5)
+            
+            @if( isset($data->document_type_id) && $data->document_type_id != 5)
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4"> 
                     <div class="form-group ">

@@ -1017,7 +1017,7 @@ class DocumentController extends Controller
             $document->hasFavorite = false;
         else
             $document->hasFavorite = true;
-        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
+        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->orderBy('id','DESC')->get();
         $variants = EditorVariant::where('document_id',$id)->get();
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
@@ -1769,7 +1769,7 @@ class DocumentController extends Controller
     public function rundschreiben()
     {
         $docType = $this->rundId;
-        $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
+        $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
         $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
         $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
@@ -1804,7 +1804,8 @@ class DocumentController extends Controller
         $qmrMyPaginated = Document::where('document_type_id' , $this->qmRundId )->where('user_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-qmr');
         $qmrMyTree = $this->document->generateTreeview( $qmrMyPaginated );
         
-        $qmrAllPaginated = Document::where('document_type_id' , $this->qmRundId )->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
+        $qmrAllPaginated = Document::where('document_type_id' , $this->qmRundId )->where('document_status_id',3)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
         $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated );
         
         return view('dokumente.circularQMR', compact('docType', 'qmrMyTree', 'qmrMyPaginated', 'qmrAllTree', 'qmrAllPaginated'));
@@ -1817,7 +1818,7 @@ class DocumentController extends Controller
      */
     public function rundschreibenNews()
     {
-        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-news');
+        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-news');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
         $rundschreibenMeine = Document::where('user_id',Auth::user()->id)
         ->where('document_type_id', $this->newsId )->orderBy('id', 'desc')
@@ -1835,7 +1836,7 @@ class DocumentController extends Controller
      */
     public function documentTemplates()
     {
-        $formulareAll = Document::where(['document_type_id' =>  $this->formulareId])->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
+        $formulareAll = Document::where(['document_type_id' =>  $this->formulareId])->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
         $formulareAllTree = $this->document->generateTreeview( $formulareAll );
         $formulareMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->formulareId])
         ->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-formulare');
