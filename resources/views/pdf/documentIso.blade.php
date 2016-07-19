@@ -19,27 +19,46 @@
                 position: fixed;
             }
             .header {
-                top: -15px;
-                border-top: 1px solid black;
+             top:0;
+             min-height 30px;
+             
             }
+             .border-div{
+                display:block;
+                border-top: 1px solid black;
+                height: 1px;
+                margin-top:15px;
+             }
             .header .div-pusher{
                 width:50%;
-                float:left !important;
             }
             .header .image-div {
                 width:50%;
-                float: left !important;
+            }
+            .pull-right{
+                text-align: right;
             }
             .div-pusher{
                 width:50%;
                 padding-left: 30px;
                 float:left !important;
             }
+           
+            /*.header-divider{*/
+                /*height:100px;*/
+            /*    width:100%;*/
+            /*    border-top: 1px solid black;*/
+            /*}*/
+            /*#divider{*/
+            /*    content: 'divider';*/
+            /*    width: 100%;*/
+            /*    height: 50px;*/
+            /*}*/
             .footer {
                 bottom: 5px;
             }
             .pagenum:before {
-                content: counter(page);
+                content: content: "Page " counter(page) " of " counter(pages);;
             }
             .first-title.first{
                 margin-top: 70px;
@@ -133,26 +152,10 @@
       @include('pdf.headerIso')
       @include('pdf.footerIso')
       <div id="content">
-          <div class="content-wrapper">
-              <div class="row mb90">
-                    <div class="document-title-row">
-                        
-                    </div>
-                  <div class="document-date-row">
-                      <div class="date-div"><p>
-                          @if( $document->created_at != null)
-                              <span class="right-correction">{{$document->created_at}}</span>
-                          @endif
-                          <br/>
-                          {{ $document->user->short_name }}
-                          </p></div>
-                  </div>
-                  <div class="clearfix"></div>
-                </div><!--end row-->  
-              <div class="clearfix"></div>
-              <div class="row">
-                  <h4 class="document-title">{{$document->name_long}}</h4>
-              </div>
+          <div class="content-wrapper" s>
+              
+            
+             <div class="header-divider"></div>
               @if( count( $variants) )
                   @foreach( $variants as $v => $variant)
                       @if( isset($variant->hasPermission) && $variant->hasPermission == true )

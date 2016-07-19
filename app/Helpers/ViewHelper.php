@@ -6,6 +6,23 @@ class ViewHelper
     /**
      * Generate and check input type text
      *
+     * @param string $str
+     * @param array $tags
+     *
+     * @return string $string
+     */
+    static function stripTags( $str,$tags=array() ){
+        foreach($tags as $tag){
+          $str=preg_replace('/<'.$tag.'[^>]*>/i', '', $str);
+          $str=preg_replace('/<\/'.$tag.'>/i', '', $str);  
+        }
+        
+        return $str;
+    }   
+    
+    /**
+     * Generate and check input type text
+     *
      * @param string $inputName
      * @param array $data || string $data='' ( declared in FormViewComposer)
      * @param string $old

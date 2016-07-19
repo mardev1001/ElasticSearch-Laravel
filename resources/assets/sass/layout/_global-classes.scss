@@ -526,6 +526,12 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     font-weight: normal !important;
 }
 
+.item-text{
+    font-size: 14px !important;
+    line-height: 24px !important;
+    // font-weight: bold;
+}
+
 #page-wrapper .treeview span.item-text.btn-block {
     font-size: 14px !important;
     line-height: 20px !important;
@@ -646,8 +652,17 @@ span.highlight{
     font-weight: bold;
 }
 .fa-1-5x{
-     font-size: 1.3em;
+    font-size: 1.3em;
+}
 
+.display-block{
+    display: block;
+}
+
+.attached-document-download{
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: bold;
 }
 
 /*A4 paper simulation*/¸

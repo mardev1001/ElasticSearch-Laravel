@@ -463,7 +463,7 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function attachments($id,$backButton=null)
+    public function attachments($id,$preparedVariant=1)
     {   
         $data = Document::find($id);
         $dt = DocumentType::find($this->formulareId);//vorlage document
@@ -491,20 +491,7 @@ class DocumentController extends Controller
             foreach( $data->editorVariantNoDeleted as $variant){
                 
                 $attachmentArray[$variant->id] = $this->document->getAttachedDocumentLinks($variant, $id);
-                
-                // dd($attachmentArray);
-                // $attachmentArray[$variant->id] = 
-                // $this->document->generateTreeview($variant, 
-                //     array(
-                //         'tags' => false, 
-                //         'document' => false, 
-                //         'documentId' => $id, 
-                //         'showDelete'=> true ,
-                //         'showHistoryIcon' => true
-                //         )
-                //     );
-                
-            }
+             }
         }
         /*End Check if document has attachments*/
         
@@ -527,7 +514,7 @@ class DocumentController extends Controller
         $documentStatus = DocumentStatus::all();
         
         return view('dokumente.attachments', compact('collections','data','data2','attachmentArray','documents', 'documentsFormulare', 'documentStatus', 'url', 'documentTypes',
-        'isoDocuments','mandantUsers','backButton','nextButton') );
+        'isoDocuments','mandantUsers','backButton','nextButton','preparedVariant') );
     }
     
     /**
@@ -535,8 +522,10 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function saveAttachments(Request $request,$id)
+    public function saveAttachments(Request $request,$id,$preparedVariant=1)
     { 
+        
+        // dd( $request->all() );
         // option 1-> dodat dokument kao attachmet za trenutnu variantu i vorlage
         // option 2-> kreira se skroz novi dokument, ali se dodaje kao attchment postojećem
         //document attachment is a record in editor_variants && editor_variant_document
@@ -641,26 +630,17 @@ class DocumentController extends Controller
             
             $adressats = Adressat::where('active',1)->get();
             $docType = DocumentType::find( $request->get('document_type_id') );
-            
-            
-            
-            
+           
             $backButton = '/dokumente/'.$data->id.'/edit';
             
-            //  $currDocEv = EditorVariant::find($currentEditorVariant);
-                    
-            //         $newAttachment = new EditorVariantDocument();
-            //         $newAttachment->editor_variant_id = $currentEditorVariant;
-            //         $newAttachment->document_id = $document->id;
-            //         $newAttachment->document_status_id = 1;
-            //         $newAttachment->save();
             
         }
         
         if($request->has('next') )
             return redirect('dokumente/rechte-und-freigabe/'.$id );
     
-       return redirect()->action('DocumentController@attachments', $id);
+    //   return redirect()->action('DocumentController@attachments', $id,$variant);
+       return redirect('dokumente/anlagen/'.$id.'/'.$preparedVariant);
     }
     
      /**
@@ -714,8 +694,10 @@ class DocumentController extends Controller
     }
     
     /**
-     * Display the specified resource.
-     *
+     * Process the Rechte und freigabe request
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int $id
+     * 
      * @return \Illuminate\Http\Response
      */
     public function saveRechteFreigabe(Request $request,$id)
@@ -748,16 +730,17 @@ class DocumentController extends Controller
         
         //check if has variant
         $hasVariants = false;
+        $processedArray = array();
         /* If variants exist in request */
         foreach($request->all() as $k => $v){
             /* If Variants are not empty */
             if (strpos($k, 'variante-') !== false && !empty($v) ){
                 $hasVariants = true;
                 $variantNumber = $this->document->variantNumber($k);
+                $processedArray[] = $variantNumber;
                 
-                if( in_array('Alle',$request->get($k) ) ){
-                   
-                    $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                if( in_array('Alle',$request->get($k) ) && count( $request->get($k) ) <= 1 ){
+                    ;$editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     if($editorVariant){
                     $editorVariant->approval_all_mandants = 1; 
                     $dirty=$this->dirty($dirty,$editorVariant);
@@ -839,6 +822,17 @@ class DocumentController extends Controller
             }
         // dd($request->all());
         }
+        
+            /*if removed mandants from variant return bool approval_all_mandants to true*/
+                $editorVariants = EditorVariant::where('document_id',$id)->whereNotIn('variant_number',$processedArray)->get();
+               
+                foreach($editorVariants as $ev){
+                    $ev->approval_all_mandants = 1; 
+                    $dirty=$this->dirty($dirty,$ev);
+                    $ev->save();
+                }
+            /*End if removed mandants from variant return bool approval_all_mandants to true*/
+        
         /* End If variants exist in request */
         
         //fix when there are roles set, but no variants
@@ -849,7 +843,7 @@ class DocumentController extends Controller
             foreach($editorVariantsNumbers as $editorVariant){
                 $variantNumber = $editorVariant->variant_number;
                 
-                    $editorVariant->approval_all_mandants = 0; 
+                    $editorVariant->approval_all_mandants = 1; 
                     $dirty=$this->dirty($dirty,$editorVariant);
                     $editorVariant->save();
                     
@@ -893,7 +887,7 @@ class DocumentController extends Controller
             foreach($editorVariantsNumbers as $editorVariant){
                 $variantNumber = $editorVariant->variant_number;
                 
-                    $editorVariant->approval_all_mandants = 0; 
+                    $editorVariant->approval_all_mandants = 1; 
                     $dirty=$this->dirty($dirty,$editorVariant);
                     $editorVariant->save();
                     
@@ -1164,9 +1158,11 @@ class DocumentController extends Controller
         //fix pdf checkbox
         if( !$request->has('pdf_upload') )
             RequestMerge::merge(['pdf_upload' => 0] );
+            
+        //if doc type formulare set ladnsace to null
+        if( !$request->has('pdf_upload') )
+            RequestMerge::merge(['pdf_upload' => 0] );
         
-        if( !$request->has('landscape') )
-            RequestMerge::merge(['landscape' => 0] );
             
         if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
             && $request->get('document_type_id') !=  $this->qmRundId  && $request->has('pdf_upload') )
@@ -1187,41 +1183,9 @@ class DocumentController extends Controller
         // dd($request->all() );
         $data = Document::find( $id );
         $prevName = $data->name;
-        /*if( $request->get('name') != $prevName ){
-            $oldSlug= str_slug($prevName);
-            $newSlug= str_slug($request->get('name'));
-            foreach($data->documentUploads as $upload){
-                $oldPath = $upload->file_path;
-                $newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
-               
-               if ( ! \File::exists( $this->movePath.'/'.$newSlug.'/' ) ) {
-        			\File::makeDirectory( $this->movePath.'/'.$newSlug.'/', $mod=0777,true,true); 
-        		}
-               copy($this->movePath.'/'.$oldSlug.'/'.$oldPath, $this->movePath.'/'.$newSlug.'/'.$newFileName);
-               $upload->file_path = $newFileName;
-               $upload->save();
-            }
-            //rename folder to new name
-            //rename files to new name
-            //rename documentUploads
-            $dirname= $this->movePath.'/'.$oldSlug;
-           if (  \File::exists( $dirname ) ) {
-            if (is_dir($dirname))
-                $dir_handle = opendir($dirname);
-            	if ($dir_handle){
-            	while($file = readdir($dir_handle)) {
-            	    if ($file != "." && $file != "..") {
-            	        if (!is_dir($dirname."/".$file))
-            	            unlink($dirname."/".$file);
-            	        else
-            	            delete_directory($dirname.'/'.$file);
-        	        }
-            	 }
-            	 closedir($dir_handle);
-            	 rmdir($dirname);
-               }
-           }//end if folder dirname exists
-        }*/
+        
+        if( $data->document_type_id == $this->formulareId )
+            RequestMerge::merge(['landscape' => 0] );
         
         // dd( $request->all() );        
         $data->fill( $request->all() )->save();
@@ -1279,18 +1243,18 @@ class DocumentController extends Controller
             
             /*Duplicate document uploads*/
             foreach( $variant->documentUpload as $upload){
-                $oldSlug= str_slug($document->name);
-                $newSlug= str_slug($newDocument->name);
-        		$newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
+                // $oldSlug= str_slug($document->name);
+                // $newSlug= str_slug($newDocument->name);
+        // 		$newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
                 $newUpload = $upload->replicate();
                 $newUpload->editor_variant_id = $newVariant->id;
-                $newUpload->file_path = $newFileName;
+                $newUpload->file_path = $upload->file_path;
                 $newUpload->save();
                 
-                 if ( ! \File::exists( $this->movePath.'/'.$newSlug.'/' ) ) {
-        			\File::makeDirectory( $this->movePath.'/'.$newSlug.'/', $mod=0777,true,true); 
+                 if ( ! \File::exists( $this->movePath.'/'.$newDocument->id.'/' ) ) {
+        			\File::makeDirectory( $this->movePath.'/'.$newDocument->id.'/', $mod=0777,true,true); 
         		}
-               copy($this->movePath.'/'.$oldSlug.'/'.$upload->file_path, $this->movePath.'/'.$newSlug.'/'.$newFileName);
+               copy($this->movePath.'/'.$document->id.'/'.$upload->file_path, $this->movePath.'/'.$newDocument->id.'/'.$upload->file_path);
             //   $upload->file_path = $newFileName;
                 
             }
@@ -1397,6 +1361,7 @@ class DocumentController extends Controller
     public function freigabeApproval($id)
     {
         $document = Document::find($id);
+        $variants = EditorVariant::where('document_id',$id)->get();
         $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->get();
         /* Button check */
@@ -1420,7 +1385,7 @@ class DocumentController extends Controller
             $published = true;
         
         /* End Button check */
-        return view('dokumente.freigabe',compact('document','documentCommentsUser','documentCommentsFreigabe','published','canPublish','authorised','authorisedPositive'));
+        return view('dokumente.freigabe',compact('document','variants','documentCommentsUser','documentCommentsFreigabe','published','canPublish','authorised','authorisedPositive'));
     }
     /**
      * Display a listing of the resource.
@@ -1456,7 +1421,7 @@ class DocumentController extends Controller
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
                 
-         if($document->published->url_unique)    
+        if($document->published->url_unique)    
             return redirect('dokumente/'.$document->published->url_unique);
         else
             return redirect('dokumente/'.$id);
@@ -1476,10 +1441,13 @@ class DocumentController extends Controller
             $favorite = FavoriteDocument::create( ['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id ]);
         else
             $favoriteCheck->delete();
-        if($document->published->url_unique)    
-            return redirect('dokumente/'.$document->published->url_unique);
-        else
-            return redirect('dokumente/'.$id);
+            
+        // if($document->published->url_unique)    
+        //     return redirect('dokumente/'.$document->published->url_unique);
+        // else
+        //     return redirect('dokumente/'.$id);
+        
+        return back();
     }
      /**
      * Display a listing of the resource.
@@ -1497,7 +1465,7 @@ class DocumentController extends Controller
         $document->save();
         
         if($document->published->url_unique)    
-            return redirect('dokumente/'.$document->published->url_unique);
+            return redirect('dokumente/'. $document->published->url_unique);
         else
             return redirect('dokumente/'.$id);
     }
@@ -1575,11 +1543,16 @@ class DocumentController extends Controller
         
         $document = Document::find($id);
          $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
-         if($document->document_type_id == $this->isoDocumentId)
-            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
-            
-          if($document->landscape == true)
+         
+        /* If document type Iso Category load different PDF template*/    
+        /* if($document->document_type_id == $this->isoDocumentId)
+            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));*/
+        /* End If document type Iso Category load different PDF template*/    
+        
+        /* If landscape is true set paper to landscape */    
+        if($document->landscape == true)
             $pdf->setPaper('A4', 'landscape');
+        /* End If landscape is true set paper to landscape */
         // $pdf->set_option('isHtml5ParserEnabled', true);
         return $pdf->stream();
     }
@@ -1604,11 +1577,16 @@ class DocumentController extends Controller
             $variant->hasPermission = true;
         
         $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
-        if($document->document_type_id == $this->isoDocumentId)
-            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
-            
+       
+        /* If document type Iso Category load different PDF template*/    
+        /* if($document->document_type_id == $this->isoDocumentId)
+            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));*/
+        /* End If document type Iso Category load different PDF template*/    
+        
+        /* If landscape is true set paper to landscape */    
         if($document->landscape == true)
             $pdf->setPaper('A4', 'landscape');
+        /* End If landscape is true set paper to landscape */
             
         return $pdf->stream();
     }

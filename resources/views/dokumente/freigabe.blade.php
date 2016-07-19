@@ -10,13 +10,17 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
             @if( isset($document->name_long) && $document->name_long != '' )
-               <h3 class="title">{{ $document->name_long }}
+               <h3 class="title"> 
+               @if( $document->document_type_id == 3 )
+                  QMR @if( $document->qmr_number != null) {{ $document->qmr_number }}: @endif
+               @endif
+               {{ $document->name_long }} 
             @else
-               <h3 class="title">{{ $document->name }}
+               <h3 class="title">{{ $document->name }} 
             @endif
-               <span class="text"><b>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{
-                trans('dokumentShow.status') }}: {{ $document->documentStatus->name }})
-                </b>
+               <br><span class="text"><strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ 
+                trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}} @endif)
+                </strong>
               </span>
           </h3> 
         </div>
@@ -30,15 +34,15 @@
                 <div class="row">
                     <div class="col-xs-12">
                 
-                        <div class="header">
-                            <p class="text-small">{{ $document->created_at }}</p> <!-- date placeholder -->
-                            @if($document->documentAdressats)
-                            <p><b>{{ trans('dokumentShow.adressat') }}:</b> {{ $document->documentAdressats->name }}</p> <!-- Adressat optional -->
-                            @endif
-                             @if( !empty( $document->betreff ))
-                                <p><b>{{ trans('dokumentShow.subject') }}:</b> {{ $document->betreff }}</p> <!-- Subject -->
-                             @endif
-                        </div>
+                        <!--<div class="header">-->
+                        <!--    <p class="text-small">{{ $document->created_at }}</p> <!-- date placeholder -->
+                        <!--    @if($document->documentAdressats)-->
+                        <!--    <p><b>{{ trans('dokumentShow.adressat') }}:</b> {{ $document->documentAdressats->name }}</p> <!-- Adressat optional -->
+                        <!--    @endif-->
+                        <!--     @if( !empty( $document->betreff ))-->
+                        <!--        <p><b>{{ trans('dokumentShow.subject') }}:</b> {{ $document->betreff }}</p> <!-- Subject -->
+                        <!--     @endif-->
+                        <!--</div>-->
                   
                          <br>
                         <div class="content">
@@ -91,16 +95,47 @@
                         <div class="clearfix"></div> <br>
                         
                          <div class="footer">
-                            @if(count($document->documentUploads)  && !$document->pdf_upload)
-                            <div class="attachments">
-                                <span class="text">Dokument Anlage/n: </span>
-                                @foreach($document->documentUploads as $attachment)
-                                    <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
-                                   <a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">{{basename($attachment->file_path)}}</a>
-                                   <br><span class="indent"></span>
-                                @endforeach
-                            </div>
+                            
+                            @if(count($document->documentUploads))
+                                <div class="attachments">
+                                    <span class="text">PDF Vorschau: </span> 
+                                    <div class="clearfix"></div> <br>
+                                    
+                                    @foreach($document->documentUploads as $k => $attachment)
+                                        <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
+                                        <!--<a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">-->
+                                        <!--{{-- basename($attachment->file_path) --}} PDF download</a>-->
+                                        <!--<br><span class="indent"></span>-->
+                                        
+                                        <object data="{{url('open/'.$document->id.'/'.$attachment->file_path)}}" type="application/pdf" width="100%" height="640">
+                                            PDF konnte nicht initialisiert werden. Die Datei können sie <a href="{{url('download/'. $document->id .'/'.$attachment->file_path)}}">hier</a> runterladen.
+                                        </object> 
+                                        <div class="clearfix"></div> <br>
+                                    @endforeach
+                                </div>
                             @endif
+                              
+                            @foreach( $variants as $v => $variant)
+                               @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
+                           
+                                    @if( count( $variant->EditorVariantDocument ) )
+                                        <div class="attachments document-attachments">
+                                            <span class="text">Dokument Anlage/n: </span> <br>
+                                            @foreach($variant->EditorVariantDocument as $k =>$docAttach)
+                                             @if( $docAttach->document_id != $document->id )
+                                                @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
+                                                    @if( $key == 0 )
+                                                       <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link">
+                                                       {{$docAttach->document->name_long }}</a> <br> <!-- <span class="indent"></span> -->
+                                                    @endif
+                                                @endforeach
+                                              @endif    
+                                            @endforeach
+                                        </div>
+                                    @endif
+                               @endif
+                           @endforeach
+                            
                         </div>
                         @if( count( $documentCommentsFreigabe ) )
                         <div class="col-xs-12 box-wrapper">    

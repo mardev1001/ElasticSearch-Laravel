@@ -16,11 +16,15 @@ class DocumentComment extends Model
     
     public function getCreatedAtAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        return Carbon::parse($value)->format('d.m.Y H:m:s');
     }
     
      
     public function user(){
         return $this->hasOne('App\User','id','user_id');
+    }
+    
+    public function document(){
+        return $this->hasOne('App\Document','id','document_id');
     }
 }

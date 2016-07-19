@@ -48,8 +48,7 @@ $( function() {
         $('a[href="/"]').addClass('active');
     }
     else if( url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1){
-        $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
-            console.log('has benuzer')        
+        $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');  
     }
     else if(  typeof documentType !== 'undefined' && documentType.length){
         var detectHref = '/dokumente/rundschreiben';
@@ -63,7 +62,11 @@ $( function() {
             detectHref = '/dokumente/news';
             
         else if(documentType == "ISO Dokumente"){
-             detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
+            if( typeof  isoCategoryName  != 'undefined') 
+                detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
+            else
+                detectHref = '/iso-dokumente';
+         
         }
        $('a[href$="'+detectHref+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
     }

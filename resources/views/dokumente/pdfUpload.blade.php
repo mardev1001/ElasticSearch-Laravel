@@ -86,3 +86,26 @@
             });//end document ready
         </script>
       @stop
+      @if( isset( $data->document_type_id ) )
+           @section('preScript')
+               <!-- variable for expanding document sidebar-->
+               <script type="text/javascript">
+                    var documentType = "{{ $data->documentType->name}}";
+                   
+                      
+               </script>
+               
+               <!--patch for checking iso category document-->
+                @if( isset($data->isoCategories->name) )
+                
+                    <script type="text/javascript">   
+                            console.log('trigged');
+                            console.log( documentType );
+                        if( documentType == 'ISO Dokumente')
+                            var isoCategoryName = '{{ $data->isoCategories->name}}';
+                            console.log('trigged');
+                    </script>
+                @endif
+               <!-- End variable for expanding document sidebar-->
+           @stop
+       @endif

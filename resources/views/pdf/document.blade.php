@@ -271,7 +271,11 @@
            @include('pdf.header')
           <h4 class="first-title first">Per Telefax/per E-Mail</h4>
           <h4 class="first-title second">
-              {{ $document->documentType->name }}
+            @if( $document->document_type_id == 3 )
+              QMR
+            @else
+                {{ $document->documentType->name }}
+            @endif
               @if( $document->document_type_id == 3 )
                   @if( $document->qmr_number != null)
                       {{ $document->qmr_number }}

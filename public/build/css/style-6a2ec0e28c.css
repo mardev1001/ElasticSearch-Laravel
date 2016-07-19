@@ -142,6 +142,11 @@ $third-color: #d3d3d3;*/
   width: 25px;
   height: 25px; }
 
+.icon-trash {
+  background: url("/img/icons/icon_trash.png") no-repeat center center;
+  width: 25px;
+  height: 25px; }
+
 /* icons - end */
 /* Mixins - start */
 /* Media queries Mixins - start */
@@ -856,6 +861,10 @@ input.form-control:-ms-input-placeholder {
   font-size: 14px !important;
   font-weight: normal !important; }
 
+.item-text {
+  font-size: 14px !important;
+  line-height: 24px !important; }
+
 #page-wrapper .treeview span.item-text.btn-block {
   font-size: 14px !important;
   line-height: 20px !important; }
@@ -953,6 +962,14 @@ span.highlight {
 
 .fa-1-5x {
   font-size: 1.3em; }
+
+.display-block {
+  display: block; }
+
+.attached-document-download {
+  font-size: 14px;
+  line-height: 24px;
+  font-weight: bold; }
 
 /*A4 paper simulation*/
 ¸

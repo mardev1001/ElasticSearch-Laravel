@@ -86,6 +86,7 @@
     <!-- JS files - start -->
     @yield('preScript')
     {!! Html::script(elixir('js/script.js')) !!}
+    @yield('afterScript')
     <!-- JS files - end -->
     
     @yield('script')

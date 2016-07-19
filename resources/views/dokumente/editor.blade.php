@@ -128,3 +128,22 @@
             </script>
         @stop
     @endif
+    @if( isset( $data->document_type_id ) )
+           @section('preScript')
+               <!-- variable for expanding document sidebar-->
+               <script type="text/javascript">
+                    var documentType = "{{ $data->documentType->name}}";
+                   
+                      
+               </script>
+               
+               <!--patch for checking iso category document-->
+                @if( isset($data->isoCategories->name) )
+                    <script type="text/javascript">   
+                        if( documentType == 'ISO Dokument')
+                            var isoCategoryName = '{{ $data->isoCategories->name}}';
+                    </script>
+                @endif
+               <!-- End variable for expanding document sidebar-->
+           @stop
+       @endif

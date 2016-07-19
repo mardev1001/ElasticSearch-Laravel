@@ -64659,8 +64659,7 @@ $( function() {
         $('a[href="/"]').addClass('active');
     }
     else if( url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1){
-        $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
-            console.log('has benuzer')        
+        $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');  
     }
     else if(  typeof documentType !== 'undefined' && documentType.length){
         var detectHref = '/dokumente/rundschreiben';
@@ -64674,7 +64673,11 @@ $( function() {
             detectHref = '/dokumente/news';
             
         else if(documentType == "ISO Dokumente"){
-             detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
+            if( typeof  isoCategoryName  != 'undefined') 
+                detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
+            else
+                detectHref = '/iso-dokumente';
+         
         }
        $('a[href$="'+detectHref+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
     }
@@ -65725,7 +65728,8 @@ $( function() {
 		icon: '<span class="icon"></span>',
 		icon2: '<span class="icon2"></span>',
 		icon3: '<span class="icon3"></span>',
-		linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
+		linkDelete: '<span class="icon-delete"><a href="#" class="node-delete" style="color:inherit;"><i class="icon-trash display-block"></i></a></span>',
+		// linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'
 	};

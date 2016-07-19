@@ -133,14 +133,14 @@
                     {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
                 </div>   
             </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-md-4 col-lg-4"> 
-                <div class="form-group ">
-                    {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
-                </div>   
-            </div><!--End input box-->
-            
+            @if($data->document_type_id != 5)
+                <!-- input box-->
+                <div class="col-md-4 col-lg-4"> 
+                    <div class="form-group ">
+                        {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
+                    </div>   
+                </div><!--End input box-->
+            @endif
             <div class="clearfix"></div>
 
             <!-- input box-->

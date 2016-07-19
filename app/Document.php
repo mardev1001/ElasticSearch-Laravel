@@ -25,7 +25,11 @@ class Document extends Model
      
     public function getDatePublishedAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y');
+        if(empty($value) || $value == null || $value == '')
+            return null;
+        else
+            return Carbon::parse($value)->format('d.m.Y');
+            
     }
     
     // public function getCreatedAtDttribute($value)
@@ -36,25 +40,6 @@ class Document extends Model
     public function getUpdatedAtAttribute($value)
     {
         return Carbon::parse($value)->format('d.m.Y H:m:s');
-    }
-    
-    public function setDatePublishedAttribute($value)
-    {
-        // dd($value);
-        if(empty($value))
-            $this->attributes['date_published'] = Carbon::parse($value)->addDay();
-        else
-            $this->attributes['date_published'] = Carbon::parse($value);
-        
-    }
-     
-    public function getDateExpiredAttribute($value)
-    {
-        if(empty($value) || $value == null || $value == '')
-            return null;
-        else
-            return Carbon::parse($value)->format('d.m.Y');
-            
     }
     
     public function setDateExpiredAttribute($value)
@@ -160,4 +145,5 @@ class Document extends Model
     public function publishedDocuments(){
         return $this->hasMany('App\PublishedDocument','document_id','id');
     }
+    
 }

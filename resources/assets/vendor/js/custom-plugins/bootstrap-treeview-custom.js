@@ -748,7 +748,8 @@
 		icon: '<span class="icon"></span>',
 		icon2: '<span class="icon2"></span>',
 		icon3: '<span class="icon3"></span>',
-		linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
+		linkDelete: '<span class="icon-delete"><a href="#" class="node-delete" style="color:inherit;"><i class="icon-trash display-block"></i></a></span>',
+		// linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'
 	};

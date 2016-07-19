@@ -130,6 +130,14 @@ class DocumentRepository
                 $node = new \StdClass();
                 $node->text = $document->name;
                 
+                if($document->document_type_id == 3 ){
+                    if($document->qmr_number != null)
+                        $node->text = $document->qmr_number .": ". $node->text;
+                    $node->text = "QMR ". $node->text;
+                }
+                
+               
+                
                 if ($options['pageHome'] == true) {
                     $node->beforeText = $document->created_at;
                     $node->afterText = $document->documentType->name;
@@ -164,9 +172,14 @@ class DocumentRepository
                 $node->icon2 = $icon2;
                 $node->icon3 = $icon3 . 'last-node-icon ';
                 // if ($options['showUniqueURL'] == true)
-                if ($document->document_status_id == 3)
-                    $node->href = route('dokumente.show', $document->published->url_unique);
+                if ($document->document_status_id == 3) $node->href = route('dokumente.show', $document->published->url_unique);
+                elseif($document->document_status_id == 6) $node->href = url('dokumente/'. $document->id .'/freigabe');
                 else $node->href = route('dokumente.show', $document->id);
+
+                // TreeView Delete Option - Uncomment if needed
+                // if ($options['pageFavorites'] && $options['showDelete']){
+                //     $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
+                // }
 
                 if ($document->document_status_id != 6) {
 
@@ -231,9 +244,11 @@ class DocumentRepository
                         $node = new \StdClass();
                         $node->text = $secondDoc->name;
                         $node->icon = 'icon-parent';
-                        if ($options['showDelete']){
-                            $node->hrefDelete = url('anhang-delete/' . $options['documentId']. '/' .$evd->editor_variant_id . '/' .$evd->document_id );
-                        }
+                        
+                        // TreeView Delete Option - Uncomment if needed
+                        // if ($options['showDelete']){
+                        //     $node->hrefDelete = url('anhang-delete/' . $options['documentId']. '/' .$evd->editor_variant_id . '/' .$evd->document_id );
+                        // }
                         //$node->href = route('dokumente.show', $secondDoc->id);
 
                         if (!$secondDoc->documentUploads->isEmpty()) {

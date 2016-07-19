@@ -38,10 +38,10 @@
                                                         @foreach($attachmentArray[$variant->id] as $attachedDoc)
                                                             @if(isset($attachedDoc->files))
                                                                 <div class="attached-document">
-                                                                    <a class="attached-document-download pull-left" href="{{$attachedDoc->files[0]->downloadUrl}}"> 
-                                                                    {{$attachedDoc->name}} </a>
-                                                                    <a class="attached-document-download pull-right" href="{{$attachedDoc->deleteUrl}}"> 
-                                                                    <i class="fa fa-1-5x fa-trash text-danger"></i> </a>
+                                                                    <a class="attached-document-download " href="{{$attachedDoc->files[0]->downloadUrl}}"> 
+                                                                    &nbsp;{{$attachedDoc->name}} </a>
+                                                                    <a class="attached-document-download pull-left" href="{{$attachedDoc->deleteUrl}}"> 
+                                                                    <span class="icon-trash display-block"></span></a>
                                                                 </div> 
                                                                 <div class="clearfix"></div> <br>
                                                             @endif
@@ -59,7 +59,7 @@
                                     <!--Select existing document-->         
                                     <div class="row">
                                         {!! Form::open([
-                                        'url' => 'dokumente/anlagen/'.$data->id,
+                                        'url' => 'dokumente/anlagen/'.$data->id.'/'. $variant->variant_number,
                                         'method' => 'POST',
                                         'class' => 'horizontal-form' ]) !!}
                                         <div class="col-xs-12">
@@ -92,7 +92,7 @@
                                     <!--create new document-->
                                     <div class="row">
                                         {!! Form::open([
-                                        'url' => 'dokumente/anlagen/'.$data->id,
+                                        'url' => 'dokumente/anlagen/'.$data->id.'/'.$variant->variant_number,
                                         'method' => 'POST',
                                         'enctype' => 'multipart/form-data',
                                         'class' => 'horizontal-form form-check' ]) !!}
@@ -306,4 +306,24 @@
                 @endif
                <!-- End variable for expanding document sidebar-->
            @stop
+       @endif
+       
+        @if( Request::segment(4) || isset($preparedVariant) )
+            @if( Request::segment(4) )
+                @section('afterScript')
+                    <script type="text/javascript">
+                            if( $('a[href*="#variant{{ Request::segment(4) }}"]') )
+                                $('a[href*="#variant{{ Request::segment(4) }}"]').click(); //#variant2
+                              
+                   </script>
+                @stop
+            @else
+                @section('afterScript')
+                    <script type="text/javascript">
+                            if( $('a[href*="#variant{{ $preparedVariant }}"]') )
+                                $('a[href*="#variant{{ $preparedVariant }}"]').click(); //#variant2
+                              
+                   </script>
+                @stop
+            @endif
        @endif

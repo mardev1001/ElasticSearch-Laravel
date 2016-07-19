@@ -121,10 +121,23 @@
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Meine letzten Kommentare</h1>
                 <div class="box home">
-                    <div class="tree-view hide-icons" data-selector="commentsMy">
-                        <div class="commentsMy hide">
-                            {{ $commentsMy }}
-                        </div>
+                    <div class="commentsMy">
+                        @if(count($commentsMy))
+                            @foreach($commentsMy as $k => $comment)
+                                <div class="comment-{{++$k}}">
+                                    <span class="comment-header">
+                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                            <strong>{{ $comment->document->name }}</strong>
+                                        </a>
+                                        , {{ $comment->created_at }}
+                                    </span> <br>
+                                    <span class="comment-body">
+                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                    </span>
+                                </div>
+                                <div class="clearfix"></div><br>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
@@ -138,16 +151,28 @@
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Neue Kommentare</h1>
                 <div class="box home">
-                    <div class="tree-view hide-icons" data-selector="commentsNew">
-                        <div class="commentsNew hide">
-                            {{ $commentsNew }}
-                        </div>
+                    <div class="commentsNew">
+                        @if(count($commentsNew))
+                            @foreach($commentsNew as $k => $comment)
+                                <div class="comment-{{++$k}}">
+                                    <span class="comment-header">
+                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                            <strong>{{ $comment->document->name }}</strong>
+                                        </a>
+                                        - {{ $comment->user->first_name ." ". $comment->user->last_name }}, {{ $comment->created_at }}
+                                    </span> <br>
+                                    <span class="comment-body">
+                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                    </span>
+                                </div>
+                                <div class="clearfix"></div><br>
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
     
     <div class="clearfix"></div><br>
 
