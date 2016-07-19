@@ -29,13 +29,16 @@ class Document extends Model
             return null;
         else
             return Carbon::parse($value)->format('d.m.Y');
-            
     }
     
-    // public function getCreatedAtDttribute($value)
-    // {
-    //     return Carbon::parse($value)->format('d.m.Y H:m:s');
-    // }
+    public function setDatePublishedAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == '')
+            $this->attributes['date_published'] = null;
+        else
+            $this->attributes['date_published'] = Carbon::parse($value);
+    }
+    
     
     public function getUpdatedAtAttribute($value)
     {
@@ -44,11 +47,24 @@ class Document extends Model
     
     public function setDateExpiredAttribute($value)
     {
+        
          if(empty($value) || $value == null || $value == '')
             $this->attributes['date_expired'] = null;
         else
             $this->attributes['date_expired'] = Carbon::parse($value);
+            
     }
+    public function getDateExpiredAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == '')
+            return null;
+        else
+            return Carbon::parse($value)->format('d.m.Y');
+            
+    }
+    
+    
+    
     
     public function getCreatedAtAttribute($value)
     {

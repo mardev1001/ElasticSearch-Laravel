@@ -141,6 +141,13 @@
                         {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
                     </div>   
                 </div><!--End input box-->
+            @else
+             <!-- input box-->
+                <div class="col-md-4 col-lg-4"> 
+                    <div class="form-group ">
+                        {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
+                    </div>   
+                </div><!--End input box-->
             @endif
             <div class="clearfix"></div>
 

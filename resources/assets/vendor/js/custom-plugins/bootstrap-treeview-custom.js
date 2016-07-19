@@ -584,22 +584,29 @@
 			}
 
 			// Add node icon 3
-			if (_this.options.showIcon) {
+			// if (_this.options.showIcon) {
 				
-				var classList = ['node-icon'];
+			// 	var classList = ['node-icon'];
+				
+			// 	console.log(node.icon3);
+			// 	// node.icon3.append('<a href="'+node.hrefDelete +'" class="display-block"></a>');
+			// 	if(node.hrefHistory != undefined){
+			// 		console.log();
+			// 		// node.icon3.append('<a href="'+node.hrefDelete +'" class="display-block"></a>');
+			// 	}
 
-				classList.push(node.icon3 || _this.options.nodeIcon3);
-				if (node.state.selected) {
-					classList.pop();
-					classList.push(node.selectedIcon || _this.options.selectedIcon || 
-									node.icon3 || _this.options.nodeIcon3);
-				}
+			// 	classList.push(node.icon3 || _this.options.nodeIcon3);
+			// 	if (node.state.selected) {
+			// 		classList.pop();
+			// 		classList.push(node.selectedIcon || _this.options.selectedIcon || 
+			// 						node.icon3 || _this.options.nodeIcon3);
+			// 	}
 
-				treeItem
-					.append($(_this.template.icon)
-						.addClass(classList.join(' '))
-					);
-			}
+			// 	treeItem
+			// 		.append($(_this.template.icon)
+			// 			.addClass(classList.join(' '))
+			// 		);
+			// }
 
 			// Add check / unchecked icon
 			if (_this.options.showCheckbox) {
@@ -646,6 +653,19 @@
 						.append($(_this.template.linkDelete)
 							.attr('href', node.hrefDelete)
 							.append(node.textDelete)
+						);
+				}
+			}
+			
+			// Add hyperlink for history
+			
+			if (_this.options.enableHistory) {
+				console.log(node.hrefHistory);
+				if(node.hrefHistory != undefined){
+					treeItem
+						.append($(_this.template.linkHistory)
+							.attr('href', node.hrefHistory)
+							// .append(node.textDelete)
 						);
 				}
 			}
@@ -747,8 +767,9 @@
 		indent: '<span class="indent"></span>',
 		icon: '<span class="icon"></span>',
 		icon2: '<span class="icon2"></span>',
-		icon3: '<span class="icon3"></span>',
-		linkDelete: '<span class="icon-delete"><a href="#" class="node-delete" style="color:inherit;"><i class="icon-trash display-block"></i></a></span>',
+		// icon3: '<span class="icon3"></span>',
+		linkHistory: '<a class="icon icon-history display-inline-block" href="#"></a>',
+		// linkDelete: '<span class="icon-delete"><a href="#" class="node-delete" style="color:inherit;"><i class="icon-trash display-block"></i></a></span>',
 		// linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'

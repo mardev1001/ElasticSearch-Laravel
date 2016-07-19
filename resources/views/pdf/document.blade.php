@@ -7,7 +7,7 @@
         @if( $document->landscape == true)
             <style>
             body,p,h1,h2,h3,h4,h5{
-                font-family: 'Arial, Helvetica, sans-serif';
+                font-family: 'Helvetica' !important;
             }
             p{
                 font-size: 14px;
@@ -122,10 +122,10 @@
             }
              .footer { position: fixed; bottom: 5px; left: 680px; }
             .absolute, .absolute:nth-child(even){
-                width:80px;
+                width:85px;
                 margin-top: -125px;
                 margin-left: 300px;
-                
+                color: #808080;
             }
             .absolute p{
                 margin-bottom: 0 !important;
@@ -136,7 +136,7 @@
         @else
             <style>
             body,p,h1,h2,h3,h4,h5{
-                font-family: 'Arial, Helvetica, sans-serif';
+                font-family: 'Helvetica' !important;
             }
             p{
                 font-size: 14px;
@@ -251,9 +251,10 @@
             }
              .footer { position: fixed; bottom: 10px; left: 350px; }
             .absolute, .absolute:nth-child(even){
-                width:80px;
+                width:85px;
                 margin-top: -125px;
                 margin-left: 300px;
+                color: #808080;
                 
             }
             .absolute p{

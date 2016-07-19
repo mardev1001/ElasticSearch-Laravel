@@ -3,37 +3,68 @@
     <head>
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <title>@yield("title",'Neptun dokument')</title>
+      {!! Html::script(elixir('js/script.js')) !!}
       <link rel="shortcut icon" href="/img/favicon.png">
-        
+        <script>
+            $(document).ready( function(){
+               $('.dummy-divv:gt(0)').each(function(){
+                    $(this).attr('style','height: 200px !important');
+               }); 
+            });
+        </script>
             <style>
             body,p,h1,h2,h3,h4,h5{
-                font-family: 'Arial, Helvetica, sans-serif';
+                font-family: 'Helvetica' !important;
             }
             p{
                 font-size: 14px;
                 margin-bottom: 25px;
             }
-            .header,
-            .footer {
+            table {
+                margin-left: 0 !important;
+                width: 100% !important;
+                /*margin-right: 30pt !important;*/
+            }
+            table td{
+                 width: auto !important;
+            }
+             @page { margin-top: 80px; }
+             
+            .clearfix{
+                clear: both !important;
+                height:1px;
+            }
+            .header,.footer {
                 width: 100%;
                 position: fixed;
             }
-            .header {
-             top:0;
-             min-height 30px;
+            .header{
+                 top: -20px;
+                 left: 0;
              
+                 clear:both;
             }
              .border-div{
-                display:block;
-                border-top: 1px solid black;
+                border-bottom: 1px solid black;
                 height: 1px;
-                margin-top:15px;
+                width: 100%;
+                /*margin-top:55px;*/
              }
             .header .div-pusher{
-                width:50%;
+                width:60%;
+                float: left;
             }
             .header .image-div {
-                width:50%;
+                width:40%;
+                float:right;
+                margin-right: 80px;
+            }
+            .parent-pagenum{
+                margin-bottom:10px;
+                padding-right: 10px;
+            }
+            .pagenum:before {
+                content: counter(page);
             }
             .pull-right{
                 text-align: right;
@@ -41,36 +72,31 @@
             .div-pusher{
                 width:50%;
                 padding-left: 30px;
-                float:left !important;
+                float: left;
             }
-           
-            /*.header-divider{*/
-                /*height:100px;*/
-            /*    width:100%;*/
-            /*    border-top: 1px solid black;*/
-            /*}*/
-            /*#divider{*/
-            /*    content: 'divider';*/
-            /*    width: 100%;*/
-            /*    height: 50px;*/
-            /*}*/
             .footer {
                 bottom: 5px;
             }
-            .pagenum:before {
-                content: content: "Page " counter(page) " of " counter(pages);;
-            }
+            
             .first-title.first{
-                margin-top: 70px;
+                /*margin-top: 70px;*/
                 margin-bottom:0px;
             }
             .first-title.second{
                 margin-top: 0;
-                margin-bottom:50px;
+                /*margin-bottom:50px;*/
             }
-             .first-title, .content-wrapper{
+             .content-wrapper{
                 padding: 0 80px 10px 30px;
             }
+            /*#content-:not(:first){*/
+            /*    margin-top: 150px;*/
+            /*    padding-top: 150px;*/
+            /*}*/
+            /*.content-wrapper:not(:first){*/
+            /*    margin-top: 150px;*/
+            /*    padding-top: 150px;*/
+            /*}*/
             .document-title-row{
                 width: 70%;
                 float:left;
@@ -90,17 +116,7 @@
                 margin-right: -5px;
             }
             
-            .clearfix{
-                clear: both !important;
-                height:1px;
-            }
-            .half-width{
-                width:50% !important;
-                float:left;
-            }
-            .footer .half-width{
-               
-            }
+            
             .text-upper{
                 text-transform: uppercase;
             }
@@ -120,14 +136,7 @@
             .mb90{
                 margin-bottom: 90px;
             }
-            table {
-                margin-left: 0 !important;
-                width: 100% !important;
-                /*margin-right: 30pt !important;*/
-            }
-            table td{
-                 width: auto !important;
-            }
+            
             #absolute{
                  font-size: 10px !important;
                  margin-top: -125px;
@@ -145,17 +154,16 @@
                 margin-top: 0 !important;
                 text-align: left;
             }
+            @page p:first{
+                margin-top:300px;
+            }
         </style>
     </head>
     <body>
-     <!-- if you want header on every page  set the include pdf.header here -->
       @include('pdf.headerIso')
       @include('pdf.footerIso')
-      <div id="content">
-          <div class="content-wrapper" s>
-              
-            
-             <div class="header-divider"></div>
+      <div id="content" >
+          <div class="content-wrapper" >
               @if( count( $variants) )
                   @foreach( $variants as $v => $variant)
                       @if( isset($variant->hasPermission) && $variant->hasPermission == true )

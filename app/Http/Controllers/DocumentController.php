@@ -1362,8 +1362,8 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         $variants = EditorVariant::where('document_id',$id)->get();
-        $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
-        $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->get();
+        $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)->orderBy('id','DESC')->get();
+        $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
         /* Button check */
         $published = false;
         $canPublish = false;
@@ -1542,11 +1542,16 @@ class DocumentController extends Controller
         }
         
         $document = Document::find($id);
+         
          $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
          
         /* If document type Iso Category load different PDF template*/    
-        /* if($document->document_type_id == $this->isoDocumentId)
-            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));*/
+         /*if($document->document_type_id == $this->isoDocumentId){
+             $html = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
+             return $html;
+             $pdf = \PDF::loadHTML($html);
+         }*/
+            
         /* End If document type Iso Category load different PDF template*/    
         
         /* If landscape is true set paper to landscape */    
@@ -1891,7 +1896,7 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         $documentHistory = Document::where('document_group_id', $document->document_group_id)->orderBy('id', 'desc')->paginate(10, ['*'], 'dokument-historie');
-        $documentHistoryTree = $this->document->generateTreeview( $documentHistory, array('pageHistory' => true, 'showHistoryIcon' => false) );
+        $documentHistoryTree = $this->document->generateTreeview( $documentHistory, array('pageHistory' => true) );
         // dd($documentHistory);
         return view('dokumente.historie', compact('document', 'documentHistory', 'documentHistoryTree') );
     }

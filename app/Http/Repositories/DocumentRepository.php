@@ -77,7 +77,7 @@ class DocumentRepository
             'showApproval' => false,
             'showUniqueURL' => false,
             'showDelete' => false,
-            'showHistoryIcon' => true,
+            'showHistory' => false,
             'pageHome' => false,
             'pageHistory' => false,
             'pageWiki' => false,
@@ -136,8 +136,6 @@ class DocumentRepository
                     $node->text = "QMR ". $node->text;
                 }
                 
-               
-                
                 if ($options['pageHome'] == true) {
                     $node->beforeText = $document->created_at;
                     $node->afterText = $document->documentType->name;
@@ -147,7 +145,8 @@ class DocumentRepository
                     $node->text = "Version " . $document->version . "- " . $node->text . " - " . $document->updated_at;
                 }
 
-                $icon = $icon2 = $icon3 = '';
+                // $icon = $icon2 = $icon3 = '';
+                $icon = $icon2 = '';
 
                 // Define icon classes
                 if ($document->document_status_id == 3) {
@@ -155,9 +154,11 @@ class DocumentRepository
                         $icon = 'icon-favorites ';
                     // $icon2 = 'icon-open ';
 
-                    if ($options['showHistoryIcon'] == true) {
-                        if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1)
-                            $icon3 = 'icon-history ';
+                    if ($options['showHistory'] == true) {
+                        if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1){
+                            // $icon3 = 'icon-history ';
+                            $node->hrefHistory = url('dokumente/historie/' . $document->id);
+                        }
                     }
                 }
 
@@ -170,7 +171,7 @@ class DocumentRepository
 
                 $node->icon = $icon;
                 $node->icon2 = $icon2;
-                $node->icon3 = $icon3 . 'last-node-icon ';
+                // $node->icon3 = $icon3 . 'last-node-icon ';
                 // if ($options['showUniqueURL'] == true)
                 if ($document->document_status_id == 3) $node->href = route('dokumente.show', $document->published->url_unique);
                 elseif($document->document_status_id == 6) $node->href = url('dokumente/'. $document->id .'/freigabe');
@@ -194,7 +195,7 @@ class DocumentRepository
                             $subNode->text = "Variante " . $variant->variant_number;
                             $subNode->icon = 'child-node ';
                             $subNode->icon2 = 'fa fa-2x fa-file-o ';
-                            $subNode->icon3 = $icon3 . 'last-node-icon ';
+                            // $subNode->icon3 = $icon3 . 'last-node-icon ';
 
                             if(count($variant->documentUpload)){
                                 $subNode->nodes = array();
@@ -204,7 +205,7 @@ class DocumentRepository
                                     $subSubNode->text = 'PDF Rundschreiben';
                                     $subSubNode->icon = 'sub-child-node ';
                                     $subSubNode->icon2 = 'icon-download ';
-                                    $subSubNode->icon3 = 'last-node-icon ';
+                                    // $subSubNode->icon3 = 'last-node-icon ';
                                     // $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
                                     $subSubNode->href = '/download/' . $document->id . '/' . $upload->file_path;
                                     
@@ -224,7 +225,7 @@ class DocumentRepository
                             $subNode->text = 'PDF Rundschreiben';;
                             $subNode->icon = 'child-node ';
                             $subNode->icon2 = 'icon-download ';
-                            $subNode->icon3 = 'last-node-icon ';
+                            // $subNode->icon3 = 'last-node-icon ';
                             // $subNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
                             $subNode->href = '/download/' . $document->id . '/' . $upload->file_path;
 

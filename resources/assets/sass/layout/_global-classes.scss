@@ -541,6 +541,13 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     display: none !important;
 }
 
+#page-wrapper .treeview a.icon-history {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    margin-top: -14px;
+}
+
 #page-wrapper .treeview.hide-icons span.indent {
     display: inline-block !important;
 }
@@ -657,6 +664,10 @@ span.highlight{
 
 .display-block{
     display: block;
+}
+
+.display-inline-block{
+    display: inline-block;
 }
 
 .attached-document-download{

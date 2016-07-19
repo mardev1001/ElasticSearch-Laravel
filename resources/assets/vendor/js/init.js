@@ -34,6 +34,7 @@ $(function() {
                 showTags: false,
                 enableLinks: true,
                 enableDelete: true,
+                enableHistory: true,
                 levels: 0,
             });
         });
