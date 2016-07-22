@@ -5,13 +5,8 @@
       <title>@yield("title",'Neptun dokument')</title>
       {!! Html::script(elixir('js/script.js')) !!}
       <link rel="shortcut icon" href="/img/favicon.png">
-        <script>
-            $(document).ready( function(){
-               $('.dummy-divv:gt(0)').each(function(){
-                    $(this).attr('style','height: 200px !important');
-               }); 
-            });
-        </script>
+        
+        @if( $document->landscape == 1)
             <style>
             body,p,h1,h2,h3,h4,h5{
                 font-family: 'Helvetica' !important;
@@ -28,7 +23,11 @@
             table td{
                  width: auto !important;
             }
-             @page { margin-top: 80px; }
+             @page { 
+                 margin-top: 130px;
+                 margin-bottom: 20px;
+                 font-family: 'Helvetica' !important;
+             }
              
             .clearfix{
                 clear: both !important;
@@ -39,10 +38,16 @@
                 position: fixed;
             }
             .header{
-                 top: -20px;
-                 left: 0;
-             
-                 clear:both;
+                top: -130px;
+                left: 0;
+                padding-top: 10px;
+                padding-bottom: 20px;
+                font-size: 16px !important; 
+                clear:both;
+            }
+            
+            .border-wrapper{
+                padding:0 135px 0 50px;
             }
              .border-div{
                 border-bottom: 1px solid black;
@@ -51,13 +56,18 @@
                 /*margin-top:55px;*/
              }
             .header .div-pusher{
-                width:60%;
+                width:50%;
                 float: left;
             }
+            .header .div-pusher p{
+                padding-top: 15px;
+                padding-right: 60px;
+                font-size: 14px !important; 
+            }
             .header .image-div {
-                width:40%;
+                width:50%;
                 float:right;
-                margin-right: 80px;
+                margin-right: 135px;
             }
             .parent-pagenum{
                 margin-bottom:10px;
@@ -71,11 +81,8 @@
             }
             .div-pusher{
                 width:50%;
-                padding-left: 30px;
+                padding-left: 50px;
                 float: left;
-            }
-            .footer {
-                bottom: 5px;
             }
             
             .first-title.first{
@@ -87,16 +94,9 @@
                 /*margin-bottom:50px;*/
             }
              .content-wrapper{
-                padding: 0 80px 10px 30px;
+                padding: 0 135px 10px 50px;
             }
-            /*#content-:not(:first){*/
-            /*    margin-top: 150px;*/
-            /*    padding-top: 150px;*/
-            /*}*/
-            /*.content-wrapper:not(:first){*/
-            /*    margin-top: 150px;*/
-            /*    padding-top: 150px;*/
-            /*}*/
+           
             .document-title-row{
                 width: 70%;
                 float:left;
@@ -137,31 +137,180 @@
                 margin-bottom: 90px;
             }
             
-            #absolute{
-                 font-size: 10px !important;
-                 margin-top: -125px;
-                 margin-left: 300px;
-            }
-            .footer { position: fixed; bottom: 10px; left: 350px; }
-            .absolute, .absolute:nth-child(even){
-                width:80px;
-                margin-top: -125px;
-                margin-left: 300px;
+            .footer {
+                position: fixed; 
+                bottom: 5px; 
+                /*left: 350px; */
                 
             }
-            .absolute p{
-                margin-bottom: 0 !important;
+            
+            .footer p{
+                /*padding-right: 135px;*/
+                text-align: right;
+                margin-bottom: 0px !important;
+                padding-bottom: 0px !important;
                 margin-top: 0 !important;
-                text-align: left;
-            }
-            @page p:first{
-                margin-top:300px;
+                padding: 3px 135px 3px 0 !important;
+                font-size: 12px;
+                line-height: 12px;
             }
         </style>
+        @else
+            <style>
+            body,p,h1,h2,h3,h4,h5{
+                font-family: 'Helvetica' !important;
+            }
+            p{
+                font-size: 14px;
+                margin-bottom: 25px;
+            }
+            table {
+                margin-left: 0 !important;
+                width: 100% !important;
+                /*margin-right: 30pt !important;*/
+            }
+            table td{
+                 width: auto !important;
+            }
+             @page { 
+                 margin-top: 150px;
+                 margin-bottom: 100px;
+                 font-family: 'Helvetica' !important;
+             }
+             
+            .clearfix{
+                clear: both !important;
+                height:1px;
+            }
+            .header,.footer {
+                width: 100%;
+                position: fixed;
+            }
+            .header{
+                top: -150px;
+                left: 0;
+                padding-top: 10px;
+                padding-bottom: 20px;
+                font-size: 16px !important; 
+                clear:both;
+            }
+            
+            .border-wrapper{
+                padding:0 135px 0 50px;
+            }
+             .border-div{
+                border-bottom: 1px solid black;
+                height: 1px;
+                width: 100%;
+                /*margin-top:55px;*/
+             }
+            .header .div-pusher{
+                width:50%;
+                float: left;
+            }
+            .header .div-pusher p{
+                padding-top: 15px;
+                padding-right: 60px;
+                font-size: 14px !important; 
+            }
+            .header .image-div {
+                width:50%;
+                float:right;
+                margin-right: 135px;
+            }
+            .parent-pagenum{
+                margin-bottom:10px;
+                padding-right: 10px;
+            }
+            .pagenum:before {
+                content: counter(page);
+            }
+            .pull-right{
+                text-align: right;
+            }
+            .div-pusher{
+                width:50%;
+                padding-left: 50px;
+                float: left;
+            }
+            
+            .first-title.first{
+                /*margin-top: 70px;*/
+                margin-bottom:0px;
+            }
+            .first-title.second{
+                margin-top: 0;
+                /*margin-bottom:50px;*/
+            }
+             .content-wrapper{
+                padding: 0 135px 40px 50px;
+            }
+           
+            .document-title-row{
+                width: 70%;
+                float:left;
+            }
+            .document-date-row{
+                width: 30%;
+                float:right;
+                font-size: 14px;
+                padding-top: 7px;
+            }
+            .date-div{
+                width:100%;
+                float:right !important;
+                text-align: right;
+            }
+            .date-div .right-correction{
+                margin-right: -5px;
+            }
+            
+            
+            .text-upper{
+                text-transform: uppercase;
+            }
+            .bold{
+                font-weight: bold;
+            }
+            .page-num-p{
+                text-align:right; 
+                font-size:14px;
+            }
+            .mb30{
+                margin-bottom: 30px;
+            }
+            .mb60{
+                margin-bottom: 60px;
+            }
+            .mb90{
+                margin-bottom: 90px;
+            }
+            
+            .footer {
+                position: fixed; 
+                bottom: 5px; 
+                /*left: 350px; */
+                
+            }
+            
+            .footer p{
+                /*padding-right: 135px;*/
+                text-align: right;
+                margin-bottom: 0px !important;
+                padding-bottom: 0px !important;
+                margin-top: 0 !important;
+                padding: 3px 135px 3px 0 !important;
+                font-size: 12px;
+                line-height: 12px;
+            }
+        </style>
+        @endif
     </head>
     <body>
       @include('pdf.headerIso')
-      @include('pdf.footerIso')
+      @if( $document->landscape != 1)
+          @include('pdf.footerIso')
+      @endif
       <div id="content" >
           <div class="content-wrapper" >
               @if( count( $variants) )

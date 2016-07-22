@@ -10,15 +10,18 @@
                     <div class="col-xs-12">
                         <ul class="nav nav-tabs" id="tabs">
                            @if( count($data->editorVariant) > 0) 
-                               @foreach( $data->editorVariant as $variant)
+                               @foreach( $data->editorVariant as $hv => $variant)
                                    <li><a href="#variant{{$variant->variant_number}}" data-toggle="tab">{{ trans('documentAnlegen.anlageZuVariante') }} {{$variant->variant_number}}</a></li>
+                                   @if( $data->pdf_upload )
+                                       @break 
+                                   @endif
                                @endforeach
                            @endif
                         </ul>
                         
                         <div class="tab-content">
                             @if( count($data->editorVariant) > 0) 
-                                @foreach( $data->editorVariant as $variant)
+                                @foreach( $data->editorVariant as $cv =>  $variant)
                                     <div class="tab-pane" id="variant{{$variant->variant_number}}">
                                         <div class="row">
                                             <div class="col-xs-6 ">

@@ -319,10 +319,10 @@
 
 		if (!this.options.enableLinks) event.preventDefault();
 
+		
 		var target = $(event.target);
 		var node = this.findNode(target);
 		if (!node || node.state.disabled) return;
-		
 		var classList = target.attr('class') ? target.attr('class').split(' ') : [];
 		if ((classList.indexOf('expand-icon') !== -1)) {
 
@@ -660,7 +660,6 @@
 			// Add hyperlink for history
 			
 			if (_this.options.enableHistory) {
-				console.log(node.hrefHistory);
 				if(node.hrefHistory != undefined){
 					treeItem
 						.append($(_this.template.linkHistory)
@@ -884,6 +883,7 @@
 	Tree.prototype.selectNode = function (identifiers, options) {
 		this.forEachIdentifier(identifiers, options, $.proxy(function (node, options) {
 			this.setSelectedState(node, true, options);
+			
 		}, this));
 
 		this.render();

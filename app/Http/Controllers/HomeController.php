@@ -33,11 +33,11 @@ class HomeController extends Controller
     {
         $documentsNew = Document::whereNotIn('document_status_id', array(1,4,5,6))->where('is_attachment',0)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
-        $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showHistory' => true));
+        $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
         
         $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
-        $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true));
+        $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true));
         
         $documentsMy = Document::where('user_id', Auth::user()->id)
         ->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-dokumente');

@@ -18,6 +18,7 @@ use App\Document;
 use App\DocumentType;
 use App\DocumentApproval;
 use App\PublishedDocument;
+use App\UserReadDocument;
 
 class DocumentRepository
 {
@@ -129,6 +130,7 @@ class DocumentRepository
                 
                 $node = new \StdClass();
                 $node->text = $document->name;
+                $icon = $icon2 = '';
                 
                 if($document->document_type_id == 3 ){
                     if($document->qmr_number != null)
@@ -137,22 +139,35 @@ class DocumentRepository
                 }
                 
                 if ($options['pageHome'] == true) {
-                    $node->beforeText = $document->created_at;
+                    
+                    if($document->published){
+                        $node->beforeText = Carbon::parse($document->date_published)->format('d.m.Y');
+                        
+                        $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
+                        ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
+                        
+                        if($readDocument) 
+                            $icon = 'icon-read ';
+                            // dd($readDocument);
+                        else
+                            $icon = 'icon-notread ';
+                            
+                    }
                     $node->afterText = $document->documentType->name;
+                    
                 }
                 
                 if ($options['pageHistory'] == true) {
                     $node->text = "Version " . $document->version . "- " . $node->text . " - " . $document->updated_at;
                 }
 
-                // $icon = $icon2 = $icon3 = '';
-                $icon = $icon2 = '';
-
-                // Define icon classes
+                
                 if ($document->document_status_id == 3) {
-                    if (Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at)))
-                        $icon = 'icon-favorites ';
-                    // $icon2 = 'icon-open ';
+                    if (Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at))){
+                        // $icon = 'icon-favorites ';
+                        $icon2 = 'icon-favorites ';
+                        // $icon2 = 'icon-open ';
+                    }
 
                     if ($options['showHistory'] == true) {
                         if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1){
@@ -160,6 +175,7 @@ class DocumentRepository
                             $node->hrefHistory = url('dokumente/historie/' . $document->id);
                         }
                     }
+                    
                 }
 
                 
@@ -214,25 +230,69 @@ class DocumentRepository
                             }
                             array_push($node->nodes, $subNode);
                         }
-                    } elseif (!$document->documentUploads->isEmpty()) {
-
-                        $node->nodes = array();
-                        if ($options['tags']) $node->tags = array(sizeof($document->documentUploads));
-
-                        foreach ($document->documentUploads as $upload) {
-                            $subNode = new \StdClass();
-                            // $subNode->text = basename($upload->file_path);
-                            $subNode->text = 'PDF Rundschreiben';;
-                            $subNode->icon = 'child-node ';
-                            $subNode->icon2 = 'icon-download ';
-                            // $subNode->icon3 = 'last-node-icon ';
-                            // $subNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
-                            $subNode->href = '/download/' . $document->id . '/' . $upload->file_path;
-
-
-                            array_push($node->nodes, $subNode);
+                    } elseif (sizeof($document->editorVariantNoDeleted)) {
+                        
+                        
+                        // get all variants, and all their attachments
+                        
+                        $documentsAttached = array();
+                        
+                        foreach($document->editorVariantNoDeleted as $ev){
+                            foreach($ev->editorVariantDocument as $evd){
+                                array_push($documentsAttached, Document::find($evd->document_id));
+                            }
+                        }
+                        
+                        // generate item for treeview and add his attachments
+                        
+                        if(count($documentsAttached)){
+                            
+                            $node->nodes = array();
+                            // $node->icon .= ' parent-node ';
+                            
+                            // if ($options['tags']) $node->tags = array(sizeof($document->editorVariantDocument));
+    
+                            foreach ($documentsAttached as $secondDoc) {
+                                
+                                // $node->href = route('dokumente.show', $secondDoc->id);
+            
+                                if (!$secondDoc->documentUploads->isEmpty()) {
+                                    
+                                    // $subNode->nodes = array();
+                                    
+                                    foreach ($secondDoc->documentUploads as $upload) {
+                                        $subNode = new \StdClass();
+                                        $subNode->icon = 'child-node ';
+                                        $subNode->icon2 = 'icon-download ';
+                                        $subNode->text = $secondDoc->name;
+                                        // $subNode->text = $upload->file_path;
+                                        $subNode->href = '/download/' . $secondDoc->id . '/' . $upload->file_path;
+                                        array_push($node->nodes, $subNode);
+                                    }
+                                    
+                                }
+                            }
                         }
                     }
+                    // } elseif (!$document->documentUploads->isEmpty()) {
+
+                    //     $node->nodes = array();
+                    //     if ($options['tags']) $node->tags = array(sizeof($document->documentUploads));
+
+                    //     foreach ($document->documentUploads as $upload) {
+                    //         $subNode = new \StdClass();
+                    //         // $subNode->text = basename($upload->file_path);
+                    //         $subNode->text = 'PDF Rundschreiben';;
+                    //         $subNode->icon = 'child-node ';
+                    //         $subNode->icon2 = 'icon-download ';
+                    //         // $subNode->icon3 = 'last-node-icon ';
+                    //         // $subNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+                    //         $subNode->href = '/download/' . $document->id . '/' . $upload->file_path;
+
+
+                    //         array_push($node->nodes, $subNode);
+                    //     }
+                    // }
                 }
                 array_push($treeView, $node);
             }

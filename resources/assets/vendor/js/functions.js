@@ -124,7 +124,8 @@ $(function() {
         var gfBis = $('input[name="geschaftsfuhrer_bis"]').val().trim();
         
         // console.log("\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
-        gfHistory.val(gfHistory.val() + "\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
+        // gfHistory.val(gfHistory.val() + "\n" + gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";");
+        gfHistory.val(gfSelect + " [" + gfVon + " - " + gfBis + "]: " + gfInfo + ";" +  "\n" + gfHistory.val());
         
     });
     
@@ -138,7 +139,8 @@ $(function() {
         var gwInfoAbgemeldet = $('input[name="abgemeldet_am"]').val().trim();
         
         // console.log("\n" + "Angemeldet am: " + gwInfoAngemeldet + "; " +  "Umgemeldet am: " + gwInfoUmgemeldet + "; " + "Abgemeldet am: " + gwInfoAbgemeldet + "; " );
-        gwHistory.val(gwHistory.val() + "\n" + "Angemeldet am: " + gwInfoAngemeldet + "; " +  "Umgemeldet am: " + gwInfoUmgemeldet + "; " + "Abgemeldet am: " + gwInfoAbgemeldet + "; " );
+        // gwHistory.val(gwHistory.val() + "\n" + "Angemeldet am: " + gwInfoAngemeldet + "; " +  "Umgemeldet am: " + gwInfoUmgemeldet + "; " + "Abgemeldet am: " + gwInfoAbgemeldet + "; " );
+        gwHistory.val("Angemeldet am: " + gwInfoAngemeldet + "; " +  "Umgemeldet am: " + gwInfoUmgemeldet + "; " + "Abgemeldet am: " + gwInfoAbgemeldet + "; " + "\n" + gwHistory.val());
         
     });
     
@@ -163,6 +165,24 @@ $(function() {
                 $('.pdf-checkbox').show(400);
             else
                 $('.pdf-checkbox').hide(400);
+        }
+    });
+
+    // Hide or show Document landscape selection based on selected value
+    
+    if($(".document-type-select .select").val() == 5)
+        $('#landscape').closest('.checkbox').hide(400);
+    else
+        $('#landscape').closest('.checkbox').show(400);
+    
+    
+    $('.document-type-select .select').chosen().change(function(event){
+        if(event.target == this){
+            // console.log($(this).val());
+            if($(this).val() == 5)
+                $('#landscape').closest('.checkbox').hide(400);
+            else
+                $('#landscape').closest('.checkbox').show(400);
         }
     });
 

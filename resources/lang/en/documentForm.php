@@ -7,6 +7,7 @@ return [
     'isoNumber' => 'ISO Dokument Nummer',
     'documentName' => 'Titel',
     'documentNameLong' => 'Titel lang',
+    'user' => 'Ersteller ',
     'owner' => 'Autor',
     'coauthor' => 'Co-Ersteller',
     'searchTags' => 'Stichwörter',

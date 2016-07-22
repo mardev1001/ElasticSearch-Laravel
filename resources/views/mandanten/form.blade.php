@@ -229,7 +229,7 @@
                 <!-- input box-->
                 <div class="col-md-12 col-lg-12">
                     <div class="form-group">
-                        {!! ViewHelper::setArea('geschaftsfuhrer_history', $data, old('geschaftsfuhrer_history'),trans('mandantenForm.managerHistory'),trans('mandantenForm.managerHistory'), false, null, null, true ) !!}
+                        {!! ViewHelper::setArea('geschaftsfuhrer_history', $data, old('geschaftsfuhrer_history'),trans('mandantenForm.managerHistory'),trans('mandantenForm.managerHistory'), false, null, null, false ) !!}
                     </div>
                 </div><!--End input box-->
         
@@ -308,7 +308,7 @@
                 <!-- input box-->
                 <div class="col-md-12 col-lg-12">
                     <div class="form-group">
-                        {!! ViewHelper::setArea('gewerbeanmeldung_history', $data->mandantInfo, old('gewerbeanmeldung_history'),trans('mandantenForm.history'),trans('mandantenForm.history'), false, null, null, true ) !!}
+                        {!! ViewHelper::setArea('gewerbeanmeldung_history', $data->mandantInfo, old('gewerbeanmeldung_history'),trans('mandantenForm.history'),trans('mandantenForm.history'), false, null, null, false ) !!}
                     </div>
                 </div><!--End input box-->
         

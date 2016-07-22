@@ -25,6 +25,7 @@ use App\DocumentUpload;
 use App\DocumentApproval;
 use App\DocumentStatus;
 use App\DocumentComment;
+use App\UserReadDocument;
 use App\PublishedDocument;
 use App\FavoriteDocument;
 use App\Role;
@@ -102,8 +103,12 @@ class DocumentController extends Controller
             //$this->qmRundId = 3;
         //$this->isoDocumentId = 4;
         $documentCoauthors = $mandantUsers;
+        
+        //this is until Neptun inserts the documents
+        $documentUsers = $mandantUsers;
+        
         return view('formWrapper', 
-        compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentCoauthors','incrementedQmr','incrementedIso') );
+        compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentUsers','documentCoauthors','incrementedQmr','incrementedIso') );
     }
 
     /**
@@ -360,7 +365,10 @@ class DocumentController extends Controller
             
             return redirect('dokumente/create')->with( array('message'=>'No Document with that id') );
         }
-        
+        //fix pdf checkbox
+        if( !$request->has('show_name') )
+            RequestMerge::merge(['show_name' => 0] );
+            
         $data = Document::findOrNew($request->get('model_id'));
         $data->fill($request->all() );
         $data->save();
@@ -944,8 +952,8 @@ class DocumentController extends Controller
                 }
                  $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
                             'url_unique'=>$uniqeUrl]);
-                $document->date_published = Carbon::now();
-                $document->save();
+                // $document->date_published = Carbon::now();
+                // $document->save();
             }
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
@@ -1008,6 +1016,18 @@ class DocumentController extends Controller
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
             $document = Document::find($id);
+            
+            // add UserReadDocumen
+            $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)->get();
+            if(count($readDocs) == 0){
+                UserReadDocument::create([
+                    'document_group_id'=> $publishedDocs->document_group_id, 
+                    'user_id'=> Auth::user()->id, 
+                    'date_read'=> Carbon::now(), 
+                    'date_read_last'=> Carbon::now()
+                ]);
+            }
+            
         }
         else{
             $document = Document::find($id);
@@ -1121,6 +1141,10 @@ class DocumentController extends Controller
         $mandantUsers =  MandantUser::distinct('user_id')->whereIn('mandant_id',$mandantId)->get();  
         $mandantUsers = $this->clearUsers($mandantUsers);
         $documentCoauthor = $mandantUsers;
+        
+        //this is until Neptun inserts the documents
+        $documentUsers = $mandantUsers;
+        
         $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
         if( $incrementedQmr == null || $incrementedQmr->qmr_number == null )
             $incrementedQmr = 1;
@@ -1138,7 +1162,7 @@ class DocumentController extends Controller
         }
        
         return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments',
-        'documentStatus','mandantUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
+        'documentStatus','mandantUsers','$documentUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
     }
 
     /**
@@ -1160,8 +1184,8 @@ class DocumentController extends Controller
             RequestMerge::merge(['pdf_upload' => 0] );
             
         //if doc type formulare set ladnsace to null
-        if( !$request->has('pdf_upload') )
-            RequestMerge::merge(['pdf_upload' => 0] );
+        if( !$request->has('landscape') )
+            RequestMerge::merge(['landscape' => 0] );
         
             
         if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
@@ -1384,8 +1408,50 @@ class DocumentController extends Controller
         if( count( $document->publishedDocuments->first() ) > 0)
             $published = true;
         
+        $hasPermission = false;
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantId->toArray();
+        foreach($variants as $variant){
+            if($hasPermission == false){
+                if($variant->approval_all_mandants == true){
+                    if($document->approval_all_roles == true){
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                        }
+                        else{
+                            foreach($variant->documentMandantRoles as $role){
+                                if( in_array($role->role_id, $mandantRolesArr) ){
+                                 $variant->hasPermission = true;
+                                 $hasPermission = true;
+                                }
+                            }//end foreach documentMandantRoles
+                        }
+                }
+                else{
+                    foreach( $variant->documentMandantMandants as $mandant){
+                        if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                            if($document->approval_all_roles == true){
+                                $hasPermission = true;
+                                $variant->hasPermission = true;
+                            }
+                            else{
+                                foreach($variant->documentMandantRoles as $role){
+                                    if( in_array($role->role_id, $mandantRolesArr) ){
+                                     $variant->hasPermission = true;
+                                     $hasPermission = true;
+                                    }
+                                }//end foreach documentMandantRoles
+                            }
+                        }
+                    }//end foreach documentMandantMandants
+                }
+            }
+        }
+        
         /* End Button check */
-        return view('dokumente.freigabe',compact('document','variants','documentCommentsUser','documentCommentsFreigabe','published','canPublish','authorised','authorisedPositive'));
+        return view('dokumente.freigabe',compact('document','variants','documentCommentsUser','documentCommentsFreigabe','published',
+        'canPublish','hasPermission','authorised','authorisedPositive'));
     }
     /**
      * Display a listing of the resource.
@@ -1396,7 +1462,7 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         $document->document_status_id = 3;
-        $document->date_published = Carbon::now();
+        // $document->date_published = Carbon::now();
         $document->save();
         $continue = true;
         $uniqeUrl = '';
@@ -1546,11 +1612,12 @@ class DocumentController extends Controller
          $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
          
         /* If document type Iso Category load different PDF template*/    
-         /*if($document->document_type_id == $this->isoDocumentId){
+         if($document->document_type_id == $this->isoDocumentId){
+             
              $html = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
-             return $html;
+            //  return $html;
              $pdf = \PDF::loadHTML($html);
-         }*/
+         }
             
         /* End If document type Iso Category load different PDF template*/    
         
@@ -1757,7 +1824,7 @@ class DocumentController extends Controller
                  $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
                             'url_unique'=>$uniqeUrl]);
             
-                $document->date_published = Carbon::now();
+                // $document->date_published = Carbon::now();
                 $document->save();
             }
             else

@@ -48,7 +48,7 @@
                         <div class="content">
                             <p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>
                             
-                            @if($document->pdf_upload || count($document->editorVariantOrderBy) )
+                            @if(!$document->pdf_upload )
                             
                                 <ul class="nav nav-tabs" id="tabs">
                                    @if( count($document->editorVariantOrderBy) ) 
@@ -73,14 +73,13 @@
                                                 </div>
                                                 @endif
                                                <div>
-                                                   {!! ($variant->inhalt) !!}
+                                                   {!! ViewHelper::stripTags($variant->inhalt, array('div' ) ) !!}
                                                </div>
                                             </div>
                                        @endforeach
                                    @endif
                                 </div>
-                               
-                            @endif
+                            @endif {{-- end if pdf upload --}}
                           
                             <!-- <p>-->
                             <!--   Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi  -->
@@ -94,49 +93,50 @@
                         
                         <div class="clearfix"></div> <br>
                         
-                         <div class="footer">
-                            
-                            @if(count($document->documentUploads))
-                                <div class="attachments">
-                                    <span class="text">PDF Vorschau: </span> 
-                                    <div class="clearfix"></div> <br>
-                                    
-                                    @foreach($document->documentUploads as $k => $attachment)
-                                        <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
+                          <div class="footer">
+
+                                @if(count($document->documentUploads))
+                                    <div class="attachments">
+                                        <span class="text">PDF Vorschau: </span>
+                                        <div class="clearfix"></div> <br>
+
+                                        @foreach($document->documentUploads as $k => $attachment)
+                                                <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
                                         <!--<a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">-->
                                         <!--{{-- basename($attachment->file_path) --}} PDF download</a>-->
                                         <!--<br><span class="indent"></span>-->
-                                        
+
                                         <object data="{{url('open/'.$document->id.'/'.$attachment->file_path)}}" type="application/pdf" width="100%" height="640">
                                             PDF konnte nicht initialisiert werden. Die Datei können sie <a href="{{url('download/'. $document->id .'/'.$attachment->file_path)}}">hier</a> runterladen.
-                                        </object> 
+                                        </object>
                                         <div class="clearfix"></div> <br>
-                                    @endforeach
-                                </div>
-                            @endif
-                              
-                            @foreach( $variants as $v => $variant)
-                               @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
-                           
-                                    @if( count( $variant->EditorVariantDocument ) )
-                                        <div class="attachments document-attachments">
-                                            <span class="text">Dokument Anlage/n: </span> <br>
-                                            @foreach($variant->EditorVariantDocument as $k =>$docAttach)
-                                             @if( $docAttach->document_id != $document->id )
-                                                @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
-                                                    @if( $key == 0 )
-                                                       <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link">
-                                                       {{$docAttach->document->name_long }}</a> <br> <!-- <span class="indent"></span> -->
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                @foreach( $variants as $v => $variant)
+                                    @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
+
+                                        @if( count( $variant->EditorVariantDocument ) )
+                                            <div class="attachments document-attachments">
+                                                <span class="text">Dokument Anlage/n: </span> <br>
+                                                @foreach($variant->EditorVariantDocument as $k =>$docAttach)
+                                                    @if( $docAttach->document_id != $document->id )
+                                                        @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
+                                                            @if( $key == 0 )
+                                                                <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link">
+                                                                    {{$docAttach->document->name_long }}</a> <br> <!-- <span class="indent"></span> -->
+                                                            @endif
+                                                        @endforeach
                                                     @endif
                                                 @endforeach
-                                              @endif    
-                                            @endforeach
-                                        </div>
+                                            </div><!-- end .attachments .document-attacments -->
+                                        @endif
                                     @endif
-                               @endif
-                           @endforeach
+                                @endforeach
+
+                            </div><!-- end .footer -->
                             
-                        </div>
                         @if( count( $documentCommentsFreigabe ) )
                         <div class="col-xs-12 box-wrapper">    
                             <h3> {{ trans('dokumentShow.freigabeCommentTitle') }} </h3>

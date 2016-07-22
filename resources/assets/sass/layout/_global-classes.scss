@@ -1,5 +1,5 @@
 body {
-    background: url('/img/bgrnd-light-1920.png') $white-color no-repeat;
+    background: url('/img/NeptunBG_new.png') $white-color no-repeat;
     background-position: center top;
     padding-top: 148px;
     font: 12px !important;
@@ -487,7 +487,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     float: left;
     width: 21px;
     // height: 25px;
-    height: 60px;
+    height: 48px;
 }
 
 #page-wrapper .treeview span.node-icon {
@@ -534,7 +534,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #page-wrapper .treeview span.item-text.btn-block {
     font-size: 14px !important;
-    line-height: 20px !important;
+    line-height: 5px !important;
 }
 
 #page-wrapper .hide-icons .node-icon {
@@ -545,7 +545,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     position: absolute;
     right: 10px;
     top: 50%;
-    margin-top: -14px;
+    margin-top: -12px;
 }
 
 #page-wrapper .treeview.hide-icons span.indent {
@@ -662,6 +662,14 @@ span.highlight{
     font-size: 1.3em;
 }
 
+.padding-top{
+    padding-top: 12px;
+}
+
+.text-bold{
+    font-weight: bold;
+}
+
 .display-block{
     display: block;
 }
@@ -674,6 +682,16 @@ span.highlight{
     font-size: 14px;
     line-height: 24px;
     font-weight: bold;
+}
+
+.box .favorite {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #efefef;
+}
+
+.box .favorite:last-child {
+    border-bottom: 0;
 }
 
 /*A4 paper simulation*/¸

@@ -297,8 +297,8 @@
                     </div>
                   <div class="document-date-row">
                       <div class="date-div"><p>
-                          @if( $document->created_at != null)
-                              <span class="right-correction">{{$document->created_at}}</span>
+                          @if( $document->date_published != null)
+                              <span class="right-correction">{{$document->date_published}}</span>
                           @endif
                           <br/>
                           {{ $document->user->short_name }}

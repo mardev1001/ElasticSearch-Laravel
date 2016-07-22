@@ -17,11 +17,11 @@
                         {{ $document->name_long }}
                     @else
                         {{ $document->name }}
-                    @endif
+                    @endif  
                         <br>
                         <span class="text">
                             <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}
-                                @if($document->date_published), {{$document->date_published}} @endif)
+                                @if($document->date_published), {{$document->date_published}}@endif)
                             </strong>
                         </span>
                     </h3>
@@ -97,7 +97,9 @@
                                                     @if( $docAttach->document_id != $document->id )
                                                         @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
                                                             @if( $key == 0 )
-                                                                <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link">
+                                                             <!--<a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="btn btn-primary">-->
+                                                             <a href="{{route('dokumente.edit', $docAttach->document->id)}}" > <i class="text-primary fa fa-2x fa-edit"></i></a> 
+                                                             <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link">
                                                                     {{$docAttach->document->name_long }}</a> <br> <!-- <span class="indent"></span> -->
                                                             @endif
                                                         @endforeach

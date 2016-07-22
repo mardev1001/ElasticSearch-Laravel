@@ -1,9 +1,6 @@
 <div class="footer">
-   
-        <p>
-            Neptun GmbH <br/>
-            Revisionsstand 05<br/>
-            Taufkirchen, {{ $dateNow }}
-        </p>
+       <p>&copy; Neptun GmbH</p>
+       <p>Revisionsstand 05</p>
+       <p>Taufkirchen, {{ $dateNow }}</p>
 
 </div>

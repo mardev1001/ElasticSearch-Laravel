@@ -60,17 +60,17 @@ class Document extends Model
             return null;
         else
             return Carbon::parse($value)->format('d.m.Y');
-            
     }
     
+    // public function getCreatedAtAttribute($value)
+    // {
+    //     return $this->attributes['created_at'] = Carbon::parse($value)->format('d.m.Y');
+    // }
     
-    
-    
-    public function getCreatedAtAttribute($value)
-    {
-        
-      return  $this->attributes['created_at'] = Carbon::parse($value)->format('d.m.Y');
-    }
+    // public function setCreatedAtAttribute($value)
+    // {
+    //     $this->attributes['created_at'] = Carbon::now();
+    // }
     
     public function setAdressatIdAttribute($value){
         if($value == null)

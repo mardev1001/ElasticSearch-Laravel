@@ -62,62 +62,21 @@
     
 </fieldset>
 
-
 <fieldset class="form-group">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('rollenForm.overview') }}</h4>
+        <h4 class="title">{{ trans('rollenForm.user-defined') }} {{ trans('rollenForm.roles') }}</h4>
+        <!--<h4 class="title">{{ trans('rollenForm.overview') }}</h4>-->
          <div class="box">
             <div class="row">
                 <div class="col-xs-12">
                     <table class="table">
-                        <tr>
-                            <th class="col-xs-12 col-md-5">
-                               {{ trans('rollenForm.system') }} {{ trans('rollenForm.roles') }}
-                            </th>
-                            <th></th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                            @foreach($roles as $role)
-                                @if($role->system_role)
-                                {!! Form::open(['route' => ['rollen.update', $role->id], 'method'=>'PATCH']) !!}
-                                   <tr>
-                                        <td class="col-xs-12 col-md-5">
-                                            <div class="form-group">
-                                                <label class="control-label">{{ trans('rollenForm.name') }}*</label>
-                                                <input class="form-control" type="text" name="name" value="{{ $role->name }}" placeholder="{{ trans('rollenForm.name') }}*" required/>
-                                            </div>
-                                        </td>
-                                        <td class="col-xs-12 col-md-2 vertical-center">
-                                             <br> <p>{{ trans('rollenForm.editing') }}</p>
-                                        </td> 
-                                         <td class="col-xs-12 col-md-2 vertical-center">
-                                            <div class="checkbox checkbox-inline pull-right">
-                                                <input type="checkbox" name="wiki" id="wiki-{{ $role->id }}" @if($role->wiki_role) checked @endif>
-                                                <label for="wiki-{{ $role->id }}">{{ trans('rollenForm.wiki') }}</label>
-                                            </div>
-                                        </td>
-                                        <td class="col-xs-12 col-md-3 text-right table-options vertical-center">
-                                            <button class="btn btn-primary ">{{ trans('rollenForm.save') }}</button>
-                                        </td>
-                                   
-                                    </tr>
-                                 {!! Form::close() !!}
-                                @endif
-                            @endforeach
-                    </table>
-                </div>
-            </div>
-    
-             
-            <div class="row">
-                <div class="col-xs-12">
-                    <table class="table">
+                        {{--
                         <tr>
                             <th colspan="4">
                                 {{ trans('rollenForm.user-defined') }} {{ trans('rollenForm.roles') }}
                             </th>
                         </tr>
+                        --}}
                              @foreach($roles as $role)
                                 @if(!$role->system_role)
                                
@@ -159,6 +118,60 @@
                     </table>
                 </div>
             </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset class="form-group">
+    <div class="box-wrapper">
+        <h4 class="title">{{ trans('rollenForm.system') }} {{ trans('rollenForm.roles') }}</h4>
+        {{-- <h4 class="title">{{ trans('rollenForm.overview') }}</h4> --}}
+         <div class="box">
+            <div class="row">
+                <div class="col-xs-12">
+                    <table class="table">
+                        {{--
+                        <tr>
+                            <th class="col-xs-12 col-md-5">
+                               {{ trans('rollenForm.system') }} {{ trans('rollenForm.roles') }}
+                            </th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        --}}
+                            @foreach($roles as $role)
+                                @if($role->system_role)
+                                {!! Form::open(['route' => ['rollen.update', $role->id], 'method'=>'PATCH']) !!}
+                                   <tr>
+                                        <td class="col-xs-12 col-md-5">
+                                            <div class="form-group">
+                                                <label class="control-label">{{ trans('rollenForm.name') }}*</label>
+                                                <input class="form-control" type="text" name="name" value="{{ $role->name }}" placeholder="{{ trans('rollenForm.name') }}*" required/>
+                                            </div>
+                                        </td>
+                                        <td class="col-xs-12 col-md-2 vertical-center">
+                                             <br> <p>{{ trans('rollenForm.editing') }}</p>
+                                        </td> 
+                                         <td class="col-xs-12 col-md-2 vertical-center">
+                                            <div class="checkbox checkbox-inline pull-right">
+                                                <input type="checkbox" name="wiki" id="wiki-{{ $role->id }}" @if($role->wiki_role) checked @endif>
+                                                <label for="wiki-{{ $role->id }}">{{ trans('rollenForm.wiki') }}</label>
+                                            </div>
+                                        </td>
+                                        <td class="col-xs-12 col-md-3 text-right table-options vertical-center">
+                                            <button class="btn btn-primary ">{{ trans('rollenForm.save') }}</button>
+                                        </td>
+                                   
+                                    </tr>
+                                 {!! Form::close() !!}
+                                @endif
+                            @endforeach
+                    </table>
+                </div>
+            </div>
+    
+            
         </div>
     </div>
 </fieldset>

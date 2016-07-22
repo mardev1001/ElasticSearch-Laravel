@@ -10,5 +10,5 @@ class UserReadDocument extends Model
     use SoftDeletes;
     
     protected $guarded = []; //blacklist
-    protected $fillable = ['document_group_id','user_id','date_read']; //whitelist
+    protected $fillable = ['document_group_id','user_id','date_read', 'date_read_last']; //whitelist
 }
