@@ -9,7 +9,7 @@ use App\Http\Requests\DocumentRequest;
 
 use App\WikiPage;
 use App\WikiPageStatus;
-use App\WikiPageRole;
+use App\WikiRole;
 use App\WikiPageHistory;
 
 class WikiController extends Controller
@@ -33,7 +33,7 @@ class WikiController extends Controller
     {
         $data = array();
         $wikiStatuses = WikiPageStatus::all();
-        $wikiRoles = WikiPageRole::all();
+        $wikiRoles = WikiRole::all();
         return view('formWrapper', compact('data','wikiStatuses','wikiRoles') );
     }
 

@@ -1018,7 +1018,9 @@ class DocumentController extends Controller
             $document = Document::find($id);
             
             // add UserReadDocumen
-            $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)->get();
+            $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)
+                    ->where('user_id', Auth::user()->id)->get();
+                    // dd($readDocs);
             if(count($readDocs) == 0){
                 UserReadDocument::create([
                     'document_group_id'=> $publishedDocs->document_group_id, 

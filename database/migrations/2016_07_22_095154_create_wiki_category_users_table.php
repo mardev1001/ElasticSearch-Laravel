@@ -14,7 +14,8 @@ class CreateWikiCategoryUsersTable extends Migration
     {
         Schema::create('wiki_category_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->integer('user_id')->unsigned();//FK
+            $table->integer('wiki_category_id')->unsigned();//FK
             $table->timestamps();
         });
     }

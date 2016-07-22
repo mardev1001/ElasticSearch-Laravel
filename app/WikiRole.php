@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class WikiPageRole extends Model
+class WikiRole extends Model
 {
     protected $guarded = []; //blacklist
-    protected $fillable = [ 'wiki_page_id', 'role_id' ]; //whitelist
+    protected $fillable = [ 'role_id', 'wiki_category_id' ]; //whitelist
     
 }

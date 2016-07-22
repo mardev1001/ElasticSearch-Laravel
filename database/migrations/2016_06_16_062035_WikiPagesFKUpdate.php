@@ -27,23 +27,26 @@ class WikiPagesFKUpdate extends Migration
         
         Schema::table('wiki_page_histories', function (Blueprint $table) {
           
-              
            $table->foreign('wiki_page_id')
                 ->references('id')
                 ->on('wiki_pages')
                 ->onDelete('cascade');
+                 $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
                 
         });
         
-        Schema::table('wiki_page_roles', function (Blueprint $table) {
+        // Schema::table('wiki_roles', function (Blueprint $table) {
           
-           $table->foreign('wiki_page_id','fk_wiki_page_roles_wiki_pages_1')
-                ->references('id')
-                ->on('wiki_pages')
-                ->onDelete('cascade');
+        //   $table->foreign('wiki_id','fk_wiki_roles_wiki_pages_1')
+        //         ->references('id')
+        //         ->on('wiki_pages')
+        //         ->onDelete('cascade');
                 
           
-        });
+        // });
     }
 
     /**

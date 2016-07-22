@@ -11,8 +11,7 @@ class WikiPage extends Model
     protected $guarded = []; //blacklist
     protected $fillable = 
     [
-        'user_id', 'status_id', 'menu_name', 'menu_parent', 'menu_parent_id',
-        'subject', 'headline', 'date_expired', 'content', 'allow_all'
+        'user_id', 'status_id', 'wiki_category_id', 'name', 'subject',  'content', 'allow_all'
     ]; //whitelist
      
     public function getDateExpiredAttribute($value)

@@ -18,14 +18,6 @@ class WikiFkUpdate extends Migration
                 ->on('wiki_categories')
                 ->onDelete('cascade');
         });
-        
-        Schema::table('wiki_roles', function (Blueprint $table) {
-            $table->foreign('wiki_category_id')
-                ->references('id')
-                ->on('wiki_categories')
-                ->onDelete('cascade');
-        });
-        
     }
 
     /**
