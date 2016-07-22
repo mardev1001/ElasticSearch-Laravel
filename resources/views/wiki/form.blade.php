@@ -5,7 +5,6 @@
 <div class="col-md-12 box-wrapper"> 
     <div class="box">
         <div class="row">
-            
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
@@ -17,7 +16,7 @@
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                <div class="form-group">
-                     {!! ViewHelper::setSelect($documentStatus,'status_id',$data,old('status_id'),
+                     {!! ViewHelper::setSelect($wikiStatuses,'status_id',$data,old('status_id'),
                             trans('wiki.status'), trans('wiki.status'),true ) !!}
                 </div>   
             </div><!--End input box-->
@@ -25,7 +24,7 @@
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group document-type-select">
-                    {!! ViewHelper::setSelect($wikiCategories,'document_type_id',$data,old('document_type_id'),
+                    {!! ViewHelper::setSelect($wikiCategories,'category_id',$data,old('category_id'),
                             trans('wiki.category'), trans('wiki.category'),true ) !!}
                 </div>   
             </div><!--End input box-->
@@ -48,7 +47,11 @@
             
             <div class="clearfix"></div>
             <div class="col-xs-12">
-                <div class="content-editor" data-id='content'></div>
+                <div class="content-editor" data-id='content'>
+                    @if( $data->content )
+                        {!! $data->content !!}
+                    @endif
+                </div>
             </div>
             <div class="clearfix"></div>
           

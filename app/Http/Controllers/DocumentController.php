@@ -658,8 +658,6 @@ class DocumentController extends Controller
      */
     public function anlegenRechteFreigabe($id,$backButton=null)
     {
-        
-        
         $data = Document::find($id);
         $dt = DocumentType::find($this->formulareId);//vorlage document
         

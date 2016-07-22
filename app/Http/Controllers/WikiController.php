@@ -23,7 +23,7 @@ class WikiController extends Controller
      */
     public function index()
     {
-        //
+        return view('wiki.index');
     }
 
     /**
@@ -33,7 +33,6 @@ class WikiController extends Controller
      */
     public function create()
     {
-        $data = array();
         $wikiStatuses = WikiPageStatus::all();
         $wikiRoles = WikiRole::all();
         $wikiCategories = WikiCategory::all();
@@ -51,8 +50,15 @@ class WikiController extends Controller
         //auto date
         //auto update
         //user_id
-        dd( $request->all() );
+        // dd($request->all() );
         $wiki = WikiPage::create( $request->all() );
+        
+        $wikiStatuses = WikiPageStatus::all();
+        $wikiRoles = WikiRole::all();
+        $wikiCategories = WikiCategory::all();
+        
+        session()->flash('message',trans('wiki.wikiCreateSuccess'));
+        return view('formWrapper', compact('data','wikiCategories','wikiStatuses','wikiRoles') );
         
     }
 
@@ -75,7 +81,11 @@ class WikiController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = WikiPage::find($id);
+        $wikiStatuses = WikiPageStatus::all();
+        $wikiRoles = WikiRole::all();
+        $wikiCategories = WikiCategory::all();
+        return view('formWrapper', compact('data','wikiCategories','wikiStatuses','wikiRoles') );
     }
 
     /**
@@ -87,7 +97,11 @@ class WikiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // dd( $request->all() );
+        $data = WikiPage::find($id);
+        $data->fill( $request->all() )->save();
+        session()->flash('message',trans('wiki.wikiEditSuccess'));
+        return redirect()->back();
     }
 
     /**
