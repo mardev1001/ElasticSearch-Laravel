@@ -5,71 +5,44 @@
 <div class="col-md-12 box-wrapper"> 
     <div class="box">
         <div class="row">
-            <!-- input box-->
-            <div class="col-md-4 col-lg-4"> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('name',$data,old('name'),trans('wiki.headline'),
-                    trans('wiki.headline') ,true  ) !!}
-                </div>   
-            </div><!--End input box-->
-            
             
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
-                    <label class="control-label"> {{ ucfirst(trans('documentForm.status')) }} </label>
-                    <select name="status_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.status')) }}" disabled>
-                        @foreach($documentStatus as $status)
-                            <option value="{{$status->id}}" @if($status->id == 1) selected @endif> 
-                                {{ $status->name }}
-                            </option>
-                        @endforeach
-                    </select>
+                    {!! ViewHelper::setInput('name',$data,old('name'),trans('wiki.name'),
+                    trans('wiki.name') ,true  ) !!}
                 </div>   
             </div><!--End input box-->
             
+            <!-- input box-->
+            <div class="col-md-4 col-lg-4"> 
+               <div class="form-group">
+                     {!! ViewHelper::setSelect($documentStatus,'status_id',$data,old('status_id'),
+                            trans('wiki.status'), trans('wiki.status'),true ) !!}
+                </div>   
+            </div><!--End input box-->
+            
+            <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group document-type-select">
-                    {!! ViewHelper::setSelect($documentTypes,'document_type_id',$data,old('document_type_id'),
-                            trans('documentForm.type'), trans('documentForm.type'),true ) !!}
+                    {!! ViewHelper::setSelect($wikiCategories,'document_type_id',$data,old('document_type_id'),
+                            trans('wiki.category'), trans('wiki.category'),true ) !!}
                 </div>   
             </div><!--End input box-->
+            
             
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
-                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
+                    {!! ViewHelper::setInput('subject',$data,old('subject'),trans('wiki.subject'),
+                    trans('wiki.subject') ,true  ) !!}
                 </div>   
             </div><!--End input box-->
             
-            <!-- input box-->
+         <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('date_expired',$data,old('date_expired'), trans('documentForm.dateExpired') , trans('documentForm.dateExpired') , false ,'text', ['datetimepicker'] ) !!}
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-lg-4 wiki-parent-checkbox"> 
-                <div class="form-group checkbox-form-group">
-                    {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('wiki.menuParent') ) !!}
-                </div>   
-            </div><!--End input box-->
-            
-            <!-- input box-->
-            <div class="col-md-4 col-lg-4"> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.parentId'),
-                    trans('wiki.headline') ,true  ) !!}
-                </div>   
-            </div><!--End input box-->
-            <div class="clearfix"></div>
-            
-            <!-- input box-->
-            <div class="col-md-4 col-lg-4"> 
-                <div class="form-group">
-                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('wiki.subject'),
-                    trans('wiki.subject'), true  ) !!}
+                <div class="form-group no-margin-top">
+                    {!! ViewHelper::setCheckbox('allow_all',$data,old('allow_all'),trans('wiki.allowAll') ) !!}
                 </div>   
             </div><!--End input box-->
             
@@ -78,18 +51,11 @@
                 <div class="content-editor" data-id='content'></div>
             </div>
             <div class="clearfix"></div>
-            <br>
-            <div class="col-xs-12 col-md-6">
-                <label>{{ trans('wiki.roles') }}*</label>
-                <select name="wiki_roles[]" class="form-control select" data-placeholder="{{ trans('wiki.roles') }}">
-                    @foreach($wikiStatuses as $status)
-                    <option value="{{$status->id}}">
-                        {{ $status->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
-    </div>
+          
+            
+            
+        </div><!--end row-->
+    </div><!-- end box-->
 
             
             <div class="clearfix"></div>

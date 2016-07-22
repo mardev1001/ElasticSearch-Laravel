@@ -35,7 +35,10 @@ class HomeController extends Controller
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
         
-        $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
+        // $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
+        $rundschreibenMy = Document::where('owner_user_id', Auth::user()->id)
+        ->where('document_type_id', '!=', 5)
+        ->where('document_status_id', 3)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true));
         
@@ -60,7 +63,7 @@ class HomeController extends Controller
         
         $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('id', 'desc')->take(10)->get();
         $commentsMy = DocumentComment::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->take(10)->get();
-        // dd($commentsNew);
+        // dd(Auth::user()->id);
         
         return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'documentsMy','documentsMyTree', 'wikiEntries', 'commentsNew', 'commentsMy'));
     }
