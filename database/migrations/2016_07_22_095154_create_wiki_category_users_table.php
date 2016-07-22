@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWikiPageRolesTable extends Migration
+class CreateWikiCategoryUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,9 @@ class CreateWikiPageRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('wiki_page_roles', function (Blueprint $table) {
+        Schema::create('wiki_category_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('wiki_page_id')->unsigned();//FK
-            $table->integer('role_id')->unsigned();//FK
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -27,8 +26,6 @@ class CreateWikiPageRolesTable extends Migration
      */
     public function down()
     {
-        DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::drop('wiki_page_roles');
-        DB::statement('SET FOREIGN_KEY_CHECKS = 1');
+        Schema::drop('wiki_category_users');
     }
 }

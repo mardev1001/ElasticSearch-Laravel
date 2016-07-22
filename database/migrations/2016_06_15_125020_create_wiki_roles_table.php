@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateWikiCategoriesTable extends Migration
+class CreateWikiRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,11 @@ class CreateWikiCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('wiki_categories', function (Blueprint $table) {
+        Schema::create('wiki_roles', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name',100);  
-            $table->boolean('top_category')->default(0);  
+            $table->integer('wiki_page_id')->unsigned();//FK
+            $table->integer('role_id')->unsigned();//FK
+            $table->integer('wiki_category_id')->unsigned();//FK
             $table->timestamps();
         });
     }
@@ -28,7 +29,7 @@ class CreateWikiCategoriesTable extends Migration
     public function down()
     {
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
-        Schema::drop('wiki_categories');
+        Schema::drop('wiki_roles');
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }
 }

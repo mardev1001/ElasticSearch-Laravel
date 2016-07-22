@@ -487,7 +487,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     float: left;
     width: 21px;
     // height: 25px;
-    height: 48px;
+    height: 54px;
 }
 
 #page-wrapper .treeview span.node-icon {
@@ -524,6 +524,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 #page-wrapper .treeview span.item-before-text.btn-block {
     font-size: 14px !important;
     font-weight: normal !important;
+    line-height: 12px !important;
 }
 
 .item-text{
@@ -534,7 +535,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #page-wrapper .treeview span.item-text.btn-block {
     font-size: 14px !important;
-    line-height: 5px !important;
+    line-height: 14px !important;
 }
 
 #page-wrapper .hide-icons .node-icon {
