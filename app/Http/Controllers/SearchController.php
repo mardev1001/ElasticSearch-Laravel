@@ -210,8 +210,9 @@ class SearchController extends Controller
      */
     public function searchPhoneList(Request $request)
     {
+        // dd( $request->all() );
         $mandants = $this->search->phonelistSearch($request);
-    
+        // dd($mandants);
         return view('telefonliste.index', compact('mandants') );
       // return redirect()->action('TelephoneListController@index', array('array'=>$results) );
         // return redirect('telefonliste');
