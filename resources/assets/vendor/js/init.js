@@ -93,7 +93,6 @@ $(function() {
                 $(this).attr('id', 'editor-' + counter);
             var classes = '';
            
-                
             if( $(this).data('classes') )
                 classes = $(this).data('classes');
             
