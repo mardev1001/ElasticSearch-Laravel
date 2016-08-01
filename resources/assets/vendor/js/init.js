@@ -92,6 +92,8 @@ $(function() {
             else
                 $(this).attr('id', 'editor-' + counter);
             var classes = '';
+           
+                
             if( $(this).data('classes') )
                 classes = $(this).data('classes');
             
@@ -99,7 +101,10 @@ $(function() {
              
             if( $('.document-orientation').length ){
                  docWidth = 'auto', docHeight = 794;
-            }    
+            }   
+             if( $(this).data('height') ){
+                docWidth = 'auto',docHeight = $(this).data('height');
+            }
                 
             tinymce.init({
                 selector: '.editable',
@@ -117,6 +122,7 @@ $(function() {
         var counter = 0;
         $('.content-editor').each(function() {
             counter++;
+            var docHeight =350;
             if ($(this).data('id'))
                 $(this).attr('id', $(this).data('id'));
             else

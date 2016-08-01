@@ -64350,7 +64350,6 @@ $(function() {
     if( $(".document-type-select .select").val() == 1 || $(".document-type-select .select").val() == 2 || $(".document-type-select .select").val() == 3){
         $('.pdf-checkbox').show(400);
         $('.pdf-checkbox').find('input[name="pdf_upload"]').val(1);
-        
     }
     else{
         $('.pdf-checkbox').hide(400);
@@ -64390,10 +64389,12 @@ $(function() {
     
     if($(".document-type-select .select").val() == 4){
         $('.iso-category-select').show(400);
+        $('.additional-letter').show(400);
         $('#landscape').closest('.checkbox').addClass('no-margin-top');
     }
     else{
         $('.iso-category-select').hide(400);
+        $('.additional-letter').hide(400);
         $('#landscape').closest('.checkbox').removeClass('no-margin-top');
     }
     
@@ -64402,11 +64403,13 @@ $(function() {
             // console.log($(this).val());
             if($(this).val() == 4){
                 $('.iso-category-select').show(400);
+                $('.additional-letter').show(400);
                 $('#landscape').closest('.checkbox').addClass('no-margin-top');
                 
             } 
             else{
                 $('.iso-category-select').hide(400);
+                $('.additional-letter').hide(400);
                 $('#landscape').closest('.checkbox').removeClass('no-margin-top');
             }
         }
@@ -64416,11 +64419,13 @@ $(function() {
     
     if($(".document-type-select .select").val() == 3){
         $('.qmr-select').show(400);
+        $('.additional-letter').show(400);
         $('#landscape').closest('.checkbox').removeClass('no-margin-top');
         $('#pdf_upload').closest('.checkbox').removeClass('no-margin-top');
     }
     else{
         $('.qmr-select').hide(400);
+        $('.additional-letter').hide(400);
         $('#landscape').closest('.checkbox').addClass('no-margin-top');
         $('#pdf_upload').closest('.checkbox').addClass('no-margin-top');
     }
@@ -64430,11 +64435,13 @@ $(function() {
             // console.log($(this).val());
             if($(this).val() == 3) {
                 $('.qmr-select').show(400);
+                $('.additional-letter').show(400);
                 $('#landscape').closest('.checkbox').removeClass('no-margin-top');
                 $('#pdf_upload').closest('.checkbox').removeClass('no-margin-top');
             }
             else{
                 $('.qmr-select').hide(400);
+                $('.additional-letter').hide(400);
                 $('#landscape').closest('.checkbox').addClass('no-margin-top');
                 $('#pdf_upload').closest('.checkbox').addClass('no-margin-top');
             }
@@ -64538,6 +64545,8 @@ $(function() {
             else
                 $(this).attr('id', 'editor-' + counter);
             var classes = '';
+           
+                
             if( $(this).data('classes') )
                 classes = $(this).data('classes');
             
@@ -64545,7 +64554,10 @@ $(function() {
              
             if( $('.document-orientation').length ){
                  docWidth = 'auto', docHeight = 794;
-            }    
+            }   
+             if( $(this).data('height') ){
+                docWidth = 'auto',docHeight = $(this).data('height');
+            }
                 
             tinymce.init({
                 selector: '.editable',
@@ -64563,6 +64575,7 @@ $(function() {
         var counter = 0;
         $('.content-editor').each(function() {
             counter++;
+            var docHeight =350;
             if ($(this).data('id'))
                 $(this).attr('id', $(this).data('id'));
             else

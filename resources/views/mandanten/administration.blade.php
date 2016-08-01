@@ -4,7 +4,7 @@
     {{  ucfirst( trans('controller.administration') ) }} 
 @stop
     @section('bodyClass')
-    mandant-administration
+    mandant-administration 
     @stop
     @section('content')
     <div class="col-xs-12 box-wrapper">
@@ -93,7 +93,7 @@
                                     
                                     <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
                                     </span>
-                                </span>
+                            </span>
                     </div>
                    
                     <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse  

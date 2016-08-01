@@ -104,7 +104,7 @@ h1.page-title {
 .title, .modal-title {
     font-family: $arial-font-family;
     color: $dark-blue;
-    font-size: 20px;
+    font-size: 18px;
     text-transform: normal;
     line-height: 22px;
     font-weight: bold;
@@ -324,6 +324,49 @@ h1.page-title {
     margin-top: -4px;
 }
 /* end mandant-administration */
+
+/* phonelist */
+.phonelist #page-wrapper .panel-title > a{
+    // padding-left: 30px;
+}
+.phonelist #page-wrapper .panel .panel-options .btn{
+    min-width:100px;
+    margin-bottom:initial;
+}
+.phonelist .panel-heading{
+    display:inline-block;
+    width: 100%;
+    padding-left: 30px;
+}
+.phonelist .panel-options{
+    margin-top: 5px;
+}
+.phonelist .panel-options form{
+    // padding-top: 10px;
+}
+
+.phonelist h4.panel-title {
+    line-height: 28px;
+}
+
+.phonelist .panel-title a{
+    padding-left: 0px;
+  
+}
+
+.phonelist .panel-heading a:not(.no-arrow):after, 
+.phonelist .panel-heading a.collapsed:not(.no-arrow):after {
+    margin-left: -31px;
+}
+
+.panel.panel-primary {
+    box-shadow: none;
+}
+
+.phonelist .collapsing , .mandant-administration .collapse.in {
+    margin-top: -4px;
+}
+/* end phonelist */
 
 
 /* tabs - start */

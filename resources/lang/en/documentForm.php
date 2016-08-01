@@ -38,6 +38,7 @@ return [
     'authorized' => 'Dokument wurde erfolgreich veröffentlicht.',
     'newVersionSuccess' => 'Neue Version wurde erstellt',
     'landscape' => 'Dokumente Querformat',
+    'additionalLetter' => 'Zusätzlicher Text',
     
     /* Freigabe process */
     'freigeben' => 'Freigeben',

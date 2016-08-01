@@ -23,7 +23,11 @@ class WikiController extends Controller
      */
     public function index()
     {
-        return view('wiki.index');
+        $topCategories = WikiCategory::where('top_category',1)->get();
+        $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        
+      
+        return view('wiki.index', compact('topCategories','newestWikiEntries')); 
     }
 
     /**
@@ -70,7 +74,9 @@ class WikiController extends Controller
      */
     public function show($id)
     {
-        //
+        $data = WikiPage::find($id);
+        
+        return view('wiki.show', compact('data') );
     }
 
     /**
@@ -113,5 +119,23 @@ class WikiController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function wikiActivation($id)
+    {
+        $wiki = WikiPage::find($id);
+        if($wiki->active == true)
+            $wiki->active = false;
+        else
+            $wiki->active = true;
+            
+        $wiki->save();
+        
+     return redirect('wiki/'.$id);
     }
 }

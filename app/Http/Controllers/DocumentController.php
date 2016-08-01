@@ -688,13 +688,9 @@ class DocumentController extends Controller
         foreach($variants as $variant){
             $variant->hasPreviousData = false;        
                 foreach($mandants as $mandant){
-                   
                     $selected = ViewHelper::setComplexMultipleSelect($variant,'documentMandantMandants', $mandant->id, 'mandant_id',true);
-                    
-                       
                 }
         }
-        
         return view('dokumente.anlegenRechteFreigabe', compact('collections',
         'mandants','mandantUsers','variants','roles','data','backButton') );
     }
@@ -1113,7 +1109,9 @@ class DocumentController extends Controller
                 }
             }
         }
-        return view('dokumente.show', compact('document', 'documentComments', 'variants', 'published', 'datePublished', 'canPublish', 'authorised') );
+        
+        $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
+        return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 'variants', 'published', 'datePublished', 'canPublish', 'authorised') );
     }
 
     /**
@@ -1174,6 +1172,7 @@ class DocumentController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd( $request->all() );
         $adressats = Adressat::where('active',1)->get();
         //fix if document type not iso category -> don't save iso_category_id
         if( $request->get('document_type_id') !=  $this->isoDocumentId )
@@ -1213,6 +1212,7 @@ class DocumentController extends Controller
         
         // dd( $request->all() );        
         $data->fill( $request->all() )->save();
+        // dd($data);
         $data = Document::find($id);
         
         

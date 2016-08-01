@@ -10,4 +10,8 @@ return [
     'allowAll' => 'Alles erlauben',
     'wikiCreateSuccess' => 'Wiki erfolgreich erstellt.',
     'wikiEditSuccess' => 'Wiki wurde aktualisiert.',
+    'wikiCategoryCreateSuccess' => 'Wiki Kategorie erfolgreich erstellt.',
+    'wikiCategoryEditSuccess' => 'Wiki Kategorie wurde aktualisiert.',
+    'commentUser' => 'Kommentare Benutzer',
+    'commentAdmin' => 'Kommentare Freigeber',
 ];

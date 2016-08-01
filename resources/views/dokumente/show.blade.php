@@ -7,14 +7,14 @@
 @section('content')
 
     <div class="box-wrapper ">
-        <div class="row">
+         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <h3 class="title">
                     @if( isset($document->name_long) && $document->name_long != '' )
                         @if( $document->document_type_id == 3 )
-                                QMR @if( $document->qmr_number != null) {{ $document->qmr_number }}: @endif
+                                QMR @if( $document->qmr_number != null) {{ $document->qmr_number }} @if( $document->additional_letter ){{ $document->additional_letter }}  @endif: @endif
                         @endif
-                        {{ $document->name_long }}
+                        {!! $document->name_long !!}
                     @else
                         {{ $document->name }}
                     @endif  
@@ -93,18 +93,20 @@
                                         @if( count( $variant->EditorVariantDocument ) )
                                             <div class="attachments document-attachments">
                                                 <span class="text">Dokument Anlage/n: </span> <br>
+                                                <div class="flexbox-container">
                                                 @foreach($variant->EditorVariantDocument as $k =>$docAttach)
                                                     @if( $docAttach->document_id != $document->id )
                                                         @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
                                                             @if( $key == 0 )
                                                              <!--<a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="btn btn-primary">-->
-                                                             <a href="{{route('dokumente.edit', $docAttach->document->id)}}" > <i class="text-primary fa fa-2x fa-edit"></i></a> 
-                                                             <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link">
+                                                             <a href="{{route('dokumente.edit', $docAttach->document->id)}}" ><span class="icon icon-edit inline-block"></span></a> 
+                                                             <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10">
                                                                     {{$docAttach->document->name_long }}</a> <br> <!-- <span class="indent"></span> -->
                                                             @endif
                                                         @endforeach
                                                     @endif
                                                 @endforeach
+                                                </div>
                                             </div><!-- end .attachments .document-attacments -->
                                         @endif
                                     @endif
@@ -112,15 +114,7 @@
 
                             </div><!-- end .footer -->
 
-                            @if( count( $documentComments ) )
-                                <h3> {{ trans('dokumentShow.userCommentTitle') }} </h3>
-                                @foreach( $documentComments as $comment )
-                                    <b>{{ $comment->user->title }} {{ $comment->user->last_name }} -
-                                        {{ $comment->betreff }} - {{$comment->created_at}}</b><br/>
-                                    <p>{!! $comment->comment !!}</p>
-                                @endforeach
-
-                            @endif
+                          
 
                         </div><!--end col-xs-12-->
                     </div><!--end row-->
@@ -220,6 +214,71 @@
             </div>
         </div>
     </div>
+     
+    <div class="clearfix"></div><br>
+    
+    <!-- user comments -->
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">{{ trans('wiki.commentUser') }}</h1>
+                <div class="box home">
+                    <div class="commentsMy">
+                        @if(count($documentComments))
+                            @foreach($documentComments as $k => $comment)
+                                <div class="comment-{{++$k}}">
+                                    <span class="comment-header">
+                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                            <strong>{{ $comment->document->name }}</strong>
+                                        </a>
+                                        , {{ $comment->created_at }}
+                                    </span> <br>
+                                    <span class="comment-body">
+                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                    </span>
+                                </div>
+                                <div class="clearfix"></div><br>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- end user comments -->
+    
+    
+    <!-- freigaber comments -->
+    @if(count($documentCommentsFreigabe) )
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">{{ trans('wiki.commentAdmin') }}</h1>
+                <div class="box home">
+                    <div class="commentsMy">
+                        
+                            @foreach($documentCommentsFreigabe as $k => $comment)
+                                <div class="comment-{{++$k}}">
+                                    <span class="comment-header">
+                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                            <strong>{{ $comment->document->name }}</strong>
+                                        </a>
+                                        , {{ $comment->created_at }}
+                                    </span> <br>
+                                    <span class="comment-body">
+                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                    </span>
+                                </div>
+                                <div class="clearfix"></div><br>
+                            @endforeach
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- end freigaber comments -->
+    @endif
+    
+       
     @stop
     
     @if( isset( $document->document_type_id ) )

@@ -82,6 +82,11 @@ $third-color: #d3d3d3;*/
   width: 25px;
   height: 25px; }
 
+.icon-edit {
+  background: url("/img/icons/icon_edit.png") no-repeat center center;
+  width: 25px;
+  height: 25px; }
+
 .icon-blocked {
   background: url("/img/icons/icon_blocked.png") no-repeat center center;
   width: 25px;
@@ -461,6 +466,20 @@ h1, h2, h3, h4 {
 
 hr {
   margin: 15px 0 !important; }
+
+.inline-block {
+  display: inline-block; }
+
+.flexbox-container {
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center; }
+
+.pl10 {
+  padding-left: 10px; }
 
 #page-wrapper a.link {
   text-decoration: underline;
@@ -858,7 +877,7 @@ input.form-control:-ms-input-placeholder {
 
 #page-wrapper .treeview span.item-after-text.btn-block,
 #page-wrapper .treeview span.item-before-text.btn-block {
-  font-size: 14px !important;
+  font-size: 12px !important;
   font-weight: normal !important;
   line-height: 12px !important; }
 
@@ -867,8 +886,8 @@ input.form-control:-ms-input-placeholder {
   line-height: 24px !important; }
 
 #page-wrapper .treeview span.item-text.btn-block {
-  font-size: 14px !important;
-  line-height: 14px !important; }
+  font-size: 12px !important;
+  line-height: 12px !important; }
 
 #page-wrapper .hide-icons .node-icon {
   display: none !important; }
@@ -1465,7 +1484,7 @@ h1.page-title {
 .title, .modal-title {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
   color: #0154BB;
-  font-size: 20px;
+  font-size: 18px;
   text-transform: normal;
   line-height: 22px;
   font-weight: bold;
@@ -1633,6 +1652,36 @@ h1.page-title {
   margin-top: -4px; }
 
 /* end mandant-administration */
+/* phonelist */
+.phonelist #page-wrapper .panel .panel-options .btn {
+  min-width: 100px;
+  margin-bottom: initial; }
+
+.phonelist .panel-heading {
+  display: inline-block;
+  width: 100%;
+  padding-left: 30px; }
+
+.phonelist .panel-options {
+  margin-top: 5px; }
+
+.phonelist h4.panel-title {
+  line-height: 28px; }
+
+.phonelist .panel-title a {
+  padding-left: 0px; }
+
+.phonelist .panel-heading a:not(.no-arrow):after,
+.phonelist .panel-heading a.collapsed:not(.no-arrow):after {
+  margin-left: -31px; }
+
+.panel.panel-primary {
+  box-shadow: none; }
+
+.phonelist .collapsing, .mandant-administration .collapse.in {
+  margin-top: -4px; }
+
+/* end phonelist */
 /* tabs - start */
 .content .tab-content {
   padding: 10px;

@@ -279,11 +279,11 @@
             @endif
               @if( $document->document_type_id == 3 )
                   @if( $document->qmr_number != null)
-                      {{ $document->qmr_number }}
+                      {{ $document->qmr_number }}@if( $document->additional_letter ){{ $document->additional_letter }}  @endif
                   @endif
               @elseif( $document->document_type_id == 4 )
                   @if( $document->iso_category_number != null)
-                      {{ $document->iso_category_number }}
+                      {{ $document->iso_category_number }}@if( $document->additional_letter ){{ $document->additional_letter }}  @endif
                   @endif
               @endif
           </h4>

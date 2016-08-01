@@ -25,6 +25,8 @@
           </h3> 
         </div>
     </div>
+
+
     <div class="box">
         <div class="row">
             <div class="col-sm-8 col-md-9 col-lg-10">
@@ -137,28 +139,10 @@
 
                             </div><!-- end .footer -->
                             
-                        @if( count( $documentCommentsFreigabe ) )
-                        <div class="col-xs-12 box-wrapper">    
-                            <h3> {{ trans('dokumentShow.freigabeCommentTitle') }} </h3>
-                             @foreach( $documentCommentsFreigabe as $comment ) 
-                                 <b>{{ $comment->user->title }} {{ $comment->user->last_name }} -
-                                  {{ $comment->betreff }} - {{$comment->created_at}}</b><br/>
-                                 <p>{!! $comment->comment !!}</p>
-                             @endforeach
                         
-                        </div>
-                        @endif
+                            
+                            
                       
-                      @if( count( $documentCommentsUser ) )
-                          <div class="col-xs-12 box-wrapper">
-                            <h3> {{ trans('dokumentShow.userCommentTitle') }} </h3>
-                             @foreach( $documentCommentsUser as $comment ) 
-                                 <b>{{ $comment->user->title }} {{ $comment->user->last_name }} -
-                                  {{ $comment->betreff }} - {{$comment->created_at}}</b><br/>
-                                 <p>{!! $comment->comment !!}</p>
-                             @endforeach
-                        </div>    
-                        @endif
                     </div><!--end col-xs-12-->
                     
                 </div>  
@@ -176,8 +160,75 @@
                 
             </div>
         </div><!--end row-->
+        </div><!-- end .box -->
+        </div>
+        <div class="clearfix"></div> <br/>
+  
+  <div class="box-wrapper ">             
+    <!-- user comments -->
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">{{ trans('wiki.commentUser') }}</h1>
+                <div class="box home">
+                    <div class="commentsMy">
+                        @if(count($documentCommentsUser))
+                            @foreach($documentCommentsUser as $k => $comment)
+                                <div class="comment-{{++$k}}">
+                                    <span class="comment-header">
+                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                            <strong>{{ $comment->document->name }}</strong>
+                                        </a>
+                                        , {{ $comment->created_at }}
+                                    </span> <br>
+                                    <span class="comment-body">
+                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                    </span>
+                                </div>
+                                <div class="clearfix"></div><br>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- end user comments -->
         <div class="clearfix"></div> 
-               
+  </div>
+  <div class="clearfix"></div><br/>
+  
+    <!-- freigaber comments -->
+    @if(count($documentCommentsFreigabe) )
+    <div class="box-wrapper "> 
+        <div class="row">
+        <div class="col-xs-12">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">{{ trans('wiki.commentAdmin') }}</h1>
+                <div class="box home">
+                    <div class="commentsMy">
+                        
+                            @foreach($documentCommentsFreigabe as $k => $comment)
+                                <div class="comment-{{++$k}}">
+                                    <span class="comment-header">
+                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                            <strong>{{ $comment->document->name }}</strong>
+                                        </a>
+                                        , {{ $comment->created_at }}
+                                    </span> <br>
+                                    <span class="comment-body">
+                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                    </span>
+                                </div>
+                                <div class="clearfix"></div><br>
+                            @endforeach
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- end freigaber comments -->
+    </div>
+    @endif
           
 
             
@@ -289,9 +340,7 @@
                     </div>
                 </div>
             </div>  <!-- modal end -->  
-        </div>
-    </div>
-</div>       
+        
 @stop        
         @if( isset( $document->document_type_id ) )
            @section('preScript')

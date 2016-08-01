@@ -69,6 +69,9 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::patch('benutzer/activate', 'UserController@userActivate');
         Route::resource('benutzer', 'UserController');
         
+        Route::resource('wiki-kategorie', 'WikiCategoryController');
+        
+        Route::get('wiki/{id}/activate', 'WikiController@wikiActivation');
         Route::resource('wiki', 'WikiController');
         
         Route::resource('iso-kategorien', 'IsoCategoryController');

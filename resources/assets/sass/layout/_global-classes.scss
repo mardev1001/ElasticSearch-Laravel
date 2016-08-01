@@ -19,7 +19,22 @@ h1, h2, h3, h4 {
 hr {
     margin: 15px 0 !important;
 }
+.inline-block{
+    display: inline-block;
+}
 
+.flexbox-container {
+  	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	-ms-flex-align: center;
+	-webkit-align-items: center;
+	-webkit-box-align: center;
+    align-items: center;
+}
+.pl10{
+    padding-left: 10px;
+}
 #page-wrapper a.link {
     text-decoration: underline;
     color: $text-primary;
@@ -522,7 +537,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 #page-wrapper .treeview span.item-after-text.btn-block,
 #page-wrapper .treeview span.item-before-text.btn-block {
-    font-size: 14px !important;
+    font-size: 12px !important;
     font-weight: normal !important;
     line-height: 12px !important;
 }
@@ -534,8 +549,8 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #page-wrapper .treeview span.item-text.btn-block {
-    font-size: 14px !important;
-    line-height: 14px !important;
+     font-size: 12px !important;
+     line-height: 12px !important;
 }
 
 #page-wrapper .hide-icons .node-icon {

@@ -9,7 +9,7 @@
             <p>
                 {{ $document->isoCategories->name }}
                 @if( $document->iso_category_number != null)
-                    / Kapitel-Nr:   {{ $document->iso_category_number }}
+                    / Kapitel-Nr:   {{ $document->iso_category_number }}@if( $document->additional_letter ){{ $document->additional_letter }}  @endif
                 @endif
             </p>
          <p class="parent-pagenum"> 

@@ -57,10 +57,10 @@ class ViewHelper
      * @param bool $required
      * @return string $value || $old
      */
-    static function setCheckbox( $inputName ,$data , $old, $label='', $required=false, $classes=array(), $dataTags=array() ){
+    static function setCheckbox( $inputName ,$data , $old, $label='', $required=false, $classes=array(), $dataTags=array(), $number=-1 ){
         $string = '';
         $string = view('partials.inputCheckbox',
-                compact('inputName','classes', 'dataTags','data','label','old','required')
+                compact('inputName','classes', 'dataTags','data','label','old','required','number')
             )->render();
      
       echo $string;

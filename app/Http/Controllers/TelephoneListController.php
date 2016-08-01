@@ -18,8 +18,34 @@ class TelephoneListController extends Controller
     public function index()
     {
         $mandants = Mandant::all();
-            foreach($mandants as $mandant)
-                $mandant->usersInMandants = $mandant->users;
+            foreach($mandants as $k =>$mandant){
+                $userArr = array();
+                $testuserArr = array();
+                foreach($mandant->users as $k2 => $mUser){
+                    foreach($mUser->mandantRoles as $mr){
+                         $testuserArr[] = $mr->role->name;
+                        if( $mr->role->id == 21 ) //edv
+                            $userArr[] = $mandant->users[$k2];
+                    }
+                    
+                    
+                    if( count($userArr) < 1){
+                        foreach($mUser->mandantRoles as $mr){
+                            if( $mr->role->id == 23 )// Lohn
+                                $userArr[] = $mandant->users[$k2]->id;
+                        }   
+                    }
+                    if( count($userArr) < 1){
+                        foreach($mUser->mandantRoles as $mr){
+                            if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
+                            ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
+                                $userArr[] = $mandant->users[$k2]->id;
+                        }   
+                    }
+                    
+                }//end second foreach
+                $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
+            }
         
         return view('telefonliste.index', compact('mandants') );
     }

@@ -178,7 +178,6 @@ class DocumentRepository
                     
                 }
 
-                
                 if ($document->document_status_id == 6) {
                     $icon = 'icon-blocked ';
                     $icon2 = 'icon-notreleased ';
@@ -194,9 +193,9 @@ class DocumentRepository
                 else $node->href = route('dokumente.show', $document->id);
 
                 // TreeView Delete Option - Uncomment if needed
-                // if ($options['pageFavorites'] && $options['showDelete']){
-                //     $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
-                // }
+                 if ($options['pageFavorites'] && $options['showDelete']){
+                     $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
+                 }
 
                 if ($document->document_status_id != 6) {
 

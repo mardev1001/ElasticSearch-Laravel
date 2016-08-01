@@ -19,8 +19,17 @@ class WikiPage extends Model
         return Carbon::parse($value)->format('d.m.Y');
     }
     
-    public function setDateExpiredAttribute($value)
+    public function getCreatedAtAttribute($value)
     {
-        $this->attributes['date_expired'] = Carbon::parse($value);
+        return Carbon::parse($value)->format('d.m.Y H:m:s');
+    }
+    
+    public function getUpdatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('d.m.Y H:m:s');
+    }
+    
+    public function user(){
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
 }

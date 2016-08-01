@@ -4,6 +4,10 @@
 
 @section('page-title') {{ trans('telefonListeForm.phone-list') }} @stop
 
+    @section('bodyClass')
+        phonelist
+    @stop
+
 @section('content')
 
 <fieldset class="telefonliste forms">
@@ -65,19 +69,37 @@
         @foreach($mandants as $mandant)
             <div id="panel-{{$mandant->id}}" class="panel panel-primary">
                 
-                <div class="panel-heading" role="tab" id="heading-{{$mandant->id}}">
-                    <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-{{$mandant->id}}" aria-expanded="false"
-                        aria-controls="collapse-{{$mandant->id}}">
-                            {{-- trans('telefonListeForm.mandant') --}} {{ $mandant->name }} ({{count($mandant->usersInMandants) }} Benutzer)
-                        </a>
-                        <span class="pull-right">
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#details-{{$mandant->id}}">{{ trans('telefonListeForm.details') }}</button>
-                        </span>
-                    </h4>
-                </div>
+                <div class="panel-heading">
+                        <h4 class="panel-title col-xs-8">
+                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
+                                   href="#collapseMandant{{$mandant->id}}">
+                                  ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
+                                </a>
+                            
+                        </h4>
+                        
+                            <span class="panel-options col-xs-4">
+                                     <span class="pull-right">
+                                    {!! Form::open(['action' => 'MandantController@mandantActivate', 
+                                    'method'=>'PATCH']) !!}
+                                        <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
+                                        @if($mandant->active)
+                                            <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
+                                        @else
+                                            <button class="btn btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button>
+                                        @endif
+                                    {!! Form::close() !!}
+                                    
+                                    {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
+                                        <button type="submit" class="btn btn-primary delete-prompt">Entfernen</button>
+                                    {!! Form::close() !!}
+                                    
+                                    <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
+                                    </span>
+                                </span>
+                    </div>
                 
-                <div id="collapse-{{$mandant->id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$mandant->id}}">
+                <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$mandant->id}}">
                     <table class="table data-table">
                         <thead>
                         <tr>

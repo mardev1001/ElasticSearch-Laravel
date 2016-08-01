@@ -19,7 +19,7 @@ class Document extends Model
         'version_parent','document_group_id','iso_category_id',
         'show_name','adressat_id','betreff','document_replaced_id',
         'date_approved','email_approval','approval_all_roles',
-        'approval_all_mandants','pdf_upload','is_attachment','active','iso_category_number','qmr_number','landscape'
+        'approval_all_mandants','pdf_upload','is_attachment','active','iso_category_number','qmr_number','landscape','additional_letter',
     ]; //whitelist
     
      
