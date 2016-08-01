@@ -134,7 +134,7 @@ class DocumentRepository
                 
                 if($document->document_type_id == 3 ){
                     if($document->qmr_number != null)
-                        $node->text = $document->qmr_number .": ". $node->text;
+                        $node->text = $document->qmr_number.$document->additional_letter .": ". $node->text;
                     $node->text = "QMR ". $node->text;
                 }
                 

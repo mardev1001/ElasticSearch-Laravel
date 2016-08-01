@@ -70,7 +70,7 @@
             <div id="panel-{{$mandant->id}}" class="panel panel-primary">
                 
                 <div class="panel-heading">
-                        <h4 class="panel-title col-xs-8">
+                        <h4 class="panel-title col-xs-12">
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
                                    href="#collapseMandant{{$mandant->id}}">
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
@@ -78,7 +78,7 @@
                             
                         </h4>
                         
-                            <span class="panel-options col-xs-4">
+                            <!-- <span class="panel-options col-xs-4">
                                      <span class="pull-right">
                                     {!! Form::open(['action' => 'MandantController@mandantActivate', 
                                     'method'=>'PATCH']) !!}
@@ -96,7 +96,7 @@
                                     
                                     <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
                                     </span>
-                                </span>
+                                </span>-->
                     </div>
                 
                 <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$mandant->id}}">
@@ -107,6 +107,7 @@
                             <th>{{ trans('telefonListeForm.title') }} </th>
                             <th>{{ trans('telefonListeForm.firstname') }} </th>
                             <th>{{ trans('telefonListeForm.lastname') }} </th>
+                            <th>{{ trans('telefonListeForm.role') }} </th>
                             <th>{{ trans('telefonListeForm.phone') }} </th>
                             <th>{{ trans('telefonListeForm.fax') }} </th>
                         </tr>
@@ -118,6 +119,15 @@
                             <td>{{ $user->title }}</td>
                             <td>{{ $user->first_name }}</td>
                             <td>{{ $user->last_name }}</td>
+                            <td>
+                                @foreach( $user->mandantRoles as $mandantUserRole)
+                                    @if( $mandantUserRole->role->phone_role == 1 || $mandantUserRole->role->id == 21 || $mandantUserRole->role->id == 23
+                                    || $mandantUserRole->role->name == 'Geschäftsführer' || $mandantUserRole->role->name == 'Qualitätsmanager' 
+                                    || $mandantUserRole->role->name == 'Rechntabteilung' )
+                                        {{ ( $mandantUserRole->role->name ) }}
+                                    @endif      
+                                @endforeach
+                            </td>
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->phone_short }}</td>
                         </tr>

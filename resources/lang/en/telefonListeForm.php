@@ -17,6 +17,7 @@ return [
     'title' => 'Anrede',
     'firstname' => 'Vorname',
     'lastname' => 'Nachname',
+    'role' => 'Rollen',
     'phone' => 'Telefon',
     'fax' => 'Fax',
     'overview' => 'Übersicht',
