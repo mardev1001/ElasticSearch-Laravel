@@ -195,7 +195,6 @@ class DocumentRepository
                  if ($options['pageFavorites'] && $options['showDelete']){
                      $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
                  }
-
                 if ($document->document_status_id != 6) {
 
                     //
@@ -469,7 +468,7 @@ class DocumentRepository
             // if($tester == true)
             //  var_dump($array);
         } else {
-            \DB::enableQueryLog();
+            // \DB::enableQueryLog();
             $modelDelete = $modelName::where('id', '>', 0);
             if (count($notIn) > 0) {
 

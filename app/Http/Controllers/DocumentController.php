@@ -172,6 +172,7 @@ class DocumentController extends Controller
      */
     public function pdfUpload(Request $request)
     {
+        //  dd( $request->all() );
         $dirty = false;
         $model = Document::find($request->get('model_id'));
         if($model == null){
@@ -243,6 +244,29 @@ class DocumentController extends Controller
             return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
         }
         $backButton = '/dokumente/pdf-upload/'.$data->id.'/edit';
+       
+        /* Preview link preparation */
+        $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload );
+        $url = $setDocument->url;
+        $form = $setDocument->form;
+        $backButton = '/dokumente/'.$data->id.'/edit';
+        $adressats = Adressat::where('active',1)->get();
+        $currentVariant = 0;
+        $previewUrl = '';
+        if( $request->has('current_variant') ){
+            $currentVariant = $request->get('current_variant');
+        }
+            
+        if($request->has('preview') && $currentVariant != 0){
+            $previewUrl = url('dokumente/ansicht/'.$id.'/'.$currentVariant);
+            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats','previewUrl') );
+        }
+        
+        if($request->has('pdf_preview') && $currentVariant != 0){
+            $previewUrl = url('dokumente/ansicht-pdf/'.$id.'/'.$currentVariant);
+            return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats','previewUrl') );
+        }
+        /* End Preview link preparation */
        
         if($request->has('attachment'))
             return redirect('dokumente/anlagen/'.$id );
@@ -359,7 +383,7 @@ class DocumentController extends Controller
     public function documentEditor(Request $request)
     {
         
-        //   dd( $request->all() );
+         
         $model = Document::find($request->get('model_id'));
         if($model == null){
             
@@ -521,8 +545,23 @@ class DocumentController extends Controller
         $variants = EditorVariant::where('document_id',$data->id)->get();
         $documentStatus = DocumentStatus::all();
         
+        $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
+        if( $incrementedQmr == null || $incrementedQmr->qmr_number == null )
+            $incrementedQmr = 1;
+        else{
+            $incrementedQmr = $incrementedQmr->qmr_number;
+            $incrementedQmr = $incrementedQmr+1;
+        }
+        
+        $incrementedIso = Document::where('document_type_id',$this->isoDocumentId )->orderBy('iso_category_number','desc')->first();
+        if( count($incrementedIso) < 1   || $data == null)
+            $incrementedIso = 1;
+        else{
+            $incrementedIso = $incrementedIso->iso_category_number;
+            $incrementedIso = $incrementedIso+1;
+        }
         return view('dokumente.attachments', compact('collections','data','data2','attachmentArray','documents', 'documentsFormulare', 'documentStatus', 'url', 'documentTypes',
-        'isoDocuments','mandantUsers','backButton','nextButton','preparedVariant') );
+        'isoDocuments','mandantUsers','backButton','nextButton','preparedVariant','incrementedQmr','incrementedIso') );
     }
     
     /**

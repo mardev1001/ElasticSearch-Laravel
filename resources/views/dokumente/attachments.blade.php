@@ -127,6 +127,40 @@
                                             </select>
                                                 </div>   
                                             </div><!--End input box-->
+                                            
+                                            <!-- input box-->
+                                            <div class="col-md-2 col-lg-2 qmr-select"> 
+                                                <div class="form-group">
+                                                    {!! ViewHelper::setInput('qmr_number',$data,$incrementedQmr,trans('documentForm.qmr') , 
+                                                           trans('documentForm.qmr') , true, 'number', array(), array() )!!}
+                                                </div>   
+                                            </div><!--End input box-->
+                                            
+                                            <!-- input box-->
+                                            <div class="col-md-2 col-lg-2 iso-category-select"> 
+                                                <div class="form-group">
+                                                    {!! ViewHelper::setInput('iso_category_number',$data,$incrementedIso,trans('documentForm.isoNumber') , 
+                                                           trans('documentForm.isoNumber') , true, 'number', array(), array() ) !!}
+                                                </div>   
+                                            </div><!--End input box-->
+                                            
+                                            <!-- input box-->
+                                            <div class="col-md-2 col-lg-2 additional-letter"> 
+                                                <div class="form-group">
+                                                    {!! ViewHelper::setInput('additional_letter',$data,old('additional_letter'),trans('documentForm.additionalLetter') , 
+                                                           trans('documentForm.additionalLetter')  ) !!}
+                                                </div>   
+                                            </div><!--End input box-->
+                                            
+                                             
+                                            <!-- input box-->
+                                            <div class="col-md-4 col-lg-4 iso-category-select"> 
+                                                <div class="form-group">
+                                                    {!! ViewHelper::setSelect($isoDocuments,'iso_category_id',$data,old('iso_category_id'),
+                                                            trans('documentForm.isoCategory'), trans('documentForm.isoCategory') ) !!}
+                                                </div>   
+                                            </div><!--End input box-->
+                                            
                                             <!-- input box-->
                                             <div class="col-lg-4"> 
                                                 <div class="form-group">
@@ -137,10 +171,19 @@
                                             
                                             
                                             <!-- input box-->
-                                            <div class="col-lg-4 "> 
+                                            <div class="col-md-12 col-lg-12 "> 
                                                 <div class="form-group">
-                                                    {!! ViewHelper::setInput('name_long',$data,old('name_long'),trans('documentForm.documentNameLong') , 
-                                                           trans('documentForm.documentNameLong') , true  ) !!}
+                                                      <label class="control-label">
+                                                        {{ trans('documentForm.documentNameLong') }}
+                                                    </label> 
+                                                    <div class="col-xs-12 editable" data-id='name_long' data-height="100">
+                                                        @if( isset($data->name_long) )
+                                                            {!! $data->name_long !!}
+                                                        @elseif( old('name_long') )
+                                                            {!! old('name_long') !!}
+                                                        @endif
+                                                    </div>
+                                                  
                                                 </div>   
                                             </div><!--End input box-->
                                             
@@ -152,13 +195,6 @@
                                                 </div>   
                                             </div><!--End input box-->
                                             
-                                            <!-- input box-->
-                                            <div class="col-lg-4 iso-category-select"> 
-                                                <div class="form-group">
-                                                    {!! ViewHelper::setSelect($isoDocuments,'iso_category_id',$data,old('iso_category_id'),
-                                                            trans('documentForm.isoCategory'), trans('documentForm.isoCategory') ) !!}
-                                                </div>   
-                                            </div><!--End input box-->
                                             
                                             <!-- input box-->
                                             <div class="col-lg-4"> 
