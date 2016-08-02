@@ -1,4 +1,4 @@
-@section('page-title') {{ trans('controller.wiki') }} @stop
+@section('page-title') {{ trans('controller.wikiCategory') }} @stop
 
     <!-- input box-->
     <div class="col-md-4 col-lg-4"> 

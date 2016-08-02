@@ -12,7 +12,7 @@
                 {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
                     <div class="input-group">
                         <div class="col-md-12 col-lg-12">
-                            {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
+                            {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
                             
                         </div>
                         <div class="col-md-12 col-lg-12">
@@ -28,7 +28,7 @@
         </div><!-- end box -->
     </div><!-- end box wrapper-->
     
-    @if( $topCategories )
+    @if( count( $topCategories ) )
     <!-- top categorie box-->
     <div class="col-xs-12 box-wrapper">
         <div class="box">

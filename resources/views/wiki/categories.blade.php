@@ -8,7 +8,7 @@
     @stop
     @section('content')
     <div class="col-xs-12 box-wrapper">
-        <h2 class="title">{{ trans('wiki.createNewWikiCat') }} </h2>
+        <h2 class="title">{{ trans('wiki.newCategory') }} </h2>
         <div class="box">
             {!! Form::open([
                    'url' => 'wiki-kategorie',

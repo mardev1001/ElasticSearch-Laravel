@@ -12,7 +12,7 @@
                 <h3 class="title">
                     @if( isset($document->name_long) && $document->name_long != '' )
                         @if( $document->document_type_id == 3 )
-                                QMR @if( $document->qmr_number != null) {{ $document->qmr_number }} @if( $document->additional_letter ){{ $document->additional_letter }}  @endif: @endif
+                                QMR @if( $document->qmr_number != null) {{ $document->qmr_number }}@if( $document->additional_letter ){{ $document->additional_letter }}@endif: @endif
                         @endif
                         {!! $document->name_long !!}
                     @else

@@ -14,4 +14,7 @@ return [
     'wikiCategoryEditSuccess' => 'Wiki Kategorie wurde aktualisiert.',
     'commentUser' => 'Kommentare Benutzer',
     'commentAdmin' => 'Kommentare Freigeber',
+    /* wiki category section */
+    'newCategory' => 'Neues Wiki Kategorie',
+    /* End wiki category section */
 ];

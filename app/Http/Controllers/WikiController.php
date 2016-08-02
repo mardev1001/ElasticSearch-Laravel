@@ -25,8 +25,6 @@ class WikiController extends Controller
     {
         $topCategories = WikiCategory::where('top_category',1)->get();
         $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
-        
-      
         return view('wiki.index', compact('topCategories','newestWikiEntries')); 
     }
 

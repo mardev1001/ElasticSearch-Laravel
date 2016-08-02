@@ -24,5 +24,6 @@ return [
     'pdfUpload' => 'Dokument erstellen',
     'editor' => 'Dokument erstellen',
     'wiki' => 'Wiki',
+    'wikiCategory' => 'Wiki Kategorien verwalten',
 
 ];
