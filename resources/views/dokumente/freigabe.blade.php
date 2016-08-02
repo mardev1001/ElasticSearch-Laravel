@@ -9,20 +9,22 @@
 <div class="box-wrapper ">
     <div class="row">
         <div class="col-md-12 col-lg-12">
-            @if( isset($document->name_long) && $document->name_long != '' )
-               <h3 class="title"> 
-               @if( $document->document_type_id == 3 )
-                  QMR @if( $document->qmr_number != null) {{ $document->qmr_number }}: @endif
-               @endif
-               {{ $document->name_long }} 
-            @else
-               <h3 class="title">{{ $document->name }} 
-            @endif
-               <br><span class="text"><strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ 
-                trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}} @endif)
-                </strong>
-              </span>
-          </h3> 
+           <h3 class="title">
+                    @if( isset($document->name_long) && $document->name_long != '' )
+                        @if( $document->document_type_id == 3 )
+                                QMR @if( $document->qmr_number != null) {{ $document->qmr_number }}@if( $document->additional_letter ){{ $document->additional_letter }}@endif: @endif
+                        @endif
+                        {!! $document->name_long !!}
+                    @else
+                        {!! $document->name !!}
+                    @endif  
+                        <br>
+                        <span class="text">
+                            <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}
+                                @if($document->date_published), {{$document->date_published}}@endif)
+                            </strong>
+                        </span>
+                    </h3>
         </div>
     </div>
 
