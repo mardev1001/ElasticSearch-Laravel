@@ -366,4 +366,36 @@ $( function() {
        
     }
     /* End Change the hidden input value on sites with .preview */
+      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $(document).find('[name="csrf-token"]').val() } });
+       var submitRequest = function(e) {
+         var form = $(this);
+           var method = form.find('input[name="_method"]').val() || 'POST';
+            $.ajax({
+                type: method,
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function(data) {
+                    if(data.success==true && data.title ){
+                 
+                    }
+                    else if(data.success==false && data.message ){
+                        swal(data.title, data.message, "error");
+                    }
+                },
+                error:function(data){
+                    if(data.success==false && data.message ){
+                    }
+    
+                },
+                
+            });
+    
+            e.preventDefault();
+        };
+
+
+        $('form[data-remote]').on('submit', submitRequest);
+    /* Ajax Mandant trigger + btn changes */
+    
+    /* End Ajax Mandant trigger + btn changes */
 });

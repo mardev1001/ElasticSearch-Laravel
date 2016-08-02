@@ -16,7 +16,7 @@
                         @endif
                         {!! $document->name_long !!}
                     @else
-                        {{ $document->name }}
+                        {!! $document->name !!}
                     @endif  
                         <br>
                         <span class="text">
@@ -101,7 +101,7 @@
                                                              <!--<a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="btn btn-primary">-->
                                                              <a href="{{route('dokumente.edit', $docAttach->document->id)}}" ><span class="icon icon-edit inline-block"></span></a> 
                                                              <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10">
-                                                                    {{$docAttach->document->name_long }}</a> <br> <!-- <span class="indent"></span> -->
+                                                                    {!!$docAttach->document->name_long !!}</a> <br> <!-- <span class="indent"></span> -->
                                                             @endif
                                                         @endforeach
                                                     @endif
