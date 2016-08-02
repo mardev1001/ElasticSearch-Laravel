@@ -481,8 +481,15 @@ hr {
 .pl10 {
   padding-left: 10px; }
 
+.pr10 {
+  padding-right: 10px; }
+
 .pl20 {
   padding-left: 20px; }
+
+.no-underline {
+  /*#page-wrapper a.link.no-underline*/
+  text-decoration: none; }
 
 #page-wrapper a.link {
   text-decoration: underline;
