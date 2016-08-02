@@ -25,16 +25,19 @@
                         --}}
                         
                         <div class="box box-linklist">
-                            @foreach($favorites['favoritesPaginated'] as $favorite)
-                                <div class="favorite favorite-{{$favorite->id}}">
+                              <div class="box box-treeview">
+                            <div class="tree-view" data-selector="{{ 'favorites-' . $favorites['document_type_id'] }}">
+                                <div class="{{ 'favorites-' . $favorites['document_type_id'] }} hide">{{ $favorites['favoritesTreeview'] }}</div>
+                            </div>
+                        </div> 
+                                {{--<div class="favorite favorite-{{$favorite->id}}">
                                     <a class="pull-left padding-top" href="{{url('dokumente/' . $favorite->id. '/favorit')}}" ><span class="icon-trash display-block"></span></a>
                                     <a class="display-block" href="{{route('dokumente.show', $favorite->published->url_unique)}}">
                                         <span class="item-text">&nbsp; {{ $favorite->date_published }}</span> <br> 
                                         <span class="item-text text-bold">&nbsp; {{ $favorite->name }}</span>
                                     </a>
                                     <div class="clearfix"></div>
-                                </div>
-                            @endforeach
+                                </div> --}}
                         </div>
                         
                         <div class="text-center box box-pagination">

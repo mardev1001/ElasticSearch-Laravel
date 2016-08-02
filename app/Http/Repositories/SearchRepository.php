@@ -49,7 +49,7 @@ class SearchRepository
             $query = User::where('users.id','>',0);
                 
             if( $request->has('parameter') )
-                $query->where('first_name',$request->get('parameter') )->orWhere('first_name',$request->get('parameter') );
+                $query->where('first_name',$request->get('parameter') )->orWhere('last_name',$request->get('parameter') );
             
             if($request->has('deletedUsers') )
                 $query ->withTrashed();        
@@ -57,6 +57,7 @@ class SearchRepository
             // $additionalQuery = $query;   
             $users = $query->get();   
             if( count($users) ){
+                // DB::enableQueryLog();
                 $usersIds = $query->pluck('id');   
                 $userMandants = MandantUser::whereIn('user_id',$usersIds)->pluck('mandant_id');
                 $mandants = Mandant::whereIn('id',$userMandants)->get();
@@ -67,12 +68,16 @@ class SearchRepository
                         $userQuery->where('first_name',$request->get('parameter') )->orWhere('last_name',$request->get('parameter') );
                      if($request->has('deletedUsers') )
                         $userQuery ->withTrashed();    
-                        
+                
                     $mandant->usersInMandants = $userQuery->get();
+                      
+                    if( count($mandant->usersInMandants) > 0 )
+                        $mandant->openTreeView = true;
                 }
                 
             }
        }
+       
         return $mandants;
      }
      

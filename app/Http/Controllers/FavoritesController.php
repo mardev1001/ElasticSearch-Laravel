@@ -51,7 +51,7 @@ class FavoritesController extends Controller
             }
     
             $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('name', 'asc')->paginate(10, ['*'], 'seite');
-            $favoritesTreeview = $this->favorites->generateTreeview($favoritesPaginated, array('pageFavorites' => true, 'showDelete' => true, ));
+            $favoritesTreeview = $this->favorites->generateTreeview($favoritesPaginated, array('pageFavorites' => true,'showDelete' => true,'showAttachments' => true ));
             
             $favsArray['favoritesPaginated'] = $favoritesPaginated;
             $favsArray['favoritesTreeview'] = $favoritesTreeview;

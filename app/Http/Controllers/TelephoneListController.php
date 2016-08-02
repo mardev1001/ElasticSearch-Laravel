@@ -46,7 +46,7 @@ class TelephoneListController extends Controller
                 }//end second foreach
                 $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
             }
-        
+        $notSearch = true; 
         return view('telefonliste.index', compact('mandants') );
     }
 

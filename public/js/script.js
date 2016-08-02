@@ -64625,16 +64625,19 @@ $(function() {
     if( $('.scrollTo').length ){
         var element = $('.scrollTo').val(), navHeight = $('.navbar-fixed-top').height()+10;
         var contactTopPosition = $(element).position().top;
-       
-      /*   $('html,body').animate({
-            scrollTop: $('#page-wrapper').find(element).offset().top
-        }, 2000); */
-      
-        // $('#page-wrapper').css('margin-top',navHeight);
+    
     }
     /*End Scroll to element id*/
 
-
+    /* Automatic trigger to open the panel heading */
+    if( $('[data-open]').length){
+        $('[data-open]').each(function(){
+           $(this).click();
+        });
+    } 
+    /* End Automatic trigger to open the panel heading */
+      
+      
 }); /*End function() wrapper*/
 /**
  * Created by Marijan on 25.04.2016..

@@ -33,7 +33,7 @@
             <div class="col-md-1 col-lg-1 additional-letter"> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('additional_letter',$data,old('additional_letter'),trans('documentForm.additionalLetter') , 
-                           trans('documentForm.additionalLetter') , true ) !!}
+                           trans('documentForm.additionalLetter')  ) !!}
                 </div>   
             </div><!--End input box-->
             

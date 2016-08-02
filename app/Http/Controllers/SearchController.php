@@ -212,8 +212,44 @@ class SearchController extends Controller
     {
         // dd( $request->all() );
         $mandants = $this->search->phonelistSearch($request);
-        // dd($mandants);
-        return view('telefonliste.index', compact('mandants') );
+        foreach($mandants as $k =>$mandant){
+                $userArr = array();
+                $testuserArr = array();
+                $mandantUsers = $mandant->users;
+                if($request->has('deletedUsers') )
+                    $mandantUsers = $mandant->usersWithTrashed;
+                foreach($mandantUsers as $k2 => $mUser){
+                    foreach($mUser->mandantRoles as $mr){
+                         $testuserArr[] = $mr->role->name;
+                        if( $mr->role->id == 21 ) //edv
+                            $userArr[] = $mandantUsers[$k2];
+                    }
+                    
+                    
+                    if( count($userArr) < 1){
+                        foreach($mUser->mandantRoles as $mr){
+                            if( $mr->role->id == 23 )// Lohn
+                                $userArr[] = $mandantUsers[$k2]->id;
+                        }   
+                    }
+                    if( count($userArr) < 1){
+                        foreach($mUser->mandantRoles as $mr){
+                            if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
+                            ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
+                                $userArr[] = $mandantUsers[$k2]->id;
+                        }   
+                    }
+                    
+                }//end second foreach
+                $mandant->usersInMandants = $mandantUsers->whereIn('id',$userArr);
+                   if($request->has('deletedUsers') )
+                       $mandant->usersInMandants = $mandant->usersWithTrashed->whereIn('id',$userArr);   
+              // if($request->has('deletedUsers') )
+               //  dd($mandant->usersInMandants);
+                //  dd($userArr);
+            }
+        $search = true;
+        return view('telefonliste.index', compact('mandants','search') );
       // return redirect()->action('TelephoneListController@index', array('array'=>$results) );
         // return redirect('telefonliste');
     }

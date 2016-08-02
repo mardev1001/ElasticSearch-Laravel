@@ -137,8 +137,7 @@ class DocumentRepository
                         $node->text = $document->qmr_number.$document->additional_letter .": ". $node->text;
                     $node->text = "QMR ". $node->text;
                 }
-                
-                if ($options['pageHome'] == true) {
+                if ($options['pageHome'] == true || $options['pageFavorites'] == true) {
                     
                     if($document->published){
                         $node->beforeText = Carbon::parse($document->date_published)->format('d.m.Y');
@@ -151,7 +150,6 @@ class DocumentRepository
                             // dd($readDocument);
                         else
                             $icon = 'icon-notread ';
-                            
                     }
                     $node->afterText = $document->documentType->name;
                     
@@ -165,7 +163,8 @@ class DocumentRepository
                 if ($document->document_status_id == 3) {
                     if (Carbon::parse(Auth::user()->last_login)->lt(Carbon::parse($document->created_at))){
                         // $icon = 'icon-favorites ';
-                        $icon2 = 'icon-favorites ';
+                        if( $options['pageFavorites'] == false )
+                            $icon2 = 'icon-favorites ';
                         // $icon2 = 'icon-open ';
                     }
 
@@ -200,21 +199,25 @@ class DocumentRepository
                 if ($document->document_status_id != 6) {
 
                     //
-                    if ($options['pageHistory'] == true) {
-
+                    if ($options['pageHistory'] == true  ) {
+                        
                         $node->nodes = array();
 
                         foreach ($document->editorVariantOrderBy as $variant) {
                             $subNode = new \StdClass();
                             // $subNode->href = url('dokumente/editor/' . $document->id . '/edit#variation' . $variant->variant_number);
+                           
                             $subNode->text = "Variante " . $variant->variant_number;
                             $subNode->icon = 'child-node ';
                             $subNode->icon2 = 'fa fa-2x fa-file-o ';
                             // $subNode->icon3 = $icon3 . 'last-node-icon ';
-
+                          
                             if(count($variant->documentUpload)){
+                                  
                                 $subNode->nodes = array();
                                 foreach ($variant->documentUpload as $upload) {
+                                    // if($variant->name = 'pdfrund')
+                                    //     dd($upload);
                                     $subSubNode = new \StdClass();
                                     // $subSubNode->text = basename($upload->file_path);
                                     $subSubNode->text = 'PDF Rundschreiben';
@@ -295,7 +298,9 @@ class DocumentRepository
                 }
                 array_push($treeView, $node);
             }
-        } elseif ($options['document'] == false && count($documents) > 0) {
+        } 
+        elseif ($options['document'] == false && count($documents) > 0) {
+          
             foreach ($documents->editorVariantDocument as $evd) {
                 if (Document::find($evd->document_id) != null)
                     if ($evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']) {

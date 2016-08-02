@@ -72,7 +72,10 @@
                 <div class="panel-heading">
                         <h4 class="panel-title col-xs-12">
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
-                                   href="#collapseMandant{{$mandant->id}}">
+                                   href="#collapseMandant{{$mandant->id}}" 
+                                   @if(isset($mandant->openTreeView) ) data-open="true" @endif 
+                                   {{-- if searched for user open the mandant --}}
+                                   > 
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
                                 </a>
                             
