@@ -19,7 +19,7 @@
                     <div class="col-md-6 col-lg-6"> 
                         <div class="form-group no-margin-bottom">
                             {!! ViewHelper::setInput('name','',old('name'),'', 
-                                   trans('mandantenForm.newCategory') , true  ) !!}
+                                   trans('wiki.newCategory') , true  ) !!}
                         </div>   
                     </div><!--End input box-->
                     <!-- input box-->

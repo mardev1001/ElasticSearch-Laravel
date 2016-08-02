@@ -64389,12 +64389,11 @@ $(function() {
     
     if($(".document-type-select .select").val() == 4){
         $('.iso-category-select').show(400);
-        $('.additional-letter').show(400);
+        console.log('trigger');
         $('#landscape').closest('.checkbox').addClass('no-margin-top');
     }
     else{
         $('.iso-category-select').hide(400);
-        $('.additional-letter').hide(400);
         $('#landscape').closest('.checkbox').removeClass('no-margin-top');
     }
     
@@ -64403,13 +64402,11 @@ $(function() {
             // console.log($(this).val());
             if($(this).val() == 4){
                 $('.iso-category-select').show(400);
-                $('.additional-letter').show(400);
                 $('#landscape').closest('.checkbox').addClass('no-margin-top');
                 
             } 
             else{
                 $('.iso-category-select').hide(400);
-                $('.additional-letter').hide(400);
                 $('#landscape').closest('.checkbox').removeClass('no-margin-top');
             }
         }
@@ -64419,13 +64416,11 @@ $(function() {
     
     if($(".document-type-select .select").val() == 3){
         $('.qmr-select').show(400);
-        $('.additional-letter').show(400);
         $('#landscape').closest('.checkbox').removeClass('no-margin-top');
         $('#pdf_upload').closest('.checkbox').removeClass('no-margin-top');
     }
     else{
         $('.qmr-select').hide(400);
-        $('.additional-letter').hide(400);
         $('#landscape').closest('.checkbox').addClass('no-margin-top');
         $('#pdf_upload').closest('.checkbox').addClass('no-margin-top');
     }
@@ -64435,19 +64430,36 @@ $(function() {
             // console.log($(this).val());
             if($(this).val() == 3) {
                 $('.qmr-select').show(400);
-                $('.additional-letter').show(400);
                 $('#landscape').closest('.checkbox').removeClass('no-margin-top');
                 $('#pdf_upload').closest('.checkbox').removeClass('no-margin-top');
             }
             else{
                 $('.qmr-select').hide(400);
-                $('.additional-letter').hide(400);
                 $('#landscape').closest('.checkbox').addClass('no-margin-top');
                 $('#pdf_upload').closest('.checkbox').addClass('no-margin-top');
             }
         }
     });
-
+    
+    /* Hide or show additional letter field for QMR or ISO category */
+    
+    if($(".document-type-select .select").val() == 3 || $(".document-type-select .select").val() == 4)
+        $('.additional-letter').show(400);
+    
+    else
+         $('.additional-letter').hide(400);
+    
+    $('.document-type-select .select').chosen().change(function(event){
+        if(event.target == this){
+            // console.log($(this).val());
+            if($(this).val() == 3 || $(this).val() == 4)
+                $('.additional-letter').show(400);
+            else
+                $('.additional-letter').hide(400);
+        }
+    });
+    
+    /* End Hide or show additional letter field for QMR or ISO category */
 
 });
 
