@@ -159,7 +159,7 @@
                         @if( $authorised == false && $canPublish ==false && $published == false)
                             <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
                         @elseif( ($authorised == false && $canPublish == true && $published == false ) ||
-                           ($authorised == true && $published == false ) )
+                           ($authorised == true && $published == false ) || ($canPublish == true && $published == false) )
                             <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
                         @endif
                     @endif
