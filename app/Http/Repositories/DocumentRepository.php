@@ -150,6 +150,11 @@ class DocumentRepository
                             // dd($readDocument);
                         else
                             $icon = 'icon-notread ';
+                            
+                        if($options['pageFavorites'] == true){
+                            $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
+                            $icon2 = 'icon-trash';
+                        }    
                     }
                     $node->afterText = $document->documentType->name;
                     
@@ -194,6 +199,9 @@ class DocumentRepository
                 // TreeView Delete Option - Uncomment if needed
                  if ($options['pageFavorites'] && $options['showDelete']){
                      $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
+                     $node->text = $document->name;
+                     $icon2 = 'icon-trash';
+                     $node->icon2;
                  }
                 if ($document->document_status_id != 6) {
 
@@ -338,7 +346,7 @@ class DocumentRepository
             }
 
         }
-
+        
         return json_encode($treeView);
 
     }

@@ -65636,7 +65636,16 @@ $( function() {
 					classList.push(node.selectedIcon || _this.options.selectedIcon || 
 									node.icon2 || _this.options.nodeIcon2);
 				}
-
+				
+				if (_this.options.enableDelete) {
+					if(node.hrefDelete != undefined){
+						treeItem
+							.append($(_this.template.icon2)
+								.attr('href', node.hrefDelete)
+								.append(node.textDelete)
+							);
+					}
+				}
 				treeItem
 					.append($(_this.template.icon)
 						.addClass(classList.join(' '))
@@ -65716,6 +65725,8 @@ $( function() {
 						);
 				}
 			}
+			
+			
 			
 			// Add hyperlink for history
 			
