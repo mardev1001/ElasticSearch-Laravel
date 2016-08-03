@@ -57,6 +57,11 @@ class UserController extends Controller
      */
     public function store(BenutzerRequest $request)
     {
+        dd( $request->all() );
+        $this->validate($request, [
+                'username_sso' => 'unique:username_sso',
+                'email' => 'unique:email',
+            ]);
         $user = User::create($request->all());
         
         $userUpdate = User::find($user->id);

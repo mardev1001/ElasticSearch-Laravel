@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AlterWiki2 extends Migration
+class UserCreateEditSsoDuplicateEntryProblem extends Migration
 {
     /**
      * Run the migrations.
@@ -12,10 +12,9 @@ class AlterWiki2 extends Migration
      */
     public function up()
     {
-        Schema::table('wiki_pages', function (Blueprint $table) {
-            // $table->integer('user_id')->unsigned()->nullable()->change();
+        /*Schema::table('users', function (Blueprint $table) {
             $table->boolean('active')->nullable()->default(1)->change();  
-        });
+        });*/
     }
 
     /**
