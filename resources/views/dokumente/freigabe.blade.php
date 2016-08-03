@@ -128,8 +128,11 @@
                                                     @if( $docAttach->document_id != $document->id )
                                                         @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
                                                             @if( $key == 0 )
-                                                                <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link">
-                                                                    {{$docAttach->document->name_long }}</a> <br> <!-- <span class="indent"></span> -->
+                                                                 <a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="no-underline">
+                                                                 <span class="icon icon-edit inline-block"></span>
+                                                             </a> 
+                                                             <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
+                                                               {!! ViewHelper::stripTags($docAttach->document->name_long, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
                                                             @endif
                                                         @endforeach
                                                     @endif
