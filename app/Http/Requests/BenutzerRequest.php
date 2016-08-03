@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+use Request as RequestMerge;
 
 use App\Http\Requests\Request;
 use App\User;
@@ -26,7 +27,6 @@ class BenutzerRequest extends Request
     {
             // Get user ID from url segment
             $userId = $this->segment(2);
-        
             switch( $this->method() ){
             case 'GET':
             case 'DELETE':
@@ -35,6 +35,7 @@ class BenutzerRequest extends Request
             }
             case 'POST':
             {
+                
                return [
                     'username' => 'required|unique:users',
                     'password' => 'required|min:6',
@@ -43,6 +44,7 @@ class BenutzerRequest extends Request
                     'last_name' => 'required',
                     'email' => 'required|email|unique:users',
                     'picture' => 'image',
+                    'username_sso' => 'required|min:3|unique:users',
                 ];
             }
             case 'PUT':

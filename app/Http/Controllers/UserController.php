@@ -57,11 +57,11 @@ class UserController extends Controller
      */
     public function store(BenutzerRequest $request)
     {
-        dd( $request->all() );
-        $this->validate($request, [
-                'username_sso' => 'unique:users',
-                'email' => 'unique:users',
-            ]);
+        if(!$request->has('username_sso') || $request->get('username_sso') == '' || empty($request->get('username_sso')) )    
+            RequestMerge::merge(['username_sso' => str_slug($request->get('username'))] );
+          
+        
+            // dd( $request->all() );
         $user = User::create($request->all());
         
         $userUpdate = User::find($user->id);
