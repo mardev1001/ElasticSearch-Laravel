@@ -59,8 +59,8 @@ class UserController extends Controller
     {
         // dd( $request->all() );
         $this->validate($request, [
-                'username_sso' => 'unique:username_sso',
-                'email' => 'unique:email',
+                'username_sso' => 'unique:users',
+                'email' => 'unique:users',
             ]);
         $user = User::create($request->all());
         
