@@ -57,7 +57,7 @@ class UserController extends Controller
      */
     public function store(BenutzerRequest $request)
     {
-        // dd( $request->all() );
+        dd( $request->all() );
         $this->validate($request, [
                 'username_sso' => 'unique:users',
                 'email' => 'unique:users',
