@@ -1212,6 +1212,7 @@ class DocumentController extends Controller
     public function update(Request $request, $id)
     {
         // dd( $request->all() );
+        $data = Document::find( $id );
         $adressats = Adressat::where('active',1)->get();
         //fix if document type not iso category -> don't save iso_category_id
         if( $request->get('document_type_id') !=  $this->isoDocumentId )
@@ -1232,10 +1233,11 @@ class DocumentController extends Controller
             
         if( !$request->has('name_long') )
             RequestMerge::merge(['name_long' => $request->get('name')] );
-        
-        if( !$request->has('betreff') )   
+            
+        if( !$request->has('betreff') && ( $data->betreff == '' || $data->betreff == null ) )   
             RequestMerge::merge(['betreff' => $request->get('name_long')] );
-    
+            
+        
          if(!$request->has('date_published') || $request->get('date_expired') == 'date_published')    
              RequestMerge::merge(['date_published' => null] );
          
@@ -1243,15 +1245,15 @@ class DocumentController extends Controller
              RequestMerge::merge(['date_expired' => null] );
              
         // dd($request->all() );
-        $data = Document::find( $id );
+        
         $prevName = $data->name;
         
         if( $data->document_type_id == $this->formulareId )
             RequestMerge::merge(['landscape' => 0] );
-        
+       
         // dd( $request->all() );        
         $data->fill( $request->all() )->save();
-        // dd($data);
+     
         $data = Document::find($id);
         
         
@@ -1880,8 +1882,10 @@ class DocumentController extends Controller
     public function rundschreiben()
     {
         $docType = $this->rundId;
-        $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
+        $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->where('document_status_id',3)
+        ->where('active',1)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
+        
         $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
         $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
@@ -1915,7 +1919,7 @@ class DocumentController extends Controller
         $qmrMyPaginated = Document::where('document_type_id' , $this->qmRundId )->where('user_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-qmr');
         $qmrMyTree = $this->document->generateTreeview( $qmrMyPaginated );
         
-        $qmrAllPaginated = Document::where('document_type_id' , $this->qmRundId )->where('document_status_id',3)
+        $qmrAllPaginated = Document::where('document_type_id' , $this->qmRundId )->where('document_status_id',3)->where('active',1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
         $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated );
         
@@ -1929,8 +1933,10 @@ class DocumentController extends Controller
      */
     public function rundschreibenNews()
     {
-        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-news');
+        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->where('document_status_id',3)->where('active',1)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-news');
         $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
+        
         $rundschreibenMeine = Document::where('user_id',Auth::user()->id)
         ->where('document_type_id', $this->newsId )->orderBy('id', 'desc')
         ->take(10)->paginate(10, ['*'], 'meine-news');
@@ -1947,8 +1953,10 @@ class DocumentController extends Controller
      */
     public function documentTemplates()
     {
-        $formulareAll = Document::where(['document_type_id' =>  $this->formulareId])->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
+        $formulareAll = Document::where(['document_type_id' =>  $this->formulareId])->where('document_status_id',3)->where('active',1)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
         $formulareAllTree = $this->document->generateTreeview( $formulareAll );
+        
         $formulareMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->formulareId])
         ->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-formulare');
         $formulareMeineTree = $this->document->generateTreeview( $formulareMeine );

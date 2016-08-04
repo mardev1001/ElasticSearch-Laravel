@@ -49,7 +49,7 @@
             }
             .first-title.first{
                 margin-top: 40px;
-                margin-bottom:0px;
+                 margin-bottom:40px;
             }
             .first-title.second{
                 margin-top: 0;
@@ -178,7 +178,7 @@
             }
             .first-title.first{
                 margin-top: 70px;
-                margin-bottom:0px;
+                margin-bottom:70px;
             }
             .first-title.second{
                 margin-top: 0;
@@ -270,8 +270,7 @@
       @include('pdf.footer')
       <div id="content">
            @include('pdf.header')
-          <h4 class="first-title first">Per Telefax/per E-Mail</h4>
-          <h4 class="first-title second">
+          <h4 class="first-title first">
             @if( $document->document_type_id == 3 )
               QMR
             @else
@@ -308,7 +307,7 @@
                 </div><!--end row-->  
               <div class="clearfix"></div>
               <div class="row">
-                  <h4 class="document-title">{{$document->name_long}}</h4>
+                  <h4 class="document-title">{!! $document->name_long !!}</h4>
               </div>
               @if( count( $variants) )
                   @foreach( $variants as $v => $variant)

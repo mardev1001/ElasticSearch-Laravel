@@ -140,7 +140,8 @@ class DocumentRepository
                 if ($options['pageHome'] == true || $options['pageFavorites'] == true) {
                     
                     if($document->published){
-                        $node->beforeText = Carbon::parse($document->date_published)->format('d.m.Y');
+                        $node->beforeText = Carbon::parse($document->date_published)->format('d.m.Y').' - '.
+                        $document->user->first_name.' '.$document->user->last_name;
                         
                         $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
                         ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();

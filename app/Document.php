@@ -62,6 +62,16 @@ class Document extends Model
             return Carbon::parse($value)->format('d.m.Y');
     }
     
+    public function getNameLongAttribute($value)
+    {
+            return str_replace(["\r\n", "\r", "\n"], "<br/>", $value);
+    }
+    
+    public function getBetreffAttribute($value)
+    {
+            return str_replace(["\r\n", "\r", "\n"], "<br/>", $value);
+    }
+    
     // public function getCreatedAtAttribute($value)
     // {
     //     return $this->attributes['created_at'] = Carbon::parse($value)->format('d.m.Y');

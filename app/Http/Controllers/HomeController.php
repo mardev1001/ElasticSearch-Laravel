@@ -31,7 +31,7 @@ class HomeController extends Controller
      */
     public function index() 
     {
-        $documentsNew = Document::whereNotIn('document_status_id', array(1,4,5,6))->where('is_attachment',0)
+        $documentsNew = Document::whereNotIn('document_status_id', array(1,4,5,6))->where('is_attachment',0)->where('active',1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
         

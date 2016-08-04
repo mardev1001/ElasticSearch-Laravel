@@ -32,7 +32,7 @@ return [
     'hinzufugen' => 'Hinzufügen',
     'procuration' => 'Prokura',
     'operationNum' => 'Betriebsnummer',
-    'commercialRegister' => 'Handelsregister',
+    'commercialRegister' => 'Handeslregisternummer',
     'taxNumber' => 'Steuernummer',
     'hrSitz' => 'Handelsregistersitz',
     'gewerbeanmeldung' => 'Gewerbeanmeldung',

@@ -16,8 +16,8 @@
     <!-- input box-->
     <div class="col-lg-5"> 
         <div class="form-group">
-            {!! ViewHelper::setInput('betreff',$data,old('betreff'),trans('documentForm.subject') , 
-                   trans('documentForm.subject') , false  ) !!}
+           {!! ViewHelper::setArea('betreff',$data,old('betreff'),trans('documentForm.subject'), trans('documentForm.subject'), false,
+                    array(), array(), false, true ) !!}
         </div>   
     </div><!--End input box-->
     

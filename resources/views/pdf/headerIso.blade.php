@@ -1,7 +1,7 @@
 <div class="header"  style="">
     
     <div class="div-pusher">       
-        <p>{{$document->name_long}}</p>
+        <p>{!! $document->name_long !!}</p>
     </div>
         <div class="image-div">
         <div class="pull-right" style="">

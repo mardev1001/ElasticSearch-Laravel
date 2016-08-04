@@ -44,7 +44,8 @@
     @foreach($internalMandantUsers as $internalUser)
     <div class="clearfix"></div>
     
-    {{ Form::open(['route' => ['mandant.internal-roles-edit', $data->id], 'method'=>'POST', 'id' => 'internal-role-'.$internalUser->id, 'class' => 'edit-internal-role']) }}
+    {{ Form::open(['route' => ['mandant.internal-roles-edit', $data->id], 'method'=>'POST', 'id' => 'internal-role-'.$internalUser->id, 
+    'class' => 'edit-internal-role' ,'data-remote']) }}
         <div class="col-md-6 col-lg-4"> 
             <div class="form-group">
                 <!--<label class="control-label">{{ trans('mandantenForm.role') }}*</label>-->

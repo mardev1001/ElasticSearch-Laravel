@@ -3,11 +3,7 @@
  */
 $( function() {
     /*Bind laravel security token to ajax*/
-     $.ajaxSetup({
-            headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-            });
+      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $(document).find('[name="csrf-token"]').val() } });
     /* End Bind laravel security token to ajax*/
     
      $(window).bind("load resize", function() {
@@ -366,7 +362,8 @@ $( function() {
        
     }
     /* End Change the hidden input value on sites with .preview */
-      $.ajaxSetup({ headers: { 'X-CSRF-TOKEN': $(document).find('[name="csrf-token"]').val() } });
+    
+    /* Ajax Mandant trigger + btn changes */
        var submitRequest = function(e) {
          var form = $(this);
            var method = form.find('input[name="_method"]').val() || 'POST';
@@ -375,16 +372,11 @@ $( function() {
                 url: form.attr('action'),
                 data: form.serialize(),
                 success: function(data) {
-                    if(data.success==true && data.title ){
-                 
-                    }
-                    else if(data.success==false && data.message ){
-                        swal(data.title, data.message, "error");
-                    }
+                    console.log(data);
+                   
                 },
                 error:function(data){
-                    if(data.success==false && data.message ){
-                    }
+                    
     
                 },
                 
@@ -394,8 +386,8 @@ $( function() {
         };
 
 
-        $('form[data-remote]').on('submit', submitRequest);
-    /* Ajax Mandant trigger + btn changes */
+        //$('form[data-remote]').on('submit', submitRequest);
+    
     
     /* End Ajax Mandant trigger + btn changes */
 });

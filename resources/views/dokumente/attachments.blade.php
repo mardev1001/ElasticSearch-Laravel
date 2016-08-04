@@ -173,17 +173,7 @@
                                             <!-- input box-->
                                             <div class="col-md-12 col-lg-12 "> 
                                                 <div class="form-group">
-                                                      <label class="control-label">
-                                                        {{ trans('documentForm.documentNameLong') }}
-                                                    </label> 
-                                                    <div class="col-xs-12 editable" data-id='name_long' data-height="100">
-                                                        @if( isset($data->name_long) )
-                                                            {!! $data->name_long !!}
-                                                        @elseif( old('name_long') )
-                                                            {!! old('name_long') !!}
-                                                        @endif
-                                                    </div>
-                                                  
+                                                    {!! ViewHelper::setArea('name_long',$data,old('name_long'),trans('documentForm.documentNameLong') ) !!}
                                                 </div>   
                                             </div><!--End input box-->
                                             

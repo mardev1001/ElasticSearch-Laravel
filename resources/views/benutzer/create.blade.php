@@ -85,7 +85,7 @@ Benutzer anlegen
                 
                 <div class="col-md-3 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('username_sso', '', old('username_sso'), trans('benutzerForm.username_sso'), trans('benutzerForm.username_sso'), false) !!}
+                       {!! ViewHelper::setInput('username_sso', '', old('username_sso'), trans('benutzerForm.username_sso'), trans('benutzerForm.username_sso'), true) !!}
                     </div>   
                 </div>
                 
@@ -130,6 +130,13 @@ Benutzer anlegen
                     </div>   
                 </div>
 
+
+              
+                <div class="col-md-3 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('active_to', '', old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
+                    </div>   
+                </div>
             </div>
             
             <div class="row">
