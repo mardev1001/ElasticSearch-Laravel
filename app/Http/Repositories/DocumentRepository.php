@@ -83,6 +83,8 @@ class DocumentRepository
             'pageHistory' => false,
             'pageWiki' => false,
             'pageFavorites' => false,
+            'pageDocuments' => false,
+            'myDocuments' => false,
         ];
         $options = array_merge($optionsDefault, $options);
 
@@ -129,36 +131,64 @@ class DocumentRepository
             foreach ($documents as $document) {
                 
                 $node = new \StdClass();
+                
                 $node->text = $document->name;
                 $icon = $icon2 = '';
                 
                 if($document->document_type_id == 3 ){
-                    if($document->qmr_number != null)
+                   if($document->qmr_number != null)
                         $node->text = $document->qmr_number.$document->additional_letter .": ". $node->text;
-                    $node->text = "QMR ". $node->text;
+                     $node->text = "QMR ". $node->text;
                 }
+                
+                // Treeview Setting for Homepage
                 if ($options['pageHome'] == true || $options['pageFavorites'] == true) {
-                    
-                    if($document->published){
-                        $node->beforeText = Carbon::parse($document->date_published)->format('d.m.Y').' - '.
-                        $document->user->first_name.' '.$document->user->last_name;
+                    // if($document->document_status_id == 1)
+                        // dd($document);
+                    if($document->published || ($document->document_status_id == 1 && $options['myDocuments'] == true)){
+                        $node->beforeText = '';
+                        if($options['pageHome'] == true && $options['myDocuments'] == true)
+                            $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
+                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - '.
+                        $document->owner->first_name.' '.$document->owner->last_name;
                         
-                        $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
-                        ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
+                        if($document->published != null)
+                            $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
+                            ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
                         
-                        if($readDocument) 
-                            $icon = 'icon-read ';
-                            // dd($readDocument);
-                        else
-                            $icon = 'icon-notread ';
+                        if($document->document_status_id == 3){
+                            if(isset($readDocument)) 
+                                $icon = 'icon-read ';
+                            else
+                                $icon = 'icon-notread ';
+                        }
                             
                         if($options['pageFavorites'] == true){
                             $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
-                            $icon2 = 'icon-trash';
+                            // $node->icon2 = 'icon-trash ';
+                            // $icon2 = 'icon-trash ';
                         }    
                     }
                     $node->afterText = $document->documentType->name;
                     
+                }
+                
+                // Treeview Setting for Document Overview Pages
+                if ($options['pageDocuments'] == true) {
+                       
+                    $node->beforeText = '';
+                    $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y');
+                    
+                    if($document->published != null)
+                        $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
+                        ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
+                    
+                    if($document->document_status_id == 3){ 
+                        if(isset($readDocument)) $icon = 'icon-read ';
+                        else $icon = 'icon-notread ';
+                    }    
+                    
+                    $node->afterText = $document->documentType->name;
                 }
                 
                 if ($options['pageHistory'] == true) {
@@ -191,6 +221,7 @@ class DocumentRepository
 
                 $node->icon = $icon;
                 $node->icon2 = $icon2;
+                // var_dump($node->icon2);
                 // $node->icon3 = $icon3 . 'last-node-icon ';
                 // if ($options['showUniqueURL'] == true)
                 if ($document->document_status_id == 3) $node->href = route('dokumente.show', $document->published->url_unique);
@@ -198,14 +229,20 @@ class DocumentRepository
                 else $node->href = route('dokumente.show', $document->id);
 
                 // TreeView Delete Option - Uncomment if needed
-                 if ($options['pageFavorites'] && $options['showDelete']){
+                if ($options['pageFavorites'] && $options['showDelete']){
                      $node->hrefDelete = url('dokumente/' . $document->id. '/favorit');
                      $node->text = $document->name;
-                     $icon2 = 'icon-trash';
-                     $node->icon2;
-                 }
+                     if($document->document_type_id == 3 ){
+                       if($document->qmr_number != null)
+                            $node->text = $document->qmr_number.$document->additional_letter .": ". $node->text;
+                         $node->text = "QMR ". $node->text;
+                    }
+                    //  $icon2 = 'icon-trash';
+                    //  $node->icon2 = 'icon-trash ';
+                }
+                
                 if ($document->document_status_id != 6) {
-
+                    
                     //
                     if ($options['pageHistory'] == true  ) {
                         
@@ -216,7 +253,7 @@ class DocumentRepository
                             // $subNode->href = url('dokumente/editor/' . $document->id . '/edit#variation' . $variant->variant_number);
                            
                             $subNode->text = "Variante " . $variant->variant_number;
-                            $subNode->icon = 'child-node ';
+                            $subNode->icon = 'child-node hidden ';
                             $subNode->icon2 = 'fa fa-2x fa-file-o ';
                             // $subNode->icon3 = $icon3 . 'last-node-icon ';
                           
@@ -229,7 +266,7 @@ class DocumentRepository
                                     $subSubNode = new \StdClass();
                                     // $subSubNode->text = basename($upload->file_path);
                                     $subSubNode->text = 'PDF Rundschreiben';
-                                    $subSubNode->icon = 'sub-child-node ';
+                                    $subSubNode->icon = 'sub-child-node hidden ';
                                     $subSubNode->icon2 = 'icon-download ';
                                     // $subSubNode->icon3 = 'last-node-icon ';
                                     // $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
@@ -272,7 +309,7 @@ class DocumentRepository
                                     
                                     foreach ($secondDoc->documentUploads as $upload) {
                                         $subNode = new \StdClass();
-                                        $subNode->icon = 'child-node ';
+                                        $subNode->icon = 'child-node hidden ';
                                         $subNode->icon2 = 'icon-download ';
                                         $subNode->text = $secondDoc->name;
                                         // $subNode->text = $upload->file_path;
@@ -420,7 +457,7 @@ class DocumentRepository
         $modelUpload = DocumentType::find($documentType);
         $data->form = 'editor';
         $data->url = 'editor';
-        if ($modelUpload->document_art == true) {
+        if ($modelUpload->document_art == true || $documentType == 5) {
             $data->form = 'upload';
             $data->url = 'document-upload';
         }

@@ -856,12 +856,14 @@ input.form-control:-ms-input-placeholder {
 #page-wrapper .list-group {
   margin-bottom: 0; }
 
+#page-wrapper .treeview a.icon,
 #page-wrapper .treeview span.icon {
   display: inline-block;
   float: left;
   width: 21px;
   height: 54px; }
 
+#page-wrapper .treeview a.node-icon,
 #page-wrapper .treeview span.node-icon {
   width: 25px;
   margin-right: 10px; }

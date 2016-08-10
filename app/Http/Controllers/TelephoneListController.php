@@ -17,7 +17,7 @@ class TelephoneListController extends Controller
      */
     public function index()
     {
-        $mandants = Mandant::all();
+        $mandants = Mandant::orderBy('mandant_number')->get();
             foreach($mandants as $k =>$mandant){
                 $userArr = array();
                 $testuserArr = array();
@@ -27,7 +27,6 @@ class TelephoneListController extends Controller
                         if( $mr->role->id == 21 ) //edv
                             $userArr[] = $mandant->users[$k2];
                     }
-                    
                     
                     if( count($userArr) < 1){
                         foreach($mUser->mandantRoles as $mr){
@@ -46,7 +45,6 @@ class TelephoneListController extends Controller
                 }//end second foreach
                 $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
             }
-        $notSearch = true; 
         return view('telefonliste.index', compact('mandants') );
     }
 

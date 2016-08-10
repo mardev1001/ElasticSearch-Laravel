@@ -126,9 +126,19 @@
                             @foreach($commentsMy as $k => $comment)
                                 <div class="comment-{{++$k}}">
                                     <span class="comment-header">
+                                        @if( $comment->document->published != null)
                                         <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            <strong>{{ $comment->document->name }}</strong>
+                                            @if ( $comment->betreff != null )                                                                 
+                                                <strong>{{ $comment->betreff }}</strong>
+                                            @endif
                                         </a>
+                                        @else
+                                         <a href="{{url('/dokumente/'. $comment->document->id)}}">
+                                            @if ( $comment->betreff != null )                                                                 
+                                                <strong>{{ $comment->betreff }}</strong>
+                                            @endif
+                                        </a>
+                                        @endif
                                         , {{ $comment->created_at }}
                                     </span> <br>
                                     <span class="comment-body">
@@ -146,7 +156,8 @@
     
     <div class="clearfix"></div><br>
     
-    <div class="row">
+    @if( $commentVisibility == true) 
+        <div class="row"><!-- Comment Leser can only see these comments -->
         <div class="col-xs-12">
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Neue Kommentare</h1>
@@ -156,9 +167,19 @@
                             @foreach($commentsNew as $k => $comment)
                                 <div class="comment-{{++$k}}">
                                     <span class="comment-header">
+                                        @if( $comment->document->published != null)
                                         <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            <strong>{{ $comment->document->name }}</strong>
+                                            @if ( $comment->betreff != null )                                                                 
+                                                <strong>{{ $comment->betreff }}</strong>
+                                            @endif
                                         </a>
+                                        @else
+                                         <a href="{{url('/dokumente/'. $comment->document->id)}}">
+                                            @if ( $comment->betreff != null )                                                                 
+                                                <strong>{{ $comment->betreff }}</strong>
+                                            @endif
+                                        </a>
+                                        @endif
                                         - {{ $comment->user->first_name ." ". $comment->user->last_name }}, {{ $comment->created_at }}
                                     </span> <br>
                                     <span class="comment-body">
@@ -172,8 +193,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    
+    </div><!-- end .row -->
+    @endif
     <div class="clearfix"></div><br>
 
 @stop

@@ -26,9 +26,9 @@ class SearchRepository
             $query = Mandant::where('mandants.id','>',0);
         
          if( $request->has('parameter') )
-            $query->where('name','LIKE', '%'.$request->get('parameter').'%');
+            $query->where('name','LIKE', '%'.$request->get('parameter').'%')->orWhere('mandant_number','=',$request->get('parameter') );
             
-        $mandants = $query->get();   
+        $mandants = $query->orderBy('mandant_number')->get();   
             // dd($mandants);
             // dd($request->all());
         if( count($mandants) ){
@@ -60,7 +60,7 @@ class SearchRepository
                 // DB::enableQueryLog();
                 $usersIds = $query->pluck('id');   
                 $userMandants = MandantUser::whereIn('user_id',$usersIds)->pluck('mandant_id');
-                $mandants = Mandant::whereIn('id',$userMandants)->get();
+                $mandants = Mandant::whereIn('id',$userMandants)->orderBy('mandant_number')->get();
                 
                 foreach($mandants as $mandant){
                     $userQuery = User::whereIn('id',$usersIds);

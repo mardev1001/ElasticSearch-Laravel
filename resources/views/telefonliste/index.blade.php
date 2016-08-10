@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-4 form-group no-margin-bottom">
                                
-                                <input type="text" class="form-control" name="parameter" placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.mandants').'/'. trans('telefonListeForm.user') }}" required>
+                                <input type="text" class="form-control" name="parameter" placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.mandants').'/ '.trans('telefonListeForm.mandantNumber').'/ '. trans('telefonListeForm.user') }}" required>
                                 <span class="custom-input-group-btn">
                                     <button type="submit" name="search" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
                                         <!--<i class="fa fa-search"></i>-->Suche

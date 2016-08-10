@@ -7,11 +7,11 @@
 
 @if(count($favoritesAll))
 
+    <div class="row">
     @foreach($favoritesAll as $favorites)
         
         @if(count($favorites['favoritesPaginated']))
-            <div class="row">
-                <div class="col-xs-12">
+                <div class="col-xs-6">
                     <div class="box-wrapper {{ 'favorites-box-' . $favorites['document_type_id'] }}">
                         <h4 class="title">{{ $favorites['document_type_name'] }}</h4>
                         
@@ -46,10 +46,10 @@
                         
                     </div>
                 </div>
-            </div>
         @endif
 
     @endforeach
+    </div><!-- end .row -->
 
 @endif
     

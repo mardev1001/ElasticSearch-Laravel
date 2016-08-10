@@ -506,6 +506,8 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     
 }
 
+
+#page-wrapper .treeview a.icon,
 #page-wrapper .treeview span.icon {
     display: inline-block;
     float: left;
@@ -514,10 +516,12 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     height: 54px;
 }
 
+#page-wrapper .treeview a.node-icon,
 #page-wrapper .treeview span.node-icon {
     width: 25px;
     margin-right: 10px;
 }
+
 
 #page-wrapper .treeview span.node-icon.icon-download {
     margin-left: 35px;

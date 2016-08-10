@@ -363,31 +363,5 @@ $( function() {
     }
     /* End Change the hidden input value on sites with .preview */
     
-    /* Ajax Mandant trigger + btn changes */
-       var submitRequest = function(e) {
-         var form = $(this);
-           var method = form.find('input[name="_method"]').val() || 'POST';
-            $.ajax({
-                type: method,
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function(data) {
-                    console.log(data);
-                   
-                },
-                error:function(data){
-                    
     
-                },
-                
-            });
-    
-            e.preventDefault();
-        };
-
-
-        //$('form[data-remote]').on('submit', submitRequest);
-    
-    
-    /* End Ajax Mandant trigger + btn changes */
 });

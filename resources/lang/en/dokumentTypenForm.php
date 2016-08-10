@@ -20,6 +20,7 @@ return [
     'inactive' => 'Inaktiv',
     'allow_comments' => 'Kommentare erlauben',
     'read_required' => 'Muss gelesen werden',
+    'visible_navigation' => 'Navigation',
     'rundschreiben' => 'Rundschreiben',
     'verfasser' => 'Verfasser',
     

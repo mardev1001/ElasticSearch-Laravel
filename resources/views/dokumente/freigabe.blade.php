@@ -10,21 +10,20 @@
     <div class="row">
         <div class="col-md-12 col-lg-12">
            <h3 class="title">
-                    @if( isset($document->name_long) && $document->name_long != '' )
-                        @if( $document->document_type_id == 3 )
-                                QMR @if( $document->qmr_number != null) {{ $document->qmr_number }}@if( $document->additional_letter ){{ $document->additional_letter }}@endif: @endif
-                        @endif
-                        {!! $document->name_long !!}
-                    @else
-                        {!! $document->name !!}
-                    @endif  
-                        <br>
-                        <span class="text">
-                            <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}
-                                @if($document->date_published), {{$document->date_published}}@endif)
-                            </strong>
-                        </span>
-                    </h3>
+            @if( isset($document->name_long) && $document->name_long != '' )
+                @if( $document->document_type_id == 3 )
+                        QMR @if( $document->qmr_number != null) {{ $document->qmr_number }}@if( $document->additional_letter ){{ $document->additional_letter }}@endif: @endif
+                @endif
+                {!! $document->name_long !!}
+            @else
+                {!! $document->name !!}
+            @endif  
+                <br>
+                <span class="text">
+                    <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}}@endif, {{ $document->user->first_name.' '.$document->user->last_name }} )
+                    </strong>
+                </span>
+            </h3>
         </div>
     </div>
 
@@ -132,7 +131,7 @@
                                                                  <span class="icon icon-edit inline-block"></span>
                                                              </a> 
                                                              <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
-                                                               {!! ViewHelper::stripTags($docAttach->document->name_long, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
+                                                               {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
                                                             @endif
                                                         @endforeach
                                                     @endif
@@ -181,8 +180,9 @@
                             @foreach($documentCommentsUser as $k => $comment)
                                 <div class="comment-{{++$k}}">
                                     <span class="comment-header">
+                                         {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }} -
                                         <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            <strong>{{ $comment->document->name }}</strong>
+                                            <strong>{{ $comment->betreff }}</strong>
                                         </a>
                                         , {{ $comment->created_at }}
                                     </span> <br>
@@ -215,9 +215,20 @@
                             @foreach($documentCommentsFreigabe as $k => $comment)
                                 <div class="comment-{{++$k}}">
                                     <span class="comment-header">
+                                        {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }} -
+                                        @if( $comment->document->published != null)
                                         <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            <strong>{{ $comment->document->name }}</strong>
+                                            @if ( $comment->betreff != null )                                                                 
+                                                <strong>{{ $comment->betreff }}</strong>
+                                            @endif
                                         </a>
+                                        @else
+                                         <a href="{{url('/dokumente/'. $comment->document->id)}}">
+                                            @if ( $comment->betreff != null )                                                                 
+                                                <strong>{{ $comment->betreff }}</strong>
+                                            @endif
+                                        </a>
+                                        @endif
                                         , {{ $comment->created_at }}
                                     </span> <br>
                                     <span class="comment-body">

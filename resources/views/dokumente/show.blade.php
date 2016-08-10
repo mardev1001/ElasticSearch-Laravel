@@ -20,8 +20,7 @@
                     @endif  
                         <br>
                         <span class="text">
-                            <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}
-                                @if($document->date_published), {{$document->date_published}}@endif)
+                            <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}}@endif, {{ $document->owner->first_name.' '.$document->owner->last_name }})
                             </strong>
                         </span>
                     </h3>
@@ -105,7 +104,7 @@
                                                                      <span class="icon icon-edit inline-block"></span>
                                                                  </a> 
                                                                  <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
-                                                                   {!! ViewHelper::stripTags($docAttach->document->name_long, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
+                                                                   {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
                                                                 </div>
                                                             </div>
                                                             <div class="clearfix"></div>
@@ -149,22 +148,22 @@
                     <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>
                     <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
 
-                    <a href="/dokumente/{{$document->id}}/favorit" class="btn btn-primary pull-right">
-                        @if( $document->hasFavorite == false)
-                            {{ trans('dokumentShow.favorite') }}
-                        @else
-                            {{ trans('dokumentShow.unFavorite') }}
-                        @endif</a>
-
-                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
-
-
+                    @if(count(Request::segments() ) == 2 && (!is_numeric(Request::segment(2) )) )
+                        <a href="/dokumente/{{$document->id}}/favorit" class="btn btn-primary pull-right">
+                            @if( $document->hasFavorite == false)
+                                {{ trans('dokumentShow.favorite') }}
+                            @else
+                                {{ trans('dokumentShow.unFavorite') }}
+                            @endif</a>
+    
+                        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                    @endif
 
                     @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
                         @if( $authorised == false && $canPublish ==false && $published == false)
                             <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
-                        @elseif( ($authorised == false && $canPublish == true && $published == false ) ||
-                           ($authorised == true && $published == false ) || ($canPublish == true && $published == false) )
+                        @elseif( ($authorised == false &&  $published == false ) ||
+                           ($authorised == true && $published == false ) || ($canPublish == true && $published == false) ){{-- $canPublish --}}
                             <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
                         @endif
                     @endif
@@ -224,65 +223,80 @@
      
     <div class="clearfix"></div><br>
     
-    <!-- user comments -->
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="col-xs-12 box-wrapper home">
-                <h1 class="title">{{ trans('wiki.commentUser') }}</h1>
-                <div class="box home">
-                    <div class="commentsMy">
-                        @if(count($documentComments))
-                            @foreach($documentComments as $k => $comment)
-                                <div class="comment-{{++$k}}">
-                                    <span class="comment-header">
-                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            <strong>{{ $comment->document->name }}</strong>
-                                        </a>
-                                        , {{ $comment->created_at }}
-                                    </span> <br>
-                                    <span class="comment-body">
-                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
-                                    </span>
-                                </div>
-                                <div class="clearfix"></div><br>
-                            @endforeach
-                        @endif
+    @if( $commentVisibility->user == true )
+        <!-- user comments -->
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-12 box-wrapper home">
+                    <h1 class="title">{{ trans('wiki.commentUser') }}</h1>
+                    <div class="box home">
+                        <div class="commentsMy">
+                            @if(count($documentComments))
+                                @foreach($documentComments as $k => $comment)
+                                    <div class="comment-{{++$k}}">
+                                        <span class="comment-header">
+                                            {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }} - 
+                                            <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                                <strong>{{ $comment->betreff }}</strong>
+                                            </a>
+                                            , {{ $comment->created_at }}
+                                        </span> <br>
+                                        <span class="comment-body">
+                                            {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                        </span>
+                                    </div>
+                                    <div class="clearfix"></div><br>
+                                @endforeach
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div><!-- end user comments -->
+        </div><!-- end user comments -->
+    @endif
     
-    
-    <!-- freigaber comments -->
-    @if(count($documentCommentsFreigabe) )
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="col-xs-12 box-wrapper home">
-                <h1 class="title">{{ trans('wiki.commentAdmin') }}</h1>
-                <div class="box home">
-                    <div class="commentsMy">
-                        
-                            @foreach($documentCommentsFreigabe as $k => $comment)
-                                <div class="comment-{{++$k}}">
-                                    <span class="comment-header">
-                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            <strong>{{ $comment->document->name }}</strong>
-                                        </a>
-                                        , {{ $comment->created_at }}
-                                    </span> <br>
-                                    <span class="comment-body">
-                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
-                                    </span>
-                                </div>
-                                <div class="clearfix"></div><br>
-                            @endforeach
-                        
+    @if( $commentVisibility->freigabe == true )
+        <!-- freigaber comments -->
+        @if(count($documentCommentsFreigabe) )
+            <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-12 box-wrapper home">
+                    <h1 class="title">{{ trans('wiki.commentAdmin') }}</h1>
+                    <div class="box home">
+                        <div class="commentsMy">
+                            
+                                @foreach($documentCommentsFreigabe as $k => $comment)
+                                    <div class="comment-{{++$k}}">
+                                        <span class="comment-header">
+                                             {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }} -
+                                            @if( $comment->document->published != null)
+                                                <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                                    @if ( $comment->betreff != null )                                                                 
+                                                        <strong>{{ $comment->betreff }}</strong>
+                                                    @endif
+                                                </a>
+                                            @else
+                                                <a href="{{url('/dokumente/'. $comment->document->id)}}">
+                                                    @if ( $comment->betreff != null )                                                                 
+                                                        <strong>{{ $comment->betreff }}</strong>
+                                                    @endif
+                                                </a>
+                                            @endif
+                                            , {{ $comment->created_at }}
+                                        </span> <br>
+                                        <span class="comment-body">
+                                            {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                        </span>
+                                    </div>
+                                    <div class="clearfix"></div><br>
+                                @endforeach
+                            
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div><!-- end freigaber comments -->
+        </div><!-- end freigaber comments -->
+        @endif
     @endif
     
        

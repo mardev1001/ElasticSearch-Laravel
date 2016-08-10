@@ -45,6 +45,7 @@ class DocumentTypeController extends Controller
         $documentType->document_role = $request->input('document_role');
         if($request->has('read_required')) $documentType->read_required = true;
         if($request->has('allow_comments')) $documentType->allow_comments = true;
+        if($request->has('visible_navigation')) $documentType->visible_navigation = true;
         $documentType->active = true;
         $documentType->save();
         return back()->with('message', 'Dokument Typ erfolgreich gespeichert.');
@@ -95,6 +96,9 @@ class DocumentTypeController extends Controller
             
             if($request->has('allow_comments')) $documentType->allow_comments = true;
             else $documentType->allow_comments = false;
+            
+            if($request->has('visible_navigation')) $documentType->visible_navigation = true;
+            else $documentType->visible_navigation = false;
         }
         
         if($request->has('activate'))

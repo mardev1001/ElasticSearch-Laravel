@@ -10,6 +10,7 @@ return [
     'search-options' => 'Suchoptionen',
     'options' => 'Optionen',
     'mandant' => 'Mandant',
+    'mandantNumber' => 'Mandatennumer',
     'mandants' => 'Mandanten',
     'user' => 'Benutzer',
     'users' => 'Benutzer',

@@ -18,5 +18,9 @@ return [
     'download' => 'Download',
     'meineNews' => 'Meine News',
     'allNews' => 'Alle News',
+    'newsEntwurf' => 'Entwurf',
+    'rundEntwurf' => 'Entwurf',
+    'newsFreigabe' => 'Im Freigabe Prozess',
+    'rundFreigabe' => 'Im Freigabe Prozess',
    
 ];

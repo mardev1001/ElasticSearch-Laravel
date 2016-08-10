@@ -6,23 +6,49 @@
 
     @section('content')
 
-        <div class="col-xs-12 col-md-12 box-wrapper">
-            <h4 class="title">{{ trans('rundschreibenQmr.myQmr')}}</h4>
-            <div class="box">
-                @if(count($qmrMyTree))
-                    <div class="tree-view hide-icons" data-selector="qmrMyTree">
-                         <div  class="qmrMyTree hide" >{{ $qmrMyTree }}</div>
+        <div class="row">
+            <div class="col-xs-12 col-md-6 ">
+                <div class="box-wrapper">
+                    <h4 class="title">{{ trans('rundschreibenQmr.qmrEntwurf')}}</h4>
+                    <div class="box">
+                        @if(count($qmrEntwurfTree))
+                            <div class="tree-view" data-selector="qmrEntwurfTree">
+                                 <div  class="qmrEntwurfTree hide" >{{ $qmrEntwurfTree }}</div>
+                            </div>
+                        @else
+                            Keine Daten gefunden.
+                        @endif
                     </div>
-                @else
-                    Keine Daten gefunden.
-                @endif
-            </div>
-            @if(count($qmrMyPaginated))
-                <div class="text-center box box-pagination">
-                    {!! $qmrMyPaginated->render() !!}
+                    @if(count($qmrEntwurfPaginated))
+                        <div class="text-center box box-pagination">
+                            {!! $qmrEntwurfPaginated->render() !!}
+                        </div>
+                    @endif
                 </div>
-            @endif
+            </div>
+            
+            <div class="col-xs-12 col-md-6 ">
+                <div class="box-wrapper">
+                    <h4 class="title">{{ trans('rundschreibenQmr.qmrFreigabe')}}</h4>
+                    <div class="box">
+                        @if(count($qmrFreigabeTree))
+                            <div class="tree-view" data-selector="qmrFreigabeTree">
+                                 <div  class="qmrFreigabeTree hide" >{{ $qmrFreigabeTree }}</div>
+                            </div>
+                        @else
+                            Keine Daten gefunden.
+                        @endif
+                    </div>
+                    @if(count($qmrFreigabePaginated))
+                        <div class="text-center box box-pagination">
+                            {!! $qmrFreigabePaginated->render() !!}
+                        </div>
+                    @endif
+                </div>
+            </div>
+        
         </div>
+        
         <div class="clearfix"></div>
         
         <div class="row">
@@ -55,15 +81,15 @@
         <div class="col-xs-12 col-md-12 box-wrapper">
             <h4 class="title">{{ trans('rundschreibenQmr.allQmr')}}</h4>
             <div class="box">
-                @if(count($qmrMyTree))
-                    <div class="tree-view hide-icons" data-selector="qmrAllTree">
+                @if(count($qmrAllTree))
+                    <div class="tree-view" data-selector="qmrAllTree">
                          <div  class="qmrAllTree hide" >{{ $qmrAllTree }}</div>
                     </div>
                 @else
                     Keine Daten gefunden.
                 @endif
             </div>
-            @if(count($qmrMyPaginated))
+            @if(count($qmrAllPaginated))
                 <div class="text-center box box-pagination">
                     {!! $qmrAllPaginated->render() !!}
                 </div>

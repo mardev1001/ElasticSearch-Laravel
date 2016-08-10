@@ -74,41 +74,47 @@ class DocumentController extends Controller
      */
     public function create()
     {
-        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
-     
-        $documentTypes = DocumentType::all();
-        $isoDocuments = IsoCategory::all();
-        $documentStatus = DocumentStatus::all(); 
-        $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
-       
-        $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
-        ->where('mandant_id', $mandantId)->get();
-        $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
-        $mandantUsers = $this->clearUsers($mandantUsers);
-        $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
-        if( count($incrementedQmr) < 1 )
-            $incrementedQmr = 1;
+        if( $this->canCreateEditDoc() == true ){
+            $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+            $documentTypes = DocumentType::all();
+            $isoDocuments = IsoCategory::all();
+            $documentStatus = DocumentStatus::all(); 
+            $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
+           
+            $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
+            ->where('mandant_id', $mandantId)->get();
+            $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
+            $mandantUsers = $this->clearUsers($mandantUsers);
+            $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
+            if( count($incrementedQmr) < 1 )
+                $incrementedQmr = 1;
+            else{
+                $incrementedQmr = $incrementedQmr->qmr_number;
+                $incrementedQmr = $incrementedQmr+1;
+            }
+            
+            $incrementedIso = Document::where('document_type_id',$this->isoDocumentId )->orderBy('iso_category_number','desc')->first();
+            if( count($incrementedIso) < 1 )
+                $incrementedIso = 1;
+            else{
+                $incrementedIso = $incrementedIso->iso_category_number;
+                $incrementedIso = $incrementedIso+1;
+            }
+                //$this->qmRundId = 3;
+            //$this->isoDocumentId = 4;
+            $documentCoauthors = $mandantUsers;
+            
+            //this is until Neptun inserts the documents
+            $documentUsers = $mandantUsers;
+            
+            return view('formWrapper', 
+            compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentUsers','documentCoauthors','incrementedQmr','incrementedIso') );
+        }   
         else{
-            $incrementedQmr = $incrementedQmr->qmr_number;
-            $incrementedQmr = $incrementedQmr+1;
+            session()->flash('message',trans('documentForm.noPermission'));
+            return redirect('/');
         }
-        
-        $incrementedIso = Document::where('document_type_id',$this->isoDocumentId )->orderBy('iso_category_number','desc')->first();
-        if( count($incrementedIso) < 1 )
-            $incrementedIso = 1;
-        else{
-            $incrementedIso = $incrementedIso->iso_category_number;
-            $incrementedIso = $incrementedIso+1;
-        }
-            //$this->qmRundId = 3;
-        //$this->isoDocumentId = 4;
-        $documentCoauthors = $mandantUsers;
-        
-        //this is until Neptun inserts the documents
-        $documentUsers = $mandantUsers;
-        
-        return view('formWrapper', 
-        compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentUsers','documentCoauthors','incrementedQmr','incrementedIso') );
+    
     }
 
     /**
@@ -517,11 +523,9 @@ class DocumentController extends Controller
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->first()->mandant_id;
         $attachmentArray = array();
-        
         /*Check if document has editorVariant*/
         if( count( $data->editorVariantNoDeleted) > 0 ){
             foreach( $data->editorVariantNoDeleted as $variant){
-                
                 $attachmentArray[$variant->id] = $this->document->getAttachedDocumentLinks($variant, $id);
              }
         }
@@ -531,9 +535,13 @@ class DocumentController extends Controller
         $documentTypes = DocumentType::all();
         $isoDocuments = IsoCategory::all();
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
-        
-        $documentsFormulare = Document::where('document_type_id', $this->formulareId)->get();
-       
+        $uploadTypes = DocumentType::where('document_art',1)->pluck('id');
+        $documentsFormulare = Document::whereIn('document_type_id', $uploadTypes)
+        ->whereIn('document_status_id',array(1,3) )
+        ->where('active',1)->get();
+        // foreach( $documentsFormulare as $df ){
+        //     $df->name =
+        // }
         // dd($documentsFormulare);
        
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
@@ -595,7 +603,7 @@ class DocumentController extends Controller
                     */
                     $currDocEv = EditorVariant::find($currentEditorVariant);
                     $documentCheck = EditorVariantDocument::where('editor_variant_id',$currentEditorVariant)->where('document_id',$document->id)->count();
-                  
+                    //  dd( $request->all() );
                     if( $documentCheck < 1){
                         $newAttachment = new EditorVariantDocument();
                         $newAttachment->editor_variant_id = $currentEditorVariant;
@@ -991,7 +999,10 @@ class DocumentController extends Controller
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
             
-           
+            $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
+                            ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
+            if($readDocument != null && $readDocument->deleted_at == null)
+                            $readDocument->delete();
                             
             $otherDocuments = Document::where('document_group_id',$document->document_group_id)
                                 ->whereNotIn('id',array($document->id))->get();
@@ -1049,7 +1060,6 @@ class DocumentController extends Controller
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
             $document = Document::find($id);
-            
             // add UserReadDocumen
             $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)
                     ->where('user_id', Auth::user()->id)->get();
@@ -1067,12 +1077,19 @@ class DocumentController extends Controller
         else{
             $document = Document::find($id);
         }
+        
+        
         $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
         if( $favorite == null )
             $document->hasFavorite = false;
         else
             $document->hasFavorite = true;
+            //user_id, owner_user_id,
         $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->orderBy('id','DESC')->get();
+        
+        /* User and freigabe comment visibility */
+        $commentVisibility = $this->commentVisibility($document);
+        
         $variants = EditorVariant::where('document_id',$id)->get();
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
@@ -1104,7 +1121,6 @@ class DocumentController extends Controller
                     $authorisedPositive = true;
             }
         }
-       
         if( count( $document->publishedDocuments->first() ) > 0)
             $published = true;
         // dd($authorised);
@@ -1150,7 +1166,9 @@ class DocumentController extends Controller
         }
         
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
-        return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 'variants', 'published', 'datePublished', 'canPublish', 'authorised') );
+        
+        return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 
+        'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility') );
     }
 
     /**
@@ -1161,45 +1179,51 @@ class DocumentController extends Controller
      */
     public function edit($id)
     {
-        $data = Document::find($id);
-        // dd($data);
-        if($data == null)
-            return redirect('dokumente/create');
-
-        $url = 'PATCH';
-        
-        $url = '';
-        $documentCoauthor = DocumentCoauthor::where('document_id', $id)->get();
-        $documentTypes = DocumentType::all();
-        $isoDocuments = IsoCategory::all();
-        $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
-        $documentStatus = DocumentStatus::all();
-        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
-        $mandantUsers =  MandantUser::distinct('user_id')->whereIn('mandant_id',$mandantId)->get();  
-        $mandantUsers = $this->clearUsers($mandantUsers);
-        $documentCoauthor = $mandantUsers;
-        
-        //this is until Neptun inserts the documents
-        $documentUsers = $mandantUsers;
-        
-        $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
-        if( $incrementedQmr == null || $incrementedQmr->qmr_number == null )
-            $incrementedQmr = 1;
+        if( $this->canCreateEditDoc() == true ){
+            $data = Document::find($id);
+            // dd($data);
+            if($data == null)
+                return redirect('dokumente/create');
+    
+            $url = 'PATCH';
+            
+            $url = '';
+            $documentCoauthor = DocumentCoauthor::where('document_id', $id)->get();
+            $documentTypes = DocumentType::all();
+            $isoDocuments = IsoCategory::all();
+            $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
+            $documentStatus = DocumentStatus::all();
+            $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+            $mandantUsers =  MandantUser::distinct('user_id')->whereIn('mandant_id',$mandantId)->get();  
+            $mandantUsers = $this->clearUsers($mandantUsers);
+            $documentCoauthor = $mandantUsers;
+            
+            //this is until Neptun inserts the documents
+            $documentUsers = $mandantUsers;
+            
+            $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
+            if( $incrementedQmr == null || $incrementedQmr->qmr_number == null )
+                $incrementedQmr = 1;
+            else{
+                $incrementedQmr = $incrementedQmr->qmr_number;
+                $incrementedQmr = $incrementedQmr+1;
+            }
+            
+            $incrementedIso = Document::where('document_type_id',$this->isoDocumentId )->orderBy('iso_category_number','desc')->first();
+            if( count($incrementedIso) < 1   || $data == null)
+                $incrementedIso = 1;
+            else{
+                $incrementedIso = $incrementedIso->iso_category_number;
+                $incrementedIso = $incrementedIso+1;
+            }
+           
+            return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments',
+            'documentStatus','mandantUsers','$documentUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
+        }   
         else{
-            $incrementedQmr = $incrementedQmr->qmr_number;
-            $incrementedQmr = $incrementedQmr+1;
+            session()->flash('message',trans('documentForm.noPermission'));
+            return redirect('/');
         }
-        
-        $incrementedIso = Document::where('document_type_id',$this->isoDocumentId )->orderBy('iso_category_number','desc')->first();
-        if( count($incrementedIso) < 1   || $data == null)
-            $incrementedIso = 1;
-        else{
-            $incrementedIso = $incrementedIso->iso_category_number;
-            $incrementedIso = $incrementedIso+1;
-        }
-       
-        return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments',
-        'documentStatus','mandantUsers','$documentUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
     }
 
     /**
@@ -1268,7 +1292,6 @@ class DocumentController extends Controller
             foreach($coauthors as $coauthor)
                 DocumentCoauthor::create(['document_id'=> $id, 'user_id'=> $coauthor]);
         }
-        
         $backButton = url('/dokumente/'.$data->id.'/edit');
         // session()->flash('message',trans('documentForm.documentCreateSuccess'));
         return view('dokumente.formWrapper', compact('data','backButton','form','url','adressats') );
@@ -1284,6 +1307,7 @@ class DocumentController extends Controller
      */
     public function newVersion($id)
     {
+       
         //find if document has version higher than one
         $document = Document::find($id);
         $highestVersion = Document::where('document_group_id',$document->document_group_id)->orderBy('version','DESC')->first();
@@ -1305,9 +1329,9 @@ class DocumentController extends Controller
             $newVariant = $variant->replicate();
             $newVariant->document_id = $newDocument->id;
             $newVariant->save();
-            
             /*Duplicate document uploads*/
             foreach( $variant->documentUpload as $upload){
+            
                 // $oldSlug= str_slug($document->name);
                 // $newSlug= str_slug($newDocument->name);
         // 		$newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
@@ -1318,6 +1342,7 @@ class DocumentController extends Controller
                 
                  if ( ! \File::exists( $this->movePath.'/'.$newDocument->id.'/' ) ) {
         			\File::makeDirectory( $this->movePath.'/'.$newDocument->id.'/', $mod=0777,true,true); 
+        			
         		}
                copy($this->movePath.'/'.$document->id.'/'.$upload->file_path, $this->movePath.'/'.$newDocument->id.'/'.$upload->file_path);
             //   $upload->file_path = $newFileName;
@@ -1427,7 +1452,14 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         $variants = EditorVariant::where('document_id',$id)->get();
-        $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)->orderBy('id','DESC')->get();
+        $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)
+        ->where(function ($query) use($document) {
+                $query->where('user_id',$document->user_id)
+                      ->orWhere('user_id', $document->owner_user_id);
+                      if( $document->documentCoauthor != null && isset( $document->documentCoauthor->user_id) )
+                        $query->orWhere('user_id', $document->documentCoauthor->user_id );
+            })
+        ->orderBy('id','DESC')->get();
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
         /* Button check */
         $published = false;
@@ -1491,8 +1523,11 @@ class DocumentController extends Controller
         }
         
         /* End Button check */
+        
+        /* User and freigabe comment visibility */
+        $commentVisibility = $this->commentVisibility($document);
         return view('dokumente.freigabe',compact('document','variants','documentCommentsUser','documentCommentsFreigabe','published',
-        'canPublish','hasPermission','authorised','authorisedPositive'));
+        'canPublish','hasPermission','authorised','authorisedPositive','commentVisiblity'));
     }
     /**
      * Display a listing of the resource.
@@ -1525,13 +1560,17 @@ class DocumentController extends Controller
                             'url_unique'=>$uniqeUrl]);
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
             }
-            else
+            else{
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
-                
-        if($document->published->url_unique)    
+                if($publishedDocs->deleted_at != null)
+                    $publishedDocs->restore();
+            }   
+        
+        return redirect()->back();        
+        /*if($document->published->url_unique)    
             return redirect('dokumente/'.$document->published->url_unique);
         else
-            return redirect('dokumente/'.$id);
+            return redirect('dokumente/'.$id);*/
     }
     
      /**
@@ -1725,7 +1764,14 @@ class DocumentController extends Controller
             $document->hasFavorite = false;
         else
             $document->hasFavorite = true;
-        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
+        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)
+         ->where(function ($query) use($document) {
+                $query->where('user_id',$document->user_id)
+                      ->orWhere('user_id', $document->owner_user_id);
+                      if( $document->documentCoauthor != null && isset( $document->documentCoauthor->user_id) )
+                        $query->orWhere('user_id', $document->documentCoauthor->user_id );
+            })
+        ->orderBy('id','DESC')->get();
         $variants = EditorVariant::where('document_id',$id)->where('variant_number',$editorId)->get();
         
             
@@ -1816,18 +1862,16 @@ class DocumentController extends Controller
     public function authorizeDocument(Request $request, $id)
     {
         // dd($request->all());
-        if($request->get('validation_status') == 1){
+        if( $request->get('validation_status') == 1 ) 
             $approved = true;
-            $dateApproved = Carbon::now();
-        }
-        else{
+        else
             $approved = false;
-            $dateApproved = Carbon::now();
-        } 
-         
+        
+        $dateApproved = Carbon::now();
         $document = Document::find($id);
         $user = Auth::user()->id;
         $document->document_status_id = 2; 
+        
         $document->save();
         $continue = true;
         $uniqeUrl = '';
@@ -1851,9 +1895,18 @@ class DocumentController extends Controller
             RequestMerge::merge(['freigeber' => 1,'active' => 1,'document_id'=>$document->id,'user_id' => $user] );
             $comment = DocumentComment::create( $request->all() );
         }
-        
-        
+        $now = Carbon::now();
+        // dd($document->date_published);
+        if( $document->date_published == null ){
+            $document->date_published = $document->created_at->addDay();
+            $document->save();
+        }
+        $publishTime = $now->gt( Carbon::parse($document->date_published) ) ; //if true you can publish
+        // dd($publishTime);
         $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
+        
+        if( $publishTime == true || $publishedDocs != null){
+            
             if($publishedDocs == null){
                 $continue = true;
                 $uniqeUrl = '';
@@ -1866,10 +1919,14 @@ class DocumentController extends Controller
                             'url_unique'=>$uniqeUrl]);
             
                 // $document->date_published = Carbon::now();
+                $document->document_status_id = 3;
                 $document->save();
             }
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
+            
+        }
+                
         session()->flash('message',trans('documentForm.authorized'));
         return redirect('/dokumente/'.$id.'/freigabe');
     }
@@ -1882,14 +1939,31 @@ class DocumentController extends Controller
     public function rundschreiben()
     {
         $docType = $this->rundId;
-        $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->where('document_status_id',3)
-        ->where('active',1)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
-        $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
         
-        $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
-        $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
-        return view('dokumente.rundschreiben', compact('docType', 'rundschreibenAll', 'rundschreibenAllTree', 'rundschreibenMeine', 'rundschreibenMeineTree') );
+        // status entwurf
+        $rundEntwurfPaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 1)->where('owner_user_id', Auth::user()->id)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-entwurf');
+        $rundEntwurfTree = $this->document->generateTreeview( $rundEntwurfPaginated, array('pageDocuments' => true) );
+        
+        // status im freigabe prozess
+        $rundFreigabePaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 6)->where('owner_user_id', Auth::user()->id)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-freigabe');
+        $rundFreigabeTree = $this->document->generateTreeview( $rundFreigabePaginated, array('pageDocuments' => true) );
+        
+        // all status aktuell/published
+        $rundAllPaginated = Document::where('document_type_id' , $docType )->where('document_status_id',3)->where('active',1)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
+        $rundAllTree = $this->document->generateTreeview( $rundAllPaginated, array('pageDocuments' => true) );
+        
+        // $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->where('document_status_id',3)
+        // ->where('active',1)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
+        // $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
+        
+        // $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
+        // $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
+        
+        return view('dokumente.rundschreiben', compact('docType', 'rundEntwurfPaginated', 'rundEntwurfTree', 'rundFreigabePaginated', 'rundFreigabeTree', 'rundAllPaginated', 'rundAllTree') );
     }
     
     /**
@@ -1916,14 +1990,23 @@ class DocumentController extends Controller
     public function rundschreibenQmr()
     {
         $docType = $this->qmRundId;
-        $qmrMyPaginated = Document::where('document_type_id' , $this->qmRundId )->where('user_id', Auth::user()->id)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-qmr');
-        $qmrMyTree = $this->document->generateTreeview( $qmrMyPaginated );
         
-        $qmrAllPaginated = Document::where('document_type_id' , $this->qmRundId )->where('document_status_id',3)->where('active',1)
+        // status entwurf
+        $qmrEntwurfPaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 1)->where('owner_user_id', Auth::user()->id)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-entwurf');
+        $qmrEntwurfTree = $this->document->generateTreeview( $qmrEntwurfPaginated, array('pageDocuments' => true) );
+        
+        // status im freigabe prozess
+        $qmrFreigabePaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 6)->where('owner_user_id', Auth::user()->id)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
+        $qmrFreigabeTree = $this->document->generateTreeview( $qmrFreigabePaginated, array('pageDocuments' => true) );
+        
+        // all status aktuell/published
+        $qmrAllPaginated = Document::where('document_type_id' , $docType )->where('document_status_id',3)->where('active',1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
-        $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated );
+        $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated, array('pageDocuments' => true) );
         
-        return view('dokumente.circularQMR', compact('docType', 'qmrMyTree', 'qmrMyPaginated', 'qmrAllTree', 'qmrAllPaginated'));
+        return view('dokumente.circularQMR', compact('docType', 'qmrEntwurfTree', 'qmrEntwurfPaginated', 'qmrFreigabeTree', 'qmrFreigabePaginated', 'qmrAllTree', 'qmrAllPaginated'));
     }
     
     /**
@@ -1933,16 +2016,24 @@ class DocumentController extends Controller
      */
     public function rundschreibenNews()
     {
-        $rundschreibenAll = Document::where('document_type_id' , $this->newsId )->where('document_status_id',3)->where('active',1)
-        ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-news');
-        $rundschreibenAllTree = $this->document->generateTreeview( $rundschreibenAll );
+        $docType = $this->newsId;
         
-        $rundschreibenMeine = Document::where('user_id',Auth::user()->id)
-        ->where('document_type_id', $this->newsId )->orderBy('id', 'desc')
-        ->take(10)->paginate(10, ['*'], 'meine-news');
-        $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
+        // status entwurf
+        $newsEntwurfPaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 1)->where('owner_user_id', Auth::user()->id)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'news-entwurf');
+        $newsEntwurfTree = $this->document->generateTreeview( $newsEntwurfPaginated, array('pageDocuments' => true) );
         
-        return view('dokumente.rundschreibenNews', compact('rundschreibenAll','rundschreibenAllTree','rundschreibenMeine','rundschreibenMeineTree') );
+        // status im freigabe prozess
+        $newsFreigabePaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 6)->where('owner_user_id', Auth::user()->id)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'news-freigabe');
+        $newsFreigabeTree = $this->document->generateTreeview( $newsFreigabePaginated, array('pageDocuments' => true) );
+        
+        // all status aktuell/published
+        $newsAllPaginated = Document::where('owner_user_id', Auth::user()->id)->where('document_status_id',3)->where('document_type_id', $docType )
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'all-news');
+        $newsAllTree = $this->document->generateTreeview( $newsAllPaginated, array('pageDocuments' => true) );
+        
+        return view('dokumente.rundschreibenNews', compact('newsEntwurfPaginated', 'newsEntwurfTree', 'newsFreigabePaginated', 'newsFreigabeTree', 'newsAllPaginated', 'newsAllTree'));
         
     }
     
@@ -2230,6 +2321,89 @@ class DocumentController extends Controller
     }
     return implode($pass); //turn the array into a string
        
+    }
+    
+    /**
+     * detect if user has privileges to see the comments
+     * @param Collection $document 
+     * @param int $uid (user id) 
+     * @return object 
+     */
+    public function commentVisibility($document,$uid=0){
+        if( $uid == 0 )
+            $uid = Auth::user()->id;       
+        $commentVisibility = new \StdClass();
+        /* Common user */
+    
+        $commentVisibility->user = false;
+        $commentVisibility->freigabe = false;
+        
+        if($uid == $document->user_id ||( $document->documentCoauthor != null && $uid == $document->documentCoauthor->user_id )|| $uid == $document->owner->user_id)
+            $commentVisibility->user = true;
+        /* End Common user */
+        
+        /* Freigabe user */
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        // dd($mandantUsers);
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            
+            foreach($userMandatRoles as $umr){
+                if($umr->role_id == 10 || $umr->role_id == 1)
+                    $commentVisibility->freigabe = true;
+            }
+        }
+        /* End Freigabe user */
+        return $commentVisibility;
+    }
+    
+    /**
+     * Set return url depeding if document has uniqe url or not
+     * @param Collection $document 
+     * @param int $uid (user id) 
+     * @return object 
+     */
+    private function setDocumentReturnUrl($document,$uid=0){
+        
+            $document = Document::find($id);
+        if( ctype_alnum($id) && !is_numeric($id) ){
+            $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
+            $id = $publishedDocs->document_id;
+            $datePublished = $publishedDocs->created_at;
+            // add UserReadDocumen
+            $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)
+                    ->where('user_id', Auth::user()->id)->get();
+                    // dd($readDocs);
+            if(count($readDocs) == 0){
+                UserReadDocument::create([
+                    'document_group_id'=> $publishedDocs->document_group_id, 
+                    'user_id'=> Auth::user()->id, 
+                    'date_read'=> Carbon::now(), 
+                    'date_read_last'=> Carbon::now()
+                ]);
+            }
+        }//end check if user has uniqe id
+        
+        
+    }
+    
+    /**
+     * Check if user is Struktur admin Dokumenten Verfasser,Rundschreiben Verfasser
+     * @param Collection $document 
+     * @param int $uid (user id) 
+     * @return object 
+     */
+    private function canCreateEditDoc(){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if( $umr->role_id == 1 || $umr->role_id == 11 || $umr->role_id == 13)
+                return true;
+            }
+        }
+        return false;
     }
     
     

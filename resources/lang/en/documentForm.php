@@ -39,6 +39,7 @@ return [
     'newVersionSuccess' => 'Neue Version wurde erstellt',
     'landscape' => 'Dokumente Querformat',
     'additionalLetter' => 'Zusätzlicher Text',
+    'noPermission' => 'Sie haben keine Berechtigung für diese Seite.',
     
     /* Freigabe process */
     'freigeben' => 'Freigeben',

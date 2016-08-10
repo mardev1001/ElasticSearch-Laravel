@@ -412,6 +412,8 @@
                         {!! ViewHelper::setArea('bankverbindungen',$data->mandantInfo,old('bankverbindungen'),trans('mandantenForm.bank') ) !!}
                     </div>
                 </div><!--End input box-->
+                
+                <div id="mandant-saved"></div>
         
                 <!-- input box-->
                 <div class="col-md-12 col-lg-12">
@@ -429,7 +431,7 @@
             </div>
           </div>
         </div>
-        <div class="clearfix"></div> 
+        <div class="clearfix"></div>
          
              
             

@@ -57,6 +57,9 @@
                     <div class="checkbox no-margin-top">
                         <input type="checkbox" name="allow_comments" id="allow_comments-0"><label for="allow_comments-0">{{ trans('dokumentTypenForm.allow_comments') }}</label>
                     </div>
+                    <div class="checkbox no-margin-top">
+                        <input type="checkbox" name="visible_navigation" id="visible_navigation-0"><label for="visible_navigation-0">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
+                    </div>
                 </div>
                 
             </div>
@@ -108,7 +111,7 @@
                                                 <label><input type="radio" name="document_art" value="1" @if($documentType->document_art) checked @endif >{{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}</label>
                                             </div>
                                         @else
-                                            @if($documentType->document_art)    
+                                            @if($documentType->document_art || $documentType->id == 5)    
                                                 {{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}
                                             @else
                                                 {{ trans('dokumentTypenForm.editor') }}
@@ -142,6 +145,10 @@
                                         <div class="checkbox no-margin-top">
                                             <input type="checkbox" name="allow_comments" id="allow_comments-{{$documentType->id}}" @if($documentType->allow_comments) checked @endif>
                                             <label for="allow_comments-{{$documentType->id}}">{{ trans('dokumentTypenForm.allow_comments') }}</label>
+                                        </div>
+                                        <div class="checkbox no-margin-top">
+                                            <input type="checkbox" name="visible_navigation" id="visible_navigation-{{$documentType->id}}" @if($documentType->visible_navigation) checked @endif>
+                                            <label for="visible_navigation-{{$documentType->id}}">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
                                         </div>
                                     </div>
                                  </td> 

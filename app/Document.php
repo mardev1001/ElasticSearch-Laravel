@@ -120,6 +120,10 @@ class Document extends Model
         return $this->belongsTo('App\User', 'user_id', 'id');
     }
     
+    public function owner(){
+        return $this->belongsTo('App\User', 'owner_user_id', 'id');
+    }
+    
     public function isoCategories(){
         return $this->belongsTo('App\IsoCategory', 'iso_category_id', 'id');
     }
@@ -162,6 +166,9 @@ class Document extends Model
     
     public function documentCoauthors(){
         return $this->hasManyThrough('App\DocumentCoauthor','App\User') ;
+    }
+    public function documentCoauthor(){
+        return $this->hasOne('App\DocumentCoauthor','document_id', 'id') ;
     }
     
     public function documentUploads(){

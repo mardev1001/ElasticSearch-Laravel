@@ -9,25 +9,52 @@
 
 @section('content')
 
+{{-- compact('rundEntwurfPaginated', 'rundEntwurfTree', 'rundFreigabePaginated', 'rundFreigabeTree', 'rundAllPaginated', 'rundAllTree') --}}
+
 <div class="row">
     
-    <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper">
+    <div class="col-xs-12 col-md-6">
+        
+        <div class="box-wrapper">
             
-            <h2 class="title">Meine Rundschreiben</h2>
+            <h2 class="title">{{ trans('rundschreiben.rundEntwurf') }}</h2>
             
             <div class="box">
-                <div class="tree-view" data-selector="rundschreibenMeine">
-                    <div class="rundschreibenMeine hide">
-                        {{ $rundschreibenMeineTree }}
+                <div class="tree-view" data-selector="rundEntwurfTree">
+                    <div class="rundEntwurfTree hide">
+                        {{ $rundEntwurfTree }}
                     </div>
                 </div>
             </div>
-            <div class="text-center">
-                {!! $rundschreibenMeine->render() !!}
+            
+            <div class="text-center box box-pagination">
+                {!! $rundEntwurfPaginated->render() !!}
             </div>
             
         </div>
+        
+    </div>
+    
+    <div class="col-xs-12 col-md-6">
+        
+        <div class="box-wrapper">
+            
+            <h2 class="title">{{ trans('rundschreiben.rundFreigabe') }}</h2>
+            
+            <div class="box">
+                <div class="tree-view" data-selector="rundFreigabeTree">
+                    <div class="rundFreigabeTree hide">
+                        {{ $rundFreigabeTree }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center box box-pagination">
+                {!! $rundFreigabePaginated->render() !!}
+            </div>
+            
+        </div>
+        
     </div>
     
 </div>
@@ -61,19 +88,20 @@
 <div class="row">
     
     <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper">
+        <div class="box-wrapper">
             
             <h2 class="title">Alle Rundschreiben</h2>
             
             <div class="box">
-                <div class="tree-view" data-selector="rundschreibenMeine">
-                    <div class="rundschreibenMeine hide">
-                        {{ $rundschreibenAllTree }}
+                <div class="tree-view" data-selector="rundAllPaginated">
+                    <div class="rundAllPaginated hide">
+                        {{ $rundAllTree }}
                     </div>
                 </div>
             </div>
-             <div class="text-center">
-                    {!! $rundschreibenAll->render() !!}
+            
+            <div class="text-center box box-pagination">
+                {!! $rundAllPaginated->render() !!}
             </div>
             
         </div>

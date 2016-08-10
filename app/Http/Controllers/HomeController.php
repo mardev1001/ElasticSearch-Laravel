@@ -10,6 +10,8 @@ use File;
 
 use App\Document;
 use App\DocumentComment;
+use App\MandantUser;
+use App\MandantUserRole;
 use App\Http\Repositories\DocumentRepository;
 
 class HomeController extends Controller
@@ -31,16 +33,19 @@ class HomeController extends Controller
      */
     public function index() 
     {
-        $documentsNew = Document::whereNotIn('document_status_id', array(1,4,5,6))->where('is_attachment',0)->where('active',1)
+        // $documentsNew = Document::whereNotIn('document_status_id', array(1,2,4,5,6))->where('is_attachment',0)->where('active',1)
+        $documentsNew = Document::where('document_status_id', 3)->where('is_attachment',0)->where('active',1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
         
         // $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
         $rundschreibenMy = Document::where('owner_user_id', Auth::user()->id)
         ->where('document_type_id', '!=', 5)
-        ->where('document_status_id', 3)
+        ->where('document_status_id', '!=', 5)
+        ->where('document_status_id', '!=', 6)
+        // ->where('document_status_id', 3)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
-        $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true));
+        $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true,'myDocuments' => true));
         
         $documentsMy = Document::where('user_id', Auth::user()->id)
         ->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-dokumente');
@@ -62,10 +67,24 @@ class HomeController extends Controller
         // $commentsMy = '[{"text":"Mein Kommentar-84","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]},{"text":"Mein Kommentar-51","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]}]';
         
         $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('id', 'desc')->take(10)->get();
+        
+        $commentVisibility = false;
+        $uid = Auth::user()->id;  
+        /* Freigabe user */
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if($umr->role_id == 9 || $umr->role_id == 1)
+                    $commentVisibility = true;
+            }
+        }
+        /* End Freigabe user */
         $commentsMy = DocumentComment::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->take(10)->get();
         // dd(Auth::user()->id);
-        
-        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'documentsMy','documentsMyTree', 'wikiEntries', 'commentsNew', 'commentsMy'));
+        // dd($commentVisibility);
+        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 
+        'documentsMy','documentsMyTree', 'wikiEntries', 'commentsNew', 'commentsMy','commentVisibility'));
     }
 
     /**

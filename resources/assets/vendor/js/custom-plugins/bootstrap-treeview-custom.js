@@ -559,10 +559,15 @@
 									node.icon || _this.options.nodeIcon);
 				}
 
-				treeItem
-					.append($(_this.template.icon)
-						.addClass(classList.join(' '))
-					);
+				// console.log(node.icon);
+				if(node.icon != undefined){
+					if(node.icon != ''){
+						treeItem
+							.append($(_this.template.icon)
+								.addClass(classList.join(' '))
+							);
+					}
+				}
 			}
 			
 			// Add node icon 2
@@ -577,19 +582,15 @@
 									node.icon2 || _this.options.nodeIcon2);
 				}
 				
-				if (_this.options.enableDelete) {
-					if(node.hrefDelete != undefined){
+				if(node.icon2 != undefined){
+					if(node.icon2 != ''){
 						treeItem
-							.append($(_this.template.icon2)
-								.attr('href', node.hrefDelete)
-								.append(node.textDelete)
+							.append($(_this.template.icon)
+								.addClass(classList.join(' '))
 							);
 					}
 				}
-				treeItem
-					.append($(_this.template.icon)
-						.addClass(classList.join(' '))
-					);
+				
 			}
 
 			// Add node icon 3
@@ -597,7 +598,7 @@
 				
 			// 	var classList = ['node-icon'];
 				
-			// 	console.log(node.icon3);
+				// console.log(node.icon);
 			// 	// node.icon3.append('<a href="'+node.hrefDelete +'" class="display-block"></a>');
 			// 	if(node.hrefHistory != undefined){
 			// 		console.log();
@@ -633,27 +634,6 @@
 						.addClass(classList.join(' '))
 					);
 			}
-
-			// Add text
-			if (_this.options.enableLinks) {
-				
-				if (node.beforeText == undefined) node.beforeText = '&nbsp;';
-				if (node.afterText == undefined) node.afterText = '&nbsp;';
-				
-				// Add hyperlink
-				treeItem
-					.append($(_this.template.link).attr('href', node.href)
-						.prepend('<span class="item-before-text btn-block">' + node.beforeText + '</span>')
-						.append('<span class="item-text btn-block">' + node.text + '</span>')
-						.append('<span class="item-after-text btn-block">' + node.afterText + '</span>')
-					);
-					
-			}
-			else {
-				// otherwise just text
-				treeItem
-					.append(node.text);
-			}
 			
 			// Add hyperlink for deleting
 			if (_this.options.enableDelete) {
@@ -679,6 +659,29 @@
 						);
 				}
 			}
+
+			// Add text
+			if (_this.options.enableLinks) {
+				
+				if (node.beforeText == undefined) node.beforeText = '&nbsp;';
+				if (node.afterText == undefined) node.afterText = '&nbsp;';
+				
+				// Add hyperlink
+				treeItem
+					.append($(_this.template.link).attr('href', node.href)
+						.prepend('<span class="item-before-text btn-block">' + node.beforeText + '</span>')
+						.append('<span class="item-text btn-block">' + node.text + '</span>')
+						.append('<span class="item-after-text btn-block">' + node.afterText + '</span>')
+					);
+					
+			}
+			else {
+				// otherwise just text
+				treeItem
+					.append(node.text);
+			}
+			
+			
 
 
 			// Add tags as badges
@@ -778,8 +781,8 @@
 		icon: '<span class="icon"></span>',
 		icon2: '<span class="icon2"></span>',
 		// icon3: '<span class="icon3"></span>',
-		linkHistory: '<a class="icon icon-history display-inline-block" href="#"></a>',
-		// linkDelete: '<span class="icon-delete"><a href="#" class="node-delete" style="color:inherit;"><i class="icon-trash display-block"></i></a></span>',
+		linkHistory: '<a class="icon node-icon icon-history display-inline-block" href="#"></a>',
+		linkDelete: '<a class="icon node-icon icon-trash display-inline-block" href="#"></a>',
 		// linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'
