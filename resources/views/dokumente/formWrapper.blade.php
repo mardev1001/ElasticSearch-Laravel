@@ -30,10 +30,13 @@
                                 <button class="btn btn-primary" type="submit" name="save" value="save">
                                     <span class="fa fa-floppy-o"></span> Speichern
                                 </button>
-                                <button class="btn btn-primary" type="submit" name="attachment" value="attachment"> 
-                                    <span class="fa fa-file-text-o"></span>
-                                    Anlage hinzufügen
-                                </button>    
+                                
+                                @if( $data->documentType->document_art != 1 )
+                                    <button class="btn btn-primary" type="submit" name="attachment" value="attachment"> 
+                                        <span class="fa fa-file-text-o"></span>
+                                        Anlage hinzufügen
+                                    </button>
+                                @endif
                                 <button class="btn btn-primary" type="submit" name="next" value="next"> 
                                     <span class="fa fa-chevron-right"></span>
                                     Freigabe & Verteiler

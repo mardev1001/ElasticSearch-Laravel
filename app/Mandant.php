@@ -12,7 +12,7 @@ class Mandant extends Model
     protected $guarded = []; //blacklist
     protected $fillable = 
     [
-        'name','kurzname','mandant_number','rights_wiki',
+        'name','kurzname','mandant_number','rights_wiki', 'geschaftsfuhrer', 'geschaftsfuhrer_infos', 'geschaftsfuhrer_von', 'geschaftsfuhrer_bis',
         'rights_admin','logo','mandant_id_hauptstelle','hauptstelle',
         'adresszusatz','strasse','plz','hausnummer','ort','bundesland','telefon',
         'kurzwahl','fax','email','website','geschaftsfuhrer_history','active'

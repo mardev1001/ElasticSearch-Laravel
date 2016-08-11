@@ -128,10 +128,11 @@
                         @endforeach
                         
                     @endif
-
-                    <li>
-                        <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
-                    </li>
+                    @if( ViewHelper::canCreateEditDoc() == true )
+                        <li>
+                            <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
+                        </li>
+                    @endif
                 </ul><!--End .nav-second-level -->
 
             </li><!-- End menu item -->

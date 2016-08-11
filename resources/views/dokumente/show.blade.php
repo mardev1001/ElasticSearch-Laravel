@@ -155,8 +155,9 @@
                             @else
                                 {{ trans('dokumentShow.unFavorite') }}
                             @endif</a>
-    
-                        <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                        @if( $commentVisibility->user == true || $commentVisibility->freigabe == true )   
+                            <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                        @endif
                     @endif
 
                     @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
@@ -223,7 +224,7 @@
      
     <div class="clearfix"></div><br>
     
-    @if( $commentVisibility->user == true )
+    @if( $commentVisibility->user == true || $commentVisibility->freigabe == true )
         <!-- user comments -->
         <div class="row">
             <div class="col-xs-12">

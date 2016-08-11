@@ -43,7 +43,8 @@ class MandantInfo extends Model
             'handelsregister_sitz','steuernummer','ust_ident_number','zausatzinfo_steuer',
             'berufsgenossenschaft_number','berufsgenossenschaft_zusatzinfo','erlaubniss_gultig_ab','erlaubniss_gultig_von',
             'geschaftsjahr','geschaftsjahr_info','bankverbindungen','info_wichtiges','info_sonstiges',
-            'steuernummer_lohn','mitarbeiter_finanz_id','mitarbeiter_edv_id','mitarbeiter_vertrieb_id','mitarbeiter_umwelt_id', 'gewerbeanmeldung_history', 'unbefristet', 'befristet_bis',
+            'steuernummer_lohn','mitarbeiter_finanz_id','mitarbeiter_edv_id','mitarbeiter_vertrieb_id','mitarbeiter_umwelt_id', 
+            'angemeldet_am', 'umgemeldet_am', 'abgemeldet_am', 'gewerbeanmeldung_history', 'unbefristet', 'befristet_bis',
         ]; //whitelist
         
     public function mandant(){

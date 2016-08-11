@@ -20,6 +20,7 @@ class DummyDocumentTypeSeeder extends Seeder
                     'document_role' => '1',
                     'read_required' => '1',
                     'allow_comments' => '0',
+                    'visible_navigation' => '1',
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
@@ -31,6 +32,7 @@ class DummyDocumentTypeSeeder extends Seeder
                     'document_role' => '1',
                     'read_required' => '1',
                     'allow_comments' => '0',
+                    'visible_navigation' => '1',
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
@@ -42,6 +44,7 @@ class DummyDocumentTypeSeeder extends Seeder
                     'document_role' => '1',
                     'read_required' => '1',
                     'allow_comments' => '0',
+                    'visible_navigation' => '1',
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
@@ -53,6 +56,7 @@ class DummyDocumentTypeSeeder extends Seeder
                     'document_role' => '0',
                     'read_required' => '1',
                     'allow_comments' => '0',
+                    'visible_navigation' => '1',
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
@@ -64,6 +68,7 @@ class DummyDocumentTypeSeeder extends Seeder
                     'document_role' => '0',
                     'read_required' => '0',
                     'allow_comments' => '0',
+                    'visible_navigation' => '1',
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")

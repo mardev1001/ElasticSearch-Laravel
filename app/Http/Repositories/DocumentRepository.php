@@ -410,13 +410,15 @@ class DocumentRepository
         if (sizeof($items)) $documents = $items;
     
         if (count($documents) > 0) {
+           
             foreach ($documents->editorVariantDocument as $evd) {
                 if (Document::find($evd->document_id) != null) {
+                    // dd($options['documentId']);
                     if ($evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']) {
-    
+     
                         $secondDoc = Document::find($evd->document_id);
                         $node = new \StdClass();
-                        $node->name = $secondDoc->name;
+                        $node->name = $secondDoc->name.' ('.$secondDoc->documentStatus->name .')';
                         $node->documentId = $secondDoc->id;
                         $node->deleteUrl = url('anhang-delete/' . $options['documentId'] . '/' . $evd->editor_variant_id . '/' . $evd->document_id);
     

@@ -221,7 +221,7 @@
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
-                    <button type="button" class="btn btn-primary history-add"> {{ trans('mandantenForm.add') }} </button>
+                    <button type="button" class="btn btn-primary history-add"> {{ trans('mandantenForm.toHistory') }} </button>
                 </div><!--End input box-->
         
                 <div class="clearfix"></div> <br>
@@ -280,21 +280,21 @@
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('angemeldet_am', '', '', trans('mandantenForm.gewerbeanmeldung'), trans('mandantenForm.angemeldetAm'), false, '') !!}
+                        {!! ViewHelper::setInput('angemeldet_am', $data->mandantInfo, old('angemeldet_am'), trans('mandantenForm.gewerbeanmeldung'), trans('mandantenForm.angemeldetAm'), false, '') !!}
                     </div>
                 </div><!--End input box-->
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('umgemeldet_am', '', '', trans('mandantenForm.umgemeldetAm'), trans('mandantenForm.umgemeldetAm'), false, '' ) !!}
+                        {!! ViewHelper::setInput('umgemeldet_am', $data->mandantInfo, old('umgemeldet_am'), trans('mandantenForm.umgemeldetAm'), trans('mandantenForm.umgemeldetAm'), false, '' ) !!}
                     </div>
                 </div><!--End input box-->
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {!! ViewHelper::setInput('abgemeldet_am', '', '', trans('mandantenForm.abgemeldetAm'), trans('mandantenForm.abgemeldetAm'), false, '') !!}
+                        {!! ViewHelper::setInput('abgemeldet_am', $data->mandantInfo, old('abgemeldet_am'), trans('mandantenForm.abgemeldetAm'), trans('mandantenForm.abgemeldetAm'), false, '') !!}
                     </div>
                 </div><!--End input box-->
                 
@@ -302,7 +302,7 @@
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
-                    <button type="button" class="btn btn-primary history-gewerbeanmeldung-add"> {{ trans('mandantenForm.add') }} </button>
+                    <button type="button" class="btn btn-primary history-gewerbeanmeldung-add"> {{ trans('mandantenForm.toHistory') }} </button>
                 </div><!--End input box-->
                 
                 <!-- input box-->

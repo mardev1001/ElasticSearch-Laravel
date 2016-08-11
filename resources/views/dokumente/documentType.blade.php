@@ -3,7 +3,7 @@
 @extends('master')
 @section('page-title')
     @if(count($documentType))
-        {{ $documentType->name }}
+        {{ $documentType->name }} - Übersicht
     @else
         Dokument Typen
     @endif
@@ -11,11 +11,13 @@
 
 @section('content')
 
+{{-- compact('documentType', 'documentsByTypeTree', 'documentsByTypePaginated', 'docsByTypeEntwurfPaginated', 'docsByTypeEntwurfTree', 'docsByTypeFreigabePaginated', 'docsByTypeFreigabeTree' ) --}}
 
+<!--
 <div class="row">
     <div class="col-xs-12">
         <div class="box-wrapper">
-            <h4 class="title">{{ trans('controller.overview') }}</h4>
+            <h4 class="title">{{ trans('dokumentTypenForm.overview') }}</h4>
             <div class="box">
                 @if(count($documentType))
                     <div class="tree-view hide-icons" data-selector="documentsByTypeTree">
@@ -37,6 +39,122 @@
         </div>
     </div>
 </div>
+-->
+
+<div class="row">
+    
+    <div class="col-xs-12 col-md-6">
+        
+        <div class="box-wrapper">
+            
+            <h2 class="title">{{ trans('dokumentTypenForm.typesEntwurf') }}</h2>
+            @if(count($docsByTypeEntwurfPaginated))
+                <div class="box">
+                    <div class="tree-view" data-selector="docsByTypeEntwurfTree">
+                        <div class="docsByTypeEntwurfTree hide">
+                            {{ $docsByTypeEntwurfTree }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $docsByTypeEntwurfPaginated->render() !!}
+                </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
+            @endif
+        </div>
+        
+    </div>
+    
+    <div class="col-xs-12 col-md-6">
+        
+        <div class="box-wrapper">
+            
+            <h2 class="title">{{ trans('dokumentTypenForm.typesFreigabe') }}</h2>
+            @if(count($docsByTypeFreigabePaginated))
+                <div class="box">
+                    <div class="tree-view" data-selector="docsByTypeFreigabeTree">
+                        <div class="docsByTypeFreigabeTree hide">
+                            {{ $docsByTypeFreigabeTree }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $docsByTypeFreigabePaginated->render() !!}
+                </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
+            @endif
+        </div>
+        
+    </div>
+    
+</div>
+
+<div class="clearfix"></div> <br>
+
+<div class="col-xs-12 box-wrapper">
+    <div class="box">
+        <div class="row">
+            {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                <div class="input-group">
+                    <div class="col-md-12 col-lg-12">
+                        {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
+                        <input type="hidden" name="document_type_id" value="{{ $documentType }}">
+                    </div>
+                    <div class="col-md-12 col-lg-12">
+                        <span class="custom-input-group-btn">
+                            <button type="submit" class="btn btn-primary no-margin-bottom">
+                                {{ trans('navigation.search') }} 
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>
+
+<div class="clearfix"></div> <br>
+
+<div class="row">
+    
+    <div class="col-xs-12">
+        
+        <div class="box-wrapper">
+            
+            <h2 class="title">{{ trans('dokumentTypenForm.typesAll') ." ". $documentType->name }}</h2>
+            @if(count($documentsByTypePaginated))
+                <div class="box">
+                    <div class="tree-view" data-selector="documentsByTypeTree">
+                        <div class="documentsByTypeTree hide">
+                            {{ $documentsByTypeTree }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $documentsByTypePaginated->render() !!}
+                </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
+            @endif
+            
+        </div>
+        
+    </div>
+    
+</div>
+
+<div class="clearfix"></div> <br>
 
     
 @stop

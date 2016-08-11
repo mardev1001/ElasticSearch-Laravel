@@ -23,5 +23,8 @@ return [
     'visible_navigation' => 'Navigation',
     'rundschreiben' => 'Rundschreiben',
     'verfasser' => 'Verfasser',
+    'typesEntwurf' => 'Entwurf',
+    'typesFreigabe' => 'Im Freigabe Prozess',
+    'typesAll' => 'Alle',
     
 ];

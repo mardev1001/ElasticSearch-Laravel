@@ -1,6 +1,11 @@
 <?php
 namespace App\Helpers;
 use Request;
+
+use Auth;
+
+use App\MandantUser;
+use App\MandantUserRole;
 class ViewHelper
 {
     /**
@@ -295,6 +300,24 @@ class ViewHelper
     }
     
     
+    /**
+     * Check if user is Struktur admin Dokumenten Verfasser,Rundschreiben Verfasser
+     * @param Collection $document 
+     * @param int $uid (user id) 
+     * @return object 
+     */
+    static function canCreateEditDoc(){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if( $umr->role_id == 1 || $umr->role_id == 11 || $umr->role_id == 13)
+                return true;
+            }
+        }
+        return false;
+    }
     
 }
 

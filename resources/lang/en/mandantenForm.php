@@ -82,5 +82,6 @@ return [
     'role-deleted' => 'Rolle/Benutzer efrolgreich entfernt.',
     'zusInfos' => 'zusätzliche Informationen',
     'bg' => 'Berufsgenossenschaft',
+    'toHistory' => 'Zur Historie',
 
 ];
