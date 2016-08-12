@@ -14,6 +14,9 @@ use DB;
 use Auth;
 use Carbon\Carbon;
 
+use App\User;
+use App\MandantUser;
+use App\MandantUserRole;
 use App\Document;
 use App\DocumentType;
 use App\DocumentApproval;
@@ -204,10 +207,13 @@ class DocumentRepository
                         // $icon2 = 'icon-open ';
                     }
 
-                    if ($options['showHistory'] == true) {
-                        if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1){
-                            // $icon3 = 'icon-history ';
-                            $node->hrefHistory = url('dokumente/historie/' . $document->id);
+                    
+                    if($this->canViewHistory()){
+                        if ($options['showHistory'] == true) {
+                            if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1){
+                                // $icon3 = 'icon-history ';
+                                $node->hrefHistory = url('dokumente/historie/' . $document->id);
+                            }
                         }
                     }
                     
@@ -246,36 +252,43 @@ class DocumentRepository
                     //
                     if ($options['pageHistory'] == true  ) {
                         
-                        $node->nodes = array();
-
-                        foreach ($document->editorVariantOrderBy as $variant) {
-                            $subNode = new \StdClass();
-                            // $subNode->href = url('dokumente/editor/' . $document->id . '/edit#variation' . $variant->variant_number);
-                           
-                            $subNode->text = "Variante " . $variant->variant_number;
-                            $subNode->icon = 'child-node hidden ';
-                            $subNode->icon2 = 'fa fa-2x fa-file-o ';
-                            // $subNode->icon3 = $icon3 . 'last-node-icon ';
-                          
-                            if(count($variant->documentUpload)){
-                                  
-                                $subNode->nodes = array();
-                                foreach ($variant->documentUpload as $upload) {
-                                    // if($variant->name = 'pdfrund')
-                                    //     dd($upload);
-                                    $subSubNode = new \StdClass();
-                                    // $subSubNode->text = basename($upload->file_path);
-                                    $subSubNode->text = 'PDF Rundschreiben';
-                                    $subSubNode->icon = 'sub-child-node hidden ';
-                                    $subSubNode->icon2 = 'icon-download ';
-                                    // $subSubNode->icon3 = 'last-node-icon ';
-                                    // $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
-                                    $subSubNode->href = '/download/' . $document->id . '/' . $upload->file_path;
-                                    
-                                    array_push($subNode->nodes, $subSubNode);
+                        if(count($document->editorVariantOrderBy)){
+                            
+                            $node->nodes = array();
+    
+                            foreach ($document->editorVariantOrderBy as $variant) {
+                                $subNode = new \StdClass();
+                                // $subNode->href = url('dokumente/editor/' . $document->id . '/edit#variation' . $variant->variant_number);
+                               
+                                $subNode->text = "Variante " . $variant->variant_number;
+                                $subNode->icon = 'child-node hidden ';
+                                $subNode->icon2 = 'fa fa-2x fa-file-o ';
+                                // $subNode->icon3 = $icon3 . 'last-node-icon ';
+                              
+                                if(count($variant->documentUpload)){
+                                      
+                                    $subNode->nodes = array();
+                                    foreach ($variant->documentUpload as $upload) {
+                                        // if($variant->name = 'pdfrund')
+                                        //     dd($upload);
+                                        $subSubNode = new \StdClass();
+                                        // $subSubNode->text = basename($upload->file_path);
+                                        $subSubNode->text = 'PDF Rundschreiben';
+                                        $subSubNode->icon = 'sub-child-node hidden ';
+                                        $subSubNode->icon2 = 'icon-download ';
+                                        // $subSubNode->icon3 = 'last-node-icon ';
+                                        // $subSubNode->href = '/download/' . str_slug($document->name) . '/' . $upload->file_path;
+                                        $subSubNode->href = '/download/' . $document->id . '/' . $upload->file_path;
+                                        
+                                        array_push($subNode->nodes, $subSubNode);
+                                    }
                                 }
+                                array_push($node->nodes, $subNode);
                             }
-                            array_push($node->nodes, $subNode);
+                            
+                            if(count($node->nodes)<1)
+                                unset($node->nodes);
+                            
                         }
                     } elseif (sizeof($document->editorVariantNoDeleted)) {
                         
@@ -319,6 +332,9 @@ class DocumentRepository
                                     
                                 }
                             }
+                            
+                            if(count($node->nodes)<1)
+                                unset($node->nodes);
                         }
                     }
                     // } elseif (!$document->documentUploads->isEmpty()) {
@@ -376,9 +392,13 @@ class DocumentRepository
 
                                 array_push($node->nodes, $subNode);
                             }
+                                
+                            if(count($node->nodes)<1)
+                                unset($node->nodes);
                         }
 
                         array_push($treeView, $node);
+                        
                     }
                 // }//if second doc not null
             }
@@ -572,6 +592,23 @@ class DocumentRepository
     {
         $string = explode('-', $name);
         return $string[1];
+    }
+    
+     /**
+     * Check if user is Historien Leser
+     * @return bool 
+     */
+    public function canViewHistory(){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if( $umr->role_id == 14)
+                    return true;
+            }
+        }
+        return false;
     }
 
 }

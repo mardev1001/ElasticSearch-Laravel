@@ -309,14 +309,45 @@ class ViewHelper
     static function canCreateEditDoc(){
         $uid = Auth::user()->id;
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        
         foreach($mandantUsers as $mu){
             $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            //  dd( $userMandatRoles );
             foreach($userMandatRoles as $umr){
                 if( $umr->role_id == 1 || $umr->role_id == 11 || $umr->role_id == 13)
                 return true;
             }
         }
         return false;
+    }
+    
+    /**
+     * Check if user is Historien Leser
+     * @return bool 
+     */
+    static function canViewHistory(){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if( $umr->role_id == 14)
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Generate comment boxes
+     * @param Collection $collection 
+     * @param string $title
+     * @return string $string (html template) 
+     */
+    static function generateCommentBoxes($collection,$title){
+        $string = '';
+        $string = view('partials.comments', compact('collection','title') )->render();
+        echo $string;
     }
     
 }

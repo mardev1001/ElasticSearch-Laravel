@@ -34,17 +34,24 @@ class HomeController extends Controller
     public function index() 
     {
         // $documentsNew = Document::whereNotIn('document_status_id', array(1,2,4,5,6))->where('is_attachment',0)->where('active',1)
-        $documentsNew = Document::where('document_status_id', 3)->where('is_attachment',0)->where('active',1)
-        ->orderBy('id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
+        $documentsNew = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
+        ->where('document_status_id', 3)->where('is_attachment',0)->where('documents.active',1)
+        ->where('document_types.document_art', 0)
+        ->orderBy('documents.id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
         
         // $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
-        $rundschreibenMy = Document::where('owner_user_id', Auth::user()->id)
+        // ->join('contacts', 'users.id', '=', 'contacts.user_id')
+        $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
+        ->where('owner_user_id', Auth::user()->id)
         ->where('document_type_id', '!=', 5)
         ->where('document_status_id', '!=', 5)
         ->where('document_status_id', '!=', 6)
+        ->where('document_types.document_art', 0)
         // ->where('document_status_id', 3)
-        ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
+        // ->get();
+        ->orderBy('documents.id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
+        // dd($rundschreibenMy);
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true,'myDocuments' => true));
         
         $documentsMy = Document::where('user_id', Auth::user()->id)

@@ -16,5 +16,6 @@ return [
     'commentAdmin' => 'Kommentare Freigeber',
     /* wiki category section */
     'newCategory' => 'Neues Wiki Kategorie',
+    'topCategory' => 'Top Kategorie',
     /* End wiki category section */
 ];

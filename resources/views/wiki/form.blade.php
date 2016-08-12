@@ -48,7 +48,7 @@
             <div class="clearfix"></div>
             <div class="col-xs-12">
                 <div class="content-editor" data-id='content'>
-                    @if( $data->content )
+                    @if( isset($data->content) )
                         {!! $data->content !!}
                     @endif
                 </div>

@@ -76,7 +76,14 @@ class DocumentController extends Controller
     {
         if( $this->canCreateEditDoc() == true ){
             $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
-            $documentTypes = DocumentType::all();
+            $documentTypes = DocumentType::all();// if struktur admin
+            
+            if( $this->returnRole() != false && $this->returnRole() == 11) // 11 Rundschreiben Verfasser
+                $documentTypes = DocumentType::where('document_art',0)->get();
+            
+            elseif( $this->returnRole() != false && $this->returnRole() == 13) // 13 Dokumenten Verfasser
+               $documentTypes = DocumentType::where('document_art',1)->get();
+               
             $isoDocuments = IsoCategory::all();
             $documentStatus = DocumentStatus::all(); 
             $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
@@ -1085,6 +1092,7 @@ class DocumentController extends Controller
             $document->hasFavorite = true;
             //user_id, owner_user_id,
         $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->orderBy('id','DESC')->get();
+        $myComments = DocumentComment::where('document_id',$id)->where('user_id',Auth::user()->id)->orderBy('id','DESC')->get();
         
         /* User and freigabe comment visibility */
         $commentVisibility = $this->commentVisibility($document);
@@ -1167,7 +1175,7 @@ class DocumentController extends Controller
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
         
         return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 
-        'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility') );
+        'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility','myComments') );
     }
 
     /**
@@ -1184,11 +1192,28 @@ class DocumentController extends Controller
             if($data == null)
                 return redirect('dokumente/create');
     
+            $documentTypes = DocumentType::all();// if struktur admin
+            $docTypesArr = $documentTypes->pluck('id')->toArray();
+            if( $this->returnRole() != false && $this->returnRole() == 11){ // 11 Rundschreiben Verfasser
+                $documentTypes = DocumentType::where('document_art',0)->get();
+                $docTypesArr = $documentTypes->pluck('id')->toArray();
+            }
+            
+            elseif( $this->returnRole() != false && $this->returnRole() == 13){
+               $documentTypes = DocumentType::where('document_art',1)->get();    
+               $docTypesArr = $documentTypes->pluck('id')->toArray(); 
+            } // 13 Dokumenten Verfasser
+            if( count( $docTypesArr) ){
+                if( !in_array($data->document_type_id,$docTypesArr) ){
+                        session()->flash('message',trans('documentForm.noPermission'));
+                    return redirect()->back();
+                }
+            }
+            
             $url = 'PATCH';
             
             $url = '';
             $documentCoauthor = DocumentCoauthor::where('document_id', $id)->get();
-            $documentTypes = DocumentType::all();
             $isoDocuments = IsoCategory::all();
             $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
             $documentStatus = DocumentStatus::all();
@@ -1452,6 +1477,21 @@ class DocumentController extends Controller
         }
         else
              return redirect('dokumente/'.$id.'/freigabe');
+    }
+    
+     
+    /**
+     * Destory the comment in the database
+     *
+     * @param  int $id
+     * @param  int  $documentId
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteComment($id, $documentId)
+    {
+        $comment = DocumentComment::find($id);
+        $comment->delete();
+        return redirect()->back();
     }
     
     /**
@@ -2447,10 +2487,8 @@ class DocumentController extends Controller
     }
     
     /**
-     * Check if user is Struktur admin Dokumenten Verfasser,Rundschreiben Verfasser
-     * @param Collection $document 
-     * @param int $uid (user id) 
-     * @return object 
+     * Check if user is Struktur Admin, Dokumenten Verfasser, Rundschreiben Verfasser
+     * @return bool 
      */
     private function canCreateEditDoc(){
         $uid = Auth::user()->id;
@@ -2459,7 +2497,24 @@ class DocumentController extends Controller
             $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
             foreach($userMandatRoles as $umr){
                 if( $umr->role_id == 1 || $umr->role_id == 11 || $umr->role_id == 13)
-                return true;
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Return role_id if user is Struktur Admin, Dokumenten Verfasser, Rundschreiben Verfasser
+     * @return int or bool 
+     */
+    private function returnRole(){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if( $umr->role_id == 11 || $umr->role_id == 13 || $umr->role_id == 1)
+                    return $umr->role_id;
             }
         }
         return false;

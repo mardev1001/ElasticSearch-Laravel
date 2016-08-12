@@ -29,7 +29,7 @@
                     <!-- button div-->    
                     <div class="col-xs-12">
                         <div class="form-group no-margin-bottom custom-input-group-btn">
-                           <button type="submit" class="btn btn-primary no-margin-bottom">{{ trans('benutzerForm.create') }}</button>
+                           <button type="submit" class="btn btn-primary no-margin-bottom">{{ trans('benutzerForm.save') }}</button>
                             <!--<button type="reset" class="btn btn-info">{{ trans('benutzerForm.reset') }}</button>-->
                         </div>
                     </div><!-- End button div-->    
@@ -68,7 +68,7 @@
                                    'class' => 'horizontal-form' ]) !!}
                                 <td class="text-center valign col-md-3">{{ $data->name }} </td>
                                 <td class="text-center valign col-md-3">
-                                    <select name="user_id[]" class="form-control select" required multiple>
+                                    <select name="user_id[]" class="form-control select" required multiple data-placeholder="Redakutre">
                                         <option></option>
                                         @foreach($users as $user){
                                            <option value="{{$user->id}}"  
@@ -80,7 +80,7 @@
                                     </select>
                                 </td>
                                 <td class="text-center valign ">
-                                    <select name="role_id[]" class="form-control select" required multiple>
+                                    <select name="role_id[]" class="form-control select" required multiple data-placeholder="Rolle">
                                         <option></option>
                                           @foreach($roles as $role)
                                             <option value="{{$role->id}}"

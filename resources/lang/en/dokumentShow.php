@@ -23,6 +23,7 @@ return [
     'variant' => 'Variante',
     'comment' => 'Kommentar',
     'commenting' => 'Kommentieren',
+    'myComments' => 'Meine Kommentare',
     'approve' => 'Freigeben',
     'disapprove' => 'Ablehnen',
     'attachments' => 'Anhänge',

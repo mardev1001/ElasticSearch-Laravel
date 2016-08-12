@@ -1704,6 +1704,9 @@ h1.page-title {
 #page-wrapper .mce-panel {
   border-color: #efefef; }
 
+.delete-comment {
+  padding: 0 10px; }
+
 /* tabs - end */
 /*if css no extension if scss add .scss*/
 /*!

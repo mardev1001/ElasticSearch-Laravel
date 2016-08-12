@@ -52,6 +52,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         Route::post('comment/{id}', 'DocumentController@saveComment');
+        Route::get('comment-delete/{comment_id}/{document_id}', 'DocumentController@deleteComment');
         
         // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
         Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles-add', 'uses' => 'MandantController@createInternalMandantUser']);

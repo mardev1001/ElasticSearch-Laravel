@@ -116,84 +116,17 @@
     
     <div class="clearfix"></div><br>
     
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="col-xs-12 box-wrapper home">
-                <h1 class="title">Meine letzten Kommentare</h1>
-                <div class="box home">
-                    <div class="commentsMy">
-                        @if(count($commentsMy))
-                            @foreach($commentsMy as $k => $comment)
-                                <div class="comment-{{++$k}}">
-                                    <span class="comment-header">
-                                        @if( $comment->document->published != null)
-                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            @if ( $comment->betreff != null )                                                                 
-                                                <strong>{{ $comment->betreff }}</strong>
-                                            @endif
-                                        </a>
-                                        @else
-                                         <a href="{{url('/dokumente/'. $comment->document->id)}}">
-                                            @if ( $comment->betreff != null )                                                                 
-                                                <strong>{{ $comment->betreff }}</strong>
-                                            @endif
-                                        </a>
-                                        @endif
-                                        , {{ $comment->created_at }}
-                                    </span> <br>
-                                    <span class="comment-body">
-                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
-                                    </span>
-                                </div>
-                                <div class="clearfix"></div><br>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+        @if(count($commentsMy))
+            {!! ViewHelper::generateCommentBoxes($commentsMy, 'Meine letzten Kommentare' ) !!}
+        @endif
+        
     
     <div class="clearfix"></div><br>
     
     @if( $commentVisibility == true) 
-        <div class="row"><!-- Comment Leser can only see these comments -->
-        <div class="col-xs-12">
-            <div class="col-xs-12 box-wrapper home">
-                <h1 class="title">Neue Kommentare</h1>
-                <div class="box home">
-                    <div class="commentsNew">
-                        @if(count($commentsNew))
-                            @foreach($commentsNew as $k => $comment)
-                                <div class="comment-{{++$k}}">
-                                    <span class="comment-header">
-                                        @if( $comment->document->published != null)
-                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                            @if ( $comment->betreff != null )                                                                 
-                                                <strong>{{ $comment->betreff }}</strong>
-                                            @endif
-                                        </a>
-                                        @else
-                                         <a href="{{url('/dokumente/'. $comment->document->id)}}">
-                                            @if ( $comment->betreff != null )                                                                 
-                                                <strong>{{ $comment->betreff }}</strong>
-                                            @endif
-                                        </a>
-                                        @endif
-                                        - {{ $comment->user->first_name ." ". $comment->user->last_name }}, {{ $comment->created_at }}
-                                    </span> <br>
-                                    <span class="comment-body">
-                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
-                                    </span>
-                                </div>
-                                <div class="clearfix"></div><br>
-                            @endforeach
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div><!-- end .row -->
+        @if( count($commentsNew) )
+            {!! ViewHelper::generateCommentBoxes($commentsNew, 'Neue Kommentare' ) !!}
+        @endif
     @endif
     <div class="clearfix"></div><br>
 
