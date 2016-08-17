@@ -53,8 +53,8 @@ Benutzer bearbeiten
                     <div class="form-group">
                         <label class="control-label">{{trans('benutzerForm.title')}}</label>
                         <select name="title" class="form-control select" placeholder="{{trans('benutzerForm.title')}}">
-                            <option value="Frau">Frau</option>
-                            <option value="Herr">Herr</option>
+                            <option value="Frau" @if($user->title == "Frau") selected @endif >Frau</option>
+                            <option value="Herr" @if($user->title == "Herr") selected @endif >Herr</option>
                         </select>
                     </div>   
                 </div><!--End input box-->

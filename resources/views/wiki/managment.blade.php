@@ -2,7 +2,7 @@
 
 @extends('master')
 
-@section('page-title') {{ trans('wiki.wikiStart') }} @stop
+@section('page-title') {{ trans('wiki.managnmet') }} - Admin or User depents on link @stop
 
 @section('content')
 <div class="row">
@@ -11,14 +11,28 @@
             <div class="row">
                 {!! Form::open(['action' => 'WikiController@search', 'method'=>'POST']) !!}
                     <div class="input-group">
-                        <div class="col-md-12 col-lg-12">
-                            @if( isset($searchInput) ) 
-                                {!! ViewHelper::setInput('search', '',$searchInput, trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
-                            @else
-                                {!! ViewHelper::setInput('search', '',old('search'), trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
-                            @endif
+                        <div class="col-md-3">
+                            {!! ViewHelper::setInput('name', '',$searchInput, trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
                         </div>
-                        <div class="col-md-12 col-lg-12">
+                        <div class="col-md-3">
+                            {!! ViewHelper::setInput('subject', '',$searchInput, trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
+                        </div>
+                      
+                        <div class="col-md-3">
+                            {!! ViewHelper::setInput('date_from', '',$searchInput, trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
+                        </div>
+                        <div class="col-md-3">
+                            {!! ViewHelper::setInput('category', '',$searchInput, trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
+                        </div>
+                        <div class="col-md-3">
+                            {!! ViewHelper::setInput('status', '',$searchInput, trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
+                        </div>
+                        
+                        <div class="col-md-3">
+                            {!! ViewHelper::setInput('ersteller', '',$searchInput, trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
+                        </div>
+                        
+                        <div class="col-md-3 col-lg-3">
                             <span class="custom-input-group-btn">
                                 <button type="submit" class="btn btn-primary no-margin-bottom">
                                     {{ trans('navigation.search') }} 

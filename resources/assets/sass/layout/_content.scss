@@ -381,9 +381,25 @@ h1.page-title {
     border-color: $border-color;
 }
 
-
+.row.flexbox-container a{
+    display: block;
+    float: left;
+    text-decoration: none !important;
+}
+.row.flexbox-container a.link{
+    margin-top: 3px;
+}
 .delete-comment{
     padding: 0 10px;
 }
 
 /* tabs - end */
+
+/* Wiki search */
+.wiki-search a h4,.wiki-search a span{
+    font-size: 16px !important;
+}
+.wiki-search a h4,.wiki-search a small{
+    font-size: 14px !important;
+}
+/* End  Wiki search */

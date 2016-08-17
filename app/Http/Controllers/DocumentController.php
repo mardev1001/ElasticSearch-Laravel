@@ -1084,8 +1084,10 @@ class DocumentController extends Controller
             $document = Document::find($id);
         }
         
+        $favorite = null;
+        if( isset($document->document_group_id) && isset(Auth::user()->id) )
+            $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
         
-        $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
         if( $favorite == null )
             $document->hasFavorite = false;
         else
@@ -1661,7 +1663,7 @@ class DocumentController extends Controller
             
         $document->save();
         
-        if($document->published->url_unique)    
+        if( $document->published != null && $document->published->url_unique)    
             return redirect('dokumente/'. $document->published->url_unique);
         else
             return redirect('dokumente/'.$id);
@@ -2175,7 +2177,7 @@ class DocumentController extends Controller
     public function documentHistory($id)
     {
         $document = Document::find($id);
-        $documentHistory = Document::where('document_group_id', $document->document_group_id)->orderBy('id', 'desc')->paginate(10, ['*'], 'dokument-historie');
+        $documentHistory = Document::where('document_group_id', $document->document_group_id)->whereIn('document_status_id', array(3,5))->orderBy('id', 'desc')->paginate(10, ['*'], 'dokument-historie');
         $documentHistoryTree = $this->document->generateTreeview( $documentHistory, array('pageHistory' => true) );
         // dd($documentHistory);
         return view('dokumente.historie', compact('document', 'documentHistory', 'documentHistoryTree') );
@@ -2437,7 +2439,7 @@ class DocumentController extends Controller
     
         $commentVisibility->user = false;
         $commentVisibility->freigabe = false;
-        if($uid == $document->user_id ||( $document->documentCoauthor != null && $uid == $document->documentCoauthor->user_id )|| $uid == $document->owner_user_id)
+        if($uid == $document->user_id ||( $document->documentCoauthor != null && $uid == $document->documentCoauthor->user_id ) || $uid == $document->owner_user_id)
             $commentVisibility->user = true;
         /* End Common user */
         
@@ -2448,10 +2450,12 @@ class DocumentController extends Controller
             $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
             
             foreach($userMandatRoles as $umr){
-                if($umr->role_id == 10 || $umr->role_id == 1)
+                if($umr->role_id == 9 || $umr->role_id == 1){
                     $commentVisibility->freigabe = true;
+                }
             }
         }
+        
         /* End Freigabe user */
         return $commentVisibility;
     }

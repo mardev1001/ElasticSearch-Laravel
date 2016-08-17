@@ -22,6 +22,7 @@ class Document extends Model
         'approval_all_mandants','pdf_upload','is_attachment','active','iso_category_number','qmr_number','landscape','additional_letter',
     ]; //whitelist
     
+    protected $dates = ['created_at', 'updated_at'];
      
     public function getDatePublishedAttribute($value)
     {

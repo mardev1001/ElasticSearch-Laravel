@@ -111,12 +111,12 @@
                             
                             
                             
-                            <table class="table">
+                            <table class="table data-table">
                             <thead>
                                 <th>Name</th>
-                                <th class="col-md-8">Rollen</th>
-                                <th>Mandanten</th>
-                                <th class="text-center">Optionen</th>
+                                <th class="col-md-8 no-sort">Rollen</th>
+                                <th class="no-sort">Mandanten</th>
+                                <th class="text-center no-sort">Optionen</th>
                             </thead>
                             <tbody>
                             
@@ -204,10 +204,10 @@
                     <div class="panel-body">
                         
                             @if(count($unassignedUsers) > 0)
-                                    <table class="table">
+                                    <table class="table data-table">
                                     <thead>
                                         <th class="col-md-10">Name</th>
-                                        <th class="col-md-2 text-center">Optionen</th>
+                                        <th class="col-md-2 text-center no-sort">Optionen</th>
                                     </thead>
                                     <tbody>
                                         

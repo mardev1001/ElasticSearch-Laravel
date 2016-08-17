@@ -145,10 +145,29 @@
                 <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>
 
-            <li>
-                <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>
-            </li>
+            <!--<li>-->
+            <!--    <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>-->
+            <!--</li>-->
 
+            <li class="">
+                <a href="#">{{ ucfirst(trans('navigation.wiki')) }}
+                    <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+
+                    <li>
+                        <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url('wiki-kategorie') }}">{{ ucfirst( trans('wiki.wikiCategory') ) }} </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('wiki/create') }}">{{ ucfirst( trans('wiki.wikiCreate') ) }} </a>
+                    </li>
+                </ul><!--End .nav-second-level -->
+            </li><!-- End menu item -->
+            
+            
             <li class="">
                 <a href="#">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                     <span class="fa arrow"></span></a>

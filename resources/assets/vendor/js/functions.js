@@ -5,7 +5,10 @@ $(function() {
     
     // Delete prompt for buttons and anchors
     $('.delete-prompt').on('click touch', function(e) {
-        if (confirm("Wollen Sie diesen Eintrag wirklich entfernen?"))
+        var text = "Wollen Sie diesen Eintrag wirklich entfernen?";
+        if( $(this).data('text').length )
+            text = $(this).data('text');
+        if (confirm(text))
             return true;
         else
             return false;

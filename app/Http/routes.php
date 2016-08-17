@@ -72,7 +72,10 @@ Route::group( array('middleware' => ['auth']), function(){
         
         Route::resource('wiki-kategorie', 'WikiCategoryController');
         
+        Route::any('wiki/search', 'WikiController@search');
         Route::get('wiki/{id}/activate', 'WikiController@wikiActivation');
+        Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
+        Route::get('wiki/verwalten', 'WikiController@managmentUser');
         Route::resource('wiki', 'WikiController');
         
         Route::resource('iso-kategorien', 'IsoCategoryController');

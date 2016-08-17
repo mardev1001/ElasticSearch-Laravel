@@ -10,6 +10,7 @@
         <div class="row">
             <div class="col-md-12 col-lg-12">
                 <h3 class="title">
+                    
                   {{ $data->name }}
                     <br>
                     <span class="text">

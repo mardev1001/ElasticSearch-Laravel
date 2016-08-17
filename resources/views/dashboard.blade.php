@@ -125,7 +125,7 @@
     
     @if( $commentVisibility == true) 
         @if( count($commentsNew) )
-            {!! ViewHelper::generateCommentBoxes($commentsNew, 'Neue Kommentare' ) !!}
+        {!! ViewHelper::generateCommentBoxes($commentsNew, 'Neue Kommentare' ) !!}
         @endif
     @endif
     <div class="clearfix"></div><br>

@@ -64205,7 +64205,10 @@ $(function() {
     
     // Delete prompt for buttons and anchors
     $('.delete-prompt').on('click touch', function(e) {
-        if (confirm("Wollen Sie diesen Eintrag wirklich entfernen?"))
+        var text = "Wollen Sie diesen Eintrag wirklich entfernen?";
+        if( $(this).data('text').length )
+            text = $(this).data('text');
+        if (confirm(text))
             return true;
         else
             return false;
@@ -65607,6 +65610,8 @@ $( function() {
 					classList.push(node.selectedIcon || _this.options.selectedIcon || 
 									node.icon2 || _this.options.nodeIcon2);
 				}
+				
+				console.log(node.icon2);
 				
 				if(node.icon2 != undefined){
 					if(node.icon2 != ''){

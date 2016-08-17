@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\DocumentRequest;
+use App\Http\Repositories\SearchRepository;
 
 use App\WikiPage;
 use App\WikiPageStatus;
@@ -16,6 +17,14 @@ use App\WikiPageHistory;
 
 class WikiController extends Controller
 {
+     /**
+     * Class constructor
+     */
+    public function __construct(SearchRepository $searchRepo)
+    {
+        $this->search =  $searchRepo;
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -135,5 +144,23 @@ class WikiController extends Controller
         $wiki->save();
         
      return redirect('wiki/'.$id);
+    }
+    
+    
+     /**
+     * Search documents by request parameters.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        if(empty($request->all())) return redirect('/wiki');
+        $searchInput = $request->get('search');
+        $search = $this->search->searchWiki( $request->all() );  
+        $topCategories = WikiCategory::where('top_category',1)->get();
+        $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        // dd($search);
+        return view('wiki.index', compact('search','topCategories','newestWikiEntries','searchInput')); 
     }
 }

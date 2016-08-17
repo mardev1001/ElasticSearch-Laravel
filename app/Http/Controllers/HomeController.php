@@ -37,9 +37,12 @@ class HomeController extends Controller
         $documentsNew = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('document_status_id', 3)->where('is_attachment',0)->where('documents.active',1)
         ->where('document_types.document_art', 0)
-        ->orderBy('documents.id', 'desc')->paginate(10, ['*'], 'neue-dokumente');
+        ->orderBy('documents.id', 'desc')
+		//->take(10)->get();
+		->paginate(10, ['*','document_types.name as docTypeName', 'documents.name as name', 
+		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at'], 'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
-        
+        //dd($documentsNew);
         // $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
         // ->join('contacts', 'users.id', '=', 'contacts.user_id')
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
@@ -48,9 +51,11 @@ class HomeController extends Controller
         ->where('document_status_id', '!=', 5)
         ->where('document_status_id', '!=', 6)
         ->where('document_types.document_art', 0)
+        ->where('documents.active',1)
         // ->where('document_status_id', 3)
         // ->get();
-        ->orderBy('documents.id', 'desc')->paginate(10, ['*'], 'meine-rundschrieben');
+        ->orderBy('documents.id', 'desc')->paginate(10, ['*','document_types.name as docTypeName', 'documents.name as name', 
+		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at'], 'meine-rundschrieben');
         // dd($rundschreibenMy);
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true,'myDocuments' => true));
         
@@ -64,7 +69,9 @@ class HomeController extends Controller
                       ->orWhere('owner_user_id', Auth::user()->id);
                     //   ->documentCoauthors('',);
             }
-        )->orderBy('id', 'desc')->paginate(10, ['*'], 'freigabe-dokumente');
+        )
+        ->where('documents.active',1)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'freigabe-dokumente');
         
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
@@ -73,7 +80,7 @@ class HomeController extends Controller
         // $commentsNew = '[{"text":"Neuer Kommentar-135","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-95","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-38","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]}]';
         // $commentsMy = '[{"text":"Mein Kommentar-84","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]},{"text":"Mein Kommentar-51","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]}]';
         
-        $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('id', 'desc')->take(10)->get();
+        $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('created_at', 'desc')->take(10)->get();
         
         $commentVisibility = false;
         $uid = Auth::user()->id;  
@@ -87,7 +94,8 @@ class HomeController extends Controller
             }
         }
         /* End Freigabe user */
-        $commentsMy = DocumentComment::where('user_id', Auth::user()->id)->orderBy('id', 'desc')->take(10)->get();
+        $commentsMy = DocumentComment::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->take(10)->get();
+        // dd($commentsMy);
         // dd(Auth::user()->id);
         // dd($commentVisibility);
         return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 

@@ -109,6 +109,7 @@ class UserController extends Controller
         $roles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
         
         // dd($mandantUserRoles);
+        // dd($user);
         return view('benutzer.edit', compact('user', 'usersAll', 'mandantsAll', 'rolesAll'));
     }
 

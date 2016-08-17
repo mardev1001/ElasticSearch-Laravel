@@ -1,6 +1,6 @@
 @section('page-title')
     @if( Request::is('*/edit') )
-        Mandanten bearbeiten
+        Mandanten bearbeiten - ({{$data->mandant_number}}) {{$data->kurzname}}
     @else
         Mandanten anlegen
     @endif

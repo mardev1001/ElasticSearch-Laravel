@@ -908,7 +908,7 @@ input.form-control:-ms-input-placeholder {
   position: absolute;
   right: 10px;
   top: 50%;
-  margin-top: -12px; }
+  margin-top: -24px; }
 
 #page-wrapper .treeview.hide-icons span.indent {
   display: inline-block !important; }
@@ -1704,10 +1704,26 @@ h1.page-title {
 #page-wrapper .mce-panel {
   border-color: #efefef; }
 
+.row.flexbox-container a {
+  display: block;
+  float: left;
+  text-decoration: none !important; }
+
+.row.flexbox-container a.link {
+  margin-top: 3px; }
+
 .delete-comment {
   padding: 0 10px; }
 
 /* tabs - end */
+/* Wiki search */
+.wiki-search a h4, .wiki-search a span {
+  font-size: 16px !important; }
+
+.wiki-search a h4, .wiki-search a small {
+  font-size: 14px !important; }
+
+/* End  Wiki search */
 /*if css no extension if scss add .scss*/
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)

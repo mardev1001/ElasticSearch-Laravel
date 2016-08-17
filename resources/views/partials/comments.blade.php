@@ -7,32 +7,38 @@
                 <div class="commentsMy">
                     @if(count($collection))
                         @foreach( $collection as $k => $comment )
-                            <div class="comment-{{++$k}} row flexbox-container">
-                                <!-- delete comment box -->
-                                <div class="pull-left delete-comment">
-                                     <a href="/comment-delete/{{$comment->id}}/{{ $comment->document_id }}" class="no-underline">
-                                         <span class="icon icon-trash inline-block"></span>
-                                     </a> 
-                                </div><!-- end delete comment box -->
-                                
-                                <!-- delete box -->
-                                <div class="pull-left">
-                                   <span class="comment-header">
-                                    {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }} - 
-                                    <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                        <strong>{{ $comment->betreff }}</strong>
-                                    </a>
-                                    , {{ $comment->created_at }}
-                                    </span> <br>
+                            @if( $comment->deleted_at == null )
+                                <div class="comment-{{++$k}} row flexbox-container">
+                                    <!-- delete comment box -->
+                                    <div class="pull-left delete-comment">
+                                         <a href="/comment-delete/{{$comment->id}}/{{ $comment->document_id }}" class="no-underline delete-prompt"
+                                         data-text="Wollen Sie diesen Kommentar wirklich löschen?">
+                                             <span class="icon icon-trash inline-block delete-prompt"
+                                         data-text="Wollen Sie diesen Kommentar wirklich löschen?"></span>
+                                         </a> 
+                                    </div><!-- end delete comment box -->
                                     
-                                    <span class="comment-body">
-                                        {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
-                                    </span> 
+                                    <!-- delete box -->
+                                    <div class="pull-left">
+                                       <span class="comment-header">
+                                           @if( $comment->document->published != null )
+                                            <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}"> <strong>{{ $comment->betreff }}</strong> -&nbsp </a>
+                                        @else
+                                            <a href="{{url('/dokumente/'. $comment->document->id)}}"> <strong>{{ $comment->betreff }}</strong> -&nbsp </a>
+                                        @endif
+                                        {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }}, {{ $comment->created_at }}
+                                        </span> <br>
+                                        
+                                        <span class="comment-body">
+                                            {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                        </span> 
+                                        
+                                    </div><!-- end delete box -->
                                     
-                                </div><!-- end delete box -->
-                                
-                            </div>
-                            <div class="clearfix"></div><br>
+                                </div>
+                                <hr/>
+                                <div class="clearfix"></div>
+                            @endif
                         @endforeach
                     @endif
                 </div>

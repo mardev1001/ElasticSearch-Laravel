@@ -90,7 +90,7 @@
     <div class="col-xs-12">
         <div class="box-wrapper">
             <h2 class="title">Alle ISO Dokumente</h2>
-                @if(count($isoAllPaginated) > 0)
+                @if(count($isoAllPaginated))
                     <div class="box">
                         <div class="tree-view" data-selector="isoAllTree">
                             <div class="isoAllTree hide">

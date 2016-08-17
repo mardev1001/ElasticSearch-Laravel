@@ -26,6 +26,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
     
+    protected $dates = ['last_login', 'created_at', 'updated_at'];
+    
     /**
      * Get the date format
      *

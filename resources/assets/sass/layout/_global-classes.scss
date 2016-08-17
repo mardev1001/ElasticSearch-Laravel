@@ -567,14 +567,14 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 #page-wrapper .hide-icons .node-icon {
-    display: none !important;
+    display: none !important; 
 }
 
 #page-wrapper .treeview a.icon-history {
     position: absolute;
     right: 10px;
     top: 50%;
-    margin-top: -12px;
+    margin-top: -24px;
 }
 
 #page-wrapper .treeview.hide-icons span.indent {

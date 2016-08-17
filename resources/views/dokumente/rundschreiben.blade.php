@@ -19,17 +19,24 @@
             
             <h2 class="title">{{ trans('rundschreiben.rundEntwurf') }}</h2>
             
-            <div class="box">
-                <div class="tree-view" data-selector="rundEntwurfTree">
-                    <div class="rundEntwurfTree hide">
-                        {{ $rundEntwurfTree }}
+            @if(count($rundEntwurfPaginated))
+                
+                <div class="box">
+                    <div class="tree-view" data-selector="rundEntwurfTree">
+                        <div class="rundEntwurfTree hide">
+                            {{ $rundEntwurfTree }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="text-center box box-pagination">
-                {!! $rundEntwurfPaginated->render() !!}
-            </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $rundEntwurfPaginated->render() !!}
+                </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
+            @endif
             
         </div>
         
@@ -41,17 +48,25 @@
             
             <h2 class="title">{{ trans('rundschreiben.rundFreigabe') }}</h2>
             
-            <div class="box">
-                <div class="tree-view" data-selector="rundFreigabeTree">
-                    <div class="rundFreigabeTree hide">
-                        {{ $rundFreigabeTree }}
+            @if(count($rundFreigabePaginated))
+            
+                <div class="box">
+                    <div class="tree-view" data-selector="rundFreigabeTree">
+                        <div class="rundFreigabeTree hide">
+                            {{ $rundFreigabeTree }}
+                        </div>
                     </div>
                 </div>
-            </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $rundFreigabePaginated->render() !!}
+                </div>
             
-            <div class="text-center box box-pagination">
-                {!! $rundFreigabePaginated->render() !!}
-            </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
+            @endif
             
         </div>
         
@@ -92,17 +107,25 @@
             
             <h2 class="title">Alle Rundschreiben</h2>
             
-            <div class="box">
-                <div class="tree-view" data-selector="rundAllPaginated">
-                    <div class="rundAllPaginated hide">
-                        {{ $rundAllTree }}
+            @if(count($rundAllPaginated))
+            
+                <div class="box">
+                    <div class="tree-view" data-selector="rundAllPaginated">
+                        <div class="rundAllPaginated hide">
+                            {{ $rundAllTree }}
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="text-center box box-pagination">
-                {!! $rundAllPaginated->render() !!}
-            </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $rundAllPaginated->render() !!}
+                </div>
+                
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
+            @endif
             
         </div>
     </div>

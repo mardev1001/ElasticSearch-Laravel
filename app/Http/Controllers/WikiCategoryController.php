@@ -12,7 +12,7 @@ use App\WikiCategory;
 use App\WikiCategoryUser;
 use App\User;
 use App\Role;
-
+use App\WikiPage;
 
 class WikiCategoryController extends Controller
 {
@@ -64,7 +64,9 @@ class WikiCategoryController extends Controller
      */
     public function show($id)
     {
-        //
+        $category = WikiCategory::find($id);
+        $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
+        return view('wiki.category', compact('category','categoryEntries') ); 
     }
 
     /**

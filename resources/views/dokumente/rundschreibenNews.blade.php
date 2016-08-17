@@ -18,23 +18,25 @@
         <div class="box-wrapper">
             
             <h2 class="title">{{ trans('rundschreiben.newsEntwurf') }}</h2>
-            
-            <div class="box">
-                @if( count($newsEntwurfTree ) )
+            @if(count($newsEntwurfPaginated ))
+                
+                <div class="box">
                     <div class="tree-view" data-selector="newsEntwurfTree">
                         <div class="newsEntwurfTree hide">
                             {{ $newsEntwurfTree }}
                         </div>
                     </div>
-                @else
+                </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $newsEntwurfPaginated->render() !!}
+                </div>
+                
+            @else
+                <div class="box">
                     <span class="text">Keine Dokumente gefunden.</span>
-                @endif 
-            </div>
-            
-            <div class="text-center box box-pagination">
-                {!! $newsEntwurfPaginated->render() !!}
-            </div>
-            
+                </div>
+            @endif
         </div>
         
     </div>
@@ -45,22 +47,25 @@
             
             <h2 class="title">{{ trans('rundschreiben.newsFreigabe') }}</h2>
             
-            <div class="box">
-                @if( count($newsFreigabeTree ) )
-                    <div class="tree-view" data-selector="newsFreigabeTree">
-                        <div class="newsFreigabeTree hide">
-                            {{ $newsFreigabeTree }}
+            @if(count($newsFreigabePaginated ))
+                <div class="box">
+                    
+                        <div class="tree-view" data-selector="newsFreigabeTree">
+                            <div class="newsFreigabeTree hide">
+                                {{ $newsFreigabeTree }}
+                            </div>
                         </div>
-                    </div>
-                @else
+                     
+                </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $newsFreigabePaginated->render() !!}
+                </div>
+            @else
+                <div class="box">
                     <span class="text">Keine Dokumente gefunden.</span>
-                @endif 
-            </div>
-            
-            <div class="text-center box box-pagination">
-                {!! $newsFreigabePaginated->render() !!}
-            </div>
-            
+                </div>
+            @endif
         </div>
         
     </div>
@@ -103,21 +108,23 @@
             
             <h2 class="title">{{ trans('rundschreiben.allNews') }}</h2>
             
-            <div class="box">
-                @if( count($newsAllTree) )
+            @if(count($newsAllPaginated))
+                <div class="box">
                     <div class="tree-view" data-selector="newsAllTree">
                         <div class="newsAllTree hide">
                             {{ $newsAllTree }}
                         </div>
                     </div>
-                @else
-                      <span class="text">Keine Dokumente gefunden.</span>
-                @endif 
-            </div>
-            
-            <div class="text-center box box-pagination">
-                {!! $newsAllPaginated->render() !!}
-            </div>
+                </div>
+                
+                <div class="text-center box box-pagination">
+                    {!! $newsAllPaginated->render() !!}
+                </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
+            @endif
                 
         </div>
     </div>

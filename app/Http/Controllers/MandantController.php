@@ -62,7 +62,8 @@ class MandantController extends Controller
     {
         $roles = Role::all();
         $mandants = Mandant::all();
-        $users = User::all();
+        // $users = User::all();
+        $users = User::orderBy('first_name', 'asc')->get();
         $mandantUsers = MandantUser::all();
         $unassignedUsers = array();
         $unassignedActiveUsers = array();
@@ -77,6 +78,8 @@ class MandantController extends Controller
                     $unassignedInactiveUsers[] = $user;
             }   
         }
+        
+        
         
         return view('mandanten.administration', compact('roles','mandants','unassignedUsers', 'unassignedActiveUsers', 'unassignedInactiveUsers') );
     }

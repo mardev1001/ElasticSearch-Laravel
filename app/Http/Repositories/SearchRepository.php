@@ -10,11 +10,12 @@ use DB;
 use App\Mandant;
 use App\MandantUser;
 use App\User;
+use App\WikiPage;
 
 class SearchRepository
 {
     /**
-     * Merge two collections
+     * Search Phone list
      *
      * @return object array $array
      */
@@ -80,5 +81,18 @@ class SearchRepository
        
         return $mandants;
      }
-     
+    /**
+     * Search Wiki subject or inhalt
+     *
+     * @return object array $array
+     */     
+     public function searchWiki( $request ){
+         $searchParam =  $request['search'];
+         $results = WikiPage::where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )
+         ->orWhere('content','LIKE','%'.$searchParam.'%' )
+     	->paginate( 10, ['*'], 'suchergebnisse' );
+         //->get() ;
+         return $results;
+         
+     }
 }

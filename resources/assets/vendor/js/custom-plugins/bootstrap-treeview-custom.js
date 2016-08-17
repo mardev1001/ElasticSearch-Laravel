@@ -582,6 +582,8 @@
 									node.icon2 || _this.options.nodeIcon2);
 				}
 				
+				console.log(node.icon2);
+				
 				if(node.icon2 != undefined){
 					if(node.icon2 != ''){
 						treeItem
