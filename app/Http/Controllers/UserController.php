@@ -95,7 +95,19 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $user = User::find($id);
+        
+        $restored = false;
+    
+        if(User::find($id))
+            $user = User::find($id);
+        elseif(User::withTrashed()->find($id)){
+            User::withTrashed()->find($id)->restore();
+            $user = User::find($id);
+            $restored = true;
+        }
+        else $user = null;
+        
+        // $user = User::find($id);
         $usersAll = User::all();
         $mandantsAll = Mandant::all();
         // $rolesAll = Role::all();
@@ -109,8 +121,10 @@ class UserController extends Controller
         $roles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
         
         // dd($mandantUserRoles);
-        // dd($user);
-        return view('benutzer.edit', compact('user', 'usersAll', 'mandantsAll', 'rolesAll'));
+        if(isset($user))
+            return view('benutzer.edit', compact('user', 'usersAll', 'mandantsAll', 'rolesAll'));
+        else
+            return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
     }
 
     /**

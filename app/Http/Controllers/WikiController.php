@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Carbon\Carbon;
 use App\Http\Requests;
 use App\Http\Requests\DocumentRequest;
 use App\Http\Repositories\SearchRepository;
@@ -14,6 +15,7 @@ use App\WikiRole;
 use App\WikiCategory;
 use App\WikiCategoryUser;
 use App\WikiPageHistory;
+use App\User;
 
 class WikiController extends Controller
 {
@@ -162,5 +164,69 @@ class WikiController extends Controller
         $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         // dd($search);
         return view('wiki.index', compact('search','topCategories','newestWikiEntries','searchInput')); 
+    }
+    
+    /**
+     * Wiki admin managment
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function managmentAdmin()
+    {  
+        $data = array();
+        $wikies = WikiPage::orderBy('created_at','desc')->get();
+        $statuses = WikiPageStatus::all();
+        $categories = WikiCategory::all();
+        $users = WikiPage::orderBy('id','asc')->pluck('user_id')->toArray();
+        $wikiUsers = User::whereIn('id',$users)->get();
+        $admin = true;
+        
+        return view('wiki.managment', compact('data','wikies', 'statuses','wikiUsers','categories','admin')); 
+    }
+    
+    /**
+     * Wiki admin managment
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function managmentUser()
+    {  
+        $data = array();
+        $wikies = WikiPage::orderBy('created_at','desc')->get();
+        $statuses = WikiPageStatus::all();
+        $categories = WikiCategory::all();
+        $users = WikiPage::orderBy('id','asc')->pluck('user_id')->toArray();
+        $wikiUsers = User::whereIn('id',$users)->get();
+        $admin = false;
+        
+        return view('wiki.managment', compact('data','wikies', 'statuses','wikiUsers','categories','admin')); 
+    }
+    
+     /**
+     * Search documents by request parameters.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function searchManagment(Request $request)
+    {
+        
+        $data = new \StdClass(); 
+        foreach($request->all() as $k => $v){
+            $data->$k = $v;
+        }
+        $wikies = $this->search->searchManagmentSearch($data);
+        $statuses = WikiPageStatus::all();
+        $categories = WikiCategory::all();
+        $users = WikiPage::orderBy('id','asc')->pluck('user_id')->toArray();
+        $wikiUsers = User::whereIn('id',$users)->get();
+        if($data->admin == true)
+            $admin = true;
+        else 
+            $admin = false;
+        
+       return view('wiki.managment', compact('data','wikies', 'statuses','wikiUsers','categories','admin')); 
     }
 }

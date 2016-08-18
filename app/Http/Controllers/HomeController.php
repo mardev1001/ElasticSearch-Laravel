@@ -63,7 +63,10 @@ class HomeController extends Controller
         ->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-dokumente');
         $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true));
         
-        $freigabeEntries = Document::where('document_status_id', 6)->where(
+        $freigabeEntries = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
+        ->where('document_status_id', 6)
+        ->where('document_types.document_art', 0)
+        ->where(
             function($query){
                 $query->where('user_id', Auth::user()->id)
                       ->orWhere('owner_user_id', Auth::user()->id);
@@ -71,7 +74,7 @@ class HomeController extends Controller
             }
         )
         ->where('documents.active',1)
-        ->orderBy('id', 'desc')->paginate(10, ['*'], 'freigabe-dokumente');
+        ->orderBy('documents.id', 'desc')->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at' ], 'freigabe-dokumente');
         
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         

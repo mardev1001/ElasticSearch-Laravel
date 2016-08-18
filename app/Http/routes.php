@@ -58,6 +58,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles-add', 'uses' => 'MandantController@createInternalMandantUser']);
         Route::post('mandanten/{id}/internal-roles-edit', ['as'=>'mandant.internal-roles-edit', 'uses' => 'MandantController@editInternalMandantUser']);
         Route::post('mandanten/user-delete', 'MandantController@destroyMandantUser');
+        Route::get('mandanten/search', 'MandantController@search');
         Route::post('mandanten/search', 'MandantController@search');
         Route::patch('mandanten/activate', 'MandantController@mandantActivate');
         Route::resource('mandanten', 'MandantController');
@@ -68,6 +69,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
         Route::patch('benutzer/roles-edit', 'UserController@userMandantRoleEdit');
         Route::patch('benutzer/activate', 'UserController@userActivate');
+        // Route::get('benutzer/{id}/edit/deleted', 'UserController@editDeleted');
         Route::resource('benutzer', 'UserController');
         
         Route::resource('wiki-kategorie', 'WikiCategoryController');
@@ -76,6 +78,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('wiki/{id}/activate', 'WikiController@wikiActivation');
         Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
         Route::get('wiki/verwalten', 'WikiController@managmentUser');
+        Route::post('wiki/verwalten', 'WikiController@searchManagment');
+        Route::post('wiki/verwalten-admin', 'WikiController@searchManagment');
         Route::resource('wiki', 'WikiController');
         
         Route::resource('iso-kategorien', 'IsoCategoryController');

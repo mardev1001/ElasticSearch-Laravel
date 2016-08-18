@@ -18,7 +18,7 @@
                     <!-- input box-->
                     <div class="col-md-6 col-lg-6"> 
                         <div class="form-group no-margin-bottom">
-                            {!! ViewHelper::setInput('search','',old('search'),'', 
+                            {!! ViewHelper::setInput('search', $searchParameter, $searchParameter,'', 
                                    trans('mandantenForm.search') , true  ) !!}
                         </div>   
                     </div><!--End input box-->
@@ -26,8 +26,8 @@
       
                     <div class="col-md-6 col-lg-6"> 
                         <div class="form-group label-form-group  no-margin-bottom">
-                                {!! ViewHelper::setCheckbox('deleted_users','', old('deleted_users'),trans('mandantenForm.showDeletedUsers') ) !!}
-                                {!! ViewHelper::setCheckbox('deleted_clients','',old('deleted_clients'),trans('mandantenForm.showDeletedClients') ) !!}
+                                {!! ViewHelper::setCheckbox('deleted_users', $deletedUsers, $deletedUsers, trans('mandantenForm.showDeletedUsers') ) !!}
+                                {!! ViewHelper::setCheckbox('deleted_mandants', $deletedMandants, $deletedMandants, trans('mandantenForm.showDeletedClients') ) !!}
                         </div>   
                     </div><!--End input box-->
                     
@@ -50,7 +50,7 @@
     @if( !empty($mandants)  ) 
         
         @if( !empty($search) && $search == true )
-            <h2 class="title">Suchergebnisse</h2>
+            <h2 class="title">Suchergebnisse für Mandanten ({{count($mandants)}})</h2>
         @else
             <h2 class="title">Übersicht</h2>
         @endif
@@ -72,28 +72,28 @@
                             
                         </h4>
                         
-                            <span class="panel-options col-xs-12">
-                                     <span class="panel-title">
-                                          {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
-                                     </span>
-                                     <span class="pull-right">
-                                    {!! Form::open(['action' => 'MandantController@mandantActivate', 
-                                    'method'=>'PATCH']) !!}
-                                        <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                        @if($mandant->active)
-                                            <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
-                                        @else
-                                            <button class="btn btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button>
-                                        @endif
-                                    {!! Form::close() !!}
-                                    
-                                    {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
-                                        <button type="submit" class="btn btn-primary delete-prompt">Entfernen</button>
-                                    {!! Form::close() !!}
-                                    
-                                    <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
-                                    </span>
-                            </span>
+                        <span class="panel-options col-xs-12">
+                                 <span class="panel-title">
+                                      {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
+                                 </span>
+                                 <span class="pull-right">
+                                {!! Form::open(['action' => 'MandantController@mandantActivate', 
+                                'method'=>'PATCH']) !!}
+                                    <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
+                                    @if($mandant->active)
+                                        <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
+                                    @else
+                                        <button class="btn btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button>
+                                    @endif
+                                {!! Form::close() !!}
+                                
+                                {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
+                                    <button type="submit" class="btn btn-primary delete-prompt">Entfernen</button>
+                                {!! Form::close() !!}
+                                
+                                <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
+                                </span>
+                        </span>
                     </div>
                    
                     <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse  
@@ -179,6 +179,41 @@
             @endforeach
             
         </div>
+        
+    @endif
+    
+    @if( !empty($search) && $search == true )
+    
+        <h2 class="title">Suchergebnisse für Benutzer ({{count($users)}})</h2>
+        
+        @if( !empty($users)  ) 
+            
+            <div class="panel-group">
+                
+                @foreach( $users as $user)
+                    
+                    <div class="panel panel-primary" id="panelUsers">
+                        
+                        <div class="panel-heading">
+                            <h4 class="panel-title pull-left">
+                                <span class="panel-title">
+                                    {{$user->first_name}} @if($user->short_name)({{$user->short_name}})@endif {{$user->last_name}}
+                                </span>
+                            </h4>
+                        
+                            <span class="pull-right">
+                                 <a href="{{route('benutzer.edit', ['id'=> $user->id])}}" class="btn btn-xs btn-primary no-arrow no-margin-bottom">Bearbeiten</a>
+                            </span>
+                            
+                        </div>
+                        
+                    </div>
+                    
+                @endforeach
+                
+            </div>
+            
+        @endif
         
     @endif
     

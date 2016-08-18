@@ -1,4 +1,4 @@
-  <label class="control-label">
+    <label class="control-label">
         {{ ucfirst($label) }}@if( $required !=false )* @endif 
     </label>
 <select name="{{$inputName}}" class="form-control select @foreach($classes as $class) {{$class}} @endforeach"
@@ -15,7 +15,7 @@ data-placeholder="{{ ucfirst($placeholder) }}@if( $required !=false )* @endif"
     @if( count($collections) >0 ){
        @foreach($collections as $collection){
            <option value="{{$collection->id}}" 
-                @if( !empty( $value) && $collection->id == $value)
+                @if( !empty( $data->$inputName) && $collection->id == $data->$inputName)
                     selected
                 @endif >
                {{$collection->first_name}} {{$collection->last_name}}

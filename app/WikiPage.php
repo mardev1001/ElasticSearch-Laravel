@@ -32,4 +32,12 @@ class WikiPage extends Model
     public function user(){
         return $this->belongsTo('App\User', 'user_id', 'id');
     }
+    
+    public function category(){
+        return $this->belongsTo('App\WikiCategory', 'category_id', 'id');
+    }
+    
+    public function status(){
+        return $this->belongsTo('App\WikiPageStatus', 'status_id', 'id');
+    }
 }

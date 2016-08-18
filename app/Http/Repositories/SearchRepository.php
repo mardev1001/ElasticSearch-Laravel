@@ -7,6 +7,9 @@ namespace App\Http\Repositories;
  */
 
 use DB;
+
+use Carbon\Carbon;
+
 use App\Mandant;
 use App\MandantUser;
 use App\User;
@@ -92,6 +95,42 @@ class SearchRepository
          ->orWhere('content','LIKE','%'.$searchParam.'%' )
      	->paginate( 10, ['*'], 'suchergebnisse' );
          //->get() ;
+         return $results;
+         
+     }
+     
+    /**
+     * Search Wiki something
+     *
+     * @return object array $array
+     */     
+     public function searchManagmentSearch( $request ){
+         $query = WikiPage::orderBy('created_at','desc');
+         if( $request->admin != 1)
+            $query = WikiPage::where()->orderBy('created_at','desc');
+        //  dd($request);
+         if( $request->name != '' )
+             $query->where('name','like','%'.$request->name.'%');
+         if( $request->subject != '' )
+             $query->where('subject','like','%'.$request->subject.'%');
+         
+         if( $request->date_from != '' )
+             $query->where('created_at','>', Carbon::parse($request->date_from) );
+         
+         if( $request->date_to != '' )
+             $query->where('created_at','<', Carbon::parse($request->date_to));
+         
+         if( $request->category != '' )
+             $query->where( 'category_id',$request->category );
+             
+         if( $request->status != '' )
+             $query->where( 'status_id',$request->status );
+         
+         if( isset($request->ersteller) && $request->ersteller != '' )
+             $query->where( 'user_id',$request->ersteller );
+         
+         $results = $query->get() ;
+         
          return $results;
          
      }

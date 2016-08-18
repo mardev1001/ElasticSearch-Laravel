@@ -429,6 +429,13 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     padding-bottom: 7px;
 }
 
+.mb-10{
+    margin-bottom: 10px;
+}
+
+.mb-20{
+    margin-bottom: 20px;
+}
 .vertical-center {
     vertical-align: middle !important;
 }
@@ -1004,3 +1011,5 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 #page-wrapper table.dataTable thead .sorting_desc_disabled:after {
    bottom: 15px;
 }
+
+

@@ -797,6 +797,12 @@ input.form-control:-ms-input-placeholder {
 .padding-bottom-sm {
   padding-bottom: 7px; }
 
+.mb-10 {
+  margin-bottom: 10px; }
+
+.mb-20 {
+  margin-bottom: 20px; }
+
 .vertical-center {
   vertical-align: middle !important; }
 
@@ -1530,7 +1536,7 @@ h1.page-title {
   padding-top: 20px;
   padding-bottom: 20px; }
 
-
+#page-wrapper .panel-title > span,
 #page-wrapper .panel-title > a, #page-wrapper .panel-title > small,
 #page-wrapper .panel-title > .small, #page-wrapper .panel-title > small > a,
 #page-wrapper .panel-title > .small > a, #page-wrapper .panel-title .col-xs-6 > a, #page-wrapper .panel-title .col-xs-7 > a {
@@ -1724,6 +1730,11 @@ h1.page-title {
   font-size: 14px !important; }
 
 /* End  Wiki search */
+/* Wiki administration */
+.wiki-managment-search select {
+  width: auto; }
+
+/* End Wiki administration */
 /*if css no extension if scss add .scss*/
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)

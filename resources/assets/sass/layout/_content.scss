@@ -149,7 +149,7 @@ h1.page-title {
     padding-bottom: 20px;
 }
 
-,
+#page-wrapper .panel-title > span,
 #page-wrapper .panel-title > a, #page-wrapper .panel-title > small, 
 #page-wrapper .panel-title > .small, #page-wrapper .panel-title > small > a,
 #page-wrapper .panel-title > .small > a, #page-wrapper .panel-title .col-xs-6 > a , #page-wrapper .panel-title .col-xs-7 > a {
@@ -403,3 +403,11 @@ h1.page-title {
     font-size: 14px !important;
 }
 /* End  Wiki search */
+
+
+/* Wiki administration */
+.wiki-managment-search select{
+    width: auto;
+}
+
+/* End Wiki administration */

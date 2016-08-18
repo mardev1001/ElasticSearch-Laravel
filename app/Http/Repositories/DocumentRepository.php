@@ -245,6 +245,11 @@ class DocumentRepository
 
 
                 if ($document->document_status_id == 6) {
+                    if($options['pageHome'] == true) {
+                        $node->beforeText = '';
+                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - '.
+                        $document->owner->first_name.' '.$document->owner->last_name;
+                    }
                     $icon = 'icon-blocked ';
                     $icon2 = 'icon-notreleased ';
                 }

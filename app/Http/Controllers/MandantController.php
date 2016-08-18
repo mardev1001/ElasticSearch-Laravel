@@ -60,6 +60,9 @@ class MandantController extends Controller
      */
     public function index()
     {
+        $searchParameter = null;
+        $deletedUsers = null;
+        $deletedMandants = null;
         $roles = Role::all();
         $mandants = Mandant::all();
         // $users = User::all();
@@ -79,9 +82,7 @@ class MandantController extends Controller
             }   
         }
         
-        
-        
-        return view('mandanten.administration', compact('roles','mandants','unassignedUsers', 'unassignedActiveUsers', 'unassignedInactiveUsers') );
+        return view('mandanten.administration', compact('roles','mandants', 'searchParameter', 'deletedUsers', 'deletedMandants', 'unassignedUsers', 'unassignedActiveUsers', 'unassignedInactiveUsers') );
     }
     
     /**
@@ -92,12 +93,28 @@ class MandantController extends Controller
      */
     public function search(Request $request)
     {
+        // dd($request->method());
+        if(!$request->has('search') || $request->method() == "GET")
+            return redirect('mandanten');
+            
         $search = true;
+        $searchParameter = $request->get('search');
+        $deletedUsers = $request->has('deleted_users');
+        $deletedMandants = $request->has('deleted_mandants');
+        
         $roles = Role::all();
-        //$users = User::where('name',$request->get('search'))->get();   
-        $mandants = Mandant::where('name','LIKE',$request->get('search'))->get();  
-        $mandants = $this->search->phonelistSearch($request);
-        return view('mandanten.administration', compact('search','mandants','roles') );
+        
+        $users = User::where('first_name', 'LIKE', '%'. $searchParameter .'%')
+        ->orWhere('first_name', 'LIKE', '%'. $searchParameter .'%')
+        ->orWhere('short_name', 'LIKE', '%'. $searchParameter .'%');
+        if($deletedUsers) $users = $users->withTrashed();
+        $users = $users ->get();
+        
+        $mandants = Mandant::where('name','LIKE', '%'. $searchParameter .'%');
+        if($deletedMandants) $mandants = $mandants->withTrashed();
+        $mandants = $mandants->get();
+        // $mandants = $this->search->phonelistSearch($request);
+        return view('mandanten.administration', compact('search', 'searchParameter', 'mandants', 'users', 'roles', 'deletedUsers', 'deletedMandants' ) );
     }
 
     /**
@@ -149,14 +166,30 @@ class MandantController extends Controller
      */
     public function edit($id)
     {
+        $restored = false;
+        
+        if(Mandant::find($id))
+            $data = Mandant::find($id);
+        elseif(Mandant::withTrashed()->find($id)){
+            Mandant::withTrashed()->find($id)->restore();
+            $data = Mandant::find($id);
+            $restored = true;
+        }
+        else $data = null;
+        
         $roles = Role::where('phone_role', true)->get();
-        $data = Mandant::find($id);
         $mandantUsers = User::all();
         $bundeslander = $this->bundeslandList;
         $internalMandantUsers = InternalMandantUser::where('mandant_id', $id)->get();
         // $mandantsAll = Mandant::all();
         $mandantsAll = Mandant::where('hauptstelle', true)->where('id', '!=', $id)->get();
-        return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers','bundeslander'));
+        
+        if(isset($data))
+            return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers','bundeslander'));
+        else
+            return back()->with('message', 'Mandant existiert nicht oder kann nicht bearbeitet werden.');
+    
+        
     }
 
     /**
@@ -224,7 +257,10 @@ class MandantController extends Controller
     public function destroy($id)
     {
         if($id != 1) {
+            MandantUser::where('mandant_id', $id)->delete();
             $mandant = Mandant::find($id);
+            $mandant->delete();
+            return back()->with(['message'=>'Mandant wurde erfolgreich entfernt.']);
         }
         return back()->with(['message'=>'Mandant kann nicht gelöscht werden.']);
     }

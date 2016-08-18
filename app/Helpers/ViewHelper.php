@@ -359,7 +359,24 @@ class ViewHelper
         foreach($mandantUsers as $mu){
             $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
             foreach($userMandatRoles as $umr){
-                if( $umr->role_id == 14)
+                if( $umr->role_id == 14 || $umr->role_id == 1)
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if is 
+     * @return bool 
+     */
+    static function canViewWikiManagmentAdmin(){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if( $umr->role_id == 15 || $umr->role_id == 1 )//wiki redaktur
                     return true;
             }
         }

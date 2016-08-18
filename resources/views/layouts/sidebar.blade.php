@@ -157,7 +157,15 @@
                     <li>
                         <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>
                     </li>
-
+                    @if( ViewHelper::canViewWikiManagmentAdmin() == true )
+                        <li>
+                            <a href="{{ url('wiki/verwalten-admin') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
+                        </li>
+                    @else  
+                    <li>
+                        <a href="{{ url('wiki/verwalten') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
+                    </li>
+                    @endif  
                     <li>
                         <a href="{{ url('wiki-kategorie') }}">{{ ucfirst( trans('wiki.wikiCategory') ) }} </a>
                     </li>

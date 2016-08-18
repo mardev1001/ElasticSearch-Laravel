@@ -15,6 +15,12 @@ return [
     'commentUser' => 'Kommentare Benutzer',
     'commentAdmin' => 'Kommentare Freigeber',
     'searchResults' => 'Suchergebnisse',
+    'dateFrom' => 'Datum von',
+    'dateTo' => 'Datum bis',
+    'user' => 'Ersteller',
+    'verwaltenAdmin' => 'Seiten verwalten-Admin',
+    'verwalten' => 'Seiten verwalten',
+    'managment' => 'Wiki Seiten Verwalten',
     
     /* wiki category section */
     'newCategory' => 'Neues Wiki Kategorie',
