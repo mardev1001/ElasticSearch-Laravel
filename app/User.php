@@ -15,7 +15,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['username', 'username_sso', 'email', 'password', 'title', 'first_name', 'last_name', 'short_name', 'email_reciever', 'picture', 'active', 'active_from', 'active_to', 'birthday', 'created_by', 'phone', 'phone_short',];
+    protected $fillable = ['username', 'username_sso', 'email', 'password', 'title', 'first_name', 'last_name', 'short_name', 'email_reciever', 'picture', 'active', 'active_from', 'active_to', 'birthday', 'created_by', 'last_login', 'phone', 'phone_short',];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -26,7 +26,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
     
-    protected $dates = ['last_login', 'created_at', 'updated_at'];
+    protected $dates = ['last_login', 'last_login_history', 'created_at', 'updated_at'];
     
     /**
      * Get the date format
@@ -76,6 +76,29 @@ class User extends Authenticatable
     {
         if (empty($value)) $this->attributes['birthday'] = null;
         else $this->attributes['birthday'] = Carbon::parse($value);
+    }
+    /**
+     * Get the timestamp for last login
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function getLastLoginAttribute($value)
+    {
+        if (empty($value)) return null;
+        else return Carbon::parse($value);
+    }
+    
+    /**
+     * Set the timestamp for last login
+     *
+     * @param  string  $value
+     * @return string
+     */
+    public function setLastLoginAttribute($value)
+    {
+        if (empty($value) || $value == null) $this->attributes['last_login'] = null;
+        else $this->attributes['last_login'] = Carbon::parse($value);
     }
      
     /**

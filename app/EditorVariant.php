@@ -27,6 +27,7 @@ class EditorVariant extends Model
     public function documentMandants(){
         return $this->hasMany('App\DocumentMandant','editor_variant_id','id') ;
     } 
+ 
     
     public function documentMandant(){
         return $this->hasMany('App\DocumentMandant');

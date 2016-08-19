@@ -229,4 +229,22 @@ class WikiController extends Controller
         
        return view('wiki.managment', compact('data','wikies', 'statuses','wikiUsers','categories','admin')); 
     }
+    
+    /**
+     * Duplicate existing wiki page
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function duplicate($id)
+    {
+        $originalWiki = WikiPage::find($id);
+        
+        $wiki = $originalWiki->replicate();
+        $wiki->name .= ' (Kopie)';
+        $wiki->save();
+        //  dd($wiki);
+        
+        return redirect('/wiki/'.$wiki->id.'/edit');
+    }
 }

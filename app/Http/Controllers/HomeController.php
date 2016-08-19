@@ -74,7 +74,7 @@ class HomeController extends Controller
             }
         )
         ->where('documents.active',1)
-        ->orderBy('documents.id', 'desc')->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at' ], 'freigabe-dokumente');
+        ->orderBy('documents.id', 'desc')->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ], 'freigabe-dokumente');
         
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         

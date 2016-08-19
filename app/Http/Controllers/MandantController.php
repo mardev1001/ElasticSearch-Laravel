@@ -180,11 +180,20 @@ class MandantController extends Controller
         else $data = null;
         
         $roles = Role::where('phone_role', true)->get();
-        $mandantUsers = User::all();
         $bundeslander = $this->bundeslandList;
         $internalMandantUsers = InternalMandantUser::where('mandant_id', $id)->get();
         // $mandantsAll = Mandant::all();
         $mandantsAll = Mandant::where('hauptstelle', true)->where('id', '!=', $id)->get();
+        
+        $mandantUsers = array();
+        $mandantUsersTmp = MandantUser::all();
+        foreach ($mandantUsersTmp as $mandantUser) {
+            if($mandantUser->mandant->rights_admin){
+                if(!in_array($mandantUser->user, $mandantUsers))
+                    array_push($mandantUsers, $mandantUser->user);
+            }
+        }
+        // dd($mandantUsers);
         
         if(isset($data))
             return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers','bundeslander'));

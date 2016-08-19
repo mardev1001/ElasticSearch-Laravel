@@ -258,12 +258,13 @@ Benutzer bearbeiten
                             </tr>
                             @foreach($user->mandantUsersDistinct as $mandantUser)
                                 @if($mandantUser->deleted_at == null)
-                              
                                 {!! Form::open(['action' => 'UserController@userMandantRoleEdit', 'method'=>'PATCH']) !!}
                                     <tr id="mandant-role-{{$mandantUser->id}}">
                                         <td>
                                             {{ $mandantUser->mandant->name }}
                                             <input type="hidden" name="mandant_user_id" value="{{$mandantUser->id}}">
+                                            <input type="hidden" name="user_id" value="{{$mandantUser->user_id}}">
+                                            <input type="hidden" name="mandant_id" value="{{$mandantUser->mandant_id}}">
                                         </td>
                                         <td>
                                             <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>

@@ -1591,11 +1591,17 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         $document->document_status_id = 3;
-        // $document->date_published = Carbon::now();
         $document->save();
         $continue = true;
         $uniqeUrl = '';
-        while ($continue) {
+        $this->publishProcedure($document);
+        $attachedDocuments = $document->editorVariantDocument;
+        foreach($document->editorVariant as $ev){
+            foreach($ev->editorVariantDocument as $evD){
+                $this->publishProcedure($evD->document);
+            }
+        }
+        /*while ($continue) {
             $uniqeUrl = $this->generateUniqeLink();
             if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
                 $continue = false;
@@ -1617,7 +1623,7 @@ class DocumentController extends Controller
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
                 if($publishedDocs->deleted_at != null)
                     $publishedDocs->restore();
-            }   
+            }  */ 
         
         return redirect()->back();        
         /*if($document->published->url_unique)    
@@ -1994,12 +2000,14 @@ class DocumentController extends Controller
         $docType = $this->rundId;
         
         // status entwurf
-        $rundEntwurfPaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 1)->where('owner_user_id', Auth::user()->id)
+        $rundEntwurfPaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+        ->where('document_type_id' , $docType )->where('document_status_id' , 1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-entwurf');
         $rundEntwurfTree = $this->document->generateTreeview( $rundEntwurfPaginated, array('pageDocuments' => true) );
         
         // status im freigabe prozess
-        $rundFreigabePaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 6)->where('owner_user_id', Auth::user()->id)
+        $rundFreigabePaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )->
+        where('document_type_id' , $docType )->where('document_status_id' , 6)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-freigabe');
         $rundFreigabeTree = $this->document->generateTreeview( $rundFreigabePaginated, array('pageDocuments' => true) );
         
@@ -2044,12 +2052,14 @@ class DocumentController extends Controller
         $docType = $this->qmRundId;
         
         // status entwurf
-        $qmrEntwurfPaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 1)->where('owner_user_id', Auth::user()->id)
+        $qmrEntwurfPaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+        ->where('document_type_id' , $docType )->where('document_status_id' , 1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-entwurf');
         $qmrEntwurfTree = $this->document->generateTreeview( $qmrEntwurfPaginated, array('pageDocuments' => true) );
         
         // status im freigabe prozess
-        $qmrFreigabePaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 6)->where('owner_user_id', Auth::user()->id)
+        $qmrFreigabePaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+        ->where('document_type_id' , $docType )->where('document_status_id' , 6)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
         $qmrFreigabeTree = $this->document->generateTreeview( $qmrFreigabePaginated, array('pageDocuments' => true) );
         
@@ -2071,12 +2081,14 @@ class DocumentController extends Controller
         $docType = $this->newsId;
         
         // status entwurf
-        $newsEntwurfPaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 1)->where('owner_user_id', Auth::user()->id)
+        $newsEntwurfPaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+        ->where('document_type_id' , $docType )->where('document_status_id' , 1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'news-entwurf');
         $newsEntwurfTree = $this->document->generateTreeview( $newsEntwurfPaginated, array('pageDocuments' => true) );
         
         // status im freigabe prozess
-        $newsFreigabePaginated = Document::where('document_type_id' , $docType )->where('document_status_id' , 6)->where('owner_user_id', Auth::user()->id)
+        $newsFreigabePaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+        ->where('document_type_id' , $docType )->where('document_status_id' , 6)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'news-freigabe');
         $newsFreigabeTree = $this->document->generateTreeview( $newsFreigabePaginated, array('pageDocuments' => true) );
         
@@ -2097,17 +2109,20 @@ class DocumentController extends Controller
     public function documentTemplates()
     {
         $docType = $this->formulareId;
-        
-        $formulareEntwurfPaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $docType])
-        ->where('document_status_id', 1)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare');
+       
+        $formulareEntwurfPaginated = Document::where('user_id' , Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+        ->where('document_type_id' ,$docType)->where('document_status_id', 1)
+        ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare');
         $formulareEntwurfTree = $this->document->generateTreeview( $formulareEntwurfPaginated, array('pageDocuments' => true) );
         
-        $formulareFreigabePaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $docType])
-        ->where('document_status_id', 6)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare');
+        $formulareFreigabePaginated = Document::where('user_id' , Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+        ->where('document_type_id' ,$docType)
+        ->where('document_status_id', 6)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare-freigabe');
         $formulareFreigabeTree = $this->document->generateTreeview( $formulareFreigabePaginated, array('pageDocuments' => true) );
         
         $formulareAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3)->where('active',1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
+        
         $formulareAllTree = $this->document->generateTreeview( $formulareAllPaginated, array('pageDocuments' => true) );
         
         // dd($formulareEntwurfPaginated);
@@ -2139,14 +2154,16 @@ class DocumentController extends Controller
         
         if(isset($documentType)){
             
-            $docsByTypeEntwurfPaginated = Document::where('document_type_id', $documentType->id)->where('deleted_at', null)
-            ->where('document_status_id', 1)->where('owner_user_id', Auth::user()->id)
+            $docsByTypeEntwurfPaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+            ->where('document_type_id', $documentType->id)->where('deleted_at', null)
+            ->where('document_status_id', 1)
             ->orderBy('id', 'desc')->paginate(10, ['*'], str_slug($documentType->name.'-entwurf'));
             
             $docsByTypeEntwurfTree = $this->document->generateTreeview($docsByTypeEntwurfPaginated, array('pageDocuments' => true) );
             
-            $docsByTypeFreigabePaginated = Document::where('document_type_id', $documentType->id)->where('deleted_at', null)
-            ->where('document_status_id', 6)->where('owner_user_id', Auth::user()->id)
+            $docsByTypeFreigabePaginated = Document::where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
+            ->where('document_type_id', $documentType->id)->where('deleted_at', null)
+            ->where('document_status_id', 6)
             ->orderBy('id', 'desc')->paginate(10, ['*'], str_slug($documentType->name.'-freigabe'));
             $docsByTypeFreigabeTree = $this->document->generateTreeview($docsByTypeFreigabePaginated, array('pageDocuments' => true) );
             
@@ -2284,9 +2301,9 @@ class DocumentController extends Controller
         
         $isoEntwurfPaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         // ->join('editor_variants','documents.id','=','editor_variants.document_id')
+        ->where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
         ->where('documents.document_type_id', $docType)
         ->where('slug', $slug)
-        ->where('documents.owner_user_id', Auth::User()->id)
         ->where('documents.document_status_id' , 1)
         ->orderBy('documents.id', 'desc')
         ->paginate(10, ['*','iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'iso-dokumente-entwurf');
@@ -2295,9 +2312,9 @@ class DocumentController extends Controller
         
         $isoFreigabePaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         // ->join('editor_variants','documents.id','=','editor_variants.document_id')
+        ->where('owner_user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id )
         ->where('documents.document_type_id', $docType)
         ->where('slug', $slug)
-        ->where('documents.owner_user_id', Auth::User()->id)
         ->where('documents.document_status_id' , 6)
         ->orderBy('documents.id', 'desc')
         ->paginate(10, ['*','iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'iso-dokumente-freigabe');
@@ -2423,6 +2440,45 @@ class DocumentController extends Controller
         $pass[] = $alphabet[$n];
     }
     return implode($pass); //turn the array into a string
+       
+    }
+    
+    /**
+     * publish check and
+     * @return bool 
+     */
+    private function publishProcedure($document,$debug=false){
+        
+        $id = $document->id;
+        $document->document_status_id = 3;
+        $document->save();
+        if($debug == true)
+            dd($document);
+        $continue = true;
+        $uniqeUrl = '';
+        while ($continue) {
+            $uniqeUrl = $this->generateUniqeLink();
+            if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                $continue = false;
+        }
+        $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
+            if($publishedDocs == null){
+                $continue = true;
+                $uniqeUrl = '';
+                while ($continue) {
+                    $uniqeUrl = $this->generateUniqeLink();
+                    if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
+                        $continue = false;
+                }
+                $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
+                            'url_unique'=>$uniqeUrl]);
+                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
+            }
+            else{
+                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
+                if($publishedDocs->deleted_at != null)
+                    $publishedDocs->restore();
+            }   
        
     }
     

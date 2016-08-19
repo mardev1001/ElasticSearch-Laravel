@@ -486,6 +486,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     min-height: 320px;
 }
 
+.box.scrollable,
 .home.box{
     overflow-y: auto;
     max-height: 400px;

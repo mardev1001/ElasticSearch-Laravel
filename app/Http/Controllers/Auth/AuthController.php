@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use Auth;
-use App\User;
-use App\MandantUser;
+use Carbon\Carbon;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use Illuminate\Http\Request;
+
+use App\User;
+use App\MandantUser;
 
 class AuthController extends Controller
 {
@@ -100,8 +102,17 @@ class AuthController extends Controller
         $credentials = array_add($credentials, 'active', 1);
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
-            if(count(Auth::user()->countMandants))
+            if(count(Auth::user()->countMandants)){
+                if(Auth::user()->last_login == null){
+                    // dd(Auth::user()->last_login);
+                    Auth::user()->last_login = Carbon::now();
+                } else {
+                    Auth::user()->last_login_history = Auth::user()->last_login;
+                    Auth::user()->last_login = Carbon::now();
+                }
+                Auth::user()->save();
                 return $this->handleUserWasAuthenticated($request, $throttles);
+            }
             else Auth::logout();
         }
 

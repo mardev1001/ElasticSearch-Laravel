@@ -2,7 +2,7 @@
 
 @extends('master')
 
-@section('page-title') @if( isset($data->documentType->name) ){{ $data->documentType->name }}@endif - Übersicht @stop
+@section('page-title') Wiki - Übersicht @stop
 
 @section('content')
 
@@ -75,7 +75,7 @@
                         @else
                             {{ trans('dokumentShow.deactivate') }}
                         @endif</a>
-                    <a href="/wiki/new-version/{{$data->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>
+                    <a href="/wiki/duplicate/{{$data->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.duplicate') }}</a>
                 </div><!--end col-sm-4 col-md-3 col-lg-2 btns-->
               
             </div>

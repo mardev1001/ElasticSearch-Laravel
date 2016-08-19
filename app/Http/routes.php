@@ -74,6 +74,7 @@ Route::group( array('middleware' => ['auth']), function(){
         
         Route::resource('wiki-kategorie', 'WikiCategoryController');
         
+        Route::get('wiki/duplicate/{id}', 'WikiController@duplicate');
         Route::any('wiki/search', 'WikiController@search');
         Route::get('wiki/{id}/activate', 'WikiController@wikiActivation');
         Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');

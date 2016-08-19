@@ -13,6 +13,7 @@ return [
     'activate' => 'Aktivieren',
     'deactivate' => 'Deaktivieren',
     'new-version' => 'Neue Version',
+    'duplicate' => 'Duplizieren',
     'history' => 'Historie',
     'favorite' => 'Favorit',
     'unFavorite' => 'Favorit entfernen',

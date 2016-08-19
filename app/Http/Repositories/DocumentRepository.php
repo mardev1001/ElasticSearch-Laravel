@@ -228,7 +228,7 @@ class DocumentRepository
                     // $node->text .= " ". $document->created_at->toDateTimeString();
                     // $node->text .= " ".$lastLogin->toDateTimeString();
                     
-                    if ($document->created_at->gt(Auth::user()->last_login)){
+                    if ($document->created_at->gt(Auth::user()->last_login_history)){
                         if( $options['pageFavorites'] == false )
                             $icon2 = 'icon-favorites ';
                     }

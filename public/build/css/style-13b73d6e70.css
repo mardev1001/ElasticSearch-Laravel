@@ -843,6 +843,7 @@ input.form-control:-ms-input-placeholder {
 .bordered.home {
   min-height: 320px; }
 
+.box.scrollable,
 .home.box {
   overflow-y: auto;
   max-height: 400px; }

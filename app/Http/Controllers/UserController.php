@@ -14,6 +14,7 @@ use App\Role;
 use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
+use App\InternalMandantUser;
 
 class UserController extends Controller
 {
@@ -65,7 +66,9 @@ class UserController extends Controller
         $user = User::create($request->all());
         
         $userUpdate = User::find($user->id);
-        $userUpdate->update(['created_by' => Auth::user()->id]);
+        $userUpdate->created_by = Auth::user()->id;
+        $userUpdate->last_login = null;
+        $userUpdate->save();
         
         if ($request->file()) {
             $userModel = User::find($user->id);
@@ -73,6 +76,7 @@ class UserController extends Controller
             $userModel->update(['picture' => $picture]);
         }
         
+        // dd($userUpdate);
         return redirect()->route('benutzer.edit', [$user])->with('message', 'Benutzer erfolgreich gespeichert.');
     }
 
@@ -111,9 +115,9 @@ class UserController extends Controller
         $usersAll = User::all();
         $mandantsAll = Mandant::all();
         // $rolesAll = Role::all();
-        $rolesAll = Role::where('phone_role', false)->get();
+         $rolesAll = Role::where('phone_role', false)->get();
+        // $rolesAll = Role::all();
         
-        // dd($usersAll);
         
         $mandantUsers = MandantUser::where('user_id', $id)->get();
         $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
@@ -216,14 +220,28 @@ class UserController extends Controller
     {
         $mandantUser = MandantUser::where('id', $request->input('mandant_user_id'))->first();
         if($request->has('save')){
+            //prvojerit sve interal
+            //ako nema na popisu dodati u array
+            // sa whereIn izbrisati
             MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
+            // InternalMandantUser::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
+            $internalRoleArray = array();
             if($request->has('role_id')){
                 foreach($request->input('role_id') as $roleId){
                     $mandantUserRole = new MandantUserRole();
                     $mandantUserRole->mandant_user_id = $request->input('mandant_user_id');
                     $mandantUserRole->role_id = $roleId;
                     $mandantUserRole->save();
+                    
+                   /* $roleTest = Role::find($roleId);
+                    if( $roleTest->phone_role == true ){
+                        $internalRoleArray[] = $roleId;
+                        $internalMandantUser = InternalMandantUser::create(['mandant_id' => $request->input('mandant_id'), 
+                        'role_id' => $roleId, 'user_id' => $request->input('user_id')]);
+                    }*/
                 }
+               //$currentIntRoles = InternalMandantUser::where('user_id',$request->input('user_id'))->whereIn('role_id',$internalRoleArray)->pluck('')
+                //InternalMandantUser::where('user_id', $request->input('user_id'))->delete();
             }
             // return back()->with('message', 'Rollen erfolgreich aktualisiert.');
             return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', 'Rollen erfolgreich aktualisiert.');
