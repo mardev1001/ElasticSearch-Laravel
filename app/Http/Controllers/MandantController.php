@@ -105,12 +105,14 @@ class MandantController extends Controller
         $roles = Role::all();
         
         $users = User::where('first_name', 'LIKE', '%'. $searchParameter .'%')
-        ->orWhere('first_name', 'LIKE', '%'. $searchParameter .'%')
+        ->orWhere('last_name', 'LIKE', '%'. $searchParameter .'%')
         ->orWhere('short_name', 'LIKE', '%'. $searchParameter .'%');
         if($deletedUsers) $users = $users->withTrashed();
         $users = $users ->get();
         
-        $mandants = Mandant::where('name','LIKE', '%'. $searchParameter .'%');
+        $mandants = Mandant::where('name','LIKE', '%'. $searchParameter .'%')
+        ->orWhere('kurzname','LIKE', '%'. $searchParameter .'%')
+        ->orWhere('mandant_number','LIKE', '%'. $searchParameter .'%');
         if($deletedMandants) $mandants = $mandants->withTrashed();
         $mandants = $mandants->get();
         // $mandants = $this->search->phonelistSearch($request);

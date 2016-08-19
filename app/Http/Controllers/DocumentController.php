@@ -2099,18 +2099,18 @@ class DocumentController extends Controller
         $docType = $this->formulareId;
         
         $formulareEntwurfPaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $docType])
-        ->where('document_status_id', 1)->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-formulare');
+        ->where('document_status_id', 1)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare');
         $formulareEntwurfTree = $this->document->generateTreeview( $formulareEntwurfPaginated, array('pageDocuments' => true) );
         
         $formulareFreigabePaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $docType])
-        ->where('document_status_id', 6)->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-formulare');
+        ->where('document_status_id', 6)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare');
         $formulareFreigabeTree = $this->document->generateTreeview( $formulareFreigabePaginated, array('pageDocuments' => true) );
         
         $formulareAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3)->where('active',1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
         $formulareAllTree = $this->document->generateTreeview( $formulareAllPaginated, array('pageDocuments' => true) );
         
-        // dd($formulareAllPaginated);
+        // dd($formulareEntwurfPaginated);
         
         return view('dokumente.documentTemplates', compact('docType', 'formulareAllPaginated', 'formulareAllTree', 'formulareEntwurfPaginated', 'formulareEntwurfTree', 'formulareFreigabePaginated', 'formulareFreigabeTree') );
     }
@@ -2142,6 +2142,7 @@ class DocumentController extends Controller
             $docsByTypeEntwurfPaginated = Document::where('document_type_id', $documentType->id)->where('deleted_at', null)
             ->where('document_status_id', 1)->where('owner_user_id', Auth::user()->id)
             ->orderBy('id', 'desc')->paginate(10, ['*'], str_slug($documentType->name.'-entwurf'));
+            
             $docsByTypeEntwurfTree = $this->document->generateTreeview($docsByTypeEntwurfPaginated, array('pageDocuments' => true) );
             
             $docsByTypeFreigabePaginated = Document::where('document_type_id', $documentType->id)->where('deleted_at', null)
@@ -2514,13 +2515,18 @@ class DocumentController extends Controller
     private function returnRole(){
         $uid = Auth::user()->id;
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        $roleArray = array();
         foreach($mandantUsers as $mu){
             $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
             foreach($userMandatRoles as $umr){
                 if( $umr->role_id == 11 || $umr->role_id == 13 || $umr->role_id == 1)
-                    return $umr->role_id;
+                    $roleArray[] = $umr->role_id;
             }
         }
+        if( count($roleArray) > 2 )
+            return true;
+        elseif( count($roleArray) == 1 )
+            return $roleArray[0];
         return false;
     }
     
