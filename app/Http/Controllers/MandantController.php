@@ -142,6 +142,7 @@ class MandantController extends Controller
     {
         session()->flash('message',trans('mandantForm.success'));
         $data = Mandant::create( $request->all() );
+        
         if($request->has('hauptstelle')) $data->mandant_id_hauptstelle = null;
         $data->save();
         
@@ -286,6 +287,13 @@ class MandantController extends Controller
     public function createInternalMandantUser(Request $request, $id)
     {
         $internalMandantUser = InternalMandantUser::create(['mandant_id' => $id, 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id'),]);
+            /* addon for userMandantRoleEdit */
+            $mandantUser =  MandantUser::where('mandant_id', $id)->where('user_id',$request->input('user_id'))->first();
+            $mandantUserRole = new MandantUserRole();
+                    $mandantUserRole->mandant_user_id = $mandantUser->id;
+                    $mandantUserRole->role_id =  $request->input('role_id');
+                    $mandantUserRole->save();
+            /* End addon for userMandantRoleEdit */
         // return back()->with('message', trans('mandantenForm.role-added'));
         return redirect('mandanten/'.$id.'/edit#internal-role-'.$internalMandantUser->id)->with('message', trans('mandantenForm.role-added'));
     }
@@ -303,7 +311,7 @@ class MandantController extends Controller
         // dd($request);
         
         if($request->has('internal_mandant_user_id')){
-            
+           
             $id = $request->input('internal_mandant_user_id');
             
             $internalMandantUser = InternalMandantUser::where('id', $id)->first();
@@ -312,11 +320,27 @@ class MandantController extends Controller
             if($request->has('role-update')){
                 InternalMandantUser::where('id', $id)->update([ 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id') ]);
                 // return back()->with('message', trans('mandantenForm.role-updated'));
+                
+                /* addon for userMandantRoleEdit */
+                if( $request->has('old_role_id')  ){
+                    $mandantUser =  MandantUser::where('mandant_id', $mandantId)->where('user_id',$request->input('user_id'))->first();
+                    $mandantUserRole = MandantUserRole::where('mandant_user_id',$mandantUser->id)->where('role_id',$request->input('old_role_id'))->first();
+                    $mandantUserRole->role_id =  $request->input('role_id');
+                    $mandantUserRole->save();
+                }
+                /* End addon for userMandantRoleEdit */
+                
                 return redirect('mandanten/'.$mandantId.'/edit#internal-role-'.$id)->with('message', trans('mandantenForm.role-updated'));
             }
             
             if($request->has('role-delete')){
                 $internalMandantUser->delete();
+            
+                /* addon for userMandantRoleEdit */
+                    $mandantUser =  MandantUser::where('mandant_id', $mandantId)->where('user_id',$request->input('user_id'))->first();
+                    $mandantUserRole = MandantUserRole::where('mandant_user_id',$mandantUser->id)
+                    ->where('role_id',$request->input('old_role_id'))->delete();
+            /* End addon for userMandantRoleEdit */
                 // return back()->with('message', trans('mandantenForm.role-deleted'));
                 return redirect('mandanten/'.$mandantId.'/edit#internal-roles')->with('message', trans('mandantenForm.role-deleted'));
             }

@@ -4,6 +4,7 @@ use Request;
 
 use Auth;
 
+use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
 class ViewHelper
@@ -393,6 +394,36 @@ class ViewHelper
         $string = '';
         $string = view('partials.comments', compact('collection','title') )->render();
         echo $string;
+    }
+    
+    /**
+     * Universal user has permissions check
+     * @param array $userArray
+     * @return bool 
+     */
+    static function universalHasPermission( $userArray=array() ){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        foreach($mandantUsers as $mu){
+            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+            foreach($userMandatRoles as $umr){
+                if( $umr->role_id == 1 || in_array($umr->role_id, $userArray))//wiki redaktur
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Get Mandants parent Mandant if he has one
+     * @param Mandant $mandant
+     * @return Mandant | bool
+     */
+    static function getHauptstelle( $mandant ){
+        $hauptstelleId = $mandant->mandant_id_hauptstelle;
+        if($hauptstelleId){
+            return Mandant::find($hauptstelleId);
+        } else return false;
     }
     
 }

@@ -162,6 +162,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -216,6 +217,7 @@ return [
          'Html' => Collective\Html\HtmlFacade::class,
          'ViewHelper' => App\Helpers\ViewHelper::class,
          'PDF' => Barryvdh\DomPDF\Facade::class,
+         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

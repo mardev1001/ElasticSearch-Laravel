@@ -583,5 +583,22 @@ class DocumentRepository
         }
         return false;
     }
+    
+    
+    /**
+     * detect if model is dirty or not
+     * @return bool 
+     */
+    public function clearUsers($users){
+        $clearedArray = array();
+            foreach($users as $k => $user){
+                if( !in_array($user->user_id, $clearedArray ) )
+                    $clearedArray[] = $user->user_id;
+                else
+                    unset($users[$k]);
+            }
+        return $users;
+       
+    }
 
 }

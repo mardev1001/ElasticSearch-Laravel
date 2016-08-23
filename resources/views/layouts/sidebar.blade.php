@@ -148,33 +148,40 @@
             <!--<li>-->
             <!--    <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>-->
             <!--</li>-->
-
-            <li class="">
-                <a href="#">{{ ucfirst(trans('navigation.wiki')) }}
-                    <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-
-                    <li>
-                        <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>
-                    </li>
-                    @if( ViewHelper::canViewWikiManagmentAdmin() == true )
+            @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
+                <li class="">
+                    <a href="#">{{ ucfirst(trans('navigation.wiki')) }}
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+    
                         <li>
-                            <a href="{{ url('wiki/verwalten-admin') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
+                            <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>
                         </li>
-                    @else  
-                    <li>
-                        <a href="{{ url('wiki/verwalten') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
-                    </li>
-                    @endif  
-                    <li>
-                        <a href="{{ url('wiki-kategorie') }}">{{ ucfirst( trans('wiki.wikiCategory') ) }} </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('wiki/create') }}">{{ ucfirst( trans('wiki.wikiCreate') ) }} </a>
-                    </li>
-                </ul><!--End .nav-second-level -->
-            </li><!-- End menu item -->
-            
+                        
+                        @if( ViewHelper::canViewWikiManagmentAdmin() == true )
+                            <li>
+                                <a href="{{ url('wiki/verwalten-admin') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
+                            </li>
+                        @else
+                            <li>
+                                <a href="{{ url('wiki/verwalten') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
+                            </li>
+                        @endif  
+                        
+                        @if( ViewHelper::universalHasPermission( array(15) ) == true ) 
+                            <li>
+                                <a href="{{ url('wiki-kategorie') }}">{{ ucfirst( trans('wiki.wikiCategory') ) }} </a>
+                            </li>
+                        @endif
+                        
+                        @if( ViewHelper::universalHasPermission( array(15) ) == true ) 
+                            <li>
+                                <a href="{{ url('wiki/create') }}">{{ ucfirst( trans('wiki.wikiCreate') ) }} </a>
+                            </li>
+                        @endif
+                    </ul><!--End .nav-second-level -->
+                </li><!-- End menu item -->
+            @endif
             
             <li class="">
                 <a href="#">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}

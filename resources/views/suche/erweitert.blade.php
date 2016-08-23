@@ -65,14 +65,41 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="form-group">
-                            {!! ViewHelper::setSelect($documentTypes, 'document_type', '', old('document_type'), trans('sucheForm.document-type'), trans('sucheForm.document-type'), false) !!}
+                            {{-- ViewHelper::setSelect($documentTypes, 'document_type', '', old('document_type'), trans('sucheForm.document-type'), trans('sucheForm.document-type'), false) --}}
+                            <div class="form-group">
+                                <label class="control-label"> {{ trans('sucheForm.document-type') }}</label>
+                                <select name="document_type" class="form-control select" data-placeholder="{{ strtoupper( trans('sucheForm.document-type') ) }}">
+                                    <option value=""></option>
+                                    @foreach($documentTypes as $documentType)
+                                        <option value="{{$documentType->id}}" @if(old('document_type') == $documentType->id) selected @endif > 
+                                            {{ $documentType->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     
+                    <div class="col-md-4 col-lg-4"> 
+                        <div class="form-group">
+                            <label class="control-label"> {{ trans('documentForm.user') }}</label>
+                            <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}">
+                                <option value=""></option>
+                                @foreach($mandantUsers as $mandantUser)
+                                    <option value="{{$mandantUser->user->id}}" @if(old('user_id') == $mandantUser->user->id) selected @endif > 
+                                        {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>   
+                    </div>
+                </div>
+                
+                <div class="row">
                     <div class="col-lg-2 col-sm-6">
                         <!--<br class="hidden-xs hidden-sm">   -->
                         <div class="checkbox">
-                            <input type="checkbox" name="wiki" id="wiki">
+                            <input type="checkbox" @if((old('wiki'))) checked @endif name="wiki" id="wiki">
                             <label for="wiki"> {{ trans('sucheForm.wiki') }} <br class="hidden-lg"> {{ trans('sucheForm.entries') }} </label>
                         </div>
                     </div>
@@ -80,7 +107,7 @@
                     <div class="col-lg-2 col-sm-6">
                         <!--<br class="hidden-xs hidden-sm">   -->
                         <div class="checkbox">
-                            <input type="checkbox" name="history" id="history">
+                            <input type="checkbox" @if((old('history'))) checked @endif name="history" id="history">
                             <label for="history"> {{ trans('sucheForm.history') }} <br class="hidden-lg"> {{ trans('sucheForm.archive') }} </label>
                         </div>
                     </div>

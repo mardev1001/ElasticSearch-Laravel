@@ -6,7 +6,7 @@ return [
     'appearance' => 'Darstellung',
     'show-deleted-users' => 'Gelöschte Benutzer anzeigen',
     'show-deleted-mandants' => 'Gelöschte Mandanten anzeigen',
-    'pdf-export' => 'PDF Export',
+    'pdf-export' => 'PDF erzeugen',
     'search-options' => 'Suchoptionen',
     'options' => 'Optionen',
     'mandant' => 'Mandant',

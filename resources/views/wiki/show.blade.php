@@ -9,7 +9,8 @@
     <div class="box-wrapper ">
         <div class="row">
             <div class="col-md-12 col-lg-12">
-                <h3 class="title">
+                @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
+                    <h3 class="title">
                     
                   {{ $data->name }}
                     <br>
@@ -18,9 +19,11 @@
                         </strong> 
                     </span>
                 </h3>
+                @endif
             </div>
         </div>
         <div class="box">
+          @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-lg-10">
 
@@ -79,6 +82,9 @@
                 </div><!--end col-sm-4 col-md-3 col-lg-2 btns-->
               
             </div>
+          @else
+              <p>{{ trans('documentForm.noPermission') }}</p>
+          @endif
         </div>
     </div>
     @stop

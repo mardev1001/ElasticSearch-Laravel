@@ -84,12 +84,12 @@
                             <div class="col-xs-12 col-md-6">
                                     <div class="form-group">
                                         <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
-                                        <select name="variante-{{$k+1}}[]" class="form-control select" 
+                                        <select name="variante-{{$k+1}}[]" class="form-control select freigabe-mandant" 
                                          data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" 
                                          @if( count($variants) > 1)
                                             required
                                         @endif multiple>
-                                            @if($variant->approval_all_mandants == true )
+                                            @if($variant->approval_all_mandants == true && count($variants) <= 1 )
                                                 
                                                 <option value="0"></option>
                                                 <option value="Alle" selected>Alle</option>

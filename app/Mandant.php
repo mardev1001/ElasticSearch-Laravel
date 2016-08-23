@@ -19,7 +19,9 @@ class Mandant extends Model
     ]; //whitelist
     
     public function mandantInfo(){
-        return $this->hasOne('App\MandantInfo');
+        if(null !== $this->hasOne('App\MandantInfo'))
+            return $this->hasOne('App\MandantInfo');
+        else return '';
     }
     
     public function mandantUsers(){

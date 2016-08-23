@@ -113,9 +113,9 @@
                 <div class="form-group">
                     <label class="control-label"> {{ trans('documentForm.user') }} *</label>
                     <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}" required>
-                        @foreach($mandantUsers as $mandantUser)
-                            <option value="{{$mandantUser->user->id}}" @if(isset($documentUsers)) {!! ViewHelper::setMultipleSelect($documentUsers, $mandantUser->user->id, 'user_id') !!} @endif > 
-                                {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
+                        @foreach( $documentUsers as $documentUser )
+                            <option value="{{$documentUser->user->id}}" @if($documentUser->user->id == $data->user_id) selected @endif > 
+                                {{ $documentUser->user->first_name }} {{ $documentUser->user->last_name }} 
                             </option>
                         @endforeach
                     </select>

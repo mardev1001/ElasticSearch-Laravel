@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use Excel;
 use App\Mandant;
+use App\MandantInfo;
 
 class TelephoneListController extends Controller
 {
@@ -24,8 +26,9 @@ class TelephoneListController extends Controller
                 foreach($mandant->users as $k2 => $mUser){
                     foreach($mUser->mandantRoles as $mr){
                          $testuserArr[] = $mr->role->name;
-                        if( $mr->role->id == 21 ) //edv
-                            $userArr[] = $mandant->users[$k2];
+                        //  dd($mr->role->phone_role);
+                        if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21) //edv
+                             $userArr[] = $mandant->users[$k2]->id;
                     }
                     
                     if( count($userArr) < 1){
@@ -113,4 +116,56 @@ class TelephoneListController extends Controller
     {
         //
     }
+    
+    /**
+     * Generate PDF document for the passed Mandant ID
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pdfExport($id)
+    {
+        $mandant = Mandant::find($id);
+        $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
+        $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+        
+        $pdf = \PDF::loadView('pdf.mandant', compact('mandant','mandantInfo','hauptstelle'));
+        return $pdf->stream();
+    }
+    
+    /**
+     * Generate XLS document for the passed request parameters
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function xlsExport(Request $request)
+    {
+        Excel::create('NEPTUN Excel', function($excel){
+            
+        
+            $excel->setTitle('Test Titel');
+            $excel->setDescription('Test XLS Beschreibung');
+            
+            // Add sheet
+            $excel->sheet('Blatt 1', function($sheet) {
+                
+                // Append row after row 2
+                $sheet->appendRow(2, array('test 1', 'test 2'));
+                
+                // Append row as very last
+                $sheet->appendRow(array('test 3', 'test 4'));
+                
+            });
+            
+            $excel->sheet('Blatt 2', function($sheet) {
+                
+            });
+
+            
+        })->export('xls');
+        
+    }
+    
+    
 }

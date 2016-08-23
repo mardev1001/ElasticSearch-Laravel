@@ -114,6 +114,7 @@ class DocumentController extends Controller
             //this is until Neptun inserts the documents
             $documentUsers = $mandantUsers;
             
+            
             return view('formWrapper', 
             compact('url', 'documentTypes', 'isoDocuments','documentStatus', 'mandantUsers', 'documentUsers','documentCoauthors','incrementedQmr','incrementedIso') );
         }   
@@ -540,7 +541,7 @@ class DocumentController extends Controller
         /*End Check if document has attachments*/
         
         $url = '';
-        $documentTypes = DocumentType::all();
+        $documentTypes = DocumentType::where('document_art',1)->get();
         $isoDocuments = IsoCategory::all();
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
         $uploadTypes = DocumentType::where('document_art',1)->pluck('id');
@@ -625,9 +626,11 @@ class DocumentController extends Controller
             /*
                 Option 2: create a new Vorlagedokument and add it as an attachment
             */
-            // dd($request->all());
-            $dt = DocumentType::find(  $this->formulareId = $this->formulareId);//vorlage document
-            RequestMerge::merge(['version' => 1, 'document_type_id' => $dt->id,'is_attachment'=> 1] );
+            //  dd($request->all());
+            ///$dt = DocumentType::find(  $this->formulareId = $this->formulareId);//vorlage document
+            // RequestMerge::merge(['version' => 1, 'document_type_id' => $dt->id,'is_attachment'=> 1] );
+            RequestMerge::merge(['version' => 1, 'is_attachment'=> 1] );
+            
             
             if( !$request->has('name_long') )
                 RequestMerge::merge(['name_long' => $request->get('name')] );
@@ -1226,6 +1229,7 @@ class DocumentController extends Controller
             
             //this is until Neptun inserts the documents
             $documentUsers = $mandantUsers;
+            // dd($documentUsers);
             
             $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
             if( $incrementedQmr == null || $incrementedQmr->qmr_number == null )
@@ -1244,7 +1248,7 @@ class DocumentController extends Controller
             }
            
             return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments',
-            'documentStatus','mandantUsers','$documentUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
+            'documentStatus','mandantUsers','documentUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
         }   
         else{
             session()->flash('message',trans('documentForm.noPermission'));

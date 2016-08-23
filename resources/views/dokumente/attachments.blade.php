@@ -112,14 +112,11 @@
                                                 <div class="form-group">
                                                 <label class="control-label">{{ ucfirst( trans('documentForm.type')) }}*</label>     
                                                 <select name="document_type_id" class="form-control select" 
-                                                data-placeholder="{{ ucfirst(trans('documentForm.type')) }}*" required disabled>
+                                                data-placeholder="{{ ucfirst(trans('documentForm.type')) }}*" required >
                                                 <option></option>
                                                 @if( count($documentTypes) >0 ){
                                                    @foreach($documentTypes as $collection){
-                                                       <option value="{{$collection->id}}" 
-                                                            @if($collection->id == 5 )
-                                                                selected
-                                                            @endif >
+                                                       <option value="{{$collection->id}}">
                                                            {{$collection->name}}
                                                        </option>
                                                     @endforeach

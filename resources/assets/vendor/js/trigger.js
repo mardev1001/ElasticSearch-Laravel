@@ -361,7 +361,14 @@ $( function() {
         });
        
     }
-    /* End Change the hidden input value on sites with .preview */
+    /* End Change the hidden input value on sites with .preview */ //.freigabe-mandant
+    /*$('.chosen-results').on('click touch', function(){
+        if( $('.freigabe-mandant').length > 1)
+           $('.freigabe-mandant').each(function(){
+               var result$(this).find('.chosen-results');
+           });
+    });*/
+    /* Check if variants*/
     
     
 });

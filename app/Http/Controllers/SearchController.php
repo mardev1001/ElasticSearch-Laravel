@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Repositories\SearchRepository;
+use App\Http\Repositories\DocumentRepository;
 
 use App\Document;
 use App\DocumentType;
 use App\EditorVariant;
+use App\MandantUser;
 
 class SearchController extends Controller
 {
@@ -18,10 +21,11 @@ class SearchController extends Controller
      * Class constructor
      *
      */
-    public function __construct(SearchRepository $searchRepo)
+    public function __construct(SearchRepository $searchRepo, DocumentRepository $docRepo)
     {
         $this->search =  $searchRepo;
-     }
+        $this->document =  $docRepo;
+    }
     
     
     /**
@@ -46,10 +50,27 @@ class SearchController extends Controller
         $variants = array();
         $documentTypes = DocumentType::all();
         
+        
+        // Fill the $mandantUsers array with users that share the same mandant as the logged in user
+        $mandantUsers = array();
+        foreach(MandantUser::all() as $mandantUser){
+            foreach(Auth::user()->mandantUsers as $loggedUserMandant){
+                if($loggedUserMandant->mandant_id == $mandantUser->mandant_id){
+                    if(!in_array($mandantUser, $mandantUsers))
+                        array_push($mandantUsers, $mandantUser);
+                }
+            }
+        }
+        // dd($mandantUsers);
+        
         if($request->has('parameter')){
             $parameter = $request->input('parameter');
             
             $documents = Document::where('name', 'LIKE', '%'.$parameter.'%' )
+                                ->where('document_status_id', 3)
+                                // ->where('document_status_id','!=', 5)
+                                ->where('active', 1)
+                                ->where('deleted_at', null)
                                 ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
                                 ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
                                 ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' )
@@ -69,7 +90,7 @@ class SearchController extends Controller
             }
         }
         
-        return view('suche.erweitert', compact('parameter','results', 'variants','documentTypes'));
+        return view('suche.erweitert', compact('parameter','results', 'variants','documentTypes', 'mandantUsers'));
     }
 
     /**
@@ -155,6 +176,16 @@ class SearchController extends Controller
         $variants = array();
         $documentTypes = DocumentType::all();
         
+        $mandantUsers = array();
+        foreach(MandantUser::all() as $mandantUser){
+            foreach(Auth::user()->mandantUsers as $loggedUserMandant){
+                if($loggedUserMandant->mandant_id == $mandantUser->mandant_id){
+                    if(!in_array($mandantUser, $mandantUsers))
+                        array_push($mandantUsers, $mandantUser);
+                }
+            }
+        }
+        
         $name = $request->input('name');
         $betreff = $request->input('betreff');
         $summary = $request->input('beschreibung');
@@ -166,11 +197,18 @@ class SearchController extends Controller
         $date_to = strlen($request->input('datum_bis')) ? Carbon::parse($request->input('datum_bis'))->toDateTimeString()  : null;
         $document_type = $request->input('document_type');
         $wiki = $request->has('wiki');
-        $history =  $request->has('history');
+        $history = $request->has('history');
+        $user_id = $request->input('user_id');
         
         // dd($request->all());
         
-        $documents = Document::where('id', '>', 0);
+        $documents = Document::where('id', '>', 0)
+        ->where('document_status_id', 3)
+        // ->where('document_status_id','!=', 5)
+        ->where('active', 1);
+        
+        if($history) $documents = $documents->where('deleted_at', '!=', null);
+        else $documents = $documents->where('deleted_at', null);
         
         if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
         if(!empty($betreff))  $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
@@ -179,6 +217,7 @@ class SearchController extends Controller
         if(!empty($search_tags))  $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
         if(!empty($date_from))  $documents->whereDate('created_at', '>=', $date_from );
         if(!empty($date_to))  $documents->whereDate('created_at', '<=', $date_to );
+        if(!empty($user_id))  $documents->where('user_id', $user_id );
         
         $documents = $documents->get();
          
@@ -199,7 +238,7 @@ class SearchController extends Controller
         
         if($emptySearch) $results = null;
         
-        return view('suche.erweitert', compact('results', 'variants', 'documentTypes'));
+        return view('suche.erweitert', compact('results', 'variants', 'documentTypes', 'mandantUsers'));
     }
 
     /**
@@ -221,8 +260,8 @@ class SearchController extends Controller
                 foreach($mandantUsers as $k2 => $mUser){
                     foreach($mUser->mandantRoles as $mr){
                          $testuserArr[] = $mr->role->name;
-                        if( $mr->role->id == 21 ) //edv
-                            $userArr[] = $mandantUsers[$k2];
+                         if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21)
+                            $userArr[] = $mandantUsers[$k2]->id;
                     }
                     
                     
