@@ -21,7 +21,7 @@
             
             @if(count($rundEntwurfPaginated))
                 
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="rundEntwurfTree">
                         <div class="rundEntwurfTree hide">
                             {{ $rundEntwurfTree }}
@@ -50,7 +50,7 @@
             
             @if(count($rundFreigabePaginated))
             
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="rundFreigabeTree">
                         <div class="rundFreigabeTree hide">
                             {{ $rundFreigabeTree }}
@@ -109,7 +109,7 @@
             
             @if(count($rundAllPaginated))
             
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="rundAllPaginated">
                         <div class="rundAllPaginated hide">
                             {{ $rundAllTree }}

@@ -49,7 +49,7 @@
             
             <h2 class="title">{{ trans('dokumentTypenForm.typesEntwurf') }}</h2>
             @if(count($docsByTypeEntwurfPaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="docsByTypeEntwurfTree">
                         <div class="docsByTypeEntwurfTree hide">
                             {{ $docsByTypeEntwurfTree }}
@@ -75,7 +75,7 @@
             
             <h2 class="title">{{ trans('dokumentTypenForm.typesFreigabe') }}</h2>
             @if(count($docsByTypeFreigabePaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="docsByTypeFreigabeTree">
                         <div class="docsByTypeFreigabeTree hide">
                             {{ $docsByTypeFreigabeTree }}
@@ -131,7 +131,7 @@
             
             <h2 class="title">{{ trans('dokumentTypenForm.typesAll') ." ". $documentType->name }}</h2>
             @if(count($documentsByTypePaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="documentsByTypeTree">
                         <div class="documentsByTypeTree hide">
                             {{ $documentsByTypeTree }}

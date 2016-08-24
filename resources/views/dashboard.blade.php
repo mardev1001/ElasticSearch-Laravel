@@ -72,7 +72,7 @@
                 </div>
                 <div class="buttons wiki">
                     <br>
-                    <a href="#" class="btn btn-primary pull-right">Wiki aufrufen</a>
+                    <a href="{{url('/wiki')}}" class="btn btn-primary pull-right">Wiki aufrufen</a>
                     <div class="clearfix"></div>
                 </div>
             </div>

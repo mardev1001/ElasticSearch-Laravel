@@ -198,12 +198,11 @@
                         <div class="col-xs-12">
                             <div class="form-inline">
                                 <label>{{ trans('telefonListeForm.mandants') }}</label>
-                                <select name="export-mandants[]" class="form-control select" multiple>
-                                    <option value="1" selected>001</option>
-                                    <option value="2" selected>002</option>
-                                    <option value="3">003</option>
-                                    <option value="4">004</option>
-                                    <option value="5" selected>005</option>
+                                <select name="export-mandants[]" data-placeholder="{{ trans('telefonListeForm.mandants') }}" class="form-control select" multiple required>
+                                    <option></option>
+                                    @foreach($mandants as $mandant)
+                                    <option value="{{$mandant->id}}">({{$mandant->mandant_number}}) {{$mandant->kurzname}}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -211,10 +210,11 @@
                         <div class="col-xs-12">
                             <div class="form-inline">
                                 <label>{{ trans('telefonListeForm.options') }}</label>
-                                <select name="export-option" class="form-control select" >
-                                    <option value="1" selected>Option 1</option>
-                                    <option value="1" selected>Option 2</option>
-                                    <option value="1" selected>Option 3</option>
+                                <select name="export-option" data-placeholder="{{ trans('telefonListeForm.options') }}" class="form-control select" required>
+                                    <option></option>
+                                    <option value="1">Option 1</option>
+                                    <option value="1">Option 2</option>
+                                    <option value="1">Option 3</option>
                                 </select>
                             </div>
                         </div>

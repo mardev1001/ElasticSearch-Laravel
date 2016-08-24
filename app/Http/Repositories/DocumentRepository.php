@@ -385,6 +385,45 @@ class DocumentRepository
     }
     
     /**
+     * Generate wiki entry treeview. If no array parameter is present, all documents are read.
+     *
+     * @param  object array $array
+     * @param  bool $tags
+     * @param  bool $document
+     * @return object array $array
+     */
+    
+    public function generateWikiTreeview($items = array())
+    {
+        $treeView = array();
+        $wikiPages = array();
+        
+        if (sizeof($items)) $wikiPages = $items;
+    
+        foreach ($wikiPages as $wikiPage) {
+            
+            $node = new \StdClass();
+            $node->text = $wikiPage->name;
+            // $icon = $icon2 = '';
+                   
+            $node->beforeText = '';
+            $node->beforeText .= Carbon::parse($wikiPage->date_created)->format('d.m.Y').' - '.
+                $wikiPage->user->first_name .' '. $wikiPage->user->last_name;
+            
+            $node->afterText = $wikiPage->category->name;
+        
+            // $node->icon = $icon;
+            // $node->icon2 = $icon2;
+            
+            $node->href = url('/wiki/' . $wikiPage->id);
+            
+            array_push($treeView, $node);
+        }
+         
+        return json_encode($treeView);
+    }
+    
+    /**
      * Generate link list of attached documents for the passed item(s)
      *
      * @param  object array $items

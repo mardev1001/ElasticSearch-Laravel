@@ -53,7 +53,7 @@
             <table class="table">
                 <thead>
                     <th  class="text-center valign col-md-3">Name</th>
-                    <th  class="text-center valign col-md-3">Redakutre</th>
+                    <th  class="text-center valign col-md-3">Redakteure</th>
                     <th class="text-center valign col-md-3">Rolle</th>
                     <th class="text-center valign">Top Kategorie</th>
                     <th class="text-center valign">Optionen</th>

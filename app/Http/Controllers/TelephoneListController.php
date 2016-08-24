@@ -141,29 +141,35 @@ class TelephoneListController extends Controller
      */
     public function xlsExport(Request $request)
     {
-        Excel::create('NEPTUN Excel', function($excel){
-            
         
-            $excel->setTitle('Test Titel');
-            $excel->setDescription('Test XLS Beschreibung');
+        $exportMandants = $request->input('export-mandants');
+        $exportOption = $request->input('export-option');
+        
+        Excel::create('NEPTUN Telefonliste Export', function($excel) use ($exportMandants, $exportOption){
             
-            // Add sheet
-            $excel->sheet('Blatt 1', function($sheet) {
-                
-                // Append row after row 2
-                $sheet->appendRow(2, array('test 1', 'test 2'));
-                
-                // Append row as very last
-                $sheet->appendRow(array('test 3', 'test 4'));
-                
-            });
+            $excel->setTitle('NEPTUN Mandanten Telefonliste');
+            $excel->setDescription('NEPTUN Mandanten Telefonliste XLS Export');
             
-            $excel->sheet('Blatt 2', function($sheet) {
+            foreach ($exportMandants as $id) {
                 
-            });
-
+                $mandant = Mandant::find($id);
+                $mandantInfo = MandantInfo::where('mandant_id', 1)->first();
+                $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+                
+                // Add sheet
+                $excel->sheet('('. $mandant->mandant_number .') '. $mandant->kurzname, function($sheet) {
+                    
+                    // Append row
+                    $sheet->appendRow(array('1st row, cell 1', '1st row, cell 2'));
+                    
+                    // Append row
+                    $sheet->appendRow(array('2nd row, cell 1', '2nd row, cell 2'));
+                    
+                });
+                
+            }
             
-        })->export('xls');
+        })->download('xls');
         
     }
     

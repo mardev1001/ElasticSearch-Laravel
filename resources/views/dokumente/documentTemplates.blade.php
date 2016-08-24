@@ -12,7 +12,7 @@
         <div class="box-wrapper">
             <h2 class="title">{{ trans('documentTemplates.templateEntwurf') }}</h2>
             @if(count($formulareEntwurfPaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="formulareEntwurfTree">
                         <div class="formulareEntwurfTree hide">
                             {{ $formulareEntwurfTree }}
@@ -34,7 +34,7 @@
         <div class="box-wrapper">
             <h2 class="title">{{ trans('documentTemplates.templateFreigabe') }}</h2>
                 @if(count($formulareFreigabePaginated))
-                    <div class="box">
+                    <div class="box scrollable">
                         <div class="tree-view" data-selector="formulareFreigabeTree">
                             <div class="formulareFreigabeTree hide">
                                 {{ $formulareFreigabeTree }}
@@ -91,7 +91,7 @@
             <h2 class="title">{{ trans('documentTemplates.allDocuments') }}</h2>
             
             @if(count($formulareAllPaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="formulareAllPaginated">
                         <div class="formulareAllPaginated hide">
                             {{ $formulareAllTree }}

@@ -114,7 +114,7 @@
                     <label class="control-label"> {{ trans('documentForm.user') }} *</label>
                     <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}" required>
                         @foreach( $documentUsers as $documentUser )
-                            <option value="{{$documentUser->user->id}}" @if($documentUser->user->id == $data->user_id) selected @endif > 
+                            <option value="{{$documentUser->user->id}}" @if( isset($data->user_id) && $documentUser->user->id == $data->user_id) selected @endif > 
                                 {{ $documentUser->user->first_name }} {{ $documentUser->user->last_name }} 
                             </option>
                         @endforeach

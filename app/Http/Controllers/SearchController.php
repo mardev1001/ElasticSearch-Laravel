@@ -66,28 +66,34 @@ class SearchController extends Controller
         if($request->has('parameter')){
             $parameter = $request->input('parameter');
             
-            $documents = Document::where('name', 'LIKE', '%'.$parameter.'%' )
+            $documents = Document::where(function($query) use ($parameter) {
+                                    $query->where('name', 'LIKE', '%'.$parameter.'%' )
+                                    ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
+                                    ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
+                                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
+                                })
                                 ->where('document_status_id', 3)
                                 // ->where('document_status_id','!=', 5)
                                 ->where('active', 1)
                                 ->where('deleted_at', null)
-                                ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
-                                ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
-                                ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' )
                                 ->get();
-                                
+            // dd($documents);
             $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
             
             foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
             
             if(count($variants)){
                 foreach ($variants as $variant){
-                    if(!in_array($variant->document, $results)) 
-                        array_push($results, $variant->document);
+                    if(!in_array($variant->document, $results)){
+                        if($variant->document->document_status_id == 3)
+                            array_push($results, $variant->document);
+                    }
                 }
             } else {
                 $variants = EditorVariant::all();
             }
+            
+            // dd($results);
         }
         
         return view('suche.erweitert', compact('parameter','results', 'variants','documentTypes', 'mandantUsers'));

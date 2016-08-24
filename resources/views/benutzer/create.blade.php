@@ -166,3 +166,10 @@ Benutzer anlegen
 <div class="clearfix"></div> <br>
 
 @stop
+@section('script')
+<script type="text/javascript">
+    $(document).ready(function(){
+       $('input[type=password]').val('') 
+    });
+</script>
+@stop

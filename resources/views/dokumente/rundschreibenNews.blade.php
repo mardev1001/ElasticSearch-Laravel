@@ -20,7 +20,7 @@
             <h2 class="title">{{ trans('rundschreiben.newsEntwurf') }}</h2>
             @if(count($newsEntwurfPaginated ))
                 
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="newsEntwurfTree">
                         <div class="newsEntwurfTree hide">
                             {{ $newsEntwurfTree }}
@@ -48,7 +48,7 @@
             <h2 class="title">{{ trans('rundschreiben.newsFreigabe') }}</h2>
             
             @if(count($newsFreigabePaginated ))
-                <div class="box">
+                <div class="box scrollable">
                     
                         <div class="tree-view" data-selector="newsFreigabeTree">
                             <div class="newsFreigabeTree hide">
@@ -109,7 +109,7 @@
             <h2 class="title">{{ trans('rundschreiben.allNews') }}</h2>
             
             @if(count($newsAllPaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="newsAllTree">
                         <div class="newsAllTree hide">
                             {{ $newsAllTree }}

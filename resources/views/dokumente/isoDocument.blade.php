@@ -16,7 +16,7 @@
         <div class="box-wrapper">
             <h2 class="title">{{ trans('isoDokument.isoEntwurf') }}</h2>
             @if(count($isoEntwurfPaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="isoEntwurfTree">
                         <div class="isoEntwurfTree hide">
                             {{ $isoEntwurfTree }}
@@ -38,7 +38,7 @@
         <div class="box-wrapper">
             <h2 class="title">{{ trans('isoDokument.isoFreigabe') }}</h2>
             @if(count($isoFreigabePaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="">
                         <div class="tree-view" data-selector="isoFreigabeTree">
                             <div class="isoFreigabeTree hide">
@@ -91,7 +91,7 @@
         <div class="box-wrapper">
             <h2 class="title">Alle ISO Dokumente</h2>
                 @if(count($isoAllPaginated))
-                    <div class="box">
+                    <div class="box scrollable">
                         <div class="tree-view" data-selector="isoAllTree">
                             <div class="isoAllTree hide">
                                 {{ $isoAllTree }}

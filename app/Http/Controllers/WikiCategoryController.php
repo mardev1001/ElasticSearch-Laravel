@@ -98,6 +98,7 @@ class WikiCategoryController extends Controller
         $wkuArray = array();
         $rolesArray = array();
         if( $request->has('user_id') ){
+            WikiCategoryUser::where('wiki_category_id',$id)->delete();
             foreach($request->get('user_id') as $uid){
                 $wku= WikiCategoryUser::where('user_id',$uid)->where('wiki_category_id',$id)->first();
                 if( $wku == null ){

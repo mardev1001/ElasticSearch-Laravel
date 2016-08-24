@@ -11,7 +11,7 @@
                 <div class="box-wrapper">
                     <h4 class="title">{{ trans('rundschreibenQmr.qmrEntwurf')}}</h4>
                     @if(count($qmrEntwurfPaginated))
-                        <div class="box">
+                        <div class="box scrollable">
                             <div class="tree-view" data-selector="qmrEntwurfTree">
                                  <div class="qmrEntwurfTree hide" >{{ $qmrEntwurfTree }}</div>
                             </div>
@@ -32,7 +32,7 @@
                     <h4 class="title">{{ trans('rundschreibenQmr.qmrFreigabe')}}</h4>
                     
                     @if(count($qmrFreigabePaginated))
-                        <div class="box">
+                        <div class="box scrollable">
                             <div class="tree-view" data-selector="qmrFreigabeTree">
                                  <div class="qmrFreigabeTree hide" >{{ $qmrFreigabeTree }}</div>
                             </div>
@@ -82,7 +82,7 @@
         <div class="col-xs-12 col-md-12 box-wrapper">
             <h4 class="title">{{ trans('rundschreibenQmr.allQmr')}}</h4>
             @if(count($qmrAllPaginated))
-                <div class="box">
+                <div class="box scrollable">
                     <div class="tree-view" data-selector="qmrAllTree">
                          <div  class="qmrAllTree hide" >{{ $qmrAllTree }}</div>
                     </div>
