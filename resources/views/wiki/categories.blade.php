@@ -99,7 +99,7 @@
                                     
                                     
                                     {{ Form::open(['route' => ['wiki-kategorie.destroy', $data->id], 'method' => 'delete']) }}
-                                        <button type="submit" name="delete" class="btn btn-xs btn-warning delete-prompt">Entfernen</button><br>
+                                        <button type="submit" name="delete" class="btn btn-xs btn-danger delete-prompt">Entfernen</button><br>
                                     {{ Form::close() }}
                                    
                                 </td>

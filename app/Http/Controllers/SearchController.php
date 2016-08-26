@@ -14,6 +14,7 @@ use App\Document;
 use App\DocumentType;
 use App\EditorVariant;
 use App\MandantUser;
+use App\WikiPage;
 
 class SearchController extends Controller
 {
@@ -47,6 +48,7 @@ class SearchController extends Controller
         
         $parameter = null;
         $results = array();
+        $resultsWiki = array();
         $variants = array();
         $documentTypes = DocumentType::all();
         
@@ -96,7 +98,7 @@ class SearchController extends Controller
             // dd($results);
         }
         
-        return view('suche.erweitert', compact('parameter','results', 'variants','documentTypes', 'mandantUsers'));
+        return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
     }
 
     /**
@@ -176,9 +178,17 @@ class SearchController extends Controller
         // dd($request);
         $emptySearch = true;
         $inputs = $request->all();
-        foreach ($inputs as $input) if(!empty($input)) $emptySearch = false;
+        
+        foreach ($inputs as $key=>$input){
+            if($key != 'wiki' && $key != 'inhalt'){
+                if(!empty($input)){
+                    $emptySearch = false;
+                }
+            }
+        }
         
         $results = array();
+        $resultsWiki = array();
         $variants = array();
         $documentTypes = DocumentType::all();
         
@@ -231,20 +241,32 @@ class SearchController extends Controller
         
         foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
         
+        if($emptySearch) $results = array();
+        
         if(count($variants)){
             foreach ($variants as $variant){
                 if(!in_array($variant->document, $results)) 
                     array_push($results, $variant->document);
             }
-        } else {
-            $variants = EditorVariant::all();
-        }
-        
+        } 
+        // else {
+        //     $variants = EditorVariant::all();
+        // }
+        // dd($documents);
         $request->flash();
         
-        if($emptySearch) $results = null;
+        if($wiki){
+            // search for $name, $inhalt
+            $resultsWiki = WikiPage::where('id', '>', 0)->where('status_id', 2)->where('active', 1);
+            if(!empty($name)) $resultsWiki = $resultsWiki->where('name', 'LIKE', '%'. $name. '%');
+            if(!empty($inhalt)) $resultsWiki = $resultsWiki->where('content', 'LIKE', '%'. $inhalt. '%');
+            $resultsWiki = $resultsWiki->get();
+        }
         
-        return view('suche.erweitert', compact('results', 'variants', 'documentTypes', 'mandantUsers'));
+        // if($emptySearch) $results = null;
+        if(empty($name) && empty($inhalt)) $resultsWiki = null;
+        
+        return view('suche.erweitert', compact('results', 'resultsWiki', 'variants', 'documentTypes', 'mandantUsers'));
     }
 
     /**

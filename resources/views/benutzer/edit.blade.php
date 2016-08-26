@@ -185,6 +185,7 @@ Benutzer bearbeiten
             <div class="row">
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
+                        <input type="hidden" name="user_id" value="{{ $user->id }}" />
                        {!! ViewHelper::setUserSelect($usersAll, 'user_transfer_id', '', old('user_transfer_id'), trans('benutzerForm.user'), trans('benutzerForm.user'), true) !!}
                     </div>
                 </div>

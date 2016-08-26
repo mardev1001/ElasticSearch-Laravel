@@ -201,7 +201,7 @@ class DocumentRepository
                     // $node->text = "Version " . $document->version . "- " . $node->text . " - " . $document->updated_at;
                     
                     $node->beforeText = '';
-                    $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
+                    $node->beforeText = 'Version e1e11'.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
                     $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - '.$document->owner->first_name.' '.$document->owner->last_name;
                     
                     if($document->published != null)

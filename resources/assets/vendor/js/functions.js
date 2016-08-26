@@ -5,9 +5,12 @@ $(function() {
     
     // Delete prompt for buttons and anchors
     $('.delete-prompt').on('click touch', function(e) {
+        // e.preventDefault();
         var text = "Wollen Sie diesen Eintrag wirklich entfernen?";
-        if( $(this).data('text').length )
-            text = $(this).data('text');
+        if($(this).data('text') != undefined){
+            if( $(this).data('text').length )
+                text = $(this).data('text');
+        }
         if (confirm(text))
             return true;
         else

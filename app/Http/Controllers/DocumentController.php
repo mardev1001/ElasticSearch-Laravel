@@ -1064,11 +1064,12 @@ class DocumentController extends Controller
     public function show($id)
     {
         $datePublished = null;
+        $document = Document::find($id);
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
-            $document = Document::find($id);
+             $document = Document::find($id);
             // add UserReadDocumen
             $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)
                     ->where('user_id', Auth::user()->id)->get();
@@ -1082,10 +1083,17 @@ class DocumentController extends Controller
                 ]);
             }
             
+             /*
+                Check if document is latest published. if not redirect from unique url to id url
+                This is used as a failsafe for documents accessed from browser history
+             */
+             $latestPublished = PublishedDocument::where('document_group_id',$document->document_group_id)->orderBy('updated_at','desc')->first();
+             if( $latestPublished->document_id != $document->id )
+                return redirect('dokumente/'.$document->id );
         }
-        else{
-            $document = Document::find($id);
-        }
+        
+        
+        
         
         $favorite = null;
         if( isset($document->document_group_id) && isset(Auth::user()->id) )

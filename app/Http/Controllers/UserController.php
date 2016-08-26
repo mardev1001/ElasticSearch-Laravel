@@ -181,7 +181,33 @@ class UserController extends Controller
         */
         
         // $user = User::find($id);
-        // dd($request->all());
+        
+        // dd($request->all() );
+        $user = $request->input('user_id');
+        // $userMandants = MandantUser::where('user_id',$selectedUser)->pluck('mandant_id')->toArray();
+       /* $selectedUser = $request->input('user_transfer_id');
+        // dd($selectedUser);
+        $mandantUsers = MandantUser::where('user_id',$selectedUser)->get();
+        foreach( $mandantUsers as $mandantUser ){
+            $sUserM = MandantUser::where('user_id',$user)->where('mandant_id',$mandantUser->mandant_id)->first();
+            $userMCreated = false; 
+            if( !count($sUserM) ){
+                $sUserM = MandantUser::create( [ 'user_id' => $user, 'mandant_id'=> $mandantUser->mandant_id ] );
+                $userMCreated = true; 
+            }
+            
+            if($userMCreated == true){
+                //
+            }
+            else{
+                //
+            }*/
+            
+            /*mandant user role*/
+            
+       /* }
+        dd($mandantUsers);*/
+        
         
         return back()->with('message', 'Rollenübertragung erfolgreich abgeschlossen.');
     }
@@ -221,7 +247,16 @@ class UserController extends Controller
         $mandantUser = MandantUser::where('id', $request->input('mandant_user_id'))->first();
         if($request->has('save')){
             
-            MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
+            // dd( $request->all() );
+            $clearedRoles = $request->has('role_id');
+            $mandantUserRoles = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->pluck('role_id')->toArray();
+            $noDeleteArr = array();
+            if(!count($request->input('role_id'))) return back()->with('message', 'Rollen dürfen nicht leer sein.');
+            $temp = $this->preventDeleteRoles($mandantUserRoles,$request->input('role_id'), 
+            $request->input('mandant_id'),  $request->input('mandant_user_id') );
+            if( count($temp) )
+                $noDeleteArr = $temp;  
+            $del = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereNotIn('role_id',$noDeleteArr)->delete();
             // $internalRoleArray = InternalMandantUser::where('user_id', $request->input('user_id'))->pluck('role_id')->toArray();
             $exists = InternalMandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->delete();
             // dd($internalRoleArray);
@@ -322,5 +357,49 @@ class UserController extends Controller
         $uploadSuccess = $file->move($folder, $newName);
         \File::delete($folder . '/' . $filename);
         return $newName;
+    }
+    
+    /**
+     * Check if roles are system roles and if this user is the only user in mandat with this role
+     *
+     * @param  array $roleArray
+     * @return array $roleArray
+     */
+    public function preventDeleteRoles($mandantUserRoles ,$roleArray,$mandantId,$mandatUserId)
+    {
+       $difference = array_diff($mandantUserRoles,$roleArray);
+       $noDeleteArr = array();
+       $midCheck = array();
+       $midCheck2 = array();
+        foreach($difference as $k => $role) {
+            $roleDb = Role::find($role);
+            if( $roleDb->system_role == 1){
+                $mUsers = MandantUser::where('mandant_id', $mandantId)->get();
+                // $mUsers = MandantUser::where('mandant_user_id', $mandantId)->where('role_id',$role)->get();
+                // dd($mUsers);
+                $count = 0;
+                foreach($mUsers as $mUser){
+                    $mur = MandantUserRole::where('mandant_user_id', $mUser->id)->where('role_id',$role)->first();
+                    if($mur != null ){
+                      $midCheck2[] = $mur->mandant_user_id;
+                        if( count($mur) ){
+                               
+                               if( in_array($mur->mandant_user_id, $midCheck) == false){
+                                    $count++;
+                                    $midCheck[] = $mur->mandant_user_id;
+                                    
+                                }
+                      }  
+                    }
+                     
+                }
+                    if( $count <= 1 )
+                        $noDeleteArr[] = $role;
+                  
+           }
+        }
+       
+        return $noDeleteArr;
+        
     }
 }

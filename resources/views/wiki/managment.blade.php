@@ -90,7 +90,7 @@
                                     {{ $data->created_at }}
                                 </td>
                                 <td class="valign table-options text-center">
-                                    <a href="/wiki/{{$data->id}}/edit" class="btn btn-xs btn-warning delete-prompt">Bearbeiten</a><br>
+                                    <a href="/wiki/{{$data->id}}/edit" class="btn btn-xs btn-primary delete-prompt">Bearbeiten</a><br>
                                 </td>
                             </tr>
                             
