@@ -149,6 +149,10 @@
                     @if(ViewHelper::canViewHistory())
                     <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
                     @endif
+                    
+                    @if($document->document_status_id == 3)
+                    <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
+                    @endif
 
                     @if(count(Request::segments() ) == 2 && (!is_numeric(Request::segment(2) )) )
                         <a href="/dokumente/{{$document->id}}/favorit" class="btn btn-primary pull-right">

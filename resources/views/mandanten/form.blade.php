@@ -380,7 +380,13 @@
                         {!! ViewHelper::setInput('befristet_bis', $data->mandantInfo, old('befristet_bis'), trans('mandantenForm.befristetBis'), trans('Datum'), false, '' ) !!}
                     </div>
                 </div><!--End input box-->
+                <div class="clearfix"></div>
         
+                <div class="col-md-6 col-lg-4">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('erlaubnisverfahren', $data->mandantInfo, old('erlaubnisverfahren'), trans('mandantenForm.erlaubnisverfahren'), trans('mandantenForm.erlaubnisverfahren'), false, '' ) !!}
+                    </div>
+                </div><!--End input box-->
                 <div class="clearfix"></div>
         
                 <!-- input box-->

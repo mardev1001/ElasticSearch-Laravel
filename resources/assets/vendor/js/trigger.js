@@ -362,6 +362,21 @@ $( function() {
        
     }
     /* End Change the hidden input value on sites with .preview */ //.freigabe-mandant
+    
+    
+    /* Check all options in select */
+        /*
+        $('.all-roles').on('click touch',function(e){
+           $(this).closest('tr').find('[name^="role_id"]').find('option').each(function(){
+              $(this).attr('selected', true).parent().trigger('chosen:updated');  
+           });
+        });
+        */
+       
+    
+    /* End check all options in select
+    
+    
     /*$('.chosen-results').on('click touch', function(){
         if( $('.freigabe-mandant').length > 1)
            $('.freigabe-mandant').each(function(){
@@ -370,5 +385,17 @@ $( function() {
     });*/
     /* Check if variants*/
     
+    
+    $('.roles-td').on('click touch',function(){
+        $(this).find('select option:selected').each(function(){
+            if( $(this).val() == 'Alle'){
+                $(this).parent().find('option').each(function(){
+                   if( $(this).val() != 'Alle' )
+                    $(this).removeAttr('selected').parent().trigger('chosen:updated');
+                });
+            }
+        });
+        
+    });
     
 });

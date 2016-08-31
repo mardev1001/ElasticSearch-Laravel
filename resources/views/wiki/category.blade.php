@@ -32,38 +32,22 @@
     
     @if( $categoryEntries )
     <!-- top categorie box-->
-    <div class="col-xs-12 box-wrapper">
-        <div class="box">
-            <div class="row">
-                <div class="col-md-12">
-                    @foreach( $categoryEntries as $k=>$entry )
-                        <!--link box-->
-                        <div class="col-md-3">
-                            <a href="{{ url('wiki/'.$entry->id) }}" class="text-center">
-                                <h4 >{{$entry->name}} </h4>
-                            </a>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    {!! ViewHelper::sentencesToDisplay($entry->content,6) !!}
-                                </div>
-                            </div>
-                            <br/>
-                              <small>{{ $entry->user->first_name }} {{ $entry->user->last_name }} - {{ $entry->created_at }} </small>
-                        </div><!--end link box-->
-                        @if( $k+1%4 == 0 )
-                            <div class="clearfix"></div>
-                        @endif
-                    @endforeach
-                </div><!-- end col-md-12-->
-            </div><!-- end row-->
-            
-            <!-- pagination box -->
-            <div class="text-ceter">
-                {!! $categoryEntries->render() !!}
-            </div><!-- end pagination box -->
-        
-        </div><!-- end box -->
-    </div><!--end  top categorie box wrapper-->
+    <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Neue Wiki-Einträge</h1>
+                <div class="box home">
+                    <div class="tree-view hide-icons wiki" data-selector="wikiEntries">
+                        <div class="wikiEntries hide">
+                            {{ $categoryEntriesTree }}
+                        </div>
+                    </div>
+                </div>
+                <!-- pagination box -->
+                <div class="text-ceter">
+                    {!! $categoryEntries->render() !!}
+                </div><!-- end pagination box -->
+            </div>
+        </div><!--end  top categorie box wrapper-->
     @endif
     
 </div><!-- end main row-->

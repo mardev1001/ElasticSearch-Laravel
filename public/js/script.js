@@ -65027,6 +65027,21 @@ $( function() {
        
     }
     /* End Change the hidden input value on sites with .preview */ //.freigabe-mandant
+    
+    
+    /* Check all options in select */
+        /*
+        $('.all-roles').on('click touch',function(e){
+           $(this).closest('tr').find('[name^="role_id"]').find('option').each(function(){
+              $(this).attr('selected', true).parent().trigger('chosen:updated');  
+           });
+        });
+        */
+       
+    
+    /* End check all options in select
+    
+    
     /*$('.chosen-results').on('click touch', function(){
         if( $('.freigabe-mandant').length > 1)
            $('.freigabe-mandant').each(function(){
@@ -65035,6 +65050,18 @@ $( function() {
     });*/
     /* Check if variants*/
     
+    
+    $('.roles-td').on('click touch',function(){
+        $(this).find('select option:selected').each(function(){
+            if( $(this).val() == 'Alle'){
+                $(this).parent().find('option').each(function(){
+                   if( $(this).val() != 'Alle' )
+                    $(this).removeAttr('selected').parent().trigger('chosen:updated');
+                });
+            }
+        });
+        
+    });
     
 });
 /* =========================================================
@@ -65469,6 +65496,8 @@ $( function() {
 	Tree.prototype.toggleCheckedState = function (node, options) {
 		if (!node) return;
 		this.setCheckedState(node, !node.state.checked, options);
+	
+		
 	};
 
 	Tree.prototype.setCheckedState = function (node, state, options) {
@@ -65547,12 +65576,26 @@ $( function() {
 
 		if (!nodes) return;
 		level += 1;
-
+		
+	
+		
 		var _this = this;
+		var childCounter = 0;
 		$.each(nodes, function addNodes(id, node) {
-
+			var parent = '';
+				
+			if( level == 1 ){
+				parent = ' parent-node ';
+				childCounter = 0;
+			}
+			else if( level > 1){	
+				parent = 'child-node';
+				childCounter++;
+				if(childCounter == 1)
+					parent +=' first-child';
+			}
 			var treeItem = $(_this.template.item)
-				.addClass('node-' + _this.elementId)
+				.addClass('node- '+parent + _this.elementId)
 				.addClass(node.state.checked ? 'node-checked' : '')
 				.addClass(node.state.disabled ? 'node-disabled': '')
 				.addClass(node.state.selected ? 'node-selected' : '')
@@ -65563,11 +65606,13 @@ $( function() {
 			// Add indent/spacer to mimic tree structure
 			for (var i = 0; i < (level - 1); i++) {
 				treeItem.append(_this.template.indent);
+			
 			}
-
+				
 			// Add expand, collapse or empty spacer icons
 			var classList = [];
 			if (node.nodes) {
+				// console.log(node.nodes);
 				classList.push('expand-icon');
 				if (node.state.expanded) {
 					classList.push(_this.options.collapseIcon);
@@ -65597,7 +65642,7 @@ $( function() {
 					classList.push(node.selectedIcon || _this.options.selectedIcon || 
 									node.icon || _this.options.nodeIcon);
 				}
-
+					
 				// console.log(node.icon);
 				if(node.icon != undefined){
 					if(node.icon != ''){
@@ -65621,7 +65666,7 @@ $( function() {
 									node.icon2 || _this.options.nodeIcon2);
 				}
 				
-				console.log(node.icon2);
+				// console.log(node.icon2);
 				
 				if(node.icon2 != undefined){
 					if(node.icon2 != ''){

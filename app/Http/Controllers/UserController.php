@@ -173,42 +173,27 @@ class UserController extends Controller
      */
     public function userRoleTransfer(Request $request)
     {
-        /*
-        Wird als zusästzlicher Ersteller bei den Dokumenten angelegt
-        Was wird übertragen?
-        - Rollen
-        - Gelesen/Ungelesen (Dokumente)
-        */
-        
-        // $user = User::find($id);
         
         // dd($request->all() );
-        $user = $request->input('user_id');
-        // $userMandants = MandantUser::where('user_id',$selectedUser)->pluck('mandant_id')->toArray();
-       /* $selectedUser = $request->input('user_transfer_id');
-        // dd($selectedUser);
-        $mandantUsers = MandantUser::where('user_id',$selectedUser)->get();
+        $user = $request->input('user_id'); //primary user
+        $selectedUser = $request->input('user_transfer_id'); //dropdown user
+        $userMandants = MandantUser::where('user_id',$user)->pluck('mandant_id')->toArray(); //pUser Mandants
+        
+        $mandantUsers = MandantUser::where('user_id',$selectedUser)->get(); //ddUser in user mandant
+        
         foreach( $mandantUsers as $mandantUser ){
             $sUserM = MandantUser::where('user_id',$user)->where('mandant_id',$mandantUser->mandant_id)->first();
-            $userMCreated = false; 
-            if( !count($sUserM) ){
+            if( !count($sUserM) )
                 $sUserM = MandantUser::create( [ 'user_id' => $user, 'mandant_id'=> $mandantUser->mandant_id ] );
-                $userMCreated = true; 
-            }
             
-            if($userMCreated == true){
-                //
-            }
-            else{
-                //
-            }*/
+            // dd($sUserM);
+            $selectedMURoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->get();
             
-            /*mandant user role*/
-            
-       /* }
-        dd($mandantUsers);*/
-        
-        
+            $userMandantUserRoles = MandantUserRole::where('mandant_user_id', $sUserM->id)->pluck('role_id')->toArray();
+            foreach( $selectedMURoles as $smur )
+                if( !in_array($smur->role_id, $userMandantUserRoles) )
+                    $create = MandantUserRole::create( [ 'mandant_user_id' => $sUserM->id, 'role_id' => $smur->role_id ] ); 
+        }
         return back()->with('message', 'Rollenübertragung erfolgreich abgeschlossen.');
     }
     

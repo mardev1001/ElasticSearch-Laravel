@@ -181,8 +181,8 @@ class DocumentRepository
                 if ($options['pageDocuments'] == true) {
                        
                     $node->beforeText = '';
-                    $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - '.
-                        $document->owner->first_name .' '. $document->owner->last_name;
+                    $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y');
+                        if(isset($document->owner)) $node->beforeText .= ' - '.$document->owner->first_name .' '. $document->owner->last_name;
                     
                     if($document->published != null)
                         $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
@@ -364,6 +364,7 @@ class DocumentRepository
                                 $subNode->icon = 'fa fa-file-o';
                                 // $subNode->href = '/download/' . str_slug($secondDoc->name) . '/' . $upload->file_path;
                                 $subNode->href = '/download/' . $secondDoc->id . '/' . $upload->file_path;
+                                $subNode->child = true;
 
                                 array_push($node->nodes, $subNode);
                             }

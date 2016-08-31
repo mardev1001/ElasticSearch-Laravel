@@ -96,7 +96,19 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'username' => [
+            'required' => 'Der Benutzername muss ausgefüllt werden.',
+            'unique' => 'Der Benutzername ist schon vergeben.',
+        ],
+        'password' => [
+            'required' => 'Das Passwort muss ausgefüllt werden.',
+            'min' => 'Das Passwort muss mindestens :min Zeichen lang sein.',
+            'confirmed' => 'Das Passwort stimmt nicht mit der Bestätigung überein.',
+        ],
     ],
+
+    // 'username' => 'required|unique:users',
+    // 'password' => 'required|min:6|confirmed',
 
     /*
     |--------------------------------------------------------------------------

@@ -89,7 +89,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('dokument-typen', 'DocumentTypeController');
         Route::resource('favoriten', 'FavoritesController');
         // Route::resource('historie', 'HistoryController');
-        Route::resource('statistik', 'StatsController');
+        //Route::resource('statistik', 'StatsController');
         Route::get('telefonliste/{id}/pdf', 'TelephoneListController@pdfExport');
         Route::post('telefonliste/xls', 'TelephoneListController@xlsExport');
         Route::resource('telefonliste', 'TelephoneListController');

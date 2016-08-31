@@ -52,8 +52,8 @@
             
             <table class="table">
                 <thead>
-                    <th  class="text-center valign col-md-3">Name</th>
-                    <th  class="text-center valign col-md-3">Redakteure</th>
+                    <th  class="text-center valign col-md-2">Name</th>
+                    <th  class="text-center valign col-md-4">Redakteure</th>
                     <th class="text-center valign col-md-3">Rolle</th>
                     <th class="text-center valign">Top Kategorie</th>
                     <th class="text-center valign">Optionen</th>
@@ -66,9 +66,9 @@
                                    'url' => 'wiki-kategorie/'.$data->id,
                                    'method' => 'PATCH',
                                    'class' => 'horizontal-form' ]) !!}
-                                <td class="text-center valign col-md-3">{{ $data->name }} </td>
-                                <td class="text-center valign col-md-3">
-                                    <select name="user_id[]" class="form-control select" required multiple data-placeholder="Redakutre">
+                                <td class="text-center valign col-md-2">{{ $data->name }} </td>
+                                <td class="text-center valign col-md-4">
+                                    <select name="user_id[]" class="form-control select" required multiple data-placeholder="Redakteure">
                                         <option></option>
                                         @foreach($users as $user){
                                            <option value="{{$user->id}}"  
@@ -79,9 +79,21 @@
                                         @endforeach
                                     </select>
                                 </td>
-                                <td class="text-center valign ">
-                                    <select name="role_id[]" class="form-control select" required multiple data-placeholder="Rolle">
+                                <td class="text-center valign roles-td">
+                                    @if( count($data->wikiRoles) == count($roles) )
+                                        <select name="role_id[]" class="form-control select" required multiple data-placeholder="Rolle">
+                                            <option></option>
+                                            <option value="Alle" selected>Alle</option>
+                                              @foreach($roles as $role)
+                                                <option value="{{$role->id}}" > 
+                                                    {{$role->name}}
+                                                    </option>
+                                            @endforeach
+                                        </select>
+                                    @else
+                                        <select name="role_id[]" class="form-control select" required multiple data-placeholder="Rolle">
                                         <option></option>
+                                        <option value="Alle">Alle</option>
                                           @foreach($roles as $role)
                                             <option value="{{$role->id}}"
                                             @if( isset($data->wikiRoles) ) 
@@ -89,6 +101,8 @@
                                                 {{$role->name}}
                                         @endforeach
                                     </select>
+                                    @endif
+                                    
                                 </td>
                                 <td class="text-center valign"> 
                                     {!! ViewHelper::setCheckbox('top_category',$data,old('top_category'),trans('wiki.topCategory'),false,
@@ -97,9 +111,12 @@
                                     <button class="btn btn-xs btn-primary" type="submit" name="save" value="save"></span>Speichern</button>
                                 </form><!--this is a global for closing -->
                                     
+                                     <!--<button type="button" name="check_all" class="btn btn-xs btn-primary all-roles">Alle Rollen</button><br>-->
+                                     <!--also if you want the functionallity in trigger.js find all-roles trigger-->
                                     
                                     {{ Form::open(['route' => ['wiki-kategorie.destroy', $data->id], 'method' => 'delete']) }}
-                                        <button type="submit" name="delete" class="btn btn-xs btn-danger delete-prompt">Entfernen</button><br>
+                                        <button type="submit" name="delete" class="btn btn-xs btn-danger delete-prompt"
+                                        data-text=" Wollen Sie diesen Eintrag wirklich löschen?">Entfernen</button><br>
                                     {{ Form::close() }}
                                    
                                 </td>

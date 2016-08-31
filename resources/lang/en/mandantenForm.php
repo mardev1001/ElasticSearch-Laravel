@@ -83,5 +83,6 @@ return [
     'zusInfos' => 'zusätzliche Informationen',
     'bg' => 'Berufsgenossenschaft',
     'toHistory' => 'Zur Historie',
+    'erlaubnisverfahren' => 'Zuständige AA für Erlaubnisverfahren ab 01.07.12',
 
 ];

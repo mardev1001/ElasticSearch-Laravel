@@ -2,6 +2,9 @@
 
 @section('content')
 
+@if(Session::has('message'))
+    <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
+@endif
 
 <div class="col-md-4 col-md-offset-4 login nopadding">
     <h1 class="page-title">
@@ -18,9 +21,9 @@
                     <div class="col-md-12">
                         <input type="text" class="form-control" name="username"  value="{{ old('text') }}" placeholder="Benutzername">
 
-                        @if ($errors->has('email'))
+                        @if ($errors->has('username'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('email') }}</strong>
+                                <strong>{{ $errors->first('username') }}</strong>
                             </span>
                         @endif
                     </div>

@@ -1061,8 +1061,8 @@ class DocumentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
+    
         $datePublished = null;
         $document = Document::find($id);
         if( ctype_alnum($id) && !is_numeric($id) ){
@@ -1073,7 +1073,13 @@ class DocumentController extends Controller
             // add UserReadDocumen
             $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)
                     ->where('user_id', Auth::user()->id)->get();
+            $dateReadBckp = '';
+          
+                
+                
+                    
                     // dd($readDocs);
+                    
             if(count($readDocs) == 0){
                 UserReadDocument::create([
                     'document_group_id'=> $publishedDocs->document_group_id, 
@@ -1081,6 +1087,13 @@ class DocumentController extends Controller
                     'date_read'=> Carbon::now(), 
                     'date_read_last'=> Carbon::now()
                 ]);
+            }
+            else{
+                foreach($readDocs as $readDoc){
+                    $readDoc->date_read_last = Carbon::now();
+                    $readDoc->save();
+                        //  dd($readDoc);
+                }
             }
             
              /*
@@ -2241,8 +2254,42 @@ class DocumentController extends Controller
      */
     public function documentStats($id)
     {
-        $data = '';
-        return view('dokumente.statistik', compact('data') );
+        $document = Document::find($id);
+        $mandants = Mandant::all();
+        $users = User::all();
+        $documentReaders = array();
+        $documentReadersCount = array();
+
+        if(!isset($document)) return back();
+        
+        $documentReadersObj = UserReadDocument::where('document_group_id', $document->published->document_group_id)->get();
+        
+        foreach($mandants as $mandant){
+            $documentReadersCount[$mandant->id] = array();
+            foreach($mandant->mandantUsers as $mandantUser){
+                foreach($documentReadersObj as $docReader){
+                    if($mandantUser->user_id == $docReader->user_id){
+                        if(!in_array($docReader, $documentReadersCount[$mandant->id]))
+                            array_push($documentReadersCount[$mandant->id], $docReader);
+                    }
+                }
+            }
+        }
+        
+        // dd($documentReadersCount);
+        
+        foreach($documentReadersObj as $documentReader){
+            $documentReaders[$documentReader->user_id] = [
+                'document_group_id' => $documentReader->document_group_id,
+                'date_read' => $documentReader->date_read,
+                'date_read_last' => $documentReader->date_read_last
+            ];
+        }
+        
+        // dd($documentReaders);
+        
+        // $data = '';
+        return view('dokumente.statistik', compact('documentReaders', 'documentReadersCount', 'mandants', 'users', 'document') );
     }
     
     /**
@@ -2603,6 +2650,12 @@ class DocumentController extends Controller
                     'date_read'=> Carbon::now(), 
                     'date_read_last'=> Carbon::now()
                 ]);
+            }
+             else{
+                foreach($readDocs as $readDoc){
+                    $readDoc->date_read_last = Carbon::now();
+                    $readDoc->save();
+                }
             }
         }//end check if user has uniqe id
         

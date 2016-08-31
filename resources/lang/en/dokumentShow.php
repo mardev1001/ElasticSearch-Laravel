@@ -19,6 +19,7 @@ return [
     'unFavorite' => 'Favorit entfernen',
     'version' => 'Version',
     'status' => 'Status',
+    'stats' => 'Statistik',
     'subject' => 'Betreff',
     'adressat' => 'Adressat',
     'variant' => 'Variante',

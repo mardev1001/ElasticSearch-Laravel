@@ -13,9 +13,18 @@ use App\WikiCategoryUser;
 use App\User;
 use App\Role;
 use App\WikiPage;
+use App\Http\Repositories\DocumentRepository;
 
 class WikiCategoryController extends Controller
 {
+    
+     public function __construct(DocumentRepository $docRepo)
+    {
+      $this->document = $docRepo;
+    }
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -65,8 +74,11 @@ class WikiCategoryController extends Controller
     public function show($id)
     {
         $category = WikiCategory::find($id);
+        
         $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
-        return view('wiki.category', compact('category','categoryEntries') ); 
+        $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
+        // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
+        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree') ); 
     }
 
     /**
@@ -115,15 +127,33 @@ class WikiCategoryController extends Controller
             //finish tihs part
             
         if( $request->has('role_id') ){
-            foreach($request->get('role_id') as $gid){
-                $wikiRole= WikiRole::where('role_id',$gid)->where('wiki_category_id',$id)->first();
-                if( $wikiRole == null ){
-                    $wikiRole = new WikiRole();
-                    $wikiRole->role_id = $gid;
-                    $wikiRole->wiki_category_id = $id;
-                    $wikiRole->save();
+            
+            if( in_array('Alle',$request->get('role_id') )  ){
+               $wikiRoles =WikiRole::where('wiki_category_id',$id)->pluck('role_id')->toArray();
+               $roles= Role::where('wiki_role',1)->get();
+               foreach($roles as $r){
+                   if( !in_array($r->id,$wikiRoles) ){
+                        $wr = new WikiRole();
+                        $wr->role_id = $r->id;
+                        $wr->wiki_category_id = $id;
+                        $wr->save();
+                   }
+                   
+               }
+            }
+            else{
+                
+                WikiRole::where('wiki_category_id',$id)->delete(); 
+                foreach($request->get('role_id') as $gid){
+                    $wikiRole= WikiRole::where('role_id',$gid)->where('wiki_category_id',$id)->first();
+                    if( $wikiRole == null ){
+                        $wikiRole = new WikiRole();
+                        $wikiRole->role_id = $gid;
+                        $wikiRole->wiki_category_id = $id;
+                        $wikiRole->save();
+                    }
+                        $wkuArray[] = $gid;
                 }
-                    $wkuArray[] = $gid;
             }
         }
         else

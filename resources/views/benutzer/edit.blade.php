@@ -216,7 +216,14 @@ Benutzer bearbeiten
             <div class="row inline">
                 <div class="col-md-4">
                     <div class="form-group">
-                       {!! ViewHelper::setSelect($mandantsAll, 'mandant_id', '', old('mandant_id'), trans('benutzerForm.mandant'), trans('benutzerForm.mandant'), true, [], [], []) !!}
+                       {{-- ViewHelper::setSelect($mandantsAll, 'mandant_id', '', old('mandant_id'), trans('benutzerForm.mandant'), trans('benutzerForm.mandant'), true, [], [], []) --}}
+                        <label class="control-label">{{trans('benutzerForm.mandant')}}*</label>
+                        <select name="mandant_id" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.mandant')) }}" required>
+                            <option></option>
+                            @foreach($mandantsAll as $mandant)
+                                <option value="{{$mandant->id}}">({{ $mandant->mandant_number }}) {{ $mandant->kurzname }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -262,7 +269,7 @@ Benutzer bearbeiten
                                 {!! Form::open(['action' => 'UserController@userMandantRoleEdit', 'method'=>'PATCH']) !!}
                                     <tr id="mandant-role-{{$mandantUser->id}}">
                                         <td>
-                                            {{ $mandantUser->mandant->name }}
+                                            ({{ $mandantUser->mandant->mandant_number }}) {{ $mandantUser->mandant->kurzname }}
                                             <input type="hidden" name="mandant_user_id" value="{{$mandantUser->id}}">
                                             <input type="hidden" name="user_id" value="{{$mandantUser->user_id}}">
                                             <input type="hidden" name="mandant_id" value="{{$mandantUser->mandant_id}}">

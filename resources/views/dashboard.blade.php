@@ -10,7 +10,6 @@
 @section('bodyClass') home-page @stop
 
 @section('content')
-    <div class="row">
         <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Neue Dokumente/Rundschreiben</h1>
@@ -37,7 +36,7 @@
                 
             </div>
         </div>
-    
+        @if( ViewHelper::universalHasPermission( array(10,11,12,13) ) == true ) 
         <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Meine Dokumente/Rundschreiben</h1>
@@ -53,12 +52,13 @@
                 </div>
             </div>
         </div>
-
-    </div>
+        <div class="clearfix"></div>
+         <br>
+        @endif
     
-    <br>
+    
+   
 
-    <div class="row">
         
         <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
@@ -77,7 +77,9 @@
                 </div>
             </div>
         </div>
-    
+         @if( ViewHelper::universalHasPermission( array(10,11,12,13) ) == false ) 
+             <div class="clearfix"></div>
+         @endif
         <!--<div class="clearfix"></div><br>-->
         
         {{-- <div class="col-xs-12 col-md-6 ">
@@ -111,8 +113,7 @@
                 </div>
             </div>
         </div>
-        
-    </div>
+       
     
     <div class="clearfix"></div><br>
     

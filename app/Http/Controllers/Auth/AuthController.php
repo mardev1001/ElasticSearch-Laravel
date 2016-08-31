@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Auth;
+use Lang;
 use Carbon\Carbon;
 use Validator;
 use App\Http\Controllers\Controller;
@@ -112,8 +113,21 @@ class AuthController extends Controller
                 }
                 Auth::user()->save();
                 return $this->handleUserWasAuthenticated($request, $throttles);
+            } else {
+                $this->logout();
+                return redirect()->back()
+                    ->withInput($request->only($this->loginUsername(), 'remember'))
+                    ->withErrors([
+                        $this->loginUsername() => 'Ihr Account ist deaktiviert. Bitte wenden Sie sich an Ihrem Geschäftsführer.',
+                    ]);
             }
-            else Auth::logout();
+        } else {
+            $this->logout();
+            return redirect()->back()
+                ->withInput($request->only($this->loginUsername(), 'remember'))
+                ->withErrors([
+                    $this->loginUsername() => 'Ihr Account ist deaktiviert. Bitte wenden Sie sich an Ihrem Geschäftsführer.',
+                ]);
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
@@ -124,6 +138,66 @@ class AuthController extends Controller
         }
 
         return $this->sendFailedLoginResponse($request);
+    }
+    
+    /**
+     * Get the failed login response instance.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        return redirect()->back()
+            ->withInput($request->only($this->loginUsername(), 'remember'))
+            ->withErrors([
+                $this->loginUsername() => $this->getFailedLoginMessage(),
+            ]);
+    }
+
+    /**
+     * Get the failed login message.
+     *
+     * @return string
+     */
+    protected function getFailedLoginMessage()
+    {
+        return Lang::has('auth.failed')
+                ? Lang::get('auth.failed')
+                : 'These credentials do not match our records.';
+    }
+
+    /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    protected function getCredentials(Request $request)
+    {
+        return $request->only($this->loginUsername(), 'password');
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getLogout()
+    {
+        return $this->logout();
+    }
+
+    /**
+     * Log the user out of the application.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function logout()
+    {
+        Auth::guard($this->getGuard())->logout();
+
+        return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }
     
 }

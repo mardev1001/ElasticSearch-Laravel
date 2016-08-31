@@ -44,7 +44,7 @@ class MandantInfo extends Model
             'berufsgenossenschaft_number','berufsgenossenschaft_zusatzinfo','erlaubniss_gultig_ab','erlaubniss_gultig_von',
             'geschaftsjahr','geschaftsjahr_info','bankverbindungen','info_wichtiges','info_sonstiges',
             'steuernummer_lohn','mitarbeiter_finanz_id','mitarbeiter_edv_id','mitarbeiter_vertrieb_id','mitarbeiter_umwelt_id', 
-            'angemeldet_am', 'umgemeldet_am', 'abgemeldet_am', 'gewerbeanmeldung_history', 'unbefristet', 'befristet_bis',
+            'angemeldet_am', 'umgemeldet_am', 'abgemeldet_am', 'gewerbeanmeldung_history', 'unbefristet', 'befristet_bis', 'erlaubnisverfahren',
         ]; //whitelist
         
     public function mandant(){

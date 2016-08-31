@@ -13,6 +13,7 @@ class WikiCategory extends Model
         return $this->hasMany('App\WikiRole','wiki_category_id','id');
     }
     
+    
     public function wikiCategoryUsers(){
         return $this->hasMany('App\WikiCategoryUser','wiki_category_id','id');
     }

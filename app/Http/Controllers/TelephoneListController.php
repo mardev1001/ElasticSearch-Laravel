@@ -7,8 +7,12 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use Excel;
+use App\User;
 use App\Mandant;
+use App\MandantUser;
+use App\MandantUserRole;
 use App\MandantInfo;
+use App\InternalMandantUser;
 
 class TelephoneListController extends Controller
 {
@@ -145,31 +149,403 @@ class TelephoneListController extends Controller
         $exportMandants = $request->input('export-mandants');
         $exportOption = $request->input('export-option');
         
-        Excel::create('NEPTUN Telefonliste Export', function($excel) use ($exportMandants, $exportOption){
+        switch ($exportOption) {
             
-            $excel->setTitle('NEPTUN Mandanten Telefonliste');
-            $excel->setDescription('NEPTUN Mandanten Telefonliste XLS Export');
-            
-            foreach ($exportMandants as $id) {
+            case 1: {
+                Excel::create('Telefonliste Export - Partner Gesamt', function($excel) use ($exportMandants, $exportOption){
                 
-                $mandant = Mandant::find($id);
-                $mandantInfo = MandantInfo::where('mandant_id', 1)->first();
-                $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+                    $excel->setTitle('Partner Gesamt');
+                    $excel->setDescription('Partner Gesamt');
+                    
+                    // $mandant = Mandant::find($id);
+                    // $mandantInfo = MandantInfo::where('mandant_id', 1)->first();
+                    // $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+                    
+                    // Add sheet
+                    $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
+                        // dd($exportMandants);
+                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', 'Bundesland', 'Zuständige AA für Erlaubnisverfahren ab 01.07.12'));
+                        
+                        if(in_array("0", $exportMandants)){
+                            foreach (Mandant::all() as $mandant) {
+                                
+                                $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $mandant->bundesland, $mandantInfo->erlaubnisverfahren));
+                            }
+                        } else {
+                            foreach ($exportMandants as $id) {
+                                
+                                $mandant = Mandant::find($id);
+                                $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $mandant->bundesland, $mandantInfo->erlaubnisverfahren));
+                            }
+                        }
+                    });
+                    
+                })->download('xls');
                 
-                // Add sheet
-                $excel->sheet('('. $mandant->mandant_number .') '. $mandant->kurzname, function($sheet) {
-                    
-                    // Append row
-                    $sheet->appendRow(array('1st row, cell 1', '1st row, cell 2'));
-                    
-                    // Append row
-                    $sheet->appendRow(array('2nd row, cell 1', '2nd row, cell 2'));
-                    
-                });
-                
+                return back();
             }
+            break;
             
-        })->download('xls');
+            case 2: {
+                Excel::create('Telefonliste Export - Einteilung Mandanten - NEPTUN-Mitarbeiter', function($excel) use ($exportMandants, $exportOption){
+                
+                    $excel->setTitle('Einteilung Mandanten - NEPTUN-Mitarbeiter');
+                    $excel->setDescription('Einteilung Mandanten - NEPTUN-Mitarbeiter');
+                    
+                    // $mandant = Mandant::find($id);
+                    // $mandantInfo = MandantInfo::where('mandant_id', 1)->first();
+                    // $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+                    
+                    // Add sheet
+                    $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
+                        // dd($exportMandants);
+                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', 'Lohn', 'Fibu', 'EDV-Außendienst'));
+                        if(in_array("0", $exportMandants)){
+                            foreach (Mandant::all() as $mandant) {
+                                
+                                $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
+                                $internalUserEdv =  InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', 21)->get();
+                                $internalUserFibu =  InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', 22)->get();
+                                $internalUserLohn =  InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', 23)->get();
+                            
+                                $rowArray = array(
+                                    0 => $mandant->mandant_number,
+                                    1 => $mandant->name,
+                                    2 => $mandant->ort,
+                                    3 => "-",
+                                    4 => "-",
+                                    5 => "-"
+                                );
+                                
+                                if(isset($internalUserLohn)){
+                                    $rowArray[3] = '';
+                                    foreach($internalUserLohn as $tmp){
+                                        $user = User::where('id', $tmp->user_id)->first();
+                                        $rowArray[3] .= $user->title .' '. $user->first_name .' '. $user->last_name ."; ";
+                                        
+                                    }
+                                }
+                                
+                                if(isset($internalUserFibu)){
+                                    $rowArray[4] = '';
+                                    foreach($internalUserFibu as $tmp){
+                                        $user = User::where('id', $tmp->user_id)->first();
+                                        $rowArray[4] .= $user->title.' '.$user->first_name.' '.$user->last_name ."; ";
+                                    }
+                                }
+                                
+                                if(isset($internalUserEdv)){
+                                    $rowArray[5] = '';
+                                    foreach($internalUserEdv as $tmp){
+                                        $user = User::where('id', $tmp->user_id)->first();
+                                        $rowArray[5] .= $user->title .' '. $user->first_name .' '. $user->last_name ."; ";
+                                    }
+                                }
+                                
+                                // dd($rowArray);
+                                
+                                // Add rows
+                                $sheet->appendRow($rowArray);
+                            }
+                        } else {
+                            foreach ($exportMandants as $id) {
+                                
+                                $mandant = Mandant::find($id);
+                                $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
+                                $internalUserEdv =  InternalMandantUser::where('mandant_id', $id)->where('role_id', 21)->get();
+                                $internalUserFibu =  InternalMandantUser::where('mandant_id', $id)->where('role_id', 22)->get();
+                                $internalUserLohn =  InternalMandantUser::where('mandant_id', $id)->where('role_id', 23)->get();
+                            
+                                $rowArray = array(
+                                    0 => $mandant->mandant_number,
+                                    1 => $mandant->name,
+                                    2 => $mandant->ort,
+                                    3 => "-",
+                                    4 => "-",
+                                    5 => "-"
+                                );
+                                
+                                if(isset($internalUserLohn)){
+                                    $rowArray[3] = '';
+                                    foreach($internalUserLohn as $tmp){
+                                        $user = User::where('id', $tmp->user_id)->first();
+                                        $rowArray[3] .= $user->title .' '. $user->first_name .' '. $user->last_name ."; ";
+                                        
+                                    }
+                                }
+                                
+                                if(isset($internalUserFibu)){
+                                    $rowArray[4] = '';
+                                    foreach($internalUserFibu as $tmp){
+                                        $user = User::where('id', $tmp->user_id)->first();
+                                        $rowArray[4] .= $user->title.' '.$user->first_name.' '.$user->last_name ."; ";
+                                    }
+                                }
+                                
+                                if(isset($internalUserEdv)){
+                                    $rowArray[5] = '';
+                                    foreach($internalUserEdv as $tmp){
+                                        $user = User::where('id', $tmp->user_id)->first();
+                                        $rowArray[5] .= $user->title .' '. $user->first_name .' '. $user->last_name ."; ";
+                                    }
+                                }
+                                
+                                // dd($rowArray);
+                                
+                                // Add rows
+                                $sheet->appendRow($rowArray);
+                            }
+                        }
+                    });
+                    
+                })->download('xls');
+                
+                return back();
+            }
+            break;
+            
+            case 3: {
+                Excel::create('Telefonliste Export - Adressliste Mandanten-Gesamt', function($excel) use ($exportMandants, $exportOption){
+                
+                    $excel->setTitle('Adressliste Mandanten-Gesamt');
+                    $excel->setDescription('Adressliste Mandanten-Gesamt');
+                    
+                    // Add sheet
+                    $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
+                        
+                        $sheet->row(1, array('Nr.', 'Firma', 'Strasse', 'Ort', 'Telefon', 'Fax', 'GF-Vorname', 'GF-Name', 'Mail'));
+                        
+                        if(in_array("0", $exportMandants)){
+                            foreach (Mandant::all() as $mandant) {
+                                
+                                $gfUser = array();
+                                $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
+                                $mandantUsers =  MandantUser::where('mandant_id', $mandant->id)->get();
+                        
+                                $rowArray = array(
+                                    0 => $mandant->mandant_number,
+                                    1 => $mandant->name,
+                                    2 => $mandant->strasse,
+                                    3 => $mandant->ort,
+                                    4 => $mandant->telefon,
+                                    5 => $mandant->fax,
+                                    6 => "-",
+                                    7 => "-",
+                                    8 => $mandant->email,
+                                );
+                                
+                                // Get Geschäftsführer
+                                foreach ($mandantUsers as $mandantUser) {
+                                    foreach($mandantUser->role as $role){
+                                        if($role->id == 2) {
+                                            // var_dump($mandantUser->user);
+                                            if(!in_array($mandantUser->user, $gfUser)) 
+                                                array_push($gfUser, $mandantUser->user);
+                                        }
+                                    }
+                                }
+                                // dd($gfUser);
+                                
+                                // Output to XLS
+                                if(count($gfUser)){
+                                    $rowArray[6] = $rowArray[7] = '';
+                                    foreach ($gfUser as $user) {
+                                        $rowArray[6] .= $user->last_name ." ";
+                                        $rowArray[7] .= $user->first_name ." ";
+                                    }
+                                }
+                                
+                                // Add rows
+                                $sheet->appendRow($rowArray);
+                            }
+                        } else {
+                            foreach ($exportMandants as $id) {
+                                
+                                $gfUser = array();
+                                $mandant = Mandant::find($id);
+                                $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
+                                $mandantUsers =  MandantUser::where('mandant_id', $id)->get();
+                        
+                                $rowArray = array(
+                                    0 => $mandant->mandant_number,
+                                    1 => $mandant->name,
+                                    2 => $mandant->strasse,
+                                    3 => $mandant->ort,
+                                    4 => $mandant->telefon,
+                                    5 => $mandant->fax,
+                                    6 => "-",
+                                    7 => "-",
+                                    8 => $mandant->email,
+                                );
+                                
+                                // Get Geschäftsführer
+                                foreach ($mandantUsers as $mandantUser) {
+                                    foreach($mandantUser->role as $role){
+                                        if($role->id == 2) {
+                                            // var_dump($mandantUser->user);
+                                            if(!in_array($mandantUser->user, $gfUser)) 
+                                                array_push($gfUser, $mandantUser->user);
+                                        }
+                                    }
+                                }
+                                // dd($gfUser);
+                                
+                                // Output to XLS
+                                if(count($gfUser)){
+                                    $rowArray[6] = $rowArray[7] = '';
+                                    foreach ($gfUser as $user) {
+                                        $rowArray[6] .= $user->last_name ." ";
+                                        $rowArray[7] .= $user->first_name ." ";
+                                    }
+                                }
+                                
+                                // Add rows
+                                $sheet->appendRow($rowArray);
+                            }
+                        }
+                    });
+                    
+                })->download('xls');
+                
+                return back();
+            }
+            break;
+            
+            case 4: {
+                Excel::create('Telefonliste Export - Partner Gesamt', function($excel) use ($exportMandants, $exportOption){
+                
+                    $excel->setTitle('Partner Gesamt');
+                    $excel->setDescription('Partner Gesamt');
+                    
+                    // $mandant = Mandant::find($id);
+                    // $mandantInfo = MandantInfo::where('mandant_id', 1)->first();
+                    // $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+                    
+                    // Add sheet
+                    $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
+                        // dd($exportMandants);
+                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', 'Beteiligungspartner'));
+                        
+                        if(in_array("0", $exportMandants)){
+                            foreach (Mandant::all() as $mandant) {
+                                
+                                $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, '-'));
+                            }
+                        } else {
+                            foreach ($exportMandants as $id) {
+                                
+                                $mandant = Mandant::find($id);
+                                $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, '-'));
+                            }
+                        }
+                    });
+                    
+                })->download('xls');
+                
+                return back();
+            }
+            break;
+            
+            case 5: {
+                Excel::create('Telefonliste Export - Zeitarbeits-Partner', function($excel) use ($exportMandants, $exportOption){
+                
+                    $excel->setTitle('Zeitarbeits-Partner');
+                    $excel->setDescription('Zeitarbeits-Partner');
+                    
+                    // $mandant = Mandant::find($id);
+                    // $mandantInfo = MandantInfo::where('mandant_id', 1)->first();
+                    // $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+                    
+                    // Add sheet
+                    $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
+                        // dd($exportMandants);
+                        $sheet->row(1, array('Nr.', 'Firma', 'Ort'));
+                        
+                        if(in_array("0", $exportMandants)){
+                            foreach (Mandant::all() as $mandant) {
+                                
+                                $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort));
+                            }
+                        } else {
+                            foreach ($exportMandants as $id) {
+                                
+                                $mandant = Mandant::find($id);
+                                $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort));
+                            }
+                        }
+                    });
+                    
+                })->download('xls');
+                
+                return back();
+            }
+            break;
+            
+            case 6: {
+                Excel::create('Telefonliste Export - Bankverbindungen', function($excel) use ($exportMandants, $exportOption){
+                
+                    $excel->setTitle('Bankverbindungen');
+                    $excel->setDescription('Bankverbindungen');
+                    
+                    // $mandant = Mandant::find($id);
+                    // $mandantInfo = MandantInfo::where('mandant_id', 1)->first();
+                    // $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+                    
+                    // Add sheet
+                    $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
+                        // dd($exportMandants);
+                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', 'IBAN', 'Bankverbindung', 'BIC'));
+                        
+                        if(in_array("0", $exportMandants)){
+                            foreach (Mandant::all() as $mandant) {
+                                
+                                $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, '-', $mandantInfo->bankverbindungen, '-'));
+                            }
+                        } else {
+                            foreach ($exportMandants as $id) {
+                                
+                                $mandant = Mandant::find($id);
+                                $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
+                                
+                                // Add rows
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, '-', $mandantInfo->bankverbindungen, '-'));
+                            }
+                        }
+                    });
+                    
+                })->download('xls');
+                
+                return back();
+            }
+            break;
+            
+            default:{
+                return back();
+                break;
+            }
+        }
+        
         
     }
     

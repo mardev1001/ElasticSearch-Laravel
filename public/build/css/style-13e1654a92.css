@@ -1736,6 +1736,26 @@ h1.page-title {
   width: auto; }
 
 /* End Wiki administration */
+/* Treeview */
+.list-group .child-node {
+  border: none;
+  border-top: none !important;
+  padding: 15px 0 !important; }
+
+.list-group .child-node.first-child {
+  margin-top: -15px; }
+
+.list-group .child-node .item-before-text,
+.list-group .child-node .item-after-text {
+  display: none; }
+
+.list-group .child-node span.icon {
+  height: 25px !important; }
+
+.tree-view.wiki .icon.glyphicon {
+  display: none !important; }
+
+/* End Treeview */
 /*if css no extension if scss add .scss*/
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)
