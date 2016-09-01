@@ -100,34 +100,43 @@ class AuthController extends Controller
         }
 
         $credentials = $this->getCredentials($request);
-        $credentials = array_add($credentials, 'active', 1);
+        // $credentials = array_add($credentials, 'active', 1);
 
         if (Auth::guard($this->getGuard())->attempt($credentials, $request->has('remember'))) {
-            if(count(Auth::user()->countMandants)){
-                if(Auth::user()->last_login == null){
-                    // dd(Auth::user()->last_login);
-                    Auth::user()->last_login = Carbon::now();
+            
+            if(Auth::user()->active){
+            
+                if(count(Auth::user()->countMandants)){
+                    if(Auth::user()->last_login == null){
+                        // dd(Auth::user()->last_login);
+                        Auth::user()->last_login = Carbon::now();
+                    } else {
+                        Auth::user()->last_login_history = Auth::user()->last_login;
+                        Auth::user()->last_login = Carbon::now();
+                    }
+                    Auth::user()->save();
+                    return $this->handleUserWasAuthenticated($request, $throttles);
                 } else {
-                    Auth::user()->last_login_history = Auth::user()->last_login;
-                    Auth::user()->last_login = Carbon::now();
+                    // Logout if user has no mandants assigned
+                    $this->logout();
+                    return redirect()->back()
+                        ->withInput($request->only($this->loginUsername(), 'remember'))
+                        ->withErrors([
+                            $this->loginUsername() => 'Ihr Account ist deaktiviert. Bitte wenden Sie sich an Ihrem Geschäftsführer.',
+                        ]);
                 }
-                Auth::user()->save();
-                return $this->handleUserWasAuthenticated($request, $throttles);
+                
             } else {
+                // Logout if user is inactive
                 $this->logout();
                 return redirect()->back()
-                    ->withInput($request->only($this->loginUsername(), 'remember'))
-                    ->withErrors([
-                        $this->loginUsername() => 'Ihr Account ist deaktiviert. Bitte wenden Sie sich an Ihrem Geschäftsführer.',
-                    ]);
+                        ->withInput($request->only($this->loginUsername(), 'remember'))
+                        ->withErrors([
+                            $this->loginUsername() => 'Ihr Account ist deaktiviert. Bitte wenden Sie sich an Ihrem Geschäftsführer.',
+                        ]);
             }
         } else {
-            $this->logout();
-            return redirect()->back()
-                ->withInput($request->only($this->loginUsername(), 'remember'))
-                ->withErrors([
-                    $this->loginUsername() => 'Ihr Account ist deaktiviert. Bitte wenden Sie sich an Ihrem Geschäftsführer.',
-                ]);
+            Auth::logout();
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts

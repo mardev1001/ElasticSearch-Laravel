@@ -18,7 +18,7 @@
             required 
         @endif
          
-        @if( isset( $data->$inputName ) && !empty($data->$inputName ) &&$data->$inputName != NULL )
+        @if( isset( $data->$inputName ) && !empty($data->$inputName ) && $data->$inputName != NULL )
     		 value="{{ $data->$inputName }}"
     	 @else
     	 	value="{{ $old }}"

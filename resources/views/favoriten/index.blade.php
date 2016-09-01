@@ -5,6 +5,10 @@
 
 @section('content')
 
+@if(!$hasFavorites)
+<p>Sie haben noch keine Favoriten angelegt.</p>
+@endif
+
 @if(count($favoritesAll))
 
     <div class="row">
@@ -30,14 +34,16 @@
                                 <div class="{{ 'favorites-' . $favorites['document_type_id'] }} hide">{{ $favorites['favoritesTreeview'] }}</div>
                             </div>
                         </div> 
-                                {{--<div class="favorite favorite-{{$favorite->id}}">
-                                    <a class="pull-left padding-top" href="{{url('dokumente/' . $favorite->id. '/favorit')}}" ><span class="icon-trash display-block"></span></a>
-                                    <a class="display-block" href="{{route('dokumente.show', $favorite->published->url_unique)}}">
-                                        <span class="item-text">&nbsp; {{ $favorite->date_published }}</span> <br> 
-                                        <span class="item-text text-bold">&nbsp; {{ $favorite->name }}</span>
-                                    </a>
-                                    <div class="clearfix"></div>
-                                </div> --}}
+                        
+                        {{--<div class="favorite favorite-{{$favorite->id}}">
+                            <a class="pull-left padding-top" href="{{url('dokumente/' . $favorite->id. '/favorit')}}" ><span class="icon-trash display-block"></span></a>
+                            <a class="display-block" href="{{route('dokumente.show', $favorite->published->url_unique)}}">
+                                <span class="item-text">&nbsp; {{ $favorite->date_published }}</span> <br> 
+                                <span class="item-text text-bold">&nbsp; {{ $favorite->name }}</span>
+                            </a>
+                            <div class="clearfix"></div>
+                        </div> --}}
+                        
                         </div>
                         
                         <div class="text-center box box-pagination">
@@ -46,11 +52,12 @@
                         
                     </div>
                 </div>
+            
         @endif
 
     @endforeach
     </div><!-- end .row -->
-
-@endif
     
+@endif
+
 @stop

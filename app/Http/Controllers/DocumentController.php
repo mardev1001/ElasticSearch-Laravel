@@ -512,6 +512,10 @@ class DocumentController extends Controller
     public function attachments($id,$preparedVariant=1)
     {   
         $data = Document::find($id);
+        /* Trigger document visibility */
+        // dd($this->universalDocumentPermission($data) );
+        
+        
         $dt = DocumentType::find($this->formulareId);//vorlage document
          
         $backButton = '/dokumente/editor/'.$data->id.'/edit';
@@ -2059,6 +2063,7 @@ class DocumentController extends Controller
         // $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
         // $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
+        $request->flash();
         return view('dokumente.rundschreiben', compact('docType', 'rundEntwurfPaginated', 'rundEntwurfTree', 'rundFreigabePaginated', 'rundFreigabeTree', 'rundAllPaginated', 'rundAllTree') );
     }
     
@@ -2115,6 +2120,7 @@ class DocumentController extends Controller
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
         $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated, array('pageDocuments' => true) );
         
+        $request->flash();
         return view('dokumente.circularQMR', compact('docType', 'qmrEntwurfTree', 'qmrEntwurfPaginated', 'qmrFreigabeTree', 'qmrFreigabePaginated', 'qmrAllTree', 'qmrAllPaginated'));
     }
     
@@ -2192,6 +2198,7 @@ class DocumentController extends Controller
         
         // dd($formulareEntwurfPaginated);
         
+        $request->flash();
         return view('dokumente.documentTemplates', compact('docType', 'formulareAllPaginated', 'formulareAllTree', 'formulareEntwurfPaginated', 'formulareEntwurfTree', 'formulareFreigabePaginated', 'formulareFreigabeTree') );
     }
     
@@ -2468,7 +2475,7 @@ class DocumentController extends Controller
         ->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc')
         ->paginate(10, ['*'], 'results-my');
         $resultMyTree = $this->document->generateTreeview($resultMyPaginated);
-        
+        $request->flash();
         // return back()->withInput()->with(compact('docType', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
         return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeName', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
     }
@@ -2699,6 +2706,71 @@ class DocumentController extends Controller
         elseif( count($roleArray) == 1 )
             return $roleArray[0];
         return false;
+    }
+   
+      /**
+     * Universal dosument permission chekc
+     * @param array $userArray
+     * @param collection $document
+     * @param bool $message
+     * @return bool || response
+     */
+    private function universalDocumentPermission( $document,$message=true,$userArray=array() ){
+       /* $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('usetr_id',$uid)->get();
+        $role = 0;
+        $hasPermission = false;
+        
+        foreach($mandantUsers as $mu){
+            $userMandatRole = MandantUserRole::where('mandant_user_id',$mu->id)->first();
+            if( $userMandatRole != null && $userMandatRole->role_id == 1 )
+                $hasPermission = true ;
+        }
+        $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
+        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) || $role == 1 )
+           return true; 
+        
+        $variants = EditorVariant::where('document_id',$document->id)->get();
+        foreach($variants as $variant){
+            if($hasPermission == false){
+                if($variant->approval_all_mandants == true){
+                    if($document->approval_all_roles == true){
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                        }
+                        else{
+                            foreach($variant->documentMandantRoles as $role){
+                                if( in_array($role->role_id, $mandantRolesArr) ){
+                                 $variant->hasPermission = true;
+                                 $hasPermission = true;
+                                }
+                            }//end foreach documentMandantRoles
+                        }
+                }
+                else{
+                    foreach( $variant->documentMandantMandants as $mandant){
+                        if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                            if($document->approval_all_roles == true){
+                                $hasPermission = true;
+                                $variant->hasPermission = true;
+                            }
+                            else{
+                                foreach($variant->documentMandantRoles as $role){
+                                    if( in_array($role->role_id, $mandantRolesArr) ){
+                                     $variant->hasPermission = true;
+                                     $hasPermission = true;
+                                    }
+                                }//end foreach documentMandantRoles
+                            }
+                        }
+                    }//end foreach documentMandantMandants
+                }
+            }
+        }
+        
+        
+        session()->flash('message',trans('documentForm.noPermission'));
+        return false;*/
     }
     
     

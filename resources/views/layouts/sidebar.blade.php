@@ -183,45 +183,60 @@
                 </li><!-- End menu item -->
             @endif
             
-            <li class="">
-                <a href="#">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
-                    <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-
-                    <li>
-                        <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
-                    </li>
-
-                    <li>
-                        <a href="{{ url('mandanten/create') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.anlegen') }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
-                    </li>
-                </ul><!--End .nav-second-level -->
-            </li><!-- End menu item -->
-
-            <li class="">
-                <a href="#">
-                    NEPTUN {{ ucfirst( trans('navigation.verwaltung') )}}
-                    <span class="fa arrow"></span>
-                </a>
-                <ul class="nav nav-second-level">
-                    <li>
-                        <a href="{{ url('adressaten') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.types') ) }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.kategorien') }} </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
-                    </li>
-                </ul><!--End .nav-second-level -->
-            </li><!-- End menu item -->
+            @if( ViewHelper::universalHasPermission( array(2,18,19,20) ) == true ) 
+                <li class="">
+                    <a href="#">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
+                        <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        @if( ViewHelper::universalHasPermission( array(18,19,20) ) == true ) 
+                            <li>
+                                <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
+                            </li>
+                        @endif
+                        
+                        @if( ViewHelper::universalHasPermission( array(18) ) == true )
+                            <li>
+                                <a href="{{ url('mandanten/create') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.anlegen') }}</a>
+                            </li>
+                        @endif
+                        
+                        @if( ViewHelper::universalHasPermission( array(18,17) ) == true )
+                            <li>
+                                <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
+                            </li>
+                        @endif
+                    </ul><!--End .nav-second-level -->
+                </li><!-- End menu item -->
+            @endif
             
+            @if( ViewHelper::universalHasPermission( array(2,4) ) == true )
+                <li>
+                    <a href="#">{{ ucfirst( trans('navigation.benutzer') ) }}</a>
+                </li>
+            @endif
+            
+            @if( ViewHelper::universalHasPermission( array() ) == true )
+                <li class="">
+                    <a href="#">
+                        NEPTUN {{ ucfirst( trans('navigation.verwaltung') )}}
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="{{ url('adressaten') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.types') ) }}</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }} {{ trans('navigation.kategorien') }} </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
+                        </li>
+                    </ul><!--End .nav-second-level -->
+                </li><!-- End menu item -->
+            @endif
             <li class="legend"> <!-- legend - start -->
                 <span class="legend-text">Legende</span>
                 <span id="btn-legend" class="icon-legend pull-right"></span>

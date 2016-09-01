@@ -152,7 +152,9 @@
                                                 {!! Form::open(['action' => 'MandantController@destroyMandantUser', 'method'=>'POST']) !!}
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                                    <button type="submit" class="btn btn-xs btn-warning delete-prompt">Entfernen</button><br>
+                                                    <button type="submit" class="btn btn-xs btn-warning delete-prompt"
+                                                    data-text="Wollen Sie diesen Benutzer wirklich löschen?"
+                                                    >Entfernen</button><br>
                                                 {!! Form::close() !!}
                                                 
                                                 <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>

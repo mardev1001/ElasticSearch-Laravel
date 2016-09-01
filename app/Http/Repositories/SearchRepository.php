@@ -74,16 +74,18 @@ class SearchRepository
                         $userQuery ->withTrashed();    
                 
                     $mandant->usersInMandants = $userQuery->get();
+                     
+                    // dd($mandant->usersInMandants );
                       
                     if( count($mandant->usersInMandants) > 0 )
                         $mandant->openTreeView = true;
                 }
                 
             }
-       }
-       
+        }
+
         return $mandants;
-     }
+    }
     /**
      * Search Wiki subject or inhalt
      *

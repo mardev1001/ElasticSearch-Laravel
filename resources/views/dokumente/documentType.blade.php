@@ -106,7 +106,7 @@
                 <div class="input-group">
                     <div class="col-md-12 col-lg-12">
                         {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
-                        <input type="hidden" name="document_type_id" value="{{ $documentType }}">
+                        <input type="hidden" name="document_type_id" value="{{ $documentType->id }}">
                     </div>
                     <div class="col-md-12 col-lg-12">
                         <span class="custom-input-group-btn">

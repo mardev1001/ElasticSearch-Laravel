@@ -69,7 +69,8 @@
                             <div class="form-group">
                                 <label class="control-label"> {{ trans('sucheForm.document-type') }}</label>
                                 <select name="document_type" class="form-control select" data-placeholder="{{ strtoupper( trans('sucheForm.document-type') ) }}">
-                                    <option value=""></option>
+                                    <!--<option value=""></option>-->
+                                    <option value="">Alle</option>
                                     @foreach($documentTypes as $documentType)
                                         <option value="{{$documentType->id}}" @if(old('document_type') == $documentType->id) selected @endif > 
                                             {{ $documentType->name }}
@@ -84,7 +85,8 @@
                         <div class="form-group">
                             <label class="control-label"> {{ trans('documentForm.user') }}</label>
                             <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}">
-                                <option value=""></option>
+                                <!--<option value=""></option>-->
+                                <option value="">Alle</option>
                                 @foreach($mandantUsers as $mandantUser)
                                     <option value="{{$mandantUser->user->id}}" @if(old('user_id') == $mandantUser->user->id) selected @endif > 
                                         {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
@@ -139,10 +141,22 @@
                                 <a href="{{route('dokumente.show', $document)}}" class="link">
                                     <strong>
                                     @if(isset($parameter)) 
-                                        #{{$key+1}} {{$document->documentType->name}} - {!! ViewHelper::highlightKeyword($parameter, $document->name) !!} - {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - 
+                                        #{{$key+1}} 
+                                        @if($document->documentType->id == 3)
+                                            QMR {{$document->qmr_number.$document->additional_letter}} -
+                                        @else
+                                        {{$document->documentType->name}} - 
+                                        @endif
+                                        {!! ViewHelper::highlightKeyword($parameter, $document->name) !!} - {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - 
                                         {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                     @else
-                                        #{{$key+1}} {{$document->documentType->name}} - 
+                                        #{{$key+1}} 
+
+                                        @if($document->documentType->id == 3)
+                                            QMR {{$document->qmr_number.$document->additional_letter}} -
+                                        @else
+                                        {{$document->documentType->name}} - 
+                                        @endif
                                         
                                         @if(old('name')) 
                                         {!! ViewHelper::highlightKeyword(old('name'), $document->name) !!} -

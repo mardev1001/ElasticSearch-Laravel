@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\Http\Repositories\SearchRepository;
 use App\Http\Repositories\DocumentRepository;
 
+use App\User;
 use App\Document;
 use App\DocumentType;
 use App\EditorVariant;
@@ -308,15 +309,28 @@ class SearchController extends Controller
                     }
                     
                 }//end second foreach
+                $userQuery = User::whereIn('id',$userArr);
+                
+                     if( $request->has('parameter') )
+                        $userQuery->where('first_name',$request->get('parameter') )->orWhere('last_name',$request->get('parameter') );
+                    
                 $mandant->usersInMandants = $mandantUsers->whereIn('id',$userArr);
                    if($request->has('deletedUsers') )
-                       $mandant->usersInMandants = $mandant->usersWithTrashed->whereIn('id',$userArr);   
+                       $userQuery = $mandant->usersWithTrashed->whereIn('id',$userArr);   
+                       
+                     $userQuery = $userQuery->get();
+                     
+                     if( count( $userQuery ) )
+                         $mandant->usersInMandants = $userQuery;
+                     else
+                      $mandant->usersInMandants = $mandant->usersWithTrashed->whereIn('id',$userArr);   
               // if($request->has('deletedUsers') )
                //  dd($mandant->usersInMandants);
                 //  dd($userArr);
             }
         $search = true;
-        return view('telefonliste.index', compact('mandants','search') );
+        $request->flash();
+        return view('telefonliste.index', compact('mandants','search') ) ;
       // return redirect()->action('TelephoneListController@index', array('array'=>$results) );
         // return redirect('telefonliste');
     }

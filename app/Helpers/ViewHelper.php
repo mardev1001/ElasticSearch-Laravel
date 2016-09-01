@@ -7,6 +7,7 @@ use Auth;
 use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
+use App\DocumentCoauthor;
 class ViewHelper
 {
     /**
@@ -412,6 +413,30 @@ class ViewHelper
             }
         }
         return false;
+    }
+    
+    /**
+     * Universal dosument permission chekc
+     * @param array $userArray
+     * @param collection $document
+     * @param bool $message
+     * @return bool || response
+     */
+    static function universalDocumentPermission( $document,$message=true,$userArray=array() ){
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        $role = 0;
+        foreach($mandantUsers as $mu){
+            $userMandatRole = MandantUserRole::where('mandant_user_id',$mu->id)->first();
+            if( $userMandatRole != null && $userMandatRole->role_id == 1 )
+                $role = 1 ;
+        }
+        $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
+        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) || $role == 1 )
+           return true; 
+        
+        session()->flash('message',trans('documentForm.noPermission'));
+        return redirect('/');
     }
     
     /**

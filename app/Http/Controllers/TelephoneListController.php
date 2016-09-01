@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 
 use Excel;
+use App\Role;
 use App\User;
 use App\Mandant;
 use App\MandantUser;
@@ -205,7 +206,12 @@ class TelephoneListController extends Controller
                     // Add sheet
                     $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
                         // dd($exportMandants);
-                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', 'Lohn', 'Fibu', 'EDV-Außendienst'));
+                        $edv = Role::find(21)->name;
+                        $fibu = Role::find(22)->name;
+                        $lohn = Role::find(23)->name;
+                        
+                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', $lohn, $fibu, $edv));
+                        
                         if(in_array("0", $exportMandants)){
                             foreach (Mandant::all() as $mandant) {
                                 
@@ -519,8 +525,16 @@ class TelephoneListController extends Controller
                                 
                                 $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
                                 
+                                $bankInfos = explode(';', $mandantInfo->bankverbindungen);
+                                
+                                $iban = trim(str_replace('IBAN', '', $bankInfos[0]));
+                                $bic = trim(str_replace('BIC', '', $bankInfos[1]));
+                                $bank = trim($bankInfos[2]);
+                                
+                                // dd($iban .", ".$bic.", ".$bank);
+                                
                                 // Add rows
-                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, '-', $mandantInfo->bankverbindungen, '-'));
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $iban, $bank, $bic));
                             }
                         } else {
                             foreach ($exportMandants as $id) {
@@ -528,8 +542,16 @@ class TelephoneListController extends Controller
                                 $mandant = Mandant::find($id);
                                 $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
                                 
+                                $bankInfos = explode(';', $mandantInfo->bankverbindungen);
+                                
+                                $iban = trim(str_replace('IBAN', '', $bankInfos[0]));
+                                $bic = trim(str_replace('BIC', '', $bankInfos[1]));
+                                $bank = trim($bankInfos[2]);
+                                
+                                // dd($iban .", ".$bic.", ".$bank);
+                                
                                 // Add rows
-                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, '-', $mandantInfo->bankverbindungen, '-'));
+                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $iban, $bank, $bic));
                             }
                         }
                     });

@@ -24,6 +24,10 @@ class Role extends Model
         return $this->belongsTo('App\MandantUserRole');
     }
     
+    public function mandantUserRolesAll(){ 
+        return $this->hasMany('App\MandantUserRole');
+    }
+    
     public function internalMandantUsers(){
         return $this->belongsTo('App\InternalMandantUser');
         // return $this->hasManyThrough('App\InternalMandantUser','App\User');

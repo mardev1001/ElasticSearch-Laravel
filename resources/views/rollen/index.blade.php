@@ -108,7 +108,9 @@
                                             <button class="btn btn-primary">{{ trans('rollenForm.save') }}</button>
                                         </td>
                                         <td class="col-xs-12 col-md-2 text-center table-options vertical-center">
-                                            <a href="javascript:void();" data-toggle="modal" data-target="#role-{{$role->id}}" class="link">{{ trans('rollenForm.active-users') }}: 0</a>
+                                            <a href="javascript:void();" data-toggle="modal" data-target="#role-{{$role->id}}" class="link">{{ trans('rollenForm.active-users') }}: 
+                                            {{ count( $role->mandantUserRolesAll->where('role_id',$role->id) )}}
+                                            </a>
                                         </td>
                                     </tr>
                                 {!! Form::close() !!}

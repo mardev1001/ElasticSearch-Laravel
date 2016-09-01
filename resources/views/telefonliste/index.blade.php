@@ -22,7 +22,9 @@
                         <div class="row">
                             <div class="col-xs-12 col-md-4 form-group no-margin-bottom">
                                
-                                <input type="text" class="form-control" name="parameter" placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.mandants').'/ '.trans('telefonListeForm.mandantNumber').'/ '. trans('telefonListeForm.user') }}" required>
+                                <input type="text" class="form-control" name="parameter"
+                                placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.mandants').'/ '.trans('telefonListeForm.mandantNumber').'/ '. trans('telefonListeForm.user') }}" required
+                                value="{{old('parameter')}}">
                                 <span class="custom-input-group-btn">
                                     <button type="submit" name="search" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
                                         <!--<i class="fa fa-search"></i>-->Suche
@@ -32,11 +34,11 @@
                             </div>
                             <div class="col-xs-12 col-md-4">
                                 <div class="checkbox">
-                                    <input type="checkbox" name="deletedUsers" id="deletedUsers">
+                                    <input type="checkbox" name="deletedUsers" id="deletedUsers" value="{{old('deletedUsers')}}">
                                     <label for="deletedUsers">{{ trans('telefonListeForm.show-deleted-users') }}</label>
                                 </div>
                                  <div class="checkbox">  
-                                    <input type="checkbox" name="deletedMandants" id="deletedMandants">
+                                    <input type="checkbox" name="deletedMandants" id="deletedMandants" value="{{old('deletedMandants')}}">
                                     <label for="deletedMandants">{{ trans('telefonListeForm.show-deleted-mandants') }}</label>
                                 </div>
                             </div>
@@ -106,7 +108,7 @@
                             <th class="no-sort">{{ trans('telefonListeForm.fax') }} </th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody> 
                         @foreach($mandant->usersInMandants as $user)
                         <tr>
                             <td><img src="http://placehold.it/60x60"></td>
