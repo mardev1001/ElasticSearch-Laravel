@@ -2063,7 +2063,7 @@ class DocumentController extends Controller
         // $rundschreibenMeine = Document::where(['user_id' => Auth::user()->id, 'document_type_id' =>  $this->rundId])->orderBy('id', 'desc')->take(10)->paginate(10, ['*'], 'meine-rundschreiben');
         // $rundschreibenMeineTree = $this->document->generateTreeview( $rundschreibenMeine );
         
-        $request->flash();
+        // $request->flash();
         return view('dokumente.rundschreiben', compact('docType', 'rundEntwurfPaginated', 'rundEntwurfTree', 'rundFreigabePaginated', 'rundFreigabeTree', 'rundAllPaginated', 'rundAllTree') );
     }
     
@@ -2120,7 +2120,7 @@ class DocumentController extends Controller
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
         $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated, array('pageDocuments' => true) );
         
-        $request->flash();
+        // $request->flash();
         return view('dokumente.circularQMR', compact('docType', 'qmrEntwurfTree', 'qmrEntwurfPaginated', 'qmrFreigabeTree', 'qmrFreigabePaginated', 'qmrAllTree', 'qmrAllPaginated'));
     }
     
@@ -2198,7 +2198,7 @@ class DocumentController extends Controller
         
         // dd($formulareEntwurfPaginated);
         
-        $request->flash();
+        // $request->flash();
         return view('dokumente.documentTemplates', compact('docType', 'formulareAllPaginated', 'formulareAllTree', 'formulareEntwurfPaginated', 'formulareEntwurfTree', 'formulareFreigabePaginated', 'formulareFreigabeTree') );
     }
     
