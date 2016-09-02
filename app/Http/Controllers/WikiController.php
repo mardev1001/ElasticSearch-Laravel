@@ -39,7 +39,7 @@ class WikiController extends Controller
     {
         $topCategories = WikiCategory::where('top_category',1)->get();
         
-        $newestWikiEntriesPagination = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        $newestWikiEntriesPagination = WikiPage::where('status_id',2)->orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
         
         $myWikiPagesPagination = WikiPage::where('user_id', Auth::user()->id)->orderBy('created_at','DESC')->paginate(10, ['*'], 'meine-beitraege');
@@ -80,7 +80,7 @@ class WikiController extends Controller
         $wikiCategories = WikiCategory::all();
         
         session()->flash('message',trans('wiki.wikiCreateSuccess'));
-        return view('formWrapper', compact('data','wikiCategories','wikiStatuses','wikiRoles') );
+        return redirect('wiki/'.$wiki->id.'/edit' );
         
     }
 

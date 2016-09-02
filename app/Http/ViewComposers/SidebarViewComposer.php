@@ -31,7 +31,8 @@ class SidebarViewComposer
     public function compose(View $view)
     {   
         $view->with('documentTypes', DocumentType::all() );
-        $view->with('isoCategories', IsoCategory::all() );
+        $view->with('isoCategories', IsoCategory::where('active', 1)->get() );
+        // $view->with('isoCategories', IsoCategory::all() );
     }
     
    

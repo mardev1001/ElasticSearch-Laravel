@@ -46,10 +46,13 @@ $( function() {
     else if( url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1){
         $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');  
     }
+    else if( url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1){
+        $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');  
+    }
     else if(  typeof documentType !== 'undefined' && documentType.length){
         var detectHref = '/dokumente/rundschreiben';
         if(documentType == "Formulare")
-            detectHref = '/dokumente/vorlagedokumente';
+            detectHref = '/dokumente/vorlagedokumente'; 
             
         else if(documentType == "QM-Rundschreiben")
             detectHref = '/dokumente/rundschreiben-qmr';

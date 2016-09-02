@@ -131,27 +131,43 @@
                 
 
                 <div class="col-sm-4 col-md-3 col-lg-2 btns">
-                    @if( $document->document_status_id  != 3)
-                        <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
-                    @else
-                        <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
-                    @endif
-
-                    <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
-                        @if( $document->active  == false)
-                            {{ trans('dokumentShow.activate') }}
+                    @if( ViewHelper::universalDocumentPermission( $document,false ) == true )
+                        @if( $document->document_status_id  != 3)
+                            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                         @else
-                            {{ trans('dokumentShow.deactivate') }}
-                        @endif</a>
-                    {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
-                    <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a>
-                    
-                    @if(ViewHelper::canViewHistory())
-                    <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
+                            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
+                        @endif
                     @endif
                     
-                    @if($document->document_status_id == 3)
-                    <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
+                    @if( ViewHelper::universalDocumentPermission( $document,false ) == true )
+                        <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
+                            @if( $document->active  == false)
+                                {{ trans('dokumentShow.activate') }}
+                            @else
+                                {{ trans('dokumentShow.deactivate') }}
+                            @endif</a>
+                        {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
+                    @endif
+                    
+                    @if( $document->documentType->document_art == 1)
+                        @if( ViewHelper::universalDocumentPermission( $document,false ) == true || ViewHelper::universalHasPermission( array(13) ) == true )
+                            <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> 
+                        @endif
+                    @else
+                         @if( ViewHelper::universalDocumentPermission( $document,false ) == true || ViewHelper::universalHasPermission( array(11) ) == true )
+                            <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> 
+                        @endif
+                    @endif
+                    
+                    
+                    @if( ViewHelper::universalHasPermission( array(14) ) == true  )
+                        <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
+                    @endif
+                    
+                    @if( ViewHelper::universalDocumentPermission( $document,false ) == true )
+                        @if($document->document_status_id == 3)
+                            <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
+                        @endif
                     @endif
 
                     @if(count(Request::segments() ) == 2 && (!is_numeric(Request::segment(2) )) )
@@ -167,7 +183,15 @@
 
                     @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
                         @if( $authorised == false && $canPublish ==false && $published == false)
-                            <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                             @if( $document->documentType->document_art == 1)
+                                @if( ViewHelper::universalHasPermission( array(13) ) == true )
+                                    <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                                @endif
+                            @else
+                                @if( ViewHelper::universalHasPermission( array(11) ) == true )
+                                    <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                                @endif
+                            @endif
                         @elseif( ($authorised == false &&  $published == false ) ||
                            ($authorised == true && $published == false ) || ($canPublish == true && $published == false) ){{-- $canPublish --}}
                             <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>

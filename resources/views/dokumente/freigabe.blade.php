@@ -119,23 +119,30 @@
 
                                 @foreach( $variants as $v => $variant)
                                     @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
-
                                         @if( count( $variant->EditorVariantDocument ) )
                                             <div class="attachments document-attachments">
                                                 <span class="text">Dokument Anlage/n: </span> <br>
+                                                <div class="">
                                                 @foreach($variant->EditorVariantDocument as $k =>$docAttach)
                                                     @if( $docAttach->document_id != $document->id )
                                                         @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
                                                             @if( $key == 0 )
+                                                             <!--<a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="btn btn-primary">-->
+                                                             <div class="row flexbox-container">
+                                                                 <div class="col-md-12">
                                                                  <a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="no-underline">
-                                                                 <span class="icon icon-edit inline-block"></span>
-                                                             </a> 
-                                                             <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
-                                                               {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
+                                                                     <span class="icon icon-edit inline-block"></span>
+                                                                 </a> 
+                                                                 <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
+                                                                   {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
                                                             @endif
                                                         @endforeach
                                                     @endif
                                                 @endforeach
+                                                </div>
                                             </div><!-- end .attachments .document-attacments -->
                                         @endif
                                     @endif

@@ -90,7 +90,7 @@ class DocumentController extends Controller
            
             $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
             ->where('mandant_id', $mandantId)->get();
-            $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get()  ;  
+            $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get() ;  
             $mandantUsers = $this->clearUsers($mandantUsers);
             $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
             if( count($incrementedQmr) < 1 )
@@ -513,7 +513,12 @@ class DocumentController extends Controller
     {   
         $data = Document::find($id);
         /* Trigger document visibility */
-        // dd($this->universalDocumentPermission($data) );
+        
+        if( $this->documentVariantPermission($data)->permissionExists == false ){
+            session()->flash('message',trans('documentForm.noPermission'));
+            return redirect('/');
+        }
+        
         
         
         $dt = DocumentType::find($this->formulareId);//vorlage document
@@ -1066,9 +1071,11 @@ class DocumentController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id){
-    
         $datePublished = null;
         $document = Document::find($id);
+       
+        
+            
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
@@ -1079,8 +1086,7 @@ class DocumentController extends Controller
                     ->where('user_id', Auth::user()->id)->get();
             $dateReadBckp = '';
           
-                
-                
+           
                     
                     // dd($readDocs);
                     
@@ -1109,7 +1115,11 @@ class DocumentController extends Controller
                 return redirect('dokumente/'.$document->id );
         }
         
-        
+         $variantPermissions = $this->documentVariantPermission($document);
+            if( $variantPermissions->permissionExists == false ){
+                session()->flash('message',trans('documentForm.noPermission'));
+                return redirect('/');
+            } 
         
         
         $favorite = null;
@@ -1201,7 +1211,7 @@ class DocumentController extends Controller
                 }
             }
         }
-        
+        $variants = $variantPermissions->variants;
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
         
         return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 
@@ -1720,13 +1730,17 @@ class DocumentController extends Controller
         else{
             $document = Document::find($id);
         }
+         $variantPermissions = $this->documentVariantPermission($document);
+            if( $variantPermissions->permissionExists == false ){
+                session()->flash('message',trans('documentForm.noPermission'));
+                return redirect('/');
+            } 
         $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
         if( $favorite == null )
             $document->hasFavorite = false;
         else
             $document->hasFavorite = true;
         $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->get();
-        $variants = EditorVariant::where('document_id',$id)->get();
         
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
         $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
@@ -1737,43 +1751,7 @@ class DocumentController extends Controller
         $hasPermission = false;
         // dd($mandantId);
         
-            
-        foreach($variants as $variant){
-            if($hasPermission == false){
-                if($variant->approval_all_mandants == true){
-                    if($document->approval_all_roles == true){
-                            $hasPermission = true;
-                            $variant->hasPermission = true;
-                        }
-                        else{
-                            foreach($variant->documentMandantRoles as $role){
-                                if( in_array($role->role_id, $mandantRolesArr) ){
-                                 $variant->hasPermission = true;
-                                 $hasPermission = true;
-                                }
-                            }//end foreach documentMandantRoles
-                        }
-                }
-                else{
-                    foreach( $variant->documentMandantMandants as $mandant){
-                        if( in_array($mandant->mandant_id,$mandantIdArr) ){
-                            if($document->approval_all_roles == true){
-                                $hasPermission = true;
-                                $variant->hasPermission = true;
-                            }
-                            else{
-                                foreach($variant->documentMandantRoles as $role){
-                                    if( in_array($role->role_id, $mandantRolesArr) ){
-                                     $variant->hasPermission = true;
-                                     $hasPermission = true;
-                                    }
-                                }//end foreach documentMandantRoles
-                            }
-                        }
-                    }//end foreach documentMandantMandants
-                }
-            }
-        }
+        $variants = $variantPermissions->variants;
         
         $document = Document::find($id);
          
@@ -2448,7 +2426,8 @@ class DocumentController extends Controller
      */
     public function isoCategoriesIndex()
     {
-        $isoCategories = IsoCategory::all();
+        // $isoCategories = IsoCategory::all();
+        $isoCategories = IsoCategory::where('active', 1)->get();
         return view('dokumente.isoCategoriesIndex', compact('isoCategories'));
     }
     
@@ -2534,7 +2513,8 @@ class DocumentController extends Controller
     private function clearUsers($users){
         $clearedArray = array();
             foreach($users as $k => $user){
-                if( !in_array($user->user_id, $clearedArray ) )
+                $u = User::find($user->user_id);
+                if( !in_array($user->user_id, $clearedArray )  && $u->active == 1)
                     $clearedArray[] = $user->user_id;
                 else
                     unset($users[$k]);
@@ -2708,7 +2688,7 @@ class DocumentController extends Controller
         return false;
     }
    
-      /**
+    /**
      * Universal dosument permission chekc
      * @param array $userArray
      * @param collection $document
@@ -2716,8 +2696,8 @@ class DocumentController extends Controller
      * @return bool || response
      */
     private function universalDocumentPermission( $document,$message=true,$userArray=array() ){
-       /* $uid = Auth::user()->id;
-        $mandantUsers =  MandantUser::where('usetr_id',$uid)->get();
+        $uid = Auth::user()->id;
+        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
         $role = 0;
         $hasPermission = false;
         
@@ -2730,35 +2710,73 @@ class DocumentController extends Controller
         if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) || $role == 1 )
            return true; 
         
+        if( $message == true )
+            session()->flash('message',trans('documentForm.noPermission'));
+        return false;
+    }
+    
+    
+    /**
+     * Document variant permission
+     * @param collection $document
+     * @return object $object 
+     */
+    private function documentVariantPermission($document){
+        
+        /*  class $object stores 2 attributes: 
+            1. permissionExists( this is a global hasPermissionso we dont have to iterate again to see if permission exists  )
+            2. variants (to store variants)[duuh]
+        */
+        
+        $object = new \StdClass(); 
+        $object->permissionExists = false;
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantId->toArray();
+        $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+        $mandantRolesArr =  $mandantRoles->toArray();
         $variants = EditorVariant::where('document_id',$document->id)->get();
+        $hasPermission = false;
+        
+        
         foreach($variants as $variant){
-            if($hasPermission == false){
-                if($variant->approval_all_mandants == true){
-                    if($document->approval_all_roles == true){
+            if($hasPermission == false){//check if hasPermission is already set
+                if($variant->approval_all_mandants == true){//database check
+                    
+                    if($document->approval_all_roles == true){//database check
                             $hasPermission = true;
                             $variant->hasPermission = true;
+                            $object->permissionExists = true;
                         }
                         else{
-                            foreach($variant->documentMandantRoles as $role){
-                                if( in_array($role->role_id, $mandantRolesArr) ){
+                            foreach($variant->documentMandantRoles as $role){// if not from database then iterate trough roles
+                                if( in_array($role->role_id, $mandantRolesArr) ){//check if it exists in mandatRoleArr
                                  $variant->hasPermission = true;
                                  $hasPermission = true;
+                                 $object->permissionExists = true;
                                 }
                             }//end foreach documentMandantRoles
                         }
                 }
                 else{
                     foreach( $variant->documentMandantMandants as $mandant){
-                        if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                        if( $this->universalDocumentPermission($document) == true){
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                            $object->permissionExists = true;
+                        }
+                        else if( in_array($mandant->mandant_id,$mandantIdArr) ){
                             if($document->approval_all_roles == true){
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
+                                $object->permissionExists = true;
                             }
                             else{
                                 foreach($variant->documentMandantRoles as $role){
                                     if( in_array($role->role_id, $mandantRolesArr) ){
                                      $variant->hasPermission = true;
                                      $hasPermission = true;
+                                     $object->permissionExists = true;
                                     }
                                 }//end foreach documentMandantRoles
                             }
@@ -2768,10 +2786,9 @@ class DocumentController extends Controller
             }
         }
         
-        
-        session()->flash('message',trans('documentForm.noPermission'));
-        return false;*/
-    }
+        $object->variants = $variants;
+        return $object;
+    }//end documentVariant permission
     
     
 }

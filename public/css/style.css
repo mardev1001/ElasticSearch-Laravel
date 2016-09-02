@@ -464,6 +464,13 @@ h1, h2, h3, h4 {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
   color: #0154BB !important; }
 
+.content h1, .content h2, .content h3, .content h4 {
+  color: black !important; }
+
+.content p, .content strong, .content i, .content b {
+  font-size: 13px !important;
+  color: black; }
+
 hr {
   margin: 15px 0 !important; }
 
@@ -17768,7 +17775,8 @@ textarea {
   margin-right: 0; }
 
 .sidebar .nav-fourth-level li a {
-  padding-left: 74px; }
+  padding-left: 63px;
+  font-size: 11px; }
 
 .panel-group .panel {
   border-radius: 0; }

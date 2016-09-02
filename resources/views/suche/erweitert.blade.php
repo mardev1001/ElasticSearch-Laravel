@@ -98,6 +98,7 @@
                 </div>
                 
                 <div class="row">
+                    @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
                     <div class="col-lg-2 col-sm-6">
                         <!--<br class="hidden-xs hidden-sm">   -->
                         <div class="checkbox">
@@ -105,7 +106,9 @@
                             <label for="wiki"> {{ trans('sucheForm.wiki') }} <br class="hidden-lg"> {{ trans('sucheForm.entries') }} </label>
                         </div>
                     </div>
+                    @endif
                     
+                    @if( ViewHelper::universalHasPermission( array(14) ) == true ) 
                     <div class="col-lg-2 col-sm-6">
                         <!--<br class="hidden-xs hidden-sm">   -->
                         <div class="checkbox">
@@ -113,6 +116,7 @@
                             <label for="history"> {{ trans('sucheForm.history') }} <br class="hidden-lg"> {{ trans('sucheForm.archive') }} </label>
                         </div>
                     </div>
+                    @endif
                     
                     <div class="col-lg-4">
                         <label>&nbsp;</label><br>   

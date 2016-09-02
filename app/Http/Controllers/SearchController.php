@@ -70,7 +70,14 @@ class SearchController extends Controller
             $parameter = $request->input('parameter');
             
             $documents = Document::where(function($query) use ($parameter) {
+                                    
+                                    $qmr = trim(str_ireplace('QMR', '', $parameter));
+                                    $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
+                                    $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
+                                    // dd($qmrNumber);
                                     $query->where('name', 'LIKE', '%'.$parameter.'%' )
+                                    ->orWhere('qmr_number', $qmrNumber)
+                                    ->orWhere('additional_letter', $qmrString)
                                     ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
                                     ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
                                     ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
@@ -227,7 +234,21 @@ class SearchController extends Controller
         if($history) $documents = $documents->where('deleted_at', '!=', null);
         else $documents = $documents->where('deleted_at', null);
         
-        if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
+        // // QMR search
+        // if(!empty($name)){
+        //     dd($name);
+        // }
+        
+        if(!empty($name)){ 
+            $documents->where('name', 'LIKE', '%'.$name.'%')
+                ->orWhere(function($query) use ($name){
+                // QMR search
+                $qmr = trim(str_ireplace('QMR', '', $name));
+                $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
+                $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
+                $query->where('qmr_number', $qmrNumber)->orWhere('additional_letter', $qmrString)->where('document_status_id', 3);
+            });
+        }
         if(!empty($betreff))  $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
         if(!empty($summary))  $documents->where('summary', 'LIKE', '%'.$summary.'%' );
         if(!empty($document_type))  $documents->where('document_type_id', 'LIKE', '%'.$document_type.'%' );

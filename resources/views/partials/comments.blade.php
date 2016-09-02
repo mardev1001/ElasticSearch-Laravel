@@ -1,5 +1,4 @@
 <!-- {{ $title }} comments -->
-<div class="row">
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper home">
             <h1 class="title">{{ $title }}</h1>
@@ -45,4 +44,4 @@
             </div>
         </div>
     </div>
-</div><!-- end {{ $title }} comments -->
+<!-- end {{ $title }} comments -->

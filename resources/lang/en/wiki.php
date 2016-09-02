@@ -23,7 +23,7 @@ return [
     'managment' => 'Wiki Seiten Verwalten',
     
     /* wiki category section */
-    'newCategory' => 'Neues Wiki Kategorie',
+    'newCategory' => 'Neue Wiki Kategorie anlegen',
     'topCategory' => 'Top Kategorie',
     'wikiCreate' => 'Seite anlegen',
     'wikiCategory' => 'Kategorien',

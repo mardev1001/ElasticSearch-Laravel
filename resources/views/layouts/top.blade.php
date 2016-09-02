@@ -22,7 +22,7 @@
         </div>
         <div class="col-xs-12 col-sm-7 col-md-6">
             <ul class="nav navbar-nav icons pull-right">
-                <li><a href="#"><span class="nav-icon icon-home"></span>Home</a></li>
+                <li><a href="{{ url('/') }}"><span class="nav-icon icon-home"></span>Home</a></li>
                 <li><a href="#"><span class="nav-icon icon-profil"></span>Profil</a></li>
                 <li><a href="{{ url('logout') }}"><span class="nav-icon icon-logout"></span>Log out</a></li>
                 <li><a href="#"><span class="nav-icon icon-kontakt"></span>Kontakt</a></li>

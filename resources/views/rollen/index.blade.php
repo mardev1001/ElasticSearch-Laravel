@@ -187,14 +187,38 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="fa fa-close"></span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ trans('rollenForm.active-users') }} - {{ trans('rollenForm.role') ." ". $role->name }}: 0</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ trans('rollenForm.active-users') }} - {{ trans('rollenForm.role') ." ". $role->name }}:  {{ count( $role->mandantUserRolesAll->where('role_id',$role->id) ) }}</h4>
                 </div>
                 
                 <div class="modal-body">
-                    
                     <div class="row general">
                         <div class="col-xs-12">
-                            
+                          @if( count( $role->mandantUserRolesAll->where('role_id',$role->id) )  )  
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mandanten</th> 
+                                            <th>Benutzer</th> 
+                                        </tr>    
+                                    </thead>
+                                    <tbody>
+                                    @foreach($role->mandantUserRolesAll->where('role_id',$role->id) as $r)
+                                        @if( $r->mandantUser != null )
+                                        <tr>
+                                            <td>
+                                                {{ $r->mandantUser->mandant->name }}
+                                            </td>
+                                            <td>
+                                                 {{ $r->mandantUser->user->first_name }} {{ $r->mandantUser->user->last_name }}
+                                            </td>
+                                        </tr>
+                                        @else
+                                            
+                                        @endif    
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                          @endif
                         </div>
                     </div>
                     

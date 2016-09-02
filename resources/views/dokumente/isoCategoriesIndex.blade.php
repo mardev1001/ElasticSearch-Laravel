@@ -19,7 +19,7 @@
             <div class="box">
                 
                 
-                @if(!empty($isoCategories))
+                @if(count($isoCategories))
                     <ul class="level-1">
                         @foreach($isoCategories as $isoCategory)
                             @if($isoCategory->parent)
@@ -36,6 +36,8 @@
                             @endif
                         @endforeach
                     </ul>
+                @else
+                    Keine Einträge gefunden.
                 @endif
                 
             </div>

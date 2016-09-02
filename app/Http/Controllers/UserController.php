@@ -16,6 +16,8 @@ use App\MandantUser;
 use App\MandantUserRole;
 use App\InternalMandantUser;
 
+use App\Http\Repositories\UtilityRepository;
+
 class UserController extends Controller
 {
     
@@ -24,8 +26,9 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
+    public function __construct(UtilityRepository $utilities)
     {
+        $this->utils = $utilities;
         // Define file upload path
         $this->fileUploadPath = public_path() . "/files/pictures/users";
     }
@@ -47,6 +50,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        if(!$this->utils->universalHasPermission([6,17])) 
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+            
         return view('benutzer.create');
     }
 
@@ -99,7 +105,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        
+        if(!$this->utils->universalHasPermission([6,17])) 
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+            
         $restored = false;
     
         if(User::find($id))
@@ -387,4 +395,5 @@ class UserController extends Controller
         return $noDeleteArr;
         
     }
+
 }

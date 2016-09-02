@@ -527,9 +527,9 @@ class TelephoneListController extends Controller
                                 
                                 $bankInfos = explode(';', $mandantInfo->bankverbindungen);
                                 
-                                $iban = trim(str_replace('IBAN', '', $bankInfos[0]));
-                                $bic = trim(str_replace('BIC', '', $bankInfos[1]));
-                                $bank = trim($bankInfos[2]);
+                                $iban = isset($bankInfos[0]) ? trim(str_replace('IBAN', '', $bankInfos[0])) : '-';
+                                $bic = isset($bankInfos[1]) ? trim(str_replace('BIC', '', $bankInfos[1])) : '-';
+                                $bank = isset($bankInfos[2]) ? trim($bankInfos[2]) : '-';
                                 
                                 // dd($iban .", ".$bic.", ".$bank);
                                 
@@ -544,9 +544,9 @@ class TelephoneListController extends Controller
                                 
                                 $bankInfos = explode(';', $mandantInfo->bankverbindungen);
                                 
-                                $iban = trim(str_replace('IBAN', '', $bankInfos[0]));
-                                $bic = trim(str_replace('BIC', '', $bankInfos[1]));
-                                $bank = trim($bankInfos[2]);
+                                $iban = isset($bankInfos[0]) ? trim(str_replace('IBAN', '', $bankInfos[0])) : '-';
+                                $bic = isset($bankInfos[1]) ? trim(str_replace('BIC', '', $bankInfos[1])) : '-';
+                                $bank = isset($bankInfos[2]) ? trim($bankInfos[2]) : '-';
                                 
                                 // dd($iban .", ".$bic.", ".$bank);
                                 
