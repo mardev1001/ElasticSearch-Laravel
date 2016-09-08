@@ -32,7 +32,8 @@
                                 </span> 
                                
                             </div>
-                            <div class="col-xs-12 col-md-4">
+                            
+                            {{-- <div class="col-xs-12 col-md-4">
                                 <div class="checkbox">
                                     <input type="checkbox" name="deletedUsers" id="deletedUsers" value="{{old('deletedUsers')}}">
                                     <label for="deletedUsers">{{ trans('telefonListeForm.show-deleted-users') }}</label>
@@ -41,7 +42,8 @@
                                     <input type="checkbox" name="deletedMandants" id="deletedMandants" value="{{old('deletedMandants')}}">
                                     <label for="deletedMandants">{{ trans('telefonListeForm.show-deleted-mandants') }}</label>
                                 </div>
-                            </div>
+                            </div> --}}
+                            
                             {{ Form::close() }}
                             <div class="col-xs-12 col-md-4 form-inline">
                                 <div class="pull-right">
@@ -117,11 +119,11 @@
                             <td>{{ $user->last_name }}</td>
                             <td>
                                 @foreach( $user->mandantRoles as $mandantUserRole)
-                                    @if( $mandantUserRole->role->phone_role == 1 || $mandantUserRole->role->id == 21 || $mandantUserRole->role->id == 23
+                                    {{-- @if( $mandantUserRole->role->phone_role == 1 || $mandantUserRole->role->id == 21 || $mandantUserRole->role->id == 23
                                     || $mandantUserRole->role->name == 'Geschäftsführer' || $mandantUserRole->role->name == 'Qualitätsmanager' 
-                                    || $mandantUserRole->role->name == 'Rechntabteilung' )
+                                    || $mandantUserRole->role->name == 'Rechntabteilung' ) --}}
                                         {{ ( $mandantUserRole->role->name ) }}
-                                    @endif      
+                                    {{-- @endif --}}
                                 @endforeach
                             </td>
                             <td>{{ $user->phone }}</td>

@@ -759,6 +759,19 @@ page[size="A4"][layout="portrait"] {
 
 
 /*Chosen*/
+select.form-control.select{
+    display: block !important; 
+    opacity: 0 !important;
+    width: 0 !important;
+    height: 5px !important;
+    position: absolute; 
+    z-index: -1;
+    top: 40%;
+    /*padding: 0 !important;*/
+    border: 0 !important;
+    min-height: initial !important;
+}
+
 .chosen-disabled .search-choice{
     padding-right: 5px !important;
 }

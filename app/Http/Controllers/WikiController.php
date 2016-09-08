@@ -26,6 +26,8 @@ class WikiController extends Controller
      */
     public function __construct(SearchRepository $searchRepo, DocumentRepository $docRepo)
     {
+        $this->middleware('wiki')->only('index', 'search', 'show');
+        $this->middleware('wiki.editor')->except('index', 'search', 'show');
         $this->search = $searchRepo;
         $this->document = $docRepo;
     }

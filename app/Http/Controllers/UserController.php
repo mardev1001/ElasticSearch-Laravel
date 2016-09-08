@@ -282,10 +282,27 @@ class UserController extends Controller
                 
              }
             // return back()->with('message', 'Rollen erfolgreich aktualisiert.');
-            return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', 'Rollen erfolgreich aktualisiert.');
+            $message = '';
+           
+            if( count($noDeleteArr) )
+                $message .= trans('benutzerForm.lastMandantRole').'<br/>';
+            $message .= 'Rollen erfolgreich aktualisiert.';
+            //  dd($message);
+            return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', $message);
         }
         
         if($request->has('remove')){
+            $mandantUserRoles = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->pluck('role_id')->toArray();
+            $noDeleteArr = array();
+            $temp = $this->preventDeleteRoles($mandantUserRoles,$request->input('role_id'), 
+            $request->input('mandant_id'),  $request->input('mandant_user_id'), true );
+            if( count($temp) )
+                $noDeleteArr = $temp;
+            $message = '';
+            if( count($noDeleteArr) ){
+                $message .= trans('benutzerForm.lastMandantRole');
+                return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', $message);
+            }
             MandantUser::where('id', $request->input('mandant_user_id'))->delete();
             // return back()->with('message', 'Rollen wurden entfernt.');
             return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandants-roles')->with('message', 'Rollen wurden entfernt.');
@@ -358,40 +375,72 @@ class UserController extends Controller
      * @param  array $roleArray
      * @return array $roleArray
      */
-    public function preventDeleteRoles($mandantUserRoles ,$roleArray,$mandantId,$mandatUserId)
+    public function preventDeleteRoles($mandantUserRoles ,$roleArray,$mandantId,$mandatUserId, $deleteCheck=false)
     {
-       $difference = array_diff($mandantUserRoles,$roleArray);
-       $noDeleteArr = array();
-       $midCheck = array();
-       $midCheck2 = array();
-        foreach($difference as $k => $role) {
-            $roleDb = Role::find($role);
-            if( $roleDb->system_role == 1){
-                $mUsers = MandantUser::where('mandant_id', $mandantId)->get();
-                // $mUsers = MandantUser::where('mandant_user_id', $mandantId)->where('role_id',$role)->get();
-                // dd($mUsers);
-                $count = 0;
-                foreach($mUsers as $mUser){
-                    $mur = MandantUserRole::where('mandant_user_id', $mUser->id)->where('role_id',$role)->first();
-                    if($mur != null ){
-                      $midCheck2[] = $mur->mandant_user_id;
-                        if( count($mur) ){
-                               
-                               if( in_array($mur->mandant_user_id, $midCheck) == false){
-                                    $count++;
-                                    $midCheck[] = $mur->mandant_user_id;
-                                    
-                                }
-                      }  
+        $difference = array_diff($mandantUserRoles,$roleArray);
+        $noDeleteArr = array();
+        $midCheck = array();
+        $midCheck2 = array();
+        if($deleteCheck == false){
+            foreach($difference as $k => $role) {
+                $roleDb = Role::find($role);
+                if( $roleDb->mandant_required == 1){
+                    $mUsers = MandantUser::where('mandant_id', $mandantId)->get();
+                    // $mUsers = MandantUser::where('mandant_user_id', $mandantId)->where('role_id',$role)->get();
+                    // dd($mUsers);
+                    $count = 0;
+                    foreach($mUsers as $mUser){
+                        $mur = MandantUserRole::where('mandant_user_id', $mUser->id)->where('role_id',$role)->first();
+                        if($mur != null ){
+                          $midCheck2[] = $mur->mandant_user_id;
+                            if( count($mur) ){
+                                   
+                                   if( in_array($mur->mandant_user_id, $midCheck) == false){
+                                        $count++;
+                                        $midCheck[] = $mur->mandant_user_id;
+                                        
+                                    }
+                          }  
+                        }
+                         
                     }
-                     
-                }
-                    if( $count <= 1 )
-                        $noDeleteArr[] = $role;
-                  
-           }
+                        if( $count <= 1 )
+                            $noDeleteArr[] = $role;
+                        
+                      
+               }
+            }
         }
-       
+        else{
+            foreach($mandantUserRoles as $role){
+                $roleDb = Role::find($role);
+                if( $roleDb->mandant_required == 1){
+                    $mUsers = MandantUser::where('mandant_id', $mandantId)->get();
+                    // $mUsers = MandantUser::where('mandant_user_id', $mandantId)->where('role_id',$role)->get();
+                    // dd($mUsers);
+                    $count = 0;
+                    foreach($mUsers as $mUser){
+                        $mur = MandantUserRole::where('mandant_user_id', $mUser->id)->where('role_id',$role)->first();
+                        if($mur != null ){
+                          $midCheck2[] = $mur->mandant_user_id;
+                            if( count($mur) ){
+                                   
+                                   if( in_array($mur->mandant_user_id, $midCheck) == false){
+                                        $count++;
+                                        $midCheck[] = $mur->mandant_user_id;
+                                        
+                                    }
+                          }  
+                        }
+                         
+                    }
+                        if( $count <= 1 )
+                            $noDeleteArr[] = $role;
+                        
+                      
+               }    
+                }
+        }       
         return $noDeleteArr;
         
     }

@@ -412,7 +412,40 @@
                     </div>
                 </div><!--End input box-->
         
+                
+                <!--Bankname, IBAN, BIC, Bemerkung-->
+                
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('bank_name', $data->mandantInfo, old('bank_name'), trans('mandantenForm.bank_name'), trans('mandantenForm.bank_name'), false, '') !!}
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('bank_iban', $data->mandantInfo, old('bank_iban'), trans('mandantenForm.bank_iban'), trans('mandantenForm.bank_iban'), false, '') !!}
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('bank_bic', $data->mandantInfo, old('bank_bic'), trans('mandantenForm.bank_bic'), trans('mandantenForm.bank_bic'), false, '') !!}
+                    </div>
+                </div>
+                
+                <div class="col-md-3 col-lg-3">
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('bank_memo', $data->mandantInfo, old('bank_memo'), trans('mandantenForm.bank_memo'), trans('mandantenForm.bank_memo'), false, '') !!}
+                    </div>
+                </div>
+                
+                <div class="clearfix"></div>
+                
                 <!-- input box-->
+                <div class="col-md-4 col-lg-4">
+                    <button type="button" class="btn btn-primary bankverbindung-add"> {{ trans('mandantenForm.toBankinfos') }} </button>
+                </div><!--End input box-->
+                
                 <div class="col-md-12 col-lg-12">
                     <div class="form-group">
                         {!! ViewHelper::setArea('bankverbindungen',$data->mandantInfo,old('bankverbindungen'),trans('mandantenForm.bank') ) !!}
@@ -437,25 +470,31 @@
             </div>
           </div>
         </div>
-        <div class="clearfix"></div>
-         
-             
-            
+        
+    <div class="clearfix"></div>
+    
+    @if($data->edited_by == Auth::user()->id)
+        @section('editApproval')
+            <button type="submit" name="mandant-approved" value="1" class="btn btn-primary no-margin-bottom">Freigeben</button>
         @endif
-        @if( Request::is('*/create') )
-            @section('beforeButtons')
-                <div class="button-box box-wrapper">
-            @stop
-        @elseif( Request::is('*/edit') )
-            @section('beforeButtons')
-                <div class="button-box box-wrapper">
-            @stop
-        @endif
-     
-     @if( Request::is('*/edit') )
-         @section('closingElementsAfterForm')
-                @include('partials.mandantStaticRoles')
-                </div>
-        @stop
-     @endif
- 
+    @stop
+    
+@endif
+    
+    
+@if( Request::is('*/create') )
+    @section('beforeButtons')
+        <div class="button-box box-wrapper">
+    @stop
+@elseif( Request::is('*/edit') )
+    @section('beforeButtons')
+        <div class="button-box box-wrapper">
+    @stop
+@endif
+
+@if( Request::is('*/edit') )
+    @section('closingElementsAfterForm')
+        @include('partials.mandantStaticRoles')
+        </div>
+    @stop
+@endif

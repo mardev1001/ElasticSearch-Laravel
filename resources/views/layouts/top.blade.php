@@ -6,8 +6,11 @@
         </div>
         <div class="col-xs-12 col-sm-2 col-md-3 session-flash">
             <div class="clearfix"></div>
+            
             @if(Session::has('message'))
-                <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{{ Session::pull('message') }}</p>
+                <p class="alert {{ Session::pull('alert-class', 'alert-info') }}">{!! Session::pull('message') !!}</p>
+            @elseif(Session::has('messageSecondary'))
+                <p class="alert {{ session('alert-class', 'alert-info') }}">{!! Session::pull('messageSecondary') !!}</p>
             @endif
             
             @if (isset($errors) && count($errors) > 0)

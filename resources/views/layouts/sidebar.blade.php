@@ -148,7 +148,8 @@
             <!--<li>-->
             <!--    <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>-->
             <!--</li>-->
-            @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
+            @if( ViewHelper::universalHasPermission( array(15,16) ) == true 
+                || ViewHelper::getMandantWikiPermission() ) 
                 <li class="">
                     <a href="#">{{ ucfirst(trans('navigation.wiki')) }}
                         <span class="fa arrow"></span></a>

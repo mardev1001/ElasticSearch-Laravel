@@ -65,6 +65,7 @@
                                    @if( count($document->editorVariant) ) 
                                        @foreach( $document->editorVariant as $v => $variant)
                                            <div class="tab-pane @if($v == 0) active @endif" id="variant{{$variant->variant_number}}">
+                                            
                                                @if(count($document->documentUploads))
                                                 <div class="attachments">
                                                     <span class="text">Dokument Anlage/n: </span>
@@ -118,15 +119,17 @@
                                 @endif
 
                                 @foreach( $variants as $v => $variant)
-                                    @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
+                               
+                                    
                                         @if( count( $variant->EditorVariantDocument ) )
                                             <div class="attachments document-attachments">
-                                                <span class="text">Dokument Anlage/n: </span> <br>
+                                                <span class="text">Dokument Anlage/n für Variante {{$variant->variant_number}}: </span> <br>
                                                 <div class="">
                                                 @foreach($variant->EditorVariantDocument as $k =>$docAttach)
                                                     @if( $docAttach->document_id != $document->id )
                                                         @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
                                                             @if( $key == 0 )
+                                                            
                                                              <!--<a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="btn btn-primary">-->
                                                              <div class="row flexbox-container">
                                                                  <div class="col-md-12">
@@ -145,7 +148,6 @@
                                                 </div>
                                             </div><!-- end .attachments .document-attacments -->
                                         @endif
-                                    @endif
                                 @endforeach
 
                             </div><!-- end .footer -->
@@ -162,8 +164,18 @@
             <div class="col-sm-4 col-md-3 col-lg-2 btns">
                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
                 @if( $authorised == false && $canPublish ==false)
-                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
-                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
+                    @if( $document->documentType->document_art == 1) $
+                        @if( ViewHelper::universalHasPermission( array(13) ) == true )
+                             <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
+                             <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
+                        @endif
+                    @else
+                        @if( ViewHelper::universalHasPermission( array(11) ) == true )
+                             <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
+                             <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
+                        @endif
+                    @endif
+                   
                 @elseif( ($authorised == false && $canPublish == true && $published == false ) ||  
                        ($authorised == true && $published == false ) )
                         <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>

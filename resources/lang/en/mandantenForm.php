@@ -67,6 +67,7 @@ return [
     'user' => 'Benutzer',
     'success' => 'Mandant erfolgreich gespeichert.',
     'saved' => 'Mandant erfolgreich gespeichert.',
+    'savedApproved' => 'Mandant erfolgreich gespeichert und freigegeben.',
     'search' =>'Suche Mandant/Benutzer',
     'von' =>'Von',
     'bis' =>'Bis',
@@ -84,5 +85,10 @@ return [
     'bg' => 'Berufsgenossenschaft',
     'toHistory' => 'Zur Historie',
     'erlaubnisverfahren' => 'Zuständige AA für Erlaubnisverfahren ab 01.07.12',
-
+    'bank_name' => 'Bankname',
+    'bank_iban' => 'IBAN',
+    'bank_bic' => 'BIC',
+    'bank_memo' => 'Bemerkung',
+    'toBankinfos' => 'Zu den Bankverbindungen',
+    
 ];

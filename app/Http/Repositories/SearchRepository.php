@@ -6,6 +6,7 @@ namespace App\Http\Repositories;
  * Time: 08:11
  */
 
+use Auth;
 use DB;
 
 use Carbon\Carbon;
@@ -50,6 +51,12 @@ class SearchRepository
             }
         }
        else{
+           
+            // $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+            // $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+            // if(!$mandants->contains($myMandant))
+            //     $mandants->prepend($myMandant);
+                
             $query = User::where('users.id','>',0);
                 
             if( $request->has('parameter') )

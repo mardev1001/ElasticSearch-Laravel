@@ -17,7 +17,10 @@ class MandantUserRole extends Model
     }
     
     public function mandantUser(){
-        return $this->belongsTo('App\MandantUser');
+        return $this->belongsTo('App\MandantUser','mandant_user_id','id');
+    }
+    public function mUser(){
+        return $this->hasOne('App\MandantUser','id','mandat_user_id');
     }
     
     public function roles(){

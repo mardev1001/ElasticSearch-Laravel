@@ -139,10 +139,12 @@
             
             @if(count($results))
                 @foreach($results as $key=>$document)
+                @if(isset($document->published->url_unique))
                     <div class="row">
                         <div class="col-xs-12 text result">
                             <div class="healine"> 
-                                <a href="{{route('dokumente.show', $document)}}" class="link">
+                                
+                                <a href="{{url('/dokumente/'. $document->published->url_unique)}}" class="link">
                                     <strong>
                                     @if(isset($parameter)) 
                                         #{{$key+1}} 
@@ -215,6 +217,7 @@
                         </div>
                         <div class="clearfix"></div> <br>
                     </div>
+                @endif
                 @endforeach
             @else
                 <div class="row">

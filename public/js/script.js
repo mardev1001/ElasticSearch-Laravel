@@ -657,8 +657,7 @@ d.parent(".dropdown-menu").length&&(d=d.closest("li.dropdown").addClass("active"
       } else {
         this.container.html('<a class="chosen-single chosen-default"><span>' + this.default_text + '</span><div><b></b></div></a><div class="chosen-drop"><div class="chosen-search"><input type="text" autocomplete="off" /></div><ul class="chosen-results"></ul></div>');
       }
-      // this.form_field_jq.hide().after(this.container);
-      this.form_field_jq.css({ position: 'absolute', opacity: 0 }).after(this.container);
+      this.form_field_jq.hide().after(this.container);
       this.dropdown = this.container.find('div.chosen-drop').first();
       this.search_field = this.container.find('input').first();
       this.search_results = this.container.find('ul.chosen-results').first();
@@ -64351,6 +64350,22 @@ $(function() {
     });
     
     
+    // Mandant Bankinfos add button
+    
+    $('.bankverbindung-add').on('click touch', function(e) {
+        
+        var bankInfo = $('textarea[name="bankverbindungen"]');
+        var bankName = $('input[name="bank_name"]').val().trim();
+        var bankIban = $('input[name="bank_iban"]').val().trim();
+        var bankBic = $('input[name="bank_bic"]').val().trim();
+        var bankMemo = $('input[name="bank_memo"]').val().trim();
+        
+        // console.log("[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] " + "\n" + bankInfo.val());
+        bankInfo.val(bankInfo.val() + "\n" + "[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] ");
+        
+    });
+    
+    
     // Hide or show PDF upload checkbox 
 
     if( $(".document-type-select .select").val() == 1 || $(".document-type-select .select").val() == 2 || $(".document-type-select .select").val() == 3){
@@ -65027,7 +65042,6 @@ $( function() {
             }
          
         });
-       
     }
     /* End Change the hidden input value on sites with .preview */ //.freigabe-mandant
     
@@ -65061,10 +65075,29 @@ $( function() {
                    if( $(this).val() != 'Alle' )
                     $(this).removeAttr('selected').parent().trigger('chosen:updated');
                 });
-            }
+            } 
         });
         
     });
+    
+    
+    /* Multiple chosen with required fix */
+//   $('.freigabe-process').on('submit',function(e){
+//       e.preventDefault();
+//       var check = false;
+//       $('.select.freigabe-mandant').each(function() {
+//           $(this).focus().trigger("click");
+//       });
+//   });
+      
+    
+    /*$.validator.setDefaults({ ignore: ":hidden:not(select)" })
+    $(".select.freigabe-mandant").validate({
+        rules: {chosen:"required"},
+        message: {chosen:"Feld ist erforderlich"}
+    });
+    */
+    /* End multiple chosen with required fix */
     
 });
 /* =========================================================

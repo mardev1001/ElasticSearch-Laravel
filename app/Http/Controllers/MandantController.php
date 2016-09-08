@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Request as RequestMerge;
 
+use Auth;
 use App\Http\Requests;
 
 use App\Http\Requests\MandantRequest;
@@ -93,7 +94,7 @@ class MandantController extends Controller
      */
     public function search(Request $request)
     {
-        // dd($request->method());
+        
         if(!$request->has('search') || $request->method() == "GET")
             return redirect('mandanten');
             
@@ -103,17 +104,21 @@ class MandantController extends Controller
         $deletedMandants = $request->has('deleted_mandants');
         
         $roles = Role::all();
-        
-        $users = User::where('first_name', 'LIKE', '%'. $searchParameter .'%')
+       // \DB::enableQueryLog();
+        $users = User::where(function ($query) use($searchParameter) {
+            $query->where('first_name', 'LIKE', '%'. $searchParameter .'%')
         ->orWhere('last_name', 'LIKE', '%'. $searchParameter .'%')
         ->orWhere('short_name', 'LIKE', '%'. $searchParameter .'%');
-        if($deletedUsers) $users = $users->withTrashed();
+        }); 
+        if($deletedUsers) $users = $users->onlyTrashed();
         $users = $users ->get();
-        
-        $mandants = Mandant::where('name','LIKE', '%'. $searchParameter .'%')
+        //dd( \DB::getQueryLog() );
+        $mandants = Mandant::where(function ($query) use($searchParameter) {
+            $query-> where('name','LIKE', '%'. $searchParameter .'%')
         ->orWhere('kurzname','LIKE', '%'. $searchParameter .'%')
         ->orWhere('mandant_number','LIKE', '%'. $searchParameter .'%');
-        if($deletedMandants) $mandants = $mandants->withTrashed();
+        }); 
+        if($deletedMandants) $mandants = $mandants->onlyTrashed();
         $mandants = $mandants->get();
         // $mandants = $this->search->phonelistSearch($request);
         return view('mandanten.administration', compact('search', 'searchParameter', 'mandants', 'users', 'roles', 'deletedUsers', 'deletedMandants' ) );
@@ -196,8 +201,13 @@ class MandantController extends Controller
         }
         // dd($mandantUsers);
         
-        if(isset($data))
-            return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers','bundeslander'));
+        if(isset($data)){
+            if($data->edited_by == 0 || $data->edited_by == Auth::user()->id){
+                $data->edited_by = Auth::user()->id;
+                $data->save();
+                return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers','bundeslander'));
+            } else return back()->with('message', 'Mandant kann nicht bearbeitet werden.');
+        }
         else
             return back()->with('message', 'Mandant existiert nicht oder kann nicht bearbeitet werden.');
     
@@ -213,6 +223,7 @@ class MandantController extends Controller
      */
     public function update(MandantRequest $request, $id)
     {
+        
         RequestMerge::merge(['mandant_id' => $id ] );
         $mandant = Mandant::find($id);
         $mandantInfos = MandantInfo::firstOrNew( ['mandant_id' =>$id] );
@@ -224,13 +235,16 @@ class MandantController extends Controller
         $mandantInfos->unbefristet = $request->has('unbefristet');
         if($mandant->hauptstelle) $mandant->mandant_id_hauptstelle = null;
         
+        if($request->has('mandant-approved')) $mandant->edited_by = 0;
         
         if ($request->file())
             $mandant->logo = $this->fileUpload($mandant, $this->fileUploadPath, $request->file());
         
         $mandantInfos->fill( $request->all() );
-        if( $mandant->save() && $mandantInfos->save() )
-            return redirect('mandanten/'.$id.'/edit#mandant-saved')->with(['message'=>trans('mandantenForm.saved')]);
+        if( $mandant->save() && $mandantInfos->save() ){
+            if($mandant->edited_by == 0 ) return redirect('mandanten')->with(['message'=>trans('mandantenForm.savedApproved')]);
+            else return redirect('mandanten/'.$id.'/edit#mandant-saved')->with(['message'=>trans('mandantenForm.saved')]);
+        }
         //   return back()->with(['message'=>trans('mandantenForm.saved')]);
         return redirect('mandanten/'.$id.'/edit#mandant-saved')->with(['message'=>trans('mandantenForm.saved')]);
         // return back()->with(['message'=>trans('mandantenForm.error')]);
@@ -286,13 +300,16 @@ class MandantController extends Controller
      */
     public function createInternalMandantUser(Request $request, $id)
     {
+        
         $internalMandantUser = InternalMandantUser::create(['mandant_id' => $id, 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id'),]);
             /* addon for userMandantRoleEdit */
             $mandantUser =  MandantUser::where('mandant_id', $id)->where('user_id',$request->input('user_id'))->first();
-            $mandantUserRole = new MandantUserRole();
-                    $mandantUserRole->mandant_user_id = $mandantUser->id;
-                    $mandantUserRole->role_id =  $request->input('role_id');
-                    $mandantUserRole->save();
+            if(isset($mandantUser)){
+                $mandantUserRole = new MandantUserRole();
+                $mandantUserRole->mandant_user_id = $mandantUser->id;
+                $mandantUserRole->role_id =  $request->input('role_id');
+                $mandantUserRole->save();
+            }
             /* End addon for userMandantRoleEdit */
         // return back()->with('message', trans('mandantenForm.role-added'));
         return redirect('mandanten/'.$id.'/edit#internal-role-'.$internalMandantUser->id)->with('message', trans('mandantenForm.role-added'));
@@ -324,9 +341,11 @@ class MandantController extends Controller
                 /* addon for userMandantRoleEdit */
                 if( $request->has('old_role_id')  ){
                     $mandantUser =  MandantUser::where('mandant_id', $mandantId)->where('user_id',$request->input('user_id'))->first();
-                    $mandantUserRole = MandantUserRole::where('mandant_user_id',$mandantUser->id)->where('role_id',$request->input('old_role_id'))->first();
-                    $mandantUserRole->role_id =  $request->input('role_id');
-                    $mandantUserRole->save();
+                    if(isset($mandantUser)){
+                        $mandantUserRole = MandantUserRole::where('mandant_user_id',$mandantUser->id)->where('role_id',$request->input('old_role_id'))->first();
+                        $mandantUserRole->role_id =  $request->input('role_id');
+                        $mandantUserRole->save();
+                    }
                 }
                 /* End addon for userMandantRoleEdit */
                 
@@ -338,8 +357,10 @@ class MandantController extends Controller
             
                 /* addon for userMandantRoleEdit */
                     $mandantUser =  MandantUser::where('mandant_id', $mandantId)->where('user_id',$request->input('user_id'))->first();
-                    $mandantUserRole = MandantUserRole::where('mandant_user_id',$mandantUser->id)
-                    ->where('role_id',$request->input('old_role_id'))->delete();
+                    if(isset($mandantUser)){
+                        $mandantUserRole = MandantUserRole::where('mandant_user_id',$mandantUser->id)
+                        ->where('role_id',$request->input('old_role_id'))->delete();
+                    }
             /* End addon for userMandantRoleEdit */
                 // return back()->with('message', trans('mandantenForm.role-deleted'));
                 return redirect('mandanten/'.$mandantId.'/edit#internal-roles')->with('message', trans('mandantenForm.role-deleted'));

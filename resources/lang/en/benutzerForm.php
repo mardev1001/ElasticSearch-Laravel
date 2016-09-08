@@ -35,4 +35,6 @@ return [
     'phone' => 'Telefon',
     'phone_short' => 'Kurzwahl',
     
+    'lastMandantRole' => 'Diese Rolle kann nicht gelöscht werden. Dies ist eine relevante System Rolle.',
+    
 ];

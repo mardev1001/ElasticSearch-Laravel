@@ -50,8 +50,8 @@ Benutzer anlegen
                     <div class="form-group">
                         <label class="control-label">{{trans('benutzerForm.title')}}</label>
                         <select name="title" class="form-control select">
-                            <option value="Frau">Frau</option>
-                            <option value="Herr">Herr</option>
+                            <option @if(old('title')) selected @endif value="Frau">Frau</option>
+                            <option @if(old('title')) selected @endif value="Herr">Herr</option>
                         </select>
                         
                     </div>   

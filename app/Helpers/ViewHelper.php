@@ -4,12 +4,15 @@ use Request;
 
 use Auth;
 
+use App\User;
 use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
 use App\DocumentCoauthor;
 class ViewHelper
 {
+    
+   
     /**
      * Generate and check input type text
      *
@@ -402,21 +405,33 @@ class ViewHelper
      * @param array $userArray
      * @return bool 
      */
-    static function universalHasPermission( $userArray=array(), $withAdmin=true){
+    static function universalHasPermission( $userArray=array(), $withAdmin=true, $debug=false){
         $uid = Auth::user()->id;
+      
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        $hasPermission = false;   
+       
         foreach($mandantUsers as $mu){
             $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
             foreach($userMandatRoles as $umr){
-                if($withAdmin == true)
-                    if( $umr->role_id == 1 || in_array($umr->role_id, $userArray))
-                        return true;
-                else
-                    if( in_array($umr->role_id, $userArray))
-                        return true;
+               if($withAdmin == true){
+                    if( $umr->role_id == 1 || in_array($umr->role_id, $userArray) ){
+                        
+                        $hasPermission = true;
+                    }
+                }
+                else{
+                    if( in_array($umr->role_id, $userArray) == true ){
+                        
+                        $hasPermission = true;
+                    }
+                    
+                }
+                   
             }
         }
-        return false;
+    
+        return $hasPermission;
     }
     
    /**
@@ -426,24 +441,34 @@ class ViewHelper
      * @param bool $message
      * @return bool || response
      */
-    static function universalDocumentPermission( $document,$message=true,$userArray=array() ){
+    static function universalDocumentPermission( $document,$message=true,$freigeber=false ){
         $uid = Auth::user()->id;
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
         $role = 0;
         $hasPermission = false;
-        
+         
         foreach($mandantUsers as $mu){
             $userMandatRole = MandantUserRole::where('mandant_user_id',$mu->id)->first();
             if( $userMandatRole != null && $userMandatRole->role_id == 1 )
                 $hasPermission = true ;
+               
+        }
+        if( $freigeber == true ){
+            $documentAprrovers = DocumentApproval::where('document_id', $document->id)->where('user_id',$uid)->get();
+            if( count($documentAprrovers) )
+                $hasPermission = true;
+               
         }
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
-        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) || $role == 1 )
-           return true; 
-        
-        if( $message == true )
+        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) || ( $freigeber == false && $document->approval_all_roles == 1) 
+        || $role == 1 )
+           $hasPermission = true; 
+           
+        if( $message == true  && $hasPermission == false)
             session()->flash('message',trans('documentForm.noPermission'));
-        return false;
+        //if($document->id == 118)
+        //    dd($hasPermission);
+        return $hasPermission;
     }
     
     
@@ -534,6 +559,27 @@ class ViewHelper
         if($hauptstelleId){
             return Mandant::find($hauptstelleId);
         } else return false;
+    }
+    
+    /**
+     * Get Mandant by ID
+     * @param Mandant $mandant
+     * @return Mandant | bool
+     */
+    static function getUser( $id ){
+        if($user = User::find($id)){
+            return $user;
+        } else return false;
+    }
+    
+    /**
+     * Check if Mandant has Wiki permission
+     * @return bool
+     */
+    static function getMandantWikiPermission(){
+        $user = Auth::user();
+        $mandant = MandantUser::where('user_id', $user->id)->first()->mandant;
+        return (bool)$mandant->rights_wiki;
     }
     
 }

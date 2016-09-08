@@ -46,9 +46,9 @@
 
                             <div class="content">
                                 <!--<p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>-->
-
+                                
                                 @if(!$document->pdf_upload)
-
+                        
                                     @foreach( $variants as $v => $variant)
                                         @if( isset($variant->hasPermission) && $variant->hasPermission == true )
                                             <div>
@@ -87,7 +87,7 @@
 
                                 @foreach( $variants as $v => $variant)
                                     @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
-
+                                        
                                         @if( count( $variant->EditorVariantDocument ) )
                                             <div class="attachments document-attachments">
                                                 <span class="text">Dokument Anlage/n: </span> <br>
@@ -140,13 +140,15 @@
                     @endif
                     
                     @if( ViewHelper::universalDocumentPermission( $document,false ) == true )
-                        <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
-                            @if( $document->active  == false)
-                                {{ trans('dokumentShow.activate') }}
-                            @else
-                                {{ trans('dokumentShow.deactivate') }}
-                            @endif</a>
-                        {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
+                        @if( in_array($document->document_status_id, [3,5] ))
+                            <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
+                                @if( $document->active  == false)
+                                    {{ trans('dokumentShow.activate') }}
+                                @else
+                                    {{ trans('dokumentShow.deactivate') }}
+                                @endif</a>
+                            {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
+                        @endif
                     @endif
                     
                     @if( $document->documentType->document_art == 1)
@@ -177,13 +179,15 @@
                             @else
                                 {{ trans('dokumentShow.unFavorite') }}
                             @endif</a>  
-                            <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                            @if( ViewHelper::universalHasPermission( array(13) ) == true )
+                                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                            @endif
                         
                     @endif
 
                     @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
                         @if( $authorised == false && $canPublish ==false && $published == false)
-                             @if( $document->documentType->document_art == 1)
+                             @if( $document->documentType->document_art == 1) $
                                 @if( ViewHelper::universalHasPermission( array(13) ) == true )
                                     <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
                                 @endif
@@ -258,8 +262,8 @@
     @endif
     
     @if( $commentVisibility->user == true || $commentVisibility->freigabe == true )
-        @if(count($documentComments))
-            {!! ViewHelper::generateCommentBoxes($documentComments, trans('wiki.commentUser') ) !!}
+        @if(count($documentComments) && ViewHelper::universalHasPermission( array(16) ))
+                {!! ViewHelper::generateCommentBoxes($documentComments, trans('wiki.commentUser') ) !!}
         @endif
     @endif
     

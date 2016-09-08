@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use Auth;
 use File;
@@ -27,6 +29,15 @@ class HomeController extends Controller
       $this->document = $docRepo;
     }
 
+
+    /**
+     * Create a length aware custom paginator instance.
+     *
+     * @param  Collection  $items
+     * @param  int  $perPage
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+     
     /**
      * Show the application dashboard.
      *
@@ -34,18 +45,25 @@ class HomeController extends Controller
      */
     public function index() 
     {
+        
+        /*
+            if role Struktur admin view all ()
+            maybe if document/Rundscriben verfasser
+            else if Find all document where document  user_id,owner_user_id or coAuthor
+        */
+        // $this->getDocumentsUser()
+        // $this->universalDocumentPermission($document, false, array());
         // $documentsNew = Document::whereNotIn('document_status_id', array(1,2,4,5,6))->where('is_attachment',0)->where('active',1)
         $documentsNew = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('document_status_id', 3)->where('is_attachment',0)->where('documents.active',1)
         ->where('document_types.document_art', 0)
         ->orderBy('documents.id', 'desc')
-		//->take(10)->get();
-		->paginate(10, ['*','document_types.name as docTypeName', 'documents.name as name', 
-		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at'], 'neue-dokumente');
+        ->get(['*','document_types.name as docTypeName', 'documents.name as name', 
+		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at']);
+		
+		$documentsNew = $this->document->getUserPermissionedDocuments($documentsNew,'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
-        //dd($documentsNew);
-        // $rundschreibenMy = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => 2, 'document_status_id' => 3])
-        // ->join('contacts', 'users.id', '=', 'contacts.user_id')
+
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('owner_user_id', Auth::user()->id)
         ->where('document_type_id', '!=', 5)

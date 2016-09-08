@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use Auth;
 use Excel;
 use App\Role;
 use App\User;
@@ -24,35 +25,61 @@ class TelephoneListController extends Controller
      */
     public function index()
     {
-        $mandants = Mandant::orderBy('mandant_number')->get();
-            foreach($mandants as $k =>$mandant){
-                $userArr = array();
-                $testuserArr = array();
-                foreach($mandant->users as $k2 => $mUser){
-                    foreach($mUser->mandantRoles as $mr){
-                         $testuserArr[] = $mr->role->name;
-                        //  dd($mr->role->phone_role);
-                        if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21) //edv
-                             $userArr[] = $mandant->users[$k2]->id;
-                    }
-                    
-                    if( count($userArr) < 1){
-                        foreach($mUser->mandantRoles as $mr){
-                            if( $mr->role->id == 23 )// Lohn
-                                $userArr[] = $mandant->users[$k2]->id;
-                        }   
-                    }
-                    if( count($userArr) < 1){
-                        foreach($mUser->mandantRoles as $mr){
-                            if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
-                            ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
-                                $userArr[] = $mandant->users[$k2]->id;
-                        }   
-                    }
-                    
-                }//end second foreach
-                $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
-            }
+        // $mandants = array();
+        $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+        if(!$mandants->contains($myMandant))
+            $mandants->prepend($myMandant);
+        // dd($mandants);
+        
+        foreach($mandants as $k => $mandant){
+            $userArr = array();
+            $testuserArr = array();
+            
+            // Check if the logged user is in the current mandant
+            $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
+            // dd($mandant->users);
+            foreach($mandant->users as $k2 => $mUser){
+                
+                // foreach($mUser->mandantRoles as $mr){
+                //      $testuserArr[] = $mr->role->name;
+                //     //  dd($mr->role->phone_role);
+                //     if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21) //edv
+                //          $userArr[] = $mandant->users[$k2]->id;
+                // }
+                
+                // if( count($userArr) < 1){
+                //     foreach($mUser->mandantRoles as $mr){
+                //         if( $mr->role->id == 23 )// Lohn
+                //             $userArr[] = $mandant->users[$k2]->id;
+                //     }   
+                // }
+                // if( count($userArr) < 1){
+                //     foreach($mUser->mandantRoles as $mr){
+                //         if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
+                //         ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
+                //             $userArr[] = $mandant->users[$k2]->id;
+                //     }   
+                // }
+                
+                foreach($mUser->mandantRoles as $mr){
+                    // Check for phone roles
+                    if( $mr->role->phone_role == 1  && ( in_array($mr->role->id, [2, 4, 21, 22, 23, 24, 25] ) ) ) 
+                         $userArr[] = $mandant->users[$k2]->id;
+                }
+                
+                if(isset($localUser) || Auth::user()->id == 1 ){
+                    // Add all users to the array for the mandant, if they have the same mandant
+                    if($mUser->active && !in_array($mUser->id, $userArr))
+                        $userArr[] = $mUser->id;
+                }
+                
+            }//end second foreach
+            
+            // dd($userArr);
+            $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
+        }
+        
         return view('telefonliste.index', compact('mandants') );
     }
 
@@ -518,23 +545,29 @@ class TelephoneListController extends Controller
                     // Add sheet
                     $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
                         // dd($exportMandants);
-                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', 'IBAN', 'Bankverbindung', 'BIC'));
+                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', 'Bankname', 'IBAN', 'BIC', 'Bemerkung'));
                         
                         if(in_array("0", $exportMandants)){
                             foreach (Mandant::all() as $mandant) {
                                 
                                 $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
                                 
-                                $bankInfos = explode(';', $mandantInfo->bankverbindungen);
+                                $name = $iban = $bic = $memo = '-';
+                                $bankInfos = array();
                                 
-                                $iban = isset($bankInfos[0]) ? trim(str_replace('IBAN', '', $bankInfos[0])) : '-';
-                                $bic = isset($bankInfos[1]) ? trim(str_replace('BIC', '', $bankInfos[1])) : '-';
-                                $bank = isset($bankInfos[2]) ? trim($bankInfos[2]) : '-';
+                                if(isset($mandantInfo->bankverbindungen))
+                                    $bankInfos = explode("]", trim(str_replace(array("\"", "\r\n"), "", $mandantInfo->bankverbindungen)));
                                 
-                                // dd($iban .", ".$bic.", ".$bank);
+                                if(count($bankInfos)>1){
+                                    foreach ($bankInfos as $bankInfo) {
+                                        if(!empty($bankInfo)){
+                                            $bank = explode(';', str_replace(array("[", "]"), "", $bankInfo));
+                                            // Add rows
+                                            $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $bank[0], $bank[1], $bank[2], $bank[3]));
+                                        }
+                                    }
+                                }
                                 
-                                // Add rows
-                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $iban, $bank, $bic));
                             }
                         } else {
                             foreach ($exportMandants as $id) {
@@ -542,16 +575,22 @@ class TelephoneListController extends Controller
                                 $mandant = Mandant::find($id);
                                 $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
                                 
-                                $bankInfos = explode(';', $mandantInfo->bankverbindungen);
+                                $name = $iban = $bic = $memo = '-';
+                                $bankInfos = array();
                                 
-                                $iban = isset($bankInfos[0]) ? trim(str_replace('IBAN', '', $bankInfos[0])) : '-';
-                                $bic = isset($bankInfos[1]) ? trim(str_replace('BIC', '', $bankInfos[1])) : '-';
-                                $bank = isset($bankInfos[2]) ? trim($bankInfos[2]) : '-';
+                                if(isset($mandantInfo->bankverbindungen))
+                                    $bankInfos = explode("]", trim(str_replace(array("\"", "\r\n"), "", $mandantInfo->bankverbindungen)));
                                 
-                                // dd($iban .", ".$bic.", ".$bank);
+                                if(count($bankInfos)>1){
+                                    foreach ($bankInfos as $bankInfo) {
+                                        if(!empty($bankInfo)){
+                                            $bank = explode(';', str_replace(array("[", "]"), "", $bankInfo));
+                                            // Add rows
+                                            $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $bank[0], $bank[1], $bank[2], $bank[3]));
+                                        }
+                                    }
+                                }
                                 
-                                // Add rows
-                                $sheet->appendRow(array($mandant->mandant_number, $mandant->name, $mandant->ort, $iban, $bank, $bic));
                             }
                         }
                     });

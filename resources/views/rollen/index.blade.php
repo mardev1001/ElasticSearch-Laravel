@@ -108,8 +108,8 @@
                                             <button class="btn btn-primary">{{ trans('rollenForm.save') }}</button>
                                         </td>
                                         <td class="col-xs-12 col-md-2 text-center table-options vertical-center">
-                                            <a href="javascript:void();" data-toggle="modal" data-target="#role-{{$role->id}}" class="link">{{ trans('rollenForm.active-users') }}: 
-                                            {{ count( $role->mandantUserRolesAll->where('role_id',$role->id) )}}
+                                            <a href="#;" data-toggle="modal" data-target="#role-{{$role->id}}" class="link">{{ trans('rollenForm.active-users') }}: 
+                                            {{ count( $role->mandantUserRolesAll->where('role_id',$role->id)->where('deleted_at',null) ) }}
                                             </a>
                                         </td>
                                     </tr>
@@ -140,6 +140,7 @@
                             <th></th>
                             <th></th>
                             <th></th>
+                            <th></th>
                         </tr>
                         --}}
                             @foreach($roles as $role)
@@ -155,14 +156,19 @@
                                         <td class="col-xs-12 col-md-2 vertical-center">
                                              <br> <p>{{ trans('rollenForm.editing') }}</p>
                                         </td> 
-                                         <td class="col-xs-12 col-md-2 vertical-center">
+                                         <td class="col-xs-12 col-md-1 vertical-center">
                                             <div class="checkbox checkbox-inline pull-right">
                                                 <input type="checkbox" name="wiki" id="wiki-{{ $role->id }}" @if($role->wiki_role) checked @endif>
                                                 <label for="wiki-{{ $role->id }}">{{ trans('rollenForm.wiki') }}</label>
                                             </div>
                                         </td>
-                                        <td class="col-xs-12 col-md-3 text-right table-options vertical-center">
+                                        <td class=" text-right table-options vertical-center">
                                             <button class="btn btn-primary ">{{ trans('rollenForm.save') }}</button>
+                                        </td>
+                                         <td class=" text-center table-options vertical-center">
+                                            <a href="#;" data-toggle="modal" data-target="#role-{{$role->id}}" class="link">{{ trans('rollenForm.active-users') }}: 
+                                            {{ count( $role->mandantUserRolesAll->where('role_id',$role->id)->where('deleted_at',null) ) }}
+                                            </a>
                                         </td>
                                    
                                     </tr>
@@ -181,19 +187,21 @@
 <div class="clearfix"></div> <br>
 
 @foreach($roles as $role)
-    @if(!$role->system_role)
+   
     <div class="modal fade" id="role-{{$role->id}}" tabindex="-1" role="dialog" aria-labelledby="role-{{$role->id}}" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><span class="fa fa-close"></span></button>
-                    <h4 class="modal-title" id="myModalLabel">{{ trans('rollenForm.active-users') }} - {{ trans('rollenForm.role') ." ". $role->name }}:  {{ count( $role->mandantUserRolesAll->where('role_id',$role->id) ) }}</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ trans('rollenForm.active-users') }} - {{ trans('rollenForm.role') ." ". $role->name }}: 
+                        {{ count( $role->mandantUserRolesAll->where('role_id',$role->id)->where('deleted_at',null) )  }}
+                 </h4>
                 </div>
                 
                 <div class="modal-body">
                     <div class="row general">
                         <div class="col-xs-12">
-                          @if( count( $role->mandantUserRolesAll->where('role_id',$role->id) )  )  
+                          @if( count( $role->mandantUserRolesAll->where('role_id',$role->id)->where('deleted_at',null) )   )  
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -202,19 +210,21 @@
                                         </tr>    
                                     </thead>
                                     <tbody>
-                                    @foreach($role->mandantUserRolesAll->where('role_id',$role->id) as $r)
-                                        @if( $r->mandantUser != null )
+                                    @foreach($role->mandantUserRolesAll->where('role_id',$role->id)->where('deleted_at',null) as $r)
+                                     
                                         <tr>
                                             <td>
-                                                {{ $r->mandantUser->mandant->name }}
+                                                @if(  isset($r->mandantUser->mandant->name)  )
+                                                    {{ ( $r->mandantUser->mandant->name ) }}
+                                                @endif 
                                             </td>
                                             <td>
-                                                 {{ $r->mandantUser->user->first_name }} {{ $r->mandantUser->user->last_name }}
+                                                @if(  isset($r->mandantUser->user->first_name) &&  isset($r->mandantUser->user->last_name) )
+                                                    {{ ( $r->mandantUser->user->first_name) }} {{ ( $r->mandantUser->user->last_name ) }}
+                                                @endif 
                                             </td>
                                         </tr>
-                                        @else
-                                            
-                                        @endif    
+                                             
                                     @endforeach
                                     </tbody>
                                 </table>
@@ -232,7 +242,6 @@
             </div>
         </div>
     </div>
-    @endif
 @endforeach
 
 @stop

@@ -116,7 +116,7 @@
                                                 <option></option>
                                                 @if( count($documentTypes) >0 ){
                                                    @foreach($documentTypes as $collection){
-                                                       <option value="{{$collection->id}}">
+                                                       <option value="{{$collection->id}}" @if($collection->id == 6) selected @endif>
                                                            {{$collection->name}}
                                                        </option>
                                                     @endforeach

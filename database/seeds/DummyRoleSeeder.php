@@ -33,7 +33,7 @@ class DummyRoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '1',
                     'wiki_role' => '1',
-                    'phone_role' => '0',
+                    'phone_role' => '1',
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
@@ -59,7 +59,7 @@ class DummyRoleSeeder extends Seeder
                     'system_role' => '1',
                     'mandant_role' => '1',
                     'wiki_role' => '0',
-                    'phone_role' => '0',
+                    'phone_role' => '1',
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")

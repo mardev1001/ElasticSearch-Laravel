@@ -362,7 +362,6 @@ $( function() {
             }
          
         });
-       
     }
     /* End Change the hidden input value on sites with .preview */ //.freigabe-mandant
     
@@ -396,9 +395,28 @@ $( function() {
                    if( $(this).val() != 'Alle' )
                     $(this).removeAttr('selected').parent().trigger('chosen:updated');
                 });
-            }
+            } 
         });
         
     });
+    
+    
+    /* Multiple chosen with required fix */
+//   $('.freigabe-process').on('submit',function(e){
+//       e.preventDefault();
+//       var check = false;
+//       $('.select.freigabe-mandant').each(function() {
+//           $(this).focus().trigger("click");
+//       });
+//   });
+      
+    
+    /*$.validator.setDefaults({ ignore: ":hidden:not(select)" })
+    $(".select.freigabe-mandant").validate({
+        rules: {chosen:"required"},
+        message: {chosen:"Feld ist erforderlich"}
+    });
+    */
+    /* End multiple chosen with required fix */
     
 });

@@ -42,7 +42,10 @@
 -->
 
 <div class="row">
-    
+     @if( 
+     ( $documentType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
+      ||  ( $documentType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ) 
+     )
     <div class="col-xs-12 col-md-6">
         
         <div class="box-wrapper">
@@ -68,7 +71,12 @@
         </div>
         
     </div>
+    @endif
     
+    @if( 
+     ( $documentType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
+      ||  ( $documentType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ) 
+     )
     <div class="col-xs-12 col-md-6">
         
         <div class="box-wrapper">
@@ -94,6 +102,7 @@
         </div>
         
     </div>
+    @endif
     
 </div>
 

@@ -103,7 +103,7 @@
                                                         <option value="Alle" selected>Alle</option>
                                                     @endif
                                                  @foreach( $mandants as $mandant)
-                                                    <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
+                                                    <option value="{{$mandant->id}}">({{ $mandant->mandant_number }}) {{ $mandant->kurzname }}</option>
                                                 @endforeach
                                             @else
                                                 <option value="0"></option>
@@ -113,7 +113,7 @@
                                                 @foreach($mandants as $mandant)
                                                     <option value="{{$mandant->id}}"
                                                           {!! ViewHelper::setComplexMultipleSelect($variant,'documentMandantMandants', $mandant->id, 'mandant_id',true) !!}
-                                                    >{{ $mandant->name }}</option>
+                                                    >({{ $mandant->mandant_number }}) {{ $mandant->kurzname }}</option>
                                                 @endforeach
                                             @endif
                                         </select>

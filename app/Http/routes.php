@@ -71,18 +71,6 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::patch('benutzer/activate', 'UserController@userActivate');
         // Route::get('benutzer/{id}/edit/deleted', 'UserController@editDeleted');
         Route::resource('benutzer', 'UserController');
-        
-        Route::resource('wiki-kategorie', 'WikiCategoryController');
-        
-        Route::get('wiki/duplicate/{id}', 'WikiController@duplicate');
-        Route::any('wiki/search', 'WikiController@search');
-        Route::get('wiki/{id}/activate', 'WikiController@wikiActivation');
-        Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
-        Route::get('wiki/verwalten', 'WikiController@managmentUser');
-        Route::post('wiki/verwalten', 'WikiController@searchManagment');
-        Route::post('wiki/verwalten-admin', 'WikiController@searchManagment');
-        Route::resource('wiki', 'WikiController');
-        
         Route::resource('iso-kategorien', 'IsoCategoryController');
         Route::resource('rollen', 'RoleController');
         Route::resource('adressaten', 'AdressatController');
@@ -97,6 +85,17 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('suche/erweitert', 'SearchController@searchAdvanced');
         Route::post('suche/telefonliste', 'SearchController@searchPhoneList');
         Route::resource('suche', 'SearchController');
+        
+        // Wiki routes
+        Route::resource('wiki-kategorie', 'WikiCategoryController');
+        Route::any('wiki/search', 'WikiController@search');
+        Route::get('wiki/verwalten', 'WikiController@managmentUser');
+        Route::get('wiki/duplicate/{id}', 'WikiController@duplicate');
+        Route::post('wiki/verwalten', 'WikiController@searchManagment');
+        Route::post('wiki/verwalten-admin', 'WikiController@searchManagment');
+        Route::get('wiki/{id}/activate', 'WikiController@wikiActivation');
+        Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
+        Route::resource('wiki', 'WikiController');
 
 }); //end auth middleware
     

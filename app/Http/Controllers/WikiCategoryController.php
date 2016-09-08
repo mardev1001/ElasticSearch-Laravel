@@ -18,8 +18,10 @@ use App\Http\Repositories\DocumentRepository;
 class WikiCategoryController extends Controller
 {
     
-     public function __construct(DocumentRepository $docRepo)
+    public function __construct(DocumentRepository $docRepo)
     {
+      $this->middleware('wiki')->only('show');
+      $this->middleware('wiki.editor')->except('show');
       $this->document = $docRepo;
     }
 

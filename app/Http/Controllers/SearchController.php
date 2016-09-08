@@ -85,7 +85,7 @@ class SearchController extends Controller
                                 ->where('document_status_id', 3)
                                 // ->where('document_status_id','!=', 5)
                                 ->where('active', 1)
-                                ->where('deleted_at', null)
+                                // ->where('deleted_at', null)
                                 ->get();
             // dd($documents);
             $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
@@ -302,11 +302,14 @@ class SearchController extends Controller
         // dd( $request->all() );
         $mandants = $this->search->phonelistSearch($request);
         foreach($mandants as $k =>$mandant){
+                
                 $userArr = array();
                 $testuserArr = array();
                 $mandantUsers = $mandant->users;
-                if($request->has('deletedUsers') )
-                    $mandantUsers = $mandant->usersWithTrashed;
+                
+                // if($request->has('deletedUsers') )
+                //     $mandantUsers = $mandant->usersWithTrashed;
+                
                 foreach($mandantUsers as $k2 => $mUser){
                     foreach($mUser->mandantRoles as $mr){
                          $testuserArr[] = $mr->role->name;
@@ -314,13 +317,13 @@ class SearchController extends Controller
                             $userArr[] = $mandantUsers[$k2]->id;
                     }
                     
-                    
                     if( count($userArr) < 1){
                         foreach($mUser->mandantRoles as $mr){
                             if( $mr->role->id == 23 )// Lohn
                                 $userArr[] = $mandantUsers[$k2]->id;
                         }   
                     }
+                    
                     if( count($userArr) < 1){
                         foreach($mUser->mandantRoles as $mr){
                             if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
@@ -330,6 +333,7 @@ class SearchController extends Controller
                     }
                     
                 }//end second foreach
+                
                 $userQuery = User::whereIn('id',$userArr);
                 
                      if( $request->has('parameter') )

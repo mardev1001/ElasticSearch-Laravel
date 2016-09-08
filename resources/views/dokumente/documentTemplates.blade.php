@@ -8,6 +8,11 @@
 
 <div class="row">
     
+    @if( 
+     ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
+      ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
+     )
+     
     <div class="col-xs-12 col-md-6">
         <div class="box-wrapper">
             <h2 class="title">{{ trans('documentTemplates.templateEntwurf') }}</h2>
@@ -29,7 +34,12 @@
             @endif
         </div>
     </div>
+    @endif
     
+    @if( 
+     ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
+      ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ) )
+     )
     <div class="col-xs-12 col-md-6">
         <div class="box-wrapper">
             <h2 class="title">{{ trans('documentTemplates.templateFreigabe') }}</h2>
@@ -52,6 +62,8 @@
             
         </div>
     </div>
+    @endif
+    
     
 </div>
 
@@ -63,7 +75,8 @@
             <div class="box">
                 
                 <div class="row">
-                    <form action="" method="GET">
+                    {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                    <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                         <div class="input-group">
                             <div class="col-md-12 col-lg-12">
                                 {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.newsSearchPlaceholder'), trans('navigation.newsSearchPlaceholder'), true) !!}

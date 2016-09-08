@@ -13,6 +13,10 @@
 
 <div class="row">
     
+    @if( 
+     ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
+      ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
+     )
     <div class="col-xs-12 col-md-6">
         
         <div class="box-wrapper">
@@ -41,7 +45,12 @@
         </div>
         
     </div>
+    @endif
     
+    @if( 
+     ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
+      ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
+     )
     <div class="col-xs-12 col-md-6">
         
         <div class="box-wrapper">
@@ -71,6 +80,8 @@
         </div>
         
     </div>
+    @endif
+    
     
 </div>
 
@@ -83,7 +94,7 @@
                 <div class="input-group">
                     <div class="col-md-12 col-lg-12">
                         {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
-                        <input type="hidden" name="document_type_id" value="{{ $docType }}">
+                        <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                     </div>
                     <div class="col-md-12 col-lg-12">
                         <span class="custom-input-group-btn">

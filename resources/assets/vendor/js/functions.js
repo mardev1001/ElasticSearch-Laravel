@@ -151,6 +151,22 @@ $(function() {
     });
     
     
+    // Mandant Bankinfos add button
+    
+    $('.bankverbindung-add').on('click touch', function(e) {
+        
+        var bankInfo = $('textarea[name="bankverbindungen"]');
+        var bankName = $('input[name="bank_name"]').val().trim();
+        var bankIban = $('input[name="bank_iban"]').val().trim();
+        var bankBic = $('input[name="bank_bic"]').val().trim();
+        var bankMemo = $('input[name="bank_memo"]').val().trim();
+        
+        // console.log("[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] " + "\n" + bankInfo.val());
+        bankInfo.val(bankInfo.val() + "\n" + "[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] ");
+        
+    });
+    
+    
     // Hide or show PDF upload checkbox 
 
     if( $(".document-type-select .select").val() == 1 || $(".document-type-select .select").val() == 2 || $(".document-type-select .select").val() == 3){

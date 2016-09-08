@@ -68,6 +68,11 @@
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
                                    href="#collapseMandant{{$mandant->id}}">
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
+                                  @if($mandant->edited_by) 
+                                  [In Bearbeitung: 
+                                  {{ ViewHelper::getUser($mandant->edited_by)->title}} 
+                                  {{ ViewHelper::getUser($mandant->edited_by)->last_name}}]
+                                  @endif
                                 </a>
                             
                         </h4>
@@ -91,7 +96,9 @@
                                     <button type="submit" class="btn btn-primary delete-prompt">Entfernen</button>
                                 {!! Form::close() !!}
                                 
-                                <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
+                                @if($mandant->edited_by == 0 || $mandant->edited_by == Auth::user()->id)
+                                    <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
+                                @endif
                                 </span>
                         </span>
                     </div>

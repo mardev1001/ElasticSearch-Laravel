@@ -3,7 +3,9 @@
 @extends('master')
 
 @section('page-title')
-    ISO Dokumente - Übersicht
+    ISO Dokumente  
+    @if($isoCategoryParent)- {{$isoCategoryParent->name}}@endif
+    @if($isoCategory)- {{$isoCategory->name}}@endif
 @stop
 
 @section('content')
@@ -65,7 +67,8 @@
 <div class="col-xs-12 box-wrapper">
     <div class="search box">
         <div class="row">
-            <form action="" method="GET">
+            {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+            <input type="hidden" name="document_type_id" value="{{ $docType }}">
                 <div class="input-group">
                     <div class="col-md-12 col-lg-12">
                         {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}

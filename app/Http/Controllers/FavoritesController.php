@@ -46,7 +46,7 @@ class FavoritesController extends Controller
             foreach($favoriteDocuments as $fav){
                 $published = PublishedDocument::where('document_group_id', $fav->document_group_id)->orderBy('id', 'desc')->first();
                 if(isset($published->document)){
-                    if($published->document->document_type_id == $docType->id  && $published->document->active == 1 ){
+                    if($published->document->document_type_id == $docType->id  && $published->document->active == 1 && $published->document->document_status_id == 3){
                         array_push($favsTmp, $published->document);
                         $hasFavorites = true;
                     }
