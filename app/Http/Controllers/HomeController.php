@@ -9,12 +9,16 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 use Auth;
 use File;
+use Mail;
 
 use App\Document;
 use App\DocumentComment;
+use App\Mandant;
+use App\User;
 use App\MandantUser;
 use App\MandantUserRole;
 use App\WikiPage;
+use App\DocumentApproval;
 use App\Http\Repositories\DocumentRepository;
 
 class HomeController extends Controller
@@ -68,7 +72,7 @@ class HomeController extends Controller
         ->where('owner_user_id', Auth::user()->id)
         ->where('document_type_id', '!=', 5)
         ->where('document_status_id', '!=', 5)
-        ->where('document_status_id', '!=', 6)
+        //->where('document_status_id', '!=', 6) Task in Jira NEPTUN-275
         ->where('document_types.document_art', 0)
         ->where('documents.active',1)
         // ->where('document_status_id', 3)
@@ -82,18 +86,26 @@ class HomeController extends Controller
         ->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-dokumente');
         $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true));
         
+        $uid = Auth::user()->id;
+        $approval = DocumentApproval::where('user_id',$uid)->where('approved', 0)->pluck('document_id')->toArray();
+        
         $freigabeEntries = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-        ->where('document_status_id', 6)
+        ->whereIn('document_status_id', [2,6]) 
         ->where('document_types.document_art', 0)
         ->where(
-            function($query){
+            function($query) use ($approval) {
                 $query->where('user_id', Auth::user()->id)
                       ->orWhere('owner_user_id', Auth::user()->id);
                     //   ->documentCoauthors('',);
+                $query->orWhereIn('documents.id',$approval);
             }
         )
         ->where('documents.active',1)
-        ->orderBy('documents.id', 'desc')->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ], 'freigabe-dokumente');
+        // ->orWhere(function ($query) use($approval) {
+        //         $query->whereIn('documents.id',$approval);
+        // })
+        ->orderBy('documents.id', 'desc')
+        ->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ],'freigabe-dokumente');
         
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
@@ -125,6 +137,52 @@ class HomeController extends Controller
         'documentsMy','documentsMyTree', 'wikiEntries', 'commentsNew', 'commentsMy','commentVisibility'));
     }
 
+    /**
+     * Contact form
+     * @param string $partOne
+     * @param string $partTwo
+     * @param string $subDir
+     *
+     * @return \Illuminate\Http\Response download
+     */
+    public function contact() 
+    {
+        //Dropdown: ALL Neptun - active - user - firstname lastname
+        $data = array();
+        $neptun = Mandant::where('name','Like','Neptun')->first();
+        $mandantUsers =  MandantUser::where('mandant_id',$neptun->id)->pluck('user_id')->toArray();
+        $users = User::whereIn('id',$mandantUsers)->where('active',1)->get();
+        
+        return view('contact', compact(  'data', 'users' ) );
+    }
+    
+    /**
+     * Contact form
+     * @param string $partOne
+     * @param string $partTwo
+     * @param string $subDir
+     *
+     * @return \Illuminate\Http\Response download
+     */
+    public function contactSend(Request $request) 
+    {
+        // dd($request->all());
+        $request = $request->all();
+        $sent= Mail::send('contactEmail',$request, function ($message) use($request){
+            // dd($request['to_user']);
+            $uid = Auth::user()->id;
+            $from = User::find($uid);
+            $to = User::find($request['to_user']);
+         
+            $message->from(  $from->email, $from->first_name.' '.$from->last_name  )
+            ->to( 'marijan.gudelj@webbite.de', 'makjato' );
+            // $megh,'user_id' => Auth()::user->idssage
+            // $message->to($to->email, $to->first_name.' '.$to->last_name);
+            // $message;
+        });
+        return redirect()->back()->with('message', 'GotYa');
+    }
+    
     /**
      * Download document
      * @param string $partOne

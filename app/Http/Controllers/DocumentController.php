@@ -640,8 +640,9 @@ class DocumentController extends Controller
             */
             //  dd($request->all());
             ///$dt = DocumentType::find(  $this->formulareId = $this->formulareId);//vorlage document
+             $uid = Auth::user()->id;
             // RequestMerge::merge(['version' => 1, 'document_type_id' => $dt->id,'is_attachment'=> 1] );
-            RequestMerge::merge(['version' => 1, 'is_attachment'=> 1] );
+            RequestMerge::merge(['version' => 1, 'is_attachment'=> 1,'user_id' => $uid,'user_owner_id' => $uid] );
             
             
             if( !$request->has('name_long') )
@@ -756,7 +757,7 @@ class DocumentController extends Controller
         foreach($variants as $variant){
             $variant->hasPreviousData = false;        
                 foreach($mandants as $mandant){
-                    $selected = ViewHelper::setComplexMultipleSelect($variant,'documentMandantMandants', $mandant->id, 'mandant_id',true);
+                    // $selected = ViewHelper::setComplexMultipleSelect($variant,'documentMandantMandants', $mandant->id, 'mandant_id',true);
                 }
         }
         return view('dokumente.anlegenRechteFreigabe', compact('collections',
@@ -1015,8 +1016,6 @@ class DocumentController extends Controller
             $dirty=$this->dirty($dirty,$document);
             $document->save();
             
-           
-            
             $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
             if($publishedDocs == null){
                 $continue = true;
@@ -1059,8 +1058,11 @@ class DocumentController extends Controller
                 $oDoc->document_status_id = 5;
                 $oDoc->save();
             }                                
-            if($dirty == true)
+            if($dirty == true){
+                // dd($document->published->document_group_id);
+                UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
                 session()->flash('message',trans('documentForm.fastPublished'));
+            }
             return redirect('/');
         }//end fast publish
         elseif( $request->has('ask_publishers') ){
@@ -1105,7 +1107,7 @@ class DocumentController extends Controller
         
         $datePublished = null;
         $document = Document::find($id);
-        
+        $initialUrl = $id;
             
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
@@ -1135,13 +1137,21 @@ class DocumentController extends Controller
                 }
             }
             
+        }
+        else{
              /*
-                Check if document is latest published. if not redirect from unique url to id url
-                This is used as a failsafe for documents accessed from browser history
-             */
-             $latestPublished = PublishedDocument::where('document_group_id',$document->document_group_id)->orderBy('updated_at','desc')->first();
-             if( $latestPublished->document_id != $document->id )
+            Check if document is latest published. if not redirect from unique url to id url
+            This is used as a failsafe for documents accessed from browser history
+         */
+         $latestPublished = PublishedDocument::where('document_group_id',$document->document_group_id)->orderBy('updated_at','desc')->first();
+            
+             if( $latestPublished != null && $latestPublished->document_id == $document->id ){
+                 return redirect('dokumente/'.$latestPublished->url_unique );
+             }
+             
+            else if( $document->id != $initialUrl ){
                 return redirect('dokumente/'.$document->id );
+            }
         }
         
         
@@ -1149,8 +1159,10 @@ class DocumentController extends Controller
         $documentPermission = $this->document->universalDocumentPermission($document);
         $variantPermissions = $this->document->documentVariantPermission($document);
         
-        if(($document->active == 0 || $document->document_status_id == 5) && ($documentPermission == false) || 
-        $variantPermissions->permissionExists == false )
+        // dd($documentPermission);
+        // dd($documentPermission);
+        if($document->active == 0 || ($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == false ) ||
+        ($variantPermissions->permissionExists == false && $documentPermission == false) )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         
         
@@ -1580,11 +1592,13 @@ class DocumentController extends Controller
         
         $document = Document::find($id);
         $variantPermissions = $this->document->documentVariantPermission($document);
+        
         if( $this->document->universalDocumentPermission($document,true, true) == false ){
             return redirect('/')->with('messageSecondary',trans('documentForm.noPermission') ) ;
         }
             
         $variants = EditorVariant::where('document_id',$id)->get();
+        
         $documentCommentsUser = DocumentComment::where('document_id',$id)->where('freigeber',0)
         ->where(function ($query) use($document) {
                 $query->where('user_id',$document->user_id)
@@ -1703,8 +1717,9 @@ class DocumentController extends Controller
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
                 if($publishedDocs->deleted_at != null)
                     $publishedDocs->restore();
-            }  */ 
-        
+            }  */
+        // dd($document->published);
+        UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
         return redirect()->back();        
         /*if($document->published->url_unique)    
             return redirect('dokumente/'.$document->published->url_unique);
@@ -1748,7 +1763,7 @@ class DocumentController extends Controller
             if($document->active == true){
                 $document->document_status_id = 5;
                 $document->active = false;
-            }else {
+            } else {
                 $document->document_status_id = 3;
                 $document->active = true;
             }
@@ -1757,10 +1772,10 @@ class DocumentController extends Controller
             
         $document->save();
         
-        if( $document->published != null && $document->published->url_unique)    
+        if($document->published != null && $document->published->url_unique)    
             return redirect('dokumente/'. $document->published->url_unique);
         else
-            return redirect('dokumente/'.$id);
+            return redirect('dokumente/'. $id);
     }
     
      /**
@@ -2070,7 +2085,7 @@ class DocumentController extends Controller
         ->where(function($query){
             $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
         })
-        ->where('document_status_id' , 6)
+        ->whereIn('document_status_id', [2,6])
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-freigabe');
         $rundFreigabeTree = $this->document->generateTreeview( $rundFreigabePaginated, array('pageDocuments' => true) );
         
@@ -2139,7 +2154,7 @@ class DocumentController extends Controller
         ->where(function($query){
             $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
         })
-        ->where('document_status_id' , 6)
+        ->whereIn('document_status_id' , [2,6])
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
         $qmrFreigabeTree = $this->document->generateTreeview( $qmrFreigabePaginated, array('pageDocuments' => true) );
         
@@ -2186,7 +2201,7 @@ class DocumentController extends Controller
         ->where(function($query){
             $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
         })
-        ->where('document_status_id' , 6)
+        ->whereIn('document_status_id' , [2,6])
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'news-freigabe');
         $newsFreigabeTree = $this->document->generateTreeview( $newsFreigabePaginated, array('pageDocuments' => true) );
         
@@ -2224,23 +2239,23 @@ class DocumentController extends Controller
         })
         ->where('document_status_id', 1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare');
-        $formulareEntwurfTree = $this->document->generateTreeview( $formulareEntwurfPaginated, array('pageDocuments' => true) );
+        $formulareEntwurfTree = $this->document->generateTreeview( $formulareEntwurfPaginated, array('pageDocuments' => true,'formulare' => true) );
         
         $formulareFreigabePaginated = Document::where('document_type_id' ,$docType)
         ->where(function($query){
             $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
         })
-        ->where('document_status_id', 6)->orderBy('id', 'desc')
+        ->whereIn('document_status_id', [2,6])->orderBy('id', 'desc')
         ->get();
         // ->paginate(10, ['*'], 'meine-formulare-freigabe');
         
         $formulareFreigabePaginated = $this->document->getUserPermissionedDocuments($formulareFreigabePaginated, 'meine-formulare-freigabe');
-        $formulareFreigabeTree = $this->document->generateTreeview( $formulareFreigabePaginated, array('pageDocuments' => true) );
+        $formulareFreigabeTree = $this->document->generateTreeview( $formulareFreigabePaginated, array('pageDocuments' => true,'formulare' => true) );
         
         $formulareAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3)->where('active',1)
         ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
         
-        $formulareAllTree = $this->document->generateTreeview( $formulareAllPaginated, array('pageDocuments' => true) );
+        $formulareAllTree = $this->document->generateTreeview( $formulareAllPaginated, array('pageDocuments' => true,'formulare' => true) );
         $docType = DocumentType::find($docType);
         // dd($formulareEntwurfPaginated);
         
@@ -2287,7 +2302,7 @@ class DocumentController extends Controller
                 $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
             })
             ->where('deleted_at', null)
-            ->where('document_status_id', 6)
+            ->whereIn('document_status_id', [2,6])
             ->orderBy('id', 'desc')->paginate(10, ['*'], str_slug($documentType->name.'-freigabe'));
             $docsByTypeFreigabeTree = $this->document->generateTreeview($docsByTypeFreigabePaginated, array('pageDocuments' => true) );
             
@@ -2355,6 +2370,8 @@ class DocumentController extends Controller
      */
     public function documentHistory($id)
     {
+         if( ViewHelper::universalHasPermission( array(14) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $document = Document::find($id);
         $documentHistory = Document::where('document_group_id', $document->document_group_id)->whereIn('document_status_id', array(3,5))->orderBy('id', 'desc')->paginate(10, ['*'], 'dokument-historie');
         $documentHistoryTree = $this->document->generateTreeview( $documentHistory, array('pageHistory' => true) );
@@ -2452,6 +2469,7 @@ class DocumentController extends Controller
         // ->where('slug',$slug)->get();//->paginate(10, ['*'], 'alle-iso-documents');
         
         $isoCategory = IsoCategory::where('slug', $slug)->first();
+        $iso_category_id = $isoCategory->id;
         if($isoCategory->iso_category_parent_id) $isoCategoryParent = IsoCategory::where('id', $isoCategory->iso_category_parent_id)->first();
         else $isoCategoryParent = null;
         
@@ -2487,12 +2505,14 @@ class DocumentController extends Controller
         })
         ->where('documents.document_type_id', $docType)
         ->where('slug', $slug)
-        ->where('documents.document_status_id' , 6)
+        ->whereIn('documents.document_status_id' , [2,6])
         ->orderBy('documents.name', 'asc')
         ->paginate(10, ['*','iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'iso-dokumente-freigabe');
         $isoFreigabeTree = $this->document->generateTreeview($isoFreigabePaginated, array('pageDocuments' => true));
         
-        return view('dokumente.isoDocument', compact('docType', 'isoAllPaginated','isoAllTree','isoEntwurfPaginated', 'isoEntwurfTree', 'isoFreigabePaginated', 'isoFreigabeTree', 'isoCategory', 'isoCategoryParent') );
+        $docType = DocumentType::find($docType);
+        
+        return view('dokumente.isoDocument', compact('docType', 'isoAllPaginated','isoAllTree','isoEntwurfPaginated', 'isoEntwurfTree', 'isoFreigabePaginated', 'isoFreigabeTree', 'isoCategory', 'iso_category_id','isoCategoryParent') );
         
     }
     
@@ -2517,23 +2537,104 @@ class DocumentController extends Controller
      */
     public function search(Request $request)
     {
+        // dd($request->all());
         if(empty($request->all())) return redirect('/');
         
         $docType = $request->input('document_type_id');
-        $docTypeName = DocumentType::find($docType)->name;
+        $docTypeSearch = DocumentType::find($docType);
+        $docTypeName = $docTypeSearch->name;
+        $iso_category_id = $request->input('iso_category_id');
         $search = $request->input('search');
-        $resultAllPaginated = Document::where(['document_type_id' =>  $docType])
-        ->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc')
-        ->paginate(10, ['*'], 'results-all');
-        $resultAllTree = $this->document->generateTreeview($resultAllPaginated);
         
-        $resultMyPaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => $docType])
-        ->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc')
-        ->paginate(10, ['*'], 'results-my');
-        $resultMyTree = $this->document->generateTreeview($resultMyPaginated);
-        $request->flash();
+        // status entwurf
+        $searchEntwurfPaginated = Document::where('document_type_id' , $docType )
+        ->where(function($query){
+            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        })
+        ->where('document_status_id' , 1);
+        
+        if($docType == 4){
+            if(!empty($iso_category_id))
+                $searchEntwurfPaginated = $searchEntwurfPaginated->where('iso_category_id', $iso_category_id);
+        }
+        
+        $searchEntwurfPaginated = $searchEntwurfPaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-entwurf');
+        $searchEntwurfTree = $this->document->generateTreeview( $searchEntwurfPaginated, array('pageDocuments' => true) );
+        
+        // status im freigabe prozess
+        $searchFreigabePaginated = Document::where('document_type_id' , $docType )
+        ->where(function($query){
+            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        })
+        ->whereIn('document_status_id' , [2,6]);
+        
+        if($docType == 4){
+            if(!empty($iso_category_id))
+                $searchFreigabePaginated = $searchFreigabePaginated->where('iso_category_id', $iso_category_id);
+        }
+        
+        $searchFreigabePaginated = $searchFreigabePaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-freigabe');
+        $searchFreigabeTree = $this->document->generateTreeview( $searchFreigabePaginated, array('pageDocuments' => true) );
+        
+        $resultAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3);
+        
+        
+        // QMR query options
+        if($docType == 3){
+            if( stripos($search, 'QMR') !== false ){
+                $qmr = trim(str_ireplace('QMR', '', $search));
+                $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
+                $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
+                // dd($qmrString);
+                
+                $resultAllPaginated = $resultAllPaginated->where(function($query) use ($qmrNumber, $qmrString) {
+                    $query->where('qmr_number', 'LIKE', $qmrNumber)
+                    ->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
+                });
+            } else
+                $resultAllPaginated = $resultAllPaginated->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc');
+        }
+        
+        // ISO query options
+        elseif($docType == 4){
+            if(!empty($iso_category_id))
+                $resultAllPaginated = $resultAllPaginated->where('iso_category_id', $iso_category_id);
+         
+            if( stripos($search, 'ISO') !== false ){
+                $iso = trim(str_ireplace('ISO', '', $search));
+                $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
+                $isoString = preg_replace("/[^a-zA-Z]+/", "", $iso);
+                // dd($isoNumber);
+                
+                $resultAllPaginated = $resultAllPaginated->where(function($query) use ($isoNumber, $isoString) {
+                    $query->where('iso_category_number', 'LIKE', $isoNumber)
+                    ->where('additional_letter', 'LIKE', '%'.$isoString.'%');
+                });
+            } else
+                $resultAllPaginated = $resultAllPaginated->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc');
+        }
+        
+        // General query options
+        else{
+            $resultAllPaginated = $resultAllPaginated->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc');
+        }
+        
+        $resultAllPaginated = $resultAllPaginated->paginate(10, ['*'], 'ergebnisse-alle');
+        $resultAllTree = $this->document->generateTreeview($resultAllPaginated, array('pageDocuments' => true));
+        
+        // generateTreeview( $rundEntwurfPaginated, array('pageDocuments' => true) );
+        
+        // $resultMyPaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => $docType])
+        // ->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc')
+        // ->paginate(10, ['*'], 'ergebnisse-meine');
+        // $resultMyTree = $this->document->generateTreeview($resultMyPaginated, array('pageDocuments' => true));
+        // $request->flash();
+        
         // return back()->withInput()->with(compact('docType', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
-        return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeName', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
+        // return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeName', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
+        return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeSearch', 'docTypeName', 
+            'resultAllPaginated', 'resultAllTree', 'searchEntwurfPaginated', 'searchEntwurfTree', 
+            'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id'));
     }
     
     

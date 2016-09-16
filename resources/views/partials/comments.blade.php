@@ -1,4 +1,7 @@
 <!-- {{ $title }} comments -->
+@if( $withRow == true)
+<div class="row">
+@endif
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper home">
             <h1 class="title">{{ $title }}</h1>
@@ -19,17 +22,27 @@
                                     
                                     <!-- delete box -->
                                     <div class="pull-left">
-                                       <span class="comment-header">
-                                           @if( $comment->document->published != null )
+                                        <span class="comment-header">
+                                            @if( $comment->freigeber == 1 &&  $comment->published != null)
+                                                <strong>
+                                                @if( $comment->published->approved == 1)
+                                                    Freigegeben
+                                               @else
+                                                   Nicht Freigegeben
+                                               @endif
+                                               </strong><br/>
+                                            @endif
+                                        @if( $comment->document->published != null )
                                             <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}"> <strong>{{ $comment->betreff }}</strong> -&nbsp </a>
                                         @else
                                             <a href="{{url('/dokumente/'. $comment->document->id)}}"> <strong>{{ $comment->betreff }}</strong> -&nbsp </a>
                                         @endif
+                                       
                                         {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }}, {{ $comment->created_at }}
                                         </span> <br>
                                         
                                         <span class="comment-body">
-                                            {{ str_limit($comment->comment, $limit = 200, $end = ' ...') }}
+                                            {!! str_limit( str_replace(["\r\n", "\r", "\n"], "<br/>", $comment->comment) , $limit = 200, $end = ' ...') !!}
                                         </span> 
                                         
                                     </div><!-- end delete box -->
@@ -44,4 +57,7 @@
             </div>
         </div>
     </div>
+@if( $withRow == true)
+</div><!-- end .row -->
+@endif
 <!-- end {{ $title }} comments -->

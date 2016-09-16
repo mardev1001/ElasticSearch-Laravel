@@ -90,6 +90,7 @@ class DocumentRepository
             'pageFavorites' => false,
             'pageDocuments' => false,
             'myDocuments' => false,
+            'formulare' => false,
         ];
         $options = array_merge($optionsDefault, $options);
 
@@ -154,8 +155,10 @@ class DocumentRepository
                         $node->beforeText = '';
                         if($options['pageHome'] == true && $options['myDocuments'] == true)
                             $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
-                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - '.
-                        $document->owner->first_name.' '.$document->owner->last_name;
+                            
+                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - ';
+                        if(isset($document->owner))
+                            $node->beforeText .= $document->owner->first_name.' '.$document->owner->last_name;
                         
                         if($document->published != null)
                             $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
@@ -174,6 +177,7 @@ class DocumentRepository
                             // $icon2 = 'icon-trash ';
                         }    
                     }
+                    
                     $node->afterText = $document->documentType->name;
                     
                 }
@@ -196,6 +200,28 @@ class DocumentRepository
                     
                     $node->afterText = $document->documentType->name;
                     
+                    if( isset($options['formulare']) && $options['formulare'] == true ){
+                        
+                        $variants = $this->documentVariantPermission($document, false)->variants;
+                        
+                        $links = null;
+                        // $document->variantDocuments->editorVariant
+                        // foreach($document->variantDocuments as $key => $dc){
+                        // if(count($document->variantDocuments))
+                        // dd($document->variantDocuments);
+                        // dd($document->variantDocuments);
+                        foreach($document->variantDocuments as $key => $dc){
+                            
+                            $docPublished = $dc->editorVariant->document->published;
+                            if(isset($docPublished)) $docStatus = $docPublished->document->document_status_id == 3;
+                            
+                            if($key != 0 && $docStatus && isset($docPublished->url_unique)) {
+                                $links .= trim('<a href="/dokumente/'. $docPublished->url_unique . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                            }
+                        }
+                        $node->afterLink = $links;
+                        // if(isset($links)) dd($links);
+                    }
                 }
                 
                 if ($options['pageHistory'] == true) {
@@ -210,6 +236,8 @@ class DocumentRepository
                         ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
                 
                     $node->afterText = $document->documentType->name;
+                    
+                    
                      
                     if($document->published) $icon = 'icon-released ';
                     else $icon = 'icon-notreleased ';
@@ -218,16 +246,6 @@ class DocumentRepository
 
                 
                 if ($document->document_status_id == 3) {
-                    // dd($document->created_at);
-                    // $docCreated = Carbon::parse($document->created_at);
-                    // $lastLogin = Carbon::parse(Auth::user()->last_login);
-                    
-                    // var_dump($docCreated);
-                    // var_dump($lastLogin);
-                    // dd($docCreated->gt($lastLogin));
-                    
-                    // $node->text .= " ". $document->created_at->toDateTimeString();
-                    // $node->text .= " ".$lastLogin->toDateTimeString();
                     
                     if ($document->created_at->gt(Auth::user()->last_login_history)){
                         if( $options['pageFavorites'] == false )
@@ -244,14 +262,19 @@ class DocumentRepository
                     
                 }
 
-
-                if ($document->document_status_id == 6) {
+                if (in_array($document->document_status_id, [2,6])) {
                     if($options['pageHome'] == true) {
                         $node->beforeText = '';
-                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - '.
-                        $document->owner->first_name.' '.$document->owner->last_name;
+                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y');
+                        if(isset($document->owner))
+                            $node->beforeText .= ' - '.$document->owner->first_name.' '.$document->owner->last_name;
                     }
-                    $icon = 'icon-blocked ';
+                    
+                    if($document->document_status_id == 2)
+                        $icon = 'icon-open ';
+                    else
+                        $icon = 'icon-blocked ';
+                        
                     $icon2 = 'icon-notreleased ';
                 }
 
@@ -654,13 +677,13 @@ class DocumentRepository
      * @param bool $message
      * @return bool || response
      */
-    public function universalDocumentPermission( $document,$message=true,$freigeber=false ){
-        
+    public function universalDocumentPermission( $document, $message=true, $freigeber=false, $filterAuthors=false ){
         $uid = Auth::user()->id;
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
         $role = 0;
         $hasPermission = false;
          
+        
         foreach($mandantUsers as $mu){
             $userMandatRole = MandantUserRole::where('mandant_user_id',$mu->id)->first();
             if( $userMandatRole != null && $userMandatRole->role_id == 1 )
@@ -674,9 +697,10 @@ class DocumentRepository
                
         }
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
-        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) || ( $freigeber == false && $document->approval_all_roles == 1) 
-        || $role == 1 )
+        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) 
+        || ( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1 )
            $hasPermission = true; 
+           
         if( $message == true  && $hasPermission == false)
             session()->flash('message',trans('documentForm.noPermission'));
         //if($document->id == 118)

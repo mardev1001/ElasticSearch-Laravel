@@ -2,7 +2,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
     <div class="">
         <div class="col-xs-12 col-sm-3">
-            <a class="nav-brand" href="/"><strong><img src="/img/NeptunLogo.png" alt="Neptun logo"/></strong></a>
+            <a class="nav-brand" href="/"><strong><img src="/img/logo-neptun-new.png" alt="Neptun logo"/></strong></a>
         </div>
         <div class="col-xs-12 col-sm-2 col-md-3 session-flash">
             <div class="clearfix"></div>
@@ -26,9 +26,9 @@
         <div class="col-xs-12 col-sm-7 col-md-6">
             <ul class="nav navbar-nav icons pull-right">
                 <li><a href="{{ url('/') }}"><span class="nav-icon icon-home"></span>Home</a></li>
-                <li><a href="#"><span class="nav-icon icon-profil"></span>Profil</a></li>
+                <li><a href="{{ url('benutzer/profil') }}"><span class="nav-icon icon-profil"></span>Profil</a></li>
                 <li><a href="{{ url('logout') }}"><span class="nav-icon icon-logout"></span>Log out</a></li>
-                <li><a href="#"><span class="nav-icon icon-kontakt"></span>Kontakt</a></li>
+                <li><a href="{{ url('kontakt') }}"><span class="nav-icon icon-kontakt"></span>Kontakt</a></li>
                 <li>
                     {{ Form::open(['route'=>['suche.index'], 'method'=>'GET']) }}
                     <div class="input-group custom-search-form">

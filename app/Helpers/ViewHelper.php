@@ -9,6 +9,8 @@ use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
 use App\DocumentCoauthor;
+use App\EditorVariant;
+use App\DocumentApproval;
 class ViewHelper
 {
     
@@ -185,13 +187,13 @@ class ViewHelper
      * @param string $value
      * @echo string 'selected'
      */
-    static function setComplexMultipleSelect($collection,$relationship, $value, $key='id',$oneLessForeach=false){
+    static function setComplexMultipleSelect($collection,$relationship, $value, $key='id',$oneLessForeach=false,$dontShow=false){
         if($oneLessForeach == false){
             if( count($collection) )
             foreach($collection as $col){
                 foreach($col->$relationship as $userValue){
                     if( $userValue->$key == $value )
-                       echo 'selected ';
+                       echo 'selected 2';
                 }  
             }
             
@@ -200,7 +202,7 @@ class ViewHelper
             if( count($collection->$relationship) > 0 ){
                 foreach($collection->$relationship as $cr){
                      if( $cr->$key == $value )
-                        echo 'selected ';
+                        echo 'selected 3';
                 }
             }
         }
@@ -394,9 +396,9 @@ class ViewHelper
      * @param string $title
      * @return string $string (html template) 
      */
-    static function generateCommentBoxes($collection,$title){
+    static function generateCommentBoxes($collection,$title,$withRow=false){
         $string = '';
-        $string = view('partials.comments', compact('collection','title') )->render();
+        $string = view('partials.comments', compact('collection','title','withRow') )->render();
         echo $string;
     }
     
@@ -441,12 +443,13 @@ class ViewHelper
      * @param bool $message
      * @return bool || response
      */
-    static function universalDocumentPermission( $document,$message=true,$freigeber=false ){
+    static function universalDocumentPermission( $document, $message=true, $freigeber=false, $filterAuthors=false ){
         $uid = Auth::user()->id;
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
         $role = 0;
         $hasPermission = false;
          
+        
         foreach($mandantUsers as $mu){
             $userMandatRole = MandantUserRole::where('mandant_user_id',$mu->id)->first();
             if( $userMandatRole != null && $userMandatRole->role_id == 1 )
@@ -460,8 +463,8 @@ class ViewHelper
                
         }
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
-        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) || ( $freigeber == false && $document->approval_all_roles == 1) 
-        || $role == 1 )
+        if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) 
+        || ( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1 )
            $hasPermission = true; 
            
         if( $message == true  && $hasPermission == false)
@@ -478,6 +481,82 @@ class ViewHelper
      * @return object $object 
      */
     static function documentVariantPermission($document){
+        
+        /*  class $object stores 2 attributes: 
+            1. permissionExists( this is a global hasPermissionso we dont have to iterate again to see if permission exists  )
+            2. variants (to store variants)[duuh]
+        */
+        
+        $object = new \StdClass(); 
+        $object->permissionExists = false;
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantId->toArray();
+        $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+        $mandantRolesArr =  $mandantRoles->toArray();
+        
+        $variants = EditorVariant::where('document_id',$document->id)->get();
+        $hasPermission = false;
+        
+        
+        foreach($variants as $variant){
+            if($hasPermission == false){//check if hasPermission is already set
+                if($variant->approval_all_mandants == true){//database check
+                    
+                    if($document->approval_all_roles == true){//database check
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                            $object->permissionExists = true;
+                        }
+                        else{
+                            foreach($variant->documentMandantRoles as $role){// if not from database then iterate trough roles
+                                if( in_array($role->role_id, $mandantRolesArr) ){//check if it exists in mandatRoleArr
+                                 $variant->hasPermission = true;
+                                 $hasPermission = true;
+                                 $object->permissionExists = true;
+                                }
+                            }//end foreach documentMandantRoles
+                        }
+                }
+                else{
+                    foreach( $variant->documentMandantMandants as $mandant){
+                        if( self::universalDocumentPermission($document) == true){
+                            $hasPermission = true;
+                            $variant->hasPermission = true;
+                            $object->permissionExists = true;
+                        }
+                        else if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                            if($document->approval_all_roles == true){
+                                $hasPermission = true;
+                                $variant->hasPermission = true;
+                                $object->permissionExists = true;
+                            }
+                            else{
+                                foreach($variant->documentMandantRoles as $role){
+                                    if( in_array($role->role_id, $mandantRolesArr) ){
+                                     $variant->hasPermission = true;
+                                     $hasPermission = true;
+                                     $object->permissionExists = true;
+                                    }
+                                }//end foreach documentMandantRoles
+                            }
+                        }
+                    }//end foreach documentMandantMandants
+                }
+            }
+        }
+        
+        $object->variants = $variants;
+        return $object;
+    }//end documentVariant permission
+    
+    
+    /**
+     * Document variant permission
+     * @param collection $document
+     * @return object $object 
+     */
+    static function documentUsersPermission($document){
         
         /*  class $object stores 2 attributes: 
             1. permissionExists( this is a global hasPermissionso we dont have to iterate again to see if permission exists  )
@@ -562,13 +641,24 @@ class ViewHelper
     }
     
     /**
-     * Get Mandant by ID
-     * @param Mandant $mandant
-     * @return Mandant | bool
+     * Get User by ID
+     * @param int $id
+     * @return User | bool
      */
     static function getUser( $id ){
         if($user = User::find($id)){
             return $user;
+        } else return false;
+    }
+    
+    /**
+     * Get Mandant by User ID
+     * @param int $id
+     * @return Mandant | bool
+     */
+    static function getMandant( $id ){
+        if($mandantUser = MandantUser::where('user_id', $id)->first()){
+            return Mandant::find($mandantUser->mandant_id);
         } else return false;
     }
     
@@ -578,8 +668,24 @@ class ViewHelper
      */
     static function getMandantWikiPermission(){
         $user = Auth::user();
-        $mandant = MandantUser::where('user_id', $user->id)->first()->mandant;
-        return (bool)$mandant->rights_wiki;
+        $mandantUser = MandantUser::where('user_id', $user->id)->first();
+        if(isset($mandantUser->mandant))
+            return (bool)$mandantUser->mandant->rights_wiki;
+        else return false;
+    }
+    
+    /**
+     * Is Freigeber for the seleted document function
+     * @param collection $document
+     * @return bool
+     */
+    static function isThisDocumentFreigeber($document){
+        $uid = Auth::user()->id;
+        $approval = DocumentApproval::where('document_id',$document->id)->where('user_id',$uid)->get();
+        if( count($approval)  )
+            return true;
+        return false;
+        
     }
     
 }

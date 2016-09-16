@@ -20,11 +20,15 @@ $(function() {
         format: 'DD.MM.YYYY',
         showTodayButton: true,
         showClear: true,
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'bottom'
+        }
     });
 
     if ($('.tree-view').length) {
-        let counter = 0;
-        let $treeview = [];
+        var counter = 0; //let insted of var
+        var $treeview = [];//let insted of var
         $('.tree-view').each(function() {
             $treeview[counter] = $(this).treeview({
                 expandIcon: 'custom-expand-icon',

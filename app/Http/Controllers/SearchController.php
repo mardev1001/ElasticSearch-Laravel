@@ -10,11 +10,15 @@ use App\Http\Requests;
 use App\Http\Repositories\SearchRepository;
 use App\Http\Repositories\DocumentRepository;
 
-use App\User;
 use App\Document;
 use App\DocumentType;
 use App\EditorVariant;
+use App\User;
+use App\Role;
+use App\Mandant;
 use App\MandantUser;
+use App\MandantUserRole;
+use App\InternalMandantUser;
 use App\WikiPage;
 
 class SearchController extends Controller
@@ -67,27 +71,47 @@ class SearchController extends Controller
         // dd($mandantUsers);
         
         if($request->has('parameter')){
+            
             $parameter = $request->input('parameter');
             
-            $documents = Document::where(function($query) use ($parameter) {
-                                    
-                                    $qmr = trim(str_ireplace('QMR', '', $parameter));
-                                    $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
-                                    $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
-                                    // dd($qmrNumber);
-                                    $query->where('name', 'LIKE', '%'.$parameter.'%' )
-                                    ->orWhere('qmr_number', $qmrNumber)
-                                    ->orWhere('additional_letter', $qmrString)
-                                    ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
-                                    ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
-                                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
-                                })
-                                ->where('document_status_id', 3)
-                                // ->where('document_status_id','!=', 5)
-                                ->where('active', 1)
-                                // ->where('deleted_at', null)
-                                ->get();
+            $documents = Document::where('document_status_id', 3)->where('active', 1);
+            
+            // Check for occurence of "QMR" string, search for QMR documents if found
+            if( stripos($parameter, 'QMR') !== false ){
+                $qmr = trim(str_ireplace('QMR', '', $parameter));
+                $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
+                $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
+                // dd($qmrString);
+                
+                $documents = $documents->where(function($query) use ($qmrNumber, $qmrString) {
+                    $query->where('document_type_id', 3)
+                    ->where('qmr_number', 'LIKE', $qmrNumber)
+                    ->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
+                });
+            } elseif( stripos($parameter, 'ISO') !== false ){
+                $iso = trim(str_ireplace('ISO', '', $parameter));
+                $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
+                $isoString = preg_replace("/[^a-zA-Z]+/", "", $iso);
+                // dd($isoNumber);
+                
+                $documents = $documents->where(function($query) use ($isoNumber, $isoString) {
+                    $query->where('document_type_id', 4)
+                    ->where('iso_category_number', 'LIKE', $isoNumber)
+                    ->where('additional_letter', 'LIKE', '%'.$isoString.'%');
+                });
+            } else {
+                // Search for other parameters
+                $documents = $documents->where(function($query) use ($parameter) {
+                    $query->where('name', 'LIKE', '%'.$parameter.'%' )
+                    ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
+                    ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
+                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
+                });
+            }       
+            
+            $documents = $documents->get();
             // dd($documents);
+            
             $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
             
             foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
@@ -99,9 +123,10 @@ class SearchController extends Controller
                             array_push($results, $variant->document);
                     }
                 }
-            } else {
-                $variants = EditorVariant::all();
-            }
+            } 
+            // else {
+            //     $variants = EditorVariant::all();
+            // }
             
             // dd($results);
         }
@@ -223,6 +248,9 @@ class SearchController extends Controller
         $wiki = $request->has('wiki');
         $history = $request->has('history');
         $user_id = $request->input('user_id');
+        $qmr_number = $request->input('qmr_number');
+        $iso_category_number = $request->input('iso_category_number');
+        $additional_letter = $request->input('additional_letter');
         
         // dd($request->all());
         
@@ -239,19 +267,32 @@ class SearchController extends Controller
         //     dd($name);
         // }
         
-        if(!empty($name)){ 
-            $documents->where('name', 'LIKE', '%'.$name.'%')
-                ->orWhere(function($query) use ($name){
-                // QMR search
-                $qmr = trim(str_ireplace('QMR', '', $name));
-                $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
-                $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
-                $query->where('qmr_number', $qmrNumber)->orWhere('additional_letter', $qmrString)->where('document_status_id', 3);
-            });
+        // if(!empty($name)){ 
+        //     $documents->where('name', 'LIKE', '%'.$name.'%')
+        //         ->orWhere(function($query) use ($name){
+        //         // QMR search
+        //         $qmr = trim(str_ireplace('QMR', '', $name));
+        //         $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
+        //         $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
+        //         $query->where('qmr_number', $qmrNumber)->orWhere('additional_letter', $qmrString)->where('document_status_id', 3);
+        //     });
+        // }
+        
+        if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
+        if(!empty($betreff)) $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
+        if(!empty($summary)) $documents->where('summary', 'LIKE', '%'.$summary.'%' );
+        
+        if(!empty($document_type))  {
+            if($document_type == 3){
+                if(!empty($qmr_number))  $documents->where('qmr_number', $qmr_number );
+                if(!empty($additional_letter))  $documents->where('additional_letter', 'LIKE', '%'.$additional_letter.'%' );
+            } elseif($document_type == 4){
+                if(!empty($iso_category_number))  $documents->where('iso_category_number', $iso_category_number );
+                if(!empty($additional_letter))  $documents->where('additional_letter', 'LIKE', '%'.$additional_letter.'%' );
+            }
+            $documents->where('document_type_id', 'LIKE', '%'.$document_type.'%' );
         }
-        if(!empty($betreff))  $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
-        if(!empty($summary))  $documents->where('summary', 'LIKE', '%'.$summary.'%' );
-        if(!empty($document_type))  $documents->where('document_type_id', 'LIKE', '%'.$document_type.'%' );
+        
         if(!empty($search_tags))  $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
         if(!empty($date_from))  $documents->whereDate('created_at', '>=', $date_from );
         if(!empty($date_to))  $documents->whereDate('created_at', '<=', $date_to );
@@ -297,11 +338,134 @@ class SearchController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
-    public function searchPhoneList(Request $request)
-    {
+    public function searchPhoneList(Request $request){
+        if(!$request->has('search') || $request->method() == "GET")
+            return redirect('telefonliste');
+            
+        $search = true;
+        $searchParameter = $request->get('search');
+        $roles = Role::all();
+        $loggedUserMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+        // dd($loggedUserMandant);
+        
+        // Get searched mandants
+        $mandants = Mandant::where(function ($query) use($searchParameter) {
+            $query-> where('name','LIKE', '%'. $searchParameter .'%')
+        ->orWhere('kurzname','LIKE', '%'. $searchParameter .'%')
+        ->orWhere('mandant_number','LIKE', '%'. $searchParameter .'%');
+        }); 
+        
+        
+        if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $loggedUserMandant->rights_admin == 1)
+            $mandants = $mandants->where('active', 1)->orderBy('mandant_number')->get();
+        else
+            $mandants = $mandants->where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        
+        // Get users for searched mandants
+        foreach($mandants as $k => $mandant){
+            
+            $userArr = array();
+            $usersInternal = array();
+            
+            // Check if the logged user is in the current mandant
+            $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
+            
+            // Get all InternalMandantUsers
+            $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            foreach ($internalMandantUsers as $user)
+                $usersInternal[] = $user;
+    
+            foreach($mandant->users as $k2 => $mUser){
+                foreach($mUser->mandantRoles as $mr){
+                    // Check for phone roles
+                    if( $mr->role->phone_role ) {
+                        // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->first();
+                        $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                        if(!count($internalRole)){
+                            $userArr[] = $mandant->users[$k2]->id;
+                        }
+                    }
+                    
+                    // if(isset($localUser) || Auth::user()->id == 1 ){
+                    if(isset($localUser)){
+                        // Add all users to the array for the mandant, if they have the same mandant
+                        if($mUser->active && !in_array($mUser->id, $userArr))
+                            $userArr[] = $mUser->id;
+                    }
+                    
+                }
+            } //end second foreach
+            
+            $mandant->usersInternal = $usersInternal;
+            $mandant->usersInMandants = $mandant->users->whereIn('id', $userArr);
+        }
+        
+        // Get mandants for searched users
+        if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $loggedUserMandant->rights_admin == 1)
+            $mandantsSearch = Mandant::where('active', 1)->orderBy('mandant_number')->get();
+        else
+            $mandantsSearch = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+            
+        $myMandantSearch = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+        if(!$mandantsSearch->contains($myMandantSearch))
+            $mandantsSearch->prepend($myMandantSearch);
+        
+        $users = User::where(function ($query) use($searchParameter) {
+            $query->where('first_name', 'LIKE', '%'. $searchParameter .'%')
+        ->orWhere('last_name', 'LIKE', '%'. $searchParameter .'%');
+        // ->orWhere('short_name', 'LIKE', '%'. $searchParameter .'%');
+        });
+        //dd( \DB::getQueryLog() );
+        
+        $usersInMandants = array();
+        $usersInternal = array();
+        $usersInMandantsInternal = array();
+
+        // Get searched users    
+        foreach($mandantsSearch as $k => $mandant){
+            
+            $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            foreach ($internalMandantUsers as $user)
+                $usersInMandantsInternal[] = $user;
+            
+            // dd($mandant->users);
+            foreach($mandant->users as $k2 => $mUser){
+                foreach($mUser->mandantRoles as $mr){
+                    // Check for phone roles
+                    $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                    if(!count($internalRole)){
+                        if( $mr->role->phone_role && !in_array($mandant->users[$k2]->id, $usersInMandants) ) 
+                             $usersInMandants[] = $mandant->users[$k2]->id;
+                    }
+                }
+            }
+        }
+        
+        // Add internal users if they satisfy search criteria
+        $tmpUsrs = User::where(function ($query) use($searchParameter) {
+            $query->where('first_name', 'LIKE', '%'. $searchParameter .'%')
+            ->orWhere('last_name', 'LIKE', '%'. $searchParameter .'%');
+        });
+        
+        foreach ($usersInMandantsInternal as $umi) {
+            if(count($tmpUsrs->where('id', $umi->user_id)->get()))
+                $usersInternal[] = $umi;
+        }
+        
+        $users = $users->whereIn('id', $usersInMandants)->get();
+        
+        // dd($usersInternal);
+        
+        return view('telefonliste.index', compact('search', 'searchParameter', 'mandants', 'users', 'usersInternal', 'roles') );
+    }
+    
+    // Old and buggy method
+    /*
+    public function searchPhoneList(Request $request){
         // dd( $request->all() );
         $mandants = $this->search->phonelistSearch($request);
-        foreach($mandants as $k =>$mandant){
+        
+        foreach($mandants as $k => $mandant){
                 
                 $userArr = array();
                 $testuserArr = array();
@@ -311,25 +475,31 @@ class SearchController extends Controller
                 //     $mandantUsers = $mandant->usersWithTrashed;
                 
                 foreach($mandantUsers as $k2 => $mUser){
+                    
+                    // foreach($mUser->mandantRoles as $mr){
+                    //      $testuserArr[] = $mr->role->name;
+                    //      if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21)
+                    //         $userArr[] = $mandantUsers[$k2]->id;
+                    // }
+                    
+                    // if( count($userArr) < 1){
+                    //     foreach($mUser->mandantRoles as $mr){
+                    //         if( $mr->role->id == 23 )// Lohn
+                    //             $userArr[] = $mandantUsers[$k2]->id;
+                    //     }   
+                    // }
+                    
+                    // if( count($userArr) < 1){
+                    //     foreach($mUser->mandantRoles as $mr){
+                    //         if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
+                    //         ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
+                    //             $userArr[] = $mandantUsers[$k2]->id;
+                    //     }   
+                    // }
+                    
                     foreach($mUser->mandantRoles as $mr){
-                         $testuserArr[] = $mr->role->name;
-                         if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21)
+                        if($mr->role->phone_role) 
                             $userArr[] = $mandantUsers[$k2]->id;
-                    }
-                    
-                    if( count($userArr) < 1){
-                        foreach($mUser->mandantRoles as $mr){
-                            if( $mr->role->id == 23 )// Lohn
-                                $userArr[] = $mandantUsers[$k2]->id;
-                        }   
-                    }
-                    
-                    if( count($userArr) < 1){
-                        foreach($mUser->mandantRoles as $mr){
-                            if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
-                            ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
-                                $userArr[] = $mandantUsers[$k2]->id;
-                        }   
                     }
                     
                 }//end second foreach
@@ -358,6 +528,8 @@ class SearchController extends Controller
         return view('telefonliste.index', compact('mandants','search') ) ;
       // return redirect()->action('TelephoneListController@index', array('array'=>$results) );
         // return redirect('telefonliste');
-    }
+    }*/
+    
+    
     
 }

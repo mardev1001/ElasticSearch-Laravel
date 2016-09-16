@@ -24,4 +24,8 @@ class InternalMandantUser extends Model
         // return $this->hasOne('App\User', 'user_id');
     }
     
+    public function role(){
+        return $this->belongsTo('App\Role', 'role_id');
+    }
+    
 }

@@ -25,16 +25,15 @@ class SearchRepository
      */
      public function phonelistSearch($request ){
         
+         $query = Mandant::where('active',1);
         if($request->has('deletedMandants') )
-             $query = Mandant::withTrashed();
-        else
-            $query = Mandant::where('mandants.id','>',0);
+             $query = $query->withTrashed();
         
          if( $request->has('parameter') )
             $query->where('name','LIKE', '%'.$request->get('parameter').'%')->orWhere('mandant_number','=',$request->get('parameter') );
             
         $mandants = $query->orderBy('mandant_number')->get();   
-            // dd($mandants);
+            
             // dd($request->all());
         if( count($mandants) ){
             

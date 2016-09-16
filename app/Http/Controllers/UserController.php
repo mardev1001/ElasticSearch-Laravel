@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Auth;
 
+use App\Helpers\ViewHelper;
 use App\Http\Requests\BenutzerRequest;
 use Request as RequestMerge;
 
@@ -15,6 +16,7 @@ use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
 use App\InternalMandantUser;
+
 
 use App\Http\Repositories\UtilityRepository;
 
@@ -40,7 +42,19 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $uid = Auth::user()->id;
+        $searchParameter = null;
+        $deletedUsers = null;
+        $deletedMandants = null;
+        if( ViewHelper::universalHasPermission( array(2,4), false ) == false )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
+        $mandantU = MandantUser::where('user_id',$uid)->pluck('mandant_id')->toArray();
+        $roles = Role::all();
+        $mandants = Mandant::whereIn('id',$mandantU)->get();
+            
+        return view('mandanten.individualAdministration', compact('mandants','roles',
+        'searchParameter','deletedUsers','deletedMandants'));
     }
 
     /**
@@ -105,7 +119,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if(!$this->utils->universalHasPermission([6,17])) 
+        if(!$this->utils->universalHasPermission([6,17,2,4])) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         $restored = false;
@@ -172,6 +186,39 @@ class UserController extends Controller
         return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
     }
     
+     /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function profile()
+    {
+        $id = Auth::user()->id;
+    
+        if(User::find($id))
+            $user = User::find($id);
+        elseif(User::withTrashed()->find($id)){
+            User::withTrashed()->find($id)->restore();
+            $user = User::find($id);
+            $restored = true;
+        }
+        else $user = null;
+        
+        // $user = User::find($id);
+        $usersAll = User::all();
+        $mandantsAll = Mandant::all();
+        // $rolesAll = Role::all();
+        // $rolesAll = Role::where('phone_role', false)->get();
+        $rolesAll = Role::all();
+    
+        // dd($mandantUserRoles);
+        if(isset($user))
+            return view('benutzer.profile', compact('user'));
+        else
+            return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
+    }
+    
     /**
      * Transfer roles from one user to another.
      *
@@ -220,10 +267,22 @@ class UserController extends Controller
         $mandantUser = MandantUser::create($request->all());
         
         foreach($request->input('role_id') as $roleId){
+            
+            $tmpRole = Role::find($roleId);
+            
+            // if($tmpRole->phone_role){
+            //     $internalMandantUser = InternalMandantUser::create([
+            //         'mandant_id' => $request->get('mandant_id'), 
+            //         'role_id' => $roleId, 
+            //         'user_id' => $request->get('user_id'),
+            //     ]);
+            // }
+            
             $mandantUserRole = new MandantUserRole();
             $mandantUserRole->mandant_user_id = $mandantUser->id;
             $mandantUserRole->role_id = $roleId;
             $mandantUserRole->save();
+            
         }
         // return back()->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
         return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
@@ -251,7 +310,7 @@ class UserController extends Controller
                 $noDeleteArr = $temp;  
             $del = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereNotIn('role_id',$noDeleteArr)->delete();
             // $internalRoleArray = InternalMandantUser::where('user_id', $request->input('user_id'))->pluck('role_id')->toArray();
-            $exists = InternalMandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->delete();
+            // $exists = InternalMandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->delete();
             // dd($internalRoleArray);
             $requestRoleArray = array();
             if($request->has('role_id')){
@@ -261,16 +320,16 @@ class UserController extends Controller
                     $mandantUserRole->role_id = $roleId;
                     $mandantUserRole->save();
                     
-                    $roleTest = Role::find($roleId);
-                    if( $roleTest->phone_role == true ){
-                      $checkInternal = InternalMandantUser::where('mandant_id',$request->input('mandant_id'))
-                      ->where('role_id',$roleId)->where('user_id',$request->input('user_id'))->get();
-                      if( count($checkInternal) < 1 ){
-                        $internalMandantUser = InternalMandantUser::create(['mandant_id' => $request->input('mandant_id'), 
-                        'role_id' => $roleId, 'user_id' => $request->input('user_id')]);
-                        // dd($internalMandantUser);
-                      }
-                    }
+                    // $roleTest = Role::find($roleId);
+                    // if( $roleTest->phone_role == true ){
+                    //   $checkInternal = InternalMandantUser::where('mandant_id',$request->input('mandant_id'))
+                    //   ->where('role_id',$roleId)->where('user_id',$request->input('user_id'))->get();
+                    //   if( count($checkInternal) < 1 ){
+                    //     $internalMandantUser = InternalMandantUser::create(['mandant_id' => $request->input('mandant_id'), 
+                    //     'role_id' => $roleId, 'user_id' => $request->input('user_id')]);
+                    //     // dd($internalMandantUser);
+                    //   }
+                    // }
                 }
                 //   dd($requestRoleArray);
                 // $difference = array_diff($requestRoleArray,$internalRoleArray);
@@ -304,6 +363,18 @@ class UserController extends Controller
                 return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', $message);
             }
             MandantUser::where('id', $request->input('mandant_user_id'))->delete();
+            MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
+            
+            // if($request->has('role_id')){
+            //     foreach($request->input('role_id') as $roleId){
+            //         $roleTest = Role::find($roleId);
+            //         if( $roleTest->phone_role == true ){
+            //           InternalMandantUser::where('mandant_id',$request->input('mandant_id'))
+            //             ->where('role_id',$roleId)->where('user_id',$request->input('user_id'))->delete();
+            //         }
+            //     }
+            //  }
+            
             // return back()->with('message', 'Rollen wurden entfernt.');
             return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandants-roles')->with('message', 'Rollen wurden entfernt.');
         }

@@ -25,6 +25,7 @@ return [
     'details' => 'Details',
     'export' => 'Export',
     'search' => 'Suche',
+    'searchTextOptions' => 'Mandanten/ Mandantennummer/ Benutzer',
     'save' => 'Speichern', 
     'noResults' => 'Keine Mandanten/Benutzer gefunden.', 
     

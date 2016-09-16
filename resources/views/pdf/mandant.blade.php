@@ -14,9 +14,48 @@
             font-size: 14px;
             margin-bottom: 25px;
         }
-
+         .header,
+            .footer {
+                width: 100%;
+                position: fixed;
+            }
+            .header {
+                top: -15px;
+                margin-bottom: 50px;
+            }
+            .div-pusher{
+                width:50%;
+                padding-left:30%;
+            }
+            .header .div-pusher{
+                width:60%;
+                padding-left:30%;
+            }
+            .header .image-div {
+                width:40%;
+                float:right !important;
+                padding-left:50px;
+                height:auto;
+            }
+            .header .image-div img{
+               margin-left:0px;
+               width:100%;
+               height:auto;
+               display:block;
+            }
+            .footer {
+                bottom: 5px;
+            }
+            .pagenum:before {
+                content: counter(page);
+            }
         .mandant-image {
             max-width: 100px;
+        }
+        
+        .first-title.first{
+            margin-top: 70px;
+            margin-bottom:70px;
         }
 
         table {
@@ -39,10 +78,14 @@
 </head>
 
 <body>
-
-<h2>{{$mandant->name}}</h2>
-
-<div class="table-container">
+    @include('pdf.footer')
+    <div id="content">
+         @include('pdf.mandantHeader')
+        <div class="first-title first">
+            <h2>{{$mandant->name}}</h2>
+        </div>
+    
+        <div class="table-container">
     <h4>Allgemeine Informationen</h4>
     <table>
         <tr>
@@ -93,7 +136,7 @@
         </tr>
     </table>
 </div>
-
+    </div>
 
 @if(!$mandant->hauptstelle)
     <div class="table-container">
@@ -152,137 +195,140 @@
     </div>
 @endif
 
-
-<div class="table-container">
-    <h4>Wichtige Informationen</h4>
-    <table>
-        @if(isset($mandantInfo))
-            <tr>
-                <td class="col-1">Wichtiges</td>
-                <td class="col-2">{{$mandantInfo->info_wichtiges}}</td>
-            </tr>
-        @endif
-
-        <tr>
-            <td class="col-1">Geschäftsführer</td>
-            <td class="col-2">{{$mandant->geschaftsfuhrer}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Geschäftsführer-Informationen</td>
-            <td class="col-2">{{$mandant->geschaftsfuhrer_infos}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Geschäftsführer Von</td>
-            <td class="col-2">{{$mandant->geschaftsfuhrer_von}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Geschäftsführer Bis</td>
-            <td class="col-2">{{$mandant->geschaftsfuhrer_bis}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Geschäftsführerhistorie</td>
-            <td class="col-2">{{$mandant->geschaftsfuhrer_history}}</td>
-        </tr>
-
-    </table>
-</div>
-
-@if(isset($mandantInfo))
-    <!--<div class="page-break"></div>-->
+@if( ViewHelper::universalHasPermission( array(19,20) ) == true  )
     <div class="table-container">
-        <h4>Weitere Informationen</h4>
+        <h4>Wichtige Informationen</h4>
         <table>
+            @if(isset($mandantInfo))
+                <tr>
+                    <td class="col-1">Wichtiges</td>
+                    <td class="col-2">{{$mandantInfo->info_wichtiges}}</td>
+                </tr>
+            @endif
+    
             <tr>
-                <td class="col-1">Prokura</td>
-                <td class="col-2">{{$mandantInfo->prokura}}</td>
+                <td class="col-1">Geschäftsführer</td>
+                <td class="col-2">{{$mandant->geschaftsfuhrer}}</td>
             </tr>
+    
             <tr>
-                <td class="col-1">Betriebsnummer</td>
-                <td class="col-2">{{$mandantInfo->betriebsnummer}}</td>
+                <td class="col-1">Geschäftsführer-Informationen</td>
+                <td class="col-2">{{$mandant->geschaftsfuhrer_infos}}</td>
             </tr>
+    
             <tr>
-                <td class="col-1">Handelsregisternummer</td>
-                <td class="col-2">{{$mandantInfo->handelsregister}}</td>
+                <td class="col-1">Geschäftsführer Von</td>
+                <td class="col-2">{{$mandant->geschaftsfuhrer_von}}</td>
             </tr>
+    
             <tr>
-                <td class="col-1">Handelsregistersitz</td>
-                <td class="col-2">{{$mandantInfo->Handelsregister_sitz}}</td>
+                <td class="col-1">Geschäftsführer Bis</td>
+                <td class="col-2">{{$mandant->geschaftsfuhrer_bis}}</td>
             </tr>
+    
             <tr>
-                <td class="col-1">Gewerbeanmeldung</td>
-                <td class="col-2">{{$mandantInfo->angemeldet_am}}</td>
+                <td class="col-1">Geschäftsführerhistorie</td>
+                <td class="col-2">{{$mandant->geschaftsfuhrer_history}}</td>
             </tr>
-            <tr>
-                <td class="col-1">Umgemeldet am</td>
-                <td class="col-2">{{$mandantInfo->umgemeldet_am}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Abgemeldet am</td>
-                <td class="col-2">{{$mandantInfo->abgemeldet_am}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Gewerbeanmeldung Historie</td>
-                <td class="col-2">{{$mandantInfo->gewerbeanmeldung_history}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Steuernummer</td>
-                <td class="col-2">{{$mandantInfo->steuernummer}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">USt-IdNr.</td>
-                <td class="col-2">{{$mandantInfo->ust_ident_number}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Zusätzliche Informationen Steuer</td>
-                <td class="col-2">{{$mandantInfo->zausatzinfo_steuer}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Berufsgenossenschaft/ Mitgliedsnummer</td>
-                <td class="col-2">{{$mandantInfo->berufsgenossenschaft_number}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Zusätzliche Informationen Berufsgenossenschaft</td>
-                <td class="col-2">{{$mandantInfo->berufsgenossenschaft_zusatzinfo}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Erlaubnis zur Arbeitnehmerüberlassung</td>
-                <td class="col-2">{{$mandantInfo->berufsgenossenschaft_zusatzinfo}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Unbefristet</td>
-                @if($mandantInfo->unbefristet)
-                    <td class="col-2">Ja</td>
-                @else
-                    <td class="col-2">Nein</td>
-                @endif
-            </tr>
-            <tr>
-                <td class="col-1">Befristet bis</td>
-                <td class="col-2">{{$mandantInfo->befristet_bis}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Zuständige Erlaubnisbehörde</td>
-                <td class="col-2">{{$mandantInfo->erlaubniss_gultig_von}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Informationen zum Geschäftsjahr</td>
-                <td class="col-2">{{$mandantInfo->geschaftsjahr_info}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Bankverbindungen</td>
-                <td class="col-2">{{$mandantInfo->bankverbindungen}}</td>
-            </tr>
-            <tr>
-                <td class="col-1">Sonstiges</td>
-                <td class="col-2">{{$mandantInfo->info_sonstiges}}</td>
-            </tr>
+    
         </table>
     </div>
-
+    
+    @if(isset($mandantInfo))
+        <!--<div class="page-break"></div>-->
+        <div class="table-container">
+            <h4>Weitere Informationen</h4>
+            <table>
+                <tr>
+                    <td class="col-1">Prokura</td>
+                    <td class="col-2">{{$mandantInfo->prokura}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Betriebsnummer</td>
+                    <td class="col-2">{{$mandantInfo->betriebsnummer}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Handelsregisternummer</td>
+                    <td class="col-2">{{$mandantInfo->handelsregister}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Handelsregistersitz</td>
+                    <td class="col-2">{{$mandantInfo->Handelsregister_sitz}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Gewerbeanmeldung</td>
+                    <td class="col-2">{{$mandantInfo->angemeldet_am}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Umgemeldet am</td>
+                    <td class="col-2">{{$mandantInfo->umgemeldet_am}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Abgemeldet am</td>
+                    <td class="col-2">{{$mandantInfo->abgemeldet_am}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Gewerbeanmeldung Historie</td>
+                    <td class="col-2">{{$mandantInfo->gewerbeanmeldung_history}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Steuernummer</td>
+                    <td class="col-2">{{$mandantInfo->steuernummer}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">USt-IdNr.</td>
+                    <td class="col-2">{{$mandantInfo->ust_ident_number}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Zusätzliche Informationen Steuer</td>
+                    <td class="col-2">{{$mandantInfo->zausatzinfo_steuer}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Berufsgenossenschaft/ Mitgliedsnummer</td>
+                    <td class="col-2">{{$mandantInfo->berufsgenossenschaft_number}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Zusätzliche Informationen Berufsgenossenschaft</td>
+                    <td class="col-2">{{$mandantInfo->berufsgenossenschaft_zusatzinfo}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Erlaubnis zur Arbeitnehmerüberlassung</td>
+                    <td class="col-2">{{$mandantInfo->berufsgenossenschaft_zusatzinfo}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Unbefristet</td>
+                    @if($mandantInfo->unbefristet)
+                        <td class="col-2">Ja</td>
+                    @else
+                        <td class="col-2">Nein</td>
+                    @endif
+                </tr>
+                <tr>
+                    <td class="col-1">Befristet bis</td>
+                    <td class="col-2">{{$mandantInfo->befristet_bis}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Zuständige Erlaubnisbehörde</td>
+                    <td class="col-2">{{$mandantInfo->erlaubniss_gultig_von}}</td>
+                </tr>
+                <tr>
+                    <td class="col-1">Informationen zum Geschäftsjahr</td>
+                    <td class="col-2">{{$mandantInfo->geschaftsjahr_info}}</td>
+                </tr>
+                @if( ViewHelper::universalHasPermission( array(20) ) == true  )
+                <tr>
+                    <td class="col-1">Bankverbindungen</td>
+                    <td class="col-2">{{$mandantInfo->bankverbindungen}}</td>
+                </tr>
+                @endif
+                <tr>
+                    <td class="col-1">Sonstiges</td>
+                    <td class="col-2">{{$mandantInfo->info_sonstiges}}</td>
+                </tr>
+            </table>
+        </div>
+    
+    @endif
 @endif
 
 </body>

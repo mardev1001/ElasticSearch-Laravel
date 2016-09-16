@@ -25,6 +25,7 @@ return [
     'editor' => 'Dokument erstellen',
     'wiki' => 'Wiki',
     'wikiCategory' => 'Wiki Kategorien verwalten',
+    'userManagment' => 'Benutzerverwaltung',
     'noPermission' => 'Sie haben keine Berechtigung für diese Seite.',
 
 ];

@@ -15,4 +15,7 @@ class EditorVariantDocument extends Model
     public function document(){
         return $this->belongsTo('App\Document', 'document_id', 'id');
     }
+    public function editorVariant(){
+        return $this->belongsTo('App\EditorVariant', 'editor_variant_id', 'id');
+    }
 }

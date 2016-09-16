@@ -20,7 +20,7 @@
             @endif  
                 <br>
                 <span class="text">
-                    <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}}@endif, {{ $document->user->first_name.' '.$document->user->last_name }} )
+                    <strong>( {{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}}@endif, {{ $document->owner->first_name.' '.$document->owner->last_name }} )
                     </strong>
                 </span>
             </h3>
@@ -84,15 +84,6 @@
                                    @endif
                                 </div>
                             @endif {{-- end if pdf upload --}}
-                          
-                            <!-- <p>-->
-                            <!--   Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare etiamsi  -->
-                            <!-- </p> -->
-                            <!-- <p>-->
-                            <!--    Lorem ipsum qum dare etiamsi  Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsum qum dare  -->
-                            <!--    Lorem ipsum qum dare etiamsi del cumsequr. Lorem ipsu Lorem ipsum qum dare etiamsi del cumsequr.-->
-                            <!--</p>-->
-                            
                         </div>
                         
                         <div class="clearfix"></div> <br>
@@ -170,7 +161,8 @@
                              <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
                         @endif
                     @else
-                        @if( ViewHelper::universalHasPermission( array(11) ) == true )
+                        @if( (ViewHelper::universalHasPermission( array(10) ) == true && ViewHelper::isThisDocumentFreigeber($document) == true )
+                        || ViewHelper::universalHasPermission( array() ) == true )
                              <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
                              <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
                         @endif
@@ -191,14 +183,14 @@
   
   
        @if(count($documentCommentsUser))
-          {!! ViewHelper::generateCommentBoxes($documentCommentsUser, trans('wiki.commentUser') ) !!}
+          {!! ViewHelper::generateCommentBoxes($documentCommentsUser, trans('wiki.commentUser'), true ) !!}
        @endif
   
   <div class="clearfix"></div><br/>
   
     <!-- freigaber comments -->
     @if(count($documentCommentsFreigabe) )
-        {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin') ) !!}
+        {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'), true ) !!}
     @endif
           
 

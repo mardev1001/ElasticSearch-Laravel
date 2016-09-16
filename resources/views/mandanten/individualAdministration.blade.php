@@ -1,17 +1,17 @@
 @extends('master')
 
 @section('page-title')
-    {{  ucfirst( trans('controller.administration') ) }} 
+    {{  ucfirst( trans('controller.userManagment') ) }}  
 @stop
     @section('bodyClass')
     mandant-administration 
     @stop
     @section('content')
     <div class="col-xs-12 box-wrapper">
-        <h2 class="title">{{ trans('mandantenForm.search') }} </h2>
+        <h2 class="title">{{ trans('mandantenForm.searchUsers') }} </h2>
         <div class="box">
             {!! Form::open([
-                   'url' => 'mandanten/search',
+                   'url' => 'mandanten/search-single',
                    'method' => 'POST',
                    'class' => 'horizontal-form' ]) !!}
                 <div class="row">
@@ -67,14 +67,15 @@
                         <h4 class="panel-title col-xs-12">
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
                                    href="#collapseMandant{{$mandant->id}}">
-                                  ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
-                                  @if($mandant->hauptstelle) [Hauptstelle] 
-                                  @else [Filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}@if( strtolower(ViewHelper::getHauptstelle($mandant)->name) == "neptun") - NEPTUN] @else ] @endif @endif
-                                  @if($mandant->edited_by) 
-                                  <span class="editing text-danger">[In Bearbeitung: 
+                                  ({{$mandant->mandant_number}}) {{$mandant->kurzname}} 
+                                  
+                                  
+                                 
+                                 {{-- @if($mandant->edited_by) 
+                                  [In Bearbeitung: 
                                   {{ ViewHelper::getUser($mandant->edited_by)->title}} 
-                                  {{ ViewHelper::getUser($mandant->edited_by)->last_name}}]</span>
-                                  @endif
+                                  {{ ViewHelper::getUser($mandant->edited_by)->last_name}}]
+                                  @endif --}}
                                 </a>
                             
                         </h4>
@@ -84,24 +85,7 @@
                                       {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
                                  </span>
                                  <span class="pull-right">
-                                {!! Form::open(['action' => 'MandantController@mandantActivate', 
-                                'method'=>'PATCH']) !!}
-                                    <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                    @if($mandant->active)
-                                        <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
-                                    @else
-                                        <button class="btn btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button>
-                                    @endif
-                                {!! Form::close() !!}
-                                
-                                {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
-                                    <button type="submit" class="btn btn-primary delete-prompt">Entfernen</button>
-                                {!! Form::close() !!}
-                                
-                                @if($mandant->edited_by == 0 || $mandant->edited_by == Auth::user()->id)
-                                    <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
-                                @endif
-                                </span>
+                                 </span>
                         </span>
                     </div>
                    
@@ -297,7 +281,14 @@
         
     @endif
     
-    
-      
-    
+@stop
+
+@section('script')
+    @if( count($mandants) == 1 )
+       <script type="text/javascript" >
+        $(document).ready(function(){
+            $('a.collapsed').click();
+        });
+       </script>
+    @endif
 @stop

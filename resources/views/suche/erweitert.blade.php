@@ -64,7 +64,7 @@
             
                 <div class="row">
                     <div class="col-lg-4">
-                        <div class="form-group">
+                        <div class="form-group document-type-select">
                             {{-- ViewHelper::setSelect($documentTypes, 'document_type', '', old('document_type'), trans('sucheForm.document-type'), trans('sucheForm.document-type'), false) --}}
                             <div class="form-group">
                                 <label class="control-label"> {{ trans('sucheForm.document-type') }}</label>
@@ -79,6 +79,28 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                        
+                    <div class="col-md-2 col-lg-2 qmr-select"> 
+                        <div class="form-group">
+                            {!! ViewHelper::setInput('qmr_number', '', old('qmr_number'), trans('documentForm.qmr') , 
+                                   trans('documentForm.qmr'), false, 'number', array(), array() )!!}
+                        </div>   
+                    </div>
+                    
+                    <!-- input box-->
+                    <div class="col-md-2 col-lg-2 iso-category-select"> 
+                        <div class="form-group">
+                            {!! ViewHelper::setInput('iso_category_number', '', old('iso_category_number'), trans('documentForm.isoNumber') , 
+                                   trans('documentForm.isoNumber') , false, 'number', array(), array() ) !!}
+                        </div>   
+                    </div>
+                    
+                    <div class="col-md-2 col-lg-2 additional-letter"> 
+                        <div class="form-group">
+                            {!! ViewHelper::setInput('additional_letter', '', old('additional_letter'), trans('documentForm.additionalLetter') , 
+                                   trans('documentForm.additionalLetter')  ) !!}
+                        </div>   
                     </div>
                     
                     <div class="col-md-4 col-lg-4"> 
@@ -149,9 +171,14 @@
                                     @if(isset($parameter)) 
                                         #{{$key+1}} 
                                         @if($document->documentType->id == 3)
-                                            QMR {{$document->qmr_number.$document->additional_letter}} -
+                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "QMR ".$document->qmr_number.$document->additional_letter) !!} - --}}
+                                            {!! "QMR " . $document->qmr_number.$document->additional_letter !!} -
+                                        @elseif($document->documentType->id == 4)
+                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "ISO ".$document->iso_category_number.$document->additional_letter) !!} - --}}
+                                            {{-- {!! "ISO " . $document->iso_category_number.$document->additional_letter !!} - --}}
+                                            {{ $document->documentType->name }} -
                                         @else
-                                        {{$document->documentType->name}} - 
+                                            {{ $document->documentType->name }} -
                                         @endif
                                         {!! ViewHelper::highlightKeyword($parameter, $document->name) !!} - {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - 
                                         {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
@@ -159,9 +186,12 @@
                                         #{{$key+1}} 
 
                                         @if($document->documentType->id == 3)
-                                            QMR {{$document->qmr_number.$document->additional_letter}} -
+                                            QMR {{$document->qmr_number.$document->additional_letter}} - 
+                                        @elseif($document->documentType->id == 4)
+                                            {{-- ISO {{$document->iso_category_number.$document->additional_letter}} - --}}
+                                            {{$document->documentType->name}} - 
                                         @else
-                                        {{$document->documentType->name}} - 
+                                            {{$document->documentType->name}} - 
                                         @endif
                                         
                                         @if(old('name')) 

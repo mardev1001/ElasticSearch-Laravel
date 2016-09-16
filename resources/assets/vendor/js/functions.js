@@ -164,7 +164,7 @@ $(function() {
         // console.log("[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] " + "\n" + bankInfo.val());
         bankInfo.val(bankInfo.val() + "\n" + "[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] ");
         
-    });
+    }); 
     
     
     // Hide or show PDF upload checkbox 

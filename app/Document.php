@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\ApprovalDocument;
+
 class Document extends Model
 {
     use SoftDeletes;
@@ -133,17 +135,23 @@ class Document extends Model
     }
     
     public function editorVariant(){
-            return $this->hasMany('App\EditorVariant');
+        return $this->hasMany('App\EditorVariant');
     }
     public function editorVariantNoDeleted(){
-            return $this->hasMany('App\EditorVariant')->where('deleted_at',null);
+        return $this->hasMany('App\EditorVariant')->where('deleted_at',null);
     }
     public function editorVariantOrderBy(){
-            return $this->hasMany('App\EditorVariant')->orderBy('variant_number');
+        return $this->hasMany('App\EditorVariant')->orderBy('variant_number');
     }
     
     public function editorVariantDocument(){
-            return $this->hasManyThrough('App\EditorVariantDocument','App\EditorVariant');
+        return $this->hasManyThrough('App\EditorVariantDocument','App\EditorVariant');
+    }
+    /*
+     * Get All documents where default document is an attachment   
+     */
+    public function variantDocuments(){
+        return $this->hasMany('App\EditorVariantDocument','document_id','id');
     }
     public function lastEditorVariant(){
             return $this->hasMany('App\EditorVariant')->orderBy('variant_number','desc')->take(1);
@@ -178,6 +186,10 @@ class Document extends Model
     
     public function publishedDocuments(){
         return $this->hasMany('App\PublishedDocument','document_id','id');
+    }
+    
+    public function documentHistory(){
+        return $this->hasMany('App\Document','document_group_id','document_group_id');
     }
     
 }

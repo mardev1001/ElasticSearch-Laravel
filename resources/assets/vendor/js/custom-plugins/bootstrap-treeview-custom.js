@@ -686,12 +686,22 @@
 				if (node.beforeText == undefined) node.beforeText = '&nbsp;';
 				if (node.afterText == undefined) node.afterText = '&nbsp;';
 				
+				// if (node.afterLink != undefined && node.afterLinkText != undefined)
+					
+				if (node.afterLink != undefined){
+					// console.log($($.parseHTML(node.afterLink)).text());
+					var afterTextVal = $($.parseHTML(node.afterLink)).text();
+					// var afterTextVal = '<a href="'+ node.afterLink +'" target="_blank" class="link-after-text btn-block">' + node.afterLinkText + '</a>';
+				}
+				else
+					var afterTextVal = '<span class="item-after-text btn-block">' + node.afterText + '</span>';
+				
 				// Add hyperlink
 				treeItem
 					.append($(_this.template.link).attr('href', node.href)
 						.prepend('<span class="item-before-text btn-block">' + node.beforeText + '</span>')
 						.append('<span class="item-text btn-block">' + node.text + '</span>')
-						.append('<span class="item-after-text btn-block">' + node.afterText + '</span>')
+						.append(afterTextVal)
 					);
 					
 			}

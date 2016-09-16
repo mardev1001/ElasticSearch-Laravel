@@ -339,7 +339,7 @@ h1.page-title {
     padding-left: 30px;
 }
 .phonelist .panel-options{
-    margin-top: 5px;
+    // margin-top: 5px;
 }
 .phonelist .panel-options form{
     // padding-top: 10px;
@@ -354,6 +354,10 @@ h1.page-title {
   
 }
 
+.phonelist .panel-heading {
+    margin-bottom: -4px;
+}
+
 .phonelist .panel-heading a:not(.no-arrow):after, 
 .phonelist .panel-heading a.collapsed:not(.no-arrow):after {
     margin-left: -31px;
@@ -364,7 +368,7 @@ h1.page-title {
 }
 
 .phonelist .collapsing , .mandant-administration .collapse.in {
-    margin-top: -4px;
+    // margin-top: -4px; 
 }
 /* end phonelist */
 
@@ -433,3 +437,9 @@ h1.page-title {
     display: none !important;
 }
 /* End Treeview */
+
+/* Iso category page*/
+    .second-level{
+        margin-left: 25px;
+    }
+/* End Iso category page*/

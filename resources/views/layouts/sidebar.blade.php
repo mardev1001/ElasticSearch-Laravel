@@ -24,6 +24,10 @@
             <li>
                 <a href="{{ url('favoriten') }}">{{ ucfirst( trans('navigation.favorites') ) }}</a>
             </li>
+            
+            <li>
+                <a href="{{ url('suche') }}">{{ ucfirst( trans('navigation.advanced_search') ) }}</a>
+            </li>
 
             <li class="">
                 <a href="#">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
@@ -212,7 +216,7 @@
             
             @if( ViewHelper::universalHasPermission( array(2,4), false ) == true )
                 <li>
-                    <a href="#">{{ ucfirst( trans('navigation.benutzer') ) }}</a>
+                    <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}</a>
                 </li>
             @endif
             

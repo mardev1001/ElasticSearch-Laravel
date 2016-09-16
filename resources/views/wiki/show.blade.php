@@ -13,8 +13,9 @@
                     {{ $data->name }}
                     <br>
                     <span class="text">
-                       <strong>( {{ $data->created_at }} )
-                        </strong> 
+                       <strong>
+                           ( {{ trans('dokumentShow.status') }}: {{ $data->status->name }}, {{$data->created_at}}, {{ $data->user->first_name.' '.$data->user->last_name }})
+                       </strong> 
                     </span>
                 </h3>
             </div>

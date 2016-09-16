@@ -42,7 +42,7 @@ class BenutzerRequest extends Request
                     'password_repeat' => 'same:password',
                     'first_name' => 'required',
                     'last_name' => 'required',
-                    'email' => 'required|email|unique:users',
+                    'email' => 'required|email',
                     'picture' => 'image',
                     'username_sso' => 'required|min:3|unique:users',
                 ];
@@ -56,7 +56,7 @@ class BenutzerRequest extends Request
                     'password_repeat' => 'same:password',
                     'first_name' => 'required',
                     'last_name' => 'required',
-                    'email' => 'required|email|unique:users,email,' . $userId,
+                    'email' => 'required|email',
                     'picture' => 'image',
                 ];
             }

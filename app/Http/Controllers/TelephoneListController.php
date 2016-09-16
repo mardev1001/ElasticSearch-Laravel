@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use Carbon\Carbon;
 use Auth;
 use Excel;
 use App\Role;
@@ -26,19 +27,31 @@ class TelephoneListController extends Controller
     public function index()
     {
         // $mandants = array();
-        $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
         $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+        if(Auth::user()->id == 1 || $myMandant->id == 1 || $myMandant->rights_admin == 1)
+            $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
+        else
+            $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        
         if(!$mandants->contains($myMandant))
             $mandants->prepend($myMandant);
         // dd($mandants);
         
         foreach($mandants as $k => $mandant){
+            
             $userArr = array();
-            $testuserArr = array();
+            $usersInternal = array();
             
             // Check if the logged user is in the current mandant
             $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
+            
+            // Get all InternalMandantUsers
+            $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            foreach ($internalMandantUsers as $user)
+                $usersInternal[] = $user;
+            
             // dd($mandant->users);
+            
             foreach($mandant->users as $k2 => $mUser){
                 
                 // foreach($mUser->mandantRoles as $mr){
@@ -64,20 +77,25 @@ class TelephoneListController extends Controller
                 
                 foreach($mUser->mandantRoles as $mr){
                     // Check for phone roles
-                    if( $mr->role->phone_role == 1  && ( in_array($mr->role->id, [2, 4, 21, 22, 23, 24, 25] ) ) ) 
-                         $userArr[] = $mandant->users[$k2]->id;
+                    if( $mr->role->phone_role ) {
+                        $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                        if(!count($internalRole)){
+                            $userArr[] = $mandant->users[$k2]->id;
+                        }
+                    }
                 }
                 
-                if(isset($localUser) || Auth::user()->id == 1 ){
+                // if(isset($localUser) || Auth::user()->id == 1 ){
+                if(isset($localUser)){
                     // Add all users to the array for the mandant, if they have the same mandant
                     if($mUser->active && !in_array($mUser->id, $userArr))
                         $userArr[] = $mUser->id;
                 }
                 
-            }//end second foreach
-            
-            // dd($userArr);
+            } // end second foreach
+        
             $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
+            $mandant->usersInternal = $usersInternal;
         }
         
         return view('telefonliste.index', compact('mandants') );
@@ -157,11 +175,12 @@ class TelephoneListController extends Controller
      */
     public function pdfExport($id)
     {
+        $dateNow = Carbon::now()->format('M Y');
         $mandant = Mandant::find($id);
         $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
         $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
         
-        $pdf = \PDF::loadView('pdf.mandant', compact('mandant','mandantInfo','hauptstelle'));
+        $pdf = \PDF::loadView('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
         return $pdf->stream();
     }
     
@@ -232,17 +251,27 @@ class TelephoneListController extends Controller
                     
                     // Add sheet
                     $excel->sheet('Alle Mandanten', function($sheet) use ($exportMandants){
-                        // dd($exportMandants);
-                        $edv = Role::find(21)->name;
-                        $fibu = Role::find(22)->name;
-                        $lohn = Role::find(23)->name;
                         
-                        $sheet->row(1, array('Nr.', 'Firma', 'Ort', $lohn, $fibu, $edv));
+                        $phoneRoles = Role::where('phone_role', 1)->get();
+                        
+                        // $edv = Role::find(21)->name;
+                        // $fibu = Role::find(22)->name;
+                        // $lohn = Role::find(23)->name;
+                        
+                        $rowTitles = array('Nr.', 'Firma', 'Ort');
+                        foreach($phoneRoles as $phoneRole) array_push($rowTitles, $phoneRole->name);
+                        
+                        // dd($rowTitles);
+                        // $sheet->row(1, array('Nr.', 'Firma', 'Ort', $lohn, $fibu, $edv));
+                        
+                        $sheet->row(1, $rowTitles);
                         
                         if(in_array("0", $exportMandants)){
                             foreach (Mandant::all() as $mandant) {
                                 
                                 $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
+                            
+                                /*    
                                 $internalUserEdv =  InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', 21)->get();
                                 $internalUserFibu =  InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', 22)->get();
                                 $internalUserLohn =  InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', 23)->get();
@@ -280,59 +309,47 @@ class TelephoneListController extends Controller
                                         $rowArray[5] .= $user->title .' '. $user->first_name .' '. $user->last_name ."; ";
                                     }
                                 }
+                                */
                                 
-                                // dd($rowArray);
+                                $cellValues = array($mandant->mandant_number, $mandant->name, $mandant->ort);
+                                foreach($phoneRoles as $phoneRole) {
+                                    
+                                    $value = '';
+                                    $users = InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', $phoneRole->id)->get();
+                                    foreach($users as $internal) {
+                                        $user = User::where('id', $internal->user_id)->first();
+                                        $value .= $user->title.' '.$user->first_name.' '.$user->last_name ."; ";
+                                    }
+                                    array_push($cellValues, $value);
+                                }
+                        
+                                // dd($cellValues);
                                 
                                 // Add rows
-                                $sheet->appendRow($rowArray);
+                                $sheet->appendRow($cellValues);
                             }
                         } else {
                             foreach ($exportMandants as $id) {
                                 
                                 $mandant = Mandant::find($id);
                                 $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
-                                $internalUserEdv =  InternalMandantUser::where('mandant_id', $id)->where('role_id', 21)->get();
-                                $internalUserFibu =  InternalMandantUser::where('mandant_id', $id)->where('role_id', 22)->get();
-                                $internalUserLohn =  InternalMandantUser::where('mandant_id', $id)->where('role_id', 23)->get();
-                            
-                                $rowArray = array(
-                                    0 => $mandant->mandant_number,
-                                    1 => $mandant->name,
-                                    2 => $mandant->ort,
-                                    3 => "-",
-                                    4 => "-",
-                                    5 => "-"
-                                );
                                 
-                                if(isset($internalUserLohn)){
-                                    $rowArray[3] = '';
-                                    foreach($internalUserLohn as $tmp){
-                                        $user = User::where('id', $tmp->user_id)->first();
-                                        $rowArray[3] .= $user->title .' '. $user->first_name .' '. $user->last_name ."; ";
-                                        
+                                $cellValues = array($mandant->mandant_number, $mandant->name, $mandant->ort);
+                                foreach($phoneRoles as $phoneRole) {
+                                    
+                                    $value = '';
+                                    $users = InternalMandantUser::where('mandant_id', $mandant->id)->where('role_id', $phoneRole->id)->get();
+                                    foreach($users as $internal) {
+                                        $user = User::where('id', $internal->user_id)->first();
+                                        $value .= $user->title.' '.$user->first_name.' '.$user->last_name ."; ";
                                     }
+                                    array_push($cellValues, $value);
                                 }
-                                
-                                if(isset($internalUserFibu)){
-                                    $rowArray[4] = '';
-                                    foreach($internalUserFibu as $tmp){
-                                        $user = User::where('id', $tmp->user_id)->first();
-                                        $rowArray[4] .= $user->title.' '.$user->first_name.' '.$user->last_name ."; ";
-                                    }
-                                }
-                                
-                                if(isset($internalUserEdv)){
-                                    $rowArray[5] = '';
-                                    foreach($internalUserEdv as $tmp){
-                                        $user = User::where('id', $tmp->user_id)->first();
-                                        $rowArray[5] .= $user->title .' '. $user->first_name .' '. $user->last_name ."; ";
-                                    }
-                                }
-                                
-                                // dd($rowArray);
+                        
+                                // dd($cellValues);
                                 
                                 // Add rows
-                                $sheet->appendRow($rowArray);
+                                $sheet->appendRow($cellValues);
                             }
                         }
                     });

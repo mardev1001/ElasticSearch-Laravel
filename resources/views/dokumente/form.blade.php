@@ -105,7 +105,7 @@
                                 </option>
                         @endforeach
                     </select>
-                </div>   
+                </div>
             </div><!--End input box-->
             
             <!-- input box-->
@@ -114,16 +114,16 @@
                     <label class="control-label"> {{ trans('documentForm.user') }} *</label>
                     <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}" required>
                         @foreach( $documentUsers as $documentUser )
-                            <option value="{{$documentUser->user->id}}" @if( isset($data->user_id) && $documentUser->user->id == $data->user_id) selected @endif > 
+                            <option value="{{$documentUser->user->id}}" @if( isset($data->user_id) && $documentUser->user->id == $data->user_id) selected @endif >
                                 {{ $documentUser->user->first_name }} {{ $documentUser->user->last_name }} 
                             </option>
                         @endforeach
                     </select>
-                </div>   
+                </div>
             </div><!--End input box-->
             
             
-            <div class="col-md-4 col-lg-4"> 
+            <div class="col-md-4 col-lg-4">
                 <div class="form-group">
                     <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
                     <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">
@@ -134,7 +134,7 @@
                             </option>
                         @endforeach
                     </select>
-                </div>   
+                </div>
             </div><!--End input box-->
             
             
@@ -145,8 +145,15 @@
                     <select name="status" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.status')) }}" disabled>
                         <option value="0"></option>
                         @foreach($documentStatus as $status)
-                            <option value="{{$status->id}}"  @if($status->id == 1) selected @endif > 
+                            <option value="{{$status->id}}" 
+                            @if( isset($data->document_status_id) )
+                                @if($status->id == $data->document_status_id) selected @endif 
+                            @else
+                                @if($status->id == 1) selected @endif 
+                            @endif
+                            > 
                                 {{ $status->name }}
+                            
                             </option>
                         @endforeach
                     </select>
@@ -172,7 +179,7 @@
                 <div class="col-md-4 col-lg-4"> 
                     <div class="form-group ">
                         {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
-                    </div>   
+                    </div>
                 </div><!--End input box-->
             @endif
             <div class="clearfix"></div>
@@ -181,7 +188,7 @@
             <div class="col-md-12 col-lg-12">
                 <div class="form-group">
                     {!! ViewHelper::setArea('summary',$data,old('summary'),trans('documentForm.summary') ) !!}
-                </div>   
+                </div>
             </div><!--End input box-->  
         </div>
     </div>

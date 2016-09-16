@@ -498,6 +498,15 @@ hr {
   /*#page-wrapper a.link.no-underline*/
   text-decoration: none; }
 
+.link-padding {
+  padding: 8px 0; }
+
+.row.flexbox-container:first-child .link-padding {
+  padding-top: 0px; }
+
+.editing {
+  font-size: 12px; }
+
 #page-wrapper a.link {
   text-decoration: underline;
   color: #575756;
@@ -900,6 +909,10 @@ input.form-control:-ms-input-placeholder {
 
 #page-wrapper .treeview span.icon.node-icon.fa:before {
   line-height: 60px; }
+
+#page-wrapper .treeview a.link-after-text {
+  font-weight: normal;
+  line-height: 24px; }
 
 #page-wrapper .treeview span.item-after-text.btn-block,
 #page-wrapper .treeview span.item-before-text.btn-block {
@@ -1700,14 +1713,14 @@ h1.page-title {
   width: 100%;
   padding-left: 30px; }
 
-.phonelist .panel-options {
-  margin-top: 5px; }
-
 .phonelist h4.panel-title {
   line-height: 28px; }
 
 .phonelist .panel-title a {
   padding-left: 0px; }
+
+.phonelist .panel-heading {
+  margin-bottom: -4px; }
 
 .phonelist .panel-heading a:not(.no-arrow):after,
 .phonelist .panel-heading a.collapsed:not(.no-arrow):after {
@@ -1715,9 +1728,6 @@ h1.page-title {
 
 .panel.panel-primary {
   box-shadow: none; }
-
-.phonelist .collapsing, .mandant-administration .collapse.in {
-  margin-top: -4px; }
 
 /* end phonelist */
 /* tabs - start */
@@ -1775,6 +1785,11 @@ h1.page-title {
   display: none !important; }
 
 /* End Treeview */
+/* Iso category page*/
+.second-level {
+  margin-left: 25px; }
+
+/* End Iso category page*/
 /*if css no extension if scss add .scss*/
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)

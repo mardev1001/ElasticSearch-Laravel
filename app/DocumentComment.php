@@ -19,9 +19,18 @@ class DocumentComment extends Model
         return Carbon::parse($value)->format('d.m.Y H:i:s');
     }
     
+    public function getCommentAttribute($value)
+    {
+      return str_replace(["\r\n", "\r", "\n"], "<br/>", $value);
+    
+    }
      
     public function user(){
         return $this->hasOne('App\User','id','user_id');
+    }
+    
+    public function published(){
+        return $this->hasOne('App\DocumentApproval','document_id','document_id')->where('document_approvals.user_id',$this->user_id);
     }
     
     public function document(){

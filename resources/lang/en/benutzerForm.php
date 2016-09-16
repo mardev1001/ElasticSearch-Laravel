@@ -9,7 +9,7 @@ return [
     'password_repeat' => 'Passwort (Bestätigung)',
     'first_name' => 'Vorname',
     'last_name' => 'Nachname',
-    'short_name' => 'Kurzname',
+    'short_name' => 'Kürzel',
     'birthday' => 'Geburtsdatum',
     'email' => 'E-Mail',
     'email_reciever' => 'E-Mails empfangen',

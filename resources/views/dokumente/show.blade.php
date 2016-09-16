@@ -5,6 +5,7 @@
 @section('page-title') @if( isset($document->documentType->name) ){{ $document->documentType->name }}@endif - Übersicht @stop
 
 @section('content')
+
     <div class="box-wrapper ">
          <div class="row">
             <div class="col-md-12 col-lg-12">
@@ -19,7 +20,7 @@
                     @endif  
                         <br>
                         <span class="text">
-                            <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}}@endif, {{ $document->owner->first_name.' '.$document->owner->last_name }})
+                            <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}}@endif @if(isset($document->owner) ), {{ $document->owner->first_name.' '.$document->owner->last_name }}@endif)
                             </strong>
                         </span>
                     </h3>
@@ -84,7 +85,39 @@
                                         @endforeach
                                     </div>
                                 @endif
-
+                                
+                                <!--if doc type formulare display where it's attached-->
+                                @if( $document->documentType->document_art == 1 && count( $document->variantDocuments )  )
+                                <div class="attachments document-attachments">
+                                    <span class="text"> <strong>{{$document->name}}</strong> ist in folgenden Dokumenten angehängt: </span>
+                                    <div class="clearfix"></div> <br>
+                                        <div class="">
+                                            @foreach($document->variantDocuments as $key =>$dc)
+                                                @if( $dc->editorVariant->document->document_status_id == 3 )
+                                                    <div class="row flexbox-container">
+                                                        <div class="col-md-12 link-padding">
+                                                           <span class="text">
+                                                                <span>@if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif</span><br/>
+                                                                @if($dc->editorVariant->document->published != null)
+                                                                    <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
+                                                                @else
+                                                                    <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
+                                                                @endif    
+                                                                    <strong>  {!! $dc->editorVariant->document->name !!} </strong>
+                                                                </a><br/>
+                                                                <span>
+                                                                    {{ $dc->editorVariant->document->documentType->name }}
+                                                                </span>
+                                                            </span>
+                                                            
+                                                        </div>
+                                                    </div><!-- end flexbox container -->
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                </div>
+                                @endif
+                                
                                 @foreach( $variants as $v => $variant)
                                     @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
                                         
@@ -131,7 +164,7 @@
                 
 
                 <div class="col-sm-4 col-md-3 col-lg-2 btns">
-                    @if( ViewHelper::universalDocumentPermission( $document,false ) == true )
+                    @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
                         @if( $document->document_status_id  != 3)
                             <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                         @else
@@ -139,7 +172,7 @@
                         @endif
                     @endif
                     
-                    @if( ViewHelper::universalDocumentPermission( $document,false ) == true )
+                    @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
                         @if( in_array($document->document_status_id, [3,5] ))
                             <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
                                 @if( $document->active  == false)
@@ -152,25 +185,28 @@
                     @endif
                     
                     @if( $document->documentType->document_art == 1)
-                        @if( ViewHelper::universalDocumentPermission( $document,false ) == true || ViewHelper::universalHasPermission( array(13) ) == true )
+                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true || ViewHelper::universalHasPermission( array(13) ) == true )
                             <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> 
                         @endif
                     @else
-                         @if( ViewHelper::universalDocumentPermission( $document,false ) == true || ViewHelper::universalHasPermission( array(11) ) == true )
+                         @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true || ViewHelper::universalHasPermission( array(11) ) == true )
                             <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> 
                         @endif
                     @endif
                     
-                    
-                    @if( ViewHelper::universalHasPermission( array(14) ) == true  )
+                    @if( ViewHelper::universalHasPermission( array(14) ) == true  && count( $document->documentHistory ) > 1  )
                         <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
                     @endif
                     
-                    @if( ViewHelper::universalDocumentPermission( $document,false ) == true )
+                
+                    
+                    @if( ViewHelper::universalDocumentPermission( $document,false,false,true )  )
+                    
                         @if($document->document_status_id == 3)
                             <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
                         @endif
                     @endif
+                    
 
                     @if(count(Request::segments() ) == 2 && (!is_numeric(Request::segment(2) )) )
                         <a href="/dokumente/{{$document->id}}/favorit" class="btn btn-primary pull-right">
@@ -179,7 +215,7 @@
                             @else
                                 {{ trans('dokumentShow.unFavorite') }}
                             @endif</a>  
-                            @if( ViewHelper::universalHasPermission( array(13) ) == true )
+                            @if( ViewHelper::universalHasPermission( array(13) ) == true ||  ViewHelper::documentVariantPermission($document)->permissionExists )
                                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
                             @endif
                         
@@ -256,21 +292,20 @@
     </div>
      
     <div class="clearfix"></div><br>
-    
     @if( count($myComments) )
-        {!! ViewHelper::generateCommentBoxes($myComments, trans('dokumentShow.myComments') ) !!}
+        {!! ViewHelper::generateCommentBoxes($myComments, trans('dokumentShow.myComments'), true ) !!}
     @endif
     
     @if( $commentVisibility->user == true || $commentVisibility->freigabe == true )
         @if(count($documentComments) && ViewHelper::universalHasPermission( array(16) ))
-                {!! ViewHelper::generateCommentBoxes($documentComments, trans('wiki.commentUser') ) !!}
+                {!! ViewHelper::generateCommentBoxes($documentComments, trans('wiki.commentUser'),true ) !!}
         @endif
     @endif
     
     @if( $commentVisibility->freigabe == true )
     
         @if(count($documentCommentsFreigabe) )
-            {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin') ) !!}
+            {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
         @endif
     @endif
     
@@ -282,6 +317,7 @@
                 <!-- variable for expanding document sidebar-->
         <script type="text/javascript">
             var documentType = "{{ $document->documentType->name}}";
+            var documentSlug = "{{ str_slug( $document->documentType->name ) }}";
         </script>
     
             <!--patch for checking iso category document-->

@@ -69,6 +69,7 @@ return [
     'saved' => 'Mandant erfolgreich gespeichert.',
     'savedApproved' => 'Mandant erfolgreich gespeichert und freigegeben.',
     'search' =>'Suche Mandant/Benutzer',
+    'searchUsers' =>'Suche Benutzer',
     'von' =>'Von',
     'bis' =>'Bis',
     'showDeletedUsers' =>'gelöschte Benutzer anzeigen',

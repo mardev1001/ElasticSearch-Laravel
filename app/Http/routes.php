@@ -13,6 +13,8 @@ Route::auth();
 Route::group( array('middleware' => ['auth']), function(){
     
         Route::get('/', 'HomeController@index');
+        Route::get('/kontakt', 'HomeController@contact');
+        Route::post('/kontakt', 'HomeController@contactSend');
         
         Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
         Route::get('/open/{path_part_one}/{path_part_two}', 'HomeController@open');
@@ -60,16 +62,19 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('mandanten/user-delete', 'MandantController@destroyMandantUser');
         Route::get('mandanten/search', 'MandantController@search');
         Route::post('mandanten/search', 'MandantController@search');
+        Route::post('mandanten/search-single', 'MandantController@searchSingle');
         Route::patch('mandanten/activate', 'MandantController@mandantActivate');
         Route::resource('mandanten', 'MandantController');
         
-        Route::get('benutzer/profile', 'UserController@profile');
-        Route::post('benutzer/profile', 'UserController@saveProfile');
+        Route::get('benutzer/profil', 'UserController@profile');
+        Route::post('benutzer/profil', 'UserController@saveProfile');
         Route::post('benutzer/role-transfer', 'UserController@userRoleTransfer');
         Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
         Route::patch('benutzer/roles-edit', 'UserController@userMandantRoleEdit');
         Route::patch('benutzer/activate', 'UserController@userActivate');
         // Route::get('benutzer/{id}/edit/deleted', 'UserController@editDeleted');
+        
+        // UserController@index is used as an individual mandant link becouse of the name-ing
         Route::resource('benutzer', 'UserController');
         Route::resource('iso-kategorien', 'IsoCategoryController');
         Route::resource('rollen', 'RoleController');
@@ -83,6 +88,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('telefonliste', 'TelephoneListController');
         Route::resource('einstellungen', 'SettingsController');
         Route::get('suche/erweitert', 'SearchController@searchAdvanced');
+        Route::get('suche/telefonliste', 'SearchController@searchPhoneList');
         Route::post('suche/telefonliste', 'SearchController@searchPhoneList');
         Route::resource('suche', 'SearchController');
         

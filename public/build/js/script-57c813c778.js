@@ -64363,7 +64363,7 @@ $(function() {
         // console.log("[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] " + "\n" + bankInfo.val());
         bankInfo.val(bankInfo.val() + "\n" + "[" + bankName + "; " + bankIban + "; " + bankBic + "; " + bankMemo + "] ");
         
-    });
+    }); 
     
     
     // Hide or show PDF upload checkbox 
@@ -64506,11 +64506,15 @@ $(function() {
         format: 'DD.MM.YYYY',
         showTodayButton: true,
         showClear: true,
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'bottom'
+        }
     });
 
     if ($('.tree-view').length) {
-        let counter = 0;
-        let $treeview = [];
+        var counter = 0; //let insted of var
+        var $treeview = [];//let insted of var
         $('.tree-view').each(function() {
             $treeview[counter] = $(this).treeview({
                 expandIcon: 'custom-expand-icon',
@@ -64703,7 +64707,7 @@ $( function() {
             $("#page-wrapper").css("min-height", (height) + "px");
         }
     });
-
+    
     /*Exapand active class*/
     var url = window.location;
     var element = $('ul.nav a').filter(function() {
@@ -64729,23 +64733,41 @@ $( function() {
     else if( url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1){
         $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');  
     }
+    else if( url.href.indexOf('suche/erweitert') != -1){ 
+        $('a[href*="suche"]').addClass('active').closest('ul').addClass('in');  
+    }
     else if(  typeof documentType !== 'undefined' && documentType.length){
-        var detectHref = '/dokumente/rundschreiben';
-        if(documentType == "Formulare")
+        var detectHref = '';
+        var locker = false;
+        if(documentType == "Rundschreiben"){
+            detectHref = '/dokumente/rundschreiben'; 
+            locker = true;
+        }
+        if(documentType == "Formulare"){
             detectHref = '/dokumente/vorlagedokumente'; 
+            locker = true;
+        }
             
-        else if(documentType == "QM-Rundschreiben")
+        else if(documentType == "QM-Rundschreiben"){
             detectHref = '/dokumente/rundschreiben-qmr';
+            locker = true;
+        }
             
-        else if(documentType == "News")
+        else if(documentType == "News"){
             detectHref = '/dokumente/news';
+            locker = true;
+        }
             
         else if(documentType == "ISO Dokumente"){
             if( typeof  isoCategoryName  != 'undefined') 
                 detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
             else
                 detectHref = '/iso-dokumente';
-         
+         locker = true;
+        }
+        else if( typeof documentSlug !== 'undefined' && documentSlug.length && locker == false){
+            
+            detectHref = '/dokumente/typ/'+documentSlug;
         }
        $('a[href$="'+detectHref+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
     }
@@ -64759,6 +64781,13 @@ $( function() {
      
     else
     /*End Exapand active class*/
+    
+    /* Page content sidebar treeview */
+     
+    var elementNew = $('content-nav ul.nav a').filter(function() {
+        return this.href == url || url.href.indexOf(this.href) == 0;
+    }).parents("ul").not('.parent-ul').addClass('in');
+    /* End Page content sidebar treeview */
     
     /* Simulate tree view */
     if( $('.tree').length ){
@@ -65788,12 +65817,22 @@ $( function() {
 				if (node.beforeText == undefined) node.beforeText = '&nbsp;';
 				if (node.afterText == undefined) node.afterText = '&nbsp;';
 				
+				// if (node.afterLink != undefined && node.afterLinkText != undefined)
+					
+				if (node.afterLink != undefined){
+					// console.log($($.parseHTML(node.afterLink)).text());
+					var afterTextVal = $($.parseHTML(node.afterLink)).text();
+					// var afterTextVal = '<a href="'+ node.afterLink +'" target="_blank" class="link-after-text btn-block">' + node.afterLinkText + '</a>';
+				}
+				else
+					var afterTextVal = '<span class="item-after-text btn-block">' + node.afterText + '</span>';
+				
 				// Add hyperlink
 				treeItem
 					.append($(_this.template.link).attr('href', node.href)
 						.prepend('<span class="item-before-text btn-block">' + node.beforeText + '</span>')
 						.append('<span class="item-text btn-block">' + node.text + '</span>')
-						.append('<span class="item-after-text btn-block">' + node.afterText + '</span>')
+						.append(afterTextVal)
 					);
 					
 			}
