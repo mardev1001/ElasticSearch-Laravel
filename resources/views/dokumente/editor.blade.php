@@ -120,19 +120,27 @@
                     if ($('.editable').length) {
                     var counter = 0;
                     $('.editable').each(function() {
+                        
                         counter++;
                         if ($(this).data('id'))
                             $(this).attr('id', 'variant-'+$(this).data('id'));
                         else
                             $(this).attr('id', 'variant-' + counter);
+                            
+                               var docWidth = 794, docHeight =1122;
+             
+                        if( $('.document-orientation').length ){
+                             docWidth = 'auto', docHeight = 794;
+                        }   
+                         if( $(this).data('height') ){
+                            docWidth = 'auto',docHeight = $(this).data('height');
+                        }
                         tinymce.init({
                             selector: '.editable',
                             skin_url: '/css/style',
                             plugins:[ "image table" ],
                             toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
-                            body_class: classes,
-                            width: docWidth,
-                            height: docHeight, 
+                           
                             removed_menuitems: 'newdocument',
                             elementpath: false,
                         });

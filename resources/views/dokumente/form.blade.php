@@ -159,14 +159,13 @@
                     </select>
                 </div>   
             </div><!--End input box-->
-            
+
             <!-- Document template select -->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group ">
                     <label class="control-label"> {{ ucfirst(trans('documentForm.documentTemplates')) }}*</label>
                     <select name="document_template" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.documentTemplates')) }}" required>
-                        <option value="1" @if($data->document_template == 1) selected @endif > Vorlage 1</option>
-                        {{-- <option value="2" @if($data->document_template == 2) selected @endif > Vorlage 2</option> --}}
+                        <option value="1" @if((isset($data->document_template)) && ($data->document_template == 1)) selected @endif> Vorlage 1</option>
                     </select>
                 </div>   
             </div>

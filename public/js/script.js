@@ -115378,7 +115378,7 @@ $( function() {
         });
     /* End Trigger tab destroy*/
     
-    /* Trigger tab creation*/
+   /* Trigger tab creation*/
        $('.add-tab').on('click touch',function(){
            	var parent =  $(this),
            	prevNumber = $(this).closest('.parent-tabs').find('.nav-tabs li').size(),
@@ -115414,29 +115414,19 @@ $( function() {
       	*/
       	$('.editable').each(function() {
                         counter++;
-                        if ($(this).data('id'))
-                            $(this).attr('id', $(this).data('id'));
-                        else
-                            $(this).attr('id', 'variant-' + counter);
-                        var classes = ' ';
-                        if( $(this).data('classes') )
-                            classes += $(this).data('classes');
                         
-                        var docWidth = 794, docHeight =1122;
-                        if( $('.document-orientation').length )
-                              docWidth = 'auto', docHeight = 794; 
+                        if ($(this).data('id'))
+                            $(this).attr('id', 'variant-'+$(this).data('id'));
                         else
                             $(this).attr('id', 'variant-' + counter);
                        tinymce.init({
                             selector: '.editable',
                             skin_url: '/css/style',
-                            plugins:[ "table" ],
-                            toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
-                            body_class: classes,
-                            width: docWidth,
-                            height: docHeight, 
+                             plugins:[ "table" ],
+                toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
+                            width: 794,
+                            height: 1122,
                             removed_menuitems: 'newdocument',
-                            elementpath: false,
                         });
         });
       	if( $('.nav-tabs li.active').length < 1 ){

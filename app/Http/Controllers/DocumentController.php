@@ -1896,8 +1896,8 @@ class DocumentController extends Controller
         $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
        
         /* If document type Iso Category load different PDF template*/    
-        /* if($document->document_type_id == $this->isoDocumentId)
-            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));*/
+         if($document->document_type_id == $this->isoDocumentId)
+            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
         /* End If document type Iso Category load different PDF template*/    
         
         /* If landscape is true set paper to landscape */    
