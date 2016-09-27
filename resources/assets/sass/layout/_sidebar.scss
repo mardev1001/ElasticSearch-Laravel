@@ -2,11 +2,12 @@
     margin-top: 10px !important;
     margin-left: 15px;
     width: 240px !important;
-
+    
 }
 
 .navbar-default.sidebar {
-    width: auto !important;
+   /* width: auto !important; */
+    width: 241px !important;
     background-color: transparent !important;
     top: 72px;
     bottom: 10px;
@@ -16,8 +17,8 @@
     margin-right: 41px;
     width: 200px;
     height: 100%;
-
-    
+    overflow-x: hidden;
+    padding-bottom: 23px;
 }
 
 
@@ -26,8 +27,9 @@
     background-color: $nav-light-grey;
     position:relative;
     min-height: 320px;
-    
+    overflow-y: auto;
     height: 100%;
+    width: 216px;
 }
 
 .navbar-toggle.big {
@@ -55,14 +57,14 @@
 
 .sidebar ul li {
     border-bottom: 1px solid #fff !important;
-   
+    width: 200px;
 }
 
 .sidebar-nav .nav a, span.legend-text {
     color: $nav-grey;
     font-weight: bold;
     font-size: 12px;
-    padding: 11px 15px;
+    padding: 12px 15px;
     line-height: 17px;
 }
 
@@ -86,6 +88,7 @@ li.legend {
     bottom: 10px;
     border-top: 1px solid $white-color;
     background-color: $nav-light-grey;
+    height: 41px;
 }
 
 .legend .icon-legend {
@@ -93,8 +96,7 @@ li.legend {
     height: 38px;
     border-left: 1px solid $white-color;
     cursor: pointer;
-    
-    margin-left: 83px;
+  /*  margin-left: 83px;*/
 }
 
 .legend-shadow {
@@ -107,7 +109,8 @@ li.legend {
     position: absolute;
     bottom: 40px;
     background-color: $nav-light-grey;
-    width: 100%;
+    // width: 100%;
+    width: 200px;
     display: none;
     
     // bottom: 125px;

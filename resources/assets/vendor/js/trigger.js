@@ -35,13 +35,19 @@ $( function() {
     if( (location.protocol + "//" + location.host+'/')  !=  url.href){
         $('a[href="/"]').removeClass('active');
     }
-        $('a.active').each(function(){
-            var url = window.location, currentLink = window.location.href 
-            if( $(this).attr('href') != currentLink )
-                $(this).removeClass('active');
-        });
-    if( (location.protocol + "//" + location.host+'/')  ==  url.href){
+    
+    $('a.active').each(function(){
+        var url = window.location, currentLink = window.location.href 
+        if( $(this).attr('href') != currentLink )
+            $(this).removeClass('active');
+    });
+    
+    if( (location.protocol + "//" + location.host+'/')  ==  url.href){ 
         $('a[href="/"]').addClass('active');
+    }
+    else if( url.href.indexOf('benutzer') != -1 && url.href.indexOf('partner') != -1){
+        // console.log(element);
+        $('a[href*="/benutzer"]').addClass('active').closest('ul').addClass('in');
     }
     else if( url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1){
         $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');  
@@ -75,8 +81,10 @@ $( function() {
         }
             
         else if(documentType == "ISO Dokumente"){
-            if( typeof  isoCategoryName  != 'undefined') 
+            if( typeof  isoCategoryName  != 'undefined'){
                 detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")').attr('href');
+                
+            }
             else
                 detectHref = '/iso-dokumente';
          locker = true;
@@ -94,7 +102,6 @@ $( function() {
         element.addClass('active');
     }
     
-     
     else
     /*End Exapand active class*/
     
@@ -277,17 +284,29 @@ $( function() {
       	*/
       	$('.editable').each(function() {
                         counter++;
-                        
                         if ($(this).data('id'))
-                            $(this).attr('id', 'variant-'+$(this).data('id'));
+                            $(this).attr('id', $(this).data('id'));
+                        else
+                            $(this).attr('id', 'variant-' + counter);
+                        var classes = ' ';
+                        if( $(this).data('classes') )
+                            classes += $(this).data('classes');
+                        
+                        var docWidth = 794, docHeight =1122;
+                        if( $('.document-orientation').length )
+                              docWidth = 'auto', docHeight = 794; 
                         else
                             $(this).attr('id', 'variant-' + counter);
                        tinymce.init({
                             selector: '.editable',
                             skin_url: '/css/style',
-                            width: 794,
-                            height: 1122,
+                            plugins:[ "table" ],
+                            toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
+                            body_class: classes,
+                            width: docWidth,
+                            height: docHeight, 
                             removed_menuitems: 'newdocument',
+                            elementpath: false,
                         });
         });
       	if( $('.nav-tabs li.active').length < 1 ){

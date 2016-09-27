@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Request as RequestMerge;
 
 use Auth;
+use Response;
 use App\Http\Requests;
 
 use App\Helpers\ViewHelper;
@@ -282,21 +283,27 @@ class MandantController extends Controller
         // $mandantsAll = Mandant::all();
         $mandantsAll = Mandant::where('hauptstelle', true)->where('id', '!=', $id)->get();
         
-        $mandantUsers = array();
-        $mandantUsersTmp = MandantUser::all();
-        foreach ($mandantUsersTmp as $mandantUser) {
-            if($mandantUser->mandant->rights_admin){
-                if(!in_array($mandantUser->user, $mandantUsers))
-                    array_push($mandantUsers, $mandantUser->user);
+        $mandantUsersNeptun = array();
+        $mandantUsers = MandantUser::all();
+        
+        // Get all users with telefonliste roles where mandant is with neptun flag
+        foreach ($mandantUsers as $mandantUser) {
+            foreach($mandantUser->role as $role){
+                if($role->phone_role && $mandantUser->mandant->rights_admin){
+                    // if(!in_array($mandantUser->user, $mandantUsersNeptun))
+                    //     array_push($mandantUsersNeptun, $mandantUser->user);
+                    if(!in_array($mandantUser, $mandantUsersNeptun))
+                        array_push($mandantUsersNeptun, $mandantUser);
+                }
             }
         }
-        // dd($mandantUsers);
+        // dd($mandantUsersNeptun);
         
         if(isset($data)){
             if($data->edited_by == 0 || $data->edited_by == Auth::user()->id){
                 $data->edited_by = Auth::user()->id;
                 $data->save();
-                return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsers', 'internalMandantUsers','bundeslander'));
+                return view('formWrapper', compact('data','roles', 'mandantsAll', 'mandantUsersNeptun', 'internalMandantUsers','bundeslander'));
             } else return back()->with('message', 'Mandant kann nicht bearbeitet werden.');
         }
         else
@@ -465,6 +472,39 @@ class MandantController extends Controller
         }
         
         return back();
+    }
+    
+    /**
+     * Retrieve Neptun users with telephone roles by the specified request parameters (as HTML).
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function ajaxInternalRoles(Request $request) {
+        
+        $html = '<option></option>';
+        $mandantUsersNeptun = array();
+        $roleId = $request->get('role_id');
+        $mandantUsers = MandantUser::all();
+        
+        // Get all users with telefonliste roles where mandant is with neptun flag
+        foreach ($mandantUsers as $mandantUser) {
+            foreach($mandantUser->role as $role){
+                if($role->phone_role && $mandantUser->mandant->rights_admin && $role->id == $roleId){
+                    if(!in_array($mandantUser, $mandantUsersNeptun))
+                        array_push($mandantUsersNeptun, $mandantUser);
+                }
+            }
+        }
+        
+        foreach ($mandantUsersNeptun as $mandantUser) {
+            $html .= '<option value="'. $mandantUser->user->id .'">'. 
+            $mandantUser->user->first_name .' '. $mandantUser->user->last_name .
+            ' ['. $mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname .']</option>';
+        }
+        
+        // dd($html);
+        return $html;
     }
     
     /**

@@ -33,6 +33,10 @@ textarea{
     visibility: hidden !important;
 }
 
+#side-menu ul.collapsing{
+     transition: none !important;
+}
+
 @media(min-width:768px) {
     
     .sidebar {

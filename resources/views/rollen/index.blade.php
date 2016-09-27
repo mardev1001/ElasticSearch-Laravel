@@ -25,7 +25,7 @@
                                     <option value="0"></option>
                                     <option value="required">Pflichtfeld</option>
                                     <option value="admin">NEPTUN</option>
-                                    <option value="mandant">Mandant</option>
+                                    <option value="mandant">Partner</option>
                                     <option value="wiki">Wiki</option>
                                     <option value="phone">Telefonliste</option>
                                 </select>
@@ -94,7 +94,7 @@
                                                 <option value="0"></option>
                                                 <option value="required" @if($role->mandant_required) selected @endif > Pflichtfeld</option>
                                                 <option value="admin" @if($role->admin_role) selected @endif > NEPTUN</option>
-                                                <option value="mandant" @if($role->mandant_role) selected @endif > Mandant</option>
+                                                <option value="mandant" @if($role->mandant_role) selected @endif > Partner</option>
                                                 <option value="wiki" @if($role->wiki_role) selected @endif > Wiki</option>
                                                 <option value="phone" @if($role->phone_role) selected @endif > Telefonliste</option>
                                             </select>
@@ -153,11 +153,21 @@
                                                 <input class="form-control" type="text" name="name" value="{{ $role->name }}" placeholder="{{ trans('rollenForm.name') }}*" required/>
                                             </div>
                                         </td>
+                                        {{--
                                         <td class="col-xs-12 col-md-2 vertical-center">
                                              <br> <p>{{ trans('rollenForm.editing') }}</p>
                                         </td> 
+                                        --}}
                                          <td class="col-xs-12 col-md-1 vertical-center">
-                                            <div class="checkbox checkbox-inline pull-right">
+                                            <div class="checkbox pull-left no-margin-top">
+                                                <input type="checkbox" name="mandant" id="mandant-{{ $role->id }}" @if($role->mandant_role) checked @endif>
+                                                <label for="mandant-{{ $role->id }}">{{ trans('rollenForm.mandant') }}</label>
+                                            </div>
+                                            <div class="checkbox pull-left no-margin-top">
+                                                <input type="checkbox" name="phone" id="phone-{{ $role->id }}" @if($role->phone_role) checked @endif>
+                                                <label for="phone-{{ $role->id }}">{{ trans('rollenForm.phone') }}</label>
+                                            </div>
+                                            <div class="checkbox pull-left no-margin-top">
                                                 <input type="checkbox" name="wiki" id="wiki-{{ $role->id }}" @if($role->wiki_role) checked @endif>
                                                 <label for="wiki-{{ $role->id }}">{{ trans('rollenForm.wiki') }}</label>
                                             </div>

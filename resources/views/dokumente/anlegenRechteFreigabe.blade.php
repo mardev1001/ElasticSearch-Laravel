@@ -10,6 +10,11 @@
         'method' => 'POST',
         'class' => 'horizontal-form freigabe-process' ]) !!}
             <div class="box-wrapper">
+                @if( $data->name != null)   
+                    <div class="row">
+                       <div class="col-md-12"><h3 class="title doc-title">{{ $data->name }}</h3></div>
+                    </div>
+                @endif
                 <h2 class="title">{{ trans('rightsRelease.release') }}</h2>
                 <div class="box">
                     <div class="row">

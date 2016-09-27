@@ -13,6 +13,7 @@ use Mail;
 
 use App\Document;
 use App\DocumentComment;
+use App\DocumentCoauthor;
 use App\Mandant;
 use App\User;
 use App\MandantUser;
@@ -67,9 +68,20 @@ class HomeController extends Controller
 		
 		$documentsNew = $this->document->getUserPermissionedDocuments($documentsNew,'neue-dokumente');
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
-
+        
+        $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('owner_user_id', Auth::user()->id)
+        // ->where('user_id', Auth::user()->id)
+        ->orWhere(
+            /* Neptun-275 */
+            function($query) use ($myRundCoauthor) {
+                $query->where('user_id', Auth::user()->id)
+                      ->orWhere('owner_user_id', Auth::user()->id);
+                    //   ->documentCoauthors('',);
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
+        )
         ->where('document_type_id', '!=', 5)
         ->where('document_status_id', '!=', 5)
         //->where('document_status_id', '!=', 6) Task in Jira NEPTUN-275

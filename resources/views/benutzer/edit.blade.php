@@ -168,6 +168,7 @@ Benutzer bearbeiten
             </div>
         </div><!--end box-->
     </div>
+    
     {!! Form::close() !!}
     
     <div class="clearfix"></div> <br>
@@ -176,9 +177,11 @@ Benutzer bearbeiten
 
 
 
+
 <fieldset class="form-group">
     
     {!! Form::open(['action' => 'UserController@userRoleTransfer', 'method'=>'POST']) !!}
+
     <div class="box-wrapper">
         <h4 class="title">{{ trans('benutzerForm.user') }} {{ trans('benutzerForm.roleTransfer') }}</h4>
         <div class="box">
@@ -201,10 +204,11 @@ Benutzer bearbeiten
             </div>
         </div>
     </div>
+
     {!! Form::close() !!}
     
 </fieldset>
-    
+
 <fieldset class="form-group">
     
     {!! Form::open(['action' => 'UserController@userMandantRoleAdd', 'method'=>'POST']) !!}
@@ -216,14 +220,24 @@ Benutzer bearbeiten
             <div class="row inline">
                 <div class="col-md-4">
                     <div class="form-group">
-                       {{-- ViewHelper::setSelect($mandantsAll, 'mandant_id', '', old('mandant_id'), trans('benutzerForm.mandant'), trans('benutzerForm.mandant'), true, [], [], []) --}}
                         <label class="control-label">{{trans('benutzerForm.mandant')}}*</label>
-                        <select name="mandant_id" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.mandant')) }}" required>
-                            <option></option>
-                            @foreach($mandantsAll as $mandant)
-                                <option value="{{$mandant->id}}">({{ $mandant->mandant_number }}) {{ $mandant->kurzname }}</option>
-                            @endforeach
-                        </select>
+                        
+                            <select name="mandant_id" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.mandant')) }}" required>
+                                <option></option>
+                                @foreach($mandantsAll as $mandant)
+                                    <option value="{{$mandant->id}}">({{ $mandant->mandant_number }}) {{ $mandant->kurzname }}</option>
+                                @endforeach
+                            </select>
+                        
+                        {{--
+                            <select name="mandant_id" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.mandant')) }}" required disabled>
+                                <option value="{{ViewHelper::getMandant($user->id)->id}}" selected>
+                                    ({{ViewHelper::getMandant($user->id)->mandant_number}}) {{ ViewHelper::getMandant($user->id)->kurzname }}
+                                </option>
+                            </select>
+                            <input type="hidden" name="mandant_id" value="{{ViewHelper::getMandant($user->id)->id}}">
+                        --}}
+                        
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -242,8 +256,9 @@ Benutzer bearbeiten
             </div>
         </div>
     </div>
+    
     {!! Form::close() !!}
-
+    
     <div class="clearfix"></div>
     
     @if(count($user->mandantUsers))

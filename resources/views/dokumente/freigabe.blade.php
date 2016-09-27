@@ -170,7 +170,14 @@
                    
                 @elseif( ($authorised == false && $canPublish == true && $published == false ) ||  
                        ($authorised == true && $published == false ) )
-                        <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                        
+                        @if( ( ( $document->documentType->document_art == 1 &&
+                                ViewHelper::universalHasPermission( array(13) ) == true ) ||
+                                ( $document->documentType->document_art == 0 &&
+                                ViewHelper::universalHasPermission( array(11) ) == true ) )
+                                && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
+                            <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                        @endif
                 @endif
                 
             </div>

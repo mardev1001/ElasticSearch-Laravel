@@ -11,6 +11,7 @@ $(function() {
 
     $('#side-menu').metisMenu({
         doubleTapToGo: true,
+        toggle: false,
     });
 
     $(".select").chosen({});
@@ -82,10 +83,10 @@ $(function() {
         		"sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
         	}
         },
-        columnDefs: [{
-            targets: 'no-sort',
-            orderable: false
-        }]
+        columnDefs: [
+            { targets: 'no-sort', orderable: false },
+            { targets: 'col-hide', visible: false }
+        ]
     });
     if ($('.editable').length) {
         var counter = 0;
@@ -98,7 +99,7 @@ $(function() {
             var classes = '';
            
             if( $(this).data('classes') )
-                classes = $(this).data('classes');
+                classes += $(this).data('classes');
             
              var docWidth = 794, docHeight =1122;
              
@@ -108,13 +109,15 @@ $(function() {
              if( $(this).data('height') ){
                 docWidth = 'auto',docHeight = $(this).data('height');
             }
-                
-            tinymce.init({
-                selector: '.editable',
+              
+            tinymce.init({ 
+                selector: '.editable', 
                 skin_url: '/css/style',
+                plugins:[ "table" ],
+                toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
                 body_class: classes,
                 width: docWidth,
-                height: docHeight,
+                height: docHeight, 
                 removed_menuitems: 'newdocument',
                 elementpath: false,
 
@@ -132,11 +135,14 @@ $(function() {
                 $(this).attr('id', 'content-editor-' + counter);
             var classes = '';
             if( $(this).data('classes') )
-                classes = $(this).data('classes');
+                classes += $(this).data('classes');
             tinymce.init({
                 selector: '.content-editor',
                 skin_url: '/css/style',
+                plugins:[ "table" ],
+                toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
                 body_class: classes,
+                height: docHeight, 
                 height: 350,
                 removed_menuitems: 'newdocument',
                 elementpath: false,
@@ -145,33 +151,109 @@ $(function() {
         });
     }
     if ($('.variant').length) {
+        $('.variant').closest('form').addClass('.tinymce-image');
+        
         var counter = 0;
         $('.variant').each(function() {
+            
             counter++;
             if ($(this).data('id'))
                 $(this).attr('id', $(this).data('id'));
             else
                 $(this).attr('id', 'variant-' + counter);
-            var classes = '';
+            var classes = ' ';
             if( $(this).data('classes') )
-                classes = $(this).data('classes');
+                classes += $(this).data('classes');
             
             var docWidth = 794, docHeight =1122;
             if( $('.document-orientation').length )
-                  docWidth = 'auto', docHeight = 794;
-                
+                  docWidth = 'auto', docHeight = 794; 
+            
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
+                plugins:[ "table" ],
+                toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
                 body_class: classes,
                 width: docWidth,
-                height: docHeight,
+                height: docHeight, 
                 removed_menuitems: 'newdocument',
                 elementpath: false,
 
             });
         });
     }
+    
+   
+    /*$('form').submit(function(e){
+        
+        if( $(this).find('.variant').length ){
+            // 
+            
+            e.preventDefault();
+            var form = $(this);
+             $('.variant').each(function(){
+                 var id = $(this).attr('id');
+                 $('#'+id).html(tinymce.get(id).getContent());
+                 tinymce.get(id).save();
+                 var content = $('#'+id+'_ifr').get(0).contentWindow.document.body.innerHTML;
+                 if( content == '<p><br data-mce-bogus="1"></p>')
+                    content = '';
+                 console.log(id);
+                //  console.log(tinyMCE.get(id));
+                //  console.log(tinymce.get(id).getContent());
+                //  console.log( $('#'+id+'_ifr body').contents() );
+                //  console.log( $('#'+id+'_ifr body').contents().html() );
+                //  console.log( $('#'+id+'_ifr body').html() );
+                //  console.log( $('#'+id+'_ifr body').text() );
+                 console.log( );
+                //  console.log( $(document).find('#'+id+'_ifr body').contents().find("html").html() );
+                //  console.log( document.getElementById(id).contentWindow.document.body.innerHTML);
+                 
+             });
+            //   form.trigger('submit');
+        }
+        
+        // $('#elm1').html(tinymce.get('elm1').getContent()); 
+    });*/
+    
+    function elFinderBrowser (field_name, url, type, win) {
+      tinymce.activeEditor.windowManager.open({
+        file: '',// use an absolute path!
+        title: 'elFinder 2.0',
+        width: 900,
+        height: 450,
+        resizable: 'yes'
+      }, {
+        setUrl: function (url) {
+          win.document.getElementById(field_name).value = url;
+        }
+      });
+      return false;
+    }
+    var imageFilePicker = function (callback, value, meta) {               
+    tinymce.activeEditor.windowManager.open({
+        title: 'Image Picker',
+        url: '/images/getimages',
+        width: 650,
+        height: 550,
+        buttons: [{
+            text: 'Insert',
+            onclick: function () {
+                //.. do some work
+                tinymce.activeEditor.windowManager.close();
+            }
+        }, {
+            text: 'Close',
+            onclick: 'close'
+        }],
+    }, {
+        oninsert: function (url) {
+            callback(url);
+            console.log("derp");
+        },
+    });
+};
     /*Scroll to element id*/
     if( $('.scrollTo').length ){
         var element = $('.scrollTo').val(), navHeight = $('.navbar-fixed-top').height()+10;

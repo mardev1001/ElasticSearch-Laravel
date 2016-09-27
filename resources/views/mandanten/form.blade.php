@@ -192,7 +192,6 @@
                 <!-- input box-->
                 <div class="col-md-4 col-lg-4">
                     <div class="form-group">
-                        {{-- ViewHelper::setUserSelect($mandantUsers, 'geschaftsfuhrer', $data, old('geschaftsfuhrer'), trans('mandantenForm.geschaftsfuhrer') )  --}}
                         {!! ViewHelper::setInput('geschaftsfuhrer', $data, old('geschaftsfuhrer'), trans('mandantenForm.geschaftsfuhrer') )  !!}
                     </div>
                 </div><!--End input box-->

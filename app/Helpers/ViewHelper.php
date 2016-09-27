@@ -437,7 +437,7 @@ class ViewHelper
     }
     
    /**
-     * Universal dosument permission chekc
+     * Universal document permission check
      * @param array $userArray
      * @param collection $document
      * @param bool $message

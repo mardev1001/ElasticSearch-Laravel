@@ -10,6 +10,7 @@ namespace App\Http\Repositories;
 use Auth;
 use DB;
 use App\MandantUser;
+use App\UserSettings;
 use App\MandantUserRole;
 
 
@@ -58,5 +59,38 @@ class UtilityRepository
         $mandant = MandantUser::where('user_id', $user->id)->first()->mandant;
         return (bool)$mandant->rights_wiki;
     }
+    
+    /**
+     * Get telephone list view settings
+     * @return array
+     */
+    static function getPhonelistSettings(){
+        
+        $visible = array();
+        $settingsUID = Auth::user()->id;
+        $settingsCategory = 'telefonliste';
+        $settingsName = 'visibleColumns';
+        
+        // Define default display options for user if they dont exist
+        $settingsOld = UserSettings::where('user_id', $settingsUID)
+            ->where('category', $settingsCategory)->where('name', $settingsName)->get();
+        
+        if(count($settingsOld) == 0){
+            for($i = 1; $i <= 7; $i++)
+                UserSettings::create(['user_id' => $settingsUID, 'category' => $settingsCategory, 'name' => $settingsName, 'value' => 'col'.$i ]);
+        }
+        
+        // Retrieve users display options
+        $userSettings = UserSettings::where('user_id', $settingsUID)
+            ->where('category', $settingsCategory)->where('name', $settingsName)->get();
+        
+        foreach($userSettings as $setting){
+            $visible[$setting->value] = true;
+        }
+        
+        return $visible;
+    }
+    
+    
      
 }

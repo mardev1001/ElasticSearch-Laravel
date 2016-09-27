@@ -59,33 +59,21 @@
             
             @foreach( $mandants as $mandant)
             
-                {{-- @if(count($mandant->mandantUsers) > 0) --}}
-                
                 <div class="panel panel-primary" id="panelMandant{{$mandant->id}}">
                     
                     <div class="panel-heading">
                         <h4 class="panel-title col-xs-12">
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
                                    href="#collapseMandant{{$mandant->id}}">
-                                  ({{$mandant->mandant_number}}) {{$mandant->kurzname}} 
-                                  
-                                  
-                                 
-                                 {{-- @if($mandant->edited_by) 
-                                  [In Bearbeitung: 
-                                  {{ ViewHelper::getUser($mandant->edited_by)->title}} 
-                                  {{ ViewHelper::getUser($mandant->edited_by)->last_name}}]
-                                  @endif --}}
+                                  ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
                                 </a>
                             
                         </h4>
                         
                         <span class="panel-options col-xs-12">
-                                 <span class="panel-title">
-                                      {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
-                                 </span>
-                                 <span class="pull-right">
-                                 </span>
+                             <span class="panel-title">
+                                  {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
+                             </span>
                         </span>
                     </div>
                    
@@ -117,31 +105,28 @@
                                     
                                     @foreach( $mandant->mandantUsers as $mandantUser )
                                         <tr>
-                                            <td class="valign">{{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
+                                            <td class="valign"> {{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
                                             <td class="col-md-8 valign">
-                                                
                                                 @foreach( $roles as $role)
                                                     @foreach( $mandantUser->mandantUserRoles as $mandantUserRole)
-                                                        @if($mandantUserRole->role_id == $role->id)
+                                                        @if(($mandantUserRole->role_id == $role->id) && $role->mandant_role)
                                                             {{ $role->name }};
                                                         @endif
                                                     @endforeach
                                                 @endforeach
-
                                             </td>
-                                            <td class="text-center valign">{{ count($mandantUser->user->countMandants) }}</td>
+                                            <td class="text-center valign"> {{ count($mandantUser->user->countMandants) }} </td>
                                             <td class="valign table-options text-center">
                                                 {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                                     @if($mandantUser->user->active)
-                                                        <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
+                                                        <button class="btn btn-xs btn-success" type="submit" name="active" value="1">Aktiv</button><br>
                                                     @else
-                                                        <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
+                                                        <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">Inaktiv</button><br>
                                                     @endif
                                                 {!! Form::close() !!}
                                                 
-                                                {{-- Form::open(['route'=>['benutzer.destroy', 'id'=> $mandantUser->user->id], 'method'=>'DELETE']) --}}
                                                 {!! Form::open(['action' => 'MandantController@destroyMandantUser', 'method'=>'POST']) !!}
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
@@ -150,7 +135,12 @@
                                                     >Entfernen</button><br>
                                                 {!! Form::close() !!}
                                                 
-                                                <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
+                                                {{-- <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a> --}}
+                                                {!! Form::open(['url' => '/benutzer/'. $mandantUser->user->id .'/partner/'. $mandantUser->mandant->id .'/edit', 'method'=>'POST']) !!}
+                                                    <!--<input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">-->
+                                                    <!--<input type="hidden" name="mandant_id" value="{{ $mandant->id }}">-->
+                                                    <button type="submit" class="btn btn-xs btn-primary">Bearbeiten</button>
+                                                {!! Form::close() !!}
                                             </td>
                                         </tr>
                                         
@@ -173,8 +163,6 @@
                     </div>
                     
                 </div>
-                
-                {{-- @endif --}}
                 
             @endforeach
             
@@ -255,9 +243,9 @@
                                                             <input type="hidden" name="user_id" value="{{ $unassignedUser->id }}">
                                                             
                                                             @if($unassignedUser->active)
-                                                                <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
+                                                                <button class="btn btn-xs btn-success" type="submit" name="active" value="1">Aktiv</button><br>
                                                             @else
-                                                                <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
+                                                                <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">Inaktiv</button><br>
                                                             @endif
                                                         {!! Form::close() !!}
                                                         

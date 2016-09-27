@@ -90,7 +90,7 @@ class DocumentRepository
             'pageFavorites' => false,
             'pageDocuments' => false,
             'myDocuments' => false,
-            'formulare' => false,
+            // 'formulare' => false,
         ];
         $options = array_merge($optionsDefault, $options);
 
@@ -200,7 +200,8 @@ class DocumentRepository
                     
                     $node->afterText = $document->documentType->name;
                     
-                    if( isset($options['formulare']) && $options['formulare'] == true ){
+                    // if( isset($options['formulare']) && $options['formulare'] == true ){
+                    if( $document->documentType->document_art == 1 ){
                         
                         $variants = $this->documentVariantPermission($document, false)->variants;
                         
@@ -212,7 +213,7 @@ class DocumentRepository
                         // dd($document->variantDocuments);
                         foreach($document->variantDocuments as $key => $dc){
                             
-                            $docPublished = $dc->editorVariant->document->published;
+                            if(isset($dc->editorVariant->document->published)) $docPublished = $dc->editorVariant->document->published;
                             if(isset($docPublished)) $docStatus = $docPublished->document->document_status_id == 3;
                             
                             if($key != 0 && $docStatus && isset($docPublished->url_unique)) {
@@ -735,7 +736,7 @@ class DocumentRepository
         foreach($variants as $variant){
             if($hasPermission == false){//check if hasPermission is already set
                 if($variant->approval_all_mandants == true){//database check
-                    
+                     
                     if($document->approval_all_roles == true){//database check
                             $hasPermission = true;
                             $variant->hasPermission = true;
@@ -750,15 +751,19 @@ class DocumentRepository
                                 }
                             }//end foreach documentMandantRoles
                         }
+                
+                 
                 }
                 else{
-                   
-                    foreach( $variant->documentMandantMandants as $mandant){
+                    if( count($variant->documentMandantMandants ) ){
+                        foreach( $variant->documentMandantMandants as $mandant){
                             //   if( $document->id == 3  && $uid == 17)
                             //         dd($mandantRolesArr);
+                            
                         if( $this->universalDocumentPermission($document,$message) == true){
                           
                            if($document->approval_all_roles == true){
+                              
                                 foreach($variant->documentMandantMandants as $mandant){
                                     if( in_array($mandant->mandant_id, $madantArr) ){
                                         $variant->hasPermission = true;
@@ -797,13 +802,26 @@ class DocumentRepository
                                 }//end foreach documentMandantRoles
                             }
                         }
+                       
                     }//end foreach documentMandantMandants
+                    }
+                    else{
+                        if( ($this->universalDocumentPermission($document,$message) == true) ){
+                            //  dd($document);
+                            if( $document->approval_all_roles == true ){
+                                $variant->hasPermission = true;
+                                 $hasPermission = true;
+                                 $object->permissionExists = true;
+                            }
+                        }
+                    }
                 }
             }
         }
         if( $object->permissionExists == true )
             \Session::forget('message');
         $object->variants = $variants;
+        // dd($variants);
         return $object;
     }//end documentVariant permission
    

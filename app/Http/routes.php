@@ -57,6 +57,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('comment-delete/{comment_id}/{document_id}', 'DocumentController@deleteComment');
         
         // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
+        Route::get('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
+        Route::post('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
         Route::post('mandanten/{id}/internal-roles', ['as'=>'mandant.internal-roles-add', 'uses' => 'MandantController@createInternalMandantUser']);
         Route::post('mandanten/{id}/internal-roles-edit', ['as'=>'mandant.internal-roles-edit', 'uses' => 'MandantController@editInternalMandantUser']);
         Route::post('mandanten/user-delete', 'MandantController@destroyMandantUser');
@@ -67,6 +69,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('mandanten', 'MandantController');
         
         Route::get('benutzer/profil', 'UserController@profile');
+        Route::get('benutzer/{id}/edit-partner/{mandant_id}', 'UserController@editPartner');
+        Route::match(['post', 'get'], 'benutzer/{id}/partner/{mandant_id}/edit', 'UserController@editPartner');
         Route::post('benutzer/profil', 'UserController@saveProfile');
         Route::post('benutzer/role-transfer', 'UserController@userRoleTransfer');
         Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
@@ -85,6 +89,7 @@ Route::group( array('middleware' => ['auth']), function(){
         //Route::resource('statistik', 'StatsController');
         Route::get('telefonliste/{id}/pdf', 'TelephoneListController@pdfExport');
         Route::post('telefonliste/xls', 'TelephoneListController@xlsExport');
+        Route::post('telefonliste/display-options', 'TelephoneListController@displayOptions');
         Route::resource('telefonliste', 'TelephoneListController');
         Route::resource('einstellungen', 'SettingsController');
         Route::get('suche/erweitert', 'SearchController@searchAdvanced');
@@ -102,7 +107,9 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('wiki/{id}/activate', 'WikiController@wikiActivation');
         Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
         Route::resource('wiki', 'WikiController');
-
+        
+        
+        
 }); //end auth middleware
     
 //}); //end web middleware

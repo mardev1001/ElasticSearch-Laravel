@@ -287,7 +287,7 @@
                                             {!! $wiki->name !!} - 
                                         @endif
                                         
-                                        {{\Carbon\Carbon::parse($wiki->created_at)->format('d.m.Y H:m:s')}} 
+                                        {{\Carbon\Carbon::parse($wiki->created_at)->format('d.m.Y H:i:s')}} 
                                     </strong> 
                                 </a>
                             </div>

@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Repositories\SearchRepository;
 use App\Http\Repositories\DocumentRepository;
+use App\Http\Repositories\UtilityRepository;
 
 use App\Document;
 use App\DocumentType;
@@ -27,10 +28,11 @@ class SearchController extends Controller
      * Class constructor
      *
      */
-    public function __construct(SearchRepository $searchRepo, DocumentRepository $docRepo)
+    public function __construct(SearchRepository $searchRepo, DocumentRepository $docRepo, UtilityRepository $utilRepo )
     {
         $this->search =  $searchRepo;
         $this->document =  $docRepo;
+        $this->utility =  $utilRepo;
     }
     
     
@@ -342,6 +344,9 @@ class SearchController extends Controller
         if(!$request->has('search') || $request->method() == "GET")
             return redirect('telefonliste');
             
+        $visible = $this->utility->getPhonelistSettings();
+            
+        $partner = false;
         $search = true;
         $searchParameter = $request->get('search');
         $roles = Role::all();
@@ -358,8 +363,24 @@ class SearchController extends Controller
         
         if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $loggedUserMandant->rights_admin == 1)
             $mandants = $mandants->where('active', 1)->orderBy('mandant_number')->get();
-        else
+        else{
+            $partner = true;
             $mandants = $mandants->where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        }
+
+        // dd($loggedUserMandant);
+        if(!$mandants->contains($loggedUserMandant) && (
+            (stripos($loggedUserMandant->name, $searchParameter) !== false) ||
+            (stripos($loggedUserMandant->kurzname, $searchParameter) !== false) ||
+            (stripos($loggedUserMandant->mandant_number, $searchParameter) !== false )) ){
+                $mandants->prepend($loggedUserMandant);
+        }
+        
+        // Sort by Mandant No.
+        $mandants = array_values(array_sort($mandants, function ($value) {
+            return $value['mandant_number'];
+        }));
+        // dd($mandants);
         
         // Get users for searched mandants
         foreach($mandants as $k => $mandant){
@@ -376,23 +397,44 @@ class SearchController extends Controller
                 $usersInternal[] = $user;
     
             foreach($mandant->users as $k2 => $mUser){
+                
+                // foreach($mUser->mandantRoles as $mr){
+                //     // Check for phone roles
+                //     if( $mr->role->phone_role ) {
+                //         // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->first();
+                //         $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                //         if(!count($internalRole)){
+                //             $userArr[] = $mandant->users[$k2]->id;
+                //         }
+                //     }
+                    
+                //     // if(isset($localUser) || Auth::user()->id == 1 ){
+                //     if(isset($localUser)){
+                //         // Add all users to the array for the mandant, if they have the same mandant
+                //         if($mUser->active && !in_array($mUser->id, $userArr))
+                //             $userArr[] = $mUser->id;
+                //     }
+                    
+                // }
+                
                 foreach($mUser->mandantRoles as $mr){
-                    // Check for phone roles
-                    if( $mr->role->phone_role ) {
-                        // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->first();
-                        $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                        if(!count($internalRole)){
-                            $userArr[] = $mandant->users[$k2]->id;
+                    if($partner){
+                        // Check for partner roles
+                        if( $mr->role->mandant_role ) {
+                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                            if(!count($internalRole)){
+                                $userArr[] = $mandant->users[$k2]->id;
+                            }
+                        }
+                    } else {
+                        // Check for phone roles
+                        if( $mr->role->phone_role ) {
+                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                            if(!count($internalRole)){
+                                $userArr[] = $mandant->users[$k2]->id;
+                            }
                         }
                     }
-                    
-                    // if(isset($localUser) || Auth::user()->id == 1 ){
-                    if(isset($localUser)){
-                        // Add all users to the array for the mandant, if they have the same mandant
-                        if($mUser->active && !in_array($mUser->id, $userArr))
-                            $userArr[] = $mUser->id;
-                    }
-                    
                 }
             } //end second foreach
             
@@ -401,10 +443,11 @@ class SearchController extends Controller
         }
         
         // Get mandants for searched users
-        if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $loggedUserMandant->rights_admin == 1)
-            $mandantsSearch = Mandant::where('active', 1)->orderBy('mandant_number')->get();
-        else
+        // if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $loggedUserMandant->rights_admin == 1)
+        if($partner)
             $mandantsSearch = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        else
+            $mandantsSearch = Mandant::where('active', 1)->orderBy('mandant_number')->get();
             
         $myMandantSearch = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
         if(!$mandantsSearch->contains($myMandantSearch))
@@ -431,11 +474,20 @@ class SearchController extends Controller
             // dd($mandant->users);
             foreach($mandant->users as $k2 => $mUser){
                 foreach($mUser->mandantRoles as $mr){
-                    // Check for phone roles
-                    $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                    if(!count($internalRole)){
-                        if( $mr->role->phone_role && !in_array($mandant->users[$k2]->id, $usersInMandants) ) 
-                             $usersInMandants[] = $mandant->users[$k2]->id;
+                    if($partner){
+                        // Check for partner roles
+                        $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                        if(!count($internalRole)){
+                            if( $mr->role->mandant_role && !in_array($mandant->users[$k2]->id, $usersInMandants) ) 
+                                 $usersInMandants[] = $mandant->users[$k2]->id;
+                        }
+                    } else {
+                        // Check for phone roles
+                        $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                        if(!count($internalRole)){
+                            if( $mr->role->phone_role && !in_array($mandant->users[$k2]->id, $usersInMandants) ) 
+                                 $usersInMandants[] = $mandant->users[$k2]->id;
+                        }
                     }
                 }
             }
@@ -456,7 +508,7 @@ class SearchController extends Controller
         
         // dd($usersInternal);
         
-        return view('telefonliste.index', compact('search', 'searchParameter', 'mandants', 'users', 'usersInternal', 'roles') );
+        return view('telefonliste.index', compact('search', 'partner','searchParameter', 'mandants', 'users', 'usersInternal', 'roles', 'visible') );
     }
     
     // Old and buggy method

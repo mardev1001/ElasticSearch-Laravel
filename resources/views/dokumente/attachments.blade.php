@@ -5,6 +5,11 @@
 @stop
     @section('content')
         <div class="box-wrapper col-md-12">
+            @if( $data->name != null)   
+                <div class="row">
+                   <div class="col-md-12"><h3 class="title doc-title">{{ $data->name }}</h3></div>
+                </div>
+            @endif
             <div class="box">
                 <div class="row">
                     <div class="col-xs-12">

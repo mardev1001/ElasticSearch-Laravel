@@ -8,6 +8,8 @@ return [
     'rights' => 'Rechte',
     'copy' => 'Kopieren',
     'wiki' => 'Wiki',
+    'mandant' => 'Partner',
+    'phone' => 'Telefonliste',
     'system' => 'System',
     'document' => 'Dokument',
     'documents' => 'Dokumente',

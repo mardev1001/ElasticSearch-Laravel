@@ -40,8 +40,8 @@
                                     <tr>
                                         <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
                                         <td>Ja</td>
-                                        <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read'])->format('d.m.Y H:m:s')}}</td>
-                                        <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->format('d.m.Y H:m:s')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read'])->format('d.m.Y H:i:s')}}</td>
+                                        <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->format('d.m.Y H:i:s')}}</td>
                                     </tr>
                                 @else
                                     <tr>

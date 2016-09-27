@@ -1,11 +1,14 @@
 @section('page-title') {{ trans('controller.create') }} @stop
 <h3 class="title">{{ trans('controller.editor') }}</h3>
+
+
 <input type="hidden" name="model_id" value="{{$data->id}}" />
 @if($data->landscape == true)
     <input type="hidden" class="document-orientation" name="document-orientation" value="landscape" />
 @endif
 <!--<div class="box-wrapper">-->
 <!--    <div class="box">-->
+
         <div class="row">
             <!-- input box-->
             <div class="col-lg-5"> 
@@ -82,7 +85,7 @@
                     var url="{{$previewUrl}}", win = window.open(url, '_blank');
                         win.focus();
                   @endif
-               if ($('.editable').length) {
+              if ($('.editable').length) {
                     var counter = 0;
                     $('.editable').each(function() {
                         counter++;
@@ -98,7 +101,7 @@
                             removed_menuitems: 'newdocument',
                         });
                     });
-               }
+              }
               	if( $('.nav-tabs li.active').length < 1 ){
               	    $('.nav-tabs li').first().addClass('active'); 
               	    $('.tab-content .tab-pane').first().addClass('active'); 
@@ -110,10 +113,31 @@
         @section('script')
             <script type="text/javascript">
                 $(document).ready(function(){
-                  @if( isset($previewUrl) && $previewUrl != '')
-                    var url="{{$previewUrl}}", win = window.open(url, '_blank');
-                        win.focus();
-                  @endif
+                    @if( isset($previewUrl) && $previewUrl != '')
+                        var url="{{$previewUrl}}", win = window.open(url, '_blank');
+                            win.focus();
+                    @endif
+                    if ($('.editable').length) {
+                    var counter = 0;
+                    $('.editable').each(function() {
+                        counter++;
+                        if ($(this).data('id'))
+                            $(this).attr('id', 'variant-'+$(this).data('id'));
+                        else
+                            $(this).attr('id', 'variant-' + counter);
+                        tinymce.init({
+                            selector: '.editable',
+                            skin_url: '/css/style',
+                            plugins:[ "image table" ],
+                            toolbar1: " | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
+                            body_class: classes,
+                            width: docWidth,
+                            height: docHeight, 
+                            removed_menuitems: 'newdocument',
+                            elementpath: false,
+                        });
+                    });
+               }    
                     
                    if( $('#variant-1').length == 0 ){
               	        $('.add-tab').click();
@@ -140,7 +164,7 @@
                <!--patch for checking iso category document-->
                 @if( isset($data->isoCategories->name) )
                     <script type="text/javascript">   
-                        if( documentType == 'ISO Dokument')
+                        if( documentType == 'ISO Dokumente')
                             var isoCategoryName = '{{ $data->isoCategories->name}}';
                     </script>
                 @endif

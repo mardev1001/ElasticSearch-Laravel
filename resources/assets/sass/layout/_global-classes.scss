@@ -2,7 +2,8 @@ body {
     background: url('/img/NeptunBG_3_08_16.png') $white-color no-repeat;
     background-position: center top;
     padding-top: 148px;
-    font: 12px !important;
+    font-size: 12px !important;
+    margin: 0 !important;
 }
 
 
@@ -17,20 +18,32 @@ h1, h2, h3, h4 {
 }
 .content h1,.content h2,.content h3,.content h4{
     color: black !important;
+    font-weight: bold;
+}
+.content h1,.tinymce-editor-class h1{
+    font-size: 2.1em;
+}
+.content h2,.tinymce-editor-class h2{
+    font-size: 1.6em;
+}
+.content h3, .tinymce-editor-class h3{
+    font-size: 1.27em;
 }
 
-.content p,.content strong, .content i,.content b{
-    font-size: 13px !important;
+.content,.content p,.content strong, .content i,.content b{
+    font-size: 14px !important;
     color: black;
 }
 
 hr {
-    margin: 15px 0 !important;
+    margin: 15px 0 !important; 
 }
 .inline-block{
     display: inline-block;
 }
-
+.cke{
+    visibility: inherit !important;
+}
 .flexbox-container {
   	display: -ms-flexbox;
 	display: -webkit-flex;
@@ -444,6 +457,10 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 
 .padding-bottom-sm {
     padding-bottom: 7px;
+}
+
+.img-phonelist{
+    max-width: 64px !important;
 }
 
 .mb-10{

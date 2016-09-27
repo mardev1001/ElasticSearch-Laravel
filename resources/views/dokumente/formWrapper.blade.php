@@ -6,6 +6,11 @@
     
 
     <div class="col-xs-12 box-wrapper">
+        @if( $data->name != null)   
+            <div class="row">
+               <div class="col-md-12"><h3 class="title doc-title">{{ $data->name }}</h3></div>
+            </div>
+        @endif
         <div class="box">
             {!! Form::open([
                    'url' => $url,

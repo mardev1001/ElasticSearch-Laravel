@@ -49,9 +49,10 @@ class UserController extends Controller
         if( ViewHelper::universalHasPermission( array(2,4), false ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
-        $mandantU = MandantUser::where('user_id',$uid)->pluck('mandant_id')->toArray();
+        $mandantUserIds = MandantUserRole::whereIn('role_id', array(2,4))->pluck('mandant_user_id')->toArray();
+        $mandantIds = MandantUser::where('user_id', $uid)->whereIn('id', $mandantUserIds)->pluck('mandant_id')->toArray();
         $roles = Role::all();
-        $mandants = Mandant::whereIn('id',$mandantU)->get();
+        $mandants = Mandant::whereIn('id', $mandantIds)->get();
             
         return view('mandanten.individualAdministration', compact('mandants','roles',
         'searchParameter','deletedUsers','deletedMandants'));
@@ -78,11 +79,10 @@ class UserController extends Controller
      */
     public function store(BenutzerRequest $request)
     {
-        if(!$request->has('username_sso') || $request->get('username_sso') == '' || empty($request->get('username_sso')) )    
+        if(!$request->has('username_sso') || $request->get('username_sso') == '' || empty($request->get('username_sso')) )
             RequestMerge::merge(['username_sso' => str_slug($request->get('username'))] );
-          
         
-            // dd( $request->all() );
+        // dd( $request->all() );
         $user = User::create($request->all());
         
         $userUpdate = User::find($user->id);
@@ -119,7 +119,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if(!$this->utils->universalHasPermission([6,17,2,4])) 
+        if(!$this->utils->universalHasPermission([6,17])) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         $restored = false;
@@ -140,7 +140,6 @@ class UserController extends Controller
         // $rolesAll = Role::where('phone_role', false)->get();
         $rolesAll = Role::all();
         
-        
         $mandantUsers = MandantUser::where('user_id', $id)->get();
         $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
         $mandantUserRoles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
@@ -149,6 +148,50 @@ class UserController extends Controller
         // dd($mandantUserRoles);
         if(isset($user))
             return view('benutzer.edit', compact('user', 'usersAll', 'mandantsAll', 'rolesAll'));
+        else
+            return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function editPartner(Request $request, $id, $mandant_id)
+    {
+        
+        $mandantId = $mandant_id;
+        
+        if(!$this->utils->universalHasPermission([2,4]))
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+            
+        $restored = false;
+    
+        if(User::find($id))
+            $user = User::find($id);
+        elseif(User::withTrashed()->find($id)){
+            User::withTrashed()->find($id)->restore();
+            $user = User::find($id);
+            $restored = true;
+        }
+        else $user = null;
+        
+        // $user = User::find($id);
+        $usersAll = User::all();
+        $mandantsAll = Mandant::all();
+        // $rolesAll = Role::all();
+        // $rolesAll = Role::where('phone_role', false)->get();
+        $rolesAll = Role::all();
+        
+        $mandantUsers = MandantUser::where('user_id', $id)->where('mandant_id', $mandantId)->get();
+        $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
+        $mandantUserRoles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
+        $roles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
+        
+        // dd($mandantUserRoles);
+        if(isset($user))
+            return view('benutzer.editPartner', compact('user', 'usersAll', 'mandantsAll', 'rolesAll', 'mandantUsers'));
         else
             return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
     }
@@ -162,6 +205,7 @@ class UserController extends Controller
      */
     public function update(BenutzerRequest $request, $id)
     {
+        // dd($request->all());
         $user = User::find($id);
         $user->update($request->all());
         
@@ -183,6 +227,8 @@ class UserController extends Controller
         }
         
         // dd($request->all());
+        if($request->has('partner-role'))
+            return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
         return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
     }
     
@@ -260,6 +306,7 @@ class UserController extends Controller
      */
     public function userMandantRoleAdd(Request $request)
     {
+        // dd($request->all());
         $checkMandant =  MandantUser::where('mandant_id', $request->get('mandant_id'))->where('user_id', $request->get('user_id'))->count();
         if( $checkMandant > 0)
              return back()->with('message', 'Dieser Mandant ist dem Benutzer bereits zugeordnet.');
@@ -296,6 +343,7 @@ class UserController extends Controller
      */
     public function userMandantRoleEdit(Request $request)
     {
+        // dd($request->all());
         $mandantUser = MandantUser::where('id', $request->input('mandant_user_id'))->first();
         if($request->has('save')){
             
@@ -303,15 +351,32 @@ class UserController extends Controller
             $clearedRoles = $request->has('role_id');
             $mandantUserRoles = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->pluck('role_id')->toArray();
             $noDeleteArr = array();
-            if(!count($request->input('role_id'))) return back()->with('message', 'Rollen dürfen nicht leer sein.');
-            $temp = $this->preventDeleteRoles($mandantUserRoles,$request->input('role_id'), 
-            $request->input('mandant_id'),  $request->input('mandant_user_id') );
-            if( count($temp) )
-                $noDeleteArr = $temp;  
-            $del = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereNotIn('role_id',$noDeleteArr)->delete();
+            
+            if($request->has('partner-role')){
+                // Delete all "partner" roles for the "mandant_user_id"
+                $partnerRoles = Role::where('mandant_role', 1)->pluck('id')->toArray();
+                MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereIn('role_id', $partnerRoles)->delete();
+            } else {
+                
+                if(!count($request->input('role_id'))) 
+                    return back()->with('message', 'Rollen dürfen nicht leer sein.');
+            
+                $temp = $this->preventDeleteRoles(
+                    $mandantUserRoles, $request->input('role_id'), 
+                    $request->input('mandant_id'),  
+                    $request->input('mandant_user_id')
+                );
+                
+                if( count($temp) )
+                    $noDeleteArr = $temp;
+                
+                $del = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereNotIn('role_id',$noDeleteArr)->delete();
+            }
+            
             // $internalRoleArray = InternalMandantUser::where('user_id', $request->input('user_id'))->pluck('role_id')->toArray();
             // $exists = InternalMandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->delete();
             // dd($internalRoleArray);
+            
             $requestRoleArray = array();
             if($request->has('role_id')){
                 foreach($request->input('role_id') as $roleId){
@@ -347,16 +412,25 @@ class UserController extends Controller
                 $message .= trans('benutzerForm.lastMandantRole').'<br/>';
             $message .= 'Rollen erfolgreich aktualisiert.';
             //  dd($message);
+            
+            if($request->has('partner-role'))
+                return back()->with('message', $message);
+                
             return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandant-role-'.$mandantUser->id)->with('message', $message);
         }
         
         if($request->has('remove')){
             $mandantUserRoles = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->pluck('role_id')->toArray();
             $noDeleteArr = array();
-            $temp = $this->preventDeleteRoles($mandantUserRoles,$request->input('role_id'), 
-            $request->input('mandant_id'),  $request->input('mandant_user_id'), true );
-            if( count($temp) )
-                $noDeleteArr = $temp;
+
+            if($request->has('role_id')){
+                $temp = $this->preventDeleteRoles($mandantUserRoles,$request->input('role_id'),
+                    $request->input('mandant_id'),  $request->input('mandant_user_id'), true );
+                
+                if( count($temp) )
+                    $noDeleteArr = $temp;
+            }
+            
             $message = '';
             if( count($noDeleteArr) ){
                 $message .= trans('benutzerForm.lastMandantRole');

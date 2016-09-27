@@ -171,5 +171,38 @@
 </div>
 
 <div class="clearfix"></div> <br>
-
+    @if($docTypeName)
+           @section('preScript')
+               <!-- variable for expanding document sidebar-->
+               <script type="text/javascript">
+                    var documentType = "{{ $docTypeName}}";
+                   
+                      
+               </script>
+               
+               
+               <!-- End variable for expanding document sidebar-->
+           @stop
+        
+        @section('afterScript')
+        <!--patch for checking iso category document-->
+                @if( $isoCategoryName )
+                    <script type="text/javascript">   
+                        if( documentType == 'ISO Dokumente'){
+                            var isoCategoryName = '{{ $isoCategoryName }}';
+                            var detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")');
+                            $('#side-menu a').each(function(){
+                               if (this.href.indexOf(isoCategoryName) != -1){
+                                 detectHref = this.href;
+                               }
+                            });
+                         setTimeout(function(){
+                             $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
+                         },500 );
+                             
+                        }
+                    </script>
+                @endif
+        @stop
+    @endif
 @stop

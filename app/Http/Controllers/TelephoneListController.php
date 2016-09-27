@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Http\Repositories\UtilityRepository;
 
 use Carbon\Carbon;
 use Auth;
 use Excel;
 use App\Role;
 use App\User;
+use App\UserSettings;
 use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
@@ -19,6 +21,11 @@ use App\InternalMandantUser;
 
 class TelephoneListController extends Controller
 {
+    public function __construct(UtilityRepository $utilRepo )
+    {
+        $this->utility =  $utilRepo;
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -26,15 +33,26 @@ class TelephoneListController extends Controller
      */
     public function index()
     {
+        $partner = false; // Partner user/mandant check var
+        $visible = $this->utility->getPhonelistSettings();
+        
         // $mandants = array();
         $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
         if(Auth::user()->id == 1 || $myMandant->id == 1 || $myMandant->rights_admin == 1)
             $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
-        else
+        else {
+            $partner = true;
             $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        }
         
         if(!$mandants->contains($myMandant))
             $mandants->prepend($myMandant);
+        
+        
+        // Sort by Mandant No.
+        $mandants = array_values(array_sort($mandants, function ($value) {
+            return $value['mandant_number'];
+        }));
         // dd($mandants);
         
         foreach($mandants as $k => $mandant){
@@ -47,58 +65,62 @@ class TelephoneListController extends Controller
             
             // Get all InternalMandantUsers
             $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
-            foreach ($internalMandantUsers as $user)
+                
+            foreach ($internalMandantUsers as $user){
+                // if($partner){
+                //     // Check for partner roles only
+                //     if($user->role->mandant_role)
+                //         $usersInternal[] = $user;
+                // } else {
+                //     // Check for phone roles only
+                //     if($user->role->phone_role)
+                //         $usersInternal[] = $user;
+                // }
                 $usersInternal[] = $user;
+            }
             
             // dd($mandant->users);
-            
+            // dd(array_pluck($usersInternal,'role_id'));
+            // dd(($usersInternal,'role_id'));
             foreach($mandant->users as $k2 => $mUser){
                 
-                // foreach($mUser->mandantRoles as $mr){
-                //      $testuserArr[] = $mr->role->name;
-                //     //  dd($mr->role->phone_role);
-                //     if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21) //edv
-                //          $userArr[] = $mandant->users[$k2]->id;
-                // }
-                
-                // if( count($userArr) < 1){
-                //     foreach($mUser->mandantRoles as $mr){
-                //         if( $mr->role->id == 23 )// Lohn
-                //             $userArr[] = $mandant->users[$k2]->id;
-                //     }   
-                // }
-                // if( count($userArr) < 1){
-                //     foreach($mUser->mandantRoles as $mr){
-                //         if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
-                //         ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
-                //             $userArr[] = $mandant->users[$k2]->id;
-                //     }   
-                // }
-                
                 foreach($mUser->mandantRoles as $mr){
-                    // Check for phone roles
-                    if( $mr->role->phone_role ) {
-                        $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                        if(!count($internalRole)){
-                            $userArr[] = $mandant->users[$k2]->id;
+                    if($partner){
+                        // Check for partner roles
+                        if( $mr->role->mandant_role ) {
+                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                            if(!count($internalRole)){
+                                $userArr[] = $mandant->users[$k2]->id;
+                            }
+                        }
+                    } else {
+                        // Check for phone roles
+                        if( $mr->role->phone_role ) {
+                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                            if(!count($internalRole)){
+                                $userArr[] = $mandant->users[$k2]->id;
+                            }
                         }
                     }
                 }
                 
                 // if(isset($localUser) || Auth::user()->id == 1 ){
-                if(isset($localUser)){
-                    // Add all users to the array for the mandant, if they have the same mandant
-                    if($mUser->active && !in_array($mUser->id, $userArr))
-                        $userArr[] = $mUser->id;
-                }
+                // if(isset($localUser)){
+                //     // Add all users to the array for the mandant, if they have the same mandant
+                //     if($mUser->active && !in_array($mUser->id, $userArr))
+                //         $userArr[] = $mUser->id;
+                // }
                 
             } // end second foreach
-        
-            $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
+            
             $mandant->usersInternal = $usersInternal;
+            $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
+            
         }
         
-        return view('telefonliste.index', compact('mandants') );
+        
+        
+        return view('telefonliste.index', compact('mandants','visible', 'partner') );
     }
 
     /**
@@ -165,6 +187,28 @@ class TelephoneListController extends Controller
     public function destroy($id)
     {
         //
+    }
+    
+    /**
+     * Store telefonliste table view options
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function displayOptions(Request $request)
+    {
+        $visibleColumns = $request->get('visibleColumns');
+        $settingsUID = Auth::user()->id;
+        $settingsCategory = 'telefonliste';
+        $settingsName = 'visibleColumns';
+        $settingsOld = UserSettings::where('user_id', $settingsUID)->where('category', $settingsCategory)->forceDelete();
+        
+        if(count($visibleColumns)){
+            foreach($visibleColumns as $key => $value)
+                UserSettings::create(['user_id' => $settingsUID, 'category' => $settingsCategory, 'name' => $settingsName, 'value' => $value ]);
+        }
+        
+        return back()->with('message', 'Einstellungen erfolgreich gespeichert.');
     }
     
     /**

@@ -40,6 +40,7 @@ return [
     'landscape' => 'Dokumente Querformat',
     'additionalLetter' => 'Zusätzlicher Text',
     'noPermission' => 'Sie haben keine Berechtigung für diese Seite.',
+    'documentTemplates' => 'Dokumentvorlagen',
     
     /* Freigabe process */
     'freigeben' => 'Freigeben',

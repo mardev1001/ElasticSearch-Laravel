@@ -36,7 +36,7 @@
         </div>
     </div>
     
-    @if( ViewHelper::universalHasPermission( array(11,13) ) == true  ) <!--  array(10,11,12,13)  NEPTUN-274-->
+    @if( ViewHelper::universalHasPermission( array(11,13) ) == true && count( $rundschreibenMy) ) <!--  array(10,11,12,13)  NEPTUN-276, count is 275-->
         <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Meine Dokumente/Rundschreiben</h1>

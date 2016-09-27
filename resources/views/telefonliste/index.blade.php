@@ -103,28 +103,30 @@
                             </span>
                             
                         </div>
+                        
                         <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$mandant->id}}">
                             <div class="panel-body">
                                 <table class="table data-table">
                                     <thead>
                                     <tr>
-                                        <th class="no-sort">{{ trans('telefonListeForm.photo') }} </th>
-                                        <th>{{ trans('telefonListeForm.title') }} </th>
-                                        <th>{{ trans('telefonListeForm.firstname') }} </th>
-                                        <th>{{ trans('telefonListeForm.lastname') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.role') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.phone') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.fax') }} </th>
+                                        <th class="@if(!isset($visible['col1'])) col-hide @endif col1 no-sort">{{ trans('telefonListeForm.photo') }} </th>
+                                        <th class="@if(!isset($visible['col2'])) col-hide @endif col2">{{ trans('telefonListeForm.title') }} </th>
+                                        <th class="@if(!isset($visible['col3'])) col-hide @endif col3">{{ trans('telefonListeForm.firstname') }} </th>
+                                        <th class="@if(!isset($visible['col4'])) col-hide @endif col4">{{ trans('telefonListeForm.lastname') }} </th>
+                                        <th class="@if(!isset($visible['col5'])) col-hide @endif col5 no-sort">{{ trans('telefonListeForm.role') }} </th>
+                                        <th class="@if(!isset($visible['col6'])) col-hide @endif col6 no-sort">{{ trans('telefonListeForm.phone') }} </th>
+                                        <th class="@if(!isset($visible['col7'])) col-hide @endif col7 no-sort">{{ trans('telefonListeForm.fax') }} </th>
                                     </tr>
                                     </thead>
                                     <tbody> 
+                                    {{-- dd(array_pluck($mandant->usersInternal,'role_id')) --}}
                                         @foreach($mandant->usersInternal as $internal)
                                             <tr>
-                                                <td width="60">
+                                                <td>
                                                     @if(isset($internal->user->picture) && $internal->user->picture)
-                                                        <img class="img-responsive" src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
+                                                        <img class="img-responsive " src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
                                                     @else
-                                                        <img class="img-responsive" src="{{url('/img/user-default.png')}}"/>
+                                                        <img class="img-responsive img-phonelist" src="{{url('/img/user-default.png')}}"/>
                                                     @endif
                                                 </td>
                                                 <td>{{ $internal->user->title }}</td>
@@ -139,18 +141,32 @@
                                             <tr>
                                                 <td width="60">
                                                     @if(isset($internal->user->picture) && $user->picture)
-                                                        <img class="img-responsive" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
+                                                        <img class="img-responsive img-phonelist" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
                                                     @else
-                                                        <img class="img-responsive" src="{{url('/img/user-default.png')}}"/>
+                                                        <img class="img-responsive img-phonelist" src="{{url('/img/user-default.png')}}"/>
                                                     @endif
                                                 </td>
                                                 <td>{{ $user->title }}</td>
                                                 <td>{{ $user->first_name }}</td>
                                                 <td>{{ $user->last_name }}</td>
                                                 <td>
+                                                    
                                                     @foreach( $user->mandantRoles as $mandantUserRole)
-                                                        @if( $mandantUserRole->role->phone_role == 1 || $mandantUserRole->role->id == 2 || $mandantUserRole->role->id == 4)
-                                                            {{ ( $mandantUserRole->role->name ) }}
+                                                        {{-- @if( $mandantUserRole->role->phone_role == 1 || $mandantUserRole->role->id == 2 || $mandantUserRole->role->id == 4) --}}
+                                                        @if($partner)
+                                                            @if( $mandantUserRole->role->mandant_role )
+                                                                {{-- Don't show roles that are already in internal roles an array --}}
+                                                                @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                                                                    {{ ( $mandantUserRole->role->name ) }}
+                                                                @endif
+                                                            @endif
+                                                        @else
+                                                            @if( $mandantUserRole->role->phone_role )
+                                                                {{-- Don't show roles that are already in internal roles an array --}}
+                                                                @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                                                                    {{ ( $mandantUserRole->role->name ) }}
+                                                                @endif
+                                                            @endif
                                                         @endif
                                                     @endforeach
                                                 </td>
@@ -208,11 +224,11 @@
                                 
                                 @foreach($usersInternal as $internal)
                                     <tr>
-                                        <td width="60">
+                                        <td>
                                             @if(isset($internal->user->picture) && $internal->user->picture)
-                                                <img class="img-responsive" src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
+                                                <img class="img-responsive img-phonelist" src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
                                             @else
-                                                <img class="img-responsive" src="{{url('/img/user-default.png')}}"/>
+                                                <img class="img-responsive img-phonelist" src="{{url('/img/user-default.png')}}"/>
                                             @endif
                                         </td>
                                         <td>{{ $internal->user->title }}</td>
@@ -230,11 +246,11 @@
                                 
                                 @foreach( $users as $user)
                                     <tr>
-                                        <td width="60">
+                                        <td>
                                             @if(isset($internal->user->picture) && $user->picture)
-                                                <img class="img-responsive" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
+                                                <img class="img-responsive img-phonelist" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
                                             @else
-                                                <img class="img-responsive" src="{{url('/img/user-default.png')}}"/>
+                                                <img class="img-responsive img-phonelist" src="{{url('/img/user-default.png')}}"/>
                                             @endif
                                         </td>
                                         <td>{{ $user->title }}</td>
@@ -281,29 +297,34 @@
                 <h4 class="modal-title" id="myModalLabel">{{ trans('telefonListeForm.appearance') }}</h4>
             </div>
             
-            <div class="modal-body">
+            {{ Form::open(['action' => 'TelephoneListController@displayOptions', 'method' => 'POST']) }}
                 
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="form-inline">
-                            <label>Sichtbare Tabellenspalten</label>
-                            <select class="form-control select" multiple>
-                                <option value="1" selected>Spalte 1</option>
-                                <option value="2" selected>Spalte 2</option>
-                                <option value="3">Spalte 3</option>
-                                <option value="4">Spalte 4</option>
-                                <option value="5" selected>Spalte 5</option>
-                                <option value="6">Spalte 6</option>
-                            </select>
+                <div class="modal-body">
+                    
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-inline">
+                                <label>Sichtbare Tabellenspalten</label>
+                                <select class="form-control select" name="visibleColumns[]" data-placeholder="Sichtbare Tabellenspalten" multiple required>
+                                    <option value="col1" @if(isset($visible['col1'])) selected @endif>Foto</option>
+                                    <option value="col2" @if(isset($visible['col2'])) selected @endif>Anrede</option>
+                                    <option value="col3" @if(isset($visible['col3'])) selected @endif>Vorname</option>
+                                    <option value="col4" @if(isset($visible['col4'])) selected @endif>Nachname</option>
+                                    <option value="col5" @if(isset($visible['col5'])) selected @endif>Abteilung</option>
+                                    <option value="col6" @if(isset($visible['col6'])) selected @endif>Telefon</option>
+                                    <option value="col7" @if(isset($visible['col7'])) selected @endif>Fax</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
+                    
                 </div>
                 
-            </div>
-            
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary">{{ trans('telefonListeForm.save') }}</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">{{ trans('telefonListeForm.save') }}</button>
+                </div>
+                
+            {{ Form::close() }}
             
         </div>
     </div>

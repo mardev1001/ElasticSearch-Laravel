@@ -160,24 +160,38 @@
                 </div>   
             </div><!--End input box-->
             
+            <!-- Document template select -->
+            <div class="col-md-4 col-lg-4"> 
+                <div class="form-group ">
+                    <label class="control-label"> {{ ucfirst(trans('documentForm.documentTemplates')) }}*</label>
+                    <select name="document_template" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.documentTemplates')) }}" required>
+                        <option value="1" @if($data->document_template == 1) selected @endif > Vorlage 1</option>
+                        {{-- <option value="2" @if($data->document_template == 2) selected @endif > Vorlage 2</option> --}}
+                    </select>
+                </div>   
+            </div>
+            
             <!-- input box-->
             <div class="col-md-4 col-lg-4 pdf-checkbox"> 
-                <div class="form-group ">
+                <div class="form-group no-margin-bottom">
+                    <br>
                     {!! ViewHelper::setCheckbox('pdf_upload',$data,old('pdf_upload'),trans('documentForm.pdfUpload') ) !!}
                 </div>   
             </div><!--End input box-->
             
             @if( isset($data->document_type_id) && $data->document_type_id != 5)
                 <!-- input box-->
-                <div class="col-md-4 col-lg-4"> 
-                    <div class="form-group ">
+                <div class="col-md-4 col-lg-4">
+                    <br>
+                    <div class="form-group no-margin-bottom">
                         {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
                     </div>   
                 </div><!--End input box-->
             @else
              <!-- input box-->
                 <div class="col-md-4 col-lg-4"> 
-                    <div class="form-group ">
+                    <br>
+                    <div class="form-group no-margin-bottom">
                         {!! ViewHelper::setCheckbox('landscape',$data,old('landscape'),trans('documentForm.landscape') ) !!}
                     </div>
                 </div><!--End input box-->

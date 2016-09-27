@@ -105,6 +105,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
+        
+        // dd($request->all());
         $role = Role::find($id);
         
         $role->name = $request->input('name');
@@ -131,6 +133,8 @@ class RoleController extends Controller
         }
         
         if($request->has('wiki')) $role->wiki_role = true;
+        if($request->has('mandant')) $role->mandant_role = true;
+        if($request->has('phone')) $role->phone_role = true;
         
         // dd($request);
         $role->save();

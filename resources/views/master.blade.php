@@ -61,7 +61,6 @@
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid first">
-                
                 <!-- Backend content -->
                 @yield('content')
     
@@ -85,6 +84,7 @@
     
     <!-- JS files - start -->
     @yield('preScript')
+    <!--<script src="/vendor/unisharp/laravel-ckeditor/adapters/jquery.js"></script>-->
     {!! Html::script(elixir('js/script.js')) !!}
     @yield('afterScript')
     <!-- JS files - end -->

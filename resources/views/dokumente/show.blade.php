@@ -52,6 +52,7 @@
                         
                                     @foreach( $variants as $v => $variant)
                                         @if( isset($variant->hasPermission) && $variant->hasPermission == true )
+                                         
                                             <div>
                                                 {{--<pre> {!! ($variant->inhalt) !!} </pre>--}}
                                                 {!! ViewHelper::stripTags($variant->inhalt, array('div' ) ) !!}
@@ -215,7 +216,8 @@
                             @else
                                 {{ trans('dokumentShow.unFavorite') }}
                             @endif</a>  
-                            @if( ViewHelper::universalHasPermission( array(13) ) == true ||  ViewHelper::documentVariantPermission($document)->permissionExists )
+                            
+                            @if( $document->documentType->allow_comments == 1 && (ViewHelper::universalHasPermission( array(13) ) == true ||  ViewHelper::documentVariantPermission($document)->permissionExists ) )
                                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
                             @endif
                         
@@ -223,8 +225,8 @@
 
                     @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
                         @if( $authorised == false && $canPublish ==false && $published == false)
-                             @if( $document->documentType->document_art == 1) $
-                                @if( ViewHelper::universalHasPermission( array(13) ) == true )
+                             @if( $document->documentType->document_art == 1) 
+                                @if( ViewHelper::universalHasPermission( array(13) ) == true  )
                                     <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
                                 @endif
                             @else
@@ -233,8 +235,16 @@
                                 @endif
                             @endif
                         @elseif( ($authorised == false &&  $published == false ) ||
-                           ($authorised == true && $published == false ) || ($canPublish == true && $published == false) ){{-- $canPublish --}}
+                           ($authorised == true && $published == false ) || ($canPublish == true && $published == false) 
+                           && (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ){{-- $canPublish --}}
+                            
+                            @if( ( ( $document->documentType->document_art == 1 &&
+                                ViewHelper::universalHasPermission( array(13) ) == true ) ||
+                                ( $document->documentType->document_art == 0 &&
+                                ViewHelper::universalHasPermission( array(11) ) == true ) )
+                                && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
                             <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                            @endif
                         @endif
                     @endif
 

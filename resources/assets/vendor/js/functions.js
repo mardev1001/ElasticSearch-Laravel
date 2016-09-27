@@ -36,35 +36,7 @@ $(function() {
 
     // });
 
-   // Toggle sidebar navigation
-    $('button.navbar-toggle.big').on('click', function(e) {
-
-        var navSidebar = $('.sidebar-nav.navbar-collapse');
-        var pageWrapper = $('#page-wrapper');
-        var navbarToggle = $('#nav-btn');
-        var fixedTitle = $('.fixed-position');
-
-        if (navSidebar.hasClass('hidden')) {
-
-            $.when(navSidebar.removeClass('hidden')).done(
-                
-                pageWrapper.removeAttr('style'),
-                fixedTitle.css('left', '315px'),
-                navbarToggle.removeClass('pull-left')
-            );
-
-        }
-        else {
-            $.when(navSidebar.addClass('hidden')).done(
-              
-                pageWrapper.css('margin-left', '65px'),
-                fixedTitle.css('left', '131px'),
-                navbarToggle.addClass('pull-left')
-            );
-        }
-
-    });
-
+   
     // Toggle legende btn in sidebar navigation
     var position = 'expanded';
     $('span#btn-legend').on('click', function(e) {
@@ -92,6 +64,37 @@ $(function() {
 
     });
     
+    // Toggle sidebar navigation
+    $('button.navbar-toggle.big').on('click', function(e) {
+
+        var navSidebar = $('.sidebar-nav.navbar-collapse');
+        var pageWrapper = $('#page-wrapper');
+        var navbarToggle = $('#nav-btn');
+        var fixedTitle = $('.fixed-position');
+        var legendBox = $('.legend-wrapper');
+        if (navSidebar.hasClass('hidden')) {
+            
+            $.when(navSidebar.removeClass('hidden')).done(
+                
+                legendBox.removeClass('hidden'),
+                pageWrapper.removeAttr('style'),
+                fixedTitle.css('left', '315px'),
+                navbarToggle.removeClass('pull-left')
+            );
+
+        }
+        else {
+            
+            $.when(navSidebar.addClass('hidden')).done(
+                function(){ if(legendBox.is(':visible')) legendBox.addClass('hidden') },
+                // function(){ if(legendBox.is(':visible')) $('span#btn-legend').trigger('click') },
+                pageWrapper.css('margin-left', '65px'),
+                fixedTitle.css('left', '131px'),
+                navbarToggle.addClass('pull-left')
+            );
+        }
+
+    });
 
     // Hide or show mandant selection if checkbox is checked
     
