@@ -164,11 +164,13 @@ class DocumentRepository
                             $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
                             ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
                         
-                        if($document->document_status_id == 3){
-                            if(isset($readDocument)) 
-                                $icon = 'icon-read ';
-                            else
-                                $icon = 'icon-notread ';
+                        if($document->documentType->read_required){
+                            if($document->document_status_id == 3){
+                                if(isset($readDocument)) 
+                                    $icon = 'icon-read ';
+                                else
+                                    $icon = 'icon-notread ';
+                            }
                         }
                             
                         if($options['pageFavorites'] == true){
@@ -193,9 +195,11 @@ class DocumentRepository
                         $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
                         ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
                     
-                    if($document->document_status_id == 3){ 
-                        if(isset($readDocument)) $icon = 'icon-read ';
-                        else $icon = 'icon-notread ';
+                    if($document->documentType->read_required){
+                        if($document->document_status_id == 3){ 
+                            if(isset($readDocument)) $icon = 'icon-read ';
+                            else $icon = 'icon-notread ';
+                        }
                     }    
                     
                     $node->afterText = $document->documentType->name;

@@ -10,6 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 use File;
 use Mail;
+use URL;
 
 use App\Document;
 use App\DocumentComment;
@@ -178,21 +179,42 @@ class HomeController extends Controller
      */
     public function contactSend(Request $request) 
     {
-        // dd($request->all());
+        $uid = Auth::user()->id;
+        $copy = false;
+        if($request->has('copy') )
+            $copy = true;
         $request = $request->all();
-        $sent= Mail::send('contactEmail',$request, function ($message) use($request){
+        $from = User::find($uid);
+        $request['logo'] = asset('/img/logo-neptun-new.png');
+        $request['from'] = $from;
+        
+        $template = view('email.contact' ,compact('request') )->render();
+        $sent= Mail::send([], [], function ($message) use($template,$request,$from){
             // dd($request['to_user']);
             $uid = Auth::user()->id;
-            $from = User::find($uid);
             $to = User::find($request['to_user']);
-         
             $message->from(  $from->email, $from->first_name.' '.$from->last_name  )
-            ->to( 'marijan.gudelj@webbite.de', 'makjato' );
-            // $megh,'user_id' => Auth()::user->idssage
-            // $message->to($to->email, $to->first_name.' '.$to->last_name);
-            // $message;
+            ->to( $to->email, $to->first_name.' '.$to->last_name )
+            ->subject($request['subject'] )
+            ->setBody($template, 'text/html');
         });
-        return redirect()->back()->with('message', 'GotYa');
+        if($copy == true){
+            $request['copy'] = 'yes';
+            $request['subject'] = 'E-Mail Kopie "'.$request['subject'].'"';
+            $template = view('email.contact' ,compact('request') )->render();
+            $sent= Mail::send([], [], function ($message) use($template,$request,$from){
+                // dd($request['to_user']);
+                $uid = Auth::user()->id;
+                $to = User::find($request['to_user']);
+                $message->from(  $from->email, $from->first_name.' '.$from->last_name  )
+                ->to( $from->email, $from->first_name.' '.$from->last_name )
+                ->subject($request['subject'] )
+                ->setBody($template, 'text/html');
+            });   
+        }
+        
+        
+        return redirect()->back()->with('message', 'Email wurde erfolgreich Versendet.');
     }
     
     /**

@@ -153,9 +153,9 @@
             </div>  
    
             <div class="col-sm-4 col-md-3 col-lg-2 btns">
-                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                <!--<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>-->
                 @if( $authorised == false && $canPublish ==false)
-                    @if( $document->documentType->document_art == 1) $
+                    @if( $document->documentType->document_art == 1)
                         @if( ViewHelper::universalHasPermission( array(13) ) == true )
                              <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
                              <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>

@@ -428,7 +428,7 @@
                             <dd>{{$mandant->fax}}</dd>
                             
                             <dt>E-Mail</dt> 
-                            <dd>{{$mandant->email}}</dd>
+                            <dd><a href="mailto:{{$mandant->email}}">{{$mandant->email}}</a></dd>
                             
                             <dt>Website</dt> 
                             <dd><a target="_blank" href="{{$mandant->website}}">{{$mandant->website}}</a></dd>
@@ -472,7 +472,7 @@
                             <dd>{{ViewHelper::getHauptstelle($mandant)->fax}}</dd>
                             
                             <dt>E-Mail</dt> 
-                            <dd>{{ViewHelper::getHauptstelle($mandant)->email}}</dd>
+                            <dd><a href="mailto:{{ViewHelper::getHauptstelle($mandant)->email}}">{{ViewHelper::getHauptstelle($mandant)->email}}</a></dd>
                             
                             <dt>Website</dt> 
                             <dd><a target="_blank" href="{{$mandant->website}}">{{ViewHelper::getHauptstelle($mandant)->website}}</a></dd>
@@ -565,7 +565,7 @@
                                 <dd>{{$mandant->mandantInfo->berufsgenossenschaft_zusatzinfo}}</dd>
                                 
                                 <dt>Erlaubnis zur Arbeitnehmerüberlassung</dt> 
-                                <dd>{{$mandant->mandantInfo->berufsgenossenschaft_zusatzinfo}}</dd>
+                                <dd>{{$mandant->mandantInfo->erlaubniss_gultig_ab}}</dd>
                                 
                                 <dt>Unbefristet</dt> 
                                 @if($mandant->mandantInfo->unbefristet)
@@ -585,10 +585,11 @@
                                 
                                 @if( ViewHelper::universalHasPermission( array(20) ) == true  )
                                     <dt>Bankverbindungen</dt> 
-                                    <dd>{{$mandant->mandantInfo->bankverbindungen}}</dd>
+                                    <dd>{!! str_replace(array('[',']'), array('','<br>'), $mandant->mandantInfo->bankverbindungen) !!}</dd>
                                 @endif
                                 <dt>Sonstiges</dt> 
-                                <dd>{{$mandant->mandantInfo->info_sonstiges}}</dd>
+                                
+                                <dd>{{ $mandant->mandantInfo->info_sonstiges }}</dd>
                                 
                             </dl>
                         </div>
@@ -599,12 +600,15 @@
             </div>
             
             <div class="modal-footer">
+               
                 @if( ViewHelper::universalHasPermission( array(20) ) == true  )
+                <!--this was wrapped around the button-> then changed with task NEPTUN-303 -->
+                @endif
                 <a target="_blank" href="{{url('/telefonliste/'.$mandant->id.'/pdf')}}" class="btn btn-primary">
                     <i class="fa fa-file-pdf-o"></i>
                     {{ trans('telefonListeForm.pdf-export') }}
                 </a>
-                @endif
+                
             </div>
         </div>
     </div>

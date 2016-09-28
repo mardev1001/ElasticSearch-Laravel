@@ -173,12 +173,14 @@
 <div class="clearfix"></div> <br>
     @if($docTypeName)
            @section('preScript')
-               <!-- variable for expanding document sidebar-->
-               <script type="text/javascript">
+                <!-- variable for expanding document sidebar-->
+                <script type="text/javascript">
                     var documentType = "{{ $docTypeName}}";
-                   
-                      
-               </script>
+                    @if(isset($docTypeSlug) && $docTypeSlug != '' )
+                    var documentSlug = "{{ $docTypeSlug }}";
+                    console.log('sa:'+documentSlug);
+                    @endif
+                </script>
                
                
                <!-- End variable for expanding document sidebar-->

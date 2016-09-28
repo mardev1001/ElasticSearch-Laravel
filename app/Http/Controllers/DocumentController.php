@@ -1659,6 +1659,10 @@ class DocumentController extends Controller
         $hasPermission = false;
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
         $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+        $mandantRolesArr =  $mandantRoles->toArray();
         $mandantIdArr = $mandantId->toArray();
         foreach($variants as $variant){
             if($hasPermission == false){
@@ -2588,6 +2592,11 @@ class DocumentController extends Controller
         $iso_category_id = $request->input('iso_category_id');
         $search = $request->input('search');
         $isoCategoryName = '';
+        $docTypeSlug = '';
+       
+        if( isset($docTypeSearch) )
+            $docTypeSlug = str_slug($docTypeSearch->name);
+             
         // status entwurf
         $searchEntwurfPaginated = Document::where('document_type_id' , $docType )
         ->where(function($query){
@@ -2598,9 +2607,11 @@ class DocumentController extends Controller
         if($docType == 4){
             if(!empty($iso_category_id))
                 $searchEntwurfPaginated = $searchEntwurfPaginated->where('iso_category_id', $iso_category_id);
-        }
         $isoCategory =  IsoCategory::find($iso_category_id);
         $isoCategoryName = str_slug($isoCategory->name);
+            
+        }
+        
         
         $searchEntwurfPaginated = $searchEntwurfPaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-entwurf');
         $searchEntwurfTree = $this->document->generateTreeview( $searchEntwurfPaginated, array('pageDocuments' => true) );
@@ -2678,7 +2689,7 @@ class DocumentController extends Controller
         // return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeName', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
         return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeSearch', 'docTypeName', 
             'resultAllPaginated', 'resultAllTree', 'searchEntwurfPaginated', 'searchEntwurfTree', 
-            'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id','isoCategoryName'));
+            'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id','isoCategoryName','docTypeSlug'));
     }
     
     
@@ -2776,11 +2787,7 @@ class DocumentController extends Controller
         //     dd($document);
         $continue = true;
         $uniqeUrl = '';
-        // while ($continue) {
-        //     $uniqeUrl = $this->generateUniqeLink();
-        //     if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
-        //         $continue = false;
-        // }
+       
         $oldDocumentVersion = PublishedDocument::where('document_group_id',$document->document_group_id)
         ->orderBy('id','DESC')->first();
         $publishedDocs =  PublishedDocument::where('document_id',$id)->first();

@@ -14,48 +14,79 @@
             font-size: 14px;
             margin-bottom: 25px;
         }
-         .header,
-            .footer {
-                width: 100%;
-                position: fixed;
-            }
-            .header {
-                top: -15px;
-                margin-bottom: 50px;
-            }
-            .div-pusher{
-                width:50%;
-                padding-left:30%;
-            }
-            .header .div-pusher{
-                width:60%;
-                padding-left:30%;
-            }
-            .header .image-div {
-                width:40%;
-                float:right !important;
-                padding-left:50px;
-                height:auto;
-            }
-            .header .image-div img{
-               margin-left:0px;
-               width:100%;
-               height:auto;
-               display:block;
-            }
-            .footer {
-                bottom: 5px;
-            }
-            .pagenum:before {
-                content: counter(page);
-            }
+
+        .header,
+        .footer {
+            width: 100%;
+            position: fixed;
+        }
+
+        .header {
+            top: -15px;
+            margin-bottom: 50px;
+        }
+
+        .div-pusher {
+            width: 50%;
+            padding-left: 30%;
+        }
+
+        .header .div-pusher {
+            width: 60%;
+            padding-left: 30%;
+        }
+
+        .header .image-div {
+            width: 40%;
+            float: right !important;
+            padding-left: 50px;
+            height: auto;
+        }
+
+        .header .image-div img {
+            margin-left: 0px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            left: 350px;
+        }
+
+        #absolute {
+            font-size: 10px !important;
+            margin-top: -125px;
+            margin-left: 300px;
+        }
+
+        .absolute, .absolute:nth-child(even) {
+            width: 85px;
+            margin-top: -125px;
+            margin-left: 300px;
+            color: #808080;
+
+        }
+
+        .absolute p {
+            margin-bottom: 0 !important;
+            margin-top: 0 !important;
+            text-align: left;
+        }
+
+        .pagenum:before {
+            content: counter(page);
+        }
+
         .mandant-image {
             max-width: 100px;
         }
-        
-        .first-title.first{
+
+        .first-title.first {
             margin-top: 70px;
-            margin-bottom:70px;
+            margin-bottom: 70px;
         }
 
         table {
@@ -71,72 +102,73 @@
         }
 
         div.page-break {
-            page-break-inside:avoid; page-break-after:always;
+            page-break-inside: avoid;
+            page-break-after: always;
         }
 
     </style>
 </head>
 
 <body>
-    @include('pdf.footer')
-    <div id="content">
-         @include('pdf.mandantHeader')
-        <div class="first-title first">
-            <h2>{{$mandant->name}}</h2>
-        </div>
-    
-        <div class="table-container">
-    <h4>Allgemeine Informationen</h4>
-    <table>
-        <tr>
-            <td class="col-1">Mandantname Kurz</td>
-            <td class="col-2">{{$mandant->kurzname}}</td>
-        </tr>
-        <tr>
-            <td class="col-1">Kurzwahl</td>
-            <td class="col-2">{{$mandant->kurzwahl}}</td>
-        </tr>
-        <tr>
-            <td class="col-1">Mandantnummer</td>
-            <td class="col-2">{{$mandant->mandant_number}}</td>
-        </tr>
-        <tr>
-            <td class="col-1">Adresszusatz</td>
-            <td class="col-2">{{$mandant->adresszusatz}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Strasse/ Nr.</td>
-            <td class="col-2">{{$mandant->strasse}}/ {{$mandant->hausnummer}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">PLZ/ Ort</td>
-            <td class="col-2">{{$mandant->plz}}/ {{$mandant->ort}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Telefon</td>
-            <td class="col-2">{{$mandant->telefon}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Fax</td>
-            <td class="col-2">{{$mandant->fax}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">E-Mail</td>
-            <td class="col-2">{{$mandant->email}}</td>
-        </tr>
-
-        <tr>
-            <td class="col-1">Website</td>
-            <td class="col-2">{{$mandant->website}}</td>
-        </tr>
-    </table>
-</div>
+@include('pdf.footer')
+<div id="content">
+    @include('pdf.header')
+    <div class="first-title first">
+        <h2>{{$mandant->name}}</h2>
     </div>
+
+    <div class="table-container">
+        <h4>Allgemeine Informationen</h4>
+        <table>
+            <tr>
+                <td class="col-1">Mandantname Kurz</td>
+                <td class="col-2">{{$mandant->kurzname}}</td>
+            </tr>
+            <tr>
+                <td class="col-1">Kurzwahl</td>
+                <td class="col-2">{{$mandant->kurzwahl}}</td>
+            </tr>
+            <tr>
+                <td class="col-1">Mandantnummer</td>
+                <td class="col-2">{{$mandant->mandant_number}}</td>
+            </tr>
+            <tr>
+                <td class="col-1">Adresszusatz</td>
+                <td class="col-2">{{$mandant->adresszusatz}}</td>
+            </tr>
+
+            <tr>
+                <td class="col-1">Strasse/ Nr.</td>
+                <td class="col-2">{{$mandant->strasse}}/ {{$mandant->hausnummer}}</td>
+            </tr>
+
+            <tr>
+                <td class="col-1">PLZ/ Ort</td>
+                <td class="col-2">{{$mandant->plz}}/ {{$mandant->ort}}</td>
+            </tr>
+
+            <tr>
+                <td class="col-1">Telefon</td>
+                <td class="col-2">{{$mandant->telefon}}</td>
+            </tr>
+
+            <tr>
+                <td class="col-1">Fax</td>
+                <td class="col-2">{{$mandant->fax}}</td>
+            </tr>
+
+            <tr>
+                <td class="col-1">E-Mail</td>
+                <td class="col-2">{{$mandant->email}}</td>
+            </tr>
+
+            <tr>
+                <td class="col-1">Website</td>
+                <td class="col-2">{{$mandant->website}}</td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 @if(!$mandant->hauptstelle)
     <div class="table-container">
@@ -205,37 +237,37 @@
                     <td class="col-2">{{$mandantInfo->info_wichtiges}}</td>
                 </tr>
             @endif
-    
+
             <tr>
                 <td class="col-1">Geschäftsführer</td>
                 <td class="col-2">{{$mandant->geschaftsfuhrer}}</td>
             </tr>
-    
+
             <tr>
                 <td class="col-1">Geschäftsführer-Informationen</td>
                 <td class="col-2">{{$mandant->geschaftsfuhrer_infos}}</td>
             </tr>
-    
+
             <tr>
                 <td class="col-1">Geschäftsführer Von</td>
                 <td class="col-2">{{$mandant->geschaftsfuhrer_von}}</td>
             </tr>
-    
+
             <tr>
                 <td class="col-1">Geschäftsführer Bis</td>
                 <td class="col-2">{{$mandant->geschaftsfuhrer_bis}}</td>
             </tr>
-    
+
             <tr>
                 <td class="col-1">Geschäftsführerhistorie</td>
                 <td class="col-2">{{$mandant->geschaftsfuhrer_history}}</td>
             </tr>
-    
+
         </table>
     </div>
-    
+
     @if(isset($mandantInfo))
-        <!--<div class="page-break"></div>-->
+            <!--<div class="page-break"></div>-->
         <div class="table-container">
             <h4>Weitere Informationen</h4>
             <table>
@@ -293,7 +325,7 @@
                 </tr>
                 <tr>
                     <td class="col-1">Erlaubnis zur Arbeitnehmerüberlassung</td>
-                    <td class="col-2">{{$mandantInfo->berufsgenossenschaft_zusatzinfo}}</td>
+                    <td class="col-2">{{$mandantInfo->erlaubniss_gultig_ab}}</td>
                 </tr>
                 <tr>
                     <td class="col-1">Unbefristet</td>
@@ -316,10 +348,10 @@
                     <td class="col-2">{{$mandantInfo->geschaftsjahr_info}}</td>
                 </tr>
                 @if( ViewHelper::universalHasPermission( array(20) ) == true  )
-                <tr>
-                    <td class="col-1">Bankverbindungen</td>
-                    <td class="col-2">{{$mandantInfo->bankverbindungen}}</td>
-                </tr>
+                    <tr>
+                        <td class="col-1">Bankverbindungen</td>
+                        <td class="col-2">{!! str_replace(array('[',']'), array('','<br>'), $mandantInfo->bankverbindungen) !!}</td>
+                    </tr>
                 @endif
                 <tr>
                     <td class="col-1">Sonstiges</td>
@@ -327,8 +359,9 @@
                 </tr>
             </table>
         </div>
-    
+
     @endif
+    
 @endif
 
 </body>

@@ -22,6 +22,18 @@ Benutzer bearbeiten
                     </div>   
                 </div>
                 
+                <div class="col-md-3 col-lg-3"> 
+                    <div class="form-group">
+                       {!! ViewHelper::setInput('password', '', '', trans('benutzerForm.password'), trans('benutzerForm.password'), false, 'password') !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-3 col-lg-3"> 
+                    <div class="form-group">
+                       {!! ViewHelper::setInput('password_repeat', '', '', trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), false, 'password') !!}
+                    </div>   
+                </div>
+                
                  <!-- input box-->
                 <div class="col-md-3 col-lg-3"> 
                     <div class="form-group">
@@ -126,7 +138,7 @@ Benutzer bearbeiten
                         
                         @if(isset($user->picture))
                             @if($user->picture)
-                            <img id="image-preview" class="img-responsive" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
+                                <img id="image-preview" class="img-responsive" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
                             @endif
                         @else
                             <img id="image-preview" class="img-responsive" src="{{url('/img/user-default.png')}}"/>
@@ -140,6 +152,7 @@ Benutzer bearbeiten
             
             <div class="row">
                 <div class="col-md-6 col-lg-6">
+                    <input type="hidden" name="active" value="1">
                     <button class="btn btn-primary no-margin-bottom" type="submit">{{ trans('benutzerForm.save') }}</button>
                 </div>
             </div>
@@ -151,6 +164,54 @@ Benutzer bearbeiten
     
 </fieldset> 
 
+<fieldset>
+    
+    @if(count($user->mandantUsers))
+    
+        <div class="box-wrapper">
+            <h4 class="title">{{ trans('benutzerForm.roles') }} {{ trans('benutzerForm.overview') }}</h4>
+             
+             <div class="box">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                        <table class="table">
+                            <tr>
+                                <th class="col-xs-4 col-md-5">
+                                    {{ trans('benutzerForm.mandants') }}
+                                </th>
+                                <th class="col-xs-4 col-md-5">
+                                    {{ trans('benutzerForm.roles') }}
+                                </th>
+                            </tr>
+                            @foreach($user->mandantUsersDistinct as $mandantUser)
+                            
+                                @if($mandantUser->deleted_at == null)
+                                    <tr id="mandant-role-{{$mandantUser->id}}">
+                                        <td>
+                                            ({{ $mandantUser->mandant->mandant_number }}) {{ $mandantUser->mandant->kurzname }}
+                                            <input type="hidden" name="mandant_user_id" value="{{$mandantUser->id}}">
+                                            <input type="hidden" name="user_id" value="{{$mandantUser->user_id}}">
+                                            <input type="hidden" name="mandant_id" value="{{$mandantUser->mandant_id}}">
+                                        </td>
+                                        <td>
+                                            @foreach($mandantUser->mandantUserRoles as $mur)
+                                                @if($mur->role->phone_role || $mur->role->mandant_role)
+                                                    {{ $mur->role->name }}; 
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                    </tr>
+                                @endif
+                                
+                            @endforeach
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    @endif
 
+</fieldset>
 
 @stop

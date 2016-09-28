@@ -207,7 +207,8 @@ class UserController extends Controller
     {
         // dd($request->all());
         $user = User::find($id);
-        $user->update($request->all());
+        // $user->update($request->all());
+        $user->update($request->except(['password', 'password_repeat']));
         
         // Fix Carbon date parsing
         if(!$request->has('birthday')) $user->update(['birthday' => '']);
@@ -219,6 +220,12 @@ class UserController extends Controller
         
         if($request->has('email_reciever')) $user->update(['email_reciever' => true]);
         else $user->update(['email_reciever' => false]);
+
+        $pass = $request->input('password');
+        $passRep = $request->input('password_repeat');
+        
+        if(!empty($pass) && ($pass == $passRep))
+            $user->update(['password' => $pass]);
         
         if ($request->file()) {
             $userModel = User::find($user->id);
@@ -231,6 +238,8 @@ class UserController extends Controller
             return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
         return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
     }
+    
+
     
      /**
      * Show the form for editing the specified resource.
@@ -251,16 +260,10 @@ class UserController extends Controller
         }
         else $user = null;
         
-        // $user = User::find($id);
-        $usersAll = User::all();
-        $mandantsAll = Mandant::all();
-        // $rolesAll = Role::all();
-        // $rolesAll = Role::where('phone_role', false)->get();
         $rolesAll = Role::all();
-    
-        // dd($mandantUserRoles);
+        
         if(isset($user))
-            return view('benutzer.profile', compact('user'));
+            return view('benutzer.profile', compact('user', 'rolesAll'));
         else
             return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
     }

@@ -730,6 +730,32 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     display: none;
 }
 
+.iso-category-overview ul.level-1{
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.iso-category-overview ul.level-1 > li{
+    padding-top: 0;
+    padding-bottom: 15px;
+}
+
+.iso-category-overview ul.level-2{
+    padding-left: 20px;
+}
+
+.iso-category-overview ul li{
+    padding-top: 15px;
+    list-style-type: none;
+}
+
+.iso-category-overview ul li a{
+    color: #575756;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 16px;
+}
+
 span.highlight{
     color: #4094dc !important;
     font-weight: bold;
@@ -768,6 +794,10 @@ span.highlight{
 
 .box .favorite:last-child {
     border-bottom: 0;
+}
+
+.list-style-dash {
+    list-style-image: url('/img/icons/icon_list_dash.png') !important;
 }
 
 /*A4 paper simulation*/¸

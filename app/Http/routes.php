@@ -99,7 +99,7 @@ Route::group( array('middleware' => ['auth']), function(){
         
         // Wiki routes
         Route::resource('wiki-kategorie', 'WikiCategoryController');
-        Route::any('wiki/search', 'WikiController@search');
+        Route::any('wiki/suche', 'WikiController@search');
         Route::get('wiki/verwalten', 'WikiController@managmentUser');
         Route::get('wiki/duplicate/{id}', 'WikiController@duplicate');
         Route::post('wiki/verwalten', 'WikiController@searchManagment');
