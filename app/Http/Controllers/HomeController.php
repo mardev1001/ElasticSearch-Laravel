@@ -162,7 +162,7 @@ class HomeController extends Controller
     {
         //Dropdown: ALL Neptun - active - user - firstname lastname
         $data = array();
-        $neptun = Mandant::where('name','Like','Neptun')->first();
+        $neptun = Mandant::find(1);
         $mandantUsers =  MandantUser::where('mandant_id',$neptun->id)->pluck('user_id')->toArray();
         $users = User::whereIn('id',$mandantUsers)->where('active',1)->get();
         

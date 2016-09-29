@@ -329,12 +329,26 @@
             var documentType = "{{ $document->documentType->name}}";
             var documentSlug = "{{ str_slug( $document->documentType->name ) }}";
         </script>
-    
+        @stop
+        
+        @section('afterScript')
             <!--patch for checking iso category document-->
             @if( isset($document->isoCategories->name) )
                 <script type="text/javascript">
-                    if( documentType == 'ISO Dokument')
+                    if( documentType == 'ISO Dokumente')
                         var isoCategoryName = '{{ $document->isoCategories->name}}';
+                        var detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")');
+                        console.log( detectHref);
+                            $('#side-menu a').each(function(){
+                                console.log('a');
+                               if (this.href.indexOf(isoCategoryName) != -1){
+                                 detectHref = this.href;
+                                 console.log(this.href);
+                               }
+                            });
+                         setTimeout(function(){
+                             $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
+                         },1000 );
                 </script>
             @endif
                     <!-- End variable for expanding document sidebar-->

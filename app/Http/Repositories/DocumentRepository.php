@@ -838,7 +838,7 @@ class DocumentRepository
 		$documentsNewArr = $collection->pluck('id')->toArray();
 		
         
-        $collection = Document::whereIn('id',$documentsNewArr)->orderBy('documents.id', 'desc')->paginate(10, ['*'], $paginator);
+        $collection = Document::whereIn('id',$documentsNewArr)->orderBy('documents.id', 'desc')->paginate(50, ['*'], $paginator);
         // dd($collection);
         return $collection;
     }

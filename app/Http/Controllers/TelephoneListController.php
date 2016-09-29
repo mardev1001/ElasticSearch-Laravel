@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Repositories\UtilityRepository;
+use App\Helpers\ViewHelper;
 
 use Carbon\Carbon;
 use Auth;
@@ -219,6 +220,9 @@ class TelephoneListController extends Controller
      */
     public function pdfExport($id)
     {
+        if( ViewHelper::universalHasPermission( array(20) ) == false  ){
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
         $dateNow = Carbon::now()->format('M Y');
         $mandant = Mandant::find($id);
         $mandantInfo = MandantInfo::where('mandant_id', $id)->first();

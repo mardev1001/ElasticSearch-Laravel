@@ -2,7 +2,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation" style="margin-bottom: 0">
     <div class="">
         <div class="col-xs-12 col-sm-3">
-            <a class="nav-brand" href="/"><strong><img src="/img/logo-neptun-new.png" alt="Neptun logo"/></strong></a>
+            <a class="nav-brand" href="/"><strong><img src="/img/logo_new.jpg" alt="Neptun logo"/></strong></a>
         </div>
         <div class="col-xs-12 col-sm-2 col-md-3 session-flash">
             <div class="clearfix"></div>

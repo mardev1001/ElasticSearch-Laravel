@@ -178,7 +178,6 @@
                     var documentType = "{{ $docTypeName}}";
                     @if(isset($docTypeSlug) && $docTypeSlug != '' )
                     var documentSlug = "{{ $docTypeSlug }}";
-                    console.log('sa:'+documentSlug);
                     @endif
                 </script>
                

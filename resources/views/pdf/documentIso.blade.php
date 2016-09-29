@@ -11,7 +11,7 @@
         @if( $document->landscape == 1)
             <style>
             body,p,h1,h2,h3,h4,h5{
-                font-family: 'Helvetica' !important;
+                font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
             }
             p{
                 font-size: 14px;
@@ -28,7 +28,7 @@
              @page { 
                  margin-top: 130px;
                  margin-bottom: 20px;
-                 font-family: 'Helvetica' !important;
+                 font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
              }
              
             .clearfix{
@@ -160,7 +160,7 @@
         @else
             <style>
             body,p,h1,h2,h3,h4,h5{
-                font-family: 'Helvetica' !important;
+                font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
             }
             p{
                 font-size: 14px;
@@ -177,7 +177,7 @@
              @page { 
                  margin-top: 150px;
                  margin-bottom: 100px;
-                 font-family: 'Helvetica' !important;
+                 font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
              }
              
             .clearfix{

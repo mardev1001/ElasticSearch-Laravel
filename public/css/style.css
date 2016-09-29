@@ -862,7 +862,8 @@ input.form-control:-ms-input-placeholder {
   border-bottom: none !important; }
 
 .box .nav-tabs > li.active > a, .box .nav-tabs > li.active > a:hover, .box .nav-tabs > li.active > a:focus {
-  color: #337ab7; }
+  color: #337ab7;
+  background-color: #eeeeee; }
 
 .box .nav-tabs > li > a > span {
   padding-left: 10px;
@@ -13093,9 +13094,9 @@ body {
   font-size: 14px !important;
   color: black; }
 
-.mce-content-body {
-  padding: 0 140px 10px 30px; }
-
+/*.mce-content-body{
+    padding: 0 140px 10px 30px;
+}*/
 .list-style-dash {
   list-style-image: url("/img/icons/icon_list_dash.png") !important; }
 

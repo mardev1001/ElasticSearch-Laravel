@@ -1857,9 +1857,10 @@ class DocumentController extends Controller
         $variants = $variantPermissions->variants;
         
         $document = Document::find($id);
+        //  $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+        //  dd($render);
          
          $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
-         
         /* If document type Iso Category load different PDF template*/    
          if($document->document_type_id == $this->isoDocumentId){
              
@@ -2142,7 +2143,7 @@ class DocumentController extends Controller
         ->orderBy('id', 'desc')->get();
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
         $rundAllPaginated = $this->document->getUserPermissionedDocuments($rundAllPaginated, 'alle-rundschreiben');
-        $rundAllTree = $this->document->generateTreeview( $rundAllPaginated, array('pageDocuments' => true) );
+        $rundAllTree = $this->document->generateTreeview( $rundAllPaginated, array('pageDocuments' => true, 'showHistory' => true) );
         
         // $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->where('document_status_id',3)
         // ->where('active',1)->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
@@ -2211,7 +2212,7 @@ class DocumentController extends Controller
         ->orderBy('id', 'desc')->get();
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
         $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr');
-        $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated, array('pageDocuments' => true) );
+        $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated, array('pageDocuments' => true, 'showHistory' => true) );
         
         $docType = DocumentType::find($docType);
         
@@ -2257,8 +2258,8 @@ class DocumentController extends Controller
         ->where('active',1)
         ->orderBy('id', 'desc')->get();
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'all-news');
-        $newsAllPaginated = $this->document->getUserPermissionedDocuments($newsAllPaginated, 'all-news');
-        $newsAllTree = $this->document->generateTreeview( $newsAllPaginated, array('pageDocuments' => true) );
+        $newsAllPaginated = $this->document->getUserPermissionedDocuments($newsAllPaginated, 'alle-news');
+        $newsAllTree = $this->document->generateTreeview( $newsAllPaginated, array('pageDocuments' => true, 'showHistory' => true) );
         
         $docType = DocumentType::find($docType);
         
@@ -2290,17 +2291,19 @@ class DocumentController extends Controller
             $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
         })
         ->whereIn('document_status_id', [2,6])->orderBy('id', 'desc')
-        ->get();
-        // ->paginate(10, ['*'], 'meine-formulare-freigabe');
+        // ->get();
+        ->paginate(10, ['*'], 'meine-formulare-freigabe');
         
-        $formulareFreigabePaginated = $this->document->getUserPermissionedDocuments($formulareFreigabePaginated, 'meine-formulare-freigabe');
+        // $formulareFreigabePaginated = $this->document->getUserPermissionedDocuments($formulareFreigabePaginated, 'meine-formulare-freigabe');
         $formulareFreigabeTree = $this->document->generateTreeview( $formulareFreigabePaginated, array('pageDocuments' => true) );
         // $formulareFreigabeTree = $this->document->generateTreeview( $formulareFreigabePaginated, array('pageDocuments' => true,'formulare' => true) );
         
         $formulareAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3)->where('active',1)
-        ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
+        ->orderBy('id', 'desc')->get();
+        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
         
-        $formulareAllTree = $this->document->generateTreeview( $formulareAllPaginated, array('pageDocuments' => true) );
+        $formulareAllPaginated = $this->document->getUserPermissionedDocuments($formulareAllPaginated, 'alle-formulare');
+        $formulareAllTree = $this->document->generateTreeview( $formulareAllPaginated, array('pageDocuments' => true, 'showHistory' => true) );
         // $formulareAllTree = $this->document->generateTreeview( $formulareAllPaginated, array('pageDocuments' => true,'formulare' => true) );
         $docType = DocumentType::find($docType);
         // dd($formulareEntwurfPaginated);
@@ -2357,7 +2360,7 @@ class DocumentController extends Controller
             ->get();
             // ->paginate(10, ['*'], str_slug('all-'.$documentType->name));
             $documentsByTypePaginated = $this->document->getUserPermissionedDocuments($documentsByTypePaginated, str_slug('all-'.$documentType->name));
-            $documentsByTypeTree = $this->document->generateTreeview($documentsByTypePaginated, array('pageDocuments' => true) );
+            $documentsByTypeTree = $this->document->generateTreeview($documentsByTypePaginated, array('pageDocuments' => true, 'showHistory' => true) );
             // dd($documentsByTypePaginated);
         }
         
@@ -2514,7 +2517,7 @@ class DocumentController extends Controller
         ->get(['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id']);
         // ->paginate(10, ['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'all-iso-dokumente');
         $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated,'all-iso-dokumente');
-        $isoAllTree = $this->document->generateTreeview($isoAllPaginated, array('pageDocuments' => true));
+        $isoAllTree = $this->document->generateTreeview($isoAllPaginated, array('pageDocuments' => true, 'showHistory' => true));
         $uid=Auth::user()->id;
         $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
         $isoEntwurfPaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
@@ -2780,7 +2783,7 @@ class DocumentController extends Controller
         
         $id = $document->id;
         $document->document_status_id = 3;
-        $document->date_published = Carbon::now();
+        // $document->date_published = Carbon::now();
         $document->save();
         // dd($document);
         // if($debug == true)
