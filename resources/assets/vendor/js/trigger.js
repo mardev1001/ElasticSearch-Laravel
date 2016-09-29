@@ -308,15 +308,44 @@ $(function () {
                 ],
                 style_formats_merge: true,
                 setup: function (editor) {
+                     editor.on('NodeChange', function(e) {
+                        // console.log( e.element.find('img') );
+                        // console.log( e.element.parseHTML() );
+                        if( e && e.element.nodeName.toLowerCase() == 'td' ){
+                            
+                            var td = $(e.element), maxHeight =  $(e.element).height() ;
+                            
+                            $( e.element ).find('img').each(function() {
+                                var height = $(this).innerHeight(), width = $(this).innerWidth();
+                                $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
+                                $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
+                                if(height != maxHeight && height > maxHeight)
+                                    maxHeight = height;
+                            });
+                            td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;')
+                            td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ')
+                        }
+                        
+                     
+                        // console.log($( e.element ).find('img') );
+                        // console.log($( e.element ).find('img').height() );
+                        // console.log($( e.element ).find('img').width() );
+                        // console.log($( e.element ).find('img').innerHeight() );
+                            // console.log( e.element.parseHTML() ); 
+                        // console.log( e.element );
+                       if (e && e.element.nodeName.toLowerCase() == 'img') {
+                            tinyMCE.DOM.setAttribs(e.element, {'width': null, 'height': null});
+                        }
+        });
                     editor.addButton('mybutton', {
                             type: 'button',
                             title: 'Bild einfügen',
                             icon: 'image',
                             onclick: function (e) {
                                 var triggeredInsert = false;
-                                console.log($(e.target));
                                 if ($(e.target).prop("tagName") == 'BUTTON') {
-                                    // console.log($(e.target).parent().parent().find('input').attr('id'));      
+                                    // console.log($(e.target).parent().parent().find('input').attr('id'));  
+                                    console.log(e.target);
                                     if ($(e.target).parent().parent().find('input').attr('id') != 'tinymce-uploader') {
                                         $(e.target).parent().parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                     }
@@ -352,7 +381,7 @@ $(function () {
                                                 // console.log('create image 2');
                                                 img = new Image();
                                                 img.src = fr.result;
-                                                editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                               editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
                                             }
 
 
@@ -407,7 +436,6 @@ $(function () {
 
                                 }
                                 if ($(e.target).prop("tagName") == 'I') {
-                                    console.log($(e.target).parent().parent().parent().find('input').attr('id'));
                                     if ($(e.target).parent().parent().parent().find('input').attr('id') != 'tinymce-uploader') {
                                         $(e.target).parent().parent().parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                     }

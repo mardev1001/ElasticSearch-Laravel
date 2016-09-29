@@ -8,6 +8,31 @@
              .list-style-dash {
                     list-style-image: url('/img/icons/icon_list_dash.png') !important;
                 }
+                p,li{
+                    font-size: 14px ;
+                }
+                 h1{
+                        font-size: 2.1em !important;
+                    }
+                     h2{
+                        font-size: 1.6em !important;
+                    }
+                     h3{
+                        font-size: 1.27em !important;
+                    }
+                img,h1,h2,h3,h4,p,div{
+                    display:block !important;
+                    clear: both !important;
+                }
+                table{
+                    font-size: 14px;
+                    height: auto !Important;
+                    margin: auto !Important;
+                }
+                
+            table td{
+                vertical-align: middle !important;
+            }
           </style>
         @if( $document->landscape == true)
             <style>

@@ -1857,7 +1857,7 @@ class DocumentController extends Controller
         $variants = $variantPermissions->variants;
         
         $document = Document::find($id);
-        //  $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+         $render = view('pdf.document', compact('document','variants','dateNow'))->render();
         //  dd($render);
          
          $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));

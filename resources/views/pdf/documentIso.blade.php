@@ -6,7 +6,13 @@
       {!! Html::script(elixir('js/script.js')) !!}
       <link rel="shortcut icon" href="/img/favicon.png">
         <style type="text/css">
-             .list-style-dash { list-style-image: url('/img/icons/icon_list_dash.png') !important; }
+            .list-style-dash { list-style-image: url('/img/icons/icon_list_dash.png') !important; }
+            p,li{
+                    font-size: 14px !important;
+            }
+            table td{
+                vertical-align: middle !important;
+            }
         </style>
         @if( $document->landscape == 1)
             <style>
