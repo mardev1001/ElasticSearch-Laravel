@@ -327,15 +327,6 @@ $(function () {
                         }
                         
                      
-                        // console.log($( e.element ).find('img') );
-                        // console.log($( e.element ).find('img').height() );
-                        // console.log($( e.element ).find('img').width() );
-                        // console.log($( e.element ).find('img').innerHeight() );
-                            // console.log( e.element.parseHTML() ); 
-                        // console.log( e.element );
-                       if (e && e.element.nodeName.toLowerCase() == 'img') {
-                            tinyMCE.DOM.setAttribs(e.element, {'width': null, 'height': null});
-                        }
         });
                     editor.addButton('mybutton', {
                             type: 'button',
