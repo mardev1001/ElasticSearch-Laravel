@@ -1203,7 +1203,7 @@ class DocumentController extends Controller
                 $canPublish = true;
         }
              
-        if( count($document->documentApprovalsApprovedDateNotNull) > 0){
+        if( count($document->documentApprovalsApprovedDateNotNull) > 0  && ( count($document->documentApprovals->where('date_approved',null)) == count( $document->documentApprovalsApprovedDateNotNull ) ) ){
             $authorised = true;
            
             foreach($document->documentApprovals->pluck('approved') as $approved){
@@ -1291,10 +1291,29 @@ class DocumentController extends Controller
                }
                 
            }
+                
+        if(  count( $document->documentApprovalsApprovedDateNotNull ) == count( $document->documentApprovals) ){
+            $canPublish = false;
+            $authorised = false;
+        }
+            
         /* End If the document can be published or in freigabe process and the roles are correct */
         
+        $isoCategoryName = '';
+        $docTypeSearch = DocumentType::find($document->document_type_id);
+        $docTypeSlug = '';
+       
+        if( isset($docTypeSearch) )
+            $docTypeSlug = str_slug($docTypeSearch->name);
+            
+        if($document->document_type_id == 4){
+            // dd($document);
+            $isoCategory =  IsoCategory::find($document->iso_category_id);
+            $isoCategoryName = str_slug($isoCategory->name);
+        }    
+            
         return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 
-        'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility','myComments') );
+        'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility','myComments','isoCategoryName') );
     }
 
     /**
@@ -1648,7 +1667,7 @@ class DocumentController extends Controller
             if( $datePassed == true)
                 $canPublish = true;
         }
-        if( count($document->documentApprovalsApprovedDateNotNull ) > 0){
+        if( count( $document->documentApprovalsApprovedDateNotNull ) == count( $document->documentApprovals) ){
             $authorised = true;
             
         }
@@ -1700,9 +1719,18 @@ class DocumentController extends Controller
                 }
             }
         }
+        
+        if( count( $document->documentApprovalsApprovedDateNotNull ) != count( $document->documentApprovals) ){
+            $published = false;
+            $canPublish = false;
+            $authorised = false;
+            $authorisedPositive = false;
+            // dd(count($document->documentApprovals->where('date_approved',null))   );
+            // dd( count($document->documentApprovals) );
+        }
         $variants = $variantPermissions->variants;
         /* End Button check */
-        
+      
         /* User and freigabe comment visibility */
         $commentVisibility = $this->commentVisibility($document);
         return view('dokumente.freigabe',compact('document','variants','documentCommentsUser','documentCommentsFreigabe','published',
@@ -2044,32 +2072,29 @@ class DocumentController extends Controller
         $dateApproved = Carbon::now();
         $document = Document::find($id);
         $user = Auth::user()->id;
-        $document->document_status_id = 2; 
         
-        $document->save();
-        $continue = true;
+        $documentApproval = DocumentApproval::firstOrCreate( array('document_id' => $id, 'user_id' => $user) );
+        $documentApproval->approved = $approved;
+        $documentApproval->date_approved = $dateApproved;
+        $documentApproval->save();
+        
+       
+        if($request->has('comment')){
+            RequestMerge::merge(['freigeber' => 1,'active' => 1,'document_id'=>$document->id,'user_id' => $user] );
+            $comment = DocumentComment::create( $request->all() );
+        }
+        
+        if(  count( $document->documentApprovalsApprovedDateNotNull ) == count( $document->documentApprovals) ){
+            $document->document_status_id = 2; 
+            $document->save();
+            
+            $continue = true;
         $uniqeUrl = '';
         while ($continue) {
             $uniqeUrl = $this->generateUniqeLink();
             if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
                 $continue = false;
         }
-        $documentApproval = DocumentApproval::firstOrCreate( array('document_id' => $id, 'user_id' => $user) );
-        $documentApproval->approved = $approved;
-        $documentApproval->date_approved = $dateApproved;
-        $documentApproval->save();
-        
-        // $otherDocuments = Document::where('document_group_id',$document->document_group_id)->whereNotIn('id',array($document->id))->get();
-        // foreach($otherDocuments as $oDoc){
-        //     $oDoc->document_status_id = 5;
-        //     $oDoc->save();
-        // }                 
-        
-        if($request->has('comment')){
-            RequestMerge::merge(['freigeber' => 1,'active' => 1,'document_id'=>$document->id,'user_id' => $user] );
-            $comment = DocumentComment::create( $request->all() );
-        }
-        
         $now = Carbon::now();
         // dd($document->date_published);
         if( $document->date_published == null ){
@@ -2101,6 +2126,11 @@ class DocumentController extends Controller
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
             
         }
+            
+        }
+      
+       
+        
                 
         session()->flash('message',trans('documentForm.authorized'));
         return redirect('/dokumente/'.$id.'/freigabe');

@@ -8,7 +8,7 @@ class InternalMandantUser extends Model
 {
     
     protected $guarded = []; //blacklist
-    protected $fillable = ['mandant_id','role_id','user_id',]; //whitelist
+    protected $fillable = ['mandant_id','role_id','user_id','mandant_id_edit',]; //whitelist
     
     // public function users(){
     //     return $this->hasOne('App\MandantInfo');

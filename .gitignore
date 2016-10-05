@@ -5,6 +5,7 @@
 /public/files/pictures/*
 /resources/assets/vendor/*
 !/resources/assets/vendor/js/
+!/resources/assets/vendor/js-modified-plugins/
 !/resources/assets/vendor/img/
 Homestead.yaml
 Homestead.json

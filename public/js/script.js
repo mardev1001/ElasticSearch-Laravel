@@ -115732,6 +115732,7 @@ $(function () {
         else if (documentType == "ISO Dokumente") {
             if (typeof  isoCategoryName != 'undefined') {
                 detectHref = $('#side-menu').find('a:contains("' + isoCategoryName + '")').attr('href');
+                
 
             }
             else

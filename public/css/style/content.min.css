@@ -7,13 +7,13 @@ body{
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
 }
 
-.content h1,.tinymce-editor-class h1{
+.content h1,.tinymce-editor-class h1,.mce-content-body h1{
     font-size: 2.1em;
 }
-.content h2,.tinymce-editor-class h2{
+.content h2,.tinymce-editor-class h2,.mce-content-body h2{
     font-size: 1.6em;
 }
-.content h3, .tinymce-editor-class h3{
+.content h3, .tinymce-editor-class h3,.mce-content-body h3{
     font-size: 1.27em;
 }
 .mce-content-body, .tinymce-editor-class p,.tinymce-editor-class strong, .tinymce-editor-class i,.tinymce-editor-class b{

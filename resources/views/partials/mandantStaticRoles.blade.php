@@ -23,7 +23,7 @@
                         <select name="user_id" class="form-control select internal_new" data-placeholder="Mitarbeiter auswählen *" required>
                             <option></option>
                             @foreach($mandantUsersNeptun as $mandantUser)
-                                <option value="{{ $mandantUser->id }}" >
+                                <option value="{{ $mandantUser->id }}" data-mandant="{{ $mandantUser->mandant->id }}">
                                     {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }}
                                     [{{$mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname}}]
                                 </option>
@@ -34,6 +34,7 @@
                 
                 <div class="col-md-6 col-lg-4">
                     <div class="form-group custom-input-group-btn">
+                        <input type="hidden" name="internal_mandant_id" value="">
                         <button class="btn btn-primary" type="submit" name='role-create' value="1">{{ trans('mandantenForm.add') }}</button>
                     </div>
                 </div>
@@ -46,14 +47,14 @@
     
     {{ Form::open(['route' => ['mandant.internal-roles-edit', $data->id], 'method'=>'POST', 'id' => 'internal-role-'.$internalUser->id, 
     'class' => 'edit-internal-role' ,'data-remote']) }}
-        <input type="hidden" value="{{ $internalUser->role_id }}" name="old_role_id" />
+        
         <div class="col-md-6 col-lg-4"> 
             <div class="form-group">
                 <!--<label class="control-label">{{ trans('mandantenForm.role') }}*</label>-->
                 <select name="role_id" class="form-control select" data-placeholder="Rolle wählen *" data-target="internal_{{$internalUser->id}}" required >
                     <option></option>
                     @foreach($roles as $role)
-                        <option @if($internalUser->role_id == $role->id) selected @endif value="{{$role->id}}">{{$role->name}}</option>
+                        <option @if($internalUser->role_id == $role->id) selected @endif value="{{$role->id}}" >{{$role->name}}</option>
                     @endforeach
                 </select>
             </div>   
@@ -62,10 +63,10 @@
         <div class="col-md-6 col-lg-4"> 
             <div class="form-group">
                 <!--<label class="control-label">{{ trans('mandantenForm.user') }}*</label>-->
-                <select name="user_id" class="form-control select internal_{{$internalUser->id}}" data-placeholder="Mitarbeiter auswählen *" required>
+                <select name="user_id" class="form-control select internal_edit internal_{{$internalUser->id}}" data-placeholder="Mitarbeiter auswählen *" required>
                     <option></option>
                     @foreach($mandantUsersNeptun as $mandantUser)
-                        <option value="{{ $mandantUser->user->id }}"  @if($internalUser->user_id == $mandantUser->user->id) selected @endif>
+                        <option value="{{ $mandantUser->user->id }}" data-mandant="{{ $mandantUser->mandant->id }}" @if($internalUser->user_id == $mandantUser->user->id) selected @endif>
                             {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }}
                             [{{$mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname}}]
                         </option>
@@ -76,7 +77,9 @@
         
         <div class="col-md-6 col-lg-4">
             <div class="form-group">
+                <input type="hidden" name="edit_internal_mandant_id" value="{{ $internalUser->mandant_id }}">
                 <input type="hidden" name="internal_mandant_user_id" value="{{$internalUser->id}}">
+                <input type="hidden" value="{{ $internalUser->role_id }}" name="old_role_id" />
                 <button class="btn btn-danger delete-prompt" type="submit" name='role-delete' value="1">{{ trans('mandantenForm.remove') }}</button>
                 <button class="btn btn-primary" type="submit" name='role-update' value="1">{{ trans('mandantenForm.save') }}</button>
             </div>
@@ -97,8 +100,9 @@
     <script>
         $(function(){
             
-            // Define select box
+            // Define select boxes
             var selectElement = $('select[name="role_id"]');
+            var selectSecondary = $('select[name="user_id"]');
             
             // AJAX Request function
             function ajaxInternalRoles(roleId, selectTarget){
@@ -125,6 +129,19 @@
                 ajaxInternalRoles(roleId, selectTarget);
                 // console.log(selectTarget);
                 // console.log($(this).data('target'));
+            });
+            
+            // Select trigger
+            selectSecondary.chosen().change(function(){
+                var selectedMandantId = $(this).find("option:selected").data('mandant');
+                
+                if($(this).hasClass('internal_new'))
+                    $('input[name="internal_mandant_id"]').val(selectedMandantId);
+                
+                if($(this).hasClass('internal_edit'))
+                    $('input[name="edit_internal_mandant_id"]').val(selectedMandantId);
+                
+                // console.log($(this).hasClass('internal_edit'));
             });
             
         });

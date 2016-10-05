@@ -65,7 +65,10 @@ class TelephoneListController extends Controller
             $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
             
             // Get all InternalMandantUsers
-            $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+                
+            $internalMandantUsers = InternalMandantUser::where('mandant_id', $myMandant->id)
+                ->where('mandant_id_edit', $mandant->id)->get();
                 
             foreach ($internalMandantUsers as $user){
                 // if($partner){

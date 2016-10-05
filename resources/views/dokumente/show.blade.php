@@ -336,15 +336,12 @@
             @if( isset($document->isoCategories->name) )
                 <script type="text/javascript">
                     if( documentType == 'ISO Dokumente')
-                        var isoCategoryName = '{{ $document->isoCategories->name}}';
+                        var isoCategoryName =  '{{ $isoCategoryName }}' ;
                         var detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")');
-                        console.log( detectHref);
                             $('#side-menu a').each(function(){
-                                console.log('a');
-                               if (this.href.indexOf(isoCategoryName) != -1){
-                                 detectHref = this.href;
-                                 console.log(this.href);
-                               }
+                                if (this.href.indexOf(isoCategoryName) != -1){
+                                    detectHref = this.href;
+                                }
                             });
                          setTimeout(function(){
                              $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');

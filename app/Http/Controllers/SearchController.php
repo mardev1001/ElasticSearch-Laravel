@@ -80,27 +80,35 @@ class SearchController extends Controller
             
             // Check for occurence of "QMR" string, search for QMR documents if found
             if( stripos($parameter, 'QMR') !== false ){
+                
                 $qmr = trim(str_ireplace('QMR', '', $parameter));
                 $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
                 $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
-                // dd($qmrString);
+                // dd(!empty($qmrString));
                 
                 $documents = $documents->where(function($query) use ($qmrNumber, $qmrString) {
-                    $query->where('document_type_id', 3)
-                    ->where('qmr_number', 'LIKE', $qmrNumber)
-                    ->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
+                    if($qmrNumber) $query = $query->where('qmr_number', 'LIKE', $qmrNumber);
+                    if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
                 });
+                
+                $results = $documents->where('document_type_id', 3)->get();
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                
             } elseif( stripos($parameter, 'ISO') !== false ){
+                
                 $iso = trim(str_ireplace('ISO', '', $parameter));
                 $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
                 $isoString = preg_replace("/[^a-zA-Z]+/", "", $iso);
                 // dd($isoNumber);
                 
                 $documents = $documents->where(function($query) use ($isoNumber, $isoString) {
-                    $query->where('document_type_id', 4)
-                    ->where('iso_category_number', 'LIKE', $isoNumber)
-                    ->where('additional_letter', 'LIKE', '%'.$isoString.'%');
+                    if($isoNumber) $query = $query->where('iso_category_number', 'LIKE', $isoNumber);
+                    if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
                 });
+                
+                $results = $documents->where('document_type_id', 4)->get();
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                
             } else {
                 // Search for other parameters
                 $documents = $documents->where(function($query) use ($parameter) {
@@ -264,21 +272,44 @@ class SearchController extends Controller
         if($history) $documents = $documents->where('deleted_at', '!=', null);
         else $documents = $documents->where('deleted_at', null);
         
-        // // QMR search
-        // if(!empty($name)){
-        //     dd($name);
-        // }
-        
-        // if(!empty($name)){ 
-        //     $documents->where('name', 'LIKE', '%'.$name.'%')
-        //         ->orWhere(function($query) use ($name){
-        //         // QMR search
-        //         $qmr = trim(str_ireplace('QMR', '', $name));
-        //         $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
-        //         $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
-        //         $query->where('qmr_number', $qmrNumber)->orWhere('additional_letter', $qmrString)->where('document_status_id', 3);
-        //     });
-        // }
+        // QMR/ISO search via name field
+       
+        if(!empty($name)){
+            
+            if( stripos($name, 'QMR') !== false ){
+                    
+                $qmr = trim(str_ireplace('QMR', '', $name));
+                $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
+                $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
+                // dd(!empty($qmrString));
+                
+                $documents = $documents->where(function($query) use ($qmrNumber, $qmrString) {
+                    if($qmrNumber) $query = $query->where('qmr_number', 'LIKE', $qmrNumber);
+                    if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
+                });
+                
+                $results = $documents->where('document_type_id', 3)->get();
+                $request->flash();
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                
+            } elseif( stripos($name, 'ISO') !== false ){
+                
+                $iso = trim(str_ireplace('ISO', '', $name));
+                $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
+                $isoString = preg_replace("/[^a-zA-Z]+/", "", $iso);
+                // dd($isoNumber);
+                
+                $documents = $documents->where(function($query) use ($isoNumber, $isoString) {
+                    if($isoNumber) $query = $query->where('iso_category_number', 'LIKE', $isoNumber);
+                    if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
+                });
+                
+                $results = $documents->where('document_type_id', 4)->get();
+                $request->flash();
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                
+            }
+        } 
         
         if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
         if(!empty($betreff)) $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );

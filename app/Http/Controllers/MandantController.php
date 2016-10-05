@@ -398,8 +398,13 @@ class MandantController extends Controller
      */
     public function createInternalMandantUser(Request $request, $id)
     {
-        
-        $internalMandantUser = InternalMandantUser::create(['mandant_id' => $id, 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id'),]);
+        // dd($request->all());
+        $internalMandantUser = InternalMandantUser::create([
+            'mandant_id' => $id, 
+            'role_id' => $request->input('role_id'), 
+            'user_id' => $request->input('user_id'),
+            'mandant_id_edit' => $request->input('internal_mandant_id'),
+        ]);
         
         /* addon for userMandantRoleEdit */
         
@@ -427,17 +432,23 @@ class MandantController extends Controller
     public function editInternalMandantUser(Request $request, $id)
     {
         // var_dump($id);
-        // dd($request);
+        // dd($request->all());
+        // dd($request->get('edit_internal_mandant_id'));
         
-        if($request->has('internal_mandant_user_id')){
+        if($request->has('internal_mandant_user_id') && $request->has('edit_internal_mandant_id')){
            
             $id = $request->input('internal_mandant_user_id');
             
             $internalMandantUser = InternalMandantUser::where('id', $id)->first();
             $mandantId = $internalMandantUser->mandant_id;
+            $mandantIdEdit = $request->get('edit_internal_mandant_id');
             
             if($request->has('role-update')){
-                InternalMandantUser::where('id', $id)->update([ 'role_id' => $request->input('role_id'), 'user_id' => $request->input('user_id') ]);
+                InternalMandantUser::where('id', $id)->update([ 
+                    'role_id' => $request->input('role_id'), 
+                    'user_id' => $request->input('user_id'), 
+                    'mandant_id_edit' => $mandantIdEdit, 
+                ]);
                 // return back()->with('message', trans('mandantenForm.role-updated'));
                 
                 /* addon for userMandantRoleEdit */
@@ -498,7 +509,7 @@ class MandantController extends Controller
         }
         
         foreach ($mandantUsersNeptun as $mandantUser) {
-            $html .= '<option value="'. $mandantUser->user->id .'">'. 
+            $html .= '<option value="'. $mandantUser->user->id .'" data-mandant="'. $mandantUser->mandant->id .'">'. 
             $mandantUser->user->first_name .' '. $mandantUser->user->last_name .
             ' ['. $mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname .']</option>';
         }
