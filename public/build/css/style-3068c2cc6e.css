@@ -478,9 +478,12 @@ h1, h2, h3, h4 {
 .content h3, .tinymce-editor-class h3 {
   font-size: 1.27em; }
 
-.content, .content p, .content strong, .content i, .content b {
+.content, .content p, .content strong, .content i, .content b, .content td {
   font-size: 14px !important;
   color: black; }
+
+.content table p {
+  margin: 14px 0; }
 
 hr {
   margin: 15px 0 !important; }
@@ -490,6 +493,23 @@ hr {
 
 .cke {
   visibility: inherit !important; }
+
+.background-white {
+  background-color: #fff; }
+
+.mce-ico.mce-i-image-text {
+  width: auto !important;
+  padding: 0 3em;
+  font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
+  font-size: 12px;
+  color: #575756;
+  line-height: 16px;
+  text-transform: initial; }
+
+.mce-i-image-text:before {
+  font-family: 'Arial';
+  content: "Bilder Upload";
+  padding-left: 0.7em; }
 
 .flexbox-container {
   display: -ms-flexbox;
@@ -563,6 +583,12 @@ p, a, #page-wrapper label {
 #page-wrapper .table > tbody > tr > th:first-child,
 #page-wrapper .table > tbody > tr > td:first-child {
   padding-left: 0; }
+
+@media (max-width: 1024px) {
+  #page-wrapper .table > thead > tr > th:first-child,
+  #page-wrapper .table > tbody > tr > th:first-child,
+  #page-wrapper .table > tbody > tr > td:first-child {
+    width: 40%; } }
 
 #page-wrapper .table > thead > tr > th:last-child,
 #page-wrapper .table > tbody > tr > th:last-child,
@@ -13081,16 +13107,17 @@ td[data-mce-selected], th[data-mce-selected] {
 body {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important; }
 
-.content h1, .tinymce-editor-class h1 {
+.content h1, .tinymce-editor-class h1, .mce-content-body h1 {
   font-size: 2.1em; }
 
-.content h2, .tinymce-editor-class h2 {
+.content h2, .tinymce-editor-class h2, .mce-content-body h2 {
   font-size: 1.6em; }
 
-.content h3, .tinymce-editor-class h3 {
+.content h3, .tinymce-editor-class h3, .mce-content-body h3 {
   font-size: 1.27em; }
 
-.mce-content-body, .tinymce-editor-class p, .tinymce-editor-class strong, .tinymce-editor-class i, .tinymce-editor-class b {
+.mce-content-body, .tinymce-editor-class p, .tinymce-editor-class strong, .tinymce-editor-class i, .tinymce-editor-class b,
+.tinymce-editor-class td, .mce-content-body td {
   font-size: 14px !important;
   color: black; }
 

@@ -112,7 +112,7 @@
                                         <th class="@if(!isset($visible['col1'])) col-hide @endif col1 no-sort">{{ trans('telefonListeForm.photo') }} </th>
                                         <th class="@if(!isset($visible['col2'])) col-hide @endif col2">{{ trans('telefonListeForm.title') }} </th>
                                         <th class="@if(!isset($visible['col3'])) col-hide @endif col3">{{ trans('telefonListeForm.firstname') }} </th>
-                                        <th class="@if(!isset($visible['col4'])) col-hide @endif col4">{{ trans('telefonListeForm.lastname') }} </th>
+                                        <th class="@if(!isset($visible['col4'])) col-hide @endif col4 defaultSort">{{ trans('telefonListeForm.lastname') }} </th>
                                         <th class="@if(!isset($visible['col5'])) col-hide @endif col5 no-sort">{{ trans('telefonListeForm.role') }} </th>
                                         <th class="@if(!isset($visible['col6'])) col-hide @endif col6 no-sort">{{ trans('telefonListeForm.phone') }} </th>
                                         <th class="@if(!isset($visible['col7'])) col-hide @endif col7 no-sort">{{ trans('telefonListeForm.fax') }} </th>
@@ -124,7 +124,7 @@
                                             <tr>
                                                 <td>
                                                     @if(isset($internal->user->picture) && $internal->user->picture)
-                                                        <img class="img-responsive " src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
+                                                        <img class="img-responsive img-phonelist" src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
                                                     @else
                                                         <img class="img-responsive img-phonelist" src="{{url('/img/user-default.png')}}"/>
                                                     @endif
@@ -137,10 +137,12 @@
                                                 <td>{{ $internal->user->phone_short }}</td>
                                             </tr>
                                         @endforeach
+                                        
                                         @foreach($mandant->usersInMandants as $user)
+                                            @if(ViewHelper::phonelistVisibility($user, $mandant))
                                             <tr>
                                                 <td width="60">
-                                                    @if(isset($internal->user->picture) && $user->picture)
+                                                    @if(isset($user->picture) && $user->picture)
                                                         <img class="img-responsive img-phonelist" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
                                                     @else
                                                         <img class="img-responsive img-phonelist" src="{{url('/img/user-default.png')}}"/>
@@ -150,21 +152,25 @@
                                                 <td>{{ $user->first_name }}</td>
                                                 <td>{{ $user->last_name }}</td>
                                                 <td>
-                                                    
                                                     @foreach( $user->mandantRoles as $mandantUserRole)
-                                                        {{-- @if( $mandantUserRole->role->phone_role == 1 || $mandantUserRole->role->id == 2 || $mandantUserRole->role->id == 4) --}}
-                                                        @if($partner)
-                                                            @if( $mandantUserRole->role->mandant_role )
-                                                                {{-- Don't show roles that are already in internal roles an array --}}
+                                                        @if(ViewHelper::getMandant(Auth::user()->id)->rights_admin || ViewHelper::universalHasPermission())
+                                                            @if( $mandantUserRole->role->phone_role || $mandantUserRole->role->mandant_role )
                                                                 @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
                                                                     {{ ( $mandantUserRole->role->name ) }}
                                                                 @endif
                                                             @endif
                                                         @else
-                                                            @if( $mandantUserRole->role->phone_role )
-                                                                {{-- Don't show roles that are already in internal roles an array --}}
-                                                                @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
-                                                                    {{ ( $mandantUserRole->role->name ) }}
+                                                            @if($mandant->rights_admin)
+                                                                @if( $mandantUserRole->role->phone_role )
+                                                                    @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                                                                        {{ ( $mandantUserRole->role->name ) }}
+                                                                    @endif
+                                                                @endif
+                                                            @else
+                                                                @if( $mandantUserRole->role->mandant_role )
+                                                                    @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                                                                        {{ ( $mandantUserRole->role->name ) }}
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         @endif
@@ -173,7 +179,9 @@
                                                 <td>{{ $user->phone }}</td>
                                                 <td>{{ $user->phone_short }}</td>
                                             </tr>
+                                            @endif
                                         @endforeach
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -247,7 +255,7 @@
                                 @foreach( $users as $user)
                                     <tr>
                                         <td>
-                                            @if(isset($internal->user->picture) && $user->picture)
+                                            @if(isset($user->picture) && $user->picture)
                                                 <img class="img-responsive img-phonelist" src="{{url('/files/pictures/users/'. $user->picture)}}"/>
                                             @else
                                                 <img class="img-responsive img-phonelist" src="{{url('/img/user-default.png')}}"/>
@@ -261,9 +269,31 @@
                                             {{ ViewHelper::getMandant($user->id)->kurzname }}
                                         </td>
                                         <td>
+                                            
                                             @foreach( $user->mandantRoles as $mandantUserRole)
-                                                {{ ( $mandantUserRole->role->name ) }}
+                                                @if(ViewHelper::getMandant(Auth::user()->id)->rights_admin || ViewHelper::universalHasPermission())
+                                                    @if( $mandantUserRole->role->phone_role || $mandantUserRole->role->mandant_role )
+                                                        @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
+                                                            {{ ( $mandantUserRole->role->name ) }}
+                                                        @endif
+                                                    @endif
+                                                @else
+                                                    @if($mandant->rights_admin)
+                                                        @if( $mandantUserRole->role->phone_role )
+                                                            @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
+                                                                {{ ( $mandantUserRole->role->name ) }}
+                                                            @endif
+                                                        @endif
+                                                    @else
+                                                        @if( $mandantUserRole->role->mandant_role )
+                                                            @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
+                                                                {{ ( $mandantUserRole->role->name ) }}
+                                                            @endif
+                                                        @endif
+                                                    @endif
+                                                @endif
                                             @endforeach
+                                            
                                         </td>
                                         <td>{{ $user->phone }}</td>
                                         <td>{{ $user->phone_short }}</td>

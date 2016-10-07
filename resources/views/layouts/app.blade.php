@@ -20,12 +20,12 @@
 <body id="app-layout">
     <nav class="navbar" role="navigation" style="margin-bottom: 0">
         <div class="col-xs-12">
-            <a class="nav-brand" href="{{ url('/') }}"><strong><img src="/img/NeptunLogo.png" alt="Neptun logo"/></strong></a>
+            <a class="nav-brand" href="{{ url('/') }}"><strong><img src="/img/logo_new.jpg" alt="Neptun logo"/></strong></a>
         </div>
     </nav>
     <div class="clearfix"></div>
     <div class="content-wrap">
-         @yield('content')
+        @yield('content')
     </div>
    <!-- JS files - start -->
           @yield('preScript')

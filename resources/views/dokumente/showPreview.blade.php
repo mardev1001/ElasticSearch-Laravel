@@ -20,8 +20,8 @@
                 @endif  
                     <br>
                     <span class="text">
-                        <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}
-                            @if($document->date_published), {{$document->date_published}}@endif)
+                        <strong>({{ trans('dokumentShow.version') }}: {{ $document->version }}, {{ trans('dokumentShow.status') }}: {{ $document->documentStatus->name }}@if($document->date_published), {{$document->date_published}}, @endif
+                        @if(isset($document->owner) ){{ $document->owner->first_name.' '.$document->owner->last_name }}@endif)
                         </strong>
                     </span>
             </h3>

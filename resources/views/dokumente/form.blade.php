@@ -129,7 +129,7 @@
                     <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">
                         <option value="0"></option>
                         @foreach($mandantUsers as $mandantUser)
-                            <option value="{{$mandantUser->user->id}}" @if(isset($documentCoauthor)) {!! ViewHelper::setMultipleSelect($documentCoauthor, $mandantUser->user->id, 'user_id') !!} @endif > 
+                            <option value="{{$mandantUser->user->id}}" @if(isset($documentCoauthors)) {!! ViewHelper::setMultipleSelect($documentCoauthors, $mandantUser->user->id, 'user_id') !!} @endif > 
                                 {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
                             </option>
                         @endforeach

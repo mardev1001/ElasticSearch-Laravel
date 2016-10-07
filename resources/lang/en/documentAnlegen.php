@@ -10,7 +10,7 @@ return [
     'datePublished' => 'Veröffentlichungstermin',
     'dateExpired' => 'Verfallsdatum',
     'isoCategory' => 'Kategorie ISO Dokument',
-    'showName' => 'Namen anzeigen',
+    'showName' => 'Namen nicht angzeigen',
     'adressat' => 'adressat_id',
     'subject' => 'Betreff',
     'pdfUpload' => 'PDF upload',

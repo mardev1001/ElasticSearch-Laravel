@@ -244,8 +244,8 @@ class DocumentRepository
                     
                     
                      
-                    if($document->published) $icon = 'icon-released ';
-                    else $icon = 'icon-notreleased ';
+                    if($document->published && $document->document_status_id == 3) $icon = 'icon-released ';
+                    // else $icon = 'icon-notreleased ';
                     
                 }
 

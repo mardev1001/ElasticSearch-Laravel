@@ -10,7 +10,7 @@
 @section('bodyClass') home-page @stop
 
 @section('content')
-<div class="row">
+<div class="row background-white">
     
     <div class="col-xs-12 col-md-6 ">
         <div class="col-xs-12 box-wrapper home">

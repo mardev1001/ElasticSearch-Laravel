@@ -423,7 +423,9 @@ class SearchController extends Controller
             $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
             
             // Get all InternalMandantUsers
-            $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            $internalMandantUsers = InternalMandantUser::where('mandant_id', $loggedUserMandant->id)
+                ->where('mandant_id_edit', $mandant->id)->get();
             foreach ($internalMandantUsers as $user)
                 $usersInternal[] = $user;
     
@@ -459,7 +461,7 @@ class SearchController extends Controller
                         }
                     } else {
                         // Check for phone roles
-                        if( $mr->role->phone_role ) {
+                        if( $mr->role->phone_role || $mr->role->mandant_role ) {
                             $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
                             if(!count($internalRole)){
                                 $userArr[] = $mandant->users[$k2]->id;
@@ -498,7 +500,9 @@ class SearchController extends Controller
         // Get searched users    
         foreach($mandantsSearch as $k => $mandant){
             
-            $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
+            $internalMandantUsers = InternalMandantUser::where('mandant_id', $loggedUserMandant->id)
+                ->where('mandant_id_edit', $mandant->id)->get();
             foreach ($internalMandantUsers as $user)
                 $usersInMandantsInternal[] = $user;
             

@@ -16,7 +16,8 @@ body{
 .content h3, .tinymce-editor-class h3,.mce-content-body h3{
     font-size: 1.27em;
 }
-.mce-content-body, .tinymce-editor-class p,.tinymce-editor-class strong, .tinymce-editor-class i,.tinymce-editor-class b{
+.mce-content-body, .tinymce-editor-class p,.tinymce-editor-class strong, .tinymce-editor-class i,.tinymce-editor-class b,
+.tinymce-editor-class td, .mce-content-body td{
     font-size: 14px !important;
     color: black;
 }

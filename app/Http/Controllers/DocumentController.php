@@ -1102,8 +1102,14 @@ class DocumentController extends Controller
             $publishedDocs = PublishedDocument::where('url_unique',$id)->orderBy('id','DESC')->first();
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
-             $document = Document::find($id);
-             
+            $document = Document::find($id);
+             /*Published hotfix*/
+                if( $document->date_published == null  && $document->document_status_id == 3){
+                    $doc = Document::find($document->id);
+                    $doc->date_published = $datePublished;
+                    $doc->save();
+                    $document->date_published = $datePublished;
+                }
              if($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == true ){
                  return redirect('dokumente/'.$document->id );
              }
@@ -1136,10 +1142,20 @@ class DocumentController extends Controller
             
         }
         else{
+           $oldStatus = $document->document_status_id; 
              /*
             Check if document is latest published. if not redirect from unique url to id url
             This is used as a failsafe for documents accessed from browser history
          */
+         /*Published hotfix*/
+        if( $document->date_published == null  && $document->document_status_id == 3){
+            $doc = Document::find($document->id);
+            $doc->date_published = $datePublished;
+            $doc->save();
+            $document->date_published = $datePublished;
+        }
+          
+
          $latestPublished = PublishedDocument::where('document_group_id',$document->document_group_id)->orderBy('updated_at','desc')->first();
             // dd($latestPublished);/
              if( $latestPublished != null && $latestPublished->document_id == $document->id  && $document->document_status_id != 5){
@@ -1257,9 +1273,8 @@ class DocumentController extends Controller
         }
         $variants = $variantPermissions->variants;
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
-    
         /* If the document can be published or in freigabe process and the roles are correct */
-            if( $authorised == false && $canPublish ==false && $published == false){
+            if( $authorised == false && $canPublish ==false && $published == false && $document->document_status_id != 5){
                 if( $authorised == false && $canPublish ==false && $published == false){
                     if( ($document->documentType->document_art == 1 && ViewHelper::universalHasPermission( array(13) ) == true)
                         || ($document->documentType->document_art == 0 && ViewHelper::universalHasPermission( array(11) ) == true)
@@ -1269,9 +1284,10 @@ class DocumentController extends Controller
                     
                 }
             }
-            elseif( ($authorised == false &&  $published == false ) ||
+            elseif(   $document->document_status_id != 5 && ( ($authorised == false &&  $published == false ) ||
                    ($authorised == true && $published == false ) || ($canPublish == true && $published == false) 
-                   && (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ){
+                   && (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ) ){
+                       dd('brejk');
                          if( ( ( $document->documentType->document_art == 1 &&
                                 ViewHelper::universalHasPermission( array(13) ) == true ) ||
                                 ( $document->documentType->document_art == 0 &&
@@ -1310,7 +1326,10 @@ class DocumentController extends Controller
             // dd($document);
             $isoCategory =  IsoCategory::find($document->iso_category_id);
             $isoCategoryName = str_slug($isoCategory->name);
-        }    
+        }
+        
+            
+        
             
         return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 
         'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility','myComments','isoCategoryName') );
@@ -1353,6 +1372,7 @@ class DocumentController extends Controller
             
             $url = '';
             $documentCoauthor = DocumentCoauthor::where('document_id', $id)->get();
+            $documentCoauthors = DocumentCoauthor::where('document_id', $id)->get();
             $isoDocuments = IsoCategory::all();
             $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
             $documentStatus = DocumentStatus::all();
@@ -1360,7 +1380,7 @@ class DocumentController extends Controller
             $mandantUsers =  MandantUser::distinct('user_id')->whereIn('mandant_id',$mandantId)->get();  
             $mandantUsers = $this->clearUsers($mandantUsers);
             $documentCoauthor = $mandantUsers;
-            
+                
             //this is until Neptun inserts the documents
             $documentUsers = $mandantUsers;
             // dd($documentUsers);
@@ -1382,7 +1402,7 @@ class DocumentController extends Controller
             }
            
             return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments',
-            'documentStatus','mandantUsers','documentUsers', 'documentCoauthor','incrementedQmr','incrementedIso') );
+            'documentStatus','mandantUsers','documentUsers', 'documentCoauthor','documentCoauthors','incrementedQmr','incrementedIso') );
         }   
         else{
             session()->flash('message',trans('documentForm.noPermission'));
@@ -1426,8 +1446,11 @@ class DocumentController extends Controller
             RequestMerge::merge(['betreff' => $request->get('name_long')] );
             
         
-         if(!$request->has('date_published') || $request->get('date_expired') == 'date_published')    
-             RequestMerge::merge(['date_published' => null] );
+          if(!$request->has('date_published'))    {
+            $publishedDate = new Carbon($data->created_at);
+            RequestMerge::merge(['date_published' => $publishedDate->addDay()->format('d.m.Y')] );      
+          }
+            
          
          if(!$request->has('date_expired') || $request->get('date_expired') == '' )    
              RequestMerge::merge(['date_expired' => null] );
@@ -1886,8 +1909,8 @@ class DocumentController extends Controller
         
         $document = Document::find($id);
          $render = view('pdf.document', compact('document','variants','dateNow'))->render();
-        //  dd($render);
-         
+        //   dd($render);
+        // return $render;
          $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
         /* If document type Iso Category load different PDF template*/    
          if($document->document_type_id == $this->isoDocumentId){
@@ -1949,6 +1972,7 @@ class DocumentController extends Controller
      */
     public function previewDocument($id,$editorId)
     {
+        
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
@@ -1957,6 +1981,13 @@ class DocumentController extends Controller
         else
             $document = Document::find($id);
         
+        $datePublished = $document->created_at;
+        if( $document->date_published == null ){
+                    $doc = Document::find($document->id);
+                    $doc->date_published = $datePublished;
+                    $doc->save();
+                    $document->date_published = $datePublished;
+                }
         if($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == false){
                   return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
@@ -2405,6 +2436,10 @@ class DocumentController extends Controller
     public function documentStats($id)
     {
         $document = Document::find($id);
+        if(ViewHelper::universalDocumentPermission($document, true, false, true ) == false){
+             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        
         $mandants = Mandant::all();
         $users = User::all();
         $documentReaders = array();

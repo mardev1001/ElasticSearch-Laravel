@@ -7,7 +7,7 @@
             <!-- input box-->
             <div class="col-lg-6"> 
                 <div class="form-group">
-                    <label>Dokumentenupload</label>
+                    
                     <input type="file" name="file[]" class="form-control" 
                     @if( $data->documentUploads()->count() < 1 )
                         required

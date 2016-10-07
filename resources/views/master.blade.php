@@ -60,7 +60,7 @@
     
         <!-- Page Content -->
         <div id="page-wrapper">
-            <div class="container-fluid first">
+            <div class="container-fluid first background-white">
                 <!-- Backend content -->
                 @yield('content')
     

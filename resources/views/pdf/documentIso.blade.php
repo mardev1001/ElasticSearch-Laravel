@@ -12,6 +12,7 @@
             }
             table td{
                 vertical-align: middle !important;
+                border-collapse: collapse !important;
             }
         </style>
         @if( $document->landscape == 1)
@@ -25,11 +26,11 @@
             }
             table {
                 margin-left: 0 !important;
-                width: 100% !important;
+                /*width: 100% !important;*/
                 /*margin-right: 30pt !important;*/
             }
             table td{
-                 width: auto !important;
+                 /*width: auto !important;*/
             }
              @page { 
                  margin-top: 130px;
@@ -174,11 +175,11 @@
             }
             table {
                 margin-left: 0 !important;
-                width: 100% !important;
+                /*width: 100% !important;*/
                 /*margin-right: 30pt !important;*/
             }
             table td{
-                 width: auto !important;
+                 /*width: auto !important;*/
             }
              @page { 
                  margin-top: 150px;

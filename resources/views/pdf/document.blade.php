@@ -8,6 +8,9 @@
              .list-style-dash {
                     list-style-image: url('/img/icons/icon_list_dash.png') !important;
                 }
+                body,table,p,strong,li,h1,h2,h3,span,b,i{
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                }
                 p,li{
                     font-size: 14px ;
                 }
@@ -27,11 +30,15 @@
                 table{
                     font-size: 14px;
                     height: auto !Important;
-                    margin: auto !Important;
+                    border-collapse: collapse !important;
                 }
                 
             table td{
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 vertical-align: middle !important;
+                padding: 0px !important;
+                line-height: 20px !important;
+                font-size: 14px !important;
             }
           </style>
         @if( $document->landscape == true)
@@ -139,11 +146,11 @@
             }
             table {
                 margin-left: 0 !important;
-                width: 100% !important;
+                /*width: 100% !important;*/
                 /*margin-right: 30pt !important;*/
             }
             table td{
-                 width: auto !important;
+                 /*width: auto !important;*/
             }
             #absolute{
                  font-size: 10px !important;
@@ -268,11 +275,11 @@
             }
             table {
                 margin-left: 0 !important;
-                width: 100% !important;
+                /*width: 100% !important;*/
                 /*margin-right: 30pt !important;*/
             }
             table td{
-                 width: auto !important;
+                 /*width: auto !important;*/
             }
             #absolute{
                  font-size: 10px !important;

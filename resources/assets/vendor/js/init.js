@@ -86,7 +86,10 @@ $(function() {
         columnDefs: [
             { targets: 'no-sort', orderable: false },
             { targets: 'col-hide', visible: false }
-        ]
+        ],
+        order: [ 
+            [ $('th.defaultSort').index(), 'asc' ]
+        ],
     });
     
     if ($('.editable').length) {
@@ -144,8 +147,8 @@ $(function() {
     });
                 editor.addButton('mybutton', {
                         type: 'button',
-                        title: 'Bild einfügen',
-                        icon: 'image',
+                        title: 'Bilder Upload',
+                        icon: 'image-text',
                         onclick: function (e) {
                             var triggeredInsert = false;
                             
@@ -340,8 +343,8 @@ $(function() {
     });
                 editor.addButton('mybutton', {
                         type: 'button',
-                        title: 'Bild einfügen',
-                        icon: 'image',
+                        title: 'Bilder Upload',
+                        icon: 'image-text',
                         onclick: function (e) {
                             var triggeredInsert = false;
                             
@@ -549,8 +552,8 @@ $(function() {
     });
                 editor.addButton('mybutton', {
                         type: 'button',
-                        title: 'Bild einfügen',
-                        icon: 'image',
+                        title: 'Bilder Upload',
+                        icon: 'image-text',
                         onclick: function (e) {
                             var triggeredInsert = false;
                             

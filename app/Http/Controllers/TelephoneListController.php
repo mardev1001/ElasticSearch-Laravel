@@ -39,7 +39,7 @@ class TelephoneListController extends Controller
         
         // $mandants = array();
         $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
-        if(Auth::user()->id == 1 || $myMandant->id == 1 || $myMandant->rights_admin == 1)
+        if(ViewHelper::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1)
             $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
         else {
             $partner = true;
@@ -83,6 +83,11 @@ class TelephoneListController extends Controller
                 $usersInternal[] = $user;
             }
             
+            // partner user -> for neptun flag mandants - phone roles; 
+            // partner user -> for other mandants - partner roles; 
+            // admin user/neptun user -> for all mandants - phone and partner roles; 
+            
+            
             // dd($mandant->users);
             // dd(array_pluck($usersInternal,'role_id'));
             // dd(($usersInternal,'role_id'));
@@ -91,7 +96,7 @@ class TelephoneListController extends Controller
                 foreach($mUser->mandantRoles as $mr){
                     if($partner){
                         // Check for partner roles
-                        if( $mr->role->mandant_role ) {
+                        if( $mr->role->mandant_role ){
                             $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
                             if(!count($internalRole)){
                                 $userArr[] = $mandant->users[$k2]->id;
@@ -99,7 +104,7 @@ class TelephoneListController extends Controller
                         }
                     } else {
                         // Check for phone roles
-                        if( $mr->role->phone_role ) {
+                        if( $mr->role->phone_role || $mr->role->mandant_role ) {
                             $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
                             if(!count($internalRole)){
                                 $userArr[] = $mandant->users[$k2]->id;

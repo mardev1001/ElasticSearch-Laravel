@@ -465,7 +465,8 @@ class ViewHelper
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
         if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) 
         || ( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1 )
-           $hasPermission = true; 
+            $hasPermission = true;
+        //   dd($coAuthors); 
            
         if( $message == true  && $hasPermission == false)
             session()->flash('message',trans('documentForm.noPermission'));
@@ -688,5 +689,34 @@ class ViewHelper
         
     }
     
+    /**
+     * Check if user has any visible roles, return true if so, else return false
+     * @return bool
+     */
+    static function phonelistVisibility($user, $mandant){
+        $rolesCount = 0;
+        foreach($user->mandantRoles as $mandantUserRole) {
+            if(ViewHelper::getMandant(Auth::user()->id)->rights_admin || ViewHelper::universalHasPermission()){
+                if( $mandantUserRole->role->phone_role || $mandantUserRole->role->mandant_role ){
+                    if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                        $rolesCount += 1; 
+                }
+            } else {
+                if($mandant->rights_admin){
+                    if( $mandantUserRole->role->phone_role ){
+                        if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                            $rolesCount += 1; 
+                    }
+                } else {
+                    if( $mandantUserRole->role->mandant_role ){
+                        if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                            $rolesCount += 1; 
+                    }
+                }
+            }
+        }
+        
+        return $rolesCount;
+    }
+    
 }
-

@@ -17,12 +17,12 @@
 </div><!--End input box-->
 
 <!-- input box-->
-<div class="col-lg-3"> 
-    <div class="form-group">
-        {!! ViewHelper::setInput('betreff',$data,old('betreff'),trans('documentForm.subject') , 
-               trans('documentForm.subject') , true  ) !!}
-    </div>   
-</div><!--End input box-->
+<!--<div class="col-lg-3"> -->
+<!--    <div class="form-group">-->
+<!--        {!! ViewHelper::setInput('betreff',$data,old('betreff'),trans('documentForm.subject') , -->
+<!--               trans('documentForm.subject') , true  ) !!}-->
+<!--    </div>   -->
+<!--</div><!--End input box-->-->
 <div class="clearfix"></div>
     <div class="parent-tabs col-xs-12 col-md-12">
     <hr/>
