@@ -24,6 +24,7 @@ use App\DocumentCoauthor;
 use App\PublishedDocument;
 use App\UserReadDocument;
 use App\EditorVariant;
+use App\Helpers\ViewHelper;
 
 class DocumentRepository
 {
@@ -89,6 +90,7 @@ class DocumentRepository
             'pageWiki' => false,
             'pageFavorites' => false,
             'pageDocuments' => false,
+            'pageSearch' => false,
             'myDocuments' => false,
             // 'formulare' => false,
         ];
@@ -132,6 +134,7 @@ class DocumentRepository
         $documents = array();
         
         if (sizeof($items)) $documents = $items;
+        if ($options['pageSearch']) $searchResultsCounter = 0;
 
         if ($options['document'] == true && count($documents) > 0) {
             
@@ -247,6 +250,45 @@ class DocumentRepository
                     if($document->published && $document->document_status_id == 3) $icon = 'icon-released ';
                     // else $icon = 'icon-notreleased ';
                     
+                }
+                
+                // Search results TreeView
+                if ($options['pageSearch'] == true) {
+                    /*
+                    #1 - 01.10.2016 - Struktur Administrator
+                    Rundschreiben - Rund Frei test
+                    HIER KOMMT TEXT FALLS DARIN DER TREFFER WAR
+                    */
+                    $searchResultsCounter += 1;
+                    if($document->published || ($document->document_status_id == 1 && $options['myDocuments'] == true)){
+                        $node->beforeText = '#' . $searchResultsCounter .' - '. $document->documentType->name .' - ';
+                        // if($options['pageHome'] == true && $options['myDocuments'] == true)
+                        //     $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
+                            
+                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - ';
+                        if(isset($document->owner))
+                            $node->beforeText .= $document->owner->first_name.' '.$document->owner->last_name;
+                        
+                        if($document->published != null)
+                            $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
+                            ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
+                        
+                        if($document->documentType->read_required){
+                            if($document->document_status_id == 3){
+                                if(isset($readDocument)) 
+                                    $icon = 'icon-read ';
+                                else
+                                    $icon = 'icon-notread ';
+                            }
+                        }
+                    }
+                    
+                    // $node->text = $document->documentType->name .' - '. $node->text;
+                    if(isset($document->inhalt) && !empty($document->inhalt))
+                        $node->afterText = ViewHelper::extractTextSimple($document->inhalt);
+                    else
+                        $node->afterText = 'Keine Inhalte';
+                    // $node->afterText = $document->documentType->name;
                 }
 
                 
@@ -427,10 +469,18 @@ class DocumentRepository
      * @return object array $array
      */
     
-    public function generateWikiTreeview($items = array())
+    public function generateWikiTreeview($items = array(), $options = array())
     {
+        $optionsDefault = [
+            'tags' => false,
+            'pageSearch' => false,
+            
+        ];
+        $options = array_merge($optionsDefault, $options);
+        
         $treeView = array();
         $wikiPages = array();
+        $wikiPageCount = 0;
         
         if (sizeof($items)) $wikiPages = $items;
     
@@ -450,6 +500,16 @@ class DocumentRepository
             // $node->icon2 = $icon2;
             
             $node->href = url('/wiki/' . $wikiPage->id);
+            
+            if($options['pageSearch']){
+                $wikiPageCount += 1;
+                $node->beforeText = '#'. $wikiPageCount .' - '. $wikiPage->category->name .' - '. $node->beforeText;
+                
+                if(isset($wikiPage->content) && !empty($wikiPage->content))
+                    $node->afterText = ViewHelper::extractTextSimple($wikiPage->content);
+                else
+                    $node->afterText = 'Keine Inhalte';
+            }
             
             array_push($treeView, $node);
         }

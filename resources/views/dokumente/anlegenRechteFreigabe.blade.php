@@ -145,6 +145,11 @@
                             <button type="submit" class="btn btn-primary no-margin-bottom no-validate"  name="save" value="save">
                                 <span class="fa fa-floppy-o"></span>  {{ trans('rightsRelease.save') }}
                             </button>
+                            @if( $data->document_status_id == 2 ) 
+                                <a class="btn btn-primary no-margin-bottom no-validate"  href="dokumente/{{$data->id}}/edit">
+                                    <span class="fa fa-floppy-o"></span>  {{ trans('dataUpload.edit') }}
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>

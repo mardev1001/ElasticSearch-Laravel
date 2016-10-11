@@ -124,3 +124,22 @@
 <div class="clearfix"></div> <br>
 
 @stop
+@section('afterScript')
+            <!--patch for checking iso category document-->
+            @if( isset($isoCategory->name) )
+                <script type="text/javascript">
+                    var isoCategoryName =  '{{str_slug($isoCategory->name)}}';
+                    var detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")');
+                      
+                        
+                     setTimeout(function(){
+                         $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
+                        $('#side-menu').find('a.active').parent('li').find('ul').addClass('in');
+                              $('a[href$="'+detectHref+'"]').parent("li").find('ul').addClass('in');
+                              console.log('test');
+                        
+                     },1000 );
+                </script>
+            @endif
+                    <!-- End variable for expanding document sidebar-->
+        @stop

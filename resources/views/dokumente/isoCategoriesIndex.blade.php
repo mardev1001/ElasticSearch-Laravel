@@ -50,3 +50,18 @@
 <div class="clearfix"></div> <br>
 
 @stop
+@section('afterScript')
+            <!--patch for checking iso category document-->
+          
+                <script type="text/javascript">
+                        var detectHref =window.location.href ;
+                         setTimeout(function(){
+                             if( $('a[href$="'+detectHref+'"]').parent("li").find('ul').length){
+                                //  console.log('yeah');
+                                  $('a[href$="'+detectHref+'"]').parent("li").find('ul').addClass('in');
+                             }
+                            
+                         },1000 );
+                </script>
+                    <!-- End variable for expanding document sidebar-->
+        @stop

@@ -94,15 +94,16 @@ class TelephoneListController extends Controller
             foreach($mandant->users as $k2 => $mUser){
                 
                 foreach($mUser->mandantRoles as $mr){
-                    if($partner){
-                        // Check for partner roles
-                        if( $mr->role->mandant_role ){
-                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                            if(!count($internalRole)){
-                                $userArr[] = $mandant->users[$k2]->id;
-                            }
-                        }
-                    } else {
+                    if($mUser->active){
+                    // if($partner){
+                    //     // Check for partner roles
+                    //     if( $mr->role->mandant_role ){
+                    //         $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
+                    //         if(!count($internalRole)){
+                    //             $userArr[] = $mandant->users[$k2]->id;
+                    //         }
+                    //     }
+                    // } else {
                         // Check for phone roles
                         if( $mr->role->phone_role || $mr->role->mandant_role ) {
                             $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
@@ -110,6 +111,7 @@ class TelephoneListController extends Controller
                                 $userArr[] = $mandant->users[$k2]->id;
                             }
                         }
+                    // }
                     }
                 }
                 

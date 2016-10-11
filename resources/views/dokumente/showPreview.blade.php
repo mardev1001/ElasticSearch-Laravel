@@ -67,7 +67,8 @@
 
                             <div class="footer">
 
-                                @if(count($document->documentUploads))
+                               @if(count($document->documentUploads))
+                                    @if( ViewHelper::hasPdf( $document ) == true)
                                     <div class="attachments">
                                         <span class="text">PDF Vorschau: </span>
                                         <div class="clearfix"></div> <br>
@@ -77,13 +78,16 @@
                                         <!--<a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">-->
                                         <!--{{-- basename($attachment->file_path) --}} PDF download</a>-->
                                         <!--<br><span class="indent"></span>-->
-
-                                        <object data="{{url('open/'.$document->id.'/'.$attachment->file_path)}}" type="application/pdf" width="100%" height="640">
-                                            PDF konnte nicht initialisiert werden. Die Datei können sie <a href="{{url('download/'. $document->id .'/'.$attachment->file_path)}}">hier</a> runterladen.
-                                        </object>
+                                         @if( ViewHelper::htmlObjectType( $document,$attachment ) != null && ViewHelper::htmlObjectType( $document,$attachment ) == 'pdf' )
+                                            <object data="{{url('open/'.$document->id.'/'.$attachment->file_path)}}" 
+                                            type="{{ ViewHelper::htmlObjectType( $document,$attachment ) }}" width="100%"  @if(ViewHelper::htmlObjectType( $document,$attachment )=='pdf') height="640" @endif>
+                                                PDF konnte nicht initialisiert werden. Die Datei können sie <a href="{{url('download/'. $document->id .'/'.$attachment->file_path)}}">hier</a> runterladen.
+                                            </object>
+                                        @endif
                                         <div class="clearfix"></div> <br>
                                         @endforeach
                                     </div>
+                                    @endif
                                 @endif
 
                                 @foreach( $variants as $v => $variant)

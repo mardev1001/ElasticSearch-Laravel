@@ -10,8 +10,10 @@ $(function() {
     /*End Blank space fix for textareas*/
 
     $('#side-menu').metisMenu({
-        doubleTapToGo: true,
+        singleTapToGo: true,
+        // doubleTapToGo: false,
         toggle: false,
+        // preventDefault: false,
     });
 
     $(".select").chosen({});
@@ -522,6 +524,7 @@ $(function() {
                 body_class: classes,
                 width: docWidth,
                 height: docHeight, 
+                
                 removed_menuitems: 'newdocument',
                 style_formats: [
                     { title: 'Spiegelstriche', selector: 'ul', classes: 'list-style-dash'},

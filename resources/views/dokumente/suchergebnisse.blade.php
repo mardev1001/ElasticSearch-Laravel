@@ -199,6 +199,10 @@
                             });
                          setTimeout(function(){
                              $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
+                             if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
+                                  $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').addClass('in');
+                             }
+                             
                          },500 );
                              
                         }

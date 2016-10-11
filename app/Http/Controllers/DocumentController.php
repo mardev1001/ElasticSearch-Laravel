@@ -790,7 +790,7 @@ class DocumentController extends Controller
         }
         $document = Document::find($id);
         if($request->get('roles')!= null && in_array('Alle',$request->get('roles') ) ){
-            
+                   
             $document->approval_all_roles = 1; 
             $document->email_approval = $request->get('email_approval');
             $dirty=$this->dirty(false,$document);
@@ -826,7 +826,7 @@ class DocumentController extends Controller
                 $processedArray[] = $variantNumber;
                 
                 if( in_array('Alle',$request->get($k) ) && count( $request->get($k) ) <= 1 ){
-                    ;$editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
+                    $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     if($editorVariant){
                     $editorVariant->approval_all_mandants = 1; 
                     $dirty=$this->dirty($dirty,$editorVariant);
@@ -852,9 +852,7 @@ class DocumentController extends Controller
                      /* End Fix where where variant is Alle and roles different from All*/
                 }
                 else{
-                    if($variantNumber == 4){
-                        dd('yeah variant 4 line 856');
-                    }
+                    
                     //editorVariant insert/edit
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     $editorVariant->approval_all_mandants = 0; 
@@ -1044,9 +1042,12 @@ class DocumentController extends Controller
             /* End set attached documents as actuell */
             
             foreach($otherDocuments as $oDoc){
-                $oDoc->document_status_id = 5;
-                $oDoc->save();
-            }                                
+                if( $oDoc->document_status_id != 6 && $oDoc->document_status_id != 2 ){
+                    $oDoc->document_status_id = 5;
+                    $oDoc->save();
+                }
+            }                     
+            
             if($dirty == true){
                 // dd($document->published->document_group_id);
                 UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
@@ -1098,7 +1099,7 @@ class DocumentController extends Controller
         $document = Document::find($id);
         $initialUrl = $id;
                
-        if( ctype_alnum($id) && !is_numeric($id) ){
+        if( ctype_alnum($id) && !is_numeric($id) ){ 
             $publishedDocs = PublishedDocument::where('url_unique',$id)->orderBy('id','DESC')->first();
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
@@ -1148,17 +1149,17 @@ class DocumentController extends Controller
             This is used as a failsafe for documents accessed from browser history
          */
          /*Published hotfix*/
-        if( $document->date_published == null  && $document->document_status_id == 3){
+        if( $document->date_published == null){
             $doc = Document::find($document->id);
-            $doc->date_published = $datePublished;
+            $doc->date_published = $document->created_at;
             $doc->save();
-            $document->date_published = $datePublished;
+            $document->date_published = $document->created_at;
         }
-          
 
          $latestPublished = PublishedDocument::where('document_group_id',$document->document_group_id)->orderBy('updated_at','desc')->first();
             // dd($latestPublished);/
              if( $latestPublished != null && $latestPublished->document_id == $document->id  && $document->document_status_id != 5){
+                
                  return redirect('dokumente/'.$latestPublished->url_unique );
              }
              
@@ -1168,8 +1169,8 @@ class DocumentController extends Controller
         }
         
         
-        $documentPermission = $this->document->universalDocumentPermission($document);
-        $variantPermissions = $this->document->documentVariantPermission($document);
+        $documentPermission = ViewHelper::universalDocumentPermission($document,false);
+        $variantPermissions = ViewHelper::documentVariantPermission($document);
         
         // dd($documentPermission);
         // dd($document);
@@ -1219,7 +1220,7 @@ class DocumentController extends Controller
                 $canPublish = true;
         }
              
-        if( count($document->documentApprovalsApprovedDateNotNull) > 0  && ( count($document->documentApprovals->where('date_approved',null)) == count( $document->documentApprovalsApprovedDateNotNull ) ) ){
+        if( count($document->documentApprovalsApprovedDateNotNull) > 0  && ( count($document->documentApprovals) == count( $document->documentApprovalsApprovedDateNotNull ) ) ){
             $authorised = true;
            
             foreach($document->documentApprovals->pluck('approved') as $approved){
@@ -1227,6 +1228,7 @@ class DocumentController extends Controller
                     $authorisedPositive = true;
             }
         }
+        
         if( count( $document->publishedDocuments->first() ) > 0)
             $published = true;
         // dd($authorised);
@@ -1271,23 +1273,24 @@ class DocumentController extends Controller
                 }
             }
         }
+         
         $variants = $variantPermissions->variants;
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
+        
         /* If the document can be published or in freigabe process and the roles are correct */
-            if( $authorised == false && $canPublish ==false && $published == false && $document->document_status_id != 5){
-                if( $authorised == false && $canPublish ==false && $published == false){
+            if( $authorised == true && $canPublish ==true && $published == false && $document->document_status_id != 5){
+                //if( $authorised == false && $canPublish ==false && $published == false){
                     if( ($document->documentType->document_art == 1 && ViewHelper::universalHasPermission( array(13) ) == true)
                         || ($document->documentType->document_art == 0 && ViewHelper::universalHasPermission( array(11) ) == true)
                         || (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ){
                         return redirect('dokumente/'.$document->id.'/freigabe' );
                     } 
                     
-                }
+                //}
             }
             elseif(   $document->document_status_id != 5 && ( ($authorised == false &&  $published == false ) ||
                    ($authorised == true && $published == false ) || ($canPublish == true && $published == false) 
                    && (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ) ){
-                       dd('brejk');
                          if( ( ( $document->documentType->document_art == 1 &&
                                 ViewHelper::universalHasPermission( array(13) ) == true ) ||
                                 ( $document->documentType->document_art == 0 &&
@@ -1756,6 +1759,8 @@ class DocumentController extends Controller
       
         /* User and freigabe comment visibility */
         $commentVisibility = $this->commentVisibility($document);
+            
+        
         return view('dokumente.freigabe',compact('document','variants','documentCommentsUser','documentCommentsFreigabe','published',
         'canPublish','hasPermission','authorised','authorisedPositive','commentVisiblity'));
     }
@@ -1767,7 +1772,7 @@ class DocumentController extends Controller
     public function publishApproval($id)
     {
         $document = Document::find($id);
-        
+        dd($test);
         $otherDocuments = Document::where('document_group_id',$document->document_group_id)->whereNotIn('id',array($document->id))->get();
         foreach($otherDocuments as $oDoc){
             $oDoc->document_status_id = 5;
@@ -1908,7 +1913,7 @@ class DocumentController extends Controller
         $variants = $variantPermissions->variants;
         
         $document = Document::find($id);
-         $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+        $render = view('pdf.document', compact('document','variants','dateNow'))->render();
         //   dd($render);
         // return $render;
          $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
@@ -2110,7 +2115,7 @@ class DocumentController extends Controller
         $documentApproval->save();
         
        
-        if($request->has('comment')){
+        if($request->has('comment') || $request->has('betreff')){
             RequestMerge::merge(['freigeber' => 1,'active' => 1,'document_id'=>$document->id,'user_id' => $user] );
             $comment = DocumentComment::create( $request->all() );
         }

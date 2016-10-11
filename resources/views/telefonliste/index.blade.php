@@ -139,7 +139,7 @@
                                         @endforeach
                                         
                                         @foreach($mandant->usersInMandants as $user)
-                                            @if(ViewHelper::phonelistVisibility($user, $mandant))
+                                            {{-- @if(ViewHelper::phonelistVisibility($user, $mandant)) --}}
                                             <tr>
                                                 <td width="60">
                                                     @if(isset($user->picture) && $user->picture)
@@ -179,7 +179,7 @@
                                                 <td>{{ $user->phone }}</td>
                                                 <td>{{ $user->phone_short }}</td>
                                             </tr>
-                                            @endif
+                                            {{-- @endif --}}
                                         @endforeach
                                         
                                     </tbody>

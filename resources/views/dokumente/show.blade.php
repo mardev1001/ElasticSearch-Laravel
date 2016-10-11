@@ -52,6 +52,7 @@
                                 @if(!$document->pdf_upload)
                         
                                     @foreach( $variants as $v => $variant)
+                                
                                         @if( isset($variant->hasPermission) && $variant->hasPermission == true )
                                          
                                             <div>
@@ -69,7 +70,8 @@
 
                             <div class="footer">
 
-                                @if(count($document->documentUploads))
+                               @if(count($document->documentUploads))
+                                    @if( ViewHelper::hasPdf( $document ) == true)
                                     <div class="attachments">
                                         <span class="text">PDF Vorschau: </span>
                                         <div class="clearfix"></div> <br>
@@ -79,13 +81,16 @@
                                         <!--<a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">-->
                                         <!--{{-- basename($attachment->file_path) --}} PDF download</a>-->
                                         <!--<br><span class="indent"></span>-->
-
-                                        <object data="{{url('open/'.$document->id.'/'.$attachment->file_path)}}" type="application/pdf" width="100%" height="640">
-                                            PDF konnte nicht initialisiert werden. Die Datei können sie <a href="{{url('download/'. $document->id .'/'.$attachment->file_path)}}">hier</a> runterladen.
-                                        </object>
+                                         @if( ViewHelper::htmlObjectType( $document,$attachment ) != null && ViewHelper::htmlObjectType( $document,$attachment ) == 'pdf' )
+                                            <object data="{{url('open/'.$document->id.'/'.$attachment->file_path)}}" 
+                                            type="{{ ViewHelper::htmlObjectType( $document,$attachment ) }}" width="100%"  @if(ViewHelper::htmlObjectType( $document,$attachment )=='pdf') height="640" @endif>
+                                                PDF konnte nicht initialisiert werden. Die Datei können sie <a href="{{url('download/'. $document->id .'/'.$attachment->file_path)}}">hier</a> runterladen.
+                                            </object>
+                                        @endif
                                         <div class="clearfix"></div> <br>
                                         @endforeach
                                     </div>
+                                    @endif
                                 @endif
                                 
                                 <!--if doc type formulare display where it's attached-->
@@ -167,22 +172,21 @@
 
                 <div class="col-sm-4 col-md-3 col-lg-2 btns">
                     @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
-                        @if( $document->document_status_id  != 3)
+                        @if( $document->document_status_id  != 5 )
                             <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
-                        @else
-                            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
-                        @endif
+                       @endif
                     @endif
-                    
-                    @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
-                        @if( in_array($document->document_status_id, [3,5] ))
-                            <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
-                                @if( $document->active  == false)
-                                    {{ trans('dokumentShow.activate') }}
-                                @else
-                                    {{ trans('dokumentShow.deactivate') }}
-                                @endif</a>
-                            {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
+                    @if( $document->document_status_id  != 5 )
+                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
+                            @if( in_array($document->document_status_id, [3,5] ))
+                                <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
+                                    @if( $document->active  == false)
+                                        {{ trans('dokumentShow.activate') }}
+                                    @else
+                                        {{ trans('dokumentShow.deactivate') }}
+                                    @endif</a>
+                                {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
+                            @endif
                         @endif
                     @endif
                     
@@ -201,11 +205,11 @@
                     @endif
                     
                 
-                    
-                    @if( ViewHelper::universalDocumentPermission( $document,false,false,true )  )
-                    
-                        @if($document->document_status_id == 3)
-                            <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
+                    @if( $document->document_status_id  != 5 )
+                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true )  )
+                            @if($document->document_status_id == 3)
+                                <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
+                            @endif
                         @endif
                     @endif
                     
@@ -223,31 +227,33 @@
                             @endif
                         
                     @endif
-
-                    @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
-                        @if( $authorised == false && $canPublish ==false && $published == false)
-                             @if( $document->documentType->document_art == 1) 
-                                @if( ViewHelper::universalHasPermission( array(13) ) == true  )
-                                    <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                    
+                    @if( $document->document_status_id  != 5 )
+                        @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
+                            @if( $authorised == false && $canPublish ==false && $published == false)
+                                 @if( $document->documentType->document_art == 1) 
+                                    @if( ViewHelper::universalHasPermission( array(13) ) == true  )
+                                        <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                                    @endif
+                                @else
+                                    @if( ViewHelper::universalHasPermission( array(11) ) == true )
+                                        <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                                    @endif
                                 @endif
-                            @else
-                                @if( ViewHelper::universalHasPermission( array(11) ) == true )
-                                    <a href="/dokumente/{{$document->id}}/freigabe" class="btn btn-primary pull-right">{{ trans('dokumentShow.approve') }}</a>
+                            @elseif( ($authorised == false &&  $published == false ) ||
+                               ($authorised == true && $published == false ) || ($canPublish == true && $published == false) 
+                               && (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ){{-- $canPublish --}}
+                                
+                                @if( ( ( $document->documentType->document_art == 1 &&
+                                    ViewHelper::universalHasPermission( array(13) ) == true ) ||
+                                    ( $document->documentType->document_art == 0 &&
+                                    ViewHelper::universalHasPermission( array(11) ) == true ) )
+                                    && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
+                                <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
                                 @endif
-                            @endif
-                        @elseif( ($authorised == false &&  $published == false ) ||
-                           ($authorised == true && $published == false ) || ($canPublish == true && $published == false) 
-                           && (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ){{-- $canPublish --}}
-                            
-                            @if( ( ( $document->documentType->document_art == 1 &&
-                                ViewHelper::universalHasPermission( array(13) ) == true ) ||
-                                ( $document->documentType->document_art == 0 &&
-                                ViewHelper::universalHasPermission( array(11) ) == true ) )
-                                && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
-                            <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
                             @endif
                         @endif
-                    @endif
+                    @endif<!-- end if document is deleted -->
 
                     @if(count($document->documentUploads))
                         {{-- The PDF download button is only shown if the document has PDF Rundschreiben / PDF uploads --}}
@@ -346,6 +352,10 @@
                             });
                          setTimeout(function(){
                              $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
+                             if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
+                                  $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').addClass('in');
+                             }
+                            
                          },1000 );
                 </script>
             @endif

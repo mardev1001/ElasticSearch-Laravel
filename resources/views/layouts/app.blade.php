@@ -20,7 +20,7 @@
 <body id="app-layout">
     <nav class="navbar" role="navigation" style="margin-bottom: 0">
         <div class="col-xs-12">
-            <a class="nav-brand" href="{{ url('/') }}"><strong><img src="/img/logo_new.jpg" alt="Neptun logo"/></strong></a>
+            <a class="nav-brand" href="{{ url('/') }}"><strong><img src="/img/logo_new.png" alt="Neptun logo"/></strong></a>
         </div>
     </nav>
     <div class="clearfix"></div>

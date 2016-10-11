@@ -22,7 +22,12 @@
             }
             p{
                 font-size: 14px;
-                margin-bottom: 25px;
+            }
+            
+            table td p {
+                margin-top: 5px;
+                margin-bottom: 5px;
+                line-height: 22px;
             }
             table {
                 margin-left: 0 !important;

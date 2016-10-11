@@ -16,6 +16,8 @@ h1, h2, h3, h4 {
     font-family: $primary-font-family !important;
     color: $dark-blue !important;
 }
+
+/* tinymce view - start */
 .content h1,.content h2,.content h3,.content h4{
     color: black !important;
     font-weight: bold;
@@ -25,18 +27,26 @@ h1, h2, h3, h4 {
 }
 .content h2,.tinymce-editor-class h2{
     font-size: 1.6em;
-}
+} 
 .content h3, .tinymce-editor-class h3{
     font-size: 1.27em;
 }
 
-.content,.content p,.content strong, .content i,.content b, .content td{
+.content,.content p,.content strong, .content i,.content b, .content td, .content th{
     font-size: 14px !important;
     color: black;
+    font-family: $primary-font-family !important;
+}
+
+.content td, .content th {
+    line-height: normal;
+    vertical-align: middle;
 }
 .content table p{
-    margin: 14px 0;
+    margin: 5px 0 !important;
 }
+
+/* tinymce view - end */
 
 hr {
     margin: 15px 0 !important; 

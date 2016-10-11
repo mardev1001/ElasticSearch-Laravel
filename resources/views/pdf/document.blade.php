@@ -14,6 +14,13 @@
                 p,li{
                     font-size: 14px ;
                 }
+                
+                table td p {
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    line-height: 22px;
+                }
+                
                  h1{
                         font-size: 2.1em !important;
                     }
@@ -29,17 +36,19 @@
                 }
                 table{
                     font-size: 14px;
-                    height: auto !Important;
+                    /*height: auto !Important;*/
                     border-collapse: collapse !important;
+                    max-width: 100% !important;
                 }
                 
             table td{
                 font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 vertical-align: middle !important;
-                padding: 0px !important;
-                line-height: 20px !important;
+                padding: 0px;
+                line-height: 16px !important;
                 font-size: 14px !important;
             }
+            
           </style>
         @if( $document->landscape == true)
             <style>
@@ -146,6 +155,7 @@
             }
             table {
                 margin-left: 0 !important;
+              
                 /*width: 100% !important;*/
                 /*margin-right: 30pt !important;*/
             }
@@ -286,7 +296,7 @@
                  margin-top: -125px;
                  margin-left: 300px;
             }
-             .footer { position: fixed; bottom: 10px; left: 350px; }
+            .footer { position: fixed; bottom: 10px; left: 350px; }
             .absolute, .absolute:nth-child(even){
                 width:85px;
                 margin-top: -125px;
@@ -337,7 +347,10 @@
                               <span class="right-correction">{{$document->date_published}}</span>
                           @endif
                           <br/>
-                          {{ $document->user->short_name }}
+                          @if($document->show_name != 1) 
+                              {{-- Inverted at the end of the project --}}
+                              {{ $document->user->short_name }}
+                           @endif
                           </p></div>
                   </div>
                   <div class="clearfix"></div>

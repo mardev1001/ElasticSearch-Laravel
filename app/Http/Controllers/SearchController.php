@@ -22,6 +22,8 @@ use App\MandantUserRole;
 use App\InternalMandantUser;
 use App\WikiPage;
 
+use App\Helpers\ViewHelper;
+
 class SearchController extends Controller
 {
      /**
@@ -57,6 +59,7 @@ class SearchController extends Controller
         $results = array();
         $resultsWiki = array();
         $variants = array();
+        $searchResultsPaginated = array();
         $documentTypes = DocumentType::all();
         
         
@@ -76,7 +79,10 @@ class SearchController extends Controller
             
             $parameter = $request->input('parameter');
             
-            $documents = Document::where('document_status_id', 3)->where('active', 1);
+            //join('document_types', 'documents.document_type_id', '=', 'document_types.id')
+            // $documents = Document::where('document_status_id', 3)->where('active', 1);
+            $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
+                ->where('document_status_id', 3)->where('active', 1)->groupBy('documents.id');
             
             // Check for occurence of "QMR" string, search for QMR documents if found
             if( stripos($parameter, 'QMR') !== false ){
@@ -91,8 +97,13 @@ class SearchController extends Controller
                     if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
                 });
                 
-                $results = $documents->where('document_type_id', 3)->get();
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                // $results = $documents->where('document_type_id', 3)->get();
+                $documents = $documents->where('document_type_id', 3);
+                $documents = $this->filterByVisibility($documents->get());
+                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             } elseif( stripos($parameter, 'ISO') !== false ){
                 
@@ -106,8 +117,12 @@ class SearchController extends Controller
                     if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
                 });
                 
-                $results = $documents->where('document_type_id', 4)->get();
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                // $results = $documents->where('document_type_id', 4)->get();
+                $documents = $documents->where('document_type_id', 4);
+                $documents = $this->filterByVisibility($documents->get());
+                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             } else {
                 // Search for other parameters
@@ -115,25 +130,30 @@ class SearchController extends Controller
                     $query->where('name', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
-                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
+                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' )
+                    ->orWhere('inhalt', 'LIKE', '%'.$parameter.'%' );
                 });
             }       
+
             
-            $documents = $documents->get();
-            // dd($documents);
+            $documents = $this->filterByVisibility($documents->get());
+            $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+            $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
             
-            $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
+            // dd($searchResultsPaginated->getCollection());
             
-            foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+            // $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
             
-            if(count($variants)){
-                foreach ($variants as $variant){
-                    if(!in_array($variant->document, $results)){
-                        if($variant->document->document_status_id == 3)
-                            array_push($results, $variant->document);
-                    }
-                }
-            } 
+            // foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+            
+            // if(count($variants)){
+            //     foreach ($variants as $variant){
+            //         if(!in_array($variant->document, $results)){
+            //             if($variant->document->document_status_id == 3)
+            //                 array_push($results, $variant->document);
+            //         }
+            //     }
+            // } 
             // else {
             //     $variants = EditorVariant::all();
             // }
@@ -141,7 +161,8 @@ class SearchController extends Controller
             // dd($results);
         }
         
-        return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+        // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsTree', 'searchResultsPaginated'));
+        return view('suche.erweitert', compact('parameter', 'resultsWiki', 'documentTypes','mandantUsers', 'searchResultsTree', 'searchResultsPaginated'));
     }
 
     /**
@@ -223,7 +244,8 @@ class SearchController extends Controller
         $inputs = $request->all();
         
         foreach ($inputs as $key=>$input){
-            if($key != 'wiki' && $key != 'inhalt'){
+            // if($key != 'wiki' && $key != 'inhalt'){
+            if($key != 'wiki'){
                 if(!empty($input)){
                     $emptySearch = false;
                 }
@@ -233,6 +255,7 @@ class SearchController extends Controller
         $results = array();
         $resultsWiki = array();
         $variants = array();
+        $searchResultsPaginated = array();
         $documentTypes = DocumentType::all();
         
         $mandantUsers = array();
@@ -264,13 +287,16 @@ class SearchController extends Controller
         
         // dd($request->all());
         
-        $documents = Document::where('id', '>', 0)
+        // $documents = Document::where('id', '>', 0)
+        $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
+        ->where('documents.id', '>', 0)
         ->where('document_status_id', 3)
         // ->where('document_status_id','!=', 5)
-        ->where('active', 1);
+        ->where('active', 1)
+        ->groupBy('documents.id');
         
-        if($history) $documents = $documents->where('deleted_at', '!=', null);
-        else $documents = $documents->where('deleted_at', null);
+        if($history) $documents = $documents->where('documents.deleted_at', '!=', null);
+        else $documents = $documents->where('documents.deleted_at', null);
         
         // QMR/ISO search via name field
        
@@ -288,9 +314,13 @@ class SearchController extends Controller
                     if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
                 });
                 
-                $results = $documents->where('document_type_id', 3)->get();
+                // $results = $documents->where('document_type_id', 3)->get();
+                $documents = $documents->where('document_type_id', 3);
+                $documents = $this->filterByVisibility($documents->get());
+                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
                 $request->flash();
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             } elseif( stripos($name, 'ISO') !== false ){
                 
@@ -304,9 +334,13 @@ class SearchController extends Controller
                     if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
                 });
                 
-                $results = $documents->where('document_type_id', 4)->get();
+                // $results = $documents->where('document_type_id', 4)->get();
+                $documents = $documents->where('document_type_id', 4);
+                $documents = $this->filterByVisibility($documents->get());
+                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
                 $request->flash();
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             }
         } 
@@ -314,6 +348,7 @@ class SearchController extends Controller
         if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
         if(!empty($betreff)) $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
         if(!empty($summary)) $documents->where('summary', 'LIKE', '%'.$summary.'%' );
+        if(!empty($inhalt)) $documents->where('inhalt', 'LIKE', '%'.$inhalt.'%');
         
         if(!empty($document_type))  {
             if($document_type == 3){
@@ -327,24 +362,28 @@ class SearchController extends Controller
         }
         
         if(!empty($search_tags))  $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
-        if(!empty($date_from))  $documents->whereDate('created_at', '>=', $date_from );
-        if(!empty($date_to))  $documents->whereDate('created_at', '<=', $date_to );
+        if(!empty($date_from))  $documents->whereDate('documents.created_at', '>=', $date_from );
+        if(!empty($date_to))  $documents->whereDate('documents.created_at', '<=', $date_to );
         if(!empty($user_id))  $documents->where('user_id', $user_id );
         
-        $documents = $documents->get();
+        $documents = $this->filterByVisibility($documents->get());
+        $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'], 'suchergebnisse');
+        $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+        // $documents = $documents->get();
          
-        if(!empty($inhalt)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
+        // if(!empty($inhalt)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
         
-        foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+        // foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
         
-        if($emptySearch) $results = array();
+        // if($emptySearch) $results = array();
+        if($emptySearch) $searchResultsPaginated = array();
         
-        if(count($variants)){
-            foreach ($variants as $variant){
-                if(!in_array($variant->document, $results)) 
-                    array_push($results, $variant->document);
-            }
-        } 
+        // if(count($variants)){
+        //     foreach ($variants as $variant){
+        //         if(!in_array($variant->document, $results)) 
+        //             array_push($results, $variant->document);
+        //     }
+        // } 
         // else {
         //     $variants = EditorVariant::all();
         // }
@@ -356,13 +395,20 @@ class SearchController extends Controller
             $resultsWiki = WikiPage::where('id', '>', 0)->where('status_id', 2)->where('active', 1);
             if(!empty($name)) $resultsWiki = $resultsWiki->where('name', 'LIKE', '%'. $name. '%');
             if(!empty($inhalt)) $resultsWiki = $resultsWiki->where('content', 'LIKE', '%'. $inhalt. '%');
-            $resultsWiki = $resultsWiki->get();
+            
+            // $resultsWiki = $resultsWiki->get();
+            
+            $resultsWikiPagination = $resultsWiki->paginate(25, ['*'], 'suchergebnisse-wiki');
+            $resultsWikiTree = $this->document->generateWikiTreeview($resultsWikiPagination, ['pageSearch' => true]);
+            
+            $resultsWiki = array();
+            
         }
         
         // if($emptySearch) $results = null;
         if(empty($name) && empty($inhalt)) $resultsWiki = null;
         
-        return view('suche.erweitert', compact('results', 'resultsWiki', 'variants', 'documentTypes', 'mandantUsers'));
+        return view('suche.erweitert', compact('results', 'resultsWiki', 'resultsWikiPagination', 'resultsWikiTree', 'variants', 'documentTypes', 'mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
     }
 
     /**
@@ -431,35 +477,8 @@ class SearchController extends Controller
     
             foreach($mandant->users as $k2 => $mUser){
                 
-                // foreach($mUser->mandantRoles as $mr){
-                //     // Check for phone roles
-                //     if( $mr->role->phone_role ) {
-                //         // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->first();
-                //         $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                //         if(!count($internalRole)){
-                //             $userArr[] = $mandant->users[$k2]->id;
-                //         }
-                //     }
-                    
-                //     // if(isset($localUser) || Auth::user()->id == 1 ){
-                //     if(isset($localUser)){
-                //         // Add all users to the array for the mandant, if they have the same mandant
-                //         if($mUser->active && !in_array($mUser->id, $userArr))
-                //             $userArr[] = $mUser->id;
-                //     }
-                    
-                // }
-                
                 foreach($mUser->mandantRoles as $mr){
-                    if($partner){
-                        // Check for partner roles
-                        if( $mr->role->mandant_role ) {
-                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                            if(!count($internalRole)){
-                                $userArr[] = $mandant->users[$k2]->id;
-                            }
-                        }
-                    } else {
+                    if($mUser->active){
                         // Check for phone roles
                         if( $mr->role->phone_role || $mr->role->mandant_role ) {
                             $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
@@ -467,6 +486,7 @@ class SearchController extends Controller
                                 $userArr[] = $mandant->users[$k2]->id;
                             }
                         }
+                
                     }
                 }
             } //end second foreach
@@ -509,18 +529,11 @@ class SearchController extends Controller
             // dd($mandant->users);
             foreach($mandant->users as $k2 => $mUser){
                 foreach($mUser->mandantRoles as $mr){
-                    if($partner){
-                        // Check for partner roles
-                        $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                        if(!count($internalRole)){
-                            if( $mr->role->mandant_role && !in_array($mandant->users[$k2]->id, $usersInMandants) ) 
-                                 $usersInMandants[] = $mandant->users[$k2]->id;
-                        }
-                    } else {
+                    if($mUser->active){
                         // Check for phone roles
                         $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
                         if(!count($internalRole)){
-                            if( $mr->role->phone_role && !in_array($mandant->users[$k2]->id, $usersInMandants) ) 
+                            // if( $mr->role->phone_role && !in_array($mandant->users[$k2]->id, $usersInMandants) )
                                  $usersInMandants[] = $mandant->users[$k2]->id;
                         }
                     }
@@ -546,77 +559,14 @@ class SearchController extends Controller
         return view('telefonliste.index', compact('search', 'partner','searchParameter', 'mandants', 'users', 'usersInternal', 'roles', 'visible') );
     }
     
-    // Old and buggy method
-    /*
-    public function searchPhoneList(Request $request){
-        // dd( $request->all() );
-        $mandants = $this->search->phonelistSearch($request);
+    // Function to filter out documents by permissions
+    public function filterByVisibility($documents){
         
-        foreach($mandants as $k => $mandant){
-                
-                $userArr = array();
-                $testuserArr = array();
-                $mandantUsers = $mandant->users;
-                
-                // if($request->has('deletedUsers') )
-                //     $mandantUsers = $mandant->usersWithTrashed;
-                
-                foreach($mandantUsers as $k2 => $mUser){
-                    
-                    // foreach($mUser->mandantRoles as $mr){
-                    //      $testuserArr[] = $mr->role->name;
-                    //      if( $mr->role->phone_role == 1  || $mr->role->id == 23 || $mr->role->id == 21)
-                    //         $userArr[] = $mandantUsers[$k2]->id;
-                    // }
-                    
-                    // if( count($userArr) < 1){
-                    //     foreach($mUser->mandantRoles as $mr){
-                    //         if( $mr->role->id == 23 )// Lohn
-                    //             $userArr[] = $mandantUsers[$k2]->id;
-                    //     }   
-                    // }
-                    
-                    // if( count($userArr) < 1){
-                    //     foreach($mUser->mandantRoles as $mr){
-                    //         if( $mr->role->name == 'Geschäftsführer' || $mr->role->name == 'Qualitätsmanager' || $mr->role->name == 'Rechntabteilung' 
-                    //         ||  $mr->role->phone_role == true ||  $mr->role->phone_role == 1 )
-                    //             $userArr[] = $mandantUsers[$k2]->id;
-                    //     }   
-                    // }
-                    
-                    foreach($mUser->mandantRoles as $mr){
-                        if($mr->role->phone_role) 
-                            $userArr[] = $mandantUsers[$k2]->id;
-                    }
-                    
-                }//end second foreach
-                
-                $userQuery = User::whereIn('id',$userArr);
-                
-                     if( $request->has('parameter') )
-                        $userQuery->where('first_name',$request->get('parameter') )->orWhere('last_name',$request->get('parameter') );
-                    
-                $mandant->usersInMandants = $mandantUsers->whereIn('id',$userArr);
-                   if($request->has('deletedUsers') )
-                       $userQuery = $mandant->usersWithTrashed->whereIn('id',$userArr);   
-                       
-                     $userQuery = $userQuery->get();
-                     
-                     if( count( $userQuery ) )
-                         $mandant->usersInMandants = $userQuery;
-                     else
-                      $mandant->usersInMandants = $mandant->usersWithTrashed->whereIn('id',$userArr);   
-              // if($request->has('deletedUsers') )
-               //  dd($mandant->usersInMandants);
-                //  dd($userArr);
-            }
-        $search = true;
-        $request->flash();
-        return view('telefonliste.index', compact('mandants','search') ) ;
-      // return redirect()->action('TelephoneListController@index', array('array'=>$results) );
-        // return redirect('telefonliste');
-    }*/
-    
-    
-    
+        foreach($documents as $key => $value){
+            if(!ViewHelper::documentVariantPermission($value)->permissionExists)
+                $documents->forget($key);
+        }
+        
+        return $documents;
+    }
 }

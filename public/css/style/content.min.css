@@ -23,8 +23,15 @@ body{
 }
 /*.mce-content-body{
     padding: 0 140px 10px 30px;
-}*/
-
+}*/    
+.content table,.tinymce-editor-class table,.mce-content-body table{
+    border-collapse: collapse;
+}
 .list-style-dash {
     list-style-image: url('/img/icons/icon_list_dash.png') !important;
+}
+
+table td p {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }

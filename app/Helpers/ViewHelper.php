@@ -323,6 +323,20 @@ class ViewHelper
     }
     
     /**
+     * Return shortened text extract
+     *
+     * @param string $haystack
+     * @return string $newstring
+     */
+    static function extractTextSimple($haystack){
+        $haystack = html_entity_decode(strip_tags(trim($haystack)));
+        $extractLenght = 128;
+        $needlePosition = 0;
+        $newstring = substr($haystack, $needlePosition, 128) . ' ...';
+        return $newstring;
+    }
+    
+    /**
      * Show active/inactive user count 
      *
      * @param array $usersActive
@@ -492,7 +506,7 @@ class ViewHelper
         $object->permissionExists = false;
         $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
         $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
-        $mandantIdArr = $mandantId->toArray();
+        $mandantIdArr = $mandantUserMandant->toArray();
         $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
         $mandantRolesArr =  $mandantRoles->toArray();
         
@@ -501,10 +515,13 @@ class ViewHelper
         
         
         foreach($variants as $variant){
+            //  dd($variant);
             if($hasPermission == false){//check if hasPermission is already set
                 if($variant->approval_all_mandants == true){//database check
-                    
+               
+                    // dd($document);
                     if($document->approval_all_roles == true){//database check
+                   
                             $hasPermission = true;
                             $variant->hasPermission = true;
                             $object->permissionExists = true;
@@ -521,12 +538,13 @@ class ViewHelper
                 }
                 else{
                     foreach( $variant->documentMandantMandants as $mandant){
-                        if( self::universalDocumentPermission($document) == true){
+                        if( self::universalDocumentPermission($document,false) == true){
                             $hasPermission = true;
                             $variant->hasPermission = true;
                             $object->permissionExists = true;
                         }
                         else if( in_array($mandant->mandant_id,$mandantIdArr) ){
+
                             if($document->approval_all_roles == true){
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
@@ -597,7 +615,7 @@ class ViewHelper
                 }
                 else{
                     foreach( $variant->documentMandantMandants as $mandant){
-                        if( $this->universalDocumentPermission($document) == true){
+                        if( $this->universalDocumentPermission($document,false) == true){
                             $hasPermission = true;
                             $variant->hasPermission = true;
                             $object->permissionExists = true;
@@ -628,6 +646,39 @@ class ViewHelper
     }//end documentVariant permission
     
     
+    
+    /**
+     * Check if document has pdf (used for example show title etc)
+     * @param collection $document
+     * @return bool
+     */
+    static function hasPdf( $document ){
+        $hasPdf = false;
+        foreach($document->documentUploads as $k => $attachment){
+            if($hasPdf == false){
+                $type = \File::extension(url('open/'.$document->id.'/'.$attachment->file_path) );  
+                if( $type == 'pdf')
+                    $hasPdf = true;
+                }
+            }
+        return $hasPdf;        
+    }
+    
+    /**
+     * Get type of file
+     * @param collection $document
+     * @param collection $attachment
+     * @return string || null
+     */
+    static function htmlObjectType( $document,$attachment ){
+        $type = \File::extension(url('open/'.$document->id.'/'.$attachment->file_path) );
+        $htmlObjectType = null;    
+        if( $type == 'png' || $type == 'jpg' || $type == 'jpeg' || $type == 'gif')
+            $htmlObjectType = 'image/'.$type;
+        elseif( $type == 'pdf')
+            $htmlObjectType = 'application/pdf';
+        return $htmlObjectType;        
+    }
     
     /**
      * Get Mandants parent Mandant if he has one

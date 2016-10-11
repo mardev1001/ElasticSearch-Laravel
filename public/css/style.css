@@ -465,6 +465,7 @@ h1, h2, h3, h4 {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
   color: #0154BB !important; }
 
+/* tinymce view - start */
 .content h1, .content h2, .content h3, .content h4 {
   color: black !important;
   font-weight: bold; }
@@ -478,13 +479,19 @@ h1, h2, h3, h4 {
 .content h3, .tinymce-editor-class h3 {
   font-size: 1.27em; }
 
-.content, .content p, .content strong, .content i, .content b, .content td {
+.content, .content p, .content strong, .content i, .content b, .content td, .content th {
   font-size: 14px !important;
-  color: black; }
+  color: black;
+  font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important; }
+
+.content td, .content th {
+  line-height: normal;
+  vertical-align: middle; }
 
 .content table p {
-  margin: 14px 0; }
+  margin: 5px 0 !important; }
 
+/* tinymce view - end */
 hr {
   margin: 15px 0 !important; }
 
@@ -13124,8 +13131,15 @@ body {
 /*.mce-content-body{
     padding: 0 140px 10px 30px;
 }*/
+.content table, .tinymce-editor-class table, .mce-content-body table {
+  border-collapse: collapse; }
+
 .list-style-dash {
   list-style-image: url("/img/icons/icon_list_dash.png") !important; }
+
+table td p {
+  margin-top: 5px;
+  margin-bottom: 5px; }
 
 .mce-container, .mce-container *, .mce-widget, .mce-widget *, .mce-reset {
   margin: 0;

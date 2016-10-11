@@ -30,6 +30,8 @@ $(function () {
         return this.href == url || url.href.indexOf(this.href) == 0;
     }).parents("ul").not('#side-menu').addClass('in');
     // }).addClass('active').parent().parent().addClass('in').parent();
+    
+    // console.log(element);
 
     /*Fix the problem where the */
     if ((location.protocol + "//" + location.host + '/') != url.href) {
@@ -41,6 +43,7 @@ $(function () {
         if ($(this).attr('href') != currentLink)
             $(this).removeClass('active');
     });
+    
 
     if ((location.protocol + "//" + location.host + '/') == url.href) {
         $('a[href="/"]').addClass('active');
@@ -84,9 +87,14 @@ $(function () {
         }
 
         else if (documentType == "ISO Dokumente") {
+            // console.log('triggered bujanec');
+            // console.log('SEEMS LEGIT');
             if (typeof  isoCategoryName != 'undefined') {
                 detectHref = $('#side-menu').find('a:contains("' + isoCategoryName + '")').attr('href');
-                
+                 if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
+                      $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').addClass('in');
+                 }
+               
 
             }
             else
@@ -106,10 +114,21 @@ $(function () {
     }
 
     if (element.is('li')) {
+        // console.log($(this));
         element.addClass('active');
     }
 
-    else
+    // else console.log($(this));
+    
+    
+    var activeLink = $('.nav li a.active');
+    activeLink.parents('li').addClass('active');
+    
+    var activeLinkSubnavs = activeLink.parents('li').first().children('ul').children('li').children('ul');
+    activeLinkSubnavs.each(function(){
+       $(this).parent('li').addClass('active');
+    });
+    
     /*End Exapand active class*/
 
     /* Page content sidebar treeview */
@@ -179,7 +198,7 @@ $(function () {
                 $('.select.mandant-roles').chosen();
             },
             error: function (data) {
-                console.log(data);
+                // console.log(data);
 
 
             },
@@ -384,13 +403,13 @@ $(function () {
                             }
                             if ($(e.target).prop("tagName") == 'DIV') {
                                 if ($(e.target).parent().find('input').attr('id') != 'tinymce-uploader') {
-                                    console.log($(e.target).parent().find('input').attr('id'));
+                                    // console.log($(e.target).parent().find('input').attr('id'));
                                     $(e.target).parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
                                 $('#tinymce-uploader').trigger('click');
                                 $('#tinymce-uploader').change(function () {
                                     var input, file, fr, img;
-                                    console.log('insert');
+                                    // console.log('insert');
                                     if (typeof window.FileReader !== 'function') {
                                         write("The file API isn't supported on this browser yet.");
                                         return;
@@ -428,7 +447,7 @@ $(function () {
 
                             }
                             if ($(e.target).prop("tagName") == 'I') {
-                                console.log($(e.target).parent().parent().parent().find('input').attr('id'));
+                                // console.log($(e.target).parent().parent().parent().find('input').attr('id'));
                                 if ($(e.target).parent().parent().parent().find('input').attr('id') != 'tinymce-uploader') {
                                     $(e.target).parent().parent().parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }

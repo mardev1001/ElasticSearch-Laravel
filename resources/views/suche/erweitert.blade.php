@@ -154,162 +154,60 @@
     
 </fieldset>
 
+
 <div class="search-results">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('sucheForm.search-results') }}@if(isset($parameter)) für "{{$parameter}}"@endif: <span class="text"> {{count($results)}} Ergebnisse gefunden</span></h4> <br>
-        <div class="box">
-            
-            @if(count($results))
-                @foreach($results as $key=>$document)
-                @if(isset($document->published->url_unique))
-                    <div class="row">
-                        <div class="col-xs-12 text result">
-                            <div class="healine"> 
-                                
-                                <a href="{{url('/dokumente/'. $document->published->url_unique)}}" class="link">
-                                    <strong>
-                                    @if(isset($parameter)) 
-                                        #{{$key+1}} 
-                                        @if($document->documentType->id == 3)
-                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "QMR ".$document->qmr_number.$document->additional_letter) !!} - --}}
-                                            {!! "QMR " . $document->qmr_number.$document->additional_letter !!} -
-                                        @elseif($document->documentType->id == 4)
-                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "ISO ".$document->iso_category_number.$document->additional_letter) !!} - --}}
-                                            {{-- {!! "ISO " . $document->iso_category_number.$document->additional_letter !!} - --}}
-                                            {{ $document->documentType->name }} -
-                                        @else
-                                            {{ $document->documentType->name }} -
-                                        @endif
-                                        {!! ViewHelper::highlightKeyword($parameter, $document->name) !!} - {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - 
-                                        {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
-                                    @else
-                                        #{{$key+1}} 
-
-                                        @if($document->documentType->id == 3)
-                                            QMR {{$document->qmr_number.$document->additional_letter}} - 
-                                        @elseif($document->documentType->id == 4)
-                                            {{-- ISO {{$document->iso_category_number.$document->additional_letter}} - --}}
-                                            {{$document->documentType->name}} - 
-                                        @else
-                                            {{$document->documentType->name}} - 
-                                        @endif
-                                        
-                                        @if(old('name')) 
-                                        {!! ViewHelper::highlightKeyword(old('name'), $document->name) !!} -
-                                        @else
-                                        {!! $document->name !!} - 
-                                        @endif
-                                        
-                                        @if(old('betreff')) 
-                                        {!! ViewHelper::highlightKeyword(old('betreff'), $document->betreff) !!} -
-                                        @else
-                                        {!! $document->betreff !!} - 
-                                        @endif
-                                        
-                                        {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
-                                    @endif
-                                    </strong> 
-                                </a>
-                            </div>
-                            <div class="document-text"> 
-                                <strong class="summary">
-                                    @if(isset($parameter)) 
-                                        {!! ViewHelper::highlightKeyword($parameter, $document->summary) !!}
-                                    @else
-                                        @if(old('beschreibung')) 
-                                            {!! ViewHelper::highlightKeyword(old('beschreibung'), $document->summary) !!}
-                                        @else
-                                            {!! $document->summary !!}
-                                        @endif
-                                    @endif
-                                </strong>
-                                <div class="content">
-                                    @if(count($variants))
-                                        @foreach($variants as $variant)
-                                            @if($document->id == $variant->document_id)
-                                                <div class="document-variant">
-                                                    <span class="number">Variante {{ $variant->variant_number }}:</span>
-                                                    @if(isset($parameter)) 
-                                                        {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
-                                                    @else
-                                                        @if(old('inhalt')) 
-                                                            {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
-                                                        @else
-                                                            <!--{!! $variant->inhalt !!}-->
-                                                        @endif
-                                                    @endif
-                                                </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clearfix"></div> <br>
-                    </div>
-                @endif
-                @endforeach
-            @else
-                <div class="row">
-                    <div class="col-xs-12 text result">
-                        <div class="healine">
-                            Keine suchergebnisse gefunden.
+        <h4 class="title">{{ trans('sucheForm.search-results') }} @if(isset($parameter)) für "{{$parameter}}"@endif: <span class="text"> {{count($searchResultsPaginated)}} Ergebnisse gefunden</span></h4> <br>
+        
+            @if(count($searchResultsPaginated))
+                <div class="box search scrollable">
+                    <div class="tree-view" data-selector="searchResultsTree">
+                        <div class="searchResultsTree hide">
+                            {{ $searchResultsTree }}
                         </div>
                     </div>
                 </div>
+                <div class="text-center">
+                    @if(isset($parameter))
+                        {!! $searchResultsPaginated->appends(['parameter'=>$parameter])->render() !!}
+                    @else
+                        {!! $searchResultsPaginated->appends(Request::all())->render() !!}
+                    @endif
+                </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Dokumente gefunden.</span>
+                </div>
             @endif
         
-        </div>
     </div>
 </div>
 
 <div class="clearfix"></div> <br>
 
 
-@if(count($resultsWiki))
+
+@if(isset($resultsWikiPagination) && count($resultsWikiPagination))
 
 <div class="search-results-wiki">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('sucheForm.search-results') }} Wiki: <span class="text"> {{count($resultsWiki)}} Ergebnisse gefunden</span></h4> <br>
-        <div class="box">
-
-                @foreach($resultsWiki as $key=>$wiki)
-                    <div class="row">
-                        <div class="col-xs-12 text result">
-                            <div class="healine"> 
-                                <a href="{{route('wiki.show', $wiki)}}" class="link">
-                                    <strong>
-                                        #{{$key+1}} {{$wiki->category->name}} - 
-                                        
-                                        @if(old('name')) 
-                                            {!! ViewHelper::highlightKeyword(old('name'), $wiki->name) !!} -
-                                        @else
-                                            {!! $wiki->name !!} - 
-                                        @endif
-                                        
-                                        {{\Carbon\Carbon::parse($wiki->created_at)->format('d.m.Y H:i:s')}} 
-                                    </strong> 
-                                </a>
-                            </div>
-                            <div class="document-text"> 
-                                <div class="content">
-                                    @if(old('inhalt')) 
-                                        {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $wiki->content)) !!}
-                                    @else
-                                        {{ $wiki->content }}
-                                    @endif
-                                </div>
-                                            
-                                
-                            </div>
+        <h4 class="title">{{ trans('sucheForm.search-results') }} Wiki: <span class="text"> {{count($resultsWikiPagination)}} Ergebnisse gefunden</span></h4> <br>
+            @if(count($resultsWikiPagination))
+                <div class="box search scrollable">
+                    <div class="tree-view" data-selector="resultsWikiTree">
+                        <div class="resultsWikiTree hide">
+                            {{ $resultsWikiTree }}
                         </div>
-                        <div class="clearfix"></div> <br>
                     </div>
-                @endforeach
-           
-           
-        
-        </div>
+                </div>
+                <div class="text-center">
+                    {!! $resultsWikiPagination->appends(Request::all())->render() !!}
+                </div>
+            @else
+                <div class="box">
+                    <span class="text">Keine Wiki Einträge gefunden.</span>
+                </div>
+            @endif
     </div>
 </div>
 

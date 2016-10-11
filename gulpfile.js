@@ -18,7 +18,7 @@ var cmsScripts = [
     "jquery/dist/jquery.min.js", 
      "jquery-ui/jquery-ui.min.js",
     "bootstrap/dist/js/bootstrap.min.js",
-    "metisMenu/dist/metisMenu.min.js",
+    // "metisMenu/dist/metisMenu.min.js",
     "chosen/chosen.jquery.js",
     // "tinymce/tinymce.js",// or plain tinymce.js
     "js-modified-plugins/**",
