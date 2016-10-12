@@ -80,9 +80,9 @@ class SearchController extends Controller
             $parameter = $request->input('parameter');
             
             //join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-            // $documents = Document::where('document_status_id', 3)->where('active', 1);
-            $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
-                ->where('document_status_id', 3)->where('active', 1)->groupBy('documents.id');
+            $documents = Document::where('document_status_id', 3)->where('active', 1);
+            // $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
+                // ->where('document_status_id', 3)->where('active', 1)->groupBy('documents.id');
             
             // Check for occurence of "QMR" string, search for QMR documents if found
             if( stripos($parameter, 'QMR') !== false ){
@@ -97,13 +97,16 @@ class SearchController extends Controller
                     if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
                 });
                 
-                // $results = $documents->where('document_type_id', 3)->get();
-                $documents = $documents->where('document_type_id', 3);
-                $documents = $this->filterByVisibility($documents->get());
-                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                $results = $documents->where('document_type_id', 3)->get();
+                $results = $this->filterByVisibility(collect($results));
                 
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
+                // $documents = $documents->where('document_type_id', 3);
+                // $documents = $this->filterByVisibility($documents->get());
+                // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             } elseif( stripos($parameter, 'ISO') !== false ){
                 
@@ -117,12 +120,16 @@ class SearchController extends Controller
                     if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
                 });
                 
-                // $results = $documents->where('document_type_id', 4)->get();
-                $documents = $documents->where('document_type_id', 4);
-                $documents = $this->filterByVisibility($documents->get());
-                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
+                $results = $documents->where('document_type_id', 4)->get();
+                $results = $this->filterByVisibility(collect($results));
+                
+                // $documents = $documents->where('document_type_id', 4);
+                // $documents = $this->filterByVisibility($documents->get());
+                // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             } else {
                 // Search for other parameters
@@ -130,39 +137,43 @@ class SearchController extends Controller
                     $query->where('name', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
-                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' )
-                    ->orWhere('inhalt', 'LIKE', '%'.$parameter.'%' );
+                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
+                    
+                    // ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' )
+                    // ->orWhere('inhalt', 'LIKE', '%'.$parameter.'%' );
                 });
             }       
 
             
-            $documents = $this->filterByVisibility($documents->get());
-            $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-            $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+            // $results = $this->filterByVisibility($documents->get());
+            // $documents = $this->filterByVisibility($documents->get());
+            // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+            // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
             
             // dd($searchResultsPaginated->getCollection());
             
-            // $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
+            $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
             
-            // foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+            foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
             
-            // if(count($variants)){
-            //     foreach ($variants as $variant){
-            //         if(!in_array($variant->document, $results)){
-            //             if($variant->document->document_status_id == 3)
-            //                 array_push($results, $variant->document);
-            //         }
-            //     }
-            // } 
+            if(count($variants)){
+                foreach ($variants as $variant){
+                    if(!in_array($variant->document, $results)){
+                        if($variant->document->document_status_id == 3)
+                            array_push($results, $variant->document);
+                    }
+                }
+            } 
             // else {
             //     $variants = EditorVariant::all();
             // }
             
             // dd($results);
+            $results = $this->filterByVisibility(collect($results));
         }
         
-        // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsTree', 'searchResultsPaginated'));
-        return view('suche.erweitert', compact('parameter', 'resultsWiki', 'documentTypes','mandantUsers', 'searchResultsTree', 'searchResultsPaginated'));
+        return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+        // return view('suche.erweitert', compact('parameter', 'resultsWiki', 'documentTypes','mandantUsers', 'searchResultsTree', 'searchResultsPaginated'));
     }
 
     /**
@@ -287,9 +298,9 @@ class SearchController extends Controller
         
         // dd($request->all());
         
-        // $documents = Document::where('id', '>', 0)
-        $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
-        ->where('documents.id', '>', 0)
+        $documents = Document::where('id', '>', 0)
+        // $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
+        // ->where('documents.id', '>', 0)
         ->where('document_status_id', 3)
         // ->where('document_status_id','!=', 5)
         ->where('active', 1)
@@ -314,13 +325,17 @@ class SearchController extends Controller
                     if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
                 });
                 
-                // $results = $documents->where('document_type_id', 3)->get();
-                $documents = $documents->where('document_type_id', 3);
-                $documents = $this->filterByVisibility($documents->get());
-                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                $results = $documents->where('document_type_id', 3)->get();
+                $results = $this->filterByVisibility(collect($results));
+                
+                // $documents = $documents->where('document_type_id', 3);
+                // $documents = $this->filterByVisibility($documents->get());
+                // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                
                 $request->flash();
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             } elseif( stripos($name, 'ISO') !== false ){
                 
@@ -334,13 +349,17 @@ class SearchController extends Controller
                     if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
                 });
                 
-                // $results = $documents->where('document_type_id', 4)->get();
-                $documents = $documents->where('document_type_id', 4);
-                $documents = $this->filterByVisibility($documents->get());
-                $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-                $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                $results = $documents->where('document_type_id', 4)->get();
+                $results = $this->filterByVisibility(collect($results));
+                
+                // $documents = $documents->where('document_type_id', 4);
+                // $documents = $this->filterByVisibility($documents->get());
+                // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
+                // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                
                 $request->flash();
-                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             }
         } 
@@ -366,24 +385,26 @@ class SearchController extends Controller
         if(!empty($date_to))  $documents->whereDate('documents.created_at', '<=', $date_to );
         if(!empty($user_id))  $documents->where('user_id', $user_id );
         
-        $documents = $this->filterByVisibility($documents->get());
-        $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'], 'suchergebnisse');
-        $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
-        // $documents = $documents->get();
+        // $documents = $this->filterByVisibility($documents->get());
+        // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'], 'suchergebnisse');
+        // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+        
+        $documents = $documents->get();
          
-        // if(!empty($inhalt)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
+        if(!empty($inhalt)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
         
-        // foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+        foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
         
-        // if($emptySearch) $results = array();
-        if($emptySearch) $searchResultsPaginated = array();
+        if($emptySearch) $results = array();
         
-        // if(count($variants)){
-        //     foreach ($variants as $variant){
-        //         if(!in_array($variant->document, $results)) 
-        //             array_push($results, $variant->document);
-        //     }
-        // } 
+        // if($emptySearch) $searchResultsPaginated = array();
+        
+        if(count($variants)){
+            foreach ($variants as $variant){
+                if(!in_array($variant->document, $results)) 
+                    array_push($results, $variant->document);
+            }
+        } 
         // else {
         //     $variants = EditorVariant::all();
         // }
@@ -396,19 +417,21 @@ class SearchController extends Controller
             if(!empty($name)) $resultsWiki = $resultsWiki->where('name', 'LIKE', '%'. $name. '%');
             if(!empty($inhalt)) $resultsWiki = $resultsWiki->where('content', 'LIKE', '%'. $inhalt. '%');
             
-            // $resultsWiki = $resultsWiki->get();
+            $resultsWiki = $resultsWiki->get();
             
-            $resultsWikiPagination = $resultsWiki->paginate(25, ['*'], 'suchergebnisse-wiki');
-            $resultsWikiTree = $this->document->generateWikiTreeview($resultsWikiPagination, ['pageSearch' => true]);
-            
-            $resultsWiki = array();
+            // $resultsWikiPagination = $resultsWiki->paginate(25, ['*'], 'suchergebnisse-wiki');
+            // $resultsWikiTree = $this->document->generateWikiTreeview($resultsWikiPagination, ['pageSearch' => true]);
+            // $resultsWiki = array();
             
         }
         
-        // if($emptySearch) $results = null;
+        $results = $this->filterByVisibility(collect($results));
+        
+        if($emptySearch) $results = null;
         if(empty($name) && empty($inhalt)) $resultsWiki = null;
         
-        return view('suche.erweitert', compact('results', 'resultsWiki', 'resultsWikiPagination', 'resultsWikiTree', 'variants', 'documentTypes', 'mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
+        return view('suche.erweitert', compact('results', 'resultsWiki', 'variants', 'documentTypes', 'mandantUsers'));
+        // return view('suche.erweitert', compact('results', 'resultsWiki', 'resultsWikiPagination', 'resultsWikiTree', 'variants', 'documentTypes', 'mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
     }
 
     /**
@@ -564,6 +587,7 @@ class SearchController extends Controller
         
         foreach($documents as $key => $value){
             if(!ViewHelper::documentVariantPermission($value)->permissionExists)
+                // dd($key);
                 $documents->forget($key);
         }
         

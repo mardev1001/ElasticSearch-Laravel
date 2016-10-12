@@ -16,7 +16,7 @@
             <strong>Documents updated: {{count($documentsUpdated)}} </strong> <hr>
             
             @foreach($documentsUpdated as $document)
-                #{{$document}} <br>
+                #{{$document->id}} - {{$document->updated_at}}, {{$document->name}} <br>
             @endforeach
             
         </div>

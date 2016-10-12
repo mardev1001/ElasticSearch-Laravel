@@ -1168,7 +1168,8 @@ class DocumentController extends Controller
             }
         }
         
-        
+        $document = $this->checkFreigabeRoles($document);
+         
         $documentPermission = ViewHelper::universalDocumentPermission($document,false);
         $variantPermissions = ViewHelper::documentVariantPermission($document);
         
@@ -1772,7 +1773,7 @@ class DocumentController extends Controller
     public function publishApproval($id)
     {
         $document = Document::find($id);
-        dd($test);
+        // dd($test);
         $otherDocuments = Document::where('document_group_id',$document->document_group_id)->whereNotIn('id',array($document->id))->get();
         foreach($otherDocuments as $oDoc){
             $oDoc->document_status_id = 5;
@@ -2770,13 +2771,18 @@ class DocumentController extends Controller
      */
     public function documentStatusUpdate(){
         
-        $documentsCurrent = Document::where('document_status_id', 3)->get();
+        // $documentsUpToDate = Document::where('document_status_id', 3)->get();
         
-        // $documentsAttached = EditorVariantDocument::whereIn('document_id', array_pluck($documentsCurrent,'id'))->groupByget();
+        // $documentsEditorVariants = EditorVariantDocument::whereIn('document_id', array_pluck($documentsUpToDate,'id'))->groupBy('document_id')->get();
         
-        // dd($documentsAttached);
+        $documentsAttached = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
+        // ->whereIn('documents.id', array_pluck($documentsEditorVariants, 'document_id'))
+        ->where('documents.is_attachment', 1)->where('document_types.document_art', 1)->get(['documents.id as id']);
         
-        $documentsUpdated = ['doc1', 'doc2'];
+        // Document::whereIn('id', array_pluck($documentsAttached, 'id'))->update(['document_status_id' => 3]);
+        
+        $documentsUpdated = Document::whereIn('id', array_pluck($documentsAttached, 'id'))->get();
+        // dd($documentsUpdated);
         
         return view('dokumente.statusUpdate', compact('documentsUpdated'));
     }
@@ -3035,6 +3041,28 @@ class DocumentController extends Controller
      */
     private function universalDocumentPermission( $document,$message=true,$freigeber=false ){
         return $this->document->universalDocumentPermission($document,$message,$freigeber);
+    }
+    
+    
+    /**
+     * Check if freigabe roles are set, if not then add all to database
+     * @param collection $document
+     * @return $document
+     */
+    private function checkFreigabeRoles( $document ){
+        $mandantRoles = array();
+        if($document->documentMandantRoles != null)
+            $mandantRoles = $document->documentMandantRoles->where('role_id',0);
+     
+        $mandantRolesAll = $document->documentMandantRoles;
+        if( $document->approval_all_roles != 1 && (count($madantRoles) || count($mandantRolesAll) < 1) ){
+            $document->approval_all_roles = 1;
+            $document->save();
+            if( count($madantRoles) ){
+                DocumentMandantRole::whereIn('id',$mandantRoles)->delete();
+            }
+        }
+        return $document;
     }
     
     
