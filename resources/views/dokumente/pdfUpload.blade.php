@@ -99,11 +99,8 @@
                 @if( isset($data->isoCategories->name) )
                 
                     <script type="text/javascript">   
-                            console.log('trigged');
-                            console.log( documentType );
                         if( documentType == 'ISO Dokumente')
                             var isoCategoryName = '{{ $data->isoCategories->name}}';
-                            console.log('trigged');
                     </script>
                 @endif
                <!-- End variable for expanding document sidebar-->

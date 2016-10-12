@@ -2765,6 +2765,21 @@ class DocumentController extends Controller
             'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id','isoCategoryName','docTypeSlug'));
     }
     
+    /**
+     * Function used to update document statuses for all attached documents in case they are not correctly set
+     */
+    public function documentStatusUpdate(){
+        
+        $documentsCurrent = Document::where('document_status_id', 3)->get();
+        
+        // $documentsAttached = EditorVariantDocument::whereIn('document_id', array_pluck($documentsCurrent,'id'))->groupByget();
+        
+        // dd($documentsAttached);
+        
+        $documentsUpdated = ['doc1', 'doc2'];
+        
+        return view('dokumente.statusUpdate', compact('documentsUpdated'));
+    }
     
     /**
      * Set back button

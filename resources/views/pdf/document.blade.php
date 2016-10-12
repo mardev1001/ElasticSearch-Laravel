@@ -39,6 +39,7 @@
                     /*height: auto !Important;*/
                     border-collapse: collapse !important;
                     max-width: 100% !important;
+                    vertical-align: middle !important;
                 }
                 
             table td{

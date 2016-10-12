@@ -86,7 +86,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('dokument-typen', 'DocumentTypeController');
         Route::resource('favoriten', 'FavoritesController');
         // Route::resource('historie', 'HistoryController');
-        //Route::resource('statistik', 'StatsController');
+        // Route::resource('statistik', 'StatsController');
         Route::get('telefonliste/{id}/pdf', 'TelephoneListController@pdfExport');
         Route::post('telefonliste/xls', 'TelephoneListController@xlsExport');
         Route::post('telefonliste/display-options', 'TelephoneListController@displayOptions');
@@ -108,6 +108,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
         Route::resource('wiki', 'WikiController');
         
+        // Developer Routes
+        // Route::match(['post', 'get'], 'dev/status-update', 'DocumentController@documentStatusUpdate');
         
         
 }); //end auth middleware

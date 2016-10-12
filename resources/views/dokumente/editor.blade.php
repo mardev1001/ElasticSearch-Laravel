@@ -100,6 +100,8 @@
                         $(this).attr('id', 'variant-' + $(this).data('id'));
                     else
                         $(this).attr('id', 'variant-' + counter);
+                        
+                 
                     tinymce.init({
                         selector: '.editable',
                         skin_url: '/css/style',
@@ -148,9 +150,12 @@
                     if ($(this).data('height')) {
                         docWidth = 'auto', docHeight = $(this).data('height');
                     }
+                    
                     tinymce.init({
                         selector: '.editable',
                         skin_url: '/css/style',
+                        width: docWidth,
+                        height: docHeight, 
                         plugins: ["image table"],
                         toolbar1: "mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ",
 
@@ -165,7 +170,6 @@
                     // console.log( e.element.find('img') );
                     // console.log( e.element.parseHTML() );
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        
                         var td = $(e.element), maxHeight =  $(e.element).height() ;
                         
                         $( e.element ).find('img').each(function() {
@@ -175,8 +179,9 @@
                             if(height != maxHeight && height > maxHeight)
                                 maxHeight = height;
                         });
-                        td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;')
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ')
+                        td.attr('style', td.attr('style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important; vertical-align: middle !important;');
+                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important;');
+                        
                     }
                     
                  

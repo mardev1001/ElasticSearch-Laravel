@@ -114957,7 +114957,7 @@ $(function() {
             if( $(this).data('classes') )
                 classes += $(this).data('classes');
             
-             var docWidth = 680, docHeight =820;
+             var docWidth = 680, docHeight =450;//820
              
             if( $('.document-orientation').length ){
                  docWidth = 'auto', docHeight = 680;
@@ -114965,12 +114965,11 @@ $(function() {
              if( $(this).data('height') ){
                 docWidth = 'auto',docHeight = $(this).data('height');
             }
-              
             tinymce.init({ 
                 selector: '.editable', 
                 skin_url: '/css/style',
                 plugins:[ "table" ],
-                toolbar1: "mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
+                 toolbar1: " mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 width: docWidth,
                 height: docHeight, 
@@ -114981,7 +114980,6 @@ $(function() {
                     // console.log( e.element.find('img') );
                     // console.log( e.element.parseHTML() );
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        
                         var td = $(e.element), maxHeight =  $(e.element).height() ;
                         
                         $( e.element ).find('img').each(function() {
@@ -114991,8 +114989,9 @@ $(function() {
                             if(height != maxHeight && height > maxHeight)
                                 maxHeight = height;
                         });
-                        td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;')
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ')
+                        td.attr('style', td.attr('style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important; vertical-align: middle !important;');
+                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important;');
+                        
                     }
                     
                  
@@ -115145,7 +115144,6 @@ $(function() {
                     }//end setup button
                 );
             }
-
             });
         });
     }
@@ -115162,11 +115160,12 @@ $(function() {
             var classes = '';
             if( $(this).data('classes') )
                 classes += $(this).data('classes');
+                
             tinymce.init({
                 selector: '.content-editor',
                 skin_url: '/css/style',
                 plugins:[ "table" ],
-                toolbar1: "mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
+                toolbar1: " mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 height: docHeight, 
                 height: 350,
@@ -115177,7 +115176,6 @@ $(function() {
                     // console.log( e.element.find('img') );
                     // console.log( e.element.parseHTML() );
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        
                         var td = $(e.element), maxHeight =  $(e.element).height() ;
                         
                         $( e.element ).find('img').each(function() {
@@ -115187,8 +115185,9 @@ $(function() {
                             if(height != maxHeight && height > maxHeight)
                                 maxHeight = height;
                         });
-                        td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;')
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ')
+                        td.attr('style', td.attr('style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important; vertical-align: middle !important;');
+                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important;');
+                        
                     }
                     
                  
@@ -115361,7 +115360,7 @@ $(function() {
             if( $(this).data('classes') )
                 classes += $(this).data('classes');
             
-            var docWidth = 680, docHeight =820;
+            var docWidth = 680, docHeight =450;//820
             if( $('.document-orientation').length )
                   docWidth = 'auto', docHeight = 680; 
             
@@ -115387,7 +115386,6 @@ $(function() {
                     // console.log( e.element.find('img') );
                     // console.log( e.element.parseHTML() );
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        
                         var td = $(e.element), maxHeight =  $(e.element).height() ;
                         
                         $( e.element ).find('img').each(function() {
@@ -115397,8 +115395,9 @@ $(function() {
                             if(height != maxHeight && height > maxHeight)
                                 maxHeight = height;
                         });
-                        td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;')
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ')
+                        td.attr('style', td.attr('style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important; vertical-align: middle !important;');
+                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important;');
+                        
                     }
                     
                  
@@ -115773,7 +115772,7 @@ $(function () {
     // else console.log($(this));
     
     
-    var activeLink = $('.nav li a.active');
+    var activeLink = $('#side-menu li a.active');
     activeLink.parents('li').addClass('active');
     
     var activeLinkSubnavs = activeLink.parents('li').first().children('ul').children('li').children('ul');
@@ -115984,7 +115983,6 @@ $(function () {
                     // console.log( e.element.find('img') );
                     // console.log( e.element.parseHTML() );
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        
                         var td = $(e.element), maxHeight =  $(e.element).height() ;
                         
                         $( e.element ).find('img').each(function() {
@@ -115994,8 +115992,9 @@ $(function () {
                             if(height != maxHeight && height > maxHeight)
                                 maxHeight = height;
                         });
-                        td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;')
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ')
+                        td.attr('style', td.attr('style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important; vertical-align: middle !important;');
+                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important;');
+                        
                     }
                     
                  
@@ -116055,13 +116054,13 @@ $(function () {
                             }
                             if ($(e.target).prop("tagName") == 'DIV') {
                                 if ($(e.target).parent().find('input').attr('id') != 'tinymce-uploader') {
-                                    // console.log($(e.target).parent().find('input').attr('id'));
+                                    console.log($(e.target).parent().find('input').attr('id'));
                                     $(e.target).parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
                                 $('#tinymce-uploader').trigger('click');
                                 $('#tinymce-uploader').change(function () {
                                     var input, file, fr, img;
-                                    // console.log('insert');
+                                    console.log('insert');
                                     if (typeof window.FileReader !== 'function') {
                                         write("The file API isn't supported on this browser yet.");
                                         return;
@@ -116099,7 +116098,7 @@ $(function () {
 
                             }
                             if ($(e.target).prop("tagName") == 'I') {
-                                // console.log($(e.target).parent().parent().parent().find('input').attr('id'));
+                                console.log($(e.target).parent().parent().parent().find('input').attr('id'));
                                 if ($(e.target).parent().parent().parent().find('input').attr('id') != 'tinymce-uploader') {
                                     $(e.target).parent().parent().parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
