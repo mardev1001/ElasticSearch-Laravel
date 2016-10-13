@@ -158,9 +158,11 @@ class SearchController extends Controller
             
             if(count($variants)){
                 foreach ($variants as $variant){
-                    if(!in_array($variant->document, $results)){
-                        if($variant->document->document_status_id == 3)
-                            array_push($results, $variant->document);
+                    if(isset($variant->document)){
+                        if(!in_array($variant->document, $results)){
+                            if($variant->document->document_status_id == 3)
+                                array_push($results, $variant->document);
+                        }
                     }
                 }
             } 
@@ -401,8 +403,10 @@ class SearchController extends Controller
         
         if(count($variants)){
             foreach ($variants as $variant){
-                if(!in_array($variant->document, $results)) 
-                    array_push($results, $variant->document);
+                if(isset($variant->document)){
+                    if(!in_array($variant->document, $results)) 
+                        array_push($results, $variant->document);
+                }
             }
         } 
         // else {

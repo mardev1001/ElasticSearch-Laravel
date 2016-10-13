@@ -6,7 +6,10 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
 body{
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
 }
-
+/*body.mce-content-body {
+    background-image: url("../../img/editor-bg-bordered2.png");
+    background-repeat: repeat-y;
+}*/
 .content h1,.tinymce-editor-class h1,.mce-content-body h1{
     font-size: 2.1em;
 }

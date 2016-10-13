@@ -15,6 +15,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('/', 'HomeController@index');
         Route::get('/kontakt', 'HomeController@contact');
         Route::post('/kontakt', 'HomeController@contactSend');
+        Route::get('tipps-und-tricks', 'HomeController@tipsAndTricks');
         
         Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
         Route::get('/open/{path_part_one}/{path_part_two}', 'HomeController@open');

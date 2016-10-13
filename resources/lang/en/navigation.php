@@ -34,6 +34,8 @@ return [
     'favorites'             => 'Favoriten',
     'search'                => 'Suchen',
     'advanced_search'       => 'Erweiterte Suche',
+    'searchParameter'       => 'Suchbegriff',
+    'tipsAndTricks'         => 'Tipps und Tricks',
     'search_placeholder'    => 'Betreff, Titel',
     'newsSearchPlaceholder' => 'Titel, Stichwörter',
     'wikiSearchPlaceholder' => 'Titel, Inhalt',

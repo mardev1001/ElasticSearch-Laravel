@@ -1,10 +1,6 @@
 <div class="navbar-default sidebar" role="navigation">
      <div class="">
         <button type="button" id="nav-btn" class="navbar-toggle big hidden-xs" title="Navi Ein-/Ausblenden">
-            <span class="sr-only">Navi Ein-/Ausblenden</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
         </button>
 
         <!--    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -26,8 +22,15 @@
             </li>
             
             <li>
-                <a href="{{ url('suche') }}">{{ ucfirst( trans('navigation.advanced_search') ) }}</a>
+                <a href="{{ url('suche') }}">{{ ucfirst( trans('navigation.advanced_search') ) }}<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                         <li>
+                            <a href="{{ url('tipps-und-tricks') }}">{{ ucfirst( trans('navigation.tipsAndTricks') ) }}</a>
+                        </li>
+                    </ul>
             </li>
+                
+           
 
             <li class="">
                 <a href="#">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
@@ -244,7 +247,7 @@
             @endif
             <li class="legend"> <!-- legend - start -->
                 <span class="legend-text">Legende</span>
-                <span id="btn-legend" class="icon-legend pull-right"></span>
+                <span id="btn-legend" class="icon-legend pull-right" title="Legende Ein-/Ausblenden"></span>
             </li> <!-- legend - end -->
             
             <div class="clearfix"></div>
@@ -253,54 +256,55 @@
     <!-- /.sidebar-collapse -->
     
     <div class="legend-wrapper legend">
-            <ul class="legend-ul nav">
-                <li>
-                    <span class="legend-text">Neueste Dokument</span>
-                    <span class="legend-icons icon-favorites "></span>
-                </li>
-                <li>
-                    <span class="legend-text">Nicht Freigegeben</span>
-                    <span class="legend-icons icon-blocked"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Freigegeben</span>
-                    <span class="legend-icons icon-open"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Ungelesen</span>
-                    <span class="legend-icons icon-notread "></span>
-                </li>
-                <li>
-                    <span class="legend-text">Gelesen</span>
-                    <span class="legend-icons icon-read"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Nicht veröffentlicht</span>
-                    <span class="legend-icons icon-notreleased"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Veröffentlicht</span>
-                    <span class="legend-icons icon-released"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Historie vorhanden</span>
-                    <span class="legend-icons icon-history"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Download</span>
-                    <span class="legend-icons icon-download"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Link</span>
-                    <span class="legend-icons icon-goto"></span>
-                </li>
-                <li>
-                    <span class="legend-text">Kommentar</span>
-                    <span class="legend-icons icon-comment"></span>
-                </li>
-
-            </ul><!--End .nav-second-level -->
-        </div>
+        <ul class="legend-ul nav">
+            <li>
+                <span class="legend-text">Neueste Dokument</span>
+                <span class="legend-icons icon-favorites "></span>
+            </li>
+            <li>
+                <span class="legend-text">Nicht Freigegeben</span>
+                <span class="legend-icons icon-blocked"></span>
+            </li>
+            <li>
+                <span class="legend-text">Freigegeben</span>
+                <span class="legend-icons icon-open"></span>
+            </li>
+            <li>
+                <span class="legend-text">Muss gelesen werden</span>
+                <span class="legend-icons icon-notread "></span>
+            </li>
+            <li>
+                <span class="legend-text">Gelesen</span>
+                <span class="legend-icons icon-read"></span>
+            </li>
+            <li>
+                <span class="legend-text">Nicht veröffentlicht</span>
+                <span class="legend-icons icon-notreleased"></span>
+            </li>
+            <li>
+                <span class="legend-text">Veröffentlicht</span>
+                <span class="legend-icons icon-released"></span>
+            </li>
+            <li>
+                <span class="legend-text">Historie vorhanden</span>
+                <span class="legend-icons icon-history"></span>
+            </li>
+            <li>
+                <span class="legend-text">Download</span>
+                <span class="legend-icons icon-download"></span>
+            </li>
+            {{--
+            <!--<li>-->
+            <!--    <span class="legend-text">Link</span>-->
+            <!--    <span class="legend-icons icon-goto"></span>-->
+            <!--</li>-->
+            <!--<li>-->
+            <!--    <span class="legend-text">Kommentar</span>-->
+            <!--    <span class="legend-icons icon-comment"></span>-->
+            <!--</li>-->
+            --}}
+        </ul><!--End .nav-second-level -->
+    </div>
 
 </div>
 <!-- /.navbar-static-side -->

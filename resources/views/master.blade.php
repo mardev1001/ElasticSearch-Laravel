@@ -25,12 +25,12 @@
         <!-- This will be used later so don't remove it-->
         <!--
         <div id="page-loader">
-      	<div class="centered-columns">
-          	<div class="centered-column">
-              	<span class="fa fa-spin fa-spinner"></span>
-              </div>
-          </div>
-      </div>
+      	    <div class="centered-columns">
+          	    <div class="centered-column">
+              	    <span class="fa fa-spin fa-spinner"></span>
+                </div>
+            </div>
+        </div>
         -->
         <!--End loader div-->
    
@@ -60,7 +60,7 @@
     
         <!-- Page Content -->
         <div id="page-wrapper">
-            <div class="container-fluid first background-white">
+            <div class="container-fluid first">
                 <!-- Backend content -->
                 @yield('content')
     

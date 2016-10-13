@@ -136,7 +136,7 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        
+      
         $adressats = Adressat::where('active',1)->get();
         $docType = DocumentType::find( $request->get('document_type_id') );
         
@@ -144,8 +144,8 @@ class DocumentController extends Controller
         if( $request->get('document_type_id') != $this->isoDocumentId )
             RequestMerge::merge(['iso_category_id' => null] );
             
-        if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
-            && $request->get('document_type_id') != $this->qmRundId && $request->has('pdf_upload') )
+        if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId 
+           && $request->get('document_type_id') != $this->isoDocumentId && $request->get('document_type_id') != $this->qmRundId && $request->has('pdf_upload') )
             RequestMerge::merge(['pdf_upload' => 0] );    
     
         if(!$request->has('date_published'))    
@@ -1423,7 +1423,7 @@ class DocumentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd( $request->all() );
+        
         $data = Document::find( $id );
         $adressats = Adressat::where('active',1)->get();
         //fix if document type not iso category -> don't save iso_category_id
@@ -1433,15 +1433,15 @@ class DocumentController extends Controller
         //fix pdf checkbox
         if( !$request->has('pdf_upload') )
             RequestMerge::merge(['pdf_upload' => 0] );
-            
+            // dd( $request->all() );
         //if doc type formulare set ladnsace to null
         if( !$request->has('landscape') )
             RequestMerge::merge(['landscape' => 0] );
         
             
-        if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId
-            && $request->get('document_type_id') !=  $this->qmRundId  && $request->has('pdf_upload') )
-            RequestMerge::merge(['pdf_upload' => 0] );  
+        if( $request->get('document_type_id') != $this->newsId && $request->get('document_type_id') !=  $this->rundId 
+           && $request->get('document_type_id') != $this->isoDocumentId && $request->get('document_type_id') != $this->qmRundId && $request->has('pdf_upload') )
+            RequestMerge::merge(['pdf_upload' => 0] );   
             
         if( !$request->has('name_long') )
             RequestMerge::merge(['name_long' => $request->get('name')] );
@@ -1468,12 +1468,12 @@ class DocumentController extends Controller
        
         // dd( $request->all() );        
         $data->fill( $request->all() )->save();
-     
+      
         $data = Document::find($id);
-        
         
         $variant = $data->editorVariant();
         $setDocument = $this->document->setDocumentForm($request->get('document_type_id'), $request->get('pdf_upload')  );
+        
         $url = $setDocument->url;
         $form = $setDocument->form;
         
@@ -3055,10 +3055,10 @@ class DocumentController extends Controller
             $mandantRoles = $document->documentMandantRoles->where('role_id',0);
      
         $mandantRolesAll = $document->documentMandantRoles;
-        if( $document->approval_all_roles != 1 && (count($madantRoles) || count($mandantRolesAll) < 1) ){
+        if( $document->approval_all_roles != 1 && (count($mandantRoles) || count($mandantRolesAll) < 1) ){
             $document->approval_all_roles = 1;
             $document->save();
-            if( count($madantRoles) ){
+            if( count($mandantRoles) ){
                 DocumentMandantRole::whereIn('id',$mandantRoles)->delete();
             }
         }

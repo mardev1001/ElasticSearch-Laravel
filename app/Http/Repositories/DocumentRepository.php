@@ -584,6 +584,7 @@ class DocumentRepository
     public function setDocumentForm($documentType, $pdf = false, $attachment = false)
     {
         $data = new \StdClass();
+       
         $modelUpload = DocumentType::find($documentType);
         $data->form = 'editor';
         $data->url = 'editor';
@@ -591,8 +592,8 @@ class DocumentRepository
             $data->form = 'upload';
             $data->url = 'document-upload';
         }
-        // dd($pdf);
-        if ($pdf == 1 || $pdf == "1" || $pdf == true)
+        // dd(strtolower($modelUpload->name) );
+        if ($pdf == 1 || $pdf == "1" || $pdf == "on" || $pdf == true)
             $data = $this->checkUploadType($data, $modelUpload, $pdf);
 
         return $data;
@@ -605,13 +606,14 @@ class DocumentRepository
      */
     public function checkUploadType($data, $model, $pdf)
     {
-        if (((strpos(strtolower($model->name), 'rundschreiben') !== false) || (strpos(strtolower($model->name), 'news') !== false))
-            && ($pdf == true || $pdf == 1)
+         
+        if ( ((strpos(strtolower($model->name), 'rundschreiben') !== false) || (strpos(strtolower($model->name), 'news') !== false) 
+        || (strpos(strtolower($model->name), 'iso dokumente') !== false) ) && ($pdf != null || $pdf != 0 || $pdf != false )
         ) {
             $data->form = 'pdfUpload';
             $data->url = 'pdf-upload';
         }
-
+        
         return $data;
     }
 

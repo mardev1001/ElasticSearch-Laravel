@@ -24,15 +24,15 @@
             @endif
         </div>
         <div class="col-xs-12 col-sm-7 col-md-6">
-            <ul class="nav navbar-nav icons pull-right">
-                <li><a href="{{ url('/') }}"><span class="nav-icon icon-home"></span>Home</a></li>
-                <li><a href="{{ url('benutzer/profil') }}"><span class="nav-icon icon-profil"></span>Profil</a></li>
-                <li><a href="{{ url('logout') }}"><span class="nav-icon icon-logout"></span>Log out</a></li>
-                <li><a href="{{ url('kontakt') }}"><span class="nav-icon icon-kontakt"></span>Kontakt</a></li>
+            <ul class="nav navbar-nav icons pull-right icons-top">
+                <li><a href="/"><span class="nav-icon icon-home" title="Zur Startseite"></span>Home</a></li>
+                <li><a href="{{ url('benutzer/profil') }}" title="Mein Benutzerprofil"><span class="nav-icon icon-profil"></span>Profil</a></li>
+                <li><a href="{{ url('logout') }}" title="Abmelden"><span class="nav-icon icon-logout"></span>Log out</a></li>
+                <li><a href="{{ url('kontakt') }}" title="NEPTUN Kontaktieren"><span class="nav-icon icon-kontakt"></span>Kontakt</a></li>
                 <li>
                     {{ Form::open(['route'=>['suche.index'], 'method'=>'GET']) }}
                     <div class="input-group custom-search-form">
-                        <input type="text" class="form-control" name="parameter" placeholder="{{ trans('navigation.advanced_search') }}" required >
+                        <input type="text" class="form-control" name="parameter" placeholder="{{ trans('navigation.searchParameter') }}" required >
                         <!--<span class="input-group-btn">
                     <button type="submit" name="search" class="btn btn-default" title="Suche">
                         <i class="fa fa-search"></i>

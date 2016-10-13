@@ -82,16 +82,16 @@
                     <div id="panel-{{$mandant->id}}" class="panel panel-primary">
                         
                         <div class="panel-heading">
-                            <h4 class="panel-title col-xs-10">
-                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
+                            <h4 class="panel-title transform-normal col-xs-10">
+                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed transform-normal" 
                                    href="#collapseMandant{{$mandant->id}}" 
                                    @if(isset($mandant->openTreeView) ) data-open="true" @endif 
                                    {{-- if searched for user open the mandant --}}
                                    > 
                                    
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}} 
-                                  @if($mandant->hauptstelle) [Hauptstelle] 
-                                  @else [Filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}]
+                                  @if($mandant->hauptstelle) [hauptstelle] 
+                                  @else [filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}]
                                   @endif
                                 </a>
                             </h4>

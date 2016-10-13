@@ -172,7 +172,8 @@ $(function() {
     
     // Hide or show PDF upload checkbox 
 
-    if( $(".document-type-select .select").val() == 1 || $(".document-type-select .select").val() == 2 || $(".document-type-select .select").val() == 3){
+    if( $(".document-type-select .select").val() == 1 || $(".document-type-select .select").val() == 2 || 
+    $(".document-type-select .select").val() == 3 || $(".document-type-select .select").val() == 4){
         $('.pdf-checkbox').show(400);
         $('.pdf-checkbox').find('input[name="pdf_upload"]').val(1);
     }
@@ -185,7 +186,7 @@ $(function() {
     $('.document-type-select .select').chosen().change(function(event){
         if(event.target == this){
             //  console.log($(this).val());
-            if( $(this).val() == 3 || $(this).val() == 2 || $(this).val() == 1 )
+            if( $(this).val() == 4 || $(this).val() == 3 || $(this).val() == 2 || $(this).val() == 1 )
                 $('.pdf-checkbox').show(400);
             else
                 $('.pdf-checkbox').hide(400);

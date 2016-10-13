@@ -99,6 +99,14 @@ li.legend {
   /*  margin-left: 83px;*/
 }
 
+.legend .icon-legend {
+    background: url(/img/icons/arrow_select_up.png) no-repeat center center;
+}
+
+.legend-shadow .icon-legend {
+    background: url(/img/icons/arrow_select_down.png) no-repeat center center;
+}
+
 .legend-shadow {
     -webkit-box-shadow: -5px -5px 5.7px 0.3px rgba(0,0,0,0.15);
     -moz-box-shadow: -5px -5px 5.7px 0.3px rgba(0,0,0,0.15);

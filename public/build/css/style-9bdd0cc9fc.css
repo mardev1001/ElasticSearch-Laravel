@@ -68,14 +68,30 @@ $third-color: #d3d3d3;*/
 .icon-home {
   background: url("/img/icons/icon_home.png") no-repeat; }
 
+.icons-top a.active .icon-home,
+.icons-top a:hover .icon-home {
+  background: url("/img/icons/icon_home_active.png") no-repeat; }
+
 .icon-profil {
   background: url("/img/icons/icon_profil.png") no-repeat; }
+
+.icons-top a.active .icon-profil,
+.icons-top a:hover .icon-profil {
+  background: url("/img/icons/icon_profil_active.png") no-repeat; }
 
 .icon-logout {
   background: url("/img/icons/icon_logout.png") no-repeat; }
 
+.icons-top a.active .icon-logout,
+.icons-top a:hover .icon-logout {
+  background: url("/img/icons/icon_logout_active.png") no-repeat; }
+
 .icon-kontakt {
   background: url("/img/icons/icon_kontakt.png") no-repeat; }
+
+.icons-top a.active .icon-kontakt,
+.icons-top a:hover .icon-kontakt {
+  background: url("/img/icons/icon_kontakt_active.png") no-repeat; }
 
 .icon-favorites {
   background: url("/img/icons/icon_favorites.png") no-repeat center center;
@@ -215,9 +231,9 @@ a:hover {
 .btn.btn-default {
   color: #0154BB; }
 
-.btn:after {
-  content: ' >'; }
-
+/*.btn:after {
+	content: ' >';
+}*/
 /* Buttons - end */
 /* Text classes - start */
 .text-left {
@@ -1506,6 +1522,12 @@ li.legend {
   cursor: pointer;
   /*  margin-left: 83px;*/ }
 
+.legend .icon-legend {
+  background: url(/img/icons/arrow_select_up.png) no-repeat center center; }
+
+.legend-shadow .icon-legend {
+  background: url(/img/icons/arrow_select_down.png) no-repeat center center; }
+
 .legend-shadow {
   box-shadow: -5px -5px 5.7px 0.3px rgba(0, 0, 0, 0.15); }
 
@@ -1531,6 +1553,10 @@ li.legend {
   min-height: 95vh;
   padding-bottom: 30px;
   margin-top: 0px; }
+
+.dl-horizontal dt {
+  text-overflow: clip !important;
+  white-space: normal !important; }
 
 .panel-heading a:not(.no-arrow):after {
   content: " ";
@@ -1661,6 +1687,10 @@ h1.page-title {
   text-transform: uppercase;
   font-weight: bold;
   word-wrap: break-word; }
+
+h1.transform-normal, h2.transform-normal, h3.transform-normal, h4.transform-normal, p.transform-normal,
+a.transform-normal, span.transform-normal {
+  text-transform: initial !important; }
 
 .white-bgrnd {
   background-color: #fff; }
@@ -17998,7 +18028,11 @@ textarea {
   border-radius: 0; }
 
 .navbar-toggle.big {
-  margin-right: 0; }
+  margin-right: 0;
+  background: url("/img/icons/arrow_select_left.png") no-repeat center center; }
+
+.navbar-toggle.big.pull-left {
+  background: url("/img/icons/arrow_select.png") no-repeat center center; }
 
 .sidebar .nav-fourth-level li a {
   padding-left: 63px;

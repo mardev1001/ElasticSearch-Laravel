@@ -14,6 +14,11 @@ textarea{
 
 .navbar-toggle.big{
     margin-right: 0;
+    background: url("/img/icons/arrow_select_left.png") no-repeat center center ;
+}
+
+.navbar-toggle.big.pull-left{
+    background: url("/img/icons/arrow_select.png") no-repeat center center ;
 }
 
 .sidebar .nav-fourth-level li a {
@@ -36,6 +41,7 @@ textarea{
 #side-menu ul.collapsing{
      transition: none !important;
 }
+
 
 @media(min-width:768px) {
     

@@ -64,12 +64,12 @@
                 <div class="panel panel-primary" id="panelMandant{{$mandant->id}}">
                     
                     <div class="panel-heading">
-                        <h4 class="panel-title col-xs-12">
-                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
+                        <h4 class="panel-title col-xs-12 transform-normal">
+                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed transform-normal" 
                                    href="#collapseMandant{{$mandant->id}}">
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
-                                  @if($mandant->hauptstelle) [Hauptstelle] 
-                                  @else [Filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}@if( strtolower(ViewHelper::getHauptstelle($mandant)->name) == "neptun") - NEPTUN] @else ] @endif @endif
+                                  @if($mandant->hauptstelle) [hauptstelle] 
+                                  @else [filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}@if( strtolower(ViewHelper::getHauptstelle($mandant)->name) == "neptun") - NEPTUN] @else ] @endif @endif
                                   @if($mandant->edited_by) 
                                   <span class="editing text-danger">[In Bearbeitung: 
                                   {{ ViewHelper::getUser($mandant->edited_by)->title}} 
@@ -80,7 +80,7 @@
                         </h4>
                         
                         <span class="panel-options col-xs-12">
-                                 <span class="panel-title">
+                                 <span class="panel-title transform-normal">
                                       {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
                                  </span>
                                  <span class="pull-right">
@@ -241,7 +241,7 @@
             <div class="panel panel-primary" id="noMandant">
                 <div class="panel-heading">
                      <h4 class="panel-title col-xs-12">
-                         <a data-toggle="collapse" data-target="#collapseNoMandant" class="collapsed" href="#collapseNoMandant">
+                         <a data-toggle="collapse" data-target="#collapseNoMandant" class="collapsed transform-normal" href="#collapseNoMandant">
                             Kein Mandant
                          </a>
                      </h4>

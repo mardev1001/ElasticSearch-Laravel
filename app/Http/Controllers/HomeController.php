@@ -158,6 +158,24 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response download
      */
+    public function tipsAndTricks() 
+    {
+        //Dropdown: ALL Neptun - active - user - firstname lastname
+        // $data = array();
+        // $neptun = Mandant::find(1);
+        // $mandantUsers =  MandantUser::where('mandant_id',$neptun->id)->pluck('user_id')->toArray();
+        // $users = User::whereIn('id',$mandantUsers)->where('active',1)->get();
+        
+        return view('simple-pages.tipsAndTricks' );
+    }
+    /**
+     * Contact form
+     * @param string $partOne
+     * @param string $partTwo
+     * @param string $subDir
+     *
+     * @return \Illuminate\Http\Response download
+     */
     public function contact() 
     {
         //Dropdown: ALL Neptun - active - user - firstname lastname

@@ -17,5 +17,5 @@
     @endif
     
     @if(count($usersActive) == 0 && count($usersInactive) == 0) 0 Aktive @endif
-    Benutzer
+    benutzer
 )

@@ -131,13 +131,13 @@
                     @endif
                     
                     @if( ViewHelper::universalHasPermission( array(14) ) == true ) 
-                    <div class="col-lg-2 col-sm-6">
-                        <!--<br class="hidden-xs hidden-sm">   -->
-                        <div class="checkbox">
-                            <input type="checkbox" @if((old('history'))) checked @endif name="history" id="history">
-                            <label for="history"> {{ trans('sucheForm.history') }} <br class="hidden-lg"> {{ trans('sucheForm.archive') }} </label>
+                        <div class="col-lg-2 col-sm-6">
+                            <!--<br class="hidden-xs hidden-sm">   -->
+                            <div class="checkbox">
+                                <input type="checkbox" @if((old('history'))) checked @endif name="history" id="history">
+                                <label for="history"> {{ trans('sucheForm.history') }} <br class="hidden-lg"> {{ trans('sucheForm.archive') }} </label>
+                            </div>
                         </div>
-                    </div>
                     @endif
                     
                     <div class="col-lg-4">

@@ -4,7 +4,10 @@
     margin-top: 0px;
 }
 
-
+.dl-horizontal dt{
+    text-overflow: clip !important;
+    white-space: normal !important;
+}
 
 .panel-heading a:not(.no-arrow):after {
     content: " ";
@@ -159,6 +162,11 @@ h1.page-title {
     text-transform: uppercase;
     font-weight: bold;
     word-wrap: break-word;
+}
+
+h1.transform-normal,h2.transform-normal, h3.transform-normal,h4.transform-normal,p.transform-normal,
+a.transform-normal, span.transform-normal{
+    text-transform: initial !important;
 }
 
 // #page-wrapper .panel-title > a {
