@@ -13,7 +13,7 @@
 <div class="row">
     
     <div class="col-xs-12 col-md-6 ">
-        <div class="col-xs-12 box-wrapper home">
+        <div class="col-xs-12 box-wrapper box-white home">
             <h1 class="title">Neue Dokumente/Rundschreiben</h1>
             
             @if(count($documentsNew))
@@ -38,7 +38,7 @@
     
     @if( ViewHelper::universalHasPermission( array(11,13) ) == true && count( $rundschreibenMy) ) <!--  array(10,11,12,13)  NEPTUN-276, count is 275-->
         <div class="col-xs-12 col-md-6 ">
-            <div class="col-xs-12 box-wrapper home">
+            <div class="col-xs-12 box-wrapper box-white home">
                 <h1 class="title">Meine Dokumente/Rundschreiben</h1>
                 
                 @if(count($rundschreibenMy))
@@ -70,7 +70,7 @@
     @if( ViewHelper::universalHasPermission(array(15,16)) 
         || ViewHelper::getMandantWikiPermission() ) 
         <div class="col-xs-12 col-md-6 ">
-            <div class="col-xs-12 box-wrapper home">
+            <div class="col-xs-12 box-wrapper box-white home">
                 <h1 class="title">Neue Wiki-Einträge</h1>
                 <div class="box home">
                     <div class="tree-view hide-icons" data-selector="wikiEntries">
@@ -94,7 +94,7 @@
     <!--<div class="clearfix"></div><br>-->
     
     {{-- <div class="col-xs-12 col-md-6 ">
-        <div class="col-xs-12 box-wrapper home">
+        <div class="col-xs-12 box-wrapper box-white home">
             <h1 class="title">Meine Dokumente</h1>
             <div class="box home">
                 <div class="tree-view" data-selector="documentsMy">
@@ -111,7 +111,7 @@
     
     @if( ViewHelper::universalHasPermission( array(10) ) == true || count($freigabeEntries) > 0 ) 
     <div class="col-xs-12 col-md-6 ">
-        <div class="col-xs-12 box-wrapper home">
+        <div class="col-xs-12 box-wrapper box-white home">
             <h1 class="title">Dokumente im Freigabeprozess</h1>
             
             @if(count($freigabeEntries))

@@ -42,6 +42,11 @@ textarea{
      transition: none !important;
 }
 
+.icons-top a.active,
+.icons-top a:hover {
+    color: #0154BB !important;
+}
+
 
 @media(min-width:768px) {
     

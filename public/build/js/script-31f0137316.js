@@ -115776,6 +115776,7 @@ $(function () {
     activeLinkSubnavs.each(function(){
        $(this).parent('li').addClass('active');
     });
+    activeLink.closest('li').children('ul').addClass('in');
     
     /*End Exapand active class*/
 

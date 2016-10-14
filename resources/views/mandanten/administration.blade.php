@@ -68,8 +68,8 @@
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed transform-normal" 
                                    href="#collapseMandant{{$mandant->id}}">
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
-                                  @if($mandant->hauptstelle) [hauptstelle] 
-                                  @else [filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}@if( strtolower(ViewHelper::getHauptstelle($mandant)->name) == "neptun") - NEPTUN] @else ] @endif @endif
+                                  @if($mandant->hauptstelle) [Hauptstelle] 
+                                  @else [Filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}@if( strtolower(ViewHelper::getHauptstelle($mandant)->name) == "neptun") - NEPTUN] @else ] @endif @endif
                                   @if($mandant->edited_by) 
                                   <span class="editing text-danger">[In Bearbeitung: 
                                   {{ ViewHelper::getUser($mandant->edited_by)->title}} 
@@ -246,7 +246,7 @@
                          </a>
                      </h4>
                       <span class="panel-options col-xs-12">
-                            <span class="panel-title">
+                            <span class="panel-title transform-normal">
                                 {!! ViewHelper::showUserCount($unassignedActiveUsers, $unassignedInactiveUsers) !!}
                             </span>
                        </span>             

@@ -1415,7 +1415,7 @@ ul.nav.navbar-nav.icons li {
 .nav.navbar-nav.icons a {
   padding: 15px 5px 0 0;
   text-transform: uppercase;
-  font-size: 8px;
+  font-size: 9px;
   color: #606060; }
 
 .nav-icon {
@@ -1624,6 +1624,9 @@ li.legend {
 .box-wrapper {
   background-color: #f4f4f4;
   margin-bottom: 15px; }
+
+.box-wrapper.box-white {
+  background-color: #fff; }
 
 .box {
   background-color: #fdfdfd; }
@@ -13144,6 +13147,10 @@ td[data-mce-selected], th[data-mce-selected] {
 body {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important; }
 
+/*body.mce-content-body {*/
+/*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/
+/*    background-repeat: no-repeat,repeat-y;*/
+/*}*/
 .content h1, .tinymce-editor-class h1, .mce-content-body h1 {
   font-size: 2.1em; }
 
@@ -18049,6 +18056,10 @@ textarea {
 
 #side-menu ul.collapsing {
   transition: none !important; }
+
+.icons-top a.active,
+.icons-top a:hover {
+  color: #0154BB !important; }
 
 @media (min-width: 768px) {
   .sidebar {

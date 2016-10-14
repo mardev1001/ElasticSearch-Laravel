@@ -30,20 +30,23 @@
                         <div class="row">
                             <div class="col-xs-12 form-buttons">
                                 @if( isset($backButton) )
-                                    <a href="{{$backButton}}" class="btn btn-info"><span class="fa fa-chevron-left"></span> Zurück</a>
+                                    <a href="{{$backButton}}" class="btn btn-info">
+                                        <!--<span class="fa fa-chevron-left"></span> -->
+                                        Zurück</a>
                                 @endif
                                 <button class="btn btn-primary" type="submit" name="save" value="save">
-                                    <span class="fa fa-floppy-o"></span> Speichern
+                                    <!--<span class="fa fa-floppy-o"></span> -->
+                                    Speichern
                                 </button>
                                 
                                 @if( $data->documentType->document_art != 1 )
                                     <button class="btn btn-primary" type="submit" name="attachment" value="attachment"> 
-                                        <span class="fa fa-file-text-o"></span>
+                                        <!--<span class="fa fa-file-text-o"></span>-->
                                         Anlage hinzufügen
                                     </button>
                                 @endif
                                 <button class="btn btn-primary" type="submit" name="next" value="next"> 
-                                    <span class="fa fa-chevron-right"></span>
+                                    <!--<span class="fa fa-chevron-right"></span>-->
                                     Freigabe & Verteiler
                                 </button>    
                                 

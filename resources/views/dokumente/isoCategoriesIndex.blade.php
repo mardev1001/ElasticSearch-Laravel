@@ -12,7 +12,7 @@
 <div class="row">
     
     <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper">
+        <div class="col-xs-12 box-wrapper box-white">
             
             <h2 class="title">Alle Kategorien</h2>
             

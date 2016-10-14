@@ -72,7 +72,7 @@
                                                     <span class="text">Dokument Anlage/n: </span>
                                                     @foreach($document->documentUploads as $attachment)
                                                         <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
-                                                       <a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">{{basename($attachment->file_path)}}</a>
+                                                       <a target="_blank" href="{{ url('download/'.$document->id.'/'.$attachment->file_path) }}" class="link">{{basename($attachment->file_path)}}</a>
                                                        <br><span class="indent"></span>
                                                     @endforeach
                                                 </div>

@@ -28,7 +28,8 @@
                     
                         <span class="custom-input-group-btn">
                             <button type="submit" class="btn btn-primary">
-                                <span class="fa fa-search"></span> {{ trans('navigation.search') }} 
+                                <!--<span class="fa fa-search"></span> -->
+                                {{ trans('navigation.search') }} 
                             </button>
                         </span>
                     </div>   
@@ -134,7 +135,9 @@
                 
                 <div class="clearfix"></div>
                 <div class="col-xs-12 col-md-4">
-                    <a href="#" class="btn btn-primary"><span class="fa fa-angle-left"></span> Back</a>    
+                    <a href="#" class="btn btn-primary">
+                        <!--<span class="fa fa-angle-left"></span> -->
+                        Back</a>    
                     <button type="submit" class="btn btn-primary">Rechte and freigabe</button>    
                 </div>
             </form>    

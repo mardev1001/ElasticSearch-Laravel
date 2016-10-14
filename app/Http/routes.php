@@ -110,7 +110,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('wiki', 'WikiController');
         
         // Developer Routes
-        // Route::match(['post', 'get'], 'dev/status-update', 'DocumentController@documentStatusUpdate');
+        Route::get('dev/status-update', 'DocumentController@documentStatusUpdate')->middleware('auth.basic');
         
         
 }); //end auth middleware

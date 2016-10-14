@@ -15,9 +15,11 @@
         <div class="results-output">
             <strong>Documents updated: {{count($documentsUpdated)}} </strong> <hr>
             
-            @foreach($documentsUpdated as $document)
-                #{{$document->id}} - {{$document->updated_at}}, {{$document->name}} <br>
-            @endforeach
+            <table>
+                @foreach($documentsUpdated as $document)
+                    <tr><td>#{{$document->id}} - {{$document->name}} </td></tr>
+                @endforeach
+            </table>
             
         </div>
     </div>

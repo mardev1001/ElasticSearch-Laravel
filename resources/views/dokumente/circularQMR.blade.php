@@ -11,7 +11,7 @@
               ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
              )
             <div class="col-xs-12 col-md-6 ">
-                <div class="box-wrapper">
+                <div class="box-wrapper box-white">
                     <h4 class="title">{{ trans('rundschreibenQmr.qmrEntwurf')}}</h4>
                     @if(count($qmrEntwurfPaginated))
                         <div class="box scrollable">
@@ -19,7 +19,7 @@
                                  <div class="qmrEntwurfTree hide" >{{ $qmrEntwurfTree }}</div>
                             </div>
                         </div>
-                        <div class="text-center box box-pagination">
+                        <div class="text-center ">
                             {!! $qmrEntwurfPaginated->render() !!}
                         </div>
                     @else
@@ -36,7 +36,7 @@
               ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
              )
             <div class="col-xs-12 col-md-6 ">
-                <div class="box-wrapper">
+                <div class="box-wrapper  box-white">
                     <h4 class="title">{{ trans('rundschreibenQmr.qmrFreigabe')}}</h4>
                     
                     @if(count($qmrFreigabePaginated))
@@ -45,7 +45,7 @@
                                  <div class="qmrFreigabeTree hide" >{{ $qmrFreigabeTree }}</div>
                             </div>
                         </div>
-                        <div class="text-center box box-pagination">
+                        <div class="text-center ">
                             {!! $qmrFreigabePaginated->render() !!}
                         </div>
                     @else
@@ -61,7 +61,7 @@
         
         <div class="row">
             <div class="col-xs-12 col-md-12">
-                <div class="box-wrapper">
+                <div class="box-wrapper box-white">
                     <div class="box">
                         {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
                             <div class="input-group">
@@ -86,7 +86,7 @@
         <br/>
             
       
-        <div class="col-xs-12 col-md-12 box-wrapper">
+        <div class="col-xs-12 col-md-12 box-wrapper box-white">
             <h4 class="title">{{ trans('rundschreibenQmr.allQmr')}}</h4>
             @if(count($qmrAllPaginated))
                 <div class="box scrollable">
@@ -95,7 +95,7 @@
                     </div>
                 </div>
             
-                <div class="text-center box box-pagination">
+                <div class="text-center ">
                     {!! $qmrAllPaginated->render() !!}
                 </div>
             @else

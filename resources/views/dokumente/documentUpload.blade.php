@@ -11,20 +11,32 @@
         </div>
         <div class="col-xs-12 col-md-6 box">
             
-                <a href="#" class="btn btn-primary"><span class="fa fa-edit"></span> {{ trans('dataUpload.edit') }}</a> 
+                <a href="#" class="btn btn-primary">
+                    <!--<span class="fa fa-edit"></span> -->
+                    {{ trans('dataUpload.edit') }}</a> 
                 
-                <a href="#" class="btn btn-danger"><span class="fa fa-trash"></span> {{ trans('dataUpload.delete') }}</a>
+                <a href="#" class="btn btn-danger">
+                    <!--<span class="fa fa-trash"></span> -->
+                    {{ trans('dataUpload.delete') }}</a>
             
-                <a href="#" class="btn btn-info"><span class="fa fa-files-o"></span> {{ trans('dataUpload.newVersion') }}</a>
+                <a href="#" class="btn btn-info">
+                    <!--<span class="fa fa-files-o"></span> -->
+                    {{ trans('dataUpload.newVersion') }}</a>
            
-                <a href="#" class="btn btn-info"><span class="fa fa-history"></span> {{ trans('dataUpload.history') }}</a>
+                <a href="#" class="btn btn-info">
+                    <!--<span class="fa fa-history"></span> -->
+                {{ trans('dataUpload.history') }}</a>
           
-                <a href="#" class="btn btn-info"><span class="fa fa-star"></span> {{ trans('dataUpload.favorite') }}</a>
+                <a href="#" class="btn btn-info">
+                    <!--<span class="fa fa-star"></span> -->
+                {{ trans('dataUpload.favorite') }}</a>
         </div>
         <div class="clearfix"></div>
          <div class="col-xs-12 col-md-12 box">
              <h3>Betreff </h3>
-             <a href="#" class="btn btn-primary"> <span class="fa fa-download"></span> {{ trans('dataUpload.download') }}</a>
+             <a href="#" class="btn btn-primary"> 
+             <!--<span class="fa fa-download"></span> -->
+             {{ trans('dataUpload.download') }}</a>
          </div>
          <div class="clearfix"></div>
         <br/>
@@ -59,9 +71,15 @@
         <div class="clearfix"></div>
         <br/>
         <div class="col-xs-12 col-md-6 box">
-            <a href="#" class="btn btn-primary"><span class="fa fa-comment-o"></span>  {{ trans('dataUpload.comment') }}</a>
-            <a href="#" class="btn btn-primary"><span class="fa fa-share-alt"></span>  {{ trans('dataUpload.release') }}</a>
-            <a href="#" class="btn btn-danger"><span class="fa fa-share-alt-square"></span> {{ trans('dataUpload.noRelease') }}</a>
+            <a href="#" class="btn btn-primary">
+                <span class="fa fa-comment-o"></span>  
+                {{ trans('dataUpload.comment') }}</a>
+            <a href="#" class="btn btn-primary">
+                <!--<span class="fa fa-share-alt"></span> -->
+            {{ trans('dataUpload.release') }}</a>
+            <a href="#" class="btn btn-danger">
+                <!--<span class="fa fa-share-alt-square"></span> -->
+            {{ trans('dataUpload.noRelease') }}</a>
         </div>
     @stop
     

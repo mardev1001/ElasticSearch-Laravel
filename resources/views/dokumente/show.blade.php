@@ -257,12 +257,12 @@
                             @endif
                         @endif
                     @endif<!-- end if document is deleted -->
-
-                    @if(count($document->documentUploads))
+                    
+                    @if(count($document->documentUploads) && ($document->pdf_upload == 1 ) )
                         {{-- The PDF download button is only shown if the document has PDF Rundschreiben / PDF uploads --}}
                         @foreach($document->documentUploads as $k => $attachment)
                             @if($k > 0) @break @endif
-                            <a href="{{url('download/'. $document->id .'/'. $attachment->file_path)}}" class="btn btn-primary pull-right">Download</a>
+                            <a href="{{url('download/'. $document->id .'/'. $attachment->file_path)}}" class="btn btn-primary pull-right">Download / Druck</a>
                         @endforeach
                     @else
                         {{-- The link for generating PDF from the document content should be here (the content you see on the overview) --}}

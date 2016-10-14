@@ -17,7 +17,7 @@
         @if(( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
           || ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ))
             <div class="col-xs-12 col-md-6">
-                <div class="box-wrapper">
+                <div class="box-wrapper box-white">
                     <h2 class="title">{{ trans('isoDokument.isoEntwurf') }}</h2>
                     @if(count($isoEntwurfPaginated))
                         <div class="box scrollable">
@@ -27,7 +27,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center box box-pagination">
+                        <div class="text-center ">
                             {!! $isoEntwurfPaginated->render() !!}
                         </div>
                     @else
@@ -42,7 +42,7 @@
         @if(( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
             || ($docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ))
             <div class="col-xs-12 col-md-6">
-                <div class="box-wrapper">
+                <div class="box-wrapper box-white">
                     <h2 class="title">{{ trans('isoDokument.isoFreigabe') }}</h2>
                     @if(count($isoFreigabePaginated))
                         <div class="box scrollable">
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="text-center box box-pagination">
+                        <div class="text-center ">
                             {!! $isoFreigabePaginated->render() !!}
                         </div>
                     @else
@@ -70,7 +70,7 @@
     
     <div class="clearfix"></div> <br>
     
-    <div class="col-xs-12 box-wrapper">
+    <div class="col-xs-12 box-wrapper box-white">
         <div class="search box">
             <div class="row">
                 {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
@@ -98,7 +98,7 @@
     <div class="row">
         
         <div class="col-xs-12">
-            <div class="box-wrapper">
+            <div class="box-wrapper box-white">
                 <h2 class="title">Alle ISO Dokumente</h2>
                     @if(count($isoAllPaginated))
                         <div class="box scrollable">
@@ -107,9 +107,9 @@
                                     {{ $isoAllTree }}
                                 </div>
                             </div>
-                            <div class="text-center">
-                                {!! $isoAllPaginated->render() !!}
-                            </div>
+                        </div>
+                        <div class="text-center">
+                            {!! $isoAllPaginated->render() !!}
                         </div>
                     @else
                         <div class="box">

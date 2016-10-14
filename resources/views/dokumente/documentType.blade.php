@@ -29,7 +29,7 @@
                             Keine Daten gefunden.
                         @endif
                     </div>
-                    <div class="text-center box box-pagination">
+                    <div class="text-center ">
                         {!! $documentsByTypePaginated->render() !!}
                     </div>
                 @else
@@ -48,7 +48,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('dokumentTypenForm.typesEntwurf') }}</h2>
             @if(count($docsByTypeEntwurfPaginated))
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center ">
                     {!! $docsByTypeEntwurfPaginated->render() !!}
                 </div>
             @else
@@ -79,7 +79,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('dokumentTypenForm.typesFreigabe') }}</h2>
             @if(count($docsByTypeFreigabePaginated))
@@ -91,7 +91,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center ">
                     {!! $docsByTypeFreigabePaginated->render() !!}
                 </div>
             @else
@@ -108,7 +108,7 @@
 
 <div class="clearfix"></div> <br>
 
-<div class="col-xs-12 box-wrapper">
+<div class="col-xs-12 box-wrapper box-white">
     <div class="box">
         <div class="row">
             {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
@@ -136,7 +136,7 @@
     
     <div class="col-xs-12">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('dokumentTypenForm.typesAll') ." ". $documentType->name }}</h2>
             @if(count($documentsByTypePaginated))
@@ -148,7 +148,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center ">
                     {!! $documentsByTypePaginated->render() !!}
                 </div>
             @else

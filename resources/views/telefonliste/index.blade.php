@@ -48,11 +48,13 @@
                             <div class="col-xs-12 col-md-4 form-inline">
                                 <div class="pull-right">
                                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
-                                        <i class="fa fa-eye"></i> {{ trans('telefonListeForm.appearance') }}
+                                        <!--<i class="fa fa-eye"></i> -->
+                                        {{ trans('telefonListeForm.appearance') }}
                                     </a>
                                     @if( ViewHelper::universalHasPermission(array(20)) ) 
                                         <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#export">
-                                            <i class="fa fa-file-excel-o "></i> {{ trans('telefonListeForm.export') }}
+                                            <!--<i class="fa fa-file-excel-o "></i> -->
+                                            {{ trans('telefonListeForm.export') }}
                                         </a>
                                     @endif
                                 </div>
@@ -90,8 +92,8 @@
                                    > 
                                    
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}} 
-                                  @if($mandant->hauptstelle) [hauptstelle] 
-                                  @else [filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}]
+                                  @if($mandant->hauptstelle) [Hauptstelle] 
+                                  @else [Filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}]
                                   @endif
                                 </a>
                             </h4>
@@ -595,7 +597,7 @@
                                 <dd>{{$mandant->mandantInfo->berufsgenossenschaft_zusatzinfo}}</dd>
                                 
                                 <dt>Erlaubnis zur Arbeitnehmerüberlassung</dt> 
-                                <dd>{{$mandant->mandantInfo->erlaubniss_gultig_ab}}</dd>
+                                <dd>{{ Carbon\Carbon::parse( $mandant->mandantInfo->erlaubniss_gultig_ab)->format('d.m.Y h:i:s') }}</dd>
                                 
                                 <dt>Unbefristet</dt> 
                                 @if($mandant->mandantInfo->unbefristet)
@@ -635,7 +637,7 @@
                 <!--this was wrapped around the button-> then changed with task NEPTUN-303 -->
                 @endif
                 <a target="_blank" href="{{url('/telefonliste/'.$mandant->id.'/pdf')}}" class="btn btn-primary">
-                    <i class="fa fa-file-pdf-o"></i>
+                    <!--<i class="fa fa-file-pdf-o"></i>-->
                     {{ trans('telefonListeForm.pdf-export') }}
                 </a>
                 

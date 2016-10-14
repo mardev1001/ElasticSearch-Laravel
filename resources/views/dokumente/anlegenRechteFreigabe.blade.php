@@ -132,22 +132,28 @@
                         <div class="col-md-12">
                             <br>
                             @if( isset($backButton) )
-                                <a href="{{$backButton}}" class="btn btn-info no-margin-bottom"><span class="fa fa-chevron-left"></span> Zurück</a>
+                                <a href="{{$backButton}}" class="btn btn-info no-margin-bottom">
+                                    <!--<span class="fa fa-chevron-left"></span> -->
+                                    Zurück</a>
                             @endif
                             @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8)
                                 <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
-                                    <span class="fa fa-exclamation-triangle"></span>  {{ trans('rightsRelease.fastPublish') }}
+                                    <!--<span class="fa fa-exclamation-triangle"></span>  -->
+                                    {{ trans('rightsRelease.fastPublish') }}
                                 </button>
                             @endif
                             <button type="submit" class="btn btn-primary no-margin-bottom validate"  name="ask_publishers" value="ask_publishers">
-                                <span class="fa fa-share"></span>  {{ trans('rightsRelease.share') }}
+                                <!--<span class="fa fa-share"></span>  -->
+                                {{ trans('rightsRelease.share') }}
                             </button>
                             <button type="submit" class="btn btn-primary no-margin-bottom no-validate"  name="save" value="save">
-                                <span class="fa fa-floppy-o"></span>  {{ trans('rightsRelease.save') }}
+                                <!--<span class="fa fa-floppy-o"></span>  -->
+                                {{ trans('rightsRelease.save') }}
                             </button>
                             @if( $data->document_status_id == 2 ) 
                                 <a class="btn btn-primary no-margin-bottom no-validate"  href="dokumente/{{$data->id}}/edit">
-                                    <span class="fa fa-floppy-o"></span>  {{ trans('dataUpload.edit') }}
+                                    <!--<span class="fa fa-floppy-o"></span>  -->
+                                    {{ trans('dataUpload.edit') }}
                                 </a>
                             @endif
                         </div>

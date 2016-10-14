@@ -14,18 +14,18 @@
      )
      
     <div class="col-xs-12 col-md-6">
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             <h2 class="title">{{ trans('documentTemplates.templateEntwurf') }}</h2>
             @if(count($formulareEntwurfPaginated))
                 <div class="box scrollable">
                     <div class="tree-view" data-selector="formulareEntwurfTree">
                         <div class="formulareEntwurfTree hide">
-                            {{ $formulareEntwurfTree }}
+                            {{ $formulareEntwurfPaginated }}
                         </div>
                     </div>
-                    <div class="text-center">
-                        {!! $formulareEntwurfPaginated->render() !!}
-                    </div>
+                </div>
+                <div class="text-center">
+                    {!! $formulareEntwurfePaginated->render() !!}
                 </div>
             @else
                 <div class="box">
@@ -41,7 +41,7 @@
       ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ) 
      )
     <div class="col-xs-12 col-md-6">
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             <h2 class="title">{{ trans('documentTemplates.templateFreigabe') }}</h2>
                 @if(count($formulareFreigabePaginated))
                     <div class="box scrollable">
@@ -50,9 +50,9 @@
                                 {{ $formulareFreigabeTree }}
                             </div>
                         </div>
-                        <div class="text-center">
-                            {!! $formulareFreigabePaginated->render() !!}
-                        </div>
+                    </div>
+                    <div class="text-center">
+                        {!! $formulareFreigabePaginated->render() !!}
                     </div>
                 @else
                     <div class="box">
@@ -71,7 +71,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             <div class="box">
                 
                 <div class="row">
@@ -100,7 +100,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             <h2 class="title">{{ trans('documentTemplates.allDocuments') }}</h2>
             
             @if(count($formulareAllPaginated))
@@ -110,9 +110,9 @@
                             {{ $formulareAllTree }}
                         </div>
                     </div>
-                    <div class="text-center">
-                        {!! $formulareAllPaginated->render() !!}
-                    </div>
+                </div>
+                <div class="text-center">
+                    {!! $formulareAllPaginated->render() !!}
                 </div>
             @else
                 <div class="box">

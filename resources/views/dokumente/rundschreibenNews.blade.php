@@ -19,7 +19,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('rundschreiben.newsEntwurf') }}</h2>
             @if(count($newsEntwurfPaginated ))
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center">
                     {!! $newsEntwurfPaginated->render() !!}
                 </div>
                 
@@ -52,7 +52,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('rundschreiben.newsFreigabe') }}</h2>
             
@@ -67,7 +67,7 @@
                      
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center">
                     {!! $newsFreigabePaginated->render() !!}
                 </div>
             @else
@@ -85,7 +85,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             <div class="box">
                 
                 <div class="row">
@@ -114,7 +114,7 @@
 
 <div class="row">
     <div class="col-xs-12">
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('rundschreiben.allNews') }}</h2>
             
@@ -127,7 +127,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center">
                     {!! $newsAllPaginated->render() !!}
                 </div>
             @else

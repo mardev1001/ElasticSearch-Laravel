@@ -325,7 +325,7 @@
                 </tr>
                 <tr>
                     <td class="col-1">Erlaubnis zur Arbeitnehmerüberlassung</td>
-                    <td class="col-2">{{$mandantInfo->erlaubniss_gultig_ab}}</td>
+                    <td class="col-2">{{ Carbon\Carbon::parse( $mandant->mandantInfo->erlaubniss_gultig_ab)->format('d.m.Y h:i:s') }}</td>
                 </tr>
                 <tr>
                     <td class="col-1">Unbefristet</td>

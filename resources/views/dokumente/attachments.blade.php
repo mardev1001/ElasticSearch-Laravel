@@ -278,14 +278,17 @@
                                             <div class="clearfix"></div>
                                             <div class="col-xs-12 form-buttons">
                                                 @if( isset($backButton) )
-                                                    <a href="{{$backButton}}" class="btn btn-info"><span class="fa fa-chevron-left"></span> Zurück</a>
+                                                    <a href="{{$backButton}}" class="btn btn-info">
+                                                        <!--<span class="fa fa-chevron-left"></span> -->
+                                                        Zurück</a>
                                                 @endif
                                                 <button class="btn btn-primary" type="submit" name="save" value="save">
-                                                    <span class="fa fa-floppy-o"></span> Speichern
+                                                    <!--<span class="fa fa-floppy-o"></span> -->
+                                                    Speichern
                                                 </button>
                                                 <button class="btn btn-primary" type="button" name="next" value="next"
                                                 @if( isset($nextButton) ) data-link="{{$nextButton}}" @endif  > 
-                                                    <span class="fa fa-chevron-right"></span>
+                                                    <!--<span class="fa fa-chevron-right"></span>-->
                                                     Weiter
                                                 </button>
                                             </div>

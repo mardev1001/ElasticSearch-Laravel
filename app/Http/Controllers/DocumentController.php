@@ -1881,7 +1881,7 @@ class DocumentController extends Controller
      */
     public function generatePdf($id)
     {
-        $dateNow = Carbon::now()->format('M Y');
+        
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
@@ -1895,6 +1895,15 @@ class DocumentController extends Controller
                 session()->flash('message',trans('documentForm.noPermission'));
                 return redirect('/');
             } 
+        
+        // Carbon::setLocale('de_DE.utf8');
+        // setlocale(LC_TIME, 'German');
+        $datePublished = new Carbon($document->date_published);
+        $dateNow = $this->getGermanMonthName( intval( $datePublished->format('m') ) );
+        
+        $dateNow .= ' '.$datePublished->format('Y');
+        // setlocale(LC_TIME, '');
+        
         $favorite =  FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
         if( $favorite == null )
             $document->hasFavorite = false;
@@ -1943,7 +1952,7 @@ class DocumentController extends Controller
      */
     public function generatePdfPreview($id,$editorId)
     {
-        $dateNow = Carbon::now()->format('M Y');
+        
         if( ctype_alnum($id) && !is_numeric($id) ){
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
@@ -1951,6 +1960,12 @@ class DocumentController extends Controller
         }
         else
             $document = Document::find($id);
+            
+        $datePublished = new Carbon($document->date_published);
+        $dateNow = $this->getGermanMonthName( intval( $datePublished->format('m') ) );
+        
+        $dateNow .= ' '.$datePublished->format('Y');
+        
         $variants = EditorVariant::where('document_id',$id)->where('variant_number',$editorId)->get();
         foreach($variants as $variant)
             $variant->hasPermission = true;
@@ -2769,22 +2784,22 @@ class DocumentController extends Controller
     /**
      * Function used to update document statuses for all attached documents in case they are not correctly set
      */
-    public function documentStatusUpdate(){
+    public function documentStatusUpdate(Request $request){
         
-        // $documentsUpToDate = Document::where('document_status_id', 3)->get();
-        
-        // $documentsEditorVariants = EditorVariantDocument::whereIn('document_id', array_pluck($documentsUpToDate,'id'))->groupBy('document_id')->get();
-        
-        $documentsAttached = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-        // ->whereIn('documents.id', array_pluck($documentsEditorVariants, 'document_id'))
-        ->where('documents.is_attachment', 1)->where('document_types.document_art', 1)->get(['documents.id as id']);
-        
-        // Document::whereIn('id', array_pluck($documentsAttached, 'id'))->update(['document_status_id' => 3]);
-        
-        $documentsUpdated = Document::whereIn('id', array_pluck($documentsAttached, 'id'))->get();
-        // dd($documentsUpdated);
-        
-        return view('dokumente.statusUpdate', compact('documentsUpdated'));
+        if($request->get('token') == '!Webbite-1234!'){
+            // get all documents with doc-type 5 (formulare)
+            $documentsUpdated = Document::where('document_type_id', 5)->get();
+            
+            // update their doc-status to 3 (aktuell)
+            Document::whereIn('id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
+            
+            // get all editor_variant_documents with above mentioned document-ids, update their doc-status to 3 (aktuell) also
+            EditorVariantDocument::whereIn('document_id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
+            
+            // return list of changed docs
+            return view('dokumente.statusUpdate', compact('documentsUpdated'));
+            
+        } else return back();
     }
     
     /**
@@ -3141,4 +3156,16 @@ class DocumentController extends Controller
     }//end documentVariant permission
     
     
+    /**
+     * Return german months
+     * @param int $id
+     * @return string 
+     */
+    private function getGermanMonthName($id){
+        $months = array(
+            1 => 'Januar', 2 => 'Februar', 3 => 'März', 4 => 'April', 5 => 'Mai', 6 => 'Juni', 7 => 'Juli', 8 => 'Ausgust',
+            9 => 'September', 10 => 'Oktober', 11 =>'November', 12 =>'Dezember',
+            );
+        return $months[$id];    
+    }
 }

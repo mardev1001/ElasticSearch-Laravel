@@ -27,7 +27,9 @@
     <div class="parent-tabs col-xs-12 col-md-12">
     <hr/>
       <!-- Tab panes -->
-    <a href="#" class="btn btn-primary add-tab"><span class="fa fa-plus"></span> Neue Variante</a>
+    <a href="#" class="btn btn-primary add-tab">
+        <!--<span class="fa fa-plus"></span> -->
+        Neue Variante</a>
 
     <ul class="nav nav-tabs" id="tabs">
        

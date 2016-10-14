@@ -314,6 +314,7 @@
         @endif
     </head>
     <body>
+        
      <!-- if you want header on every page  set the include pdf.header here -->
       @include('pdf.footer')
       <div id="content">

@@ -120,6 +120,7 @@
                 </div>
                 
                 <div class="row">
+                    {{--
                     @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
                     <div class="col-lg-2 col-sm-6">
                         <!--<br class="hidden-xs hidden-sm">   -->
@@ -129,6 +130,7 @@
                         </div>
                     </div>
                     @endif
+                    --}}
                     
                     @if( ViewHelper::universalHasPermission( array(14) ) == true ) 
                         <div class="col-lg-2 col-sm-6">

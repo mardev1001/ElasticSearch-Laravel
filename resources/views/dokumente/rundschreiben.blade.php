@@ -19,7 +19,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('rundschreiben.rundEntwurf') }}</h2>
             
@@ -32,8 +32,7 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="text-center box box-pagination">
+                <div class="text-center">
                     {!! $rundEntwurfPaginated->render() !!}
                 </div>
             @else
@@ -53,7 +52,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('rundschreiben.rundFreigabe') }}</h2>
             
@@ -67,7 +66,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center">
                     {!! $rundFreigabePaginated->render() !!}
                 </div>
             
@@ -87,7 +86,7 @@
 
 <div class="clearfix"></div> <br>
 
-<div class="col-xs-12 box-wrapper">
+<div class="col-xs-12 box-wrapper box-white">
     <div class="box">
         <div class="row">
             {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
@@ -114,7 +113,7 @@
 <div class="row">
     
     <div class="col-xs-12">
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">Alle Rundschreiben</h2>
             
@@ -128,7 +127,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center">
                     {!! $rundAllPaginated->render() !!}
                 </div>
                 

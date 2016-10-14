@@ -22,7 +22,8 @@
             </li>
             
             <li>
-                <a href="{{ url('suche') }}">{{ ucfirst( trans('navigation.advanced_search') ) }}<span class="fa arrow"></span></a>
+                <a href="{{ url('suche') }}">{{ ucfirst( trans('navigation.advanced_search') ) }}
+                    <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                          <li>
                             <a href="{{ url('tipps-und-tricks') }}">{{ ucfirst( trans('navigation.tipsAndTricks') ) }}</a>
@@ -30,9 +31,7 @@
                     </ul>
             </li>
                 
-           
-
-            <li class="">
+           <li class="">
                 <a href="#">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     
