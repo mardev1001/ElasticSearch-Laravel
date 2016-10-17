@@ -62,6 +62,7 @@
         <div class="row">
             <div class="col-xs-12 col-md-12">
                 <div class="box-wrapper box-white">
+                    <h2 class="title">{{ trans('benutzerForm.search') }} {{ $docType->name }}</h2>
                     <div class="box">
                         {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
                             <div class="input-group">

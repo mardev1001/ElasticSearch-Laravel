@@ -20,7 +20,7 @@ return [
     'allNews' => 'Alle News',
     'newsEntwurf' => 'Entwurf',
     'rundEntwurf' => 'Entwurf',
-    'newsFreigabe' => 'Im Freigabe Prozess',
-    'rundFreigabe' => 'Im Freigabe Prozess',
+    'newsFreigabe' => 'Im Freigabeprozess',
+    'rundFreigabe' => 'Im Freigabeprozess',
    
 ];

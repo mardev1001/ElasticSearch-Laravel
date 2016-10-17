@@ -24,7 +24,7 @@ return [
     'rundschreiben' => 'Rundschreiben',
     'verfasser' => 'Verfasser',
     'typesEntwurf' => 'Entwurf',
-    'typesFreigabe' => 'Im Freigabe Prozess',
+    'typesFreigabe' => 'Im Freigabeprozess',
     'typesAll' => 'Alle',
     
 ];

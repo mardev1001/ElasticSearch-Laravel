@@ -20,12 +20,12 @@
                 <div class="box scrollable">
                     <div class="tree-view" data-selector="formulareEntwurfTree">
                         <div class="formulareEntwurfTree hide">
-                            {{ $formulareEntwurfPaginated }}
+                            {{ $formulareEntwurfTree }}
                         </div>
                     </div>
                 </div>
                 <div class="text-center">
-                    {!! $formulareEntwurfePaginated->render() !!}
+                    {!! $formulareEntwurfPaginated->render() !!}
                 </div>
             @else
                 <div class="box">
@@ -72,8 +72,8 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="box-wrapper box-white">
+            <h2 class="title">{{ trans('benutzerForm.search') }} {{ $docType->name }}</h2>
             <div class="box">
-                
                 <div class="row">
                     {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
                     <input type="hidden" name="document_type_id" value="{{ $docType->id }}">

@@ -1625,8 +1625,8 @@ li.legend {
   background-color: #f4f4f4;
   margin-bottom: 15px; }
 
-.box-wrapper.box-white {
-  background-color: #fff; }
+.box-wrapper.box-white .list-group-item, .box-wrapper.box-white .box {
+  background-color: #fff !important; }
 
 .box {
   background-color: #fdfdfd; }
