@@ -59,6 +59,9 @@
     border-bottom: 1px solid #fff !important;
     width: 200px;
 }
+.sidebar ul li:not(.legend) {
+    z-index: 100;
+}
 
 .sidebar-nav .nav a, span.legend-text {
     color: $nav-grey;

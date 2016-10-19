@@ -16,7 +16,7 @@
         {{ Form::open(['action' => 'SearchController@searchPhoneList', 'method' => 'POST']) }}
             <div class="col-xs-12">
                 <div class="box-wrapper">
-                    <h4 class="title">{{ trans('telefonListeForm.search-options') }}</h4>
+                    <h4 class="title">{{ trans('telefonListeForm.search') }} {{ trans('telefonListeForm.phone-list') }}</h4>
                      <div class="box">
                         <div class="clearfix"></div>
                         <div class="row">
@@ -27,8 +27,13 @@
                                 @if(isset($searchParameter)) value="{{$searchParameter}}" @endif>
                                 <span class="custom-input-group-btn">
                                     <button type="submit" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
-                                        <!--<i class="fa fa-search"></i>-->Suche
+                                        <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
                                     </button>
+                                    
+                                    @if(isset($searchParameter))
+                                        <a href="{{url('telefonliste')}}" class="btn btn-primary no-margin-bottom">{{ trans('telefonListeForm.reset') }}</a>
+                                    @endif
+                                    
                                 </span> 
                                
                             </div>
@@ -46,17 +51,21 @@
                             
                             {{ Form::close() }}
                             <div class="col-xs-12 col-md-4 form-inline">
-                                <div class="pull-right">
+                                <div class="">
                                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
                                         <!--<i class="fa fa-eye"></i> -->
                                         {{ trans('telefonListeForm.appearance') }}
                                     </a>
+                                    
+                                    {{--
                                     @if( ViewHelper::universalHasPermission(array(20)) ) 
                                         <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#export">
                                             <!--<i class="fa fa-file-excel-o "></i> -->
                                             {{ trans('telefonListeForm.export') }}
                                         </a>
                                     @endif
+                                    --}}
+                                    
                                 </div>
                             </div>
                         </div>
@@ -100,7 +109,7 @@
                             
                             <span class="panel-options col-xs-2 no-margin-top">
                                 <span class="pull-right">
-                                    <a href="#" data-toggle="modal" data-target="#details{{$mandant->id}}" class="btn btn-primary no-arrow"> Detailansicht </a> 
+                                    <a href="#" data-toggle="modal" data-target="#details{{$mandant->id}}" class="btn btn-primary no-arrow"> Auszug Mandaten Gesamt </a><!-- before was Detailansicht --> 
                                 </span>
                             </span>
                             
@@ -362,6 +371,7 @@
     </div>
 </div>
 
+{{--
 <div class="modal fade" id="export" tabindex="-1" role="dialog" aria-labelledby="export" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -412,6 +422,7 @@
         </div>
     </div>
 </div>
+--}}
 
 @foreach($mandants as $mandant)
 

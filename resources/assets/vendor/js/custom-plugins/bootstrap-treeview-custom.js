@@ -568,7 +568,7 @@
 			// Add node icon
 			if (_this.options.showIcon) {
 				
-				var classList = ['node-icon'];
+				var classList = ['node-icon', 'icon-1'];
 
 				classList.push(node.icon || _this.options.nodeIcon);
 				if (node.state.selected) {
@@ -578,20 +578,20 @@
 				}
 					
 				// console.log(node.icon);
-				if(node.icon != undefined){
-					if(node.icon != ''){
+				// if(node.icon != undefined){
+					// if(node.icon != ''){
 						treeItem
 							.append($(_this.template.icon)
 								.addClass(classList.join(' '))
 							);
-					}
-				}
+					// }
+				// }
 			}
 			
 			// Add node icon 2
 			if (_this.options.showIcon) {
 				
-				var classList = ['node-icon'];
+				var classList = ['node-icon', 'icon-2'];
 
 				classList.push(node.icon2 || _this.options.nodeIcon2);
 				if (node.state.selected) {
@@ -602,14 +602,14 @@
 				
 				// console.log(node.icon2);
 				
-				if(node.icon2 != undefined){
-					if(node.icon2 != ''){
+				// if(node.icon2 != undefined){
+					// if(node.icon2 != ''){
 						treeItem
 							.append($(_this.template.icon)
 								.addClass(classList.join(' '))
 							);
-					}
-				}
+					// }
+				// }
 				
 			}
 

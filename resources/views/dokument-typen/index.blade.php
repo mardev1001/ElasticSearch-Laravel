@@ -10,7 +10,7 @@
 
 <fieldset class="form-group">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.type') }} {{ trans('dokumentTypenForm.add') }}</h4>
+        <h4 class="title">{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.type') }} {{ strtolower(trans('dokumentTypenForm.add') ) }}</h4>
         
         {!! Form::open(['route' => 'dokument-typen.store']) !!}
         

@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'profileTitle' => 'Profil bearbeiten',
     'baseInfo' => 'Basis Informationen',
     'title' => 'Anrede',
     'username' => 'Benutzername',

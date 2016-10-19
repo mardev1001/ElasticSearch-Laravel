@@ -32,7 +32,7 @@
             </li>
                 
            <li class="">
-                <a href="#">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
+                <a href="{{ url('dokumente') }}">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     
                     
@@ -157,13 +157,13 @@
             @if( ViewHelper::universalHasPermission( array(15,16) ) == true 
                 || ViewHelper::getMandantWikiPermission() ) 
                 <li class="">
-                    <a href="#">{{ ucfirst(trans('navigation.wiki')) }}
+                    <a href="{{ url('wiki') }}">{{ ucfirst(trans('navigation.wiki')) }}
                         <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
     
-                        <li>
-                            <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>
-                        </li>
+                        <!--<li>-->
+                        <!--    <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>-->
+                        <!--</li>-->
                         
                         @if( ViewHelper::canViewWikiManagmentAdmin() == true )
                             <li>
@@ -190,14 +190,20 @@
                 </li><!-- End menu item -->
             @endif
             
-            @if( ViewHelper::universalHasPermission( array(6,19,20) ) == true ) 
+            @if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == true ) 
                 <li class="">
-                    <a href="#">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
+                    <a href="{{ url('mandantenverwaltung') }}">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                         <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         @if( ViewHelper::universalHasPermission( array(6,19,20) ) == true ) 
                             <li>
                                 <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
+                            </li>
+                        @endif
+                        
+                        @if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == true ) 
+                            <li>
+                                <a href="{{ url('mandanten/export') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.export') }}</a>
                             </li>
                         @endif
                         
@@ -224,13 +230,13 @@
             
             @if( ViewHelper::universalHasPermission( array() ) == true )
                 <li class="">
-                    <a href="#">
+                    <a href="{{ url('neptun-verwaltung') }}">
                         NEPTUN {{ ucfirst( trans('navigation.verwaltung') )}}
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="{{ url('adressaten') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
+                            <a href="{{ url('empfangerkreis') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
                         </li>
                         <li>
                             <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }} {{ ucfirst( trans('navigation.types') ) }}</a>

@@ -19,7 +19,7 @@ class DummyDocumentStatusSeeder extends Seeder
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
                 [
-                    'name' => 'Freigegeben, nicht veröffentlich',
+                    'name' => 'Freigegeben, nicht veröffentlicht',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ],

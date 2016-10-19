@@ -111,13 +111,38 @@ $(function() {
         
         
     mandantHauptstelleCheckbox.change(function(e){
-        console.log(mandantHauptstelleSelect.prop('required'));
+        // console.log(mandantHauptstelleSelect.prop('required'));
         if(mandantHauptstelleCheckbox.prop('checked') == true){
             $('select[name="mandant_id_hauptstelle"]').prop('required', false);
             mandantHauptstelleSelect.hide(400);
         } else {
             $('select[name="mandant_id_hauptstelle"]').prop('required', true);
             mandantHauptstelleSelect.show(400);
+        }
+    });
+    
+    // Hide or show advanced search options if checkbox is checked
+    
+    var advSearchCheckbox = $('input[type="checkbox"]#adv-search');
+    var advSearchContainer = $('.advanced-search');
+
+    if(advSearchCheckbox.prop('checked') == false) {
+        $('input.adv-parameter').prop('disabled', false);
+        advSearchContainer.hide(400);
+    } else {
+        $('input.adv-parameter').prop('disabled', true)
+        advSearchContainer.show(400);
+    }
+        
+        
+    advSearchCheckbox.change(function(e){
+        // console.log(mandantHauptstelleSelect.prop('required'));
+        if(advSearchCheckbox.prop('checked') == false){
+            $('input.adv-parameter').prop('disabled', false);
+            advSearchContainer.hide(400);
+        } else {
+            $('input.adv-parameter').prop('disabled', true);
+            advSearchContainer.show(400);
         }
     });
     
@@ -215,7 +240,7 @@ $(function() {
     
     if($(".document-type-select .select").val() == 4){
         $('.iso-category-select').show(400);
-        console.log('trigger');
+        // console.log('trigger');
         $('#landscape').closest('.checkbox').addClass('no-margin-top');
     }
     else{

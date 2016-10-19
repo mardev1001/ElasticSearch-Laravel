@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    ISO Dokumente  
+    {{ ucfirst( trans('controller.dokumente')) }} - ISO Dokumente  
     @if($isoCategoryParent)- {{$isoCategoryParent->name}}@endif
     @if($isoCategory)- {{$isoCategory->name}}@endif
 @stop

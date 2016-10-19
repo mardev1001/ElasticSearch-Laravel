@@ -89,7 +89,7 @@
     @endif
     
     @if( ViewHelper::universalHasPermission( array(10,11,12,13) ) == false  ) 
-        <div class="clearfix"></div>
+        <!--<div class="clearfix"></div>-->
     @endif
     <!--<div class="clearfix"></div><br>-->
     

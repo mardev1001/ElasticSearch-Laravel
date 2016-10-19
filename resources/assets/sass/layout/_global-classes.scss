@@ -640,12 +640,16 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     font-size: 12px !important;
     font-weight: normal !important;
     line-height: 12px !important;
+    padding-left: 60px;
+    padding-right: 48px;
 }
 
 .item-text{
     font-size: 14px !important;
     line-height: 24px !important;
     // font-weight: bold;
+    padding-left: 60px;
+    padding-right: 48px;
 }
 
 #page-wrapper .treeview span.item-text.btn-block {
@@ -838,6 +842,25 @@ span.highlight{
 
 .list-style-dash {
     list-style-image: url('/img/icons/icon_list_dash.png') !important;
+}
+
+span.node-icon.icon-1{
+    position: absolute;
+    top: -5px; 
+}
+
+span.node-icon.icon-2:not(.icon-download){
+    position: absolute;
+    // bottom: -5px;
+    top: 25px;
+}
+
+a > .link-after-text:first-of-type{
+    padding-left: 34px;
+}
+
+.advanced-search{
+    display: none;
 }
 
 /*A4 paper simulation*/¸

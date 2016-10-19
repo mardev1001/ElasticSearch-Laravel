@@ -173,7 +173,7 @@
                 </div><!-- end .col-sm-8 .col-md-9 .col-lg-10 -->
                 
 
-                <div class="col-sm-4 col-md-3 col-lg-2 btns">
+                <div class="col-sm-4 col-md-3 col-lg-2 btns scrollable-document">
                     @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
                         @if( $document->document_status_id  != 5 )
                             <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
@@ -231,7 +231,7 @@
                         
                     @endif
                     
-                    @if( $document->document_status_id  != 5 )
+                    @if( $document->document_status_id  != 5 && $document->document_status_id != 1 )
                         @if(count(Request::segments() ) == 2 && is_numeric(Request::segment(2) ) )
                             @if( $authorised == false && $canPublish ==false && $published == false)
                                  @if( $document->documentType->document_art == 1) 

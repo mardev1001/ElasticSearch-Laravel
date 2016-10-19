@@ -157,7 +157,7 @@
                 </div>  
             </div>  
    
-            <div class="col-sm-4 col-md-3 col-lg-2 btns">
+            <div class="col-sm-4 col-md-3 col-lg-2 btns scrollable-document">
                 <!--<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>-->
              
                 @if( $authorised == false && $canPublish == false )

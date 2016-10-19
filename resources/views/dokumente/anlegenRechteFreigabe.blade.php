@@ -90,7 +90,7 @@
                                     <div class="form-group">
                                         <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
                                         <select name="variante-{{$k+1}}[]" class="form-control select freigabe-mandant" 
-                                         data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}" 
+                                         data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}"  
                                          @if( count($variants) > 1)
                                             required
                                         @endif multiple>
@@ -136,7 +136,8 @@
                                     <!--<span class="fa fa-chevron-left"></span> -->
                                     Zurück</a>
                             @endif
-                            @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8)
+                            @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8
+                            || (ViewHelper::universalDocumentPermission($data, false,false, true) == true && $data->document_status_id ==2 ) )
                                 <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
                                     <!--<span class="fa fa-exclamation-triangle"></span>  -->
                                     {{ trans('rightsRelease.fastPublish') }}

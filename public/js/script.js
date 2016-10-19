@@ -103512,6 +103512,7 @@ if("function"!=typeof a)throw new TypeError("parseInputDate() sholud be as funct
 		for ( i=0 ; i<nestedSort.length ; i++ )
 		{
 			srcCol = nestedSort[i][0];
+			if( typeof aoColumns[ srcCol ] != 'undefined'){
 			aDataSort = aoColumns[ srcCol ].aDataSort;
 	
 			for ( k=0, kLen=aDataSort.length ; k<kLen ; k++ )
@@ -103531,7 +103532,9 @@ if("function"!=typeof a)throw new TypeError("parseInputDate() sholud be as funct
 					type:      sType,
 					formatter: DataTable.ext.type.order[ sType+"-pre" ]
 				} );
+			}	
 			}
+			
 		}
 	
 		return aSort;
@@ -114662,13 +114665,38 @@ $(function() {
         
         
     mandantHauptstelleCheckbox.change(function(e){
-        console.log(mandantHauptstelleSelect.prop('required'));
+        // console.log(mandantHauptstelleSelect.prop('required'));
         if(mandantHauptstelleCheckbox.prop('checked') == true){
             $('select[name="mandant_id_hauptstelle"]').prop('required', false);
             mandantHauptstelleSelect.hide(400);
         } else {
             $('select[name="mandant_id_hauptstelle"]').prop('required', true);
             mandantHauptstelleSelect.show(400);
+        }
+    });
+    
+    // Hide or show advanced search options if checkbox is checked
+    
+    var advSearchCheckbox = $('input[type="checkbox"]#adv-search');
+    var advSearchContainer = $('.advanced-search');
+
+    if(advSearchCheckbox.prop('checked') == false) {
+        $('input.adv-parameter').prop('disabled', false);
+        advSearchContainer.hide(400);
+    } else {
+        $('input.adv-parameter').prop('disabled', true)
+        advSearchContainer.show(400);
+    }
+        
+        
+    advSearchCheckbox.change(function(e){
+        // console.log(mandantHauptstelleSelect.prop('required'));
+        if(advSearchCheckbox.prop('checked') == false){
+            $('input.adv-parameter').prop('disabled', false);
+            advSearchContainer.hide(400);
+        } else {
+            $('input.adv-parameter').prop('disabled', true);
+            advSearchContainer.show(400);
         }
     });
     
@@ -114766,7 +114794,7 @@ $(function() {
     
     if($(".document-type-select .select").val() == 4){
         $('.iso-category-select').show(400);
-        console.log('trigger');
+        // console.log('trigger');
         $('#landscape').closest('.checkbox').addClass('no-margin-top');
     }
     else{
@@ -115710,7 +115738,10 @@ $(function () {
         $('a[href$="/wiki"]').addClass('active').closest('ul').addClass('in');
     }
     else if (url.href.indexOf('suche/erweitert') != -1) {
-        $('a[href*="suche"]').addClass('active').closest('ul').addClass('in');
+        $('a[href*="suche"]').addClass('active').next('ul').addClass('in');
+    }
+    else if (url.href.indexOf('suche') != -1) {
+        $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
     }
     else if (typeof documentType !== 'undefined' && documentType.length) {
         var detectHref = '';
@@ -115776,10 +115807,18 @@ $(function () {
     activeLinkSubnavs.each(function(){
        $(this).parent('li').addClass('active');
     });
-    activeLink.closest('li').children('ul').addClass('in');
+    activeLink.closest('li').next('ul').addClass('in');
+    // activeLink.closest('li').children('ul').addClass('in');
     
     /*End Exapand active class*/
 
+    /* If clicked on arrow expand DD*/
+    $('a[href="#"]:contains("fa arrow")').on('click touch',function(){
+        $(this).parent('li').addClass('in').children('ul').addClass('in');
+    });
+    /*End If clicked on arrow expand DD*/
+    
+    
     /* Page content sidebar treeview */
 
         var elementNew = $('content-nav ul.nav a').filter(function () {
@@ -116872,7 +116911,7 @@ $(function () {
 			// Add node icon
 			if (_this.options.showIcon) {
 				
-				var classList = ['node-icon'];
+				var classList = ['node-icon', 'icon-1'];
 
 				classList.push(node.icon || _this.options.nodeIcon);
 				if (node.state.selected) {
@@ -116882,20 +116921,20 @@ $(function () {
 				}
 					
 				// console.log(node.icon);
-				if(node.icon != undefined){
-					if(node.icon != ''){
+				// if(node.icon != undefined){
+					// if(node.icon != ''){
 						treeItem
 							.append($(_this.template.icon)
 								.addClass(classList.join(' '))
 							);
-					}
-				}
+					// }
+				// }
 			}
 			
 			// Add node icon 2
 			if (_this.options.showIcon) {
 				
-				var classList = ['node-icon'];
+				var classList = ['node-icon', 'icon-2'];
 
 				classList.push(node.icon2 || _this.options.nodeIcon2);
 				if (node.state.selected) {
@@ -116906,14 +116945,14 @@ $(function () {
 				
 				// console.log(node.icon2);
 				
-				if(node.icon2 != undefined){
-					if(node.icon2 != ''){
+				// if(node.icon2 != undefined){
+					// if(node.icon2 != ''){
 						treeItem
 							.append($(_this.template.icon)
 								.addClass(classList.join(' '))
 							);
-					}
-				}
+					// }
+				// }
 				
 			}
 

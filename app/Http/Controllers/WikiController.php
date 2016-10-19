@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Carbon\Carbon;
 use App\Http\Requests;
+use App\Helpers\ViewHelper;
 use App\Http\Requests\DocumentRequest;
 use App\Http\Repositories\SearchRepository;
 use App\Http\Repositories\DocumentRepository;
@@ -39,6 +40,9 @@ class WikiController extends Controller
      */
     public function index()
     {
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
         $topCategories = WikiCategory::where('top_category',1)->get();
         
         $newestWikiEntriesPagination = WikiPage::where('status_id',2)->orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
@@ -57,6 +61,9 @@ class WikiController extends Controller
      */
     public function create()
     {
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
         $wikiStatuses = WikiPageStatus::all();
         $wikiRoles = WikiRole::all();
         $wikiCategories = WikiCategory::all();
@@ -94,6 +101,9 @@ class WikiController extends Controller
      */
     public function show($id)
     {
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
         $data = WikiPage::find($id);
         
         return view('wiki.show', compact('data') );
@@ -107,6 +117,9 @@ class WikiController extends Controller
      */
     public function edit($id)
     {
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
         $data = WikiPage::find($id);
         $wikiStatuses = WikiPageStatus::all();
         $wikiRoles = WikiRole::all();
@@ -192,6 +205,9 @@ class WikiController extends Controller
      */
     public function managmentAdmin()
     {  
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
         $data = array();
         $wikies = WikiPage::orderBy('created_at','desc')->get();
         $statuses = WikiPageStatus::all();
@@ -211,6 +227,9 @@ class WikiController extends Controller
      */
     public function managmentUser()
     {  
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
         $data = array();
         $wikies = WikiPage::orderBy('created_at','desc')->get();
         $statuses = WikiPageStatus::all();

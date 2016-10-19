@@ -33,16 +33,27 @@
                                                </strong><br/>
                                             @endif
                                         @if( $comment->document->published != null )
-                                            <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}"> <strong>{{ $comment->betreff }}</strong> -&nbsp </a>
+                                            <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}"> <strong>
+                                                @if( isset($comment->betreff) && !empty($comment->betreff) )
+                                                    {{ $comment->betreff }}
+                                                @endif
+                                                </strong> -&nbsp </a>
                                         @else
-                                            <a href="{{url('/dokumente/'. $comment->document->id)}}"> <strong>{{ $comment->betreff }}</strong> -&nbsp </a>
+                                            <a href="{{url('/dokumente/'. $comment->document->id)}}"> <strong>
+                                             @if( isset($comment->betreff) && !empty($comment->betreff) )
+                                                {{ $comment->betreff }}
+                                            @endif
+                                            </strong> -&nbsp </a>
                                         @endif
-                                       
-                                        {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }}, {{ $comment->created_at }}
+                                        @if( isset($comment->user) && !empty($comment->user) )
+                                            {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }}, {{ $comment->created_at }}
+                                        @endif
                                         </span> <br>
                                         
                                         <span class="comment-body">
-                                            {!! str_limit( str_replace(["\r\n", "\r", "\n"], "<br/>", $comment->comment) , $limit = 200, $end = ' ...') !!}
+                                            @if( isset($comment->comment) && !empty($comment->comment) )
+                                                {!! str_limit( str_replace(["\r\n", "\r", "\n"], "<br/>", $comment->comment) , $limit = 200, $end = ' ...') !!}
+                                            @endif
                                         </span> 
                                         
                                     </div><!-- end delete box -->

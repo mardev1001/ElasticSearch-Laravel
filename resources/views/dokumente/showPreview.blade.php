@@ -133,7 +133,7 @@
                
             </div>
 
-            <div class="col-sm-4 col-md-3 col-lg-2 btns">
+            <div class="col-sm-4 col-md-3 col-lg-2 btns scrollable-document">
                 @if(isset($variants[0] ) ) 
                     <a href="/dokumente/ansicht-pdf/{{$document->id}}/{{$variants[0]->variant_number}}" class="btn btn-primary pull-right">Druckvorschau</a>
                 @endif

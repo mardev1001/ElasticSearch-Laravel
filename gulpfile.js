@@ -41,7 +41,7 @@ elixir(function(mix) {
         .styles(cmsScripts, 'public/js/script.js', bower)
         .version(['public/js/script.js','public/css/style.css'])
         .copy(bower + 'bootstrap/fonts/', 'public/build/fonts/')
-        .copy(bower + 'font-awesome/fonts/', 'public/build/fonts/')
+        .copy(bower + 'font-awesome/fonts', 'public/build/fonts/')
         .copy(bower + 'jquery-ui/themes/base/images/', 'public/img/jquery-ui')
         .copy(bower + 'chosen/chosen-sprite.png', 'public/build/css/')
         .copy(bower + 'chosen/chosen-sprite@2x.png', 'public/build/css/')

@@ -151,6 +151,16 @@ class HomeController extends Controller
     }
 
     /**
+     * Display the documents for the specified source
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function neptunManagment()
+    {
+        return view('simple-pages.neptunManagment');
+    }
+
+    /**
      * Contact form
      * @param string $partOne
      * @param string $partTwo

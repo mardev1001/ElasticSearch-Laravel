@@ -18,20 +18,21 @@
                     <!-- input box-->
                     <div class="col-md-6 col-lg-6"> 
                         <div class="form-group no-margin-bottom">
-                            {!! ViewHelper::setInput('search', $searchParameter, $searchParameter,'', 
-                                   trans('mandantenForm.search')   ) !!}
+                            {!! ViewHelper::setInput('search', $searchParameter, $searchParameter, '', trans('mandantenForm.searchUsers')   ) !!}
                         </div>   
                     </div><!--End input box-->
                     <!-- input box-->
       
+                    {{--
                     <div class="col-md-6 col-lg-6"> 
                         <div class="form-group label-form-group  no-margin-bottom">
                                 {!! ViewHelper::setCheckbox('deleted_users', $deletedUsers, $deletedUsers, trans('mandantenForm.showDeletedUsers') ) !!}
                                 {!! ViewHelper::setCheckbox('deleted_mandants', $deletedMandants, $deletedMandants, trans('mandantenForm.showDeletedClients') ) !!}
                         </div>   
                     </div><!--End input box-->
+                    --}}
                     
-                        <div class="clearfix"></div>
+                    <div class="clearfix"></div>
                     
                     <!-- button div-->    
                     <div class="col-xs-12">
@@ -62,8 +63,8 @@
                 <div class="panel panel-primary" id="panelMandant{{$mandant->id}}">
                     
                     <div class="panel-heading">
-                        <h4 class="panel-title col-xs-12">
-                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed" 
+                        <h4 class="panel-title col-xs-12 transform-normal">
+                                <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed transform-normal" 
                                    href="#collapseMandant{{$mandant->id}}">
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
                                 </a>
@@ -71,7 +72,7 @@
                         </h4>
                         
                         <span class="panel-options col-xs-12">
-                             <span class="panel-title">
+                             <span class="panel-title transform-normal">
                                   {!! ViewHelper::showUserCount($mandant->usersActive, $mandant->usersInactive) !!}
                              </span>
                         </span>
@@ -212,13 +213,13 @@
                 
             <div class="panel panel-primary" id="noMandant">
                 <div class="panel-heading">
-                     <h4 class="panel-title col-xs-12">
+                     <h4 class="panel-title col-xs-12 transform-normal">
                          <a data-toggle="collapse" data-target="#collapseNoMandant" class="collapsed" href="#collapseNoMandant">
                             Kein Mandant
                          </a>
                      </h4>
                       <span class="panel-options col-xs-12">
-                            <span class="panel-title">
+                            <span class="panel-title transform-normal">
                                 {!! ViewHelper::showUserCount($unassignedActiveUsers, $unassignedInactiveUsers) !!}
                             </span>
                        </span>             

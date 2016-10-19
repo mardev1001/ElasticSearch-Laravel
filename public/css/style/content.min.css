@@ -3,8 +3,10 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
     color: black !important;
     font-weight: bold;
 }
-body{
+.mce-content-body body,.mce-content-body b,.mce-content-body strong,.mce-content-body p,.mce-content-body div, .mce-content-bodyspan,
+.mce-content-body i,.mce-content-body  table{
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+    line-height: 16px;
 }
 /*body.mce-content-body {*/
 /*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/

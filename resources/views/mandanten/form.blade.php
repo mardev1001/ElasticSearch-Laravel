@@ -1,4 +1,5 @@
 @section('page-title')
+    Mandantenverwaltung - 
     @if( Request::is('*/edit') )
         Mandanten bearbeiten - ({{$data->mandant_number}}) {{$data->kurzname}}
     @else

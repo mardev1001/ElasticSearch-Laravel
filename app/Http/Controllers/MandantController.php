@@ -587,6 +587,45 @@ class MandantController extends Controller
         
     }
     
+    /**
+     * Mandant Export view
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function xlsExport(){
+        
+        if( ViewHelper::universalHasPermission( array(6, 18, 19, 20) ) == false )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
+        // $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+        // if(ViewHelper::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1)
+        //     $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
+        // else {
+        //     $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        // }
+        // if(!$mandants->contains($myMandant))
+        //     $mandants->prepend($myMandant);
+            
+        // $mandants = array_values(array_sort($mandants, function ($value) {
+        //     return $value['mandant_number'];
+        // }));
+        
+        $mandants = Mandant::orderBy('mandant_number')->get();
+        
+        return view('mandanten.export', compact('mandants'));
+    }
+    
+     /**
+     * Display the documents for the specified source
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function clientManagment()
+    {
+        return view('simple-pages.clientManagment');
+    }
+    
 
     private function fileUpload($model, $path, $files)
     {

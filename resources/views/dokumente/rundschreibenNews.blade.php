@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    News - Übersicht
+   {{ ucfirst( trans('controller.dokumente')) }} - News 
 @stop
 
 

@@ -224,7 +224,9 @@ class DocumentRepository
                             if(isset($docPublished)) $docStatus = $docPublished->document->document_status_id == 3;
                             
                             if($key != 0 && $docStatus && isset($docPublished->url_unique)) {
-                                $links .= trim('<a href="/dokumente/'. $docPublished->url_unique . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                                if($this->universalDocumentPermission($docPublished->document)){
+                                    $links .= trim('<a href="/dokumente/'. $docPublished->url_unique . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                                }
                             }
                         }
                         $node->afterLink = $links;
@@ -312,9 +314,18 @@ class DocumentRepository
                 if (in_array($document->document_status_id, [2,6])) {
                     if($options['pageHome'] == true) {
                         $node->beforeText = '';
+                        $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';
                         $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y');
                         if(isset($document->owner))
                             $node->beforeText .= ' - '.$document->owner->first_name.' '.$document->owner->last_name;
+                    }
+                    
+                    if($this->canViewHistory()){
+                        if ($options['showHistory'] == true) {
+                            if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1){
+                                $node->hrefHistory = url('dokumente/historie/' . $document->id);
+                            }
+                        }
                     }
                     
                     if($document->document_status_id == 2)

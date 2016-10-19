@@ -1,4 +1,6 @@
-@section('page-title') {{ trans('controller.wiki') }} @stop
+@section('page-title') {{ trans('controller.wiki') }} 
+@if( Request::is('*/edit') ) {{ trans('benutzerForm.edit') }} @else anlegen @endif 
+@stop
 
 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
 

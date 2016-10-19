@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-Benutzer bearbeiten
+{{ trans('benutzerForm.profileTitle') }}
 @stop
 
 @section('content')

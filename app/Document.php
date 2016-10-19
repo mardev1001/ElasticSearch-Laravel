@@ -169,9 +169,12 @@ class Document extends Model
         return $this->hasManyThrough('App\DocumentMandant','App\EditorVariant') ;
     }
     
-    
     public function documentMandantMandants(){
         return $this->hasManyThrough('App\DocumentMandantMandant','App\DocumentMandant','App\EditorVariant') ;
+    }
+    
+    public function documentMandantRoles(){
+        return $this->hasManyThrough('App\DocumentMandantRole','App\DocumentMandant','App\EditorVariant') ;
     }
     
     public function documentCoauthors(){

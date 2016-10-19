@@ -62,7 +62,10 @@ $(function () {
         $('a[href$="/wiki"]').addClass('active').closest('ul').addClass('in');
     }
     else if (url.href.indexOf('suche/erweitert') != -1) {
-        $('a[href*="suche"]').addClass('active').closest('ul').addClass('in');
+        $('a[href*="suche"]').addClass('active').next('ul').addClass('in');
+    }
+    else if (url.href.indexOf('suche') != -1) {
+        $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
     }
     else if (typeof documentType !== 'undefined' && documentType.length) {
         var detectHref = '';
@@ -128,10 +131,18 @@ $(function () {
     activeLinkSubnavs.each(function(){
        $(this).parent('li').addClass('active');
     });
-    activeLink.closest('li').children('ul').addClass('in');
+    activeLink.closest('li').next('ul').addClass('in');
+    // activeLink.closest('li').children('ul').addClass('in');
     
     /*End Exapand active class*/
 
+    /* If clicked on arrow expand DD*/
+    $('a[href="#"]:contains("fa arrow")').on('click touch',function(){
+        $(this).parent('li').addClass('in').children('ul').addClass('in');
+    });
+    /*End If clicked on arrow expand DD*/
+    
+    
     /* Page content sidebar treeview */
 
         var elementNew = $('content-nav ul.nav a').filter(function () {

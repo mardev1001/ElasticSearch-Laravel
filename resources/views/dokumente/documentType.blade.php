@@ -3,7 +3,7 @@
 @extends('master')
 @section('page-title')
     @if(count($documentType))
-        {{ $documentType->name }} - Übersicht
+        {{ ucfirst( trans('controller.dokumente')) }} - {{ $documentType->name }} 
     @else
         Dokument Typen
     @endif

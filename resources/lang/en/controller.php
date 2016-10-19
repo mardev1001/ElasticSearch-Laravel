@@ -4,12 +4,12 @@ return [
 
     'history' => 'Historie',
     'overview' => 'Übersicht',
-    'dokumente' => 'dokumente',
-    'mandanten' => 'mandanten',
+    'dokumente' => 'Dokumente',
+    'mandanten' => 'Mandanten',
     'administration' => 'Mandantenverwaltung',
     'benutzer'  => 'Benutzer',
     'adressaten' => 'Adressaten',
-    'favorites' => 'Meine Favoriten',
+    'favorites' => 'Favoriten',//Meine Favoriten
     'mandantenverwaltung' => 'Mandantenverwaltung',
     'qmr' => 'Rundschreiben QMR',
     'attachment' => 'Dokument anlegen - Anlage/n',

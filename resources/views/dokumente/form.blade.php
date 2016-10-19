@@ -57,8 +57,8 @@
             <!-- input box-->
             <div class="col-md-12 col-lg-12 "> 
                 <div class="form-group">
-                    {!! ViewHelper::setArea('name_long',$data,old('name_long'),trans('documentForm.documentNameLong'),
-                    trans('documentForm.documentNameLong'), false, array(), array(), false, true ) !!}
+                    {!! ViewHelper::setArea('name_long',$data,old('name_long'),trans('documentForm.subject'),
+                    trans('documentForm.subject'), false, array(), array(), false, true ) !!}
                     
                 </div>   
             </div><!--End input box-->

@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    Rundschreiben - Übersicht
+  {{ ucfirst( trans('controller.dokumente')) }} -  Rundschreiben
 @stop
 
 

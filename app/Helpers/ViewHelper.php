@@ -477,6 +477,8 @@ class ViewHelper
                
         }
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
+        // dd( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1 );
+        
         if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) 
         || ( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1 )
             $hasPermission = true;
@@ -488,7 +490,6 @@ class ViewHelper
         //    dd($hasPermission);
         return $hasPermission;
     }
-    
     
     /**
      * Document variant permission
@@ -517,34 +518,44 @@ class ViewHelper
         foreach($variants as $variant){
             //  dd($variant);
             if($hasPermission == false){//check if hasPermission is already set
+            
                 if($variant->approval_all_mandants == true){//database check
-               
+            //   dd($variant);
                     // dd($document);
                     if($document->approval_all_roles == true){//database check
-                   
-                            $hasPermission = true;
-                            $variant->hasPermission = true;
-                            $object->permissionExists = true;
-                        }
-                        else{
-                            foreach($variant->documentMandantRoles as $role){// if not from database then iterate trough roles
+                        $hasPermission = true;
+                        $variant->hasPermission = true;
+                        $object->permissionExists = true;
+                    }
+                    else{
+                        foreach($variant->documentMandantRoles as $role){// if not from database then iterate trough roles
+                            if( self::universalDocumentPermission($document,false) == true){
+                                $hasPermission = true;
+                                $variant->hasPermission = true;
+                                $object->permissionExists = true;
+                            }
+                            else{
                                 if( in_array($role->role_id, $mandantRolesArr) ){//check if it exists in mandatRoleArr
-                                 $variant->hasPermission = true;
-                                 $hasPermission = true;
-                                 $object->permissionExists = true;
-                                }
-                            }//end foreach documentMandantRoles
-                        }
+                                    $variant->hasPermission = true;
+                                    $hasPermission = true;
+                                    $object->permissionExists = true;
+                                }    
+                            }
+                            // dd($hasPermission);
+                        }//end foreach documentMandantRoles
+                    }
                 }
                 else{
                     foreach( $variant->documentMandantMandants as $mandant){
-                        if( self::universalDocumentPermission($document,false) == true){
+                        
+                        if( self::universalDocumentPermission($document,false,false, true) == true){
                             $hasPermission = true;
                             $variant->hasPermission = true;
                             $object->permissionExists = true;
+                            // dd('test');
                         }
                         else if( in_array($mandant->mandant_id,$mandantIdArr) ){
-
+                            // dd($variant->documentMandantMandants);
                             if($document->approval_all_roles == true){
                                 $hasPermission = true;
                                 $variant->hasPermission = true;

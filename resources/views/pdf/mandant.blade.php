@@ -95,10 +95,13 @@
 
         .col-1 {
             width: 30%;
+            vertical-align: top;
+            font-weight: 700 !important;
         }
 
         .col-2 {
             width: 70%;
+            vertical-align: top;
         }
 
         div.page-break {

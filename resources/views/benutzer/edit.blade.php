@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-Benutzer bearbeiten
+Mandantenverwaltung - Benutzer bearbeiten
 @stop
 
 @section('content')

@@ -69,7 +69,7 @@
                                    href="#collapseMandant{{$mandant->id}}">
                                   ({{$mandant->mandant_number}}) {{$mandant->kurzname}}
                                   @if($mandant->hauptstelle) [Hauptstelle] 
-                                  @else [Filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}@if( strtolower(ViewHelper::getHauptstelle($mandant)->name) == "neptun") - NEPTUN] @else ] @endif @endif
+                                  @else [Filiale - {{ViewHelper::getHauptstelle($mandant)->mandant_number}}@if( strtolower(ViewHelper::getHauptstelle($mandant)->name) == "neptun") - NEPTUN] @else] @endif @endif
                                   @if($mandant->edited_by) 
                                   <span class="editing text-danger">[In Bearbeitung: 
                                   {{ ViewHelper::getUser($mandant->edited_by)->title}} 
@@ -120,7 +120,7 @@
                             
                             
                             
-                            <table class="table data-table">
+                            <table class="table @if( count($mandant->mandantUsers) > 1) data-table @endif ">
                             <thead>
                                 <th>Name</th>
                                 <th class="col-md-8 no-sort">Rollen</th>
@@ -133,7 +133,9 @@
                                     
                                     @foreach( $mandant->mandantUsers as $mandantUser )
                                         <tr>
-                                            <td class="valign">{{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
+                                            <td class="valign @if( empty($mandantUser->user->first_name) ) || empty($mandantUser->user->first_name) ) no-sort @endif">
+                                                {{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} 
+                                                </td>
                                             <td class="col-md-8 valign">
                                                 
                                                 @foreach( $roles as $role)
@@ -150,21 +152,26 @@
                                                 {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                                    @if($mandantUser->user->active)
-                                                        <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
-                                                    @else
-                                                        <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
+                                                    
+                                                    @if($mandantUser->user->id != 1)
+                                                        @if($mandantUser->user->active)
+                                                            <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
+                                                        @else
+                                                            <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
+                                                        @endif
                                                     @endif
                                                 {!! Form::close() !!}
                                                 
-                                                {{-- Form::open(['route'=>['benutzer.destroy', 'id'=> $mandantUser->user->id], 'method'=>'DELETE']) --}}
-                                                {!! Form::open(['action' => 'MandantController@destroyMandantUser', 'method'=>'POST']) !!}
-                                                    <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
-                                                    <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                                    <button type="submit" class="btn btn-xs btn-warning delete-prompt"
-                                                    data-text="Wollen Sie diesen Benutzer wirklich löschen?"
-                                                    >Entfernen</button><br>
-                                                {!! Form::close() !!}
+                                                @if($mandantUser->user->id != 1)
+                                                    {{-- Form::open(['route'=>['benutzer.destroy', 'id'=> $mandantUser->user->id], 'method'=>'DELETE']) --}}
+                                                    {!! Form::open(['action' => 'MandantController@destroyMandantUser', 'method'=>'POST']) !!}
+                                                        <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
+                                                        <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
+                                                        <button type="submit" class="btn btn-xs btn-warning delete-prompt"
+                                                        data-text="Wollen Sie diesen Benutzer wirklich löschen?"
+                                                        >Entfernen</button><br>
+                                                    {!! Form::close() !!}
+                                                @endif
                                                 
                                                 <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
                                             </td>
@@ -175,9 +182,9 @@
                                     
                                 @else
                                     <tr>
-                                        <td colspan="4"> Keine Daten vorhanden. </td>
+                                        <td> Keine Daten vorhanden. </td>
                                         <!--fix for Cannot set property '_DT_CellIndex' of undefined-->
-                                        <td></td><td></td><td></td>
+                                        <td></td> <td></td> <td></td>
                                         <!-- end fix -->
                                     </tr>
                                 @endif
@@ -255,9 +262,9 @@
                     <div class="panel-body">
                         
                             @if(count($unassignedUsers) > 0)
-                                    <table class="table data-table">
+                                    <table class="table @if(count($unassignedUsers) > 1 ) data-table @endif">
                                     <thead>
-                                        <th class="col-md-10">Name</th>
+                                        <th class="col-md-10 no-sort">Name</th>
                                         <th class="col-md-2 text-center no-sort">Optionen</th>
                                     </thead>
                                     <tbody>
@@ -266,7 +273,7 @@
                                              {{-- @if( $mandantUser->deleted_at == null ) --}}
                                                 <tr>
                                                     <td class="valign">{{ $unassignedUser->first_name ." ". $unassignedUser->last_name }} </td>
-                                                    <td class="valign table-options text-center">
+                                                    <td class="valign table-options text-center no-sort">
                                                         {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                             <input type="hidden" name="user_id" value="{{ $unassignedUser->id }}">
                                                             
@@ -282,6 +289,8 @@
                                                         {!! Form::close() !!}
                                                         <a href="{{route('benutzer.edit', ['id'=> $unassignedUser->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
                                                     </td>
+                                                    
+                                                    
                                                 </tr>
                                             {{-- @endif --}}
                                         @endforeach

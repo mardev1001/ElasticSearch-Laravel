@@ -8,7 +8,8 @@ return [
     'mandant'               => 'mandant',
     'mandanten'             => 'mandanten',
     'adressat'              => 'Adressat',
-    'adressate'             => 'Adressate',
+    // 'adressate'             => 'Adressate',
+    'adressate'             => 'Empfängerkreis',
     'mandantenverwaltung'   => 'Mandantenverwaltung',
     'benutzerverwaltung'    => 'Benutzerverwaltung',
     'benutzer'              => 'benutzer',
@@ -39,5 +40,7 @@ return [
     'search_placeholder'    => 'Betreff, Titel',
     'newsSearchPlaceholder' => 'Titel, Stichwörter',
     'wikiSearchPlaceholder' => 'Titel, Inhalt',
+    'export'                => 'Export',
+    
 
 ];

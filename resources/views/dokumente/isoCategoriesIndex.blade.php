@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    ISO Dokumente - Übersicht
+    {{ ucfirst( trans('controller.dokumente')) }} - ISO Dokumente 
 @stop
 
 

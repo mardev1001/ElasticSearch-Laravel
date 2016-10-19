@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-     {{ trans('controller.history') }} - {{$document->name}}
+     {{ trans('controller.dokumente') }} {{ trans('controller.history') }}
 @stop
 
 @section('content')

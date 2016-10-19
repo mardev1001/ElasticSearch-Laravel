@@ -16,6 +16,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('/kontakt', 'HomeController@contact');
         Route::post('/kontakt', 'HomeController@contactSend');
         Route::get('tipps-und-tricks', 'HomeController@tipsAndTricks');
+        Route::get('tipps-und-tricks', 'HomeController@tipsAndTricks');
+        Route::get('neptun-verwaltung', 'HomeController@neptunManagment');
         
         Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
         Route::get('/open/{path_part_one}/{path_part_two}', 'HomeController@open');
@@ -67,6 +69,9 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('mandanten/search', 'MandantController@search');
         Route::post('mandanten/search-single', 'MandantController@searchSingle');
         Route::patch('mandanten/activate', 'MandantController@mandantActivate');
+        Route::get('mandantenverwaltung', 'MandantController@clientManagment');
+        Route::get('mandanten/export', 'MandantController@xlsExport');
+        Route::post('mandanten/export/xls', 'TelephoneListController@xlsExport');
         Route::resource('mandanten', 'MandantController');
         
         Route::get('benutzer/profil', 'UserController@profile');
@@ -83,13 +88,13 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('benutzer', 'UserController');
         Route::resource('iso-kategorien', 'IsoCategoryController');
         Route::resource('rollen', 'RoleController');
+        Route::resource('empfangerkreis ', 'AdressatController');
         Route::resource('adressaten', 'AdressatController');
         Route::resource('dokument-typen', 'DocumentTypeController');
         Route::resource('favoriten', 'FavoritesController');
         // Route::resource('historie', 'HistoryController');
         // Route::resource('statistik', 'StatsController');
         Route::get('telefonliste/{id}/pdf', 'TelephoneListController@pdfExport');
-        Route::post('telefonliste/xls', 'TelephoneListController@xlsExport');
         Route::post('telefonliste/display-options', 'TelephoneListController@displayOptions');
         Route::resource('telefonliste', 'TelephoneListController');
         Route::resource('einstellungen', 'SettingsController');

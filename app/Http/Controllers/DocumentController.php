@@ -67,7 +67,9 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        //
+        $documentTypes = DocumentType::all() ;
+        $isoCategories = IsoCategory::where('active', 1)->get();
+        return view('dokumente.documentIndex', compact('documentTypes','isoCategories') );
     }
 
      /**
@@ -789,8 +791,7 @@ class DocumentController extends Controller
             
         }
         $document = Document::find($id);
-        if($request->get('roles')!= null && in_array('Alle',$request->get('roles') ) ){
-                   
+        if($request->get('roles')!= null &&  count( $request->get('roles') ) == 1 && in_array('Alle',$request->get('roles') ) ){
             $document->approval_all_roles = 1; 
             $document->email_approval = $request->get('email_approval');
             $dirty=$this->dirty(false,$document);
@@ -801,6 +802,13 @@ class DocumentController extends Controller
              $document->approval_all_roles = 0; 
              $dirty=$this->dirty(false,$document);
              $document->save();
+             if( in_array('Alle',$request->get('roles') ) ){
+                //  dd( $request->get('roles') );
+                 $key = array_search('Alle', $request->get('roles') );
+                 $tempArr = $request->get('roles');
+                 unset($tempArr[$key] );
+                 $request->merge( array( 'roles' => $tempArr ) );
+             }
         }
         
         $documentApproval = DocumentApproval::where('document_id',$id)->get();
@@ -826,18 +834,21 @@ class DocumentController extends Controller
                 $processedArray[] = $variantNumber;
                 
                 if( in_array('Alle',$request->get($k) ) && count( $request->get($k) ) <= 1 ){
+                    
                     $editorVariant = EditorVariant::where('document_id',$id)->where('variant_number',$variantNumber)->first();
                     if($editorVariant){
+                        
                     $editorVariant->approval_all_mandants = 1; 
                     $dirty=$this->dirty($dirty,$editorVariant);
                     $editorVariant->save();
                     
                     /*Fix where where variant is Alle and roles different from All*/
                     $documentMandants = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->get();
-                     foreach($documentMandants as $documentMandant){
+                    if( count($documentMandants) ){
+                        foreach($documentMandants as $documentMandant){
                         $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->get();
                         $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->pluck('role_id');
-                        
+                      
                         if( $request->has('roles') )
                             $this->document->processOrSave($documentMandantRoles,$documentMandantRolesPluck,$request->get('roles'), 'DocumentMandantRole',
                                 array('document_mandant_id'=>$documentMandant->id,'role_id'=>'inherit'),
@@ -846,8 +857,28 @@ class DocumentController extends Controller
                         elseif( !$request->has('roles') ){
                              $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->delete();
                         }
+                        
                      }//end foreach
-                     
+                    }
+                    else{
+                        $dM = DocumentMandant::create( array('document_id' => $id, 'editor_variant_id' => $editorVariant->id  ) );
+                        $documentMandants = DocumentMandant::where('document_id',$id)->where('editor_variant_id',$editorVariant->id)->get();
+                         foreach($documentMandants as $documentMandant){
+                        $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->get();
+                        $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->pluck('role_id');
+                      
+                        if( $request->has('roles') )
+                            $this->document->processOrSave($documentMandantRoles,$documentMandantRolesPluck,$request->get('roles'), 'DocumentMandantRole',
+                                array('document_mandant_id'=>$documentMandant->id,'role_id'=>'inherit'),
+                                array('document_mandant_id'=>array($documentMandant->id) ) ); 
+                                
+                        elseif( !$request->has('roles') ){
+                             $documentMandantRoles = DocumentMandantRole::where('document_mandant_id',$documentMandant->id)->delete();
+                        }
+                        
+                     }//end foreach
+                    }
+                      
                     }
                      /* End Fix where where variant is Alle and roles different from All*/
                 }
@@ -923,6 +954,7 @@ class DocumentController extends Controller
         /* End If variants exist in request */
         
         //fix when there are roles set, but no variants
+       
         if( $hasVariants == false && $request->has('roles')){
           
             $editorVariantsNumbers = EditorVariant::where('document_id',$id)->get();
@@ -1104,13 +1136,16 @@ class DocumentController extends Controller
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
             $document = Document::find($id);
-             /*Published hotfix*/
-                if( $document->date_published == null  && $document->document_status_id == 3){
-                    $doc = Document::find($document->id);
-                    $doc->date_published = $datePublished;
-                    $doc->save();
-                    $document->date_published = $datePublished;
-                }
+            
+            /*Published hotfix*/
+            if( $document->date_published == null){
+                $doc = Document::find($document->id);
+                $doc->date_published = $doc->created_at->addDay();
+                $doc->save();
+                $document->date_published = $document->created_at;
+            }
+            /*Published hotfix*/
+            
              if($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == true ){
                  return redirect('dokumente/'.$document->id );
              }
@@ -1148,13 +1183,15 @@ class DocumentController extends Controller
             Check if document is latest published. if not redirect from unique url to id url
             This is used as a failsafe for documents accessed from browser history
          */
-         /*Published hotfix*/
+        
+        /*Published hotfix*/
         if( $document->date_published == null){
             $doc = Document::find($document->id);
-            $doc->date_published = $document->created_at;
+            $doc->date_published = $doc->created_at->addDay();
             $doc->save();
             $document->date_published = $document->created_at;
         }
+        /*Published hotfix*/
 
          $latestPublished = PublishedDocument::where('document_group_id',$document->document_group_id)->orderBy('updated_at','desc')->first();
             // dd($latestPublished);/
@@ -1173,7 +1210,7 @@ class DocumentController extends Controller
         $documentPermission = ViewHelper::universalDocumentPermission($document,false);
         $variantPermissions = ViewHelper::documentVariantPermission($document);
         
-        // dd($documentPermission);
+        // dd($variantPermissions);
         // dd($document);
         //  dd('brejk jorself');
         if($document->active == 0 
@@ -1278,8 +1315,11 @@ class DocumentController extends Controller
         $variants = $variantPermissions->variants;
         $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
         
+        
+        
+        
         /* If the document can be published or in freigabe process and the roles are correct */
-            if( $authorised == true && $canPublish ==true && $published == false && $document->document_status_id != 5){
+            if( $authorised == true && $canPublish ==true && $published == false && $document->document_status_id != 5 && $document->document_status_id != 1){
                 //if( $authorised == false && $canPublish ==false && $published == false){
                     if( ($document->documentType->document_art == 1 && ViewHelper::universalHasPermission( array(13) ) == true)
                         || ($document->documentType->document_art == 0 && ViewHelper::universalHasPermission( array(11) ) == true)
@@ -1289,7 +1329,7 @@ class DocumentController extends Controller
                     
                 //}
             }
-            elseif(   $document->document_status_id != 5 && ( ($authorised == false &&  $published == false ) ||
+            elseif( $document->document_status_id != 1 &&  $document->document_status_id != 5 && ( ($authorised == false &&  $published == false ) ||
                    ($authorised == true && $published == false ) || ($canPublish == true && $published == false) 
                    && (ViewHelper::universalDocumentPermission( $document, false, false, true ) ) ) ){
                          if( ( ( $document->documentType->document_art == 1 &&
@@ -1676,6 +1716,10 @@ class DocumentController extends Controller
         
         if( $this->document->universalDocumentPermission($document,true, true) == false ){
             return redirect('/')->with('messageSecondary',trans('documentForm.noPermission') ) ;
+        }
+        
+        if( $document->document_status_id == 1 ){
+            return redirect('dokumente/'.$id);
         }
             
         $variants = EditorVariant::where('document_id',$id)->get();
@@ -3066,16 +3110,25 @@ class DocumentController extends Controller
      */
     private function checkFreigabeRoles( $document ){
         $mandantRoles = array();
-        if($document->documentMandantRoles != null)
+        // dd( $document );
+        /*if($document->documentMandantRoles != null)
             $mandantRoles = $document->documentMandantRoles->where('role_id',0);
-     
-        $mandantRolesAll = $document->documentMandantRoles;
-        if( $document->approval_all_roles != 1 && (count($mandantRoles) || count($mandantRolesAll) < 1) ){
+        */
+        $mandants = $document->documentMandants;
+        $mandantRolesAll = 0;
+        $mandantsHasPermissionAll = 0;
+        foreach($mandants as $dc){
+            $mandantRolesAll = $mandantRolesAll + count( $dc->documentMandantRole);
+            if( $dc->editorVariant->approval_all_mandants == 1 )
+                $mandantsHasPermissionAll++;
+        }
+        if( ( $document->approval_all_roles != 1 && (count($mandants) == 0 && $mandantsHasPermissionAll == 0 ) )
+            || (  $document->approval_all_roles != 1 && count($mandantRolesAll) < 1 ) ){
             $document->approval_all_roles = 1;
             $document->save();
-            if( count($mandantRoles) ){
-                DocumentMandantRole::whereIn('id',$mandantRoles)->delete();
-            }
+            // if( count($mandantRoles) ){
+            //     DocumentMandantRole::whereIn('id',$mandantRoles)->delete();
+            // }
         }
         return $document;
     }

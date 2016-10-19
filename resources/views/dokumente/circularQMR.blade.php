@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('page-title')
-     QM-Rundschreiben - Übersicht
+    {{ ucfirst( trans('controller.dokumente')) }} - QM-Rundschreiben 
 @stop
 
     @section('content')

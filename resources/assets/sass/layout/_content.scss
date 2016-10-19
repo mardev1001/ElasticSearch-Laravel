@@ -123,6 +123,13 @@ h1.page-title {
     padding: 0;
 }
 
+.scrollable-document{
+    width: 226px !important;
+    position: fixed !important;
+    right: 53px;
+    z-index: 100;
+    background: #fff;
+}
 // .form-group .checkbox {
 //     margin-top: 5px;
 //     margin-bottom: 10px;
@@ -431,10 +438,11 @@ a.transform-normal, span.transform-normal{
 .list-group .child-node{
     border: none;
     border-top: none !important;
-    padding: 15px 0 !important; 
+    padding: 5px 0 15px 0 !important; 
 }
 .list-group .child-node.first-child{
-    margin-top: -15px;
+    // margin-top: -15px;
+    margin-top: -10px;
 }
 .list-group .child-node .item-before-text,
 .list-group .child-node .item-after-text{

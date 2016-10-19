@@ -75,6 +75,9 @@ class SearchController extends Controller
         }
         // dd($mandantUsers);
         
+        if($request->get('sort') == 'asc') $sort = 'asc';
+        else $sort = 'desc';
+        
         if($request->has('parameter')){
             
             $parameter = $request->input('parameter');
@@ -105,6 +108,13 @@ class SearchController extends Controller
                 // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
                 // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
                 
+                $resultIds = array_pluck($results, 'id');
+            
+                if($sort == 'asc')
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+                else
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
+                
                 return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
                 // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
@@ -127,6 +137,13 @@ class SearchController extends Controller
                 // $documents = $this->filterByVisibility($documents->get());
                 // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
                 // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
+                
+                $resultIds = array_pluck($results, 'id');
+            
+                if($sort == 'asc')
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+                else
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
                 
                 return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
                 // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
@@ -170,8 +187,27 @@ class SearchController extends Controller
             //     $variants = EditorVariant::all();
             // }
             
+            // TODO: pluck ids and sort from db
+            
             // dd($results);
+            // sort by collection $sort
+            // $results = collect($results);
+            
+            // $results = $results->sortBy('date_published');
+                
             $results = $this->filterByVisibility(collect($results));
+            $resultIds = array_pluck($results, 'id');
+            
+            if($sort == 'asc')
+                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+            else
+                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
+            
+            // Sort by results
+            // $results = array_values(array_sort($results, function ($value) {
+            //     return $value['date_published'];
+            // }));
+            //$sorted = $collection->sortBy('price');  sortByDesc();
         }
         
         return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
@@ -256,9 +292,12 @@ class SearchController extends Controller
         $emptySearch = true;
         $inputs = $request->all();
         
+        if($request->get('sort') == 'asc') $sort = 'asc';
+        else $sort = 'desc';
+        
         foreach ($inputs as $key=>$input){
             // if($key != 'wiki' && $key != 'inhalt'){
-            if($key != 'wiki'){
+            if($key != 'wiki' && $key != 'adv-search'){
                 if(!empty($input)){
                     $emptySearch = false;
                 }
@@ -281,6 +320,7 @@ class SearchController extends Controller
             }
         }
         
+        $parameter = $request->input('parameter');
         $name = $request->input('name');
         $betreff = $request->input('betreff');
         $summary = $request->input('beschreibung');
@@ -299,6 +339,82 @@ class SearchController extends Controller
         $additional_letter = $request->input('additional_letter');
         
         // dd($request->all());
+        
+        // Add-in parameter for use inside advanced search
+        if(!empty($parameter)){
+            
+            $documents = Document::where('document_status_id', 3)->where('active', 1);
+            
+            // Check for occurence of "QMR" string, search for QMR documents if found
+            if( stripos($parameter, 'QMR') !== false ){
+                
+                $qmr = trim(str_ireplace('QMR', '', $parameter));
+                $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
+                $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
+                
+                $documents = $documents->where(function($query) use ($qmrNumber, $qmrString) {
+                    if($qmrNumber) $query = $query->where('qmr_number', 'LIKE', $qmrNumber);
+                    if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
+                });
+                
+                $results = $documents->where('document_type_id', 3)->get();
+                $results = $this->filterByVisibility(collect($results));
+                
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                
+            } elseif( stripos($parameter, 'ISO') !== false ){
+                
+                $iso = trim(str_ireplace('ISO', '', $parameter));
+                $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
+                $isoString = preg_replace("/[^a-zA-Z]+/", "", $iso);
+                
+                $documents = $documents->where(function($query) use ($isoNumber, $isoString) {
+                    if($isoNumber) $query = $query->where('iso_category_number', 'LIKE', $isoNumber);
+                    if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
+                });
+                
+                $results = $documents->where('document_type_id', 4)->get();
+                $results = $this->filterByVisibility(collect($results));
+                      
+                return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+                
+            } else {
+                // Search for other parameters
+                $documents = $documents->where(function($query) use ($parameter) {
+                    $query->where('name', 'LIKE', '%'.$parameter.'%' )
+                    ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
+                    ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
+                    ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
+                });
+            }       
+            
+            $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
+            
+            foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
+            
+            if(count($variants)){
+                foreach ($variants as $variant){
+                    if(isset($variant->document)){
+                        if(!in_array($variant->document, $results)){
+                            if($variant->document->document_status_id == 3)
+                                array_push($results, $variant->document);
+                        }
+                    }
+                }
+            } 
+            
+            $results = $this->filterByVisibility(collect($results));
+            
+            $resultIds = array_pluck($results, 'id');
+            
+            if($sort == 'asc')
+                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+            else
+                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
+            
+            return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
+        }
+        
         
         $documents = Document::where('id', '>', 0)
         // $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
@@ -335,6 +451,13 @@ class SearchController extends Controller
                 // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
                 // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
                 
+                $resultIds = array_pluck($results, 'id');
+            
+                if($sort == 'asc')
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+                else
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
+                    
                 $request->flash();
                 return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
                 // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
@@ -359,6 +482,13 @@ class SearchController extends Controller
                 // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
                 // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
                 
+                $resultIds = array_pluck($results, 'id');
+            
+                if($sort == 'asc')
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+                else
+                    $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
+                
                 $request->flash();
                 return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
                 // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
@@ -369,7 +499,7 @@ class SearchController extends Controller
         if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
         if(!empty($betreff)) $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
         if(!empty($summary)) $documents->where('summary', 'LIKE', '%'.$summary.'%' );
-        if(!empty($inhalt)) $documents->where('inhalt', 'LIKE', '%'.$inhalt.'%');
+        // if(!empty($inhalt)) $documents->where('inhalt', 'LIKE', '%'.$inhalt.'%');
         
         if(!empty($document_type))  {
             if($document_type == 3){
@@ -385,7 +515,7 @@ class SearchController extends Controller
         if(!empty($search_tags))  $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
         if(!empty($date_from))  $documents->whereDate('documents.created_at', '>=', $date_from );
         if(!empty($date_to))  $documents->whereDate('documents.created_at', '<=', $date_to );
-        if(!empty($user_id))  $documents->where('user_id', $user_id );
+        if(!empty($user_id))  $documents->where('owner_user_id', $user_id );
         
         // $documents = $this->filterByVisibility($documents->get());
         // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'], 'suchergebnisse');
@@ -430,6 +560,13 @@ class SearchController extends Controller
         }
         
         $results = $this->filterByVisibility(collect($results));
+        
+        $resultIds = array_pluck($results, 'id');
+    
+        if($sort == 'asc')
+            $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+        else
+            $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
         
         if($emptySearch) $results = null;
         if(empty($name) && empty($inhalt)) $resultsWiki = null;

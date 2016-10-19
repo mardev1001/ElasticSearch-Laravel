@@ -17,5 +17,8 @@ class DocumentMandant extends Model
     public function documentMandantRole(){
         return $this->hasMany('App\DocumentMandantRole','document_mandant_id','id') ;
     } 
+    public function editorVariant(){
+        return $this->belongsTo('App\EditorVariant','editor_variant_id','id') ;
+    } 
 }
 

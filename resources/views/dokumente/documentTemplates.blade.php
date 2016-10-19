@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('page-title') Formulare - Übersicht @stop
+@section('page-title') {{ ucfirst( trans('controller.dokumente')) }} - Formulare  @stop
 
 @section('content')
 
