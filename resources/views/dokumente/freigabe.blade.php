@@ -2,7 +2,7 @@
 
 @extends('master')
 
-@section('page-title') @if( isset($document->documentType->name) ){{ $document->documentType->name }}@endif - Übersicht @stop
+@section('page-title') {{ ucfirst( trans('controller.dokumente')) }} - @if( isset($document->documentType->name) ){{ $document->documentType->name }}@endif @stop
 
 @section('content')
 
@@ -185,6 +185,7 @@
                                 ( $document->documentType->document_art == 0 &&
                                 ViewHelper::universalHasPermission( array(11) ) == true ) )
                                 && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
+                            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                             <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
                         @endif
                 @endif

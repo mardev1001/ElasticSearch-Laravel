@@ -319,7 +319,7 @@ class ViewHelper
         $extractLenght = 128;
         $needlePosition = strpos($haystack , $needle);
         $newstring = '... ' . substr($haystack, $needlePosition, 128) . ' ...';
-        return $newstring;    
+        return strip_tags($newstring);    
     }
     
     /**
@@ -333,7 +333,7 @@ class ViewHelper
         $extractLenght = 128;
         $needlePosition = 0;
         $newstring = substr($haystack, $needlePosition, 128) . ' ...';
-        return $newstring;
+        return strip_tags($newstring);
     }
     
     /**

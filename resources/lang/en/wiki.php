@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'wikiStart' => 'Wiki Startseite',
+    'wikiStart' => 'Wiki',
     'name' => 'Name',
     'status' => 'Status',
     'category' => 'Kategorie',

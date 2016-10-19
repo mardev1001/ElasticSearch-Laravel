@@ -9,7 +9,7 @@
 <div class="row">
     <div class="col-sm-6 ">
         <div class="box-wrapper">
-            <h2 class="title">Suche Titel/Inhalt</h2>
+            <h2 class="title">Suche Wiki</h2>
             <div class="box">
                 <div class="row">
                     {!! Form::open(['action' => 'WikiController@search', 'method'=>'POST']) !!}

@@ -214,28 +214,46 @@
                                     <strong>
                                     @if(isset($parameter)) 
                                         #{{$key+1}} 
-                                        
                                         @if($document->documentType->id == 3)
+                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "QMR ".$document->qmr_number.$document->additional_letter) !!} - --}}
                                             {!! "QMR " . $document->qmr_number.$document->additional_letter !!} -
                                         @elseif($document->documentType->id == 4)
+                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "ISO ".$document->iso_category_number.$document->additional_letter) !!} - --}}
+                                            {{-- {!! "ISO " . $document->iso_category_number.$document->additional_letter !!} - --}}
                                             {{ $document->documentType->name }} -
                                         @else
                                             {{ $document->documentType->name }} -
                                         @endif
-                                        
-                                        {!! $document->name_long !!} - {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                                        {!! ViewHelper::highlightKeyword($parameter, $document->name_long) !!} -
+                                        {{-- {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - --}}
+                                        {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                     @else
                                         #{{$key+1}} 
 
                                         @if($document->documentType->id == 3)
                                             QMR {{$document->qmr_number.$document->additional_letter}} - 
                                         @elseif($document->documentType->id == 4)
+                                            {{-- ISO {{$document->iso_category_number.$document->additional_letter}} - --}}
                                             {{$document->documentType->name}} - 
                                         @else
                                             {{$document->documentType->name}} - 
                                         @endif
                                         
-                                        {!! $document->name_long !!} - {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                                        @if(old('name')) 
+                                        {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
+                                        @else
+                                        {!! $document->name_long !!} - 
+                                        @endif
+                                        
+                                        {{--
+                                        @if(old('betreff')) 
+                                        {!! ViewHelper::highlightKeyword(old('betreff'), $document->betreff) !!} -
+                                        @else
+                                        {!! $document->betreff !!} - 
+                                        @endif
+                                        --}}
+                                        
+                                        {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                     @endif
                                     </strong> 
                                 </a>
@@ -264,7 +282,7 @@
                                                         @if(old('inhalt')) 
                                                             {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
                                                         @else
-                                                            {{-- {!! $variant->inhalt !!} --}}
+                                                            {!! ViewHelper::extractTextSimple($variant->inhalt) !!}
                                                         @endif
                                                     @endif
                                                 </div>

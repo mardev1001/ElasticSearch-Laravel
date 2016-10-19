@@ -32,7 +32,7 @@ h1, h2, h3, h4 {
     font-size: 1.27em;
 }
 
-.content,.content p,.content strong, .content i,.content b, .content td, .content th{
+.content,.content p,.content strong, .content i,.content u,.content b, .content td, .content th{
     font-size: 14px !important;
     color: black;
     font-family: $primary-font-family !important;
@@ -41,9 +41,13 @@ h1, h2, h3, h4 {
 .content td, .content th {
     line-height: normal;
     vertical-align: middle;
+    padding: 1px;
 }
 .content table p{
     margin: 5px 0 !important;
+}
+.content p{
+    margin: 16px 0;
 }
 
 /* tinymce view - end */
@@ -60,6 +64,7 @@ hr {
 .background-white{
     background-color: #fff;
 }
+
 
 .mce-ico.mce-i-image-text {
     width: auto !important;
@@ -602,6 +607,7 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 #page-wrapper .treeview span.node-icon {
     width: 25px;
     margin-right: 10px;
+    margin-top: 3px;
 }
 
 
@@ -846,7 +852,7 @@ span.highlight{
 
 span.node-icon.icon-1{
     position: absolute;
-    top: -5px; 
+    top: -5px;
 }
 
 span.node-icon.icon-2:not(.icon-download){
@@ -855,12 +861,35 @@ span.node-icon.icon-2:not(.icon-download){
     top: 25px;
 }
 
+a.node-icon.icon-trash{
+    position: absolute;
+    // bottom: -5px;
+    top: 25px;
+}
+
+.node-icon {
+    background-size: 20px 20px !important;
+}
+
 a > .link-after-text:first-of-type{
     padding-left: 34px;
 }
 
 .advanced-search{
     display: none;
+}
+
+.nav.icons-top li:first-child {
+	background: url("/img/icons/icon_home_active.png") no-repeat -9999px -9999px;
+}
+.nav.icons-top li:nth-child(2) {
+	background: url("/img/icons/icon_profil_active.png") no-repeat -9999px -9999px;
+}
+.nav.icons-top li:nth-child(3) {
+	background: url("/img/icons/icon_logout_active.png") no-repeat -9999px -9999px;
+}
+.nav.icons-top li:nth-child(4) {
+	background: url("/img/icons/icon_kontakt_active.png") no-repeat -9999px -9999px;
 }
 
 /*A4 paper simulation*/¸

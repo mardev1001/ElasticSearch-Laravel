@@ -480,6 +480,9 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        
+        if($user->id == 1) return back()->with('message', 'Benutzer kann nicht entfernt werden.');
+        
         $mandantUsers = MandantUser::where('user_id', $id)->get();
         
         foreach($mandantUsers as $mandantUser) {

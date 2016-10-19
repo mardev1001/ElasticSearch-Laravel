@@ -495,17 +495,21 @@ h1, h2, h3, h4 {
 .content h3, .tinymce-editor-class h3 {
   font-size: 1.27em; }
 
-.content, .content p, .content strong, .content i, .content b, .content td, .content th {
+.content, .content p, .content strong, .content i, .content u, .content b, .content td, .content th {
   font-size: 14px !important;
   color: black;
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important; }
 
 .content td, .content th {
   line-height: normal;
-  vertical-align: middle; }
+  vertical-align: middle;
+  padding: 1px; }
 
 .content table p {
   margin: 5px 0 !important; }
+
+.content p {
+  margin: 16px 0; }
 
 /* tinymce view - end */
 hr {
@@ -956,7 +960,8 @@ input.form-control:-ms-input-placeholder {
 #page-wrapper .treeview a.node-icon,
 #page-wrapper .treeview span.node-icon {
   width: 25px;
-  margin-right: 10px; }
+  margin-right: 10px;
+  margin-top: 3px; }
 
 #page-wrapper .treeview span.node-icon.icon-download {
   margin-left: 35px; }
@@ -1156,11 +1161,30 @@ span.node-icon.icon-2:not(.icon-download) {
   position: absolute;
   top: 25px; }
 
+a.node-icon.icon-trash {
+  position: absolute;
+  top: 25px; }
+
+.node-icon {
+  background-size: 20px 20px !important; }
+
 a > .link-after-text:first-of-type {
   padding-left: 34px; }
 
 .advanced-search {
   display: none; }
+
+.nav.icons-top li:first-child {
+  background: url("/img/icons/icon_home_active.png") no-repeat -9999px -9999px; }
+
+.nav.icons-top li:nth-child(2) {
+  background: url("/img/icons/icon_profil_active.png") no-repeat -9999px -9999px; }
+
+.nav.icons-top li:nth-child(3) {
+  background: url("/img/icons/icon_logout_active.png") no-repeat -9999px -9999px; }
+
+.nav.icons-top li:nth-child(4) {
+  background: url("/img/icons/icon_kontakt_active.png") no-repeat -9999px -9999px; }
 
 /*A4 paper simulation*/
 ¸
@@ -1557,7 +1581,8 @@ li.legend {
   bottom: 40px;
   background-color: #efefef;
   width: 200px;
-  display: none; }
+  display: none;
+  z-index: 999; }
 
 .legend-wrapper .legend-icons {
   width: 25px;
@@ -13173,7 +13198,7 @@ td[data-mce-selected], th[data-mce-selected] {
   font-weight: bold; }
 
 .mce-content-body body, .mce-content-body b, .mce-content-body strong, .mce-content-body p, .mce-content-body div, .mce-content-bodyspan,
-.mce-content-body i, .mce-content-body table {
+.mce-content-body i, .mce-content-body table, .mce-content-body table td, .mce-content-body table th {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
   line-height: 16px; }
 

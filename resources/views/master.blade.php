@@ -39,7 +39,7 @@
             <div class="col-xs-12 col-md-12 ">
                 <div class="fixed-row @yield('page-title-class')">
                     <div class="fixed-position ">
-                        <h1 class="page-title">@yield('page-title')</h1>
+                        <h1 class="page-title"><span class="white-bgrnd inline-block">@yield('page-title')</span></h1>
                     </div>
                 </div>
             </div>

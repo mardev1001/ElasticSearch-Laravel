@@ -151,7 +151,7 @@ class SearchController extends Controller
             } else {
                 // Search for other parameters
                 $documents = $documents->where(function($query) use ($parameter) {
-                    $query->where('name', 'LIKE', '%'.$parameter.'%' )
+                    $query->where('name_long', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
@@ -159,6 +159,7 @@ class SearchController extends Controller
                     // ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' )
                     // ->orWhere('inhalt', 'LIKE', '%'.$parameter.'%' );
                 });
+                
             }       
 
             
@@ -168,6 +169,8 @@ class SearchController extends Controller
             // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
             
             // dd($searchResultsPaginated->getCollection());
+            
+            $documents = $documents->get();
             
             $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
             
@@ -194,6 +197,7 @@ class SearchController extends Controller
             // $results = collect($results);
             
             // $results = $results->sortBy('date_published');
+            
                 
             $results = $this->filterByVisibility(collect($results));
             $resultIds = array_pluck($results, 'id');
@@ -340,6 +344,7 @@ class SearchController extends Controller
         
         // dd($request->all());
         
+        /***
         // Add-in parameter for use inside advanced search
         if(!empty($parameter)){
             
@@ -388,6 +393,8 @@ class SearchController extends Controller
                 });
             }       
             
+            $documents = $documents->get();
+            
             $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
             
             foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
@@ -414,7 +421,7 @@ class SearchController extends Controller
             
             return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
         }
-        
+        ***/
         
         $documents = Document::where('id', '>', 0)
         // $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
@@ -496,9 +503,24 @@ class SearchController extends Controller
             }
         } 
         
-        if(!empty($name)) $documents->where('name', 'LIKE', '%'.$name.'%');
-        if(!empty($betreff)) $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
-        if(!empty($summary)) $documents->where('summary', 'LIKE', '%'.$summary.'%' );
+        // if(!empty($name) || !empty($parameter)) $documents->where('name', 'LIKE', '%'.$name.'%');
+        $documents->where(function($query) use ($name, $parameter) {
+            if(!empty($name)) $query = $query->where('name_long', 'LIKE', '%'.$name.'%');
+            if(!empty($parameter)) $query = $query->where('name_long', 'LIKE', '%'.$parameter.'%');
+        });
+        
+        // if(!empty($betreff) || !empty($parameter)) $documents->where('betreff', 'LIKE', '%'.$betreff.'%' );
+        $documents->where(function($query) use ($betreff, $parameter) {
+            if(!empty($betreff)) $query = $query->where('betreff', 'LIKE', '%'.$name.'%');
+            if(!empty($parameter)) $query = $query->where('betreff', 'LIKE', '%'.$parameter.'%');
+        });
+        
+        // if(!empty($summary) || !empty($parameter)) $documents->where('summary', 'LIKE', '%'.$summary.'%' );
+        $documents->where(function($query) use ($summary, $parameter) {
+            if(!empty($summary)) $query = $query->where('summary', 'LIKE', '%'.$summary.'%');
+            if(!empty($parameter)) $query = $query->where('summary', 'LIKE', '%'.$parameter.'%');
+        });
+        
         // if(!empty($inhalt)) $documents->where('inhalt', 'LIKE', '%'.$inhalt.'%');
         
         if(!empty($document_type))  {
@@ -512,7 +534,12 @@ class SearchController extends Controller
             $documents->where('document_type_id', 'LIKE', '%'.$document_type.'%' );
         }
         
-        if(!empty($search_tags))  $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
+        // if(!empty($search_tags) || !empty($parameter)) $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
+        $documents->where(function($query) use ($search_tags, $parameter) {
+            if(!empty($search_tags)) $query = $query->where('search_tags', 'LIKE', '%'.$search_tags.'%');
+            if(!empty($parameter)) $query = $query->where('search_tags', 'LIKE', '%'.$parameter.'%');
+        });
+            
         if(!empty($date_from))  $documents->whereDate('documents.created_at', '>=', $date_from );
         if(!empty($date_to))  $documents->whereDate('documents.created_at', '<=', $date_to );
         if(!empty($user_id))  $documents->where('owner_user_id', $user_id );
@@ -523,7 +550,11 @@ class SearchController extends Controller
         
         $documents = $documents->get();
          
-        if(!empty($inhalt)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
+        // if(!empty($inhalt) || !empty($parameter)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
+        if(!empty($inhalt) || !empty($parameter)) {
+            $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')
+                ->where('inhalt', 'LIKE', '%'.$parameter.'%')->get();
+        }
         
         foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
         

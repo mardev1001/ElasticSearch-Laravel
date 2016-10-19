@@ -475,7 +475,7 @@
     
     @if($data->edited_by == Auth::user()->id)
         @section('editApproval')
-            <button type="submit" name="mandant-approved" value="1" class="btn btn-primary no-margin-bottom">Freigeben</button>
+            <button type="submit" name="mandant-approved" value="1" class="btn btn-primary no-margin-bottom">Bearbeitung verlassen</button>
         @endif
     @stop
     

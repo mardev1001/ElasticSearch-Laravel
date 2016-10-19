@@ -154,8 +154,7 @@
             <!--<li>-->
             <!--    <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>-->
             <!--</li>-->
-            @if( ViewHelper::universalHasPermission( array(15,16) ) == true 
-                || ViewHelper::getMandantWikiPermission() ) 
+            @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
                 <li class="">
                     <a href="{{ url('wiki') }}">{{ ucfirst(trans('navigation.wiki')) }}
                         <span class="fa arrow"></span></a>
@@ -231,7 +230,7 @@
             @if( ViewHelper::universalHasPermission( array() ) == true )
                 <li class="">
                     <a href="{{ url('neptun-verwaltung') }}">
-                        NEPTUN {{ ucfirst( trans('navigation.verwaltung') )}}
+                        NEPTUN-{{ ucfirst( trans('navigation.verwaltung') )}}
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level">

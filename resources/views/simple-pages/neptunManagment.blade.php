@@ -14,7 +14,7 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper box-white">
             
-            <h2 class="title">NEPTUN {{ ucfirst( trans('navigation.verwaltung') )}}</h2>
+            <h2 class="title">NEPTUN-{{ ucfirst( trans('navigation.verwaltung') )}}</h2>
             
             <div class="box iso-category-overview">
                 

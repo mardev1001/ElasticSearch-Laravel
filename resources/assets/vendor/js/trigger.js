@@ -58,11 +58,8 @@ $(function () {
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1) {
         $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');
     }
-    else if (url.href.indexOf('suche') != -1 && url.href.indexOf('wiki') != -1) {
-        $('a[href$="/wiki"]').addClass('active').closest('ul').addClass('in');
-    }
-    else if (url.href.indexOf('suche/erweitert') != -1) {
-        $('a[href*="suche"]').addClass('active').next('ul').addClass('in');
+    else if (url.href.indexOf('wiki') != -1) {
+        $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');

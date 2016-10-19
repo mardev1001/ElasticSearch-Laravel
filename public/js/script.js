@@ -114681,10 +114681,10 @@ $(function() {
     var advSearchContainer = $('.advanced-search');
 
     if(advSearchCheckbox.prop('checked') == false) {
-        $('input.adv-parameter').prop('disabled', false);
+        // $('input.adv-parameter').prop('disabled', false);
         advSearchContainer.hide(400);
     } else {
-        $('input.adv-parameter').prop('disabled', true)
+        // $('input.adv-parameter').prop('disabled', true)
         advSearchContainer.show(400);
     }
         
@@ -114692,10 +114692,10 @@ $(function() {
     advSearchCheckbox.change(function(e){
         // console.log(mandantHauptstelleSelect.prop('required'));
         if(advSearchCheckbox.prop('checked') == false){
-            $('input.adv-parameter').prop('disabled', false);
+            // $('input.adv-parameter').prop('disabled', false);
             advSearchContainer.hide(400);
         } else {
-            $('input.adv-parameter').prop('disabled', true);
+            // $('input.adv-parameter').prop('disabled', true);
             advSearchContainer.show(400);
         }
     });
@@ -115407,20 +115407,25 @@ $(function() {
                     console.log(e);
                 });
                 editor.on('NodeChange', function(e) {
-                    // console.log( e.element.find('img') );
-                    console.log(e.element.nodeName.toLowerCase() );
-                    // console.log( e.element.parseHTML() );
+                    
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
                         var td = $(e.element), maxHeight =  $(e.element).height() ;
-                        
+                       
                         $( e.element ).find('img').each(function() {
                             var height = $(this).innerHeight(), width = $(this).innerWidth();
-                            $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            if(height != maxHeight && height > maxHeight)
-                                maxHeight = height;
+                            $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
+                            $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
+                            if(height != maxHeight-5 && height > maxHeight)
+                                maxHeight = height+5;
+                                console.log('trigged');
                         });
-                        td.attr('style', td.attr('style')+' height:'+ maxHeight+'px !important;');
+                        td.closest('tr').addClass('test');
+                        if(td.css('height')){
+                            td.css('height', maxHeight);
+                        }
+                        else{
+                            td.attr('style', td.attr('style')+' height:'+ maxHeight+'px !important;');
+                        }
                         td.attr('data-mce-style', td.attr('data-mce-style')+'height:'+ maxHeight+'px !important;');
                         
                     }
@@ -115734,11 +115739,8 @@ $(function () {
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1) {
         $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');
     }
-    else if (url.href.indexOf('suche') != -1 && url.href.indexOf('wiki') != -1) {
-        $('a[href$="/wiki"]').addClass('active').closest('ul').addClass('in');
-    }
-    else if (url.href.indexOf('suche/erweitert') != -1) {
-        $('a[href*="suche"]').addClass('active').next('ul').addClass('in');
+    else if (url.href.indexOf('wiki') != -1) {
+        $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');

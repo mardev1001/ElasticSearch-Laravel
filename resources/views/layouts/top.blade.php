@@ -25,10 +25,10 @@
         </div>
         <div class="col-xs-12 col-sm-7 col-md-6">
             <ul class="nav navbar-nav icons pull-right icons-top">
-                <li><a href="/"><span class="nav-icon icon-home" title="Zur Startseite"></span>Home</a></li>
-                <li><a href="{{ url('benutzer/profil') }}" title="Mein Benutzerprofil"><span class="nav-icon icon-profil"></span>Profil</a></li>
-                <li><a href="{{ url('logout') }}" title="Abmelden"><span class="nav-icon icon-logout"></span>Log out</a></li>
-                <li><a href="{{ url('kontakt') }}" title="NEPTUN Kontaktieren"><span class="nav-icon icon-kontakt"></span>Kontakt</a></li>
+                <li><a href="/"><span class="nav-icon icon-home" title="Zur Startseite"></span><span class="white-bgrnd">Home</span></a></li>
+                <li><a href="{{ url('benutzer/profil') }}" title="Mein Benutzerprofil"><span class="nav-icon icon-profil"></span><span class="white-bgrnd">Profil</span></a></li>
+                <li><a href="{{ url('logout') }}" title="Abmelden"><span class="nav-icon icon-logout"></span><span class="white-bgrnd">Log out</span></a></li>
+                <li><a href="{{ url('kontakt') }}" title="NEPTUN Kontaktieren"><span class="nav-icon icon-kontakt"></span><span class="white-bgrnd">Kontakt</span></a></li>
                 <li>
                     {{ Form::open(['route'=>['suche.index'], 'method'=>'GET']) }}
                     <div class="input-group custom-search-form">

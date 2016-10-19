@@ -2,7 +2,7 @@
 
 return [
     
-    'adressats-title' => 'NEPTUN Verwaltung - Empfängerkreis',
+    'adressats-title' => 'NEPTUN-Verwaltung - Empfängerkreis',
     'adressat' => 'Empfängerkreis',
     'adressats' => 'Empfängerkreis',
     'management' => 'Verwalten',

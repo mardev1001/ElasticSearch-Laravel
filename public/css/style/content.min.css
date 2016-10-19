@@ -4,7 +4,7 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
     font-weight: bold;
 }
 .mce-content-body body,.mce-content-body b,.mce-content-body strong,.mce-content-body p,.mce-content-body div, .mce-content-bodyspan,
-.mce-content-body i,.mce-content-body  table{
+.mce-content-body i,.mce-content-body  table,.mce-content-body  table td, .mce-content-body  table th{
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
     line-height: 16px;
 }

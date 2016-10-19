@@ -127,10 +127,10 @@ $(function() {
     var advSearchContainer = $('.advanced-search');
 
     if(advSearchCheckbox.prop('checked') == false) {
-        $('input.adv-parameter').prop('disabled', false);
+        // $('input.adv-parameter').prop('disabled', false);
         advSearchContainer.hide(400);
     } else {
-        $('input.adv-parameter').prop('disabled', true)
+        // $('input.adv-parameter').prop('disabled', true)
         advSearchContainer.show(400);
     }
         
@@ -138,10 +138,10 @@ $(function() {
     advSearchCheckbox.change(function(e){
         // console.log(mandantHauptstelleSelect.prop('required'));
         if(advSearchCheckbox.prop('checked') == false){
-            $('input.adv-parameter').prop('disabled', false);
+            // $('input.adv-parameter').prop('disabled', false);
             advSearchContainer.hide(400);
         } else {
-            $('input.adv-parameter').prop('disabled', true);
+            // $('input.adv-parameter').prop('disabled', true);
             advSearchContainer.show(400);
         }
     });

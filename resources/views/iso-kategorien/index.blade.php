@@ -2,7 +2,7 @@
 
 @extends('master')
 
-@section('page-title') NEPTUN Verwaltung - ISO Kategorie @stop
+@section('page-title') NEPTUN-Verwaltung - ISO Kategorie @stop
 
 @section('content')
 
