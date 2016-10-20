@@ -217,9 +217,9 @@ return [
          'Form' => Collective\Html\FormFacade::class,
          'Html' => Collective\Html\HtmlFacade::class,
          'ViewHelper' => App\Helpers\ViewHelper::class,
-        //  'PDF' => Barryvdh\DomPDF\Facade::class,
+         'PDF' => Barryvdh\DomPDF\Facade::class,
          'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-         'PDF'    => Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf::class,
+        //  'PDF'    => Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf::class,
 
     ],
 

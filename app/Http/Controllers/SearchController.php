@@ -62,7 +62,8 @@ class SearchController extends Controller
         $resultsWiki = array();
         $variants = array();
         $searchResultsPaginated = array();
-        $documentTypes = DocumentType::all();
+        // $documentTypes = DocumentType::all();
+        $documentTypes = DocumentType::where('active', 1)->where('visible_navigation', 1)->get();
         
         
         // Fill the $mandantUsers array with users that share the same mandant as the logged in user
@@ -314,7 +315,8 @@ class SearchController extends Controller
         $resultsWiki = array();
         $variants = array();
         $searchResultsPaginated = array();
-        $documentTypes = DocumentType::all();
+        // $documentTypes = DocumentType::all();
+        $documentTypes = DocumentType::where('active', 1)->where('visible_navigation', 1)->get();
         
         if($request->get('sort') == 'asc') $sort = 'asc';
         else $sort = 'desc';

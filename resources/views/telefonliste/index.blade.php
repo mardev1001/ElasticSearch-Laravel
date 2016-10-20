@@ -20,12 +20,16 @@
                      <div class="box">
                         <div class="clearfix"></div>
                         <div class="row">
-                            <div class="col-xs-12 col-md-4 form-group no-margin-bottom">
-                               
+                            <div class="col-xs-12 col-md-8 col-lg-4 form-group no-margin-bottom">
                                 <input type="text" class="form-control" name="search"
                                 placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.searchTextOptions') }}" required
                                 @if(isset($searchParameter)) value="{{$searchParameter}}" @endif>
-                                <div class="col-xs-4 hidden-sm hidden-xs">
+                            </div>  
+                            <div class="row">
+                            <div class="col-xs-12 col-md-12 col-lg-12 form-group no-margin-bottom">
+                               
+                                
+                                <div class="col-md-4 col-lg-2 hidden-sm hidden-xs">
                                     <span class="custom-input-group-btn">
                                         <button type="submit" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
                                             <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
@@ -35,25 +39,25 @@
                                     </span> 
                                 </div>
                                   @if(isset($searchParameter))
-                                    <div class="col-xs-4 hidden-sm hidden-xs">
+                                    <div class="col-md-4 col-lg-2 hidden-sm hidden-xs">
                                         <span class="custom-input-group-btn">
                                             <a href="{{url('telefonliste')}}" class="btn btn-primary no-margin-bottom">{{ trans('telefonListeForm.reset') }}</a>
                                         </span> 
                                     </div>
                                    @endif
+                                   
+                                   
+                                   <div class="col-md-4 col-lg-2 hidden-sm hidden-xs">
+                                         <span class="custom-input-group-btn">
+                                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
+                                                <!--<i class="fa fa-eye"></i> -->
+                                                {{ trans('telefonListeForm.appearance') }}
+                                            </a>
+                                        </span>
+                                    </div>
                             </div>
                            
-                            
-                            {{-- <div class="col-xs-12 col-md-4">
-                                <div class="checkbox">
-                                    <input type="checkbox" name="deletedUsers" id="deletedUsers" value="{{old('deletedUsers')}}">
-                                    <label for="deletedUsers">{{ trans('telefonListeForm.show-deleted-users') }}</label>
-                                </div>
-                                 <div class="checkbox">  
-                                    <input type="checkbox" name="deletedMandants" id="deletedMandants" value="{{old('deletedMandants')}}">
-                                    <label for="deletedMandants">{{ trans('telefonListeForm.show-deleted-mandants') }}</label>
-                                </div>
-                            </div> --}}
+                            </div><!-- .row -->
                             
                             {{ Form::close() }}
                             <div class="col-xs-4 hidden-md hidden-lg">
@@ -72,39 +76,13 @@
                                         </span> 
                                     </div>
                                    @endif
-                            <div class="col-xs-4 col-md-4 form-inline hidden-xs hidden-sm">
-                                <div class="">
-                                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
-                                        <!--<i class="fa fa-eye"></i> -->
-                                        {{ trans('telefonListeForm.appearance') }}
-                                    </a>
-                                    
-                                    {{--
-                                    @if( ViewHelper::universalHasPermission(array(20)) ) 
-                                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#export">
-                                            <!--<i class="fa fa-file-excel-o "></i> -->
-                                            {{ trans('telefonListeForm.export') }}
-                                        </a>
-                                    @endif
-                                    --}}
-                                    
-                                </div>
-                            </div>
-                            <div class="col-xs-4 col-md-4 hidden-md hidden-lg">
+                         
+                            <div class="col-xs-4  hidden-md hidden-lg">
                                 <span class="custom-input-group-btn">
                                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
-                                        <!--<i class="fa fa-eye"></i> -->
                                         {{ trans('telefonListeForm.appearance') }}
                                     </a>
                                     
-                                    {{--
-                                    @if( ViewHelper::universalHasPermission(array(20)) ) 
-                                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#export">
-                                            <!--<i class="fa fa-file-excel-o "></i> -->
-                                            {{ trans('telefonListeForm.export') }}
-                                        </a>
-                                    @endif
-                                    --}}
                                     
                                 </span>
                             </div>

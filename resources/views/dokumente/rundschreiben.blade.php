@@ -116,7 +116,11 @@
     <div class="col-xs-12">
         <div class="box-wrapper box-white">
             
-            <h2 class="title">Alle Rundschreiben</h2>
+            <h2 class="title">
+                Alle Rundschreiben
+                <a href="{{ action('DocumentController@rundschreiben', ['documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                <a href="{{ action('DocumentController@rundschreiben', ['documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+            </h2>
             
             @if(count($rundAllPaginated))
             
@@ -129,7 +133,11 @@
                 </div>
                 
                 <div class="text-center">
-                    {!! $rundAllPaginated->render() !!}
+                    @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'alle')) 
+                        {!! $rundAllPaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                    @else
+                        {!! $rundAllPaginated->render() !!}
+                    @endif
                 </div>
                 
             @else

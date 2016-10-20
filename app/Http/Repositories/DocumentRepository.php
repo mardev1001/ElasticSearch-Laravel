@@ -169,10 +169,14 @@ class DocumentRepository
                         
                         if($document->documentType->read_required){
                             if($document->document_status_id == 3){
-                                if(isset($readDocument)) 
+                                if(isset($readDocument)){ 
                                     $icon = 'icon-read ';
-                                else
+                                    $node->titleText = 'Gelesen';
+                                }
+                                else {
                                     $icon = 'icon-notread ';
+                                    $node->titleText = 'Muss gelesen werden';
+                                }
                             }
                         }
                             
@@ -200,8 +204,13 @@ class DocumentRepository
                     
                     if($document->documentType->read_required){
                         if($document->document_status_id == 3){ 
-                            if(isset($readDocument)) $icon = 'icon-read ';
-                            else $icon = 'icon-notread ';
+                            if(isset($readDocument)){
+                                $icon = 'icon-read ';
+                                $node->titleText = 'Gelesen';
+                            } else {
+                                $icon = 'icon-notread ';
+                                $node->titleText = 'Muss gelesen werden';
+                            }
                         }
                     }    
                     
@@ -249,7 +258,10 @@ class DocumentRepository
                     
                     
                      
-                    if($document->published && $document->document_status_id == 3) $icon = 'icon-released ';
+                    if($document->published && $document->document_status_id == 3) {
+                        $icon = 'icon-released ';
+                        $node->titleText = 'Veröffentlicht';
+                    }
                     // else $icon = 'icon-notreleased ';
                     
                 }
@@ -277,10 +289,13 @@ class DocumentRepository
                         
                         if($document->documentType->read_required){
                             if($document->document_status_id == 3){
-                                if(isset($readDocument)) 
+                                if(isset($readDocument)) {
                                     $icon = 'icon-read ';
-                                else
+                                    $node->titleText = 'Gelesen';
+                                } else {
                                     $icon = 'icon-notread ';
+                                    $node->titleText = 'Muss gelesen werden';
+                                }
                             }
                         }
                     }
@@ -297,8 +312,10 @@ class DocumentRepository
                 if ($document->document_status_id == 3) {
                     
                     if ($document->created_at->gt(Auth::user()->last_login_history)){
-                        if( $options['pageFavorites'] == false )
+                        if( $options['pageFavorites'] == false ){
                             $icon2 = 'icon-favorites ';
+                            $node->titleText2 = 'Neueste Dokument';
+                        }
                     }
 
                     if($this->canViewHistory()){
@@ -328,12 +345,16 @@ class DocumentRepository
                         }
                     }
                     
-                    if($document->document_status_id == 2)
+                    if($document->document_status_id == 2){
                         $icon = 'icon-open ';
-                    else
+                        $node->titleText = 'Freigegeben';
+                    } else {
                         $icon = 'icon-blocked ';
+                        $node->titleText = 'Nicht Freigegeben';
+                    }
                         
                     $icon2 = 'icon-notreleased ';
+                    $node->titleText2 = 'Nicht veröffentlicht';
                 }
 
                 $node->icon = $icon;
@@ -404,6 +425,7 @@ class DocumentRepository
                                         $subNode = new \StdClass();
                                         $subNode->icon = 'child-node hidden ';
                                         $subNode->icon2 = 'icon-download ';
+                                        $subNode->titleText2 = 'Download';
                                         $subNode->text = $secondDoc->name;
                                         // $subNode->text = $upload->file_path;
                                         $subNode->href = '/download/' . $secondDoc->id . '/' . $upload->file_path;
@@ -902,7 +924,7 @@ class DocumentRepository
         return $object;
     }//end documentVariant permission
    
-    public function getUserPermissionedDocuments($collection,$paginator='page'){
+    public function getUserPermissionedDocuments($collection,$paginator='page',$orderBy=array('field' => 'id', 'sort' => 'desc')){
     	foreach($collection as $key => $document){
 		    if($this->documentVariantPermission($document,false)->permissionExists == false)
 		        unset($collection[$key]);
@@ -911,7 +933,7 @@ class DocumentRepository
 		$documentsNewArr = $collection->pluck('id')->toArray();
 		
         
-        $collection = Document::whereIn('id',$documentsNewArr)->orderBy('documents.id', 'desc')->paginate(50, ['*'], $paginator);
+        $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate(50, ['*'], $paginator);
         // dd($collection);
         return $collection;
     }

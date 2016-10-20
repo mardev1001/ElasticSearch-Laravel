@@ -16,7 +16,7 @@
                                          <a href="/comment-delete/{{$comment->id}}/{{ $comment->document_id }}" class="no-underline delete-prompt"
                                          data-text="Wollen Sie diesen Kommentar wirklich löschen?">
                                              <span class="icon icon-trash inline-block delete-prompt"
-                                         data-text="Wollen Sie diesen Kommentar wirklich löschen?"></span>
+                                         data-text="Wollen Sie diesen Kommentar wirklich löschen?" title="Entfernen"></span>
                                          </a> 
                                     </div><!-- end delete comment box -->
                                     
@@ -35,15 +35,15 @@
                                         @if( $comment->document->published != null )
                                             <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}"> <strong>
                                                 @if( isset($comment->betreff) && !empty($comment->betreff) )
-                                                    {{ $comment->betreff }}
+                                                    {{ $comment->betreff }} -&nbsp;
                                                 @endif
-                                                </strong> -&nbsp </a>
+                                                </strong> </a>
                                         @else
                                             <a href="{{url('/dokumente/'. $comment->document->id)}}"> <strong>
                                              @if( isset($comment->betreff) && !empty($comment->betreff) )
-                                                {{ $comment->betreff }}
+                                                {{ $comment->betreff }} -&nbsp;
                                             @endif
-                                            </strong> -&nbsp </a>
+                                            </strong> </a>
                                         @endif
                                         @if( isset($comment->user) && !empty($comment->user) )
                                             {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }}, {{ $comment->created_at }}

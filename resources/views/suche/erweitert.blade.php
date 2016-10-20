@@ -223,11 +223,7 @@
                                             {{ $document->documentType->name }} -
                                         @endif
                                         
-                                        @if(isset($parameter) && !empty($parameter)) 
-                                            {!! ViewHelper::highlightKeyword($parameter, ViewHelper::highlightKeyword(old('name'), $document->name_long)) !!} -
-                                        @else
-                                            {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
-                                        @endif
+                                        {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
                                         
                                         {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                     @else

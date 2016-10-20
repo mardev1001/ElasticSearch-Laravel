@@ -2,7 +2,14 @@
 
 @extends('master')
 
-@section('page-title') {{ ucfirst( trans('controller.dokumente')) }} - @if( isset($document->documentType->name) ){{ $document->documentType->name }}@endif @stop
+@section('page-title') {{ ucfirst( trans('controller.dokumente')) }} - 
+@if( isset($document->documentType->name) && $document->documentType->id ==4)
+    ISO Dokumente 
+    @if($isoCategoryParent)- {{$isoCategoryParent->name}}@endif
+    @if($isoCategory)- {{$isoCategory->name}}@endif
+@elseif( isset($document->documentType->name) )
+{{ $document->documentType->name }}
+@endif @stop
 
 @section('content')
 

@@ -139,7 +139,12 @@
         
         <div class="box-wrapper box-white">
             
-            <h2 class="title">{{ trans('dokumentTypenForm.typesAll') ." ". $documentType->name }}</h2>
+            <h2 class="title">
+                Alle {{ $documentType->name }}
+                <a href="{{ action('DocumentController@documentType', ['type' => str_slug($documentType->name), 'documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                <a href="{{ action('DocumentController@documentType', ['type' => str_slug($documentType->name), 'documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+            </h2>
+                
             @if(count($documentsByTypePaginated))
                 <div class="box scrollable">
                     <div class="tree-view" data-selector="documentsByTypeTree">
@@ -150,7 +155,11 @@
                 </div>
                 
                 <div class="text-center ">
-                    {!! $documentsByTypePaginated->render() !!}
+                    @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'alle')) 
+                        {!! $documentsByTypePaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                    @else
+                        {!! $documentsByTypePaginated->render() !!}
+                    @endif
                 </div>
             @else
                 <div class="box">

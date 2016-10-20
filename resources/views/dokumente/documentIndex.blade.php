@@ -18,71 +18,71 @@
             
             <div class="box iso-category-overview">
                 
-                @if(count($documentTypes))
-                    
-                    <ul class="level-1">
-                        
-                        @if(!empty($documentTypes))
+                @if(count($documentTypes))  
+                        <ul class="level-1">
                             
-                            @foreach($documentTypes as $documentType)
-                            
-                                @if($documentType->active)
+                            @if(!empty($documentTypes))
                                 
-                                    @if($documentType->visible_navigation)
+                                @foreach($documentTypes as $documentType)
                                 
-                                        @if($documentType->id == 1)
-                                            <li> <a href="{{ url('dokumente/news') }}">{{ $documentType->name }}</a> </li>
-                                        @elseif($documentType->id == 2)
-                                            <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
-                                        @elseif($documentType->id == 3)
-                                            <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
-                                        @elseif($documentType->id == 4)
-                                            <li>
-                                                <a href="{{url('iso-dokumente')}}">{{ $documentType->name }}
-                                                    @if(!empty($isoCategories)) <span class="fa arrow"></span> @endif
-                                                </a>
-                                                
-                                                @if(!empty($isoCategories))
-                                                <ul class="level-2">
-                                                    @foreach($isoCategories as $isoCategory)
-                                                        @if($isoCategory->parent)
-                                                        <li>
-                                                            <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
-                                                            <ul class="level-3">
-                                                            @foreach($isoCategories as $isoCategoryChild)
-                                                                @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
-                                                                    <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
-                                                                @endif
-                                                            @endforeach
-                                                            </ul>
-                                                        </li>
-                                                        @endif
-                                                    @endforeach
-                                                </ul>
-                                                @endif
-                                            </li>
-                                        @elseif($documentType->id == 5)
-                                            <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentType->name }}</a> </li>
-                                        @else
-                                            <li> <a href="{{ url('dokumente/typ/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
+                                    @if($documentType->active)
+                                    
+                                        @if($documentType->visible_navigation)
+                                    
+                                            @if($documentType->id == 1)
+                                                <li> <a href="{{ url('dokumente/news') }}">{{ $documentType->name }}</a> </li>
+                                            @elseif($documentType->id == 2)
+                                                <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
+                                            @elseif($documentType->id == 3)
+                                                <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
+                                            @elseif($documentType->id == 4)
+                                                <li>
+                                                    <a href="{{url('iso-dokumente')}}">{{ $documentType->name }}
+                                                        @if(!empty($isoCategories)) <span class="fa arrow"></span> @endif
+                                                    </a>
+                                                    
+                                                    @if(!empty($isoCategories))
+                                                    <ul class="level-2">
+                                                        @foreach($isoCategories as $isoCategory)
+                                                            @if($isoCategory->parent)
+                                                            <li>
+                                                                <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                                                <ul class="level-3">
+                                                                @foreach($isoCategories as $isoCategoryChild)
+                                                                    @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
+                                                                        <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
+                                                                    @endif
+                                                                @endforeach
+                                                                </ul>
+                                                            </li>
+                                                            @endif
+                                                        @endforeach
+                                                    </ul>
+                                                    @endif
+                                                </li>
+                                            @elseif($documentType->id == 5)
+                                                <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentType->name }}</a> </li>
+                                            @else
+                                                <li> <a href="{{ url('dokumente/typ/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
+                                            @endif
+                                    
                                         @endif
-                                
+                                    
                                     @endif
+                                    
+                                @endforeach
                                 
-                                @endif
-                                
-                            @endforeach
+                            @endif
+                           
                             
-                        @endif
-                       
-                        
-                       
-                        @if( ViewHelper::canCreateEditDoc() == true )
-                            <li>
-                                <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
-                            </li>
-                        @endif
-                    </ul>
+                           
+                            @if( ViewHelper::canCreateEditDoc() == true )
+                                <li>
+                                    <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
+                                </li>
+                            @endif
+                        </ul>
+                    <div class="clearfix"></div>
                 @else
                     Keine Einträge gefunden.
                 @endif

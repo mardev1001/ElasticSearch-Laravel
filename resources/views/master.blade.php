@@ -56,8 +56,6 @@
         <!-- Sidebar navigation -->
         @include('layouts.sidebar')
     
-        
-    
         <!-- Page Content -->
         <div id="page-wrapper">
             <div class="container-fluid first">

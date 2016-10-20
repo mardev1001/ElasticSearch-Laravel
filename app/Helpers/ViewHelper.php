@@ -492,6 +492,28 @@ class ViewHelper
     }
     
     /**
+     * Check if user has mandant variant
+     * @param collection $document
+     * @return int 
+     */
+    static function userHasMandantVariant( $document ){
+        $uid = Auth::user()->id;
+        $variants = EditorVariant::where('document_id',$document->id)->get();
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantUserMandant->toArray();
+        $hasOwnMandant = 0;
+        foreach($variants as $variant){
+            foreach( $variant->documentMandantMandants as $mandant){
+                if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                    $hasOwnMandant = $variant->id;
+                }
+            }
+        }
+        return $hasOwnMandant;
+    }
+    
+    /**
      * Document variant permission
      * @param collection $document
      * @return object $object 
@@ -549,9 +571,19 @@ class ViewHelper
                     foreach( $variant->documentMandantMandants as $mandant){
                         
                         if( self::universalDocumentPermission($document,false,false, true) == true){
+                           if(self::userHasMandantVariant( $document ) == 0 ){
                             $hasPermission = true;
                             $variant->hasPermission = true;
                             $object->permissionExists = true;
+                           }
+                           else{
+                                if($variant->id == self::userHasMandantVariant( $document ) ){
+                                    $hasPermission = true;
+                                    $variant->hasPermission = true;
+                                    $object->permissionExists = true;
+                                }
+                            }
+                           
                             // dd('test');
                         }
                         else if( in_array($mandant->mandant_id,$mandantIdArr) ){

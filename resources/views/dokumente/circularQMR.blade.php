@@ -88,7 +88,7 @@
             
       
         <div class="col-xs-12 col-md-12 box-wrapper box-white">
-            <h4 class="title">{{ trans('rundschreibenQmr.allQmr')}}</h4>
+            <h4 class="title">Alle {{ trans('rundschreibenQmr.allQmr')}}</h4>
             @if(count($qmrAllPaginated))
                 <div class="box scrollable">
                     <div class="tree-view" data-selector="qmrAllTree">

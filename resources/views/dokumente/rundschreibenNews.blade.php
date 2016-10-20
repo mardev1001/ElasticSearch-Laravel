@@ -21,7 +21,12 @@
         
         <div class="box-wrapper box-white">
             
-            <h2 class="title">{{ trans('rundschreiben.newsEntwurf') }}</h2>
+            <h2 class="title">
+                {{ trans('rundschreiben.newsEntwurf') }}
+                {{-- <a href="{{ action('DocumentController@rundschreibenNews', ['documents' => 'entwurf'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a> --}}
+                {{-- <a href="{{ action('DocumentController@rundschreibenNews', ['documents' => 'entwurf'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a> --}}
+            </h2>
+            
             @if(count($newsEntwurfPaginated ))
                 
                 <div class="box scrollable">
@@ -33,6 +38,13 @@
                 </div>
                 
                 <div class="text-center">
+                    {{-- 
+                    @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'entwurf')) 
+                        {!! $newsEntwurfPaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                    @else
+                        {!! $newsEntwurfPaginated->render() !!}
+                    @endif
+                    --}}
                     {!! $newsEntwurfPaginated->render() !!}
                 </div>
                 
@@ -68,6 +80,13 @@
                 </div>
                 
                 <div class="text-center">
+                    {{--
+                    @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'entwurf')) 
+                        {!! $newsEntwurfPaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                    @else
+                        {!! $newsFreigabePaginated->render() !!}
+                    @endif
+                    --}}
                     {!! $newsFreigabePaginated->render() !!}
                 </div>
             @else
@@ -116,7 +135,11 @@
     <div class="col-xs-12">
         <div class="box-wrapper box-white">
             
-            <h2 class="title">{{ trans('rundschreiben.allNews') }}</h2>
+            <h2 class="title">
+               Alle {{ trans('rundschreiben.allNews') }}
+                <a href="{{ action('DocumentController@rundschreibenNews', ['documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                <a href="{{ action('DocumentController@rundschreibenNews', ['documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+            </h2>
             
             @if(count($newsAllPaginated))
                 <div class="box scrollable">
@@ -128,7 +151,11 @@
                 </div>
                 
                 <div class="text-center">
-                    {!! $newsAllPaginated->render() !!}
+                    @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'alle')) 
+                        {!! $newsAllPaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                    @else
+                        {!! $newsAllPaginated->render() !!}
+                    @endif
                 </div>
             @else
                 <div class="box">

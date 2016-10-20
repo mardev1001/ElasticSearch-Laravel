@@ -9,7 +9,7 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
     line-height: 16px;
 }
 .mce-content-body  table{
-    max-width: 800px;
+    max-width: 500px;
 } 
 /*body.mce-content-body {*/
 /*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/

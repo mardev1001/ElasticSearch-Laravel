@@ -569,6 +569,12 @@
 			if (_this.options.showIcon) {
 				
 				var classList = ['node-icon', 'icon-1'];
+				var titleText = '';
+				
+				if(node.titleText != undefined){
+					// console.log(node.titleText);
+					titleText = node.titleText;
+				}
 
 				classList.push(node.icon || _this.options.nodeIcon);
 				if (node.state.selected) {
@@ -583,6 +589,7 @@
 						treeItem
 							.append($(_this.template.icon)
 								.addClass(classList.join(' '))
+								.prop('title', titleText)
 							);
 					// }
 				// }
@@ -592,6 +599,12 @@
 			if (_this.options.showIcon) {
 				
 				var classList = ['node-icon', 'icon-2'];
+				var titleText = '';
+				
+				if(node.titleText2 != undefined){
+					// console.log(node.titleText2);
+					titleText = node.titleText2;
+				}
 
 				classList.push(node.icon2 || _this.options.nodeIcon2);
 				if (node.state.selected) {
@@ -607,6 +620,7 @@
 						treeItem
 							.append($(_this.template.icon)
 								.addClass(classList.join(' '))
+								.prop('title', titleText)
 							);
 					// }
 				// }
@@ -811,8 +825,8 @@
 		icon: '<span class="icon"></span>',
 		icon2: '<span class="icon2"></span>',
 		// icon3: '<span class="icon3"></span>',
-		linkHistory: '<a class="icon node-icon icon-history display-inline-block" href="#"></a>',
-		linkDelete: '<a class="icon node-icon icon-trash display-inline-block" href="#"></a>',
+		linkHistory: '<a class="icon node-icon icon-history display-inline-block" href="#" title="Historie vorhanden"></a>',
+		linkDelete: '<a class="icon node-icon icon-trash display-inline-block" href="#" title="Entfernen"></a>',
 		// linkDelete: '<a href="#" class="node-delete pull-right" style="color:inherit;"><i class="fa fa-1-5x fa-trash text-danger"></i></a>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'

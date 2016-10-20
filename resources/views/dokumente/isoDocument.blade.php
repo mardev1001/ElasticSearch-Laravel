@@ -3,7 +3,9 @@
 @extends('master')
 
 @section('page-title')
-    Alle ISO Dokumente @if($isoCategory)- {{$isoCategory->name}}@endif
+    Dokumente - ISO Dokumente 
+    @if($isoCategoryParent)- {{$isoCategoryParent->name}}@endif
+    @if($isoCategory)- {{$isoCategory->name}}@endif
 @stop
 
 @section('content')
@@ -99,7 +101,7 @@
         
         <div class="col-xs-12">
             <div class="box-wrapper box-white">
-                <h2 class="title">Alle ISO Dokumente</h2>
+                <h2 class="title">Alle @if($isoCategory) {{$isoCategory->name}} @endif</h2>
                     @if(count($isoAllPaginated))
                         <div class="box scrollable">
                             <div class="tree-view" data-selector="isoAllTree">

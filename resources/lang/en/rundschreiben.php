@@ -17,7 +17,7 @@ return [
     'noRelease' => 'nicht freigeben',
     'download' => 'download',
     'meineNews' => 'meine News',
-    'allNews' => 'alle News',
+    'allNews' => 'News',
     'newsEntwurf' => 'Entwurf',
     'rundEntwurf' => 'Entwurf',
     'newsFreigabe' => 'im Freigabeprozess',

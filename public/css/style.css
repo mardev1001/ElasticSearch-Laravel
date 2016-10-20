@@ -1101,9 +1101,13 @@ input.form-control:-ms-input-placeholder {
   padding-left: 0;
   margin-bottom: 0; }
 
+ul.level-1 .fa-arrow, ul.level-2 .fa-arrow, ul.level-3 .fa-arrow {
+  display: none; }
+
 .iso-category-overview ul.level-1 > li {
-  padding-top: 0;
-  padding-bottom: 15px; }
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e7e7e7; }
 
 .iso-category-overview ul.level-2 {
   padding-left: 20px; }
@@ -1701,9 +1705,11 @@ h1.page-title {
   padding: 0; }
 
 .scrollable-document {
-  width: 160px !important;
+  width: 130px !important;
   position: fixed !important;
-  right: 53px;
+  right: 48px;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   z-index: 100;
   background: #fff; }
 
@@ -13200,7 +13206,7 @@ td[data-mce-selected], th[data-mce-selected] {
   line-height: 16px; }
 
 .mce-content-body table {
-  max-width: 600px; }
+  max-width: 500px; }
 
 /*body.mce-content-body {*/
 /*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/

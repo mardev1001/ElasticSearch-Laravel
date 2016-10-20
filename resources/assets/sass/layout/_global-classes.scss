@@ -783,11 +783,15 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 .iso-category-overview ul.level-1{
     padding-left: 0;
     margin-bottom: 0;
+   
 }
-
+ul.level-1 .fa-arrow,ul.level-2 .fa-arrow,ul.level-3 .fa-arrow{
+    display: none;
+}
 .iso-category-overview ul.level-1 > li{
-    padding-top: 0;
-    padding-bottom: 15px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+     border-bottom: 1px solid #e7e7e7;
 }
 
 .iso-category-overview ul.level-2{

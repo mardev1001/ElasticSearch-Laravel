@@ -202,6 +202,7 @@
             }
             .header {
                 top: -15px;
+                position: relative;
             }
             .div-pusher{
                 width:50%;
@@ -230,8 +231,10 @@
                 content: counter(page);
             }
             .first-title.first{
-                margin-top: 70px;
-                margin-bottom:70px;
+                position: absolute;
+                margin-bottom: 70px;
+                top: 70px;
+                z-index: 100;
             }
             .first-title.second{
                 margin-top: 0;
@@ -297,19 +300,19 @@
             table td{
                  /*width: auto !important;*/
             }
-            #absolute{
-                 font-size: 10px !important;
-                 margin-top: -125px;
-                 margin-left: 300px;
-            }
-            .footer { position: fixed; bottom: 10px; left: 350px; }
-            .absolute, .absolute:nth-child(even){
-                width:85px;
-                margin-top: -125px;
-                margin-left: 300px;
-                color: #808080;
+            /*#absolute{*/
+            /*     font-size: 10px !important;*/
+            /*     margin-top: -125px;*/
+            /*     margin-left: 300px;*/
+            /*}*/
+            /*.footer { position: fixed; bottom: 10px; left: 350px; }*/
+            /*.absolute, .absolute:nth-child(even){*/
+            /*    width:85px;*/
+            /*    margin-top: -125px;*/
+            /*    margin-left: 300px;*/
+            /*    color: #808080;*/
                 
-            }
+            /*}*/
             .absolute p{
                 margin-bottom: 0 !important;
                 margin-top: 0 !important;
@@ -317,11 +320,13 @@
             }
         </style>
         @endif
+        
+        
     </head>
     <body>
         
      <!-- if you want header on every page  set the include pdf.header here -->
-      @include('pdf.footer')
+      
       <div id="content">
            @include('pdf.header')
           <h4 class="first-title first">
@@ -342,7 +347,7 @@
           </h4>
           <!--<div class="div-pusher"></div>-->
           <div class="content-wrapper">
-              <div class="row mb90">
+              <div class="row ">
                     <div class="document-title-row">
                         @if( $document->adressat_id != null )
                           <h4 class="document-adressat">{{$document->documentAdressats->name}}</h4>

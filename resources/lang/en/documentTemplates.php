@@ -3,7 +3,7 @@
 return [
 
     'myDocuments' => 'meine Formulare',
-    'allDocuments' => 'alle Formulare',
+    'allDocuments' => 'Formulare',
     'templateEntwurf' => 'Entwurf',
     'templateFreigabe' => 'im Freigabeprozess',
     

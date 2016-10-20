@@ -124,9 +124,11 @@ h1.page-title {
 }
 
 .scrollable-document{
-    width: 160px !important;
+    width: 130px !important;
     position: fixed !important;
-    right: 53px;
+    right: 48px;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
     z-index: 100;
     background: #fff;
 }

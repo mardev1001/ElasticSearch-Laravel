@@ -3,6 +3,7 @@
  */
 $(function() {
     
+    
     // Delete prompt for buttons and anchors
     $('.delete-prompt').on('click touch', function(e) {
         // e.preventDefault();

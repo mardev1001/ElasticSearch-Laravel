@@ -101,7 +101,11 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="box-wrapper box-white">
-            <h2 class="title">{{ trans('documentTemplates.allDocuments') }}</h2>
+            <h2 class="title">
+                Alle {{ trans('documentTemplates.allDocuments') }}
+                <a href="{{ action('DocumentController@documentTemplates', ['documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                <a href="{{ action('DocumentController@documentTemplates', ['documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+            </h2>
             
             @if(count($formulareAllPaginated))
                 <div class="box scrollable">
@@ -112,7 +116,11 @@
                     </div>
                 </div>
                 <div class="text-center">
-                    {!! $formulareAllPaginated->render() !!}
+                    @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'alle')) 
+                        {!! $formulareAllPaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                    @else
+                        {!! $formulareAllPaginated->render() !!}
+                    @endif
                 </div>
             @else
                 <div class="box">

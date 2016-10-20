@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    NEPTUN {{ ucfirst( trans('navigation.verwaltung') )}}
+    NEPTUN-{{ ucfirst( trans('navigation.verwaltung') )}}
 @stop
 
 
