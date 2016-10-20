@@ -25,7 +25,7 @@ class Document extends Model
         'qmr_number','landscape','additional_letter',
     ]; //whitelist
     
-    protected $dates = ['created_at', 'updated_at'];
+    protected $dates = ['created_at', 'updated_at', 'date_published'];
      
     public function getDatePublishedAttribute($value)
     {

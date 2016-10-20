@@ -608,14 +608,17 @@ $(function () {
     /* End Change the hidden input value on sites with .preview */ //.freigabe-mandant
 
 
-    /* Check all options in select */
-    /*
-     $('.all-roles').on('click touch',function(e){
-     $(this).closest('tr').find('[name^="role_id"]').find('option').each(function(){
-     $(this).attr('selected', true).parent().trigger('chosen:updated');  
+    /* Check if option has alle */
+    
+     $('.alle-switch').on('change',function(e){
+         var count = $(this).find('option:selected').length;
+         if( count > 1 ){
+             $(this).find('option:contains("Alle")').prop('selected',false).trigger('chosen:updated');
+         }
+            // $(this).attr('selected', true).parent().trigger('chosen:updated');  
+         
      });
-     });
-     */
+     
 
 
     /* End check all options in select

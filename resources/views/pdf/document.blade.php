@@ -44,8 +44,8 @@
                 
             table td{
                 font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                vertical-align: middle !important;
-                padding: 0px;
+                /*vertical-align: middle !important;*/
+                padding: 1px;
                 line-height: 16px !important;
                 font-size: 14px !important;
             }

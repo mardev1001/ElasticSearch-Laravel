@@ -52,7 +52,7 @@
                         <div class="col-xs-12 col-md-6">
                                <div class="form-group">
                                   <label>{{ trans('rightsRelease.roles') }}</label>
-                                    <select name="roles[]" class="form-control select" data-placeholder="{{ trans('rightsRelease.roles') }}" multiple>
+                                    <select name="roles[]" class="form-control select alle-switch" data-placeholder="{{ trans('rightsRelease.roles') }}" multiple>
                                         @if( $data->approval_all_roles == true )
                                             <option value="0"></option>
                                             <option value="Alle" selected>Alle</option>
@@ -89,7 +89,7 @@
                             <div class="col-xs-12 col-md-6">
                                     <div class="form-group">
                                         <label>{{ trans('rightsRelease.variante') }} {{$k+1}}</label>
-                                        <select name="variante-{{$k+1}}[]" class="form-control select freigabe-mandant" 
+                                        <select name="variante-{{$k+1}}[]" class="form-control select freigabe-mandant alle-switch" 
                                          data-placeholder="{{ trans('rightsRelease.variante') }} {{$k+1}}"  
                                          @if( count($variants) > 1)
                                             required

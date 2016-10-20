@@ -129,6 +129,9 @@ $(function() {
     if(advSearchCheckbox.prop('checked') == false) {
         // $('input.adv-parameter').prop('disabled', false);
         advSearchContainer.hide(400);
+        $(".advanced-search input:text").val("");
+        $('.advanced-search input:checkbox').removeAttr('checked');
+        $('.advanced-search select').prop('selectedIndex',0).trigger('chosen:updated');
     } else {
         // $('input.adv-parameter').prop('disabled', true)
         advSearchContainer.show(400);
@@ -140,6 +143,10 @@ $(function() {
         if(advSearchCheckbox.prop('checked') == false){
             // $('input.adv-parameter').prop('disabled', false);
             advSearchContainer.hide(400);
+            $(".advanced-search input:text").val("");
+            $('.advanced-search input:checkbox').removeAttr('checked');
+            $('.advanced-search select').prop('selectedIndex',0).trigger('chosen:updated');
+            
         } else {
             // $('input.adv-parameter').prop('disabled', true);
             advSearchContainer.show(400);

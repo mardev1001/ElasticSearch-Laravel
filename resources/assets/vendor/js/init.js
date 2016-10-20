@@ -533,34 +533,35 @@ $(function() {
                 style_formats_merge: true,
                 elementpath: false,
                 setup: function (editor) {
-                editor.on('ExecCommand',function(e){
-                    console.log(e);
+                editor.on('click', function (e) {
+                    console.log(e.element);
+                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                        console.log('triggerd 1');
+                        e.find('td').each(function(){
+                            processTableColumn( $(this) );
+                        });
+                        console.log('triggerd 2');
+                    }
+                    if( e && e.element.nodeName.toLowerCase() == 'td' ){
+                        console.log('triggerd3');
+                        processTableColumn(e);
+                        console.log('triggerd 24');
+                    }
                 });
                 editor.on('NodeChange', function(e) {
-                    
+                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                        console.log('triggerd5');
+                        e.find('td').each(function(){
+                            processTableColumn( $(this) );
+                        })
+                        console.log('triggerd6');
+                    }
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        var td = $(e.element), maxHeight =  $(e.element).height() ;
-                       
-                        $( e.element ).find('img').each(function() {
-                            var height = $(this).innerHeight(), width = $(this).innerWidth();
-                            $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
-                            $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
-                            if(height != maxHeight-5 && height > maxHeight)
-                                maxHeight = height+5;
-                                console.log('trigged');
-                        });
-                        td.closest('tr').addClass('test');
-                        if(td.css('height')){
-                            td.css('height', maxHeight);
-                        }
-                        else{
-                            td.attr('style', td.attr('style')+' height:'+ maxHeight+'px !important;');
-                        }
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'height:'+ maxHeight+'px !important;');
-                        
+                        console.log('triggerd7');
+                        processTableColumn(e);
+                        console.log('triggerd8');
                     }
                     
-                 
     });
                 editor.addButton('mybutton', {
                         type: 'button',
@@ -715,83 +716,115 @@ $(function() {
         
     }
     
-   
-    /*$('form').submit(function(e){
+    function processTableColumn(e){
+        var td = $(e.element), maxHeight =  $(e.element).height() ;
         
-        if( $(this).find('.variant').length ){
-            // 
-            
-            e.preventDefault();
-            var form = $(this);
-             $('.variant').each(function(){
-                 var id = $(this).attr('id');
-                 $('#'+id).html(tinymce.get(id).getContent());
-                 tinymce.get(id).save();
-                 var content = $('#'+id+'_ifr').get(0).contentWindow.document.body.innerHTML;
-                 if( content == '<p><br data-mce-bogus="1"></p>')
-                    content = '';
-                 console.log(id);
-                //  console.log(tinyMCE.get(id));
-                //  console.log(tinymce.get(id).getContent());
-                //  console.log( $('#'+id+'_ifr body').contents() );
-                //  console.log( $('#'+id+'_ifr body').contents().html() );
-                //  console.log( $('#'+id+'_ifr body').html() );
-                //  console.log( $('#'+id+'_ifr body').text() );
-                 console.log( );
-                //  console.log( $(document).find('#'+id+'_ifr body').contents().find("html").html() );
-                //  console.log( document.getElementById(id).contentWindow.document.body.innerHTML);
-                 
-             });
-            //   form.trigger('submit');
-        }
+        /*If td has images correct the whole row */
+        if(td.find('img').length){
+            ( e.element ).find('img').each(function() {
+                var height = $(this).innerHeight(), width = $(this).innerWidth();
+                $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
+                $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
+                if(height != maxHeight && height > maxHeight)
+                    maxHeight = height;
+            });
+        }               
         
-        // $('#elm1').html(tinymce.get('elm1').getContent()); 
-    });*/
-    
-    function elFinderBrowser (field_name, url, type, win) {
-      tinymce.activeEditor.windowManager.open({
-        file: '',// use an absolute path!
-        title: 'elFinder 2.0',
-        width: 900,
-        height: 450,
-        resizable: 'yes'
-      }, {
-        setUrl: function (url) {
-          win.document.getElementById(field_name).value = url;
-        }
-      });
-      return false;
+        
+        /* Determine the biggest height in tr*/
+            td.closest('tr').find('td').each(function(){
+                if( maxHeight < $(this).height() )
+                    maxHeight = $(this).height(); 
+            });
+        /* End Determine the biggest height in tr*/
+        
+        /* Go to each td, clear the style height, data-mce-style and after that set height and width */
+            td.closest('tr').attr('style',findTinyMCE(td.closest('tr'),'height')+';').find('td').each(function(){
+                    removeCss( $(this),'height');
+                    removeCss( $(this),'min-height');
+                    removeCss( $(this),'width');
+                    removeCss( $(this),'vertical-align');
+                    removeCss( $(this),'height','data-mce-style');
+                    removeCss( $(this),'min-height','data-mce-style');
+                    removeCss( $(this),'width','data-mce-style');
+                    removeCss( $(this),'vertical-align','data-mce-style');
+                    
+                    removeCss( $(this),'height');
+                    removeCss( $(this),'height','data-mce-style');
+                    
+                    setNewTdAttributes($(this), maxHeight)
+                    setNewTdAttributes($(this), maxHeight, attribute='data-mce-style')
+            });
+        /* End Go to each td, clear the style height, data-mce-style and after that set height and width */
+                    findTinyMCE(td.closest('tr'),'height');
+                     totalTableHeight = td.closest('table').height();
+                    
+                    /*removeCss( $(this),'height');
+                    removeCss( $(this),'height','data-mce-style');*/
+                    var cnt = 0;
+                    td.closest('table').find('tr').each(function(){
+                        cnt = cnt+ $(this).height();
+                    });
+                    setNewTdAttributes(td.closest('table'), cnt, attribute='style',true);
+                    setNewTdAttributes(td.closest('table'), cnt, attribute='data-mce-style',true);
     }
-    var imageFilePicker = function (callback, value, meta) {               
-    tinymce.activeEditor.windowManager.open({
-        title: 'Image Picker',
-        url: '/images/getimages',
-        width: 650,
-        height: 550,
-        buttons: [{
-            text: 'Insert',
-            onclick: function () {
-                //.. do some work
-                tinymce.activeEditor.windowManager.close();
+    
+    /* Remove style */
+    function removeCss(element, toDelete,attribute='style'){
+                console.log(element);
+            var props=element.attr(attribute).split(';');
+            var tmp=-1;
+            for( var p=0;p<props.length; p++){if(props[p].indexOf(toDelete)!==-1){tmp=p}};
+            if(tmp!==-1){
+                delete props[tmp];
             }
-        }, {
-            text: 'Close',
-            onclick: 'close'
-        }],
-    }, {
-        oninsert: function (url) {
-            callback(url);
-            console.log("derp");
-        },
-    });
-};
-    /*Scroll to element id*/
-    if( $('.scrollTo').length ){
-        var element = $('.scrollTo').val(), navHeight = $('.navbar-fixed-top').height()+10;
-        var contactTopPosition = $(element).position().top;
-    
+                for(var key in props){
+                    if( props[key].trim() == ''  )
+                        delete props[key];
+                }
+                var finalAttr = '';
+                for(var key in props){
+                    finalAttr += props[key]+'; '
+                }
+          return element.attr(attribute,finalAttr);
+        
     }
-    /*End Scroll to element id*/
+    /*End remove style*/
+    
+    /* Remove style */
+    function findTinyMCE(element, toDelete,attribute='data-mce-style'){
+        
+            var props=element.attr(attribute).split(';');
+            var tmp=-1;
+            for( var p=0;p<props.length; p++){if(props[p].indexOf(toDelete)!==-1){tmp=p}};
+            if(tmp!==-1){
+                return props[tmp];
+            }
+               /* var finalAttr = '';
+                for(var key in props){
+                    finalAttr += props[key]+'; '
+                }
+          return element.attr(attribute,finalAttr);*/
+        
+    }
+    /*End remove style*/
+    
+    function setNewTdAttributes(element, height, attribute='style',isRow=false){
+      
+            var existingAttribute = element.attr(attribute);
+            if( existingAttribute.indexOf('height') == -1 )
+                existingAttribute = existingAttribute+' height:'+height+'px !important; ';
+            if( isRow == false ){
+                if( existingAttribute.indexOf('width') == -1 )
+                    existingAttribute = existingAttribute+' width:'+element.width()+'px !important; ';  
+            }    
+              
+            return element.attr(attribute,existingAttribute);
+        
+    }
+    
+    
+    
 
     /* Automatic trigger to open the panel heading */
     if( $('[data-open]').length){

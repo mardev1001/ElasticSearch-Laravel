@@ -466,7 +466,7 @@ body#app-layout {
 
 /* Layout - Header, footer, forms, sidebar */
 body {
-  background: url("/img/NeptunBG_3_08_16.png") #fff no-repeat;
+  background: url("/img/bgrnd.png") #fff no-repeat;
   background-position: center top;
   padding-top: 148px;
   font-size: 12px !important;
