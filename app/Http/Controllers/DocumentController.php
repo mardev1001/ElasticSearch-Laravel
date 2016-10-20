@@ -1368,8 +1368,10 @@ class DocumentController extends Controller
             
         if($document->document_type_id == 4){
             // dd($document);
-            $isoCategory =  IsoCategory::find($document->iso_category_id);
-            $isoCategoryName = str_slug($isoCategory->name);
+            if( $document->iso_category_id != null ){
+				$isoCategory =  IsoCategory::find($document->iso_category_id);
+				$isoCategoryName = str_slug($isoCategory->name);
+			}
         }
         
             
@@ -1968,15 +1970,20 @@ class DocumentController extends Controller
         
         $document = Document::find($id);
         $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+        
+        \PDF::setHeaderHtml(view('pdf.header' )->render());
+        \PDF::setFooterHtml(view('pdf.footer', compact('document','variants','dateNow') )->render());
+        // dd (\PDF::getFooterHtml() );
         //   dd($render);
+        $pdf = \PDF::html('pdf.document', compact('document','variants','dateNow'));
+        
         // return $render;
-         $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
         /* If document type Iso Category load different PDF template*/    
          if($document->document_type_id == $this->isoDocumentId){
              
              $html = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
             //  return $html;
-             $pdf = \PDF::loadHTML($html);
+             $pdf = \PDF::html($html);
          }
             
         /* End If document type Iso Category load different PDF template*/    
@@ -2018,7 +2025,7 @@ class DocumentController extends Controller
        
         /* If document type Iso Category load different PDF template*/    
          if($document->document_type_id == $this->isoDocumentId)
-            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
+            $pdf = \PDF::html('pdf.documentIso', compact('document','variants','dateNow'));
         /* End If document type Iso Category load different PDF template*/    
         
         /* If landscape is true set paper to landscape */    

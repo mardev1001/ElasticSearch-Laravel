@@ -13,12 +13,17 @@
                 }
                 p,li{
                     font-size: 14px ;
+                    line-height: 16px;
+                }
+                
+                p{
+                    margin: 14px 0 12px 0!important;/*This is actually 14px 0 but 15 is set as an print correction*/
                 }
                 
                 table td p {
-                    margin-top: 5px;
-                    margin-bottom: 5px;
-                    line-height: 22px;
+                    /*margin-top: 5px;*/
+                    /*margin-bottom: 5px;*/
+                    /*line-height: 22px;*/
                 }
                 
                  h1{
@@ -197,6 +202,7 @@
             }
             .header {
                 top: -15px;
+                position: relative;
             }
             .div-pusher{
                 width:50%;
@@ -225,15 +231,17 @@
                 content: counter(page);
             }
             .first-title.first{
-                margin-top: 70px;
-                margin-bottom:70px;
+                position: absolute;
+                margin-bottom: 70px;
+                top: 70px;
+                z-index: 100;
             }
             .first-title.second{
                 margin-top: 0;
                 margin-bottom:50px;
             }
              .first-title, .content-wrapper{
-                padding: 0 80px 10px 30px;
+                padding: 0 80px 10px 31px;
             }
             .document-title-row{
                 width: 70%;
@@ -312,13 +320,14 @@
             }
         </style>
         @endif
+        
+        
     </head>
     <body>
         
      <!-- if you want header on every page  set the include pdf.header here -->
-      @include('pdf.footer')
+      
       <div id="content">
-           @include('pdf.header')
           <h4 class="first-title first">
             @if( $document->document_type_id == 3 )
               QMR

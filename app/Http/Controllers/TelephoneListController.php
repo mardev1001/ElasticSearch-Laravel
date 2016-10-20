@@ -238,7 +238,8 @@ class TelephoneListController extends Controller
         $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
         $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
         
-        $pdf = \PDF::loadView('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
+        // $pdf = \PDF::loadView('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
+        $pdf = \PDF::html('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
         return $pdf->stream();
     }
     

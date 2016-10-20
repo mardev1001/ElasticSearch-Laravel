@@ -5,7 +5,7 @@ return [
     'stats' => 'Statistik',
     'user' => 'Benutzer',
     'mandant' => 'Mandant',
-    'read' => 'Gelesen',
+    'read' => 'gelesen',
     'date' => 'Datum',
     'first' => 'zuerst',
     'last' => 'zuletzt',

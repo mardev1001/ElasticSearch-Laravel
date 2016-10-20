@@ -1,16 +1,16 @@
-<?php
+﻿<?php
 
 return [
-    'documentType' => 'Dokumente Typ',
+    'documentType' => 'Dokument-Typ',
     'type' => 'Typ',
-    'documentName' => 'Dokument name',
-    'owner' => 'Eigentümer',
-    'searchTags' => 'Suche Tags',
+    'documentName' => 'Dokument-Name',
+    'owner' => 'Besitzer',
+    'searchTags' => 'Such-Tags',
     'summary' => 'Beschreibung',
     'datePublished' => 'Veröffentlichungstermin',
     'dateExpired' => 'Verfallsdatum',
-    'isoCategory' => 'Kategorie ISO Dokument',
-    'showName' => 'Namen nicht angzeigen',
+    'isoCategory' => 'Kategorie bei ISO-Dokumenten',
+    'showName' => 'Namen nicht anzeigen',
     'adressat' => 'adressat_id',
     'subject' => 'Betreff',
     'pdfUpload' => 'PDF upload',

@@ -129,12 +129,6 @@ Mandantenverwaltung - Benutzer anlegen
                         {!! ViewHelper::setInput('active_to', '', old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
-
-                <div class="col-md-3 col-lg-3"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('active_to', '', old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
-                    </div>   
-                </div>
             </div><!--end class row-->
             
             <div class="row">

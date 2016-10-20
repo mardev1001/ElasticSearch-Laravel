@@ -3,8 +3,8 @@
 return [
 
     'qmrEntwurf' => 'Entwurf',
-    'qmrFreigabe' => 'Im Freigabeprozess',
-    'myQmr' => 'Meine QM-Rundschreiben',
-    'allQmr' => 'Alle QM-Rundschreiben',
+    'qmrFreigabe' => 'im Freigabeprozess',
+    'myQmr' => 'meine QM-Rundschreiben',
+    'allQmr' => 'alle QM-Rundschreiben',
     
 ];

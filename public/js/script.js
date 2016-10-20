@@ -115003,25 +115003,19 @@ $(function() {
                 removed_menuitems: 'newdocument',
                 elementpath: false,
                 setup: function (editor) {
+                editor.on('click', function (e) {
+                });
                 editor.on('NodeChange', function(e) {
-                    // console.log( e.element.find('img') );
-                    // console.log( e.element.parseHTML() );
+                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                       
+                        e.find('td').each(function(){
+                            processTableColumn( $(this) );
+                        })
+                    }
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        
-                        var td = $(e.element), maxHeight =  $(e.element).height() ;
-                        
-                        $( e.element ).find('img').each(function() {
-                            var height = $(this).innerHeight(), width = $(this).innerWidth();
-                            $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            if(height != maxHeight && height > maxHeight)
-                                maxHeight = height;
-                        });
-                        td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;')
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ')
+                        processTableColumn(e);
                     }
                     
-                 
     });
                 editor.addButton('mybutton', {
                         type: 'button',
@@ -115200,25 +115194,19 @@ $(function() {
                 removed_menuitems: 'newdocument',
                 elementpath: false,
                 setup: function (editor) {
+                editor.on('click', function (e) {
+                });
                 editor.on('NodeChange', function(e) {
-                    // console.log( e.element.find('img') );
-                    // console.log( e.element.parseHTML() );
+                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                       
+                        e.find('td').each(function(){
+                            processTableColumn( $(this) );
+                        })
+                    }
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        
-                        var td = $(e.element), maxHeight =  $(e.element).height() ;
-                        
-                        $( e.element ).find('img').each(function() {
-                            var height = $(this).innerHeight(), width = $(this).innerWidth();
-                            $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            if(height != maxHeight && height > maxHeight)
-                                maxHeight = height;
-                        });
-                        td.attr('style', td.attr('style')+'min-height: '+maxHeight+'px !important;');
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height: '+maxHeight+'px !important; ');
+                        processTableColumn(e);
                     }
                     
-                 
     });
                 editor.addButton('mybutton', {
                         type: 'button',
@@ -115411,32 +115399,16 @@ $(function() {
                 elementpath: false,
                 setup: function (editor) {
                 editor.on('click', function (e) {
-                    console.log(e.element);
-                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
-                        console.log('triggerd 1');
-                        e.find('td').each(function(){
-                            processTableColumn( $(this) );
-                        });
-                        console.log('triggerd 2');
-                    }
-                    if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        console.log('triggerd3');
-                        processTableColumn(e);
-                        console.log('triggerd 24');
-                    }
                 });
                 editor.on('NodeChange', function(e) {
-                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
-                        console.log('triggerd5');
+                    /*if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                       
                         e.find('td').each(function(){
                             processTableColumn( $(this) );
                         })
-                        console.log('triggerd6');
-                    }
+                    }*/
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        console.log('triggerd7');
                         processTableColumn(e);
-                        console.log('triggerd8');
                     }
                     
     });
@@ -115484,7 +115456,9 @@ $(function() {
                                             // console.log('create image 2');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                           imgWidth = img.width;
+                                            imgHeight =img.height;
+                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
 
@@ -115530,7 +115504,13 @@ $(function() {
                                             // console.log('create image 3');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                            imgWidth = img.width;
+                                            imgHeight =img.height;
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
                                     }
@@ -115539,7 +115519,6 @@ $(function() {
 
                             }
                             if ($(e.target).prop("tagName") == 'I') {
-                                console.log($(e.target).parent().parent().parent().find('input').attr('id'));
                                 if ($(e.target).parent().parent().parent().find('input').attr('id') != 'tinymce-uploader') {
                                     $(e.target).parent().parent().parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
@@ -115575,7 +115554,13 @@ $(function() {
                                             // console.log('create image 1');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                            imgWidth = img.width;
+                                            imgHeight =img.height;
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                            editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
                                     }
@@ -115594,23 +115579,27 @@ $(function() {
     }
     
     function processTableColumn(e){
-        var td = $(e.element), maxHeight =  $(e.element).height() ;
+        var td = $(e.element), maxHeight =  $(e.element).height()+1 ;
         
         /*If td has images correct the whole row */
         if(td.find('img').length){
-            ( e.element ).find('img').each(function() {
+           /* $( e.element ).find('img').each(function() {
                 var height = $(this).innerHeight(), width = $(this).innerWidth();
-                $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
-                $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; width: '+width+'px !important;')
+                // $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; width: '+width+'px !important;');
+                // $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; width: '+width+'px !important;');
+                $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; width: '+width+'px !important;');
+                $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; width: '+width+'px !important;');
                 if(height != maxHeight && height > maxHeight)
                     maxHeight = height;
-            });
+            });*/
         }               
         
         
         /* Determine the biggest height in tr*/
+        
             td.closest('tr').find('td').each(function(){
-                if( maxHeight < $(this).height() )
+                var calc = $(this).height();
+                if( maxHeight < $(this).height())
                     maxHeight = $(this).height(); 
             });
         /* End Determine the biggest height in tr*/
@@ -115619,18 +115608,19 @@ $(function() {
             td.closest('tr').attr('style',findTinyMCE(td.closest('tr'),'height')+';').find('td').each(function(){
                     removeCss( $(this),'height');
                     removeCss( $(this),'min-height');
-                    removeCss( $(this),'width');
+                    // removeCss( $(this),'width');
+                    
                     removeCss( $(this),'vertical-align');
                     removeCss( $(this),'height','data-mce-style');
                     removeCss( $(this),'min-height','data-mce-style');
-                    removeCss( $(this),'width','data-mce-style');
+                    // removeCss( $(this),'width','data-mce-style');
                     removeCss( $(this),'vertical-align','data-mce-style');
                     
                     removeCss( $(this),'height');
                     removeCss( $(this),'height','data-mce-style');
                     
-                    setNewTdAttributes($(this), maxHeight)
-                    setNewTdAttributes($(this), maxHeight, attribute='data-mce-style')
+                    setNewTdAttributes($(this), maxHeight,'style',true)
+                    setNewTdAttributes($(this), maxHeight, attribute='data-mce-style',true)
             });
         /* End Go to each td, clear the style height, data-mce-style and after that set height and width */
                     findTinyMCE(td.closest('tr'),'height');
@@ -115642,13 +115632,13 @@ $(function() {
                     td.closest('table').find('tr').each(function(){
                         cnt = cnt+ $(this).height();
                     });
-                    setNewTdAttributes(td.closest('table'), cnt, attribute='style',true);
-                    setNewTdAttributes(td.closest('table'), cnt, attribute='data-mce-style',true);
+                    td.closest('table').css('height','auto')
+                    /*setNewTdAttributes(td.closest('table'), cnt, attribute='style',true);
+                    setNewTdAttributes(td.closest('table'), cnt, attribute='data-mce-style',true);*/
     }
     
     /* Remove style */
     function removeCss(element, toDelete,attribute='style'){
-                console.log(element);
             var props=element.attr(attribute).split(';');
             var tmp=-1;
             for( var p=0;p<props.length; p++){if(props[p].indexOf(toDelete)!==-1){tmp=p}};
@@ -115670,8 +115660,10 @@ $(function() {
     
     /* Remove style */
     function findTinyMCE(element, toDelete,attribute='data-mce-style'){
-        
-            var props=element.attr(attribute).split(';');
+            if(typeof element.attr(attribute) != 'undefined' )
+                var props=element.attr(attribute).split(';');
+            else
+                return 'height:'+element.height()-1+'px';
             var tmp=-1;
             for( var p=0;p<props.length; p++){if(props[p].indexOf(toDelete)!==-1){tmp=p}};
             if(tmp!==-1){
@@ -115813,7 +115805,8 @@ $(function () {
             if (typeof  isoCategoryName != 'undefined') {
                 detectHref = $('#side-menu').find('a:contains("' + isoCategoryName + '")').attr('href');
                  if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
-                      $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').addClass('in');
+                      $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').next('ul').addClass('in');
+                     
                  }
                
 
@@ -116058,25 +116051,19 @@ $(function () {
                 ],
                 style_formats_merge: true,
                 setup: function (editor) {
+                editor.on('click', function (e) {
+                });
                 editor.on('NodeChange', function(e) {
-                    // console.log( e.element.find('img') );
-                    // console.log( e.element.parseHTML() );
+                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                       
+                        e.find('td').each(function(){
+                            processTableColumn( $(this) );
+                        })
+                    }
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        var td = $(e.element), maxHeight =  $(e.element).height() ;
-                        
-                        $( e.element ).find('img').each(function() {
-                            var height = $(this).innerHeight(), width = $(this).innerWidth();
-                            $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            if(height != maxHeight && height > maxHeight)
-                                maxHeight = height;
-                        });
-                        td.attr('style', td.attr('style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important; vertical-align: middle !important;');
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important;');
-                        
+                        processTableColumn(e);
                     }
                     
-                 
     });
                 editor.addButton('mybutton', {
                         type: 'button',

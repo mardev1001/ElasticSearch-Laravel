@@ -92,7 +92,8 @@ $(function () {
             if (typeof  isoCategoryName != 'undefined') {
                 detectHref = $('#side-menu').find('a:contains("' + isoCategoryName + '")').attr('href');
                  if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
-                      $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').addClass('in');
+                      $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').next('ul').addClass('in');
+                     
                  }
                
 
@@ -337,25 +338,19 @@ $(function () {
                 ],
                 style_formats_merge: true,
                 setup: function (editor) {
+                editor.on('click', function (e) {
+                });
                 editor.on('NodeChange', function(e) {
-                    // console.log( e.element.find('img') );
-                    // console.log( e.element.parseHTML() );
+                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                       
+                        e.find('td').each(function(){
+                            processTableColumn( $(this) );
+                        })
+                    }
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
-                        var td = $(e.element), maxHeight =  $(e.element).height() ;
-                        
-                        $( e.element ).find('img').each(function() {
-                            var height = $(this).innerHeight(), width = $(this).innerWidth();
-                            $(this).attr('style', $(this).attr('style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            $(this).attr('data-mce-style', $(this).attr('data-mce-style')+'min-height: '+height+'px !important; min-width: '+width+'px !important;')
-                            if(height != maxHeight && height > maxHeight)
-                                maxHeight = height;
-                        });
-                        td.attr('style', td.attr('style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important; vertical-align: middle !important;');
-                        td.attr('data-mce-style', td.attr('data-mce-style')+'min-height:'+maxHeight+'; height:'+ maxHeight+'px !important;');
-                        
+                        processTableColumn(e);
                     }
                     
-                 
     });
                 editor.addButton('mybutton', {
                         type: 'button',

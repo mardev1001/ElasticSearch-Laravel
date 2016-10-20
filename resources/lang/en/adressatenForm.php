@@ -8,9 +8,9 @@ return [
     'management' => 'Verwalten',
     'name' => 'Name',
     'overview' => 'Übersicht',
-    'add' => 'Hinzufügen',
-    'save' => 'Speichern',
-    'active' => 'Aktiv',
-    'inactive' => 'Inaktiv',
+    'add' => 'hinzufügen',
+    'save' => 'speichern',
+    'active' => 'aktiv',
+    'inactive' => 'inaktiv',
     
 ];

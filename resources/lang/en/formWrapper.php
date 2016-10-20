@@ -2,10 +2,10 @@
 
 return [
 
-    'cancel'    => 'Abbrechen',
-    'reset'     => 'Zurücksetzen',
-    'save'      => 'Speichern',
-    'update'    => 'Speichern'
+    'cancel'    => 'abbrechen',
+    'reset'     => 'zurücksetzen',
+    'save'      => 'ppeichern',
+    'update'    => 'speichern'
     // 'update'    => 'Aktualisieren'
     
 ];

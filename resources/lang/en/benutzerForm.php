@@ -2,7 +2,7 @@
 
 return [
     'profileTitle' => 'Profil bearbeiten',
-    'baseInfo' => 'Basis Informationen',
+    'baseInfo' => 'Basisinformationen',
     'title' => 'Anrede',
     'username' => 'Benutzername',
     'username_sso' => 'Single Sign ON - Name',
@@ -25,17 +25,17 @@ return [
     'overview' => 'Übersicht',
     'options' => 'Optionen',
     'add' => 'hinzufügen',
-    'remove' => 'Entfernen',
+    'remove' => 'entfernen',
     'edit' => 'bearbeiten',
-    'active' => 'Aktiv',
-    'active_from' => 'Aktiv von',
-    'active_to' => 'Aktiv bis',
+    'active' => 'aktiv',
+    'active_from' => 'aktiv ab',
+    'active_to' => 'aktiv bis',
     'search' => 'Suche',
-    'save' => 'Speichern',
-    'reset' => 'Zurücksetzen',
+    'save' => 'speichern',
+    'reset' => 'zurücksetzen',
     'phone' => 'Telefon',
     'phone_short' => 'Kurzwahl',
     
-    'lastMandantRole' => 'Diese Rolle kann nicht gelöscht werden. Dies ist eine relevante System Rolle.',
+    'lastMandantRole' => 'Diese Benutzer-Rolle kann nicht gelöscht werden. Dies ist eine System relevante Benutzer-Rolle.',
     
 ];

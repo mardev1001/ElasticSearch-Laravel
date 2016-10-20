@@ -2,9 +2,9 @@
 
 return [
 
-    'myDocuments' => 'Meine Formulare',
-    'allDocuments' => 'Alle Formulare',
+    'myDocuments' => 'meine Formulare',
+    'allDocuments' => 'alle Formulare',
     'templateEntwurf' => 'Entwurf',
-    'templateFreigabe' => 'Im Freigabeprozess',
+    'templateFreigabe' => 'im Freigabeprozess',
     
 ];

@@ -25,18 +25,24 @@
                                 <input type="text" class="form-control" name="search"
                                 placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.searchTextOptions') }}" required
                                 @if(isset($searchParameter)) value="{{$searchParameter}}" @endif>
-                                <span class="custom-input-group-btn">
-                                    <button type="submit" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
-                                        <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
-                                    </button>
-                                    
-                                    @if(isset($searchParameter))
-                                        <a href="{{url('telefonliste')}}" class="btn btn-primary no-margin-bottom">{{ trans('telefonListeForm.reset') }}</a>
-                                    @endif
-                                    
-                                </span> 
-                               
+                                <div class="col-xs-4 hidden-sm hidden-xs">
+                                    <span class="custom-input-group-btn">
+                                        <button type="submit" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
+                                            <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
+                                        </button>
+                                        
+                                        
+                                    </span> 
+                                </div>
+                                  @if(isset($searchParameter))
+                                    <div class="col-xs-4 hidden-sm hidden-xs">
+                                        <span class="custom-input-group-btn">
+                                            <a href="{{url('telefonliste')}}" class="btn btn-primary no-margin-bottom">{{ trans('telefonListeForm.reset') }}</a>
+                                        </span> 
+                                    </div>
+                                   @endif
                             </div>
+                           
                             
                             {{-- <div class="col-xs-12 col-md-4">
                                 <div class="checkbox">
@@ -50,7 +56,23 @@
                             </div> --}}
                             
                             {{ Form::close() }}
-                            <div class="col-xs-12 col-md-4 form-inline">
+                            <div class="col-xs-4 hidden-md hidden-lg">
+                                    <span class="custom-input-group-btn">
+                                        <button type="submit" class="btn btn-primary no-margin-bottom" title="{{ trans('telefonListeForm.search') }}">
+                                            <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
+                                        </button>
+                                        
+                                        
+                                    </span> 
+                                </div>
+                                  @if(isset($searchParameter))
+                                    <div class="col-xs-4 hidden-md hidden-lg">
+                                        <span class="custom-input-group-btn">
+                                            <a href="{{url('telefonliste')}}" class="btn btn-primary no-margin-bottom">{{ trans('telefonListeForm.reset') }}</a>
+                                        </span> 
+                                    </div>
+                                   @endif
+                            <div class="col-xs-4 col-md-4 form-inline hidden-xs hidden-sm">
                                 <div class="">
                                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
                                         <!--<i class="fa fa-eye"></i> -->
@@ -67,6 +89,24 @@
                                     --}}
                                     
                                 </div>
+                            </div>
+                            <div class="col-xs-4 col-md-4 hidden-md hidden-lg">
+                                <span class="custom-input-group-btn">
+                                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#darstellung">
+                                        <!--<i class="fa fa-eye"></i> -->
+                                        {{ trans('telefonListeForm.appearance') }}
+                                    </a>
+                                    
+                                    {{--
+                                    @if( ViewHelper::universalHasPermission(array(20)) ) 
+                                        <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#export">
+                                            <!--<i class="fa fa-file-excel-o "></i> -->
+                                            {{ trans('telefonListeForm.export') }}
+                                        </a>
+                                    @endif
+                                    --}}
+                                    
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -109,7 +149,8 @@
                             
                             <span class="panel-options col-xs-2 no-margin-top">
                                 <span class="pull-right">
-                                    <a href="#" data-toggle="modal" data-target="#details{{$mandant->id}}" class="btn btn-primary no-arrow"> Auszug Mandaten Gesamt </a><!-- before was Detailansicht --> 
+                                    <a href="#" data-toggle="modal" data-target="#details{{$mandant->id}}" class="btn btn-primary no-arrow">
+                                        Auszug Mandanten Gesamt  </a><!-- before was Detailansicht --> 
                                 </span>
                             </span>
                             

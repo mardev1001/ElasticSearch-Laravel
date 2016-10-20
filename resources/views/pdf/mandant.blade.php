@@ -113,9 +113,9 @@
 </head>
 
 <body>
-@include('pdf.footer')
+{{-- @include('pdf.footer') --}}
 <div id="content">
-    @include('pdf.header')
+    {{-- @include('pdf.header') --}}
     <div class="first-title first">
         <h2>{{$mandant->name}}</h2>
     </div>

@@ -2,19 +2,19 @@
 
 return [
     'status' => 'Status',
-    'version' => 'version',
-    'edit' => 'Bearbeiten',
-    'delete' => 'Löschen',
+    'version' => 'Version',
+    'edit' => 'bearbeiten',
+    'delete' => 'löschen',
     'newVersion' => 'als neue Version anlegen',
     'history' => 'Historie ansehen',
     'favorite' => 'Favorit',
     'date' => 'Datum',
-    'userComments' => 'Kommentare Benutzer',
-    'deletedComments' => 'gelöschte Kommentare anzeigen',
+    'userComments' => 'Benutzerkommentare',
+    'deletedComments' => 'gelöschte Kommentare anzeigen.',
     'pdf' => 'PDF ansehen',
     'comment' => 'Kommentar abgeben',
-    'release' => 'Freigeben',
-    'noRelease' => 'Nicht freigeben',
-    'download' => 'Download',
+    'release' => 'freigeben',
+    'noRelease' => 'nicht freigeben',
+    'download' => 'download',
    
 ];

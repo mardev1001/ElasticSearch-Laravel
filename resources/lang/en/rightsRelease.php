@@ -8,7 +8,7 @@ return [
     'right' => 'Rechte',
     'roles' => 'Verteiler',
     'variante' => 'Variante',
-    'fastPublish' => 'Schnell - Veröffentlichen',
+    'fastPublish' => 'schnell veröffentlichen',
     'share' => 'Freigabe starten',
-    'save' => 'Speichern',
+    'save' => 'speichern',
 ];

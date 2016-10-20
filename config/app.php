@@ -163,6 +163,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Nitmedia\Wkhtml2pdf\L5Wkhtml2pdfServiceProvider::class,
 
     ],
 
@@ -216,8 +217,9 @@ return [
          'Form' => Collective\Html\FormFacade::class,
          'Html' => Collective\Html\HtmlFacade::class,
          'ViewHelper' => App\Helpers\ViewHelper::class,
-         'PDF' => Barryvdh\DomPDF\Facade::class,
+        //  'PDF' => Barryvdh\DomPDF\Facade::class,
          'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+         'PDF'    => Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf::class,
 
     ],
 

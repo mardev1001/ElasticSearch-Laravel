@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e278458a8fefa3d3a57ece3ffc99038b",
-    "content-hash": "bffee66280ceb1fc30e6897d2717c7ff",
+    "hash": "b641fae8d18a6a060ba1b88a2d452920",
+    "content-hash": "0722ba3af72fbeda0663c288ffe7ac5f",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -1395,6 +1395,54 @@
                 "php"
             ],
             "time": "2016-09-16 12:04:44"
+        },
+        {
+            "name": "nitmedia/wkhtml2pdf",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NitMedia/wkhtml2pdf.git",
+                "reference": "59d46d6dbda7d54efd045aed8bef0f05a63abd90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NitMedia/wkhtml2pdf/zipball/59d46d6dbda7d54efd045aed8bef0f05a63abd90",
+                "reference": "59d46d6dbda7d54efd045aed8bef0f05a63abd90",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Nitmedia\\Wkhtml2pdf": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nithin Meppurathu",
+                    "email": "admin@nitmedia.com"
+                }
+            ],
+            "description": "Html 2 Pdf - using wkhtml2pdf, work on 32bit and 64 bit linux + MacOS",
+            "keywords": [
+                "illuminate",
+                "laravel",
+                "pdf",
+                "wkhtml2pdf",
+                "wkhtmltopdf"
+            ],
+            "time": "2016-05-11 19:00:35"
         },
         {
             "name": "paragonie/random_compat",
@@ -3959,7 +4007,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nitmedia/wkhtml2pdf": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

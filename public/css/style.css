@@ -1530,9 +1530,6 @@ ul.nav.navbar-nav.icons li {
   border-bottom: 1px solid #fff !important;
   width: 200px; }
 
-.sidebar ul li:not(.legend) {
-  z-index: 100; }
-
 .sidebar-nav .nav a, span.legend-text {
   color: #575756;
   font-weight: bold;
@@ -1704,7 +1701,7 @@ h1.page-title {
   padding: 0; }
 
 .scrollable-document {
-  width: 226px !important;
+  width: 160px !important;
   position: fixed !important;
   right: 53px;
   z-index: 100;
@@ -13201,6 +13198,9 @@ td[data-mce-selected], th[data-mce-selected] {
 .mce-content-body i, .mce-content-body table, .mce-content-body table td, .mce-content-body table th {
   font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
   line-height: 16px; }
+
+.mce-content-body table {
+  max-width: 600px; }
 
 /*body.mce-content-body {*/
 /*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/

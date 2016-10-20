@@ -11,7 +11,8 @@
         "barryvdh/laravel-dompdf": "^0.6.1",
         "doctrine/dbal": "^2.5",
         "maatwebsite/excel": "^2.1",
-        "laravelcollective/bus": "^5.2"
+        "laravelcollective/bus": "^5.2",
+        "nitmedia/wkhtml2pdf": "dev-master"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

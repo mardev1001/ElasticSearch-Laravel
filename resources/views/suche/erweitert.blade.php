@@ -190,7 +190,8 @@
 
 <div class="search-results">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('sucheForm.search-results') }}@if(isset($parameter)) für "{{$parameter}}"@endif: <span class="text"> {{count($results)}} Ergebnisse gefunden</span></h4>
+        {{-- <h4 class="title">{{ trans('sucheForm.search-results') }}@if(isset($parameter)) für "{{$parameter}}"@endif: <span class="text"> {{count($results)}} Ergebnisse gefunden</span></h4> --}}
+        <h4 class="title">{{ trans('sucheForm.search-results') }}: <span class="text"> {{count($results)}} Treffer</span></h4>
         
         @if(count($results))
         <div class="sort-urls">
@@ -199,12 +200,12 @@
         </div>
         @endif
         
+        @if(count($results))
         
         <div class="box">
-            
-            @if(count($results))
     
                 @foreach($results as $key=>$document)
+                    
                 @if(isset($document->published->url_unique))
                     <div class="row">
                         <div class="col-xs-12 text result">
@@ -212,20 +213,22 @@
                                 
                                 <a href="{{url('/dokumente/'. $document->published->url_unique)}}" class="link">
                                     <strong>
-                                    @if(isset($parameter)) 
+                                    @if(old('name')) 
                                         #{{$key+1}} 
                                         @if($document->documentType->id == 3)
-                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "QMR ".$document->qmr_number.$document->additional_letter) !!} - --}}
                                             {!! "QMR " . $document->qmr_number.$document->additional_letter !!} -
                                         @elseif($document->documentType->id == 4)
-                                            {{-- {!! ViewHelper::highlightKeyword($parameter, "ISO ".$document->iso_category_number.$document->additional_letter) !!} - --}}
-                                            {{-- {!! "ISO " . $document->iso_category_number.$document->additional_letter !!} - --}}
                                             {{ $document->documentType->name }} -
                                         @else
                                             {{ $document->documentType->name }} -
                                         @endif
-                                        {!! ViewHelper::highlightKeyword($parameter, $document->name_long) !!} -
-                                        {{-- {!! ViewHelper::highlightKeyword($parameter, $document->betreff) !!} - --}}
+                                        
+                                        @if(isset($parameter) && !empty($parameter)) 
+                                            {!! ViewHelper::highlightKeyword($parameter, ViewHelper::highlightKeyword(old('name'), $document->name_long)) !!} -
+                                        @else
+                                            {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
+                                        @endif
+                                        
                                         {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                     @else
                                         #{{$key+1}} 
@@ -233,25 +236,16 @@
                                         @if($document->documentType->id == 3)
                                             QMR {{$document->qmr_number.$document->additional_letter}} - 
                                         @elseif($document->documentType->id == 4)
-                                            {{-- ISO {{$document->iso_category_number.$document->additional_letter}} - --}}
                                             {{$document->documentType->name}} - 
                                         @else
                                             {{$document->documentType->name}} - 
                                         @endif
                                         
-                                        @if(old('name')) 
-                                        {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
+                                        @if(isset($parameter) && !empty($parameter)) 
+                                            {!! ViewHelper::highlightKeyword($parameter, $document->name_long) !!} -
                                         @else
-                                        {!! $document->name_long !!} - 
+                                            {!! $document->name_long !!} - 
                                         @endif
-                                        
-                                        {{--
-                                        @if(old('betreff')) 
-                                        {!! ViewHelper::highlightKeyword(old('betreff'), $document->betreff) !!} -
-                                        @else
-                                        {!! $document->betreff !!} - 
-                                        @endif
-                                        --}}
                                         
                                         {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                     @endif
@@ -260,35 +254,28 @@
                             </div>
                             <div class="document-text"> 
                                 <strong class="summary">
-                                    @if(isset($parameter)) 
-                                        {!! ViewHelper::highlightKeyword($parameter, $document->summary) !!}
+                                    @if(old('beschreibung')) 
+                                        {!! ViewHelper::highlightKeyword(old('beschreibung'), $document->summary) !!}
                                     @else
-                                        @if(old('beschreibung')) 
-                                            {!! ViewHelper::highlightKeyword(old('beschreibung'), $document->summary) !!}
+                                        @if(isset($parameter) && !empty($parameter)) 
+                                            {!! ViewHelper::highlightKeyword($parameter, $document->summary) !!}    
                                         @else
                                             {!! $document->summary !!}
                                         @endif
                                     @endif
                                 </strong>
                                 <div class="content">
-                                    @if(count($variants))
-                                        @foreach($variants as $variant)
-                                            @if($document->id == $variant->document_id)
-                                                <div class="document-variant">
-                                                    {{-- <span class="number">Variante {{ $variant->variant_number }}:</span> --}}
-                                                    @if(isset($parameter)) 
-                                                        {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
-                                                    @else
-                                                        @if(old('inhalt')) 
-                                                            {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
-                                                        @else
-                                                            {!! ViewHelper::extractTextSimple($variant->inhalt) !!}
-                                                        @endif
-                                                    @endif
-                                                </div>
+                                    @foreach(ViewHelper::documentVariantPermission($document)->variants as $variant)
+                                        @if(old('inhalt'))
+                                            {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
+                                        @else
+                                            @if(isset($parameter) && !empty($parameter))
+                                                {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
+                                            @else
+                                                {!! ViewHelper::extractTextSimple($variant->inhalt) !!}
                                             @endif
-                                        @endforeach
-                                    @endif
+                                        @endif
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -296,17 +283,11 @@
                     </div>
                 @endif
                 @endforeach
-            @else
-                <div class="row">
-                    <div class="col-xs-12 text result">
-                        <div class="healine">
-                            Keine suchergebnisse gefunden.
-                        </div>
-                    </div>
-                </div>
-            @endif
+            
+            
         
         </div>
+        @endif
     </div>
 </div>
 
@@ -317,7 +298,7 @@
 
 <div class="search-results-wiki">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('sucheForm.search-results') }} Wiki: <span class="text"> {{count($resultsWiki)}} Ergebnisse gefunden</span></h4> <br>
+        <h4 class="title">{{ trans('sucheForm.search-results') }} Wiki: <span class="text"> {{count($resultsWiki)}} Treffer</span></h4> <br>
         <div class="box">
 
                 @foreach($resultsWiki as $key=>$wiki)

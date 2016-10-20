@@ -56,9 +56,9 @@
                 <script type="text/javascript">
                         var detectHref =window.location.href ;
                          setTimeout(function(){
-                             if( $('a[href$="'+detectHref+'"]').parent("li").find('ul').length){
+                             if( $('a[href$="'+detectHref+'"]').next('ul').length){
                                 //  console.log('yeah');
-                                  $('a[href$="'+detectHref+'"]').parent("li").find('ul').addClass('in');
+                                  $('a[href$="'+detectHref+'"]').next('ul').addClass('in');
                              }
                             
                          },1000 );
