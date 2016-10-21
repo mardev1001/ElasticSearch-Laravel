@@ -7,12 +7,33 @@
       <link rel="shortcut icon" href="/img/favicon.png">
         <style type="text/css">
             .list-style-dash { list-style-image: url('/img/icons/icon_list_dash.png') !important; }
-            p,li{
-                    font-size: 14px !important;
-            }
+            body,table,p,strong,li,h1,h2,h3,span,b,i{
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                }
+                p,li{
+                    font-size: 14px ;
+                }
+                
+                table td p {
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    line-height: 22px;
+                }
+                
+                table{
+                    font-size: 14px;
+                    /*height: auto !Important;*/
+                    border-collapse: collapse !important;
+                    max-width: 100% !important;
+                    vertical-align: middle !important;
+                }
+                
             table td{
-                vertical-align: middle !important;
-                border-collapse: collapse !important;
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                /*vertical-align: middle !important;*/
+                padding: 1px;
+                line-height: 16px !important;
+                font-size: 14px !important;
             }
         </style>
         @if( $document->landscape == 1)
@@ -204,7 +225,7 @@
                 top: -150px;
                 left: 0;
                 padding-top: 10px;
-                padding-bottom: 20px;
+                padding-bottom: 0px;
                 font-size: 16px !important; 
                 clear:both;
             }
@@ -255,6 +276,9 @@
             .first-title.second{
                 margin-top: 0;
                 /*margin-bottom:50px;*/
+            }
+            .content-wrapper{
+                
             }
              .content-wrapper{
                 padding: 0 135px 40px 50px;

@@ -115703,6 +115703,10 @@ $(function() {
         });
     } 
     /* End Automatic trigger to open the panel heading */
+    
+    /* Add empty select option to doropdon */
+    // $(".empty-select").prepend("<option value='' >&nbsp;</option>");
+    /* End Add empty select option to doropdon */
       
       
 }); /*End function() wrapper*/

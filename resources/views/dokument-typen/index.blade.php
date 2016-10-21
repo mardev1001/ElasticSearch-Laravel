@@ -39,7 +39,7 @@
                         <label><input type="radio" name="document_art" value="0" checked>{{ trans('dokumentTypenForm.editor') }}</label>
                     </div>
                     <div class="radio">
-                        <label><input type="radio" name="document_art" value="1">{{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}</label>
+                        <label><input type="radio" name="document_art" value="1">{{ trans('dokumentTypenForm.upload') }}</label>
                     </div>
                 </div>
                 <div class="col-md-3 col-lg-3">
@@ -108,7 +108,7 @@
                                                 <label><input type="radio" name="document_art" value="0" @if(!$documentType->document_art) checked @endif >{{ trans('dokumentTypenForm.editor') }}</label>
                                             </div>
                                             <div class="radio">
-                                                <label><input type="radio" name="document_art" value="1" @if($documentType->document_art) checked @endif >{{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}</label>
+                                                <label><input type="radio" name="document_art" value="1" @if($documentType->document_art) checked @endif >{{ trans('dokumentTypenForm.upload') }}</label>
                                             </div>
                                         @else
                                             @if($documentType->document_art || $documentType->id == 5)    

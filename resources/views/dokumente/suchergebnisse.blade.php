@@ -147,7 +147,11 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper">
             
-            <h2 class="title">Alle @if($docTypeName) {{$docTypeName}} @else Dokumente @endif </h2>
+            <h2 class="title">
+                Alle @if($docTypeName) {{$docTypeName}} @else Dokumente @endif
+                {{-- <a href="{{ action('DocumentController@search', ['search' => $search, 'document_type_id' => $docType, 'iso_category_id' => $iso_category_id, 'documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a> --}}
+                {{-- <a href="{{ action('DocumentController@search', ['search' => $search, 'document_type_id' => $docType, 'iso_category_id' => $iso_category_id,'documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a> --}}
+            </h2>
             
             @if(count($resultAllPaginated))
                 <div class="box scrollable">

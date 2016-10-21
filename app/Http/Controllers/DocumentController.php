@@ -138,7 +138,7 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-      
+    //   dd($request->all() );
         $adressats = Adressat::where('active',1)->get();
         $docType = DocumentType::find( $request->get('document_type_id') );
         
@@ -169,7 +169,8 @@ class DocumentController extends Controller
         $lastId->document_group_id = $lastId->id;
         $lastId->save();
         
-        if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0" ){
+        if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0"
+        && $request->input('document_coauthor')[0] != 0){
             $coauthors = $request->input('document_coauthor');
             foreach($coauthors as $coauthor)
                 if( $coauthor != '0');
@@ -1528,7 +1529,8 @@ class DocumentController extends Controller
         $form = $setDocument->form;
         
         DocumentCoauthor::where('document_id', $id)->delete();
-        if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0" ){
+        if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0" 
+        && $request->input('document_coauthor')[0] != 0){
             $coauthors = $request->input('document_coauthor');
             foreach($coauthors as $coauthor)
                 DocumentCoauthor::create(['document_id'=> $id, 'user_id'=> $coauthor]);
@@ -1991,7 +1993,7 @@ class DocumentController extends Controller
          if($document->document_type_id == $this->isoDocumentId){
              
              $html = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
-            //  return $html;
+        //  return $html;
              $pdf = \PDF::loadHTML($html);
          }
          
@@ -2378,9 +2380,9 @@ class DocumentController extends Controller
         // ->orderBy('id', 'desc')->get();
         ->orderBy('qmr_number', 'desc')->get();
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
-        if($docs == 'alle' && $sort == 'asc')
-            $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr', array('field' => 'qmr_number', 'sort' => 'asc'));
-        else $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr', array('field' => 'qmr_number', 'sort' => 'desc'));
+        if($docs == 'alle' && $sort == 'desc')
+            $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr', array('field' => 'qmr_number', 'sort' => 'desc'));
+        else $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr', array('field' => 'qmr_number', 'sort' => 'asc'));
         
         $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated, array('pageDocuments' => true, 'showHistory' => true) );
         
@@ -2728,11 +2730,12 @@ class DocumentController extends Controller
         ->get(['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id']);
         // ->paginate(10, ['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'all-iso-dokumente');
 
-        if($docs == 'alle' && $sort == 'asc')
-            $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated, 'all-iso-dokumente', array('field' => 'iso_category_number', 'sort' => 'asc'));
-        else $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated, 'all-iso-dokumente', array('field' => 'iso_category_number', 'sort' => 'desc'));
+        if($docs == 'alle' && $sort == 'desc')
+            $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated, 'all-iso-dokumente', array('field' => 'iso_category_number', 'sort' => 'desc'));
+        else $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated, 'all-iso-dokumente', array('field' => 'iso_category_number', 'sort' => 'asc'));
         
         $isoAllTree = $this->document->generateTreeview($isoAllPaginated, array('pageDocuments' => true, 'showHistory' => true));
+        
         $uid=Auth::user()->id;
         $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
         $isoEntwurfPaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
@@ -2795,7 +2798,7 @@ class DocumentController extends Controller
         $name = $isoCategory->name;
         $isoCategory->delete();
         // dd($isoCategory);
-        return redirect('/dokumente')->with('messageSecondary', 'Gelöschte Kategorie :'.$name); 
+        return redirect('/iso-kategorien')->with('messageSecondary', 'Gelöschte Kategorie "'.$name.'"'); 
         
     }
     
@@ -2822,6 +2825,9 @@ class DocumentController extends Controller
     {
         // dd($request->all());
         if(empty($request->all())) return redirect('/');
+        
+        $docs = $request->get('documents');
+        $sort = $request->get('sort');
         
         $docType = $request->input('document_type_id');
         $docTypeSearch = DocumentType::find($docType);
@@ -2850,7 +2856,8 @@ class DocumentController extends Controller
         }
         
         
-        $searchEntwurfPaginated = $searchEntwurfPaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-entwurf');
+        // $searchEntwurfPaginated = $searchEntwurfPaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-entwurf');
+        $searchEntwurfPaginated = $searchEntwurfPaginated->orderBy('date_published', 'desc')->paginate(10, ['*'], $docTypeName.'-entwurf');
         $searchEntwurfTree = $this->document->generateTreeview( $searchEntwurfPaginated, array('pageDocuments' => true) );
         
         // status im freigabe prozess
@@ -2865,24 +2872,28 @@ class DocumentController extends Controller
                 $searchFreigabePaginated = $searchFreigabePaginated->where('iso_category_id', $iso_category_id);
         }
         
-        $searchFreigabePaginated = $searchFreigabePaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-freigabe');
+        // DB::enableQueryLog();
+        
+        // $searchFreigabePaginated = $searchFreigabePaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-freigabe');
+        $searchFreigabePaginated = $searchFreigabePaginated->orderBy('date_published', 'desc')->paginate(10, ['*'], $docTypeName.'-freigabe');
         $searchFreigabeTree = $this->document->generateTreeview( $searchFreigabePaginated, array('pageDocuments' => true) );
         
         $resultAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3);
-        
-        
+
         // QMR query options
         if($docType == 3){
             if( stripos($search, 'QMR') !== false ){
                 $qmr = trim(str_ireplace('QMR', '', $search));
                 $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
                 $qmrString = preg_replace("/[^a-zA-Z]+/", "", $qmr);
-                // dd($qmrString);
                 
                 $resultAllPaginated = $resultAllPaginated->where(function($query) use ($qmrNumber, $qmrString) {
-                    $query->where('qmr_number', 'LIKE', $qmrNumber)
-                    ->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
+                    if($qmrNumber) $query = $query->where('qmr_number', 'LIKE', $qmrNumber);
+                    if(!empty($qmrString)) $query = $query->where('additional_letter', 'LIKE', '%'.$qmrString.'%');
                 });
+                
+                // where('document_type_id', 3);
+                
             } else
                 $resultAllPaginated = $resultAllPaginated->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc');
         }
@@ -2899,8 +2910,8 @@ class DocumentController extends Controller
                 // dd($isoNumber);
                 
                 $resultAllPaginated = $resultAllPaginated->where(function($query) use ($isoNumber, $isoString) {
-                    $query->where('iso_category_number', 'LIKE', $isoNumber)
-                    ->where('additional_letter', 'LIKE', '%'.$isoString.'%');
+                    if($isoNumber) $query = $query->where('iso_category_number', 'LIKE', $isoNumber);
+                    if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
                 });
             } else
                 $resultAllPaginated = $resultAllPaginated->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc');
@@ -2911,22 +2922,24 @@ class DocumentController extends Controller
             $resultAllPaginated = $resultAllPaginated->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc');
         }
         
-        $resultAllPaginated = $resultAllPaginated->paginate(10, ['*'], 'ergebnisse-alle');
+        // $resultAllPaginated = $resultAllPaginated->paginate(10, ['*'], 'ergebnisse-alle');
+        
+        // Set sorting field according to document type
+        $sortField = 'date_published';
+        if($docType == 3) $sortField = 'qmr_number';
+        if($docType == 4) $sortField = 'iso_category_number';
+
+        if($docs == 'alle' && $sort == 'asc')
+            $resultAllPaginated = $this->document->getUserPermissionedDocuments($resultAllPaginated, 'ergebnisse-alle', array('field' => $sortField, 'sort' => 'asc'));
+        else $resultAllPaginated = $this->document->getUserPermissionedDocuments($resultAllPaginated, 'ergebnisse-alle', array('field' => $sortField, 'sort' => 'desc'));
+        
+        // dd(DB::getQueryLog());
+        
         $resultAllTree = $this->document->generateTreeview($resultAllPaginated, array('pageDocuments' => true));
         
-        // generateTreeview( $rundEntwurfPaginated, array('pageDocuments' => true) );
-        
-        // $resultMyPaginated = Document::where(['user_id' => Auth::user()->id, 'document_type_id' => $docType])
-        // ->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc')
-        // ->paginate(10, ['*'], 'ergebnisse-meine');
-        // $resultMyTree = $this->document->generateTreeview($resultMyPaginated, array('pageDocuments' => true));
-        // $request->flash();
-        
-        // return back()->withInput()->with(compact('docType', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
-        // return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeName', 'resultAllPaginated', 'resultAllTree', 'resultMyPaginated', 'resultMyTree'));
         return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeSearch', 'docTypeName', 
             'resultAllPaginated', 'resultAllTree', 'searchEntwurfPaginated', 'searchEntwurfTree', 
-            'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id','isoCategoryName','docTypeSlug'));
+            'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id','isoCategoryName','docTypeSlug', 'docs', 'sort'));
     }
     
     /**
@@ -2935,14 +2948,52 @@ class DocumentController extends Controller
     public function documentStatusUpdate(Request $request){
         
         if($request->get('token') == '!Webbite-1234!'){
+            
             // get all documents with doc-type 5 (formulare)
             $documentsUpdated = Document::where('document_type_id', 5)->get();
             
             // update their doc-status to 3 (aktuell)
-            Document::whereIn('id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
+            // Document::whereIn('id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
             
             // get all editor_variant_documents with above mentioned document-ids, update their doc-status to 3 (aktuell) also
-            EditorVariantDocument::whereIn('document_id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
+            // EditorVariantDocument::whereIn('document_id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
+            
+            foreach ($documentsUpdated as $document) {
+                // code...
+            
+                //save to Published documents
+                $document->document_status_id = 3;//aktualan
+                $document->save();
+                
+                $publishedDocs = $this->publishProcedure($document);
+                $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
+                                ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
+                if($readDocument != null && $readDocument->deleted_at == null)
+                                $readDocument->delete();
+                                
+                $otherDocuments = Document::where('document_group_id',$document->document_group_id)
+                                    ->whereNotIn('id',array($document->id))->get();
+                /*Set attached documents as actuell */
+                $variantsAttachedDocuments = EditorVariant::where('document_id',$document->id)->get();
+                foreach( $variantsAttachedDocuments as $vad ){
+                    $editorVariantDocuments = $vad->editorVariantDocument;
+                    foreach($editorVariantDocuments as $evd){
+                        $evd->document_status_id = 3;
+                        $evd->save();
+                        $doc = Document::find($evd->document_id);
+                        $doc->document_status_id = 3;
+                        $doc->save();
+                    }
+                }
+                /* End set attached documents as actuell */
+                
+                foreach($otherDocuments as $oDoc){
+                    if( $oDoc->document_status_id != 6 && $oDoc->document_status_id != 2 ){
+                        $oDoc->document_status_id = 5;
+                        $oDoc->save();
+                    }
+                }                
+            }
             
             // return list of changed docs
             return view('dokumente.statusUpdate', compact('documentsUpdated'));

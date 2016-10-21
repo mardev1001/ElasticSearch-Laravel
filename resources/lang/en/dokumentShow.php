@@ -14,7 +14,7 @@ return [
     'deactivate' => 'deaktivieren',
     'new-version' => 'neue Version',
     'duplicate' => 'duplizieren',
-    'history' => 'Historie',
+    'history' => 'Alte Versionen',
     'favorite' => 'Favorit',
     'unFavorite' => 'Favorit entfernen',
     'version' => 'Version',

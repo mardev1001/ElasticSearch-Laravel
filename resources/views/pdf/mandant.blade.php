@@ -115,7 +115,7 @@
 <body>
 {{-- @include('pdf.footer') --}}
 <div id="content">
-    {{-- @include('pdf.header') --}}
+     @include('pdf.mandantHeader') 
     <div class="first-title first">
         <h2>{{$mandant->name}}</h2>
     </div>

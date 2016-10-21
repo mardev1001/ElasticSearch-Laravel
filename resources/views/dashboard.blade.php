@@ -11,8 +11,17 @@
 
 @section('content')
 <div class="row">
-    
-    <div class="col-xs-12 col-md-6 ">
+    <div class="col-xs-12  
+        @if(
+            ( ViewHelper::universalHasPermission( array(11,13) ) == false && count( $rundschreibenMy) < 1 ) &&
+            ( ViewHelper::universalHasPermission(array(15,16)) == false ) &&
+            ( ViewHelper::universalHasPermission( array(10) ) == false || count($freigabeEntries) < 1 )
+        )
+            col-md-12
+        @else
+            col-md-6
+        @endif
+    ">
         <div class="col-xs-12 box-wrapper box-white home">
             <h1 class="title">Neue Dokumente/Rundschreiben</h1>
             

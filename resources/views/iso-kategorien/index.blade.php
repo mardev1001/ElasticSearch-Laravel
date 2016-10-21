@@ -2,13 +2,13 @@
 
 @extends('master')
 
-@section('page-title') NEPTUN-Verwaltung - ISO Kategorie @stop
+@section('page-title') NEPTUN-Verwaltung - ISO-Kategorien @stop
 
 @section('content')
 
 <fieldset class="form-group">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.add') }}</h4>
+        <h4 class="title">ISO-{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.add') }} </h4>
         <div class="box">
       
             <!-- input box-->
@@ -96,9 +96,21 @@
                                 @endif
                                 
                                 <button class="btn btn-primary" type="submit">{{ trans('adressatenForm.save') }}</button>
-                                
+                               {!! Form::close() !!} 
+                               
+                               @if( count($isoCategory->isIsoCategoryParent) < 1 && count($isoCategory->hasAllDocuments) < 1  )
+                                {!! Form::open([
+                                   'url' => 'iso-dokumente/delete/'.$isoCategory->id,
+                                   'method' => 'POST',
+                                   'class' => 'horizontal-form',]) !!}
+                                        <button  type="submit" href="" class="btn btn-danger delete-prompt"
+                                         data-text="Wollen Sie diesen kategorie wirklich löschen?">
+                                             löschen
+                                         </button> 
+                                     </form>
+                                @endif     
                             </td>
-                            {!! Form::close() !!}
+                            
                         </tr>
                         @endforeach
                     </table>

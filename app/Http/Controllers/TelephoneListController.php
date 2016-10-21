@@ -230,9 +230,9 @@ class TelephoneListController extends Controller
      */
     public function pdfExport($id)
     {
-        if( ViewHelper::universalHasPermission( array(20) ) == false  ){
-            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-        }
+        // if( ViewHelper::universalHasPermission( array(20) ) == false  ){
+        //     return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        // }
         $dateNow = Carbon::now()->format('M Y');
         $mandant = Mandant::find($id);
         $mandantInfo = MandantInfo::where('mandant_id', $id)->first();

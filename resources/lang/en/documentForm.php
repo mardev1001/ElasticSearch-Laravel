@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'documentType' => 'Dokument Typ',
+    'documentType' => 'Dokument-Typ',
     'type' => 'Typ',
     'qmr' => 'QMR-Nummer',
     'isoNumber' => 'ISO-Dokument-Nummer',
@@ -16,7 +16,7 @@ return [
     'dateExpired' => 'Verfallsdatum',
     'isoCategory' => 'Kategorie ISO-Dokument',
     'showName' => 'Namen nicht anzeigen',
-    'adressat' => 'Empfänger',
+    'adressat' => 'EMPFÄNGER',
     'subject' => 'Betreff',
     'pdfUpload' => 'PDF Rundschreiben',
     'documents' => 'Dokument',

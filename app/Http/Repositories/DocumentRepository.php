@@ -933,7 +933,7 @@ class DocumentRepository
 		$documentsNewArr = $collection->pluck('id')->toArray();
 		
         
-        $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate(5, ['*'], $paginator);
+        $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate(50, ['*'], $paginator);
         // dd($collection);
         return $collection;
     }

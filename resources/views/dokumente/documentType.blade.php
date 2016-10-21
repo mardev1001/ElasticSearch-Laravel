@@ -5,7 +5,7 @@
     @if(count($documentType))
         {{ ucfirst( trans('controller.dokumente')) }} - {{ $documentType->name }} 
     @else
-        Dokument Typen
+        Dokument-Typen
     @endif
 @stop
 
