@@ -88,18 +88,18 @@
                                 'method'=>'PATCH']) !!}
                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                     @if($mandant->active)
-                                        <button class="btn btn-primary" type="submit" name="active" value="1"></span>Aktiv</button>
+                                        <button class="btn btn-primary" type="submit" name="active" value="1"></span>aktiv</button>
                                     @else
-                                        <button class="btn btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button>
+                                        <button class="btn btn-danger" type="submit" name="active" value="0"></span>inaktiv</button>
                                     @endif
                                 {!! Form::close() !!}
                                 
                                 {!! Form::open(['route'=>['mandanten.destroy', 'id'=> $mandant->id], 'method'=>'DELETE']) !!}
-                                    <button type="submit" class="btn btn-primary delete-prompt">Entfernen</button>
+                                    <button type="submit" class="btn btn-primary delete-prompt">entfernen</button>
                                 {!! Form::close() !!}
                                 
                                 @if($mandant->edited_by == 0 || $mandant->edited_by == Auth::user()->id)
-                                    <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> Bearbeiten </a> 
+                                    <a href="{{ url('/mandanten/'. $mandant->id. '/edit') }}" class="btn btn-primary no-arrow"> bearbeiten </a> 
                                 @endif
                                 </span>
                         </span>
@@ -155,9 +155,9 @@
                                                     
                                                     @if($mandantUser->user->id != 1)
                                                         @if($mandantUser->user->active)
-                                                            <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
+                                                            <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>aktiv</button><br>
                                                         @else
-                                                            <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
+                                                            <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>inaktiv</button><br>
                                                         @endif
                                                     @endif
                                                 {!! Form::close() !!}
@@ -169,7 +169,7 @@
                                                         <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                                         <button type="submit" class="btn btn-xs btn-warning delete-prompt"
                                                         data-text="Wollen Sie diesen Benutzer wirklich löschen?"
-                                                        >Entfernen</button><br>
+                                                        >entfernen</button><br>
                                                     {!! Form::close() !!}
                                                 @endif
                                                 
@@ -278,14 +278,14 @@
                                                             <input type="hidden" name="user_id" value="{{ $unassignedUser->id }}">
                                                             
                                                             @if($unassignedUser->active)
-                                                                <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>Aktiv</button><br>
+                                                                <button class="btn btn-xs btn-success" type="submit" name="active" value="1"></span>aktiv</button><br>
                                                             @else
-                                                                <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>Inaktiv</button><br>
+                                                                <button class="btn btn-xs btn-danger" type="submit" name="active" value="0"></span>inaktiv</button><br>
                                                             @endif
                                                         {!! Form::close() !!}
                                                         
                                                         {!! Form::open(['route'=>['benutzer.destroy', 'id'=> $unassignedUser->id], 'method'=>'DELETE']) !!}
-                                                            <button type="submit" class="btn btn-xs btn-warning">Entfernen</button><br>
+                                                            <button type="submit" class="btn btn-xs btn-warning">entfernen</button><br>
                                                         {!! Form::close() !!}
                                                         <a href="{{route('benutzer.edit', ['id'=> $unassignedUser->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
                                                     </td>

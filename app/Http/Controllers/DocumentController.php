@@ -1138,6 +1138,7 @@ class DocumentController extends Controller
             $document = Document::find($id);
             
             /*Published hotfix*/
+            // dd($document);
             if( $document->date_published == null){
                 $doc = Document::find($document->id);
                 $doc->date_published = $doc->created_at->addDay();
@@ -1993,6 +1994,18 @@ class DocumentController extends Controller
             //  return $html;
              $pdf = \PDF::loadHTML($html);
          }
+         
+          /*Iso doc backup*/    
+        /*if($document->document_type_id == $this->isoDocumentId){
+            \PDF::setHeaderHtml(view('pdf.headerIso1', compact('document','variants','dateNow')  )->render());
+           
+            \PDF::setFooterHtml(view('pdf.footerIso', compact('document','variants','dateNow') )->render());
+            //  return \PDF::getHtml();
+             $pdf = \PDF::html('pdf.documentIso1', compact('document','variants','dateNow'));
+            //  $html = view('pdf.documentIso1', compact('document','variants','dateNow'))->render();
+            //  return $html;
+            //  $pdf = \PDF::loadHTML($html);
+         }*/
             
         /* End If document type Iso Category load different PDF template*/    
         
@@ -2029,11 +2042,11 @@ class DocumentController extends Controller
         foreach($variants as $variant)
             $variant->hasPermission = true;
         
-        $pdf = \PDF::loadHTML('pdf.document', compact('document','variants','dateNow'));
+        $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
        
         /* If document type Iso Category load different PDF template*/    
          if($document->document_type_id == $this->isoDocumentId)
-            $pdf = \PDF::loadHTML('pdf.documentIso', compact('document','variants','dateNow'));
+            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
         /* End If document type Iso Category load different PDF template*/    
         
         /* If landscape is true set paper to landscape */    
@@ -2328,8 +2341,11 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function rundschreibenQmr()
+    public function rundschreibenQmr(Request $request)
     {
+        $docs = $request->get('documents');
+        $sort = $request->get('sort');
+        
         $docType = $this->qmRundId;
         
         // status entwurf
@@ -2338,7 +2354,8 @@ class DocumentController extends Controller
             $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
         })
         ->where('document_status_id' , 1)
-        ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-entwurf');
+        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-entwurf');
+        ->orderBy('qmr_number', 'desc')->paginate(10, ['*'], 'qmr-entwurf');
         $qmrEntwurfTree = $this->document->generateTreeview( $qmrEntwurfPaginated, array('pageDocuments' => true) );
         
         // status im freigabe prozess
@@ -2347,7 +2364,8 @@ class DocumentController extends Controller
             $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
         })
         ->whereIn('document_status_id' , [2,6])
-        ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
+        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
+        ->orderBy('qmr_number', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
         $qmrFreigabeTree = $this->document->generateTreeview( $qmrFreigabePaginated, array('pageDocuments' => true) );
         
         // all status aktuell/published
@@ -2357,15 +2375,19 @@ class DocumentController extends Controller
         // })
         ->where('document_status_id', 3)
         ->where('active', 1)
-        ->orderBy('id', 'desc')->get();
+        // ->orderBy('id', 'desc')->get();
+        ->orderBy('qmr_number', 'desc')->get();
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
-        $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr');
+        if($docs == 'alle' && $sort == 'asc')
+            $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr', array('field' => 'qmr_number', 'sort' => 'asc'));
+        else $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr', array('field' => 'qmr_number', 'sort' => 'desc'));
+        
         $qmrAllTree = $this->document->generateTreeview( $qmrAllPaginated, array('pageDocuments' => true, 'showHistory' => true) );
         
         $docType = DocumentType::find($docType);
         
         // $request->flash();
-        return view('dokumente.circularQMR', compact('docType', 'qmrEntwurfTree', 'qmrEntwurfPaginated', 'qmrFreigabeTree', 'qmrFreigabePaginated', 'qmrAllTree', 'qmrAllPaginated'));
+        return view('dokumente.circularQMR', compact('docType', 'qmrEntwurfTree', 'qmrEntwurfPaginated', 'qmrFreigabeTree', 'qmrFreigabePaginated', 'qmrAllTree', 'qmrAllPaginated', 'docs', 'sort'));
     }
     
     /**
@@ -2679,8 +2701,11 @@ class DocumentController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
-    public function isoCategoriesBySlug($slug)
+    public function isoCategoriesBySlug($slug, Request $request)
     {
+        $docs = $request->get('documents');
+        $sort = $request->get('sort');
+        
         $docType = $this->isoDocumentId;
         
         $canDeleteButton = false;
@@ -2698,10 +2723,15 @@ class DocumentController extends Controller
         ->where('documents.document_type_id', $docType)
         ->where('slug', $slug)
         ->where('documents.document_status_id' , 3)
-        ->orderBy('documents.name', 'asc')
+        // ->orderBy('documents.name', 'asc')
+        ->orderBy('documents.date_published', 'desc')
         ->get(['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id']);
         // ->paginate(10, ['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'all-iso-dokumente');
-        $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated,'all-iso-dokumente');
+
+        if($docs == 'alle' && $sort == 'asc')
+            $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated, 'all-iso-dokumente', array('field' => 'iso_category_number', 'sort' => 'asc'));
+        else $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated, 'all-iso-dokumente', array('field' => 'iso_category_number', 'sort' => 'desc'));
+        
         $isoAllTree = $this->document->generateTreeview($isoAllPaginated, array('pageDocuments' => true, 'showHistory' => true));
         $uid=Auth::user()->id;
         $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
@@ -2746,7 +2776,26 @@ class DocumentController extends Controller
         if( count($isoFreigabePaginated) < 1 && count($isoAllPaginated) < 1 && count($isoEntwurfPaginated) < 1 && count($categoryIsParent) < 1 )
             $canDeleteButton = true;
         
-        return view('dokumente.isoDocument', compact('docType', 'canDeleteButton', 'isoAllPaginated','isoAllTree','isoEntwurfPaginated', 'isoEntwurfTree', 'isoFreigabePaginated', 'isoFreigabeTree', 'isoCategory', 'iso_category_id','isoCategoryParent') );
+        return view('dokumente.isoDocument', compact('docType', 'canDeleteButton', 'isoAllPaginated','isoAllTree','isoEntwurfPaginated', 
+        'isoEntwurfTree', 'isoFreigabePaginated', 'isoFreigabeTree', 'isoCategory', 'iso_category_id','isoCategoryParent','categoryIsParent', 'docs', 'sort') );
+        
+    }
+    
+    
+    /**
+     * Delete ISo category by id
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteIsoCategoriesById($id)
+    {  
+       
+        $isoCategory = IsoCategory::find($id);
+        $name = $isoCategory->name;
+        $isoCategory->delete();
+        // dd($isoCategory);
+        return redirect('/dokumente')->with('messageSecondary', 'Gelöschte Kategorie :'.$name); 
         
     }
     

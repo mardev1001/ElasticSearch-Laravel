@@ -37,6 +37,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/historie/{id}', 'DocumentController@documentHistory');
         Route::get('iso-dokumente', 'DocumentController@isoCategoriesIndex');
         Route::get('iso-dokumente/{slug}', 'DocumentController@isoCategoriesBySlug');
+        Route::post('iso-dokumente/delete/{id}', 'DocumentController@deleteIsoCategoriesById');
         Route::get('dokumente/editor/{id}/edit', 'DocumentController@editDocumentEditor');
         Route::post('editor', 'DocumentController@documentEditor');
         Route::get('dokumente/dokumente-upload/{id}/edit', 'DocumentController@editDocumentUpload');

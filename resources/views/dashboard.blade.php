@@ -4,7 +4,7 @@
 
 @section('page-title')
     Guten Tag {{ auth()->user()->title ." ". auth()->user()->first_name ." ". auth()->user()->last_name }}
-    <br> Herzlich willkommen im NEPTUN Intranet
+    <br> Herzlich Willkommen im NEPTUN Intranet
 @stop
 
 @section('bodyClass') home-page @stop

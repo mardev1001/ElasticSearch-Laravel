@@ -20,7 +20,7 @@
                     <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></div>
                     <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.document_art') }}</strong></div>
                     <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.document_role') }}</strong></div>
-                    <div class="col-lg-3 col-md-3"></div>
+                    <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.options') }}</strong></div>
                     <div class="col-lg-12"></div>
                 </div>
              </div>
@@ -44,10 +44,10 @@
                 </div>
                 <div class="col-md-3 col-lg-3">
                     <div class="radio no-margin-top">
-                        <label><input type="radio" name="document_role" value="0" checked>{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.verfasser') }}</label>
+                        <label><input type="radio" name="document_role" value="0" checked>{{ trans('dokumentTypenForm.document') }}-{{ trans('dokumentTypenForm.verfasser') }}</label>
                     </div>
                     <div class="radio">
-                        <label><input type="radio" name="document_role" value="1">{{ trans('dokumentTypenForm.rundschreiben') }} {{ trans('dokumentTypenForm.verfasser') }}</label>
+                        <label><input type="radio" name="document_role" value="1">{{ trans('dokumentTypenForm.rundschreiben') }}-{{ trans('dokumentTypenForm.verfasser') }}</label>
                     </div>
                 </div>
                 <div class="col-md-3 col-lg-3">
@@ -88,7 +88,7 @@
                             <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></th>
                             <th class="col-lg-2"><strong>{{ trans('dokumentTypenForm.document_art') }}</strong></th>
                             <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.document_role') }}</strong></th>
-                            <th class="col-lg-3"></th>
+                            <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.options') }}</strong></th>
                             <th class="col-lg-1"></th>
                         </tr>
                         

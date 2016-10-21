@@ -11,8 +11,7 @@
 @section('content')
 
 <div class="clearfix"></div> 
-
-
+    
     <div class="row">
         @if(( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
           || ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ))
@@ -101,7 +100,11 @@
         
         <div class="col-xs-12">
             <div class="box-wrapper box-white">
-                <h2 class="title">Alle @if($isoCategory) {{$isoCategory->name}} @endif</h2>
+                <h2 class="title">
+                    Alle @if($isoCategory) {{$isoCategory->name}} @endif
+                    <a href="{{ action('DocumentController@isoCategoriesBySlug', ['slug' => str_slug($isoCategory->name), 'documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    <a href="{{ action('DocumentController@isoCategoriesBySlug', ['slug' => str_slug($isoCategory->name), 'documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+                </h2>
                     @if(count($isoAllPaginated))
                         <div class="box scrollable">
                             <div class="tree-view" data-selector="isoAllTree">
@@ -111,7 +114,11 @@
                             </div>
                         </div>
                         <div class="text-center">
-                            {!! $isoAllPaginated->render() !!}
+                            @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'alle')) 
+                                {!! $isoAllPaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                            @else
+                                {!! $isoAllPaginated->render() !!}
+                            @endif
                         </div>
                     @else
                         <div class="box">
@@ -123,6 +130,8 @@
         </div>
         
     </div>
+    
+    
 <div class="clearfix"></div> <br>
 
 @stop

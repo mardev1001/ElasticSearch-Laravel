@@ -171,11 +171,11 @@ class DocumentRepository
                             if($document->document_status_id == 3){
                                 if(isset($readDocument)){ 
                                     $icon = 'icon-read ';
-                                    $node->titleText = 'Gelesen';
+                                    $node->titleText = 'gelesen';
                                 }
                                 else {
                                     $icon = 'icon-notread ';
-                                    $node->titleText = 'Muss gelesen werden';
+                                    $node->titleText = 'muss gelesen werden';
                                 }
                             }
                         }
@@ -206,10 +206,10 @@ class DocumentRepository
                         if($document->document_status_id == 3){ 
                             if(isset($readDocument)){
                                 $icon = 'icon-read ';
-                                $node->titleText = 'Gelesen';
+                                $node->titleText = 'gelesen';
                             } else {
                                 $icon = 'icon-notread ';
-                                $node->titleText = 'Muss gelesen werden';
+                                $node->titleText = 'muss gelesen werden';
                             }
                         }
                     }    
@@ -260,7 +260,7 @@ class DocumentRepository
                      
                     if($document->published && $document->document_status_id == 3) {
                         $icon = 'icon-released ';
-                        $node->titleText = 'Veröffentlicht';
+                        $node->titleText = 'veröffentlicht';
                     }
                     // else $icon = 'icon-notreleased ';
                     
@@ -291,10 +291,10 @@ class DocumentRepository
                             if($document->document_status_id == 3){
                                 if(isset($readDocument)) {
                                     $icon = 'icon-read ';
-                                    $node->titleText = 'Gelesen';
+                                    $node->titleText = 'gelesen';
                                 } else {
                                     $icon = 'icon-notread ';
-                                    $node->titleText = 'Muss gelesen werden';
+                                    $node->titleText = 'muss gelesen werden';
                                 }
                             }
                         }
@@ -314,7 +314,7 @@ class DocumentRepository
                     if ($document->created_at->gt(Auth::user()->last_login_history)){
                         if( $options['pageFavorites'] == false ){
                             $icon2 = 'icon-favorites ';
-                            $node->titleText2 = 'Neueste Dokument';
+                            $node->titleText2 = 'neues Dokument';
                         }
                     }
 
@@ -347,14 +347,14 @@ class DocumentRepository
                     
                     if($document->document_status_id == 2){
                         $icon = 'icon-open ';
-                        $node->titleText = 'Freigegeben';
+                        $node->titleText = 'freigegeben';
                     } else {
                         $icon = 'icon-blocked ';
-                        $node->titleText = 'Nicht Freigegeben';
+                        $node->titleText = 'nicht freigegeben';
                     }
                         
                     $icon2 = 'icon-notreleased ';
-                    $node->titleText2 = 'Nicht veröffentlicht';
+                    $node->titleText2 = 'nicht veröffentlicht';
                 }
 
                 $node->icon = $icon;
@@ -933,7 +933,7 @@ class DocumentRepository
 		$documentsNewArr = $collection->pluck('id')->toArray();
 		
         
-        $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate(50, ['*'], $paginator);
+        $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate(5, ['*'], $paginator);
         // dd($collection);
         return $collection;
     }

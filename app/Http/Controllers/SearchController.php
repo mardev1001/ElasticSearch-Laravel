@@ -214,7 +214,11 @@ class SearchController extends Controller
             
                 
             $results = $this->filterByVisibility(collect($results));
-            $resultIds = array_pluck($results, 'id');
+            // add docs where $document->published->url_unique isset
+            $resultsWithUrls = array();
+            foreach($results as $tmp) if(isset($tmp->published->url_unique)) $resultsWithUrls[] = $tmp;
+            $resultIds = array_pluck($resultsWithUrls, 'id');
+            // $resultIds = array_pluck($results, 'id');
             
             if($sort == 'asc')
                 $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
@@ -227,7 +231,7 @@ class SearchController extends Controller
             // }));
             //$sorted = $collection->sortBy('price');  sortByDesc();
         }
-        
+        $request->flush();
         return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
         // return view('suche.erweitert', compact('parameter', 'resultsWiki', 'documentTypes','mandantUsers', 'searchResultsTree', 'searchResultsPaginated'));
     }
@@ -370,7 +374,16 @@ class SearchController extends Controller
         
         // DB::enableQueryLog();
         
-        $documents = Document::where('document_status_id', 3)->where('active', 1);
+        // if($history) $documents = $documents->where('documents.deleted_at', '!=', null)->where('document_status_id', 5);
+        if($history) {
+            // $documents = ->where( function($query) { $query->where('document_status_id', 5)->orWhereNotNull('documents.deleted_at');})->where('active', 1);
+            $documents = Document::where('document_status_id', 5)->where('active', 1);
+            // $documents = $documents->get();
+            // var_dump(array_pluck($documents, 'id'));
+        } else {
+            // $documents = $documents->where('documents.deleted_at', null);
+            $documents = Document::where('document_status_id', 3)->where('active', 1);
+        }
         
         // $documents = Document::where('id', '>', 0)
         // // $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
@@ -442,8 +455,7 @@ class SearchController extends Controller
         
         
         
-        if($history) $documents = $documents->where('documents.deleted_at', '!=', null);
-        else $documents = $documents->where('documents.deleted_at', null);
+        
         
         // dd($documents->get());
         
@@ -485,6 +497,7 @@ class SearchController extends Controller
 
         // exit();
         // dd($documents);
+        // dd(array_pluck($documents, 'document_status_id'));
         // dd(DB::getQueryLog());
         // dd($documents->toSql());
          
@@ -515,8 +528,6 @@ class SearchController extends Controller
             }
         }
         
-        // dd($variants);
-        
         if(empty($parameter) && empty($inhalt)) $variants = array();
         
         foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
@@ -539,6 +550,19 @@ class SearchController extends Controller
         //     $variants = EditorVariant::all();
         // }
         // dd($documents);
+        
+        // dd(array_pluck($results, 'document_status_id'));
+        
+        // Filter documents and variants by document_status_id if history search is enabled
+        if($history){
+            foreach($results as $key => $value){
+                if($value->document_status_id != 5)
+                    $results = array_except($results, $key);
+            }
+        }
+        
+        // dd(array_pluck($results, 'document_status_id'));
+        
         $request->flash();
         
         if($wiki){
@@ -557,7 +581,11 @@ class SearchController extends Controller
         
         // dd($results);
         $results = $this->filterByVisibility(collect($results));
-        $resultIds = array_pluck($results, 'id');
+        // add docs where $document->published->url_unique isset
+        $resultsWithUrls = array();
+        foreach($results as $tmp) if(isset($tmp->published->url_unique)) $resultsWithUrls[] = $tmp;
+        $resultIds = array_pluck($resultsWithUrls, 'id');
+        // $resultIds = array_pluck($results, 'id');
     
         if($sort == 'asc')
             $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();

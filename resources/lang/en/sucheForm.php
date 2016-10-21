@@ -21,6 +21,6 @@ return [
     'wiki' => 'Wiki',
     'entries' => 'Einträge',
     'history' => 'Historie',
-    'archive' => 'Archiv',
+    'archive' => 'Nur Archiv durchsuchen',
     
 ];

@@ -12,7 +12,7 @@
             <div class="row">
                 <!-- input box-->
                     {!! Form::open(['route' => 'rollen.store']) !!}
-                        <div class="col-xs-12"><div class="add-border-bottom"><strong>Rolle Anlegen</strong></div></div>
+                        <div class="col-xs-12"><div class="add-border-bottom"><strong>Rolle anlegen</strong></div></div>
                         <div class="col-md-5 col-lg-4">
                             <div class="form-group">
                                 {!! ViewHelper::setInput('name', '', old('name'), trans('rollenForm.name'), trans('rollenForm.name'), true) !!} 

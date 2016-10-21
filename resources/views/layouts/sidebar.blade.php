@@ -262,31 +262,31 @@
     <div class="legend-wrapper legend">
         <ul class="legend-ul nav">
             <li>
-                <span class="legend-text">Neueste Dokument</span>
+                <span class="legend-text">neues Dokument</span>
                 <span class="legend-icons icon-favorites "></span>
             </li>
             <li>
-                <span class="legend-text">Nicht Freigegeben</span>
+                <span class="legend-text">nicht freigegeben</span>
                 <span class="legend-icons icon-blocked"></span>
             </li>
             <li>
-                <span class="legend-text">Freigegeben</span>
+                <span class="legend-text">freigegeben</span>
                 <span class="legend-icons icon-open"></span>
             </li>
             <li>
-                <span class="legend-text">Muss gelesen werden</span>
+                <span class="legend-text">muss gelesen werden</span>
                 <span class="legend-icons icon-notread "></span>
             </li>
             <li>
-                <span class="legend-text">Gelesen</span>
+                <span class="legend-text">gelesen</span>
                 <span class="legend-icons icon-read"></span>
             </li>
             <li>
-                <span class="legend-text">Nicht veröffentlicht</span>
+                <span class="legend-text">nicht veröffentlicht</span>
                 <span class="legend-icons icon-notreleased"></span>
             </li>
             <li>
-                <span class="legend-text">Veröffentlicht</span>
+                <span class="legend-text">veröffentlicht</span>
                 <span class="legend-icons icon-released"></span>
             </li>
             <li>

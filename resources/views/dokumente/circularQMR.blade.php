@@ -88,7 +88,13 @@
             
       
         <div class="col-xs-12 col-md-12 box-wrapper box-white">
-            <h4 class="title">Alle {{ trans('rundschreibenQmr.allQmr')}}</h4>
+            
+            <h4 class="title">
+                Alle {{ trans('rundschreibenQmr.allQmr')}}
+                <a href="{{ action('DocumentController@rundschreibenQmr', ['documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                <a href="{{ action('DocumentController@rundschreibenQmr', ['documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
+            </h4>
+            
             @if(count($qmrAllPaginated))
                 <div class="box scrollable">
                     <div class="tree-view" data-selector="qmrAllTree">
@@ -97,7 +103,11 @@
                 </div>
             
                 <div class="text-center ">
-                    {!! $qmrAllPaginated->render() !!}
+                    @if(($sort == 'asc' || $sort == 'desc') && ($docs == 'alle')) 
+                        {!! $qmrAllPaginated->appends(['documents'=>$docs, 'sort'=>$sort])->render() !!}
+                    @else
+                        {!! $qmrAllPaginated->render() !!}
+                    @endif
                 </div>
             @else
                 <div class="box">

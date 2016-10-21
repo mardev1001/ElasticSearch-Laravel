@@ -4,7 +4,7 @@ return [
 
     'cancel'    => 'abbrechen',
     'reset'     => 'zurücksetzen',
-    'save'      => 'ppeichern',
+    'save'      => 'speichern',
     'update'    => 'speichern'
     // 'update'    => 'Aktualisieren'
     

@@ -3,7 +3,7 @@
 return [
 
     'phone-list' => 'Telefonliste',
-    'appearance' => 'Darstellung',
+    'appearance' => 'Telefonliste anpassen',
     'show-deleted-users' => 'gelöschte Benutzer anzeigen',
     'show-deleted-mandants' => 'gelöschte Mandanten anzeigen',
     'pdf-export' => 'PDF erzeugen',

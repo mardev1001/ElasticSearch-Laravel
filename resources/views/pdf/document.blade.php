@@ -13,17 +13,12 @@
                 }
                 p,li{
                     font-size: 14px ;
-                    line-height: 16px;
-                }
-                
-                p{
-                    margin: 14px 0 12px 0!important;/*This is actually 14px 0 but 15 is set as an print correction*/
                 }
                 
                 table td p {
-                    /*margin-top: 5px;*/
-                    /*margin-bottom: 5px;*/
-                    /*line-height: 22px;*/
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    line-height: 22px;
                 }
                 
                  h1{
@@ -238,7 +233,7 @@
                 margin-bottom:50px;
             }
              .first-title, .content-wrapper{
-                padding: 0 80px 10px 31px;
+                padding: 0 80px 10px 30px;
             }
             .document-title-row{
                 width: 70%;

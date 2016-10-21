@@ -16,7 +16,7 @@ return [
     'management' => 'verwalten',
     'editing' => 'NEPTUN',
     'role-management' => 'NEPTUN-Verwaltung - Rollenverwaltung',
-    'user-defined' => 'benutzerdefiniert',
+    'user-defined' => 'benutzerdefinierte',
     'active-users' => 'aktive Benutzer',
     'name' => 'Name',
     'overview' => 'Übersicht',

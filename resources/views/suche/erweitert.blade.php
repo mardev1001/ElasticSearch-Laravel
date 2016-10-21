@@ -171,7 +171,7 @@
                                 <!--<br class="hidden-xs hidden-sm">   -->
                                 <div class="checkbox">
                                     <input type="checkbox" @if((old('history'))) checked @endif name="history" id="history">
-                                    <label for="history"> {{ trans('sucheForm.history') }} <br class="hidden-lg"> {{ trans('sucheForm.archive') }} </label>
+                                    <label for="history"> {{ trans('sucheForm.archive') }} </label>
                                 </div>
                             </div>
                         @endif
@@ -188,68 +188,78 @@
     
 </fieldset>
 
+@if(count($results))
+
 <div class="search-results">
     <div class="box-wrapper">
         {{-- <h4 class="title">{{ trans('sucheForm.search-results') }}@if(isset($parameter)) für "{{$parameter}}"@endif: <span class="text"> {{count($results)}} Ergebnisse gefunden</span></h4> --}}
         <h4 class="title">{{ trans('sucheForm.search-results') }}: <span class="text"> {{count($results)}} Treffer</span></h4>
         
-        @if(count($results))
         <div class="sort-urls">
             <a href="{{ Request::fullUrl() }}&sort=asc" class="link">{{ trans('sucheForm.publish-date') }} <i class="fa fa-arrow-up" aria-hidden="true"></i></a> / 
             <a href="{{ Request::fullUrl() }}&sort=desc" class="link">{{ trans('sucheForm.publish-date') }} <i class="fa fa-arrow-down" aria-hidden="true"></i></a>
         </div>
-        @endif
-        
-        @if(count($results))
         
         <div class="box">
     
-                @foreach($results as $key=>$document)
-                    
-                @if(isset($document->published->url_unique))
-                    <div class="row">
-                        <div class="col-xs-12 text result">
-                            <div class="healine"> 
-                                
+            @foreach($results as $key=>$document)
+            
+            @if(isset($document->published->url_unique))
+                <div class="row">
+                    <div class="col-xs-12 text result">
+                        <div class="healine"> 
+                            
+                            @if(old('history')) 
+                                <a href="{{url('/dokumente/'. $document->id)}}" class="link">
+                            @else
                                 <a href="{{url('/dokumente/'. $document->published->url_unique)}}" class="link">
-                                    <strong>
-                                    @if(old('name')) 
-                                        #{{$key+1}} 
-                                        @if($document->documentType->id == 3)
-                                            {!! "QMR " . $document->qmr_number.$document->additional_letter !!} -
-                                        @elseif($document->documentType->id == 4)
-                                            {{ $document->documentType->name }} -
-                                        @else
-                                            {{ $document->documentType->name }} -
-                                        @endif
-                                        
-                                        {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
-                                        
-                                        {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                            @endif
+                            
+                                <strong>
+                                #{{$key+1}} 
+                                @if(old('name')) 
+                                    
+                                    @if($document->documentType->id == 3)
+                                        {!! "QMR " . $document->qmr_number.$document->additional_letter !!} -
+                                    @elseif($document->documentType->id == 4)
+                                        {{ $document->documentType->name }} -
                                     @else
-                                        #{{$key+1}} 
-
-                                        @if($document->documentType->id == 3)
-                                            QMR {{$document->qmr_number.$document->additional_letter}} - 
-                                        @elseif($document->documentType->id == 4)
-                                            {{$document->documentType->name}} - 
-                                        @else
-                                            {{$document->documentType->name}} - 
-                                        @endif
-                                        
-                                        @if(isset($parameter) && !empty($parameter)) 
-                                            {!! ViewHelper::highlightKeyword($parameter, $document->name_long) !!} -
-                                        @else
-                                            {!! $document->name_long !!} - 
-                                        @endif
-                                        
-                                        {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                                        {{ $document->documentType->name }} -
                                     @endif
-                                    </strong> 
-                                </a>
+                                    
+                                    {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
+                                    
+                                    {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                                @else
+                                    @if($document->documentType->id == 3)
+                                        QMR {{$document->qmr_number.$document->additional_letter}} - 
+                                    @elseif($document->documentType->id == 4)
+                                        {{$document->documentType->name}} - 
+                                    @else
+                                        {{$document->documentType->name}} - 
+                                    @endif
+                                    
+                                    @if(isset($parameter) && !empty($parameter)) 
+                                        {!! ViewHelper::highlightKeyword($parameter, $document->name_long) !!} -
+                                    @else
+                                        {!! $document->name_long !!} - 
+                                    @endif
+                                    
+                                    {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                                @endif
+                                </strong> 
+                            </a>
+                        </div>
+                        <div class="document-text"> 
+                            <div class="tags">
+                                @if((stripos($document->search_tags, old('tags')) !== false)  || (stripos($document->search_tags, $parameter)!== false))
+                                    <strong>
+                                         <span class="highlight">Treffer: Stichwörter</span>
+                                    </strong>
+                                @endif
                             </div>
-                            <div class="document-text"> 
-                                <strong class="summary">
+                            <div class="summary">
+                                <strong>
                                     @if(old('beschreibung')) 
                                         {!! ViewHelper::highlightKeyword(old('beschreibung'), $document->summary) !!}
                                     @else
@@ -260,35 +270,35 @@
                                         @endif
                                     @endif
                                 </strong>
-                                <div class="content">
-                                    @foreach(ViewHelper::documentVariantPermission($document)->variants as $variant)
-                                        @if(old('inhalt'))
-                                            {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
+                            </div>
+                            <div class="content">
+                                @foreach(ViewHelper::documentVariantPermission($document)->variants as $variant)
+                                    @if(old('inhalt'))
+                                        {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
+                                    @else
+                                        @if(isset($parameter) && !empty($parameter))
+                                            {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
                                         @else
-                                            @if(isset($parameter) && !empty($parameter))
-                                                {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
-                                            @else
-                                                {!! ViewHelper::extractTextSimple($variant->inhalt) !!}
-                                            @endif
+                                            {!! ViewHelper::extractTextSimple($variant->inhalt) !!}
                                         @endif
-                                    @endforeach
-                                </div>
+                                    @endif
+                                @endforeach
                             </div>
                         </div>
-                        <div class="clearfix"></div> <br>
                     </div>
-                @endif
-                @endforeach
+                    <div class="clearfix"></div> <br>
+                </div>
+            @endif
             
-            
+            @endforeach
         
         </div>
-        @endif
     </div>
 </div>
 
-<div class="clearfix"></div> <br>
+@endif
 
+<div class="clearfix"></div> <br>
 
 @if(count($resultsWiki))
 
