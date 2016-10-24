@@ -50,9 +50,9 @@
     @if( !empty($mandants)  ) 
         
         @if( !empty($search) && $search == true )
-            <h2 class="title">trans('mandantenForm.search-result-mandants') ({{count($mandants)}})</h2>
+            <h2 class="title">{{trans('mandantenForm.search-result-mandants')}} ({{count($mandants)}})</h2>
         @else
-            <h2 class="title">trans('mandantenForm.overview')</h2>
+            <h2 class="title">{{ trans('mandantenForm.overview')}}</h2>
         @endif
         
         <div class="panel-group">

@@ -105,7 +105,7 @@
             
         </div>
         
-        <div class="clearfix"></div> <br>
+        <div class="clearfix"></div> @if( count($isoEntwurfPaginated) || count( $isoFreigabePaginated ) )<br>@endif
         
         <div class="col-xs-12 box-wrapper box-white">
             <h2 class="title">{{ trans('benutzerForm.search') }}  @if($isoCategoryParent) {{$isoCategoryParent->name}} -@endif

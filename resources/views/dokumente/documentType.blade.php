@@ -106,7 +106,7 @@
     
 </div>
 
-<div class="clearfix"></div> <br>
+<div class="clearfix"></div> @if( count($docsByTypeEntwurfPaginated) || count( $docsByTypeFreigabePaginated ) )<br>@endif
 
 <div class="col-xs-12 box-wrapper box-white">
     <h2 class="title">{{ trans('benutzerForm.search') }} {{ $documentType->name }}</h2>

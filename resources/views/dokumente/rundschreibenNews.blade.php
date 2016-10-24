@@ -100,7 +100,7 @@
     @endif
 </div>
 
-<div class="clearfix"></div> <br>
+<div class="clearfix"></div> @if( count($newsEntwurfPaginated) || count( $newsFreigabePaginated ) )<br>@endif
 
 <div class="row">
     <div class="col-xs-12">

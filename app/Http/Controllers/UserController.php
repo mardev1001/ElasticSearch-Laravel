@@ -80,7 +80,8 @@ class UserController extends Controller
     public function store(BenutzerRequest $request)
     {
         if(!$request->has('username_sso') || $request->get('username_sso') == '' || empty($request->get('username_sso')) )
-            RequestMerge::merge(['username_sso' => str_slug($request->get('username'))] );
+             $request->merge(array('username_sso' => null) );
+            
         
         // dd( $request->all() );
         $user = User::create($request->all());
@@ -213,10 +214,14 @@ class UserController extends Controller
      */
     public function update(BenutzerRequest $request, $id)
     {
-        // dd($request->all());
+       
         $user = User::find($id);
         // $user->update($request->all());
+         if(!$request->has('username_sso') || $request->get('username_sso') == '' || empty($request->get('username_sso')) )
+             $request->merge(array('username_sso' => null) );
         $user->update($request->except(['password', 'password_repeat']));
+        
+       
         
         // Fix Carbon date parsing
         if(!$request->has('birthday')) $user->update(['birthday' => '']);

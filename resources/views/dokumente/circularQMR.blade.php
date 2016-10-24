@@ -57,7 +57,7 @@
             </div>
             @endif
     </div>     
-        <div class="clearfix"></div>
+        <div class="clearfix"></div>@if( count($qmrEntwurfPaginated) || count( $qmrFreigabePaginated ) )<br>@endif
         
         <div class="row">
             <div class="col-xs-12 col-md-12">

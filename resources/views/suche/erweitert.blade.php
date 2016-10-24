@@ -190,7 +190,7 @@
     
 </fieldset>
 
-@if(count($results))
+@if(count($results) || Request::has('parameter'))
 
 <div class="search-results">
     <div class="box-wrapper">

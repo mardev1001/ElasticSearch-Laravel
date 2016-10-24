@@ -44,7 +44,7 @@ class BenutzerRequest extends Request
                     'last_name' => 'required',
                     'email' => 'required|email',
                     'picture' => 'image',
-                    'username_sso' => 'required|min:3|unique:users',
+                    // 'username_sso' => 'required|min:3|unique:users',
                 ];
             }
             case 'PUT':
