@@ -613,11 +613,15 @@ class SearchController extends Controller
         $visible = $this->utility->getPhonelistSettings();
             
         $partner = false;
+        $adminRights = false;
         $search = true;
         $searchParameter = $request->get('search');
         $roles = Role::all();
         $loggedUserMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
-        // dd($loggedUserMandant);
+        $loggedUserMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(),'mandant_id'))->get();
+        // dd($loggedUserMandants);
+        
+        foreach ($loggedUserMandants as $tmp) if($tmp->rights_admin) $adminRights = true;
         
         // Get searched mandants
         $mandants = Mandant::where(function ($query) use($searchParameter) {
@@ -627,20 +631,23 @@ class SearchController extends Controller
         }); 
         
         
-        if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $loggedUserMandant->rights_admin == 1)
+        if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $adminRights)
             $mandants = $mandants->where('active', 1)->orderBy('mandant_number')->get();
         else{
             $partner = true;
             $mandants = $mandants->where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
         }
 
-        // dd($loggedUserMandant);
-        if(!$mandants->contains($loggedUserMandant) && (
-            (stripos($loggedUserMandant->name, $searchParameter) !== false) ||
-            (stripos($loggedUserMandant->kurzname, $searchParameter) !== false) ||
-            (stripos($loggedUserMandant->mandant_number, $searchParameter) !== false )) ){
-                $mandants->prepend($loggedUserMandant);
+        // dd($loggedUserMandants);
+        foreach ($loggedUserMandants as $tmp) {
+            if(!$mandants->contains($tmp) && (
+                (stripos($tmp->name, $searchParameter) !== false) ||
+                (stripos($tmp->kurzname, $searchParameter) !== false) ||
+                (stripos($tmp->mandant_number, $searchParameter) !== false )) ){
+                    $mandants->prepend($tmp);
+            }
         }
+        
         
         // Sort by Mandant No.
         $mandants = array_values(array_sort($mandants, function ($value) {
@@ -658,8 +665,9 @@ class SearchController extends Controller
             $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
             
             // Get all InternalMandantUsers
-            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
-            $internalMandantUsers = InternalMandantUser::where('mandant_id', $loggedUserMandant->id)
+            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $loggedUserMandant->id)
+            //     ->where('mandant_id_edit', $mandant->id)->get();
+            $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($loggedUserMandants, 'id'))
                 ->where('mandant_id_edit', $mandant->id)->get();
             foreach ($internalMandantUsers as $user)
                 $usersInternal[] = $user;
@@ -685,7 +693,6 @@ class SearchController extends Controller
         }
         
         // Get mandants for searched users
-        // if(Auth::user()->id == 1 || $loggedUserMandant->id == 1 || $loggedUserMandant->rights_admin == 1)
         if($partner)
             $mandantsSearch = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
         else
@@ -710,7 +717,9 @@ class SearchController extends Controller
         foreach($mandantsSearch as $k => $mandant){
             
             // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
-            $internalMandantUsers = InternalMandantUser::where('mandant_id', $loggedUserMandant->id)
+            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $loggedUserMandant->id)
+            //     ->where('mandant_id_edit', $mandant->id)->get();
+            $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($loggedUserMandants, 'id'))
                 ->where('mandant_id_edit', $mandant->id)->get();
             foreach ($internalMandantUsers as $user)
                 $usersInMandantsInternal[] = $user;

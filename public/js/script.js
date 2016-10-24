@@ -114999,7 +114999,7 @@ $(function() {
                 plugins:[ "table" ],
                  toolbar1: " mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
-                width: docWidth,
+                //width: docWidth,
                 height: docHeight, 
                 removed_menuitems: 'newdocument',
                 elementpath: false,
@@ -115198,12 +115198,12 @@ $(function() {
                 editor.on('click', function (e) {
                 });
                 editor.on('NodeChange', function(e) {
-                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                    /*if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
                        
                         e.find('td').each(function(){
                             processTableColumn( $(this) );
                         })
-                    }
+                    }*/
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
                         processTableColumn(e);
                     }
@@ -115253,7 +115253,9 @@ $(function() {
                                             // console.log('create image 2');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                           imgWidth = img.width;
+                                            imgHeight =img.height;
+                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
 
@@ -115299,7 +115301,13 @@ $(function() {
                                             // console.log('create image 3');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                            imgWidth = img.width;
+                                            imgHeight =img.height;
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
                                     }
@@ -115308,7 +115316,6 @@ $(function() {
 
                             }
                             if ($(e.target).prop("tagName") == 'I') {
-                                console.log($(e.target).parent().parent().parent().find('input').attr('id'));
                                 if ($(e.target).parent().parent().parent().find('input').attr('id') != 'tinymce-uploader') {
                                     $(e.target).parent().parent().parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
@@ -115344,7 +115351,13 @@ $(function() {
                                             // console.log('create image 1');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                            imgWidth = img.width;
+                                            imgHeight =img.height;
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                            editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
                                     }
@@ -115388,7 +115401,7 @@ $(function() {
                 // toolbar1: " mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
                 toolbar1: " mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
-                width: docWidth,
+                //width: docWidth,
                 height: docHeight, 
                 
                 removed_menuitems: 'newdocument',
@@ -116047,7 +116060,7 @@ $(function () {
                 skin_url: '/css/style',
                 plugins: ["table"],
                 toolbar1: "mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ",
-                width: 680,
+                //width: 680,
                 // height: 820,
                 height: 450,
                 removed_menuitems: 'newdocument',
@@ -116059,12 +116072,12 @@ $(function () {
                 editor.on('click', function (e) {
                 });
                 editor.on('NodeChange', function(e) {
-                    if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                    /*if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
                        
                         e.find('td').each(function(){
                             processTableColumn( $(this) );
                         })
-                    }
+                    }*/
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
                         processTableColumn(e);
                     }
@@ -116114,7 +116127,9 @@ $(function () {
                                             // console.log('create image 2');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                           imgWidth = img.width;
+                                            imgHeight =img.height;
+                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
 
@@ -116160,7 +116175,13 @@ $(function () {
                                             // console.log('create image 3');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                            imgWidth = img.width;
+                                            imgHeight =img.height;
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
                                     }
@@ -116169,7 +116190,6 @@ $(function () {
 
                             }
                             if ($(e.target).prop("tagName") == 'I') {
-                                console.log($(e.target).parent().parent().parent().find('input').attr('id'));
                                 if ($(e.target).parent().parent().parent().find('input').attr('id') != 'tinymce-uploader') {
                                     $(e.target).parent().parent().parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
@@ -116205,7 +116225,13 @@ $(function () {
                                             // console.log('create image 1');
                                             img = new Image();
                                             img.src = fr.result;
-                                            editor.insertContent('<img style="max-width:100% !important" src="' + img.src + '"/>');
+                                            imgWidth = img.width;
+                                            imgHeight =img.height;
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                            editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
                                         }
 
                                     }

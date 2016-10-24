@@ -180,9 +180,17 @@ class UserController extends Controller
         // $user = User::find($id);
         $usersAll = User::all();
         $mandantsAll = Mandant::all();
-        // $rolesAll = Role::all();
         // $rolesAll = Role::where('phone_role', false)->get();
-        $rolesAll = Role::all();
+        $rolesAll = Role::where('mandant_role', 1)->get();
+        
+        $loggedUserRoles = MandantUserRole::where('mandant_user_id', MandantUser::where('user_id', Auth::user()->id)->where('mandant_id', $mandantId)->first()->id)->get();
+        
+        foreach ($loggedUserRoles as $tmp) {
+            if(!in_array($tmp->role_id, array_pluck($rolesAll,'id')))
+               $rolesAll->push(Role::find($tmp->role_id));
+        }
+    
+        // dd($rolesAll);
         
         $mandantUsers = MandantUser::where('user_id', $id)->where('mandant_id', $mandantId)->get();
         $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
@@ -358,7 +366,9 @@ class UserController extends Controller
             if($request->has('partner-role')){
                 // Delete all "partner" roles for the "mandant_user_id"
                 $partnerRoles = Role::where('mandant_role', 1)->pluck('id')->toArray();
-                MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereIn('role_id', $partnerRoles)->delete();
+                // dd($partnerRoles);
+                // MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereIn('role_id', $partnerRoles)->delete();
+                MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
             } else {
                 
                 if(!count($request->input('role_id'))) 

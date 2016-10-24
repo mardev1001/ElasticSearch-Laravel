@@ -38,13 +38,13 @@
                                         
                                     </span> 
                                 </div>
-                                  @if(isset($searchParameter))
-                                    <div class="col-md-4 col-lg-2 hidden-sm hidden-xs">
-                                        <span class="custom-input-group-btn">
-                                            <a href="{{url('telefonliste')}}" class="btn btn-primary no-margin-bottom">{{ trans('telefonListeForm.reset') }}</a>
-                                        </span> 
-                                    </div>
-                                   @endif
+                                    @if(isset($searchParameter))
+                                        <div class="col-md-4 col-lg-2 hidden-sm hidden-xs">
+                                            <span class="custom-input-group-btn">
+                                                <a href="{{url('telefonliste')}}" class="btn btn-primary no-margin-bottom">{{ trans('telefonListeForm.reset') }}</a>
+                                            </span> 
+                                        </div>
+                                    @endif
                                    
                                    
                                    <div class="col-md-4 col-lg-2 hidden-sm hidden-xs">
@@ -128,7 +128,7 @@
                             <span class="panel-options col-xs-2 no-margin-top">
                                 <span class="pull-right">
                                     <a href="#" data-toggle="modal" data-target="#details{{$mandant->id}}" class="btn btn-primary no-arrow">
-                                        Auszug Mandanten Gesamt  </a><!-- before was Detailansicht --> 
+                                        Firmeninformationen  </a><!-- before was Detailansicht --> 
                                 </span>
                             </span>
                             
@@ -145,7 +145,7 @@
                                         <th class="@if(!isset($visible['col4'])) col-hide @endif col4 defaultSort">{{ trans('telefonListeForm.lastname') }} </th>
                                         <th class="@if(!isset($visible['col5'])) col-hide @endif col5 no-sort">{{ trans('telefonListeForm.role') }} </th>
                                         <th class="@if(!isset($visible['col6'])) col-hide @endif col6 no-sort">{{ trans('telefonListeForm.phone') }} </th>
-                                        <th class="@if(!isset($visible['col7'])) col-hide @endif col7 no-sort">{{ trans('telefonListeForm.fax') }} </th>
+                                        <th class="@if(!isset($visible['col7'])) col-hide @endif col7 no-sort">{{ trans('telefonListeForm.phone_short') }} </th>
                                     </tr>
                                     </thead>
                                     <tbody> 
@@ -190,16 +190,18 @@
                                                                 @endif
                                                             @endif
                                                         @else
-                                                            @if($mandant->rights_admin)
-                                                                @if( $mandantUserRole->role->phone_role )
-                                                                    @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
-                                                                        {{ ( $mandantUserRole->role->name ) }}
+                                                            @if(isset($mandant))
+                                                                @if($mandant->rights_admin)
+                                                                    @if( $mandantUserRole->role->phone_role )
+                                                                        @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                                                                            {{ ( $mandantUserRole->role->name ) }}
+                                                                        @endif
                                                                     @endif
-                                                                @endif
-                                                            @else
-                                                                @if( $mandantUserRole->role->mandant_role )
-                                                                    @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
-                                                                        {{ ( $mandantUserRole->role->name ) }}
+                                                                @else
+                                                                    @if( $mandantUserRole->role->mandant_role )
+                                                                        @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
+                                                                            {{ ( $mandantUserRole->role->name ) }}
+                                                                        @endif
                                                                     @endif
                                                                 @endif
                                                             @endif
@@ -255,7 +257,7 @@
                                     <th>{{ trans('telefonListeForm.mandant') }} </th>
                                     <th class="no-sort">{{ trans('telefonListeForm.role') }} </th>
                                     <th class="no-sort">{{ trans('telefonListeForm.phone') }} </th>
-                                    <th class="no-sort">{{ trans('telefonListeForm.fax') }} </th>
+                                    <th class="no-sort">{{ trans('telefonListeForm.phone_short') }} </th>
                                 </tr>
                                 </thead>
                                 <tbody> 
@@ -308,16 +310,18 @@
                                                         @endif
                                                     @endif
                                                 @else
-                                                    @if($mandant->rights_admin)
-                                                        @if( $mandantUserRole->role->phone_role )
-                                                            @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
-                                                                {{ ( $mandantUserRole->role->name ) }}
+                                                    @if(isset($mandant))
+                                                        @if($mandant->rights_admin)
+                                                            @if( $mandantUserRole->role->phone_role )
+                                                                @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
+                                                                    {{ ( $mandantUserRole->role->name ) }}
+                                                                @endif
                                                             @endif
-                                                        @endif
-                                                    @else
-                                                        @if( $mandantUserRole->role->mandant_role )
-                                                            @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
-                                                                {{ ( $mandantUserRole->role->name ) }}
+                                                        @else
+                                                            @if( $mandantUserRole->role->mandant_role )
+                                                                @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
+                                                                    {{ ( $mandantUserRole->role->name ) }}
+                                                                @endif
                                                             @endif
                                                         @endif
                                                     @endif
@@ -372,7 +376,7 @@
                                     <option value="col4" @if(isset($visible['col4'])) selected @endif>Nachname</option>
                                     <option value="col5" @if(isset($visible['col5'])) selected @endif>Abteilung</option>
                                     <option value="col6" @if(isset($visible['col6'])) selected @endif>Telefon</option>
-                                    <option value="col7" @if(isset($visible['col7'])) selected @endif>Fax</option>
+                                    <option value="col7" @if(isset($visible['col7'])) selected @endif>Kurzwahl</option>
                                 </select>
                             </div>
                         </div>

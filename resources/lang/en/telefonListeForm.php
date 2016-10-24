@@ -20,6 +20,7 @@ return [
     'lastname' => 'Nachname',
     'role' => 'Abteilung',
     'phone' => 'Telefon',
+    'phone_short' => 'Kurzwahl',
     'fax' => 'Fax',
     'overview' => 'Übersicht',
     'details' => 'Details',

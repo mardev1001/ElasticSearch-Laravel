@@ -47,7 +47,31 @@
     
 </div>
 
-<div class="clearfix"></div> <br>
+ <div class="clearfix"></div> <br>
+    
+    <div class="col-xs-12 box-wrapper box-white">
+        <h2 class="title">{{ trans('benutzerForm.search') }} ISO Dokumente</h2>
+        <div class="search box">
+            <div class="row">
+                {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                    <input type="hidden" name="document_type_id" value="4">
+                    
+                    <div class="input-group">
+                        <div class="col-md-12 col-lg-12">
+                            {!! ViewHelper::setInput('search', old('search'), old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
+                        </div>
+                        <div class="col-md-12 col-lg-12">
+                            <span class="custom-input-group-btn">
+                                <button type="submit" class="btn btn-primary no-margin-bottom">
+                                    {{ trans('navigation.search') }} 
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+               </form>
+            </div>
+        </div>
+    </div>
 
 @stop
 @section('afterScript')

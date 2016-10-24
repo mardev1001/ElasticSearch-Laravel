@@ -116,7 +116,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('wiki', 'WikiController');
         
         // Developer Routes
-        Route::get('dev/status-update', 'DocumentController@documentStatusUpdate')->middleware('auth.basic');
+        // Route::get('dev/status-update', 'DocumentController@documentStatusUpdate')->middleware('auth.basic');
         
         
 }); //end auth middleware

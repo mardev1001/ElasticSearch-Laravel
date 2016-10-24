@@ -122,14 +122,17 @@
                 </div>
             </div><!--End input box-->
             
-            
             <div class="col-md-4 col-lg-4">
                 <div class="form-group">
                     <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
                     <select name="document_coauthor[]" class="form-control select empty-select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">
-                        <option value="">&nbsp;</option>
+                        <option value="" @if( Request::is('*/create') ) select @endif >&nbsp;</option>
                         @foreach($mandantUsers as $mandantUser)
-                            <option value="{{$mandantUser->user->id}}" @if(isset($documentCoauthors)) {!! ViewHelper::setMultipleSelect($documentCoauthors, $mandantUser->user->id, 'user_id') !!} @endif > 
+                            <option value="{{$mandantUser->user->id}}"
+                            @if( Request::is('*/edit') )
+                                @if(isset($documentCoauthors)) {!! ViewHelper::setMultipleSelect($documentCoauthors, $mandantUser->user->id, 'user_id') !!} @endif
+                            @endif
+                            > 
                                 {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
                             </option>
                         @endforeach

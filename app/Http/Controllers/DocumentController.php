@@ -2714,11 +2714,9 @@ class DocumentController extends Controller
         
         $isoCategory = IsoCategory::where('slug', $slug)->first();
         $categoryIsParent =  IsoCategory::where('iso_category_parent_id',$isoCategory->id)->get();
-        
         $iso_category_id = $isoCategory->id;
         if($isoCategory->iso_category_parent_id) $isoCategoryParent = IsoCategory::where('id', $isoCategory->iso_category_parent_id)->first();
         else $isoCategoryParent = null;
-        
         
         $isoAllPaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         // ->join('editor_variants','documents.id','=','editor_variants.document_id')
@@ -2812,6 +2810,7 @@ class DocumentController extends Controller
     {
         // $isoCategories = IsoCategory::all();
         $isoCategories = IsoCategory::where('active', 1)->get();
+        
         return view('dokumente.isoCategoriesIndex', compact('isoCategories'));
     }
     
@@ -2850,12 +2849,16 @@ class DocumentController extends Controller
         if($docType == 4){
             if(!empty($iso_category_id))
                 $searchEntwurfPaginated = $searchEntwurfPaginated->where('iso_category_id', $iso_category_id);
-        $isoCategory =  IsoCategory::find($iso_category_id);
-        $isoCategoryName = str_slug($isoCategory->name);
-            
+            $isoCategory =  IsoCategory::find($iso_category_id);
+            if($isoCategory != null){
+                $isoCategoryName = str_slug($isoCategory->name);
+            }
+            else{
+                $isoCategoryName = str_slug($docTypeSearch->name);
+            }
         }
         
-        
+        // dd($searchEntwurfPaginated->get());
         // $searchEntwurfPaginated = $searchEntwurfPaginated->orderBy('id', 'desc')->paginate(10, ['*'], $docTypeName.'-entwurf');
         $searchEntwurfPaginated = $searchEntwurfPaginated->orderBy('date_published', 'desc')->paginate(10, ['*'], $docTypeName.'-entwurf');
         $searchEntwurfTree = $this->document->generateTreeview( $searchEntwurfPaginated, array('pageDocuments' => true) );
@@ -2878,8 +2881,8 @@ class DocumentController extends Controller
         $searchFreigabePaginated = $searchFreigabePaginated->orderBy('date_published', 'desc')->paginate(10, ['*'], $docTypeName.'-freigabe');
         $searchFreigabeTree = $this->document->generateTreeview( $searchFreigabePaginated, array('pageDocuments' => true) );
         
-        $resultAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3);
-
+        $resultAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3)->where('active', 1);
+        
         // QMR query options
         if($docType == 3){
             if( stripos($search, 'QMR') !== false ){
@@ -2902,7 +2905,8 @@ class DocumentController extends Controller
         elseif($docType == 4){
             if(!empty($iso_category_id))
                 $resultAllPaginated = $resultAllPaginated->where('iso_category_id', $iso_category_id);
-         
+               
+                
             if( stripos($search, 'ISO') !== false ){
                 $iso = trim(str_ireplace('ISO', '', $search));
                 $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
@@ -2913,8 +2917,9 @@ class DocumentController extends Controller
                     if($isoNumber) $query = $query->where('iso_category_number', 'LIKE', $isoNumber);
                     if(!empty($isoString)) $query = $query->where('additional_letter', 'LIKE', '%'.$isoString.'%');
                 });
-            } else
+            } else{
                 $resultAllPaginated = $resultAllPaginated->where('name', 'LIKE' ,'%'.$search.'%')->orderBy('id', 'desc');
+            }
         }
         
         // General query options
@@ -2963,6 +2968,7 @@ class DocumentController extends Controller
             
                 //save to Published documents
                 $document->document_status_id = 3;//aktualan
+                $document->approval_all_roles = 1;//permisija
                 $document->save();
                 
                 $publishedDocs = $this->publishProcedure($document);

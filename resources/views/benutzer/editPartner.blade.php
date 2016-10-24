@@ -215,11 +215,11 @@ Benutzer bearbeiten
                                         <td>
                                             <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
                                                 @foreach($rolesAll as $role)
-                                                    @if($role->mandant_role)
+                                                    {{-- @if($role->mandant_role) --}}
                                                     <option value="{{$role->id}}" {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}> 
                                                         {{$role->name}}
                                                     </option>
-                                                    @endif
+                                                    {{-- @endif --}}
                                                 @endforeach
                                             </select>
                                             <input type="hidden" name="partner-role" value="1">

@@ -10,7 +10,7 @@
 
 <fieldset class="form-group">
     <div class="box-wrapper">
-        <h4 class="title">{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.type') }} {{ strtolower(trans('dokumentTypenForm.add') ) }}</h4>
+        <h4 class="title">{{ trans('dokumentTypenForm.document') }}-{{ trans('dokumentTypenForm.type') }} {{ strtolower(trans('dokumentTypenForm.add') ) }}</h4>
         
         {!! Form::open(['route' => 'dokument-typen.store']) !!}
         
@@ -112,7 +112,7 @@
                                             </div>
                                         @else
                                             @if($documentType->document_art || $documentType->id == 5)    
-                                                {{ trans('dokumentTypenForm.upload') }} {{ trans('dokumentTypenForm.document') }}
+                                                {{ trans('dokumentTypenForm.upload') }} {{-- trans('dokumentTypenForm.document') --}}
                                             @else
                                                 {{ trans('dokumentTypenForm.editor') }}
                                             @endif

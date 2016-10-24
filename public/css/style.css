@@ -1716,6 +1716,11 @@ h1.page-title {
 #page-wrapper.form-group .radio, #page-wrapper .form-group .checkbox, .checkbox-form-group {
   margin-top: 20px; }
 
+/*This is a fix for benuzer form on certain devices*/
+#page-wrapper .col-md-4.col-lg-3 .form-group .checkbox {
+  min-height: 41px; }
+
+/*End This is a fix for benuzer form on certain devices*/
 .custom-input-group-btn {
   display: block;
   margin-top: 22px; }

@@ -16,25 +16,25 @@ Mandantenverwaltung - Benutzer anlegen
         <div class="box">
             <div class="row">
         
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('username', '', old('username'), trans('benutzerForm.username'), trans('benutzerForm.username'), true) !!}
                     </div>   
                 </div>
         
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('password', '', '', trans('benutzerForm.password'), trans('benutzerForm.password'), true, 'password') !!}
                     </div>   
                 </div>
         
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('password_repeat', '', '', trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), true, 'password') !!}
                     </div>   
                 </div>
             
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {{-- !! ViewHelper::setCheckbox('active', '', old('active'), trans('benutzerForm.active'), false) !! --}}
                         <div class="checkbox">
@@ -43,10 +43,8 @@ Mandantenverwaltung - Benutzer anlegen
                     </div>   
                 </div>
             
-            </div>
-        
-            <div class="row">
-                <div class="col-md-3 col-lg-3"> 
+            
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <label class="control-label">{{trans('benutzerForm.title')}}</label>
                         <select name="title" class="form-control select">
@@ -57,59 +55,59 @@ Mandantenverwaltung - Benutzer anlegen
                     </div>   
                 </div>
         
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('first_name', '', old('first_name'), trans('benutzerForm.first_name'), trans('benutzerForm.first_name'), true) !!}
                     </div>   
                 </div>
         
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('last_name', '', old('last_name'), trans('benutzerForm.last_name'), trans('benutzerForm.last_name'), true) !!}
                     </div>   
                 </div>
         
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('birthday', '', old('birthday'), trans('benutzerForm.birthday'), trans('benutzerForm.birthday'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
                 
-                <div class="clearfix"></div>
+                <!--<div class="clearfix"></div>-->
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('short_name', '', old('short_name'), trans('benutzerForm.short_name'), trans('benutzerForm.short_name'), false) !!}
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('username_sso', '', old('username_sso'), trans('benutzerForm.username_sso'), trans('benutzerForm.username_sso'), true) !!}
                     </div>   
                 </div>
                 
-                 <div class="col-md-3 col-lg-3"> 
+                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <!-- Telefon -->
                         {!! ViewHelper::setInput('phone', '', old('phone'), trans('benutzerForm.phone'), trans('benutzerForm.phone'), false) !!}
                     </div>
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <!-- Kurzwahl -->
                         {!! ViewHelper::setInput('phone_short', '', old('phone_short'), trans('benutzerForm.phone_short'), trans('benutzerForm.phone_short'), false) !!}
                     </div>
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('email', '', old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), true, 'email') !!}
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        <!--{!! ViewHelper::setCheckbox('email_reciever', '', old('email_reciever'), trans('benutzerForm.email_reciever')) !!}-->
                         <div class="checkbox">
@@ -118,22 +116,20 @@ Mandantenverwaltung - Benutzer anlegen
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         {!! ViewHelper::setInput('active_from', '', old('active_from'), trans('benutzerForm.active_from'), trans('benutzerForm.active_from'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         {!! ViewHelper::setInput('active_to', '', old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
-            </div><!--end class row-->
             
-            <div class="row">
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <label>{{ trans('benutzerForm.picture') }}</label>
                         <input type="file" id="image-upload" name="picture"/><br/>
@@ -141,7 +137,7 @@ Mandantenverwaltung - Benutzer anlegen
                     </div>   
                 </div>
         
-            </div>
+             </div><!--end class row-->
             
             <div class="clearfix"></div> <br>
             

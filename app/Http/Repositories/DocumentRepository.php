@@ -137,10 +137,9 @@ class DocumentRepository
         if ($options['pageSearch']) $searchResultsCounter = 0;
 
         if ($options['document'] == true && count($documents) > 0) {
-            
+           
             foreach ($documents as $document) {
                 $node = new \StdClass();
-                
                 $node->text = $document->name;
                 $icon = $icon2 = '';
                 
@@ -468,7 +467,7 @@ class DocumentRepository
                             foreach ($secondDoc->documentUploads as $upload) {
                                 $subNode = new \StdClass();
                                 // $subNode->text = basename($upload->file_path);
-                                $subNode->text = 'PDF Rundschreiben';;
+                                $subNode->text = 'PDF Rundschreiben';
                                 $subNode->icon = 'fa fa-file-o';
                                 // $subNode->href = '/download/' . str_slug($secondDoc->name) . '/' . $upload->file_path;
                                 $subNode->href = '/download/' . $secondDoc->id . '/' . $upload->file_path;

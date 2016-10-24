@@ -39,6 +39,9 @@ class TelephoneListController extends Controller
         
         // $mandants = array();
         $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+        $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(),'mandant_id'))->get();
+        // dd($myMandants);
+        
         if(ViewHelper::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1)
             $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
         else {
@@ -46,9 +49,10 @@ class TelephoneListController extends Controller
             $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
         }
         
-        if(!$mandants->contains($myMandant))
-            $mandants->prepend($myMandant);
-        
+        foreach($myMandants as $tmp){
+            if(!$mandants->contains($tmp))
+                $mandants->prepend($tmp);
+        }
         
         // Sort by Mandant No.
         $mandants = array_values(array_sort($mandants, function ($value) {
@@ -67,19 +71,14 @@ class TelephoneListController extends Controller
             // Get all InternalMandantUsers
             // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
                 
-            $internalMandantUsers = InternalMandantUser::where('mandant_id', $myMandant->id)
+            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $myMandant->id)
+            //     ->where('mandant_id_edit', $mandant->id)->get();
+            
+            $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($myMandants, 'id'))
                 ->where('mandant_id_edit', $mandant->id)->get();
+            // dd($internalMandantUsers);
                 
             foreach ($internalMandantUsers as $user){
-                // if($partner){
-                //     // Check for partner roles only
-                //     if($user->role->mandant_role)
-                //         $usersInternal[] = $user;
-                // } else {
-                //     // Check for phone roles only
-                //     if($user->role->phone_role)
-                //         $usersInternal[] = $user;
-                // }
                 $usersInternal[] = $user;
             }
             
@@ -95,15 +94,6 @@ class TelephoneListController extends Controller
                 
                 foreach($mUser->mandantRoles as $mr){
                     if($mUser->active){
-                    // if($partner){
-                    //     // Check for partner roles
-                    //     if( $mr->role->mandant_role ){
-                    //         $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
-                    //         if(!count($internalRole)){
-                    //             $userArr[] = $mandant->users[$k2]->id;
-                    //         }
-                    //     }
-                    // } else {
                         // Check for phone roles
                         if( $mr->role->phone_role || $mr->role->mandant_role ) {
                             $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id', $mandant->id)->first();
@@ -111,17 +101,10 @@ class TelephoneListController extends Controller
                                 $userArr[] = $mandant->users[$k2]->id;
                             }
                         }
-                    // }
+                    
                     }
                 }
-                
-                // if(isset($localUser) || Auth::user()->id == 1 ){
-                // if(isset($localUser)){
-                //     // Add all users to the array for the mandant, if they have the same mandant
-                //     if($mUser->active && !in_array($mUser->id, $userArr))
-                //         $userArr[] = $mUser->id;
-                // }
-                
+
             } // end second foreach
             
             $mandant->usersInternal = $usersInternal;
