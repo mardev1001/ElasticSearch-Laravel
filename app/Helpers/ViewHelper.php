@@ -277,6 +277,24 @@ class ViewHelper
     }
     
     /**
+     * Highlight keywords in string
+     *
+     * @param string $needles
+     * @param string $haystack
+     * @return string $newstring
+     */
+    static function highlightKeywords($needles = array(), $haystack){
+        $parsedText = $haystack;
+        
+        foreach ($needles as $keyword) {
+            if(stripos($parsedText, $keyword) !== false ){
+                $parsedText = preg_replace("/$keyword/i", "<span class='highlight'>\$0</span>", $parsedText);
+            }
+        }
+        return $parsedText;
+    }
+    
+    /**
      * Return n number of sentences. Default2
      *
      * @param string $body
@@ -314,6 +332,7 @@ class ViewHelper
      * @return string $newstring
      */
     static function extractText($needle, $haystack) {
+        if(empty($haystack)) return;
         $newstring = '';
         $haystack = html_entity_decode(strip_tags($haystack));
         $extractLenght = 128;
@@ -329,6 +348,7 @@ class ViewHelper
      * @return string $newstring
      */
     static function extractTextSimple($haystack){
+        if(empty($haystack)) return;
         $haystack = html_entity_decode(strip_tags(trim($haystack)));
         $extractLenght = 128;
         $needlePosition = 0;
@@ -755,6 +775,16 @@ class ViewHelper
         if($mandantUser = MandantUser::where('user_id', $id)->first()){
             return Mandant::find($mandantUser->mandant_id);
         } else return false;
+    }
+    
+    /**
+     * Get Mandant Roles from MandantUserRole and Mandant
+     * @param MandantUserRole $object
+     * @param Mandant $object
+     * @return Mandant | bool
+     */
+    static function getMandantRoles( $mandantUserRole, $mandant ){
+       //
     }
     
     /**

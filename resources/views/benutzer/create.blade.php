@@ -13,7 +13,7 @@ Mandantenverwaltung - Benutzer anlegen
         {!! Form::open(['route' => 'benutzer.store', 'enctype' => 'multipart/form-data']) !!}
         
         <h4 class="title">{{ trans('benutzerForm.baseInfo') }}</h4>
-        <div class="box">
+        <div class="box box-white">
             <div class="row">
         
                 <div class="col-md-4 col-lg-3"> 

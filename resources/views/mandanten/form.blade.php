@@ -9,7 +9,7 @@
 
 <div class="col-xs-12 box-wrapper">
     <h3 class="title">Basis Informationen</h3>
-    <div class="box">
+    <div class="box box-white">
         <div class="row">
             <!-- input box-->
             <div class="col-md-6 col-lg-4">

@@ -14,7 +14,7 @@
         
         {!! Form::open(['route' => 'dokument-typen.store']) !!}
         
-         <div class="box">
+         <div class="box box-white">
               <div class="box-header">
                   <div class="row">
                     <div class="col-lg-3 col-md-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></div>
@@ -82,7 +82,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h4 class="title"> {{ trans('dokumentTypenForm.overview') }}</h4>
-                <div class="box">
+                <div class="box box-white">
                     <table class="table">
                         <tr>
                             <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></th>

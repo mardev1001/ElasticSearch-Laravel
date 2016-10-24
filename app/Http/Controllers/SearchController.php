@@ -360,8 +360,10 @@ class SearchController extends Controller
         $search_tags = $request->input('tags');
         // $date_from = $request->input('datum_von');
         $date_from = strlen($request->input('datum_von')) ? Carbon::parse($request->input('datum_von'))->toDateTimeString()  : null;
+        // $date_from = strlen($request->input('datum_von')) ? Carbon::parse($request->input('datum_von'))  : null;
         // $date_to = $request->input('datum_bis');
         $date_to = strlen($request->input('datum_bis')) ? Carbon::parse($request->input('datum_bis'))->toDateTimeString()  : null;
+        // $date_to = strlen($request->input('datum_bis')) ? Carbon::parse($request->input('datum_bis'))  : null;
         $document_type = $request->input('document_type');
         $wiki = $request->has('wiki');
         $history = $request->has('history');
@@ -482,7 +484,7 @@ class SearchController extends Controller
         
         // if(!empty($date_from))  $documents->whereDate('documents.created_at', '>=', $date_from );
         // if(!empty($date_to))  $documents->whereDate('documents.created_at', '<=', $date_to );
-        
+        // dd($date_from);
         if(!empty($date_from))  $documents->whereDate('documents.date_published', '>=', $date_from );
         if(!empty($date_to))  $documents->whereDate('documents.date_published', '<=', $date_to );
         if(!empty($user_id))  $documents->where('owner_user_id', $user_id );
@@ -490,8 +492,27 @@ class SearchController extends Controller
         // $documents = $this->filterByVisibility($documents->get());
         // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'], 'suchergebnisse');
         // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
-        
+        // DB::enableQueryLog();
         $documents = $documents->get();
+        // dd(DB::getQueryLog());
+        
+        // foreach($documents as $key => $doc){
+        //     // echo $doc->date_published;
+        //     // var_dump(Carbon::parse($doc->date_published)->gte($date_from));
+        //     // var_dump(Carbon::parse($doc->date_published)->lte($date_to));
+            
+        //     if(!empty($date_from)) {
+        //         if(!Carbon::parse($doc->date_published)->gte($date_from)) 
+        //             $documents->forget($key);
+        //     }
+            
+        //     if(!empty($date_to)) {
+        //         if(!Carbon::parse($doc->date_published)->lte($date_to)) 
+        //             $documents->forget($key);
+        //     }
+        // }
+        
+        // dd($documents);
         
         if($emptyDocs) $documents = array();
 
@@ -558,6 +579,24 @@ class SearchController extends Controller
             foreach($results as $key => $value){
                 if($value->document_status_id != 5)
                     $results = array_except($results, $key);
+            }
+        }
+        
+        foreach($results as $key => $doc){
+            // echo $doc->date_published;
+            // var_dump(Carbon::parse($doc->date_published)->gte($date_from));
+            // var_dump(Carbon::parse($doc->date_published)->lte($date_to));
+            
+            if(!empty($date_from)) {
+                if(!Carbon::parse($doc->date_published)->gte(Carbon::parse($date_from))) 
+                    unset($results[$key]);
+                    // $results->forget($key);
+            }
+            
+            if(!empty($date_to)) {
+                if(!Carbon::parse($doc->date_published)->lte(Carbon::parse($date_to))) 
+                    unset($results[$key]);
+                    // $results->forget($key);
             }
         }
         

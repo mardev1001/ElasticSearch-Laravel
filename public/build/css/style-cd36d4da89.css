@@ -1157,6 +1157,10 @@ span.highlight {
 .box .favorite:last-child {
   border-bottom: 0; }
 
+.box, .box-white table, .panel-body.box-white, .box .dataTables_wrapper,
+#page-wrapper .box .list-group-item {
+  background-color: #fff !important; }
+
 .list-style-dash {
   list-style-image: url("/img/icons/icon_list_dash.png") !important; }
 

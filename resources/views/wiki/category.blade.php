@@ -7,7 +7,7 @@
 @section('content')
 <div class="row">
     <div class="col-xs-12 box-wrapper">
-        <div class="box">
+        <div class="box box-white">
             <div class="row">
                 {!! Form::open(['action' => 'WikiController@search', 'method'=>'POST']) !!}
                     <div class="input-group">
@@ -35,7 +35,7 @@
     <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">
                 <h1 class="title">Neue Wiki-Einträge</h1>
-                <div class="box home">
+                <div class="box home box-white">
                     <div class="tree-view hide-icons wiki" data-selector="wikiEntries">
                         <div class="wikiEntries hide">
                             {{ $categoryEntriesTree }}

@@ -66,7 +66,7 @@ class TelephoneListController extends Controller
             $usersInternal = array();
             
             // Check if the logged user is in the current mandant
-            $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
+            // $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
             
             // Get all InternalMandantUsers
             // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();

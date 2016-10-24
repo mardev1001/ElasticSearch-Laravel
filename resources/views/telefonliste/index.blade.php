@@ -17,7 +17,7 @@
             <div class="col-xs-12">
                 <div class="box-wrapper">
                     <h4 class="title">{{ trans('telefonListeForm.search') }} {{ trans('telefonListeForm.phone-list') }}</h4>
-                     <div class="box">
+                     <div class="box box-white">
                         <div class="clearfix"></div>
                         <div class="row">
                             <div class="col-xs-12 col-md-8 col-lg-4 form-group no-margin-bottom">
@@ -135,7 +135,7 @@
                         </div>
                         
                         <div id="collapseMandant{{$mandant->id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$mandant->id}}">
-                            <div class="panel-body">
+                            <div class="panel-body box-white">
                                 <table class="table data-table">
                                     <thead>
                                     <tr>
@@ -183,10 +183,13 @@
                                                 <td>{{ $user->last_name }}</td>
                                                 <td>
                                                     @foreach( $user->mandantRoles as $mandantUserRole)
+                                                        
                                                         @if(ViewHelper::getMandant(Auth::user()->id)->rights_admin || ViewHelper::universalHasPermission())
                                                             @if( $mandantUserRole->role->phone_role || $mandantUserRole->role->mandant_role )
                                                                 @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
-                                                                    {{ ( $mandantUserRole->role->name ) }}
+                                                                    @if($mandantUserRole->mandantUser->mandant->id == $mandant->id)
+                                                                        {{ ( $mandantUserRole->role->name ) }}
+                                                                    @endif
                                                                 @endif
                                                             @endif
                                                         @else
@@ -194,13 +197,17 @@
                                                                 @if($mandant->rights_admin)
                                                                     @if( $mandantUserRole->role->phone_role )
                                                                         @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
-                                                                            {{ ( $mandantUserRole->role->name ) }}
+                                                                            @if($mandantUserRole->mandantUser->mandant->id == $mandant->id)
+                                                                                {{ ( $mandantUserRole->role->name ) }}
+                                                                            @endif
                                                                         @endif
                                                                     @endif
                                                                 @else
                                                                     @if( $mandantUserRole->role->mandant_role )
                                                                         @if( !in_array($mandantUserRole->role->id, array_pluck($mandant->usersInternal,'role_id')) )
-                                                                            {{ ( $mandantUserRole->role->name ) }}
+                                                                            @if($mandantUserRole->mandantUser->mandant->id == $mandant->id)
+                                                                                {{ ( $mandantUserRole->role->name ) }}
+                                                                            @endif
                                                                         @endif
                                                                     @endif
                                                                 @endif

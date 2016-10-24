@@ -9,7 +9,7 @@
     @section('content')
     <div class="col-xs-12 box-wrapper">
         <h2 class="title">{{ trans('mandantenForm.searchUsers') }} </h2>
-        <div class="box">
+        <div class="box box-white">
             {!! Form::open([
                    'url' => 'mandanten/search-single',
                    'method' => 'POST',
@@ -56,7 +56,7 @@
             <h2 class="title">Übersicht</h2>
         @endif
         
-        <div class="panel-group">
+        <div class="panel-group ">
             
             @foreach( $mandants as $mandant)
             
@@ -84,7 +84,7 @@
                             in
                         @endif
                     @endif">
-                        <div class="panel-body">
+                        <div class="panel-body box-white">
                              @if(Session::has('mandantChanged'))
                                 @if( Session::get('mandantChanged') == $mandant->id )
                                     <input type="hidden" class="scrollTo" value="#panelMandant{{ $mandant->id }}" />
@@ -93,7 +93,7 @@
                             
                             
                             
-                            <table class="table data-table">
+                            <table class="table data-table box-white">
                             <thead>
                                 <th>Name</th>
                                 <th class="col-md-8 no-sort">Rollen</th>
@@ -122,9 +122,9 @@
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                                     @if($mandantUser->user->active)
-                                                        <button class="btn btn-xs btn-success" type="submit" name="active" value="1">Aktiv</button><br>
+                                                        <button class="btn btn-xs btn-success" type="submit" name="active" value="1">{{ trans('benutzerForm.active') }}</button><br>
                                                     @else
-                                                        <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">Inaktiv</button><br>
+                                                        <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">{{ trans('benutzerForm.inactive') }}</button><br>
                                                     @endif
                                                 {!! Form::close() !!}
                                                 
@@ -133,14 +133,14 @@
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                                     <button type="submit" class="btn btn-xs btn-warning delete-prompt"
                                                     data-text="Wollen Sie diesen Benutzer wirklich löschen?"
-                                                    >Entfernen</button><br>
+                                                    >{{ trans('benutzerForm.remove') }}</button><br>
                                                 {!! Form::close() !!}
                                                 
-                                                {{-- <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a> --}}
+                                                {{-- <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">{{ trans('benutzerForm.edit') }}</a> --}}
                                                 {!! Form::open(['url' => '/benutzer/'. $mandantUser->user->id .'/partner/'. $mandantUser->mandant->id .'/edit', 'method'=>'POST']) !!}
                                                     <!--<input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">-->
                                                     <!--<input type="hidden" name="mandant_id" value="{{ $mandant->id }}">-->
-                                                    <button type="submit" class="btn btn-xs btn-primary">Bearbeiten</button>
+                                                    <button type="submit" class="btn btn-xs btn-primary">{{ trans('benutzerForm.edit') }}</button>
                                                 {!! Form::close() !!}
                                             </td>
                                         </tr>
@@ -191,7 +191,7 @@
                             </h4>
                         
                             <span class="pull-right">
-                                 <a href="{{route('benutzer.edit', ['id'=> $user->id])}}" class="btn btn-xs btn-primary no-arrow no-margin-bottom">Bearbeiten</a>
+                                 <a href="{{route('benutzer.edit', ['id'=> $user->id])}}" class="btn btn-xs btn-primary no-arrow no-margin-bottom">{{ trans('benutzerForm.edit') }}</a>
                             </span>
                             
                         </div>
@@ -244,16 +244,16 @@
                                                             <input type="hidden" name="user_id" value="{{ $unassignedUser->id }}">
                                                             
                                                             @if($unassignedUser->active)
-                                                                <button class="btn btn-xs btn-success" type="submit" name="active" value="1">Aktiv</button><br>
+                                                                <button class="btn btn-xs btn-success" type="submit" name="active" value="1">{{ trans('benutzerForm.active') }}</button><br>
                                                             @else
-                                                                <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">Inaktiv</button><br>
+                                                                <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">{{ trans('benutzerForm.inactive') }}</button><br>
                                                             @endif
                                                         {!! Form::close() !!}
                                                         
                                                         {!! Form::open(['route'=>['benutzer.destroy', 'id'=> $unassignedUser->id], 'method'=>'DELETE']) !!}
-                                                            <button type="submit" class="btn btn-xs btn-warning">Entfernen</button><br>
+                                                            <button type="submit" class="btn btn-xs btn-warning">{{ trans('benutzerForm.remove') }}</button><br>
                                                         {!! Form::close() !!}
-                                                        <a href="{{route('benutzer.edit', ['id'=> $unassignedUser->id])}}" class="btn btn-xs btn-primary">Bearbeiten</a>
+                                                        <a href="{{route('benutzer.edit', ['id'=> $unassignedUser->id])}}" class="btn btn-xs btn-primary">{{ trans('benutzerForm.edit') }}</a>
                                                     </td>
                                                 </tr>
                                             {{-- @endif --}}

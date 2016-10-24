@@ -9,7 +9,7 @@
 <fieldset class="form-group">
     <div class="box-wrapper">
         <h4 class="title">ISO-{{ trans('isoKategorienForm.category') }} {{ trans('isoKategorienForm.add') }} </h4>
-        <div class="box">
+        <div class="box box-white">
       
             <!-- input box-->
             
@@ -59,7 +59,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h4 class="title">{{ trans('isoKategorienForm.overview') }}</h4>
-                <div class="box">
+                <div class="box box-white">
                     <table class="table">
                         <tr>
                             <th colspan="3">

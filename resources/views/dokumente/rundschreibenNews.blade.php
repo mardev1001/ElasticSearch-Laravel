@@ -141,6 +141,7 @@
                 <a href="{{ action('DocumentController@rundschreibenNews', ['documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
             </h2>
             
+            
             @if(count($newsAllPaginated))
                 <div class="box scrollable">
                     <div class="tree-view" data-selector="newsAllTree">

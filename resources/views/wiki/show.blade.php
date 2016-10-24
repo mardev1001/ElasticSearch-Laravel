@@ -20,7 +20,7 @@
                 </h3>
             </div>
         </div>
-        <div class="box">
+        <div class="box box-white">
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-lg-10">
 

@@ -21,15 +21,15 @@
                         
                         {{--
                         <!-- Old TreeView Code ... Uncomment if required -->
-                        <div class="box box-treeview">
+                        <div class="box box-white box-treeview">
                             <div class="tree-view" data-selector="{{ 'favorites-' . $favorites['document_type_id'] }}">
                                 <div class="{{ 'favorites-' . $favorites['document_type_id'] }} hide">{{ $favorites['favoritesTreeview'] }}</div>
                             </div>
                         </div> 
                         --}}
                         
-                        <div class="box box-linklist">
-                              <div class="box box-treeview">
+                        <div class="box box-white box-linklist">
+                              <div class="box box-white box-treeview">
                             <div class="tree-view" data-selector="{{ 'favorites-' . $favorites['document_type_id'] }}">
                                 <div class="{{ 'favorites-' . $favorites['document_type_id'] }} hide">{{ $favorites['favoritesTreeview'] }}</div>
                             </div>
@@ -46,7 +46,7 @@
                         
                         </div>
                         
-                        <div class="text-center box box-pagination">
+                        <div class="text-center box-white box box-pagination">
                             {!! $favorites['favoritesPaginated']->render() !!}
                         </div>
                         

@@ -11,7 +11,9 @@
         <h4 class="title">{{ trans('sucheForm.search-title') }}</h4>
         
         {!! Form::open(['action' => 'SearchController@searchAdvanced', 'method'=>'GET']) !!}
-            <div class="box">
+            <div class="box box-white
+            
+            ">
                 
                 <div class="row">
                     
@@ -200,7 +202,7 @@
             <a href="{{ Request::fullUrl() }}&sort=desc" class="link">{{ trans('sucheForm.publish-date') }} <i class="fa fa-arrow-down" aria-hidden="true"></i></a>
         </div>
         
-        <div class="box">
+        <div class="box box-white">
     
             @foreach($results as $key=>$document)
             
@@ -227,13 +229,11 @@
                                         {{ $document->documentType->name }} -
                                     @endif
                                     
-                                    
-                                    
-                                    {{-- @if(isset($parameter) && !empty($parameter)) 
+                                    @if(isset($parameter) && !empty($parameter)) 
+                                        {!! ViewHelper::highlightKeywords(array($parameter, old('name')), $document->name_long) !!} -
+                                    @else
                                         {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
-                                    @else --}}
-                                        {!! ViewHelper::highlightKeyword($parameter, ViewHelper::highlightKeyword(old('name'), $document->name_long)) !!} -
-                                    {{-- @endif --}}
+                                    @endif
                                     
                                     {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                 @else
@@ -311,7 +311,7 @@
 <div class="search-results-wiki">
     <div class="box-wrapper">
         <h4 class="title">{{ trans('sucheForm.search-results') }} Wiki: <span class="text"> {{count($resultsWiki)}} Treffer</span></h4> <br>
-        <div class="box">
+        <div class="box box-white">
 
                 @foreach($resultsWiki as $key=>$wiki)
                     <div class="row">

@@ -10,7 +10,7 @@
     <div class="col-sm-6 ">
         <div class="box-wrapper">
             <h2 class="title">Suche Wiki</h2>
-            <div class="box">
+            <div class="box  box-white">
                 <div class="row">
                     {!! Form::open(['action' => 'WikiController@search', 'method'=>'POST']) !!}
                         <div class="input-group">
@@ -40,7 +40,7 @@
     <div class="col-xs-6 ">
         <div class="box-wrapper">
             <h2 class="title">Top Kategorien</h2>
-            <div class="box">
+            <div class="box box-white">
                 <div class="row">
                     <div class="col-md-12">
                         @foreach( $topCategories as $cat )
@@ -61,7 +61,7 @@
     <div class="col-sm-12">
         <div class="box-wrapper">
             <h2 class="title">{{ trans('wiki.searchResults') }}</h2>
-            <div class="box wiki-search">
+            <div class="box  box-white wiki-search">
                 <div class="row">
                     <div class="col-md-12">
                         @foreach( $search as $s )
@@ -91,7 +91,7 @@
     <div class="col-xs-6 ">
         <div class="box-wrapper">
             <h2 class="title">Neueste Beiträge (Änderungen)</h2>
-            <div class="box">
+            <div class="box box-white">
                 <div class="row">
                     <div class="col-md-12">
                         @foreach( $newestWikiEntries as $entry )

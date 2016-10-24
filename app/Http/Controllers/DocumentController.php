@@ -2942,6 +2942,7 @@ class DocumentController extends Controller
         
         $resultAllTree = $this->document->generateTreeview($resultAllPaginated, array('pageDocuments' => true));
         
+        
         return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeSearch', 'docTypeName', 
             'resultAllPaginated', 'resultAllTree', 'searchEntwurfPaginated', 'searchEntwurfTree', 
             'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id','isoCategoryName','docTypeSlug', 'docs', 'sort'));

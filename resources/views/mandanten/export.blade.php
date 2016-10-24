@@ -10,7 +10,7 @@
 {{ Form::open(['action' => 'TelephoneListController@xlsExport', 'method' => 'POST']) }}
 <div class="box-wrapper col-sm-6">
     
-    <div class="box">
+    <div class="box box-white">
 
         <div class="row">
             

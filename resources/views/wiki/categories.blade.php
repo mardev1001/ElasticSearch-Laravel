@@ -9,7 +9,7 @@
     @section('content')
     <div class="col-xs-12 box-wrapper">
         <h2 class="title">{{ trans('wiki.newCategory') }} </h2>
-        <div class="box">
+        <div class="box box-white">
             {!! Form::open([
                    'url' => 'wiki-kategorie',
                    'method' => 'POST',
@@ -47,7 +47,7 @@
         @else
             <h2 class="title">Wiki Kategorien verwalten</h2>
         @endif
-        <div class="box">
+        <div class="box box-white">
             <div class="row">
             
             <table class="table">

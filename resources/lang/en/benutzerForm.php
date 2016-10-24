@@ -28,6 +28,7 @@ return [
     'remove' => 'entfernen',
     'edit' => 'bearbeiten',
     'active' => 'aktiv',
+    'inactive' => 'inaktiv',
     'active_from' => 'aktiv ab',
     'active_to' => 'aktiv bis',
     'search' => 'Suche',

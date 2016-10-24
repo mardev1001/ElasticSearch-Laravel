@@ -7,7 +7,7 @@
 @section('content')
 <div class="row">
     <div class="col-xs-12 box-wrapper">
-        <div class="box">
+        <div class="box box-white">
             <div class="row">
                 {!! Form::open(['action' => 'WikiController@searchManagment', 'method'=>'POST']) !!}
                      @if( isset($admin) && $admin == true) 
@@ -61,8 +61,8 @@
     
     <!-- top categorie box-->
     <div class="col-xs-12 box-wrapper">
-        <div class="box">
-             <table class="table data-table">
+        <div class="box box-white">
+             <table class="table data-table box-white">
                 <thead>
                     <th  class="text-center valign">Name</th>
                     <th  class="text-center valign">Kategorie</th>

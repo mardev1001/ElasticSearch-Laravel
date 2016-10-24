@@ -115794,6 +115794,8 @@ $(function () {
     }
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
+         
+    
     }
     else if (typeof documentType !== 'undefined' && documentType.length) {
         var detectHref = '';

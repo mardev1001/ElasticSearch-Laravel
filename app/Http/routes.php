@@ -27,6 +27,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::any('dokumente/suche', 'DocumentController@search');
         // Route::get('dokumente/suchergebnisse', 'DocumentController@searchResults');
         Route::get('dokumente/rundschreiben', 'DocumentController@rundschreiben');
+        Route::any('dokumente/rundschreiben/suche', 'DocumentController@search');
         Route::get('dokumente/rundschreiben-pdf', 'DocumentController@rundschreibenPdf');
         Route::get('dokumente/rundschreiben-qmr', 'DocumentController@rundschreibenQmr');
         Route::get('dokumente/news', 'DocumentController@rundschreibenNews');

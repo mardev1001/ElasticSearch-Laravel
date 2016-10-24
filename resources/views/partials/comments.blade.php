@@ -5,7 +5,7 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper home">
             <h1 class="title">{{ $title }}</h1>
-            <div class="box home">
+            <div class="box box-white home">
                 <div class="commentsMy">
                     @if(count($collection))
                         @foreach( $collection as $k => $comment )

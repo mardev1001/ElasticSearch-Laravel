@@ -91,5 +91,11 @@ return [
     'bank_bic' => 'BIC',
     'bank_memo' => 'Bemerkung',
     'toBankinfos' => 'zu den Bankverbindungen',
+    'edit' => 'bearbeiten',
+    'active' => 'aktiv',
+    'inactive' => 'inaktiv',
+    'remove' => 'entfernen',
+    'overview' => 'Übersicht',
+    'search-result-mandants' => 'Suchergebnisse für Mandanten',
     
 ];

@@ -15,7 +15,7 @@
              {!! Form::open([
                 'method'=>'POST' 
                 ]) !!}
-            <div class="box">
+            <div class="box box-white">
                
                 
             </div><!--end .box-->

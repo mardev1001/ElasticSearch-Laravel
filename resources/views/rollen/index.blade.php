@@ -8,7 +8,7 @@
 <fieldset class="form-group">
     <div class="box-wrapper">
         <h4 class="title">{{ trans('rollenForm.roles') }} {{ trans('rollenForm.add') }}</h4>
-        <div class="box">
+        <div class="box box-white">
             <div class="row">
                 <!-- input box-->
                     {!! Form::open(['route' => 'rollen.store']) !!}
@@ -66,7 +66,7 @@
     <div class="box-wrapper">
         <h4 class="title">{{ trans('rollenForm.user-defined') }} {{ trans('rollenForm.roles') }}</h4>
         <!--<h4 class="title">{{ trans('rollenForm.overview') }}</h4>-->
-         <div class="box">
+         <div class="box box-white">
             <div class="row">
                 <div class="col-xs-12">
                     <table class="table">
@@ -128,7 +128,7 @@
     <div class="box-wrapper">
         <h4 class="title">{{ trans('rollenForm.system') }} {{ trans('rollenForm.roles') }}</h4>
         {{-- <h4 class="title">{{ trans('rollenForm.overview') }}</h4> --}}
-         <div class="box">
+         <div class="box box-white">
             <div class="row">
                 <div class="col-xs-12">
                     <table class="table">

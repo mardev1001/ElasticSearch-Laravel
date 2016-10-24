@@ -63,7 +63,7 @@ class HomeController extends Controller
         $documentsNew = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('document_status_id', 3)->where('is_attachment',0)->where('documents.active',1)
         ->where('document_types.document_art', 0)
-        ->orderBy('documents.date_published', 'desc')
+        ->orderBy('documents.date_published', 'desc')->limit(50)
         ->get(['*','document_types.name as docTypeName', 'documents.name as name', 
 		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at']);
 		

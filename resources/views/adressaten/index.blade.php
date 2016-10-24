@@ -12,7 +12,7 @@
 <fieldset class="form-group">
     <div class="box-wrapper">
         <h4 class="title">{{ trans('adressatenForm.adressat') }} {{ trans('adressatenForm.add') }}</h4>
-        <div class="box">
+        <div class="box box-white">
             <div class="row">
                 <!-- input box-->
                 <div class="col-md-5"> 
@@ -38,7 +38,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <h4 class="title">{{ trans('adressatenForm.overview') }}</h4>
-                 <div class="box">
+                 <div class="box box-white">
                     @foreach($adressate as $adressat)
                     <div class="row">
                         {!! Form::open(['route' => ['adressaten.update', 'adressaten'=> $adressat->id], 'method' => 'PATCH']) !!}
