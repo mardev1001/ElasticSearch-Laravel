@@ -63,11 +63,11 @@ class HomeController extends Controller
         $documentsNew = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('document_status_id', 3)->where('is_attachment',0)->where('documents.active',1)
         ->where('document_types.document_art', 0)
-        ->orderBy('documents.id', 'desc')
+        ->orderBy('documents.date_published', 'desc')
         ->get(['*','document_types.name as docTypeName', 'documents.name as name', 
 		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at']);
 		
-		$documentsNew = $this->document->getUserPermissionedDocuments($documentsNew,'neue-dokumente');
+		$documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
         
         $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
@@ -85,19 +85,12 @@ class HomeController extends Controller
         )
         ->where('document_type_id', '!=', 5)
         ->where('document_status_id', '!=', 5)
-        //->where('document_status_id', '!=', 6) Task in Jira NEPTUN-275
         ->where('document_types.document_art', 0)
         ->where('documents.active',1)
-        // ->where('document_status_id', 3)
-        // ->get();
-        ->orderBy('documents.id', 'desc')->paginate(10, ['*','document_types.name as docTypeName', 'documents.name as name', 
-		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at'], 'meine-rundschrieben');
+        ->orderBy('documents.id', 'desc')->limit(50)->get(['documents.id as id']);
+        $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->paginate(10, ['*'], 'meine-rundschrieben');
         // dd($rundschreibenMy);
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true,'myDocuments' => true));
-        
-        $documentsMy = Document::where('user_id', Auth::user()->id)
-        ->where('document_status_id',3)->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-dokumente');
-        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true));
         
         $uid = Auth::user()->id;
         $approval = DocumentApproval::where('user_id',$uid)->where('approved', 0)->pluck('document_id')->toArray();
@@ -105,29 +98,19 @@ class HomeController extends Controller
         $freigabeEntries = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->whereIn('document_status_id', [2,6]) 
         ->where('document_types.document_art', 0)
-        ->where(
-            function($query) use ($approval) {
-                $query->where('user_id', Auth::user()->id)
-                      ->orWhere('owner_user_id', Auth::user()->id);
-                    //   ->documentCoauthors('',);
-                $query->orWhereIn('documents.id',$approval);
-            }
-        )
+        ->where(function($query) use ($approval) {
+            $query->where('user_id', Auth::user()->id)
+                  ->orWhere('owner_user_id', Auth::user()->id);
+            $query->orWhereIn('documents.id',$approval);
+        })
         ->where('documents.active',1)
-        // ->orWhere(function ($query) use($approval) {
-        //         $query->whereIn('documents.id',$approval);
-        // })
-        ->orderBy('documents.id', 'desc')
-        ->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ],'freigabe-dokumente');
+        ->orderBy('documents.id', 'desc')->limit(50)->get(['documents.id as id']);
+        // ->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ],'freigabe-dokumente');
         
+        $freigabeEntries = Document::whereIn('id', array_pluck($freigabeEntries, 'id'))->paginate(10, ['*'], 'freigabe-dokumente');
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
         $wikiEntries = $this->document->generateWikiTreeview(WikiPage::orderBy('created_at','DESC')->take(5)->get());
-        // $wikiEntries = '[{"text":"Wiki Eintrag-74","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-79","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-25","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-166","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]},{"text":"Wiki Eintrag-19","tags":[2],"nodes":[{"text":"Lorem Ipsum-136","tags":[0]},{"text":"Lorem Ipsum-108","tags":[0]}]}]';
-        
-        // $commentsNew = '[{"text":"Neuer Kommentar-135","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-95","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]},{"text":"Neuer Kommentar-38","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-51","tags":[0]}]}]';
-        // $commentsMy = '[{"text":"Mein Kommentar-84","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]},{"text":"Mein Kommentar-51","tags":[1],"nodes":[{"text":"Kommentar Text Lorem Ipsum Dolor Sit Amet-41","tags":[0]}]}]';
-        
         $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('created_at', 'desc')->take(10)->get();
         
         $commentVisibility = false;
@@ -146,8 +129,7 @@ class HomeController extends Controller
         // dd($commentsMy);
         // dd(Auth::user()->id);
         // dd($commentVisibility);
-        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 
-        'documentsMy','documentsMyTree', 'wikiEntries', 'commentsNew', 'commentsMy','commentVisibility'));
+        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'wikiEntries', 'commentsNew', 'commentsMy','commentVisibility'));
     }
 
     /**

@@ -923,7 +923,7 @@ class DocumentRepository
         return $object;
     }//end documentVariant permission
    
-    public function getUserPermissionedDocuments($collection,$paginator='page',$orderBy=array('field' => 'id', 'sort' => 'desc')){
+    public function getUserPermissionedDocuments($collection,$paginator='page', $orderBy=array('field' => 'id', 'sort' => 'desc'), $perPage = 50){
     	foreach($collection as $key => $document){
 		    if($this->documentVariantPermission($document,false)->permissionExists == false)
 		        unset($collection[$key]);
@@ -932,7 +932,7 @@ class DocumentRepository
 		$documentsNewArr = $collection->pluck('id')->toArray();
 		
         
-        $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate(50, ['*'], $paginator);
+        $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate($perPage, ['*'], $paginator);
         // dd($collection);
         return $collection;
     }

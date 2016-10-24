@@ -90,7 +90,7 @@ Mandantenverwaltung - Benutzer bearbeiten
                 <!-- input box-->
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('username_sso', $user, old('username_sso'), trans('benutzerForm.username_sso'), trans('benutzerForm.username_sso'), true) !!}
+                       {!! ViewHelper::setInput('username_sso', $user, old('username_sso'), trans('benutzerForm.username_sso'), trans('benutzerForm.username_sso'), false) !!}
                     </div>   
                 </div><!--End input box-->
                 

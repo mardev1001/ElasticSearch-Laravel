@@ -115843,6 +115843,8 @@ $(function () {
     }
     else {
         $('a[href="' + url.href + '"]').addClass('active');
+        if( $('a[href="' + url.href + '"]').next('ul').length )
+            $('a[href="' + url.href + '"]').next('ul').addClass('in').hide().show("fast");
     }
 
     if (element.is('li')) {

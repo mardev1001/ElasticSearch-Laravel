@@ -111,7 +111,7 @@
                     <div id="panel-{{$mandant->id}}" class="panel panel-primary">
                         
                         <div class="panel-heading">
-                            <h4 class="panel-title transform-normal col-xs-10">
+                            <h4 class="panel-title transform-normal display-inline col-lg-10 col-md-8">
                                 <a data-toggle="collapse" data-target="#collapseMandant{{$mandant->id}}" class="collapsed transform-normal" 
                                    href="#collapseMandant{{$mandant->id}}" 
                                    @if(isset($mandant->openTreeView) ) data-open="true" @endif 
@@ -125,7 +125,7 @@
                                 </a>
                             </h4>
                             
-                            <span class="panel-options col-xs-2 no-margin-top">
+                            <span class="panel-options col-lg-2 col-md-4 no-margin-top">
                                 <span class="pull-right">
                                     <a href="#" data-toggle="modal" data-target="#details{{$mandant->id}}" class="btn btn-primary no-arrow">
                                         Firmeninformationen  </a><!-- before was Detailansicht --> 
