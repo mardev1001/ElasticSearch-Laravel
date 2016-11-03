@@ -71,7 +71,8 @@
                     @foreach( $data->editorVariant as $variant)
                         <div class="tab-pane " id="variation{{$variant->variant_number}}"
                              data-id="{{$variant->variant_number}}">
-                            <div class="variant" id="variant-{{$variant->variant_number}}">
+                            <div class="variant" id="variant-{{$variant->variant_number}}"  
+                            data-classes="@if( $data->landscape == true) landscape @else portrait @endif @if( $data->document_type_id == 4) iso-document @else rundschreiben @endif">
                                 {!!($variant->inhalt)!!}
                             </div>
                         </div>
@@ -113,6 +114,7 @@
                             {title: 'Spiegelstriche', selector: 'ul', classes: 'list-style-dash'},
                         ],
                         style_formats_merge: true,
+                        
                         setup: function (editor) {
                 editor.on('click', function (e) {
                 });
@@ -341,8 +343,17 @@
                         ],
                         style_formats_merge: true,
                         elementpath: false,
+                        
                         setup: function (editor) {
-                editor.on('click', function (e) {
+                editor.on('click', function (e) { 
+                    console.log( e.target.src );
+                    var source = e.target.src;
+                    var image = $(document).find('img[src$="'+source+'"]')
+                    removeCss( image ,'height');
+                     /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                        console.log('trig');
+                        
+                    }*/
                 });
                 editor.on('NodeChange', function(e) {
                     /*if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
@@ -351,6 +362,11 @@
                             processTableColumn( $(this) );
                         })
                     }*/
+                  
+                    if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                        processImage(e);
+                        
+                    }
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
                         processTableColumn(e);
                     }
@@ -402,7 +418,12 @@
                                             img.src = fr.result;
                                            imgWidth = img.width;
                                             imgHeight =img.height;
-                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                           var ratio = imgWidth/imgHeight;
+                                           editor.insertContent('<img  style="height:'+imgHeight+';" data-ratio="'+ratio+'" src="' + img.src + '"/>');
                                         }
 
 
@@ -413,7 +434,7 @@
                             }
                             if ($(e.target).prop("tagName") == 'DIV') {
                                 if ($(e.target).parent().find('input').attr('id') != 'tinymce-uploader') {
-                                    console.log($(e.target).parent().find('input').attr('id'));
+                                   
                                     $(e.target).parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
                                 $('#tinymce-uploader').trigger('click');
@@ -454,7 +475,8 @@
                                               imgWidth = this.width;
                                               imgHeight= this.height;
                                             }
-                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
+                                           var ratio = imgWidth/imgHeight;
+                                           editor.insertContent('<img  style="height:'+imgHeight+';" data-ratio="'+ratio+'" src="' + img.src + '"/>');
                                         }
 
                                     }
@@ -504,7 +526,8 @@
                                               imgWidth = this.width;
                                               imgHeight= this.height;
                                             }
-                                            editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
+                                           var ratio = imgWidth/imgHeight;
+                                           editor.insertContent('<img  style="height:'+imgHeight+';" data-ratio="'+ratio+'" src="' + img.src + '"/>');
                                         }
 
                                     }

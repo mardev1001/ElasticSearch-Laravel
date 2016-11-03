@@ -16,40 +16,34 @@ Benutzer bearbeiten
         <div class="box">
             <div class="row">
         
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('username', $user, old('username'), trans('benutzerForm.username'), trans('benutzerForm.username'), true) !!}
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('password', '', '', trans('benutzerForm.password'), trans('benutzerForm.password'), false, 'password') !!}
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('password_repeat', '', '', trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), false, 'password') !!}
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <div class="checkbox">
-                      
                            {!! ViewHelper::setCheckbox('active',$user,old('active'),trans('benutzerForm.active') ) !!}
-                          
                         </div>
                     </div>   
                 </div>
                 
-            </div>
-            
-            <div class="row">
-                
                 <!-- input box-->
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <label class="control-label">{{trans('benutzerForm.title')}}</label>
                         <select name="title" class="form-control select" placeholder="{{trans('benutzerForm.title')}}">
@@ -60,21 +54,21 @@ Benutzer bearbeiten
                 </div><!--End input box-->
         
                 <!-- input box-->
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('first_name', $user, old('first_name'), trans('benutzerForm.first_name'), trans('benutzerForm.first_name'), true) !!}
                     </div>   
                 </div><!--End input box-->
         
                 <!-- input box-->
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('last_name', $user, old('last_name'), trans('benutzerForm.last_name'), trans('benutzerForm.last_name'), true) !!}
                     </div>   
                 </div><!--End input box-->
         
                 <!-- input box-->
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('birthday', $user, old('birthday'), trans('benutzerForm.birthday'), trans('benutzerForm.birthday'), false, 'text', ['datetimepicker']) !!}
                     </div>   
@@ -83,27 +77,34 @@ Benutzer bearbeiten
                 <div class="clearfix"></div>
                 
                 <!-- input box-->
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('short_name', $user, old('short_name'), trans('benutzerForm.short_name'), trans('benutzerForm.short_name'), false) !!}
                     </div>   
                 </div><!--End input box-->
                 
                 <!-- input box-->
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('username_sso', $user, old('username_sso'), trans('benutzerForm.username_sso'), trans('benutzerForm.username_sso'), false) !!}
                     </div>   
                 </div><!--End input box-->
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <!-- Telefon -->
                         {!! ViewHelper::setInput('phone', $user, old('phone'), trans('benutzerForm.phone'), trans('benutzerForm.phone'), false) !!}
                     </div>
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        <!-- Telefon Mobil-->
+                        {!! ViewHelper::setInput('phone_mobile', $user, old('phone_mobile'), trans('benutzerForm.phone_mobile'), trans('benutzerForm.phone_mobile'), false) !!}
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <!-- Kurzwahl -->
                         {!! ViewHelper::setInput('phone_short', $user, old('phone_short'), trans('benutzerForm.phone_short'), trans('benutzerForm.phone_short'), false) !!}
@@ -111,13 +112,25 @@ Benutzer bearbeiten
                 </div>
                 
                 <!-- input box-->
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('email', $user, old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), true, 'email') !!}
                     </div>   
                 </div><!--End input box-->
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                       {!! ViewHelper::setInput('email_private', $user, old('email_private'), trans('benutzerForm.email_private'), trans('benutzerForm.email_private'), false, 'email') !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                       {!! ViewHelper::setInput('email_work', $user, old('email_work'), trans('benutzerForm.email_work'), trans('benutzerForm.email_work'), false, 'email') !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <div class="checkbox">
                             {!! ViewHelper::setCheckbox('email_reciever',$user,old('email_reciever'),trans('benutzerForm.email_reciever') ) !!}
@@ -126,17 +139,36 @@ Benutzer bearbeiten
                     </div>   
                 </div>
 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         {!! ViewHelper::setInput('active_from', $user, old('active_from'), trans('benutzerForm.active_from'), trans('benutzerForm.active_from'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
                 
-                <div class="col-md-3 col-lg-3"> 
+                <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         {!! ViewHelper::setInput('active_to', $user, old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('position', $user, old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('abteilung', $user, old('abteilung'), trans('benutzerForm.abteilung'), trans('benutzerForm.abteilung'), false) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('informationen', $user, old('informationen'), trans('benutzerForm.informationen'), trans('benutzerForm.informationen'), false) !!}
+                    </div>   
+                </div>
+                
                 
             </div>
             

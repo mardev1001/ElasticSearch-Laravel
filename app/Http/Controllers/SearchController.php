@@ -46,16 +46,6 @@ class SearchController extends Controller
      */
     public function index(Request $request)
     {
-        /*
-        'document_type_id', 'document_status_id', 'user_id','date_created','version',
-        'name','owner_user_id','search_tags',
-        'summary','date_published','date_modified','date_expired',
-        'version_parent','document_group_id','iso_category_id',
-        'show_name','adressat_id','betreff','document_replaced_id',
-        'date_approved','email_approval','approval_all_roles',
-        'approval_all_mandants','pdf_upload'
-        */
-        
         $parameter = null;
         $searchQmrIso = false;
         $results = array();
@@ -84,14 +74,10 @@ class SearchController extends Controller
         if($request->has('parameter')){
             
             $parameter = $request->input('parameter');
-            
-            //join('document_types', 'documents.document_type_id', '=', 'document_types.id')
             $documents = Document::where('document_status_id', 3)->where('active', 1);
-            // $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
-                // ->where('document_status_id', 3)->where('active', 1)->groupBy('documents.id');
             
-            // Check for occurence of "QMR" string, search for QMR documents if found
             if( stripos($parameter, 'QMR') !== false ){
+                // Check for occurence of "QMR" string, search for QMR documents if found
                 $searchQmrIso = true;
                 $qmr = trim(str_ireplace('QMR', '', $parameter));
                 $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
@@ -104,25 +90,9 @@ class SearchController extends Controller
                 });
                 
                 $documents->where('document_type_id', 3);
-                // $results = $documents->where('document_type_id', 3)->get();
-                // $results = $this->filterByVisibility(collect($results));
-                
-                // $documents = $documents->where('document_type_id', 3);
-                // $documents = $this->filterByVisibility($documents->get());
-                // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-                // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
-                
-                // $resultIds = array_pluck($results, 'id');
-            
-                // if($sort == 'asc')
-                //     $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
-                // else
-                //     $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
-                
-                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
-                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
-                
+
             } elseif( stripos($parameter, 'ISO') !== false ){
+                // Check for occurence of "ISO" string, search for ISO documents if found
                 $searchQmrIso = true;
                 $iso = trim(str_ireplace('ISO', '', $parameter));
                 $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
@@ -135,23 +105,6 @@ class SearchController extends Controller
                 });
                 
                 $documents->where('document_type_id', 4);
-                // $results = $documents->where('document_type_id', 4)->get();
-                // $results = $this->filterByVisibility(collect($results));
-                
-                // $documents = $documents->where('document_type_id', 4);
-                // $documents = $this->filterByVisibility($documents->get());
-                // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-                // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
-                
-                // $resultIds = array_pluck($results, 'id');
-            
-                // if($sort == 'asc')
-                //     $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
-                // else
-                //     $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
-                
-                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
-                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers', 'searchResultsPaginated', 'searchResultsTree'));
                 
             } else {
                 // Search for other parameters
@@ -160,20 +113,10 @@ class SearchController extends Controller
                     ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('summary', 'LIKE', '%'.$parameter.'%' )
                     ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' );
-                    
-                    // ->orWhere('betreff', 'LIKE', '%'.$parameter.'%' )
-                    // ->orWhere('inhalt', 'LIKE', '%'.$parameter.'%' );
                 });
                 
             }       
 
-            // $results = $this->filterByVisibility($documents->get());
-            // $documents = $this->filterByVisibility($documents->get());
-            // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'],'suchergebnisse');
-            // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
-            
-            // dd($searchResultsPaginated->getCollection());
-            
             $documents = $documents->get();
             // dd($documents);
             
@@ -200,16 +143,7 @@ class SearchController extends Controller
                     }
                 }
             } 
-            // else {
-            //     $variants = EditorVariant::all();
-            // }
-            
-            // TODO: pluck ids and sort from db
-            
-            // dd($results);
-            // sort by collection $sort
-            // $results = collect($results);
-            
+
             // $results = $results->sortBy('date_published');
             
                 
@@ -229,7 +163,6 @@ class SearchController extends Controller
             // $results = array_values(array_sort($results, function ($value) {
             //     return $value['date_published'];
             // }));
-            //$sorted = $collection->sortBy('price');  sortByDesc();
         }
         $request->flush();
         return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
@@ -358,6 +291,7 @@ class SearchController extends Controller
         $summary = $request->input('beschreibung');
         $inhalt = $request->input('inhalt');
         $search_tags = $request->input('tags');
+        $date_published = strlen($request->input('publish_date')) ? Carbon::parse($request->input('publish_date'))->toDateTimeString()  : null;
         // $date_from = $request->input('datum_von');
         $date_from = strlen($request->input('datum_von')) ? Carbon::parse($request->input('datum_von'))->toDateTimeString()  : null;
         // $date_from = strlen($request->input('datum_von')) ? Carbon::parse($request->input('datum_von'))  : null;
@@ -376,29 +310,19 @@ class SearchController extends Controller
         
         // DB::enableQueryLog();
         
-        // if($history) $documents = $documents->where('documents.deleted_at', '!=', null)->where('document_status_id', 5);
+        
         if($history) {
-            // $documents = ->where( function($query) { $query->where('document_status_id', 5)->orWhereNotNull('documents.deleted_at');})->where('active', 1);
-            $documents = Document::where('document_status_id', 5)->where('active', 1);
-            // $documents = $documents->get();
-            // var_dump(array_pluck($documents, 'id'));
+            // $documents = Document::where('document_status_id', 5)->where('active', 1);
+            $documents = Document::where('document_status_id', 5);
         } else {
-            // $documents = $documents->where('documents.deleted_at', null);
             $documents = Document::where('document_status_id', 3)->where('active', 1);
         }
-        
-        // $documents = Document::where('id', '>', 0)
-        // // $documents = Document::join('editor_variants', 'documents.id', '=', 'editor_variants.document_id')
-        // ->where('documents.id', '>', 0)
-        // // ->where('document_status_id','!=', 5)
-        // ->where('active', 1);
-        // // ->groupBy('documents.id');
         
         // Add-in parameter for use inside advanced search
         if(!empty($parameter)){
             
-            // Check for occurence of "QMR" string, search for QMR documents if found
             if( stripos($parameter, 'QMR') !== false ){
+                // Check for occurence of "QMR" string, search for QMR documents if found
                 $searchQmrIso = true;
                 $qmr = trim(str_ireplace('QMR', '', $parameter));
                 $qmrNumber = (int) preg_replace("/[^0-9]+/", "", $qmr);
@@ -410,17 +334,9 @@ class SearchController extends Controller
                 });
                 
                 $documents->where('document_type_id', 3);
-                // $results = $documents->where('document_type_id', 3)->get();
-                // $results = $this->filterByVisibility(collect($results));
-                
-                // $resultIds = array_pluck($results, 'id');
-                // if($sort == 'asc') $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
-                // else $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
-                
-                // $request->flash();
-                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
                 
             } elseif( stripos($parameter, 'ISO') !== false ){
+                // Check for occurence of "ISO" string, search for ISO documents if found
                 $searchQmrIso = true;
                 $iso = trim(str_ireplace('ISO', '', $parameter));
                 $isoNumber = (int) preg_replace("/[^0-9]+/", "", $iso);
@@ -432,34 +348,22 @@ class SearchController extends Controller
                 });
                 
                 $documents->where('document_type_id', 4);
-                // $results = $documents->where('document_type_id', 4)->get();
-                // $results = $this->filterByVisibility(collect($results));
-                
-                // $resultIds = array_pluck($results, 'id');
-                // if($sort == 'asc') $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
-                // else $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
-                
-                // $request->flash();
-                // return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
                 
             } else {
-                
                 $documents->where(function($query) use ($parameter) {
                     $query->where('name_long', 'LIKE', '%'.$parameter.'%' )
                         ->orWhere('search_tags', 'LIKE', '%'.$parameter.'%' )
                         ->orWhere('betreff', 'LIKE', '%'.$parameter.'%')
                         ->orWhere('summary', 'LIKE', '%'.$parameter.'%');
                 });
-                
             }
-            
         }
         
-        
-        
-        
-        
         // dd($documents->get());
+        
+        /***
+         
+        // Database search method - not applicable since document variants are being also added and searched
         
         if(!empty($name)) $documents->where('name_long', 'LIKE', '%'.$name.'%' );
         
@@ -481,58 +385,16 @@ class SearchController extends Controller
             $documents->where('document_type_id', $document_type );
         }
         
-        
-        // if(!empty($date_from))  $documents->whereDate('documents.created_at', '>=', $date_from );
-        // if(!empty($date_to))  $documents->whereDate('documents.created_at', '<=', $date_to );
-        // dd($date_from);
         if(!empty($date_from))  $documents->whereDate('documents.date_published', '>=', $date_from );
         if(!empty($date_to))  $documents->whereDate('documents.date_published', '<=', $date_to );
         if(!empty($user_id))  $documents->where('owner_user_id', $user_id );
         
-        // $documents = $this->filterByVisibility($documents->get());
-        // $searchResultsPaginated = Document::whereIn('id', array_pluck($documents, 'id'))->paginate(25, ['*', 'documents.id as id'], 'suchergebnisse');
-        // $searchResultsTree = $this->document->generateTreeview($searchResultsPaginated, array('pageSearch' => true));
-        // DB::enableQueryLog();
+        ***/
+        
         $documents = $documents->get();
-        // dd(DB::getQueryLog());
-        
-        // foreach($documents as $key => $doc){
-        //     // echo $doc->date_published;
-        //     // var_dump(Carbon::parse($doc->date_published)->gte($date_from));
-        //     // var_dump(Carbon::parse($doc->date_published)->lte($date_to));
-            
-        //     if(!empty($date_from)) {
-        //         if(!Carbon::parse($doc->date_published)->gte($date_from)) 
-        //             $documents->forget($key);
-        //     }
-            
-        //     if(!empty($date_to)) {
-        //         if(!Carbon::parse($doc->date_published)->lte($date_to)) 
-        //             $documents->forget($key);
-        //     }
-        // }
-        
-        // dd($documents);
         
         if($emptyDocs) $documents = array();
 
-        // exit();
-        // dd($documents);
-        // dd(array_pluck($documents, 'document_status_id'));
-        // dd(DB::getQueryLog());
-        // dd($documents->toSql());
-         
-        // if(!empty($inhalt) || !empty($parameter)) $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')->get();
-        // if(!empty($inhalt) || !empty($parameter)) {
-        //     $variants = EditorVariant::where('inhalt', 'LIKE', '%'.$inhalt.'%')
-        //         ->orWhere('inhalt', 'LIKE', '%'.$parameter.'%')->get();
-        // }
-        
-        // $variants = EditorVariant::where('id', '>', 0);
-        // if(!empty($parameter)) $variants->where('inhalt', 'LIKE', '%'.$parameter.'%'); 
-        // if(!empty($inhalt)) $variants->where('inhalt', 'LIKE', '%'.$inhalt.'%');
-        // $variants = $variants->get();
-        
         $variantsQuery = EditorVariant::whereNotNull('inhalt')->get();
         foreach ($variantsQuery as $tmp) {
             // Filter out images to only get the content
@@ -551,8 +413,10 @@ class SearchController extends Controller
         
         if(empty($parameter) && empty($inhalt)) $variants = array();
         
+        // Add standard documents to results array
         foreach ($documents as $document) if(!in_array($document, $results)) array_push($results, $document);
         
+        // Add document variants to results array
         if(count($variants)){
             foreach ($variants as $variant){
                 if(isset($variant->document)){
@@ -566,13 +430,7 @@ class SearchController extends Controller
                     }
                 }
             }
-        } 
-        // else {
-        //     $variants = EditorVariant::all();
-        // }
-        // dd($documents);
-        
-        // dd(array_pluck($results, 'document_status_id'));
+        }
         
         // Filter documents and variants by document_status_id if history search is enabled
         if($history){
@@ -582,22 +440,102 @@ class SearchController extends Controller
             }
         }
         
+        // Define filters for all search results here (documents AND document variants)
         foreach($results as $key => $doc){
-            // echo $doc->date_published;
-            // var_dump(Carbon::parse($doc->date_published)->gte($date_from));
-            // var_dump(Carbon::parse($doc->date_published)->lte($date_to));
             
+            // dd($doc);
+            
+            // Filter results and variants by date_from
             if(!empty($date_from)) {
                 if(!Carbon::parse($doc->date_published)->gte(Carbon::parse($date_from))) 
                     unset($results[$key]);
-                    // $results->forget($key);
             }
             
+            // Filter results and variants by date_to
             if(!empty($date_to)) {
                 if(!Carbon::parse($doc->date_published)->lte(Carbon::parse($date_to))) 
                     unset($results[$key]);
-                    // $results->forget($key);
             }
+            
+            // Filter results and variants by date_to
+            if(!empty($date_published)) {
+                if(!Carbon::parse($doc->date_published)->eq(Carbon::parse($date_published))) 
+                    unset($results[$key]);
+            }
+            
+            // Filter results by title/name
+            if(!empty($name)) {
+                if(!(stripos($doc->name_long, $name) !== false)){
+                    unset($results[$key]);
+                }
+            }
+            
+            // Filter results by tags/keywords
+            if(!empty($search_tags)) {
+                if(!(stripos($doc->search_tags, $search_tags) !== false)){
+                    unset($results[$key]);
+                }
+            }
+            
+            // Filter results by summary
+            if(!empty($summary)) {
+                if(!(stripos($doc->summary, $summary) !== false)){
+                    unset($results[$key]);
+                }
+            }
+            
+            // Filter results by content
+            if(!empty($inhalt)) {
+                $searchResult = false;
+                // dd($doc->editorVariant);
+                foreach ($doc->editorVariant as $variant) {
+                    // if($variant->inhalt != null) dd($variant->inhalt);
+                    $content = preg_replace("/<img[^>]+\>/i", "", $variant->inhalt);
+                    if(stripos($content, $inhalt) !== false) $searchResult = true;
+                }
+                if(!$searchResult) unset($results[$key]);
+            }
+            
+            // Filter results by betreff
+            if(!empty($betreff)) {
+                if(!(stripos($doc->betreff, $betreff) !== false)){
+                    unset($results[$key]);
+                }
+            }
+            
+            // Filter results by user/author
+            if(!empty($user_id)) {
+                if($doc->owner_user_id != $user_id){
+                    unset($results[$key]);
+                }
+            }
+            
+            // Filter results by user/author
+            if(!empty($document_type)) {
+                if($doc->document_type_id != $document_type) unset($results[$key]);
+                else {
+                    if($document_type == 3){
+                        if(!empty($qmr_number)){
+                            if($doc->qmr_number != $qmr_number)
+                                unset($results[$key]);
+                        }
+                        if(!empty($additional_letter)){
+                            if(!(stripos($doc->additional_letter, $additional_letter) !== false))
+                                unset($results[$key]);
+                        }
+                    } elseif($document_type == 4){
+                        if(!empty($iso_category_number)){
+                            if($doc->iso_category_number != $iso_category_number)
+                                unset($results[$key]);
+                        }
+                        if(!empty($additional_letter)){
+                            if(!(stripos($doc->additional_letter, $additional_letter) !== false))
+                                unset($results[$key]);
+                        }
+                    }
+                }
+            }
+            
         }
         
         // dd(array_pluck($results, 'document_status_id'));
@@ -620,6 +558,7 @@ class SearchController extends Controller
         
         // dd($results);
         $results = $this->filterByVisibility(collect($results));
+        
         // add docs where $document->published->url_unique isset
         $resultsWithUrls = array();
         foreach($results as $tmp) if(isset($tmp->published->url_unique)) $resultsWithUrls[] = $tmp;

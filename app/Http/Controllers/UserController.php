@@ -247,6 +247,9 @@ class UserController extends Controller
         }
         
         // dd($request->all());
+        // dd($user->getAttributes());
+        // $user->save();
+        
         if($request->has('partner-role'))
             return back()->with('message', 'Benutzer erfolgreich aktualisiert.');
         return back()->with('message', 'Benutzer erfolgreich aktualisiert.');

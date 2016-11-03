@@ -71,24 +71,24 @@ class HomeController extends Controller
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
         
         $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+        // dd($myRundCoauthor);
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-        ->where('owner_user_id', Auth::user()->id)
-        // ->where('user_id', Auth::user()->id)
-        ->orWhere(
+        ->where('documents.active', 1)
+        ->where('document_types.document_art', 0)
+        ->where(
             /* Neptun-275 */
             function($query) use ($myRundCoauthor) {
-                $query->where('user_id', Auth::user()->id)
-                      ->orWhere('owner_user_id', Auth::user()->id);
-                    //   ->documentCoauthors('',);
-                $query->orWhereIn('documents.id',$myRundCoauthor);
+                $query->where('user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id);
+                $query->orWhereIn('documents.id', $myRundCoauthor);
             }
         )
-        ->where('document_type_id', '!=', 5)
-        ->where('document_status_id', '!=', 5)
-        ->where('document_types.document_art', 0)
-        ->where('documents.active',1)
-        ->orderBy('documents.id', 'desc')->limit(50)->get(['documents.id as id']);
-        $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->paginate(10, ['*'], 'meine-rundschrieben');
+        // ->where('documents.document_type_id', '!=', 5)
+        // ->where('documents.document_status_id', '!=', 5)
+        ->limit(50)
+        ->orderBy('documents.id', 'desc')->get(['documents.id as id']);
+        
+        $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->orderBy('date_published', 'desc' )
+        ->paginate(10, ['*'], 'meine-rundschrieben');
         // dd($rundschreibenMy);
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true,'myDocuments' => true));
         
@@ -174,7 +174,8 @@ class HomeController extends Controller
         $data = array();
         $neptun = Mandant::find(1);
         $mandantUsers =  MandantUser::where('mandant_id',$neptun->id)->pluck('user_id')->toArray();
-        $users = User::whereIn('id',$mandantUsers)->where('active',1)->get();
+        $users = User::whereIn('id',$mandantUsers)->where('active',1)->orderBy('last_name','asc')->get();
+      
         
         return view('contact', compact(  'data', 'users' ) );
     }

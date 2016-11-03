@@ -103,6 +103,13 @@ Mandantenverwaltung - Benutzer bearbeiten
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
+                        <!-- Telefon Mobil-->
+                        {!! ViewHelper::setInput('phone_mobile', $user, old('phone_mobile'), trans('benutzerForm.phone_mobile'), trans('benutzerForm.phone_mobile'), false) !!}
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
                         <!-- Kurzwahl -->
                         {!! ViewHelper::setInput('phone_short', $user, old('phone_short'), trans('benutzerForm.phone_short'), trans('benutzerForm.phone_short'), false) !!}
                     </div>
@@ -117,8 +124,21 @@ Mandantenverwaltung - Benutzer bearbeiten
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
+                       {!! ViewHelper::setInput('email_private', $user, old('email_private'), trans('benutzerForm.email_private'), trans('benutzerForm.email_private'), false, 'email') !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                       {!! ViewHelper::setInput('email_work', $user, old('email_work'), trans('benutzerForm.email_work'), trans('benutzerForm.email_work'), false, 'email') !!}
+                    </div>   
+                </div>
+                
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
                         <div class="checkbox">
-                            {!! ViewHelper::setCheckbox('email_reciever',$user,old('email_reciever'),trans('benutzerForm.email_reciever') ) !!}
+                            {!! ViewHelper::setCheckbox('email_reciever', $user, old('email_reciever'),trans('benutzerForm.email_reciever') ) !!}
                          
                         </div>
                     </div>   
@@ -136,7 +156,27 @@ Mandantenverwaltung - Benutzer bearbeiten
                     </div>   
                 </div>
                 
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('position', $user, old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('abteilung', $user, old('abteilung'), trans('benutzerForm.abteilung'), trans('benutzerForm.abteilung'), false) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('informationen', $user, old('informationen'), trans('benutzerForm.informationen'), trans('benutzerForm.informationen'), false) !!}
+                    </div>   
+                </div>
+                
             </div>
+            
+            <div class="clearfix"></div>
             
             <div class="row">
                 <!-- input box-->
@@ -223,7 +263,7 @@ Mandantenverwaltung - Benutzer bearbeiten
                             <select name="mandant_id" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.mandant')) }}" required>
                                 <option></option>
                                 @foreach($mandantsAll as $mandant)
-                                    <option value="{{$mandant->id}}">({{ $mandant->mandant_number }}) {{ $mandant->kurzname }}</option>
+                                    <option value="{{$mandant->id}}">{{ $mandant->mandant_number }} - {{ $mandant->kurzname }}</option>
                                 @endforeach
                             </select>
                         

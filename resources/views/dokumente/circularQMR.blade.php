@@ -64,6 +64,7 @@
                 <div class="box-wrapper box-white">
                     <h2 class="title">{{ trans('benutzerForm.search') }} {{ $docType->name }}</h2>
                     <div class="box">
+                        <div class="row">
                         {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
                             <div class="input-group">
                                 <div class="col-md-12 col-lg-12">
@@ -79,6 +80,7 @@
                                 </div>
                             </div>
                         {!! Form::close() !!}
+                        </div>
                     </div>
                 </div>
             </div>

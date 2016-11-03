@@ -147,7 +147,7 @@ $(function () {
     
     /* Page content sidebar treeview */
 
-        var elementNew = $('content-nav ul.nav a').filter(function () {
+        var elementNew = $('.content-nav ul.nav a').filter(function () {
             return this.href == url || url.href.indexOf(this.href) == 0;
         }).parents("ul").not('.parent-ul').addClass('in');
     /* End Page content sidebar treeview */
@@ -341,8 +341,16 @@ $(function () {
                     {title: 'Spiegelstriche', selector: 'ul', classes: 'list-style-dash'},
                 ],
                 style_formats_merge: true,
-                setup: function (editor) {
-                editor.on('click', function (e) {
+                 setup: function (editor) {
+                editor.on('click', function (e) { 
+                    console.log( e.target.src );
+                    var source = e.target.src;
+                    var image = $(document).find('img[src$="'+source+'"]')
+                    removeCss( image ,'height');
+                     /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                        console.log('trig');
+                        
+                    }*/
                 });
                 editor.on('NodeChange', function(e) {
                     /*if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
@@ -351,6 +359,11 @@ $(function () {
                             processTableColumn( $(this) );
                         })
                     }*/
+                  
+                    if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                        processImage(e);
+                        
+                    }
                     if( e && e.element.nodeName.toLowerCase() == 'td' ){
                         processTableColumn(e);
                     }
@@ -402,7 +415,12 @@ $(function () {
                                             img.src = fr.result;
                                            imgWidth = img.width;
                                             imgHeight =img.height;
-                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
+                                            img.onload = function() {
+                                              imgWidth = this.width;
+                                              imgHeight= this.height;
+                                            }
+                                           var ratio = imgWidth/imgHeight;
+                                           editor.insertContent('<img  style="height:'+imgHeight+';" data-ratio="'+ratio+'" src="' + img.src + '"/>');
                                         }
 
 
@@ -413,7 +431,7 @@ $(function () {
                             }
                             if ($(e.target).prop("tagName") == 'DIV') {
                                 if ($(e.target).parent().find('input').attr('id') != 'tinymce-uploader') {
-                                    console.log($(e.target).parent().find('input').attr('id'));
+                                   
                                     $(e.target).parent().append('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                                 }
                                 $('#tinymce-uploader').trigger('click');
@@ -454,7 +472,8 @@ $(function () {
                                               imgWidth = this.width;
                                               imgHeight= this.height;
                                             }
-                                             editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
+                                           var ratio = imgWidth/imgHeight;
+                                           editor.insertContent('<img  style="height:'+imgHeight+';" data-ratio="'+ratio+'" src="' + img.src + '"/>');
                                         }
 
                                     }
@@ -504,7 +523,8 @@ $(function () {
                                               imgWidth = this.width;
                                               imgHeight= this.height;
                                             }
-                                            editor.insertContent('<img style="max-width:100%;" src="' + img.src + '"/>');
+                                           var ratio = imgWidth/imgHeight;
+                                           editor.insertContent('<img  style="height:'+imgHeight+';" data-ratio="'+ratio+'" src="' + img.src + '"/>');
                                         }
 
                                     }

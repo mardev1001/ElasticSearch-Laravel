@@ -1,15 +1,8 @@
 <div class="navbar-default sidebar" role="navigation">
-     <div class="">
-        <button type="button" id="nav-btn" class="navbar-toggle big hidden-xs" title="Navi Ein-/Ausblenden">
-        </button>
-
-        <!--    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Navi Ein-/Ausblenden</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button> -->
+    <div class="">
+        <button type="button" id="nav-btn" class="navbar-toggle big hidden-xs" title="Navi Ein-/Ausblenden"></button>
     </div>
+    
     <div class="sidebar-nav navbar-collapse" id="nav-collapse">
         <ul class="nav" id="side-menu">
 
@@ -24,7 +17,7 @@
             <li>
                 <a href="{{ url('suche') }}">{{ ucfirst( trans('navigation.advanced_search') ) }}
                     <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
+                    <ul class="nav nav-second-level collapse">
                          <li>
                             <a href="{{ url('tipps-und-tricks') }}">{{ ucfirst( trans('navigation.tipsAndTricks') ) }}</a>
                         </li>
@@ -33,54 +26,7 @@
                 
            <li class="">
                 <a href="{{ url('dokumente') }}">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level">
-                    
-                    
-                    
-                    <!--
-                    {{--
-                    <li>
-                        <a href="#">{{ ucfirst( trans('navigation.iso') ) }} {{ ucfirst(trans('navigation.documents')) }}
-                            <span class="fa arrow"></span>
-                        </a>
-                        
-                    @if(!empty($isoCategories))
-                        <ul class="nav nav-third-level">
-                            @foreach($isoCategories as $isoCategory)
-                                @if($isoCategory->parent)
-                                <li>
-                                    <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
-                                    <ul class="nav nav-fourth-level">
-                                    @foreach($isoCategories as $isoCategoryChild)
-                                        @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
-                                            <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
-                                        @endif
-                                    @endforeach
-                                    </ul>
-                                </li>
-                                @endif
-                            @endforeach
-                        </ul>
-                    @endif
-                    </li>
-                    
-                    <li>
-                        <a href="{{ url('dokumente/rundschreiben') }}">{{ ucfirst( trans('navigation.rundschreiben') ) }}</a>
-                    </li>
-                    
-                    <li>
-                        <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ ucfirst( trans('navigation.rundschreiben-qmr') ) }}</a>
-                    </li>
-                    
-                    <li>
-                        <a href="{{ url('dokumente/vorlagedokumente') }}">{{ ucfirst( trans('navigation.vorlagendokumente') ) }}</a>
-                    </li>
-                    
-                    <li>
-                        <a href="{{ url('dokumente/rundschreiben-news') }}">{{ trans('navigation.news') }}</a>
-                    </li>
-                    --}}
-                    -->
+                <ul class="nav nav-second-level collapse">
                     
                     @if(!empty($documentTypes))
                         
@@ -142,36 +88,43 @@
                             <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
                         </li>
                     @endif
-                </ul><!--End .nav-second-level -->
+                </ul>
 
-            </li><!-- End menu item -->
+            </li>
 
 
             <li>
                 <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>
 
-            <!--<li>-->
-            <!--    <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>-->
-            <!--</li>-->
+            {{--
+            <li>
+                <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>
+            </li>
+            --}}
+            
             @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
                 <li class="">
                     <a href="{{ url('wiki') }}">{{ ucfirst(trans('navigation.wiki')) }}
                         <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
+                    <ul class="nav nav-second-level collapse">
     
-                        <!--<li>-->
-                        <!--    <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>-->
-                        <!--</li>-->
+                        {{--
+                        <li>
+                            <a href="{{ url('wiki') }}">{{ ucfirst(trans('wiki.wikiList')) }}</a>
+                        </li>
+                        --}}
                         
                         @if( ViewHelper::canViewWikiManagmentAdmin() == true )
                             <li>
                                 <a href="{{ url('wiki/verwalten-admin') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
                             </li>
                         @else
-                            <!--<li>-->
-                            <!--    <a href="{{ url('wiki/verwalten') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>-->
-                            <!--</li>-->
+                            {{--
+                            <li>
+                                <a href="{{ url('wiki/verwalten') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
+                            </li>
+                            --}}
                         @endif  
                         
                         @if( ViewHelper::universalHasPermission( array(15) ) == true ) 
@@ -185,15 +138,15 @@
                                 <a href="{{ url('wiki/create') }}">{{ ucfirst( trans('wiki.wikiCreate') ) }} </a>
                             </li>
                         @endif
-                    </ul><!--End .nav-second-level -->
-                </li><!-- End menu item -->
+                    </ul>
+                </li>
             @endif
             
             @if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == true ) 
                 <li class="">
                     <a href="{{ url('mandantenverwaltung') }}">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                         <span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
+                    <ul class="nav nav-second-level collapse">
                         @if( ViewHelper::universalHasPermission( array(6,19,20) ) == true ) 
                             <li>
                                 <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
@@ -217,8 +170,8 @@
                                 <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
                             </li>
                         @endif
-                    </ul><!--End .nav-second-level -->
-                </li><!-- End menu item -->
+                    </ul>
+                </li>
             @endif
             
             @if( ViewHelper::universalHasPermission( array(2,4), false ) == true )
@@ -233,7 +186,7 @@
                         NEPTUN-{{ ucfirst( trans('navigation.verwaltung') )}}
                         <span class="fa arrow"></span>
                     </a>
-                    <ul class="nav nav-second-level">
+                    <ul class="nav nav-second-level collapse">
                         <li>
                             <a href="{{ url('empfangerkreis') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
                         </li>
@@ -246,8 +199,8 @@
                         <li>
                             <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
                         </li>
-                    </ul><!--End .nav-second-level -->
-                </li><!-- End menu item -->
+                    </ul>
+                </li>
             @endif
             <li class="legend"> <!-- legend - start -->
                 <span class="legend-text">Legende</span>
@@ -257,7 +210,7 @@
             <div class="clearfix"></div>
         </ul>
     </div>
-    <!-- /.sidebar-collapse -->
+    
     
     <div class="legend-wrapper legend">
         <ul class="legend-ul nav">
@@ -297,19 +250,9 @@
                 <span class="legend-text">Download</span>
                 <span class="legend-icons icon-download"></span>
             </li>
-            {{--
-            <!--<li>-->
-            <!--    <span class="legend-text">Link</span>-->
-            <!--    <span class="legend-icons icon-goto"></span>-->
-            <!--</li>-->
-            <!--<li>-->
-            <!--    <span class="legend-text">Kommentar</span>-->
-            <!--    <span class="legend-icons icon-comment"></span>-->
-            <!--</li>-->
-            --}}
-        </ul><!--End .nav-second-level -->
+        </ul>
     </div>
 
 </div>
-<!-- /.navbar-static-side -->
+
 

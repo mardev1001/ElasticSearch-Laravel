@@ -21,14 +21,14 @@
                 <!-- input box-->
                 <div class="col-md-12 col-lg-12"> 
                     <label class="control-label">
-                        Neptun user*
+                       NEPTUN Mitarbeiter*
                     </label>
                     <div class="form-group">
-                        <select name="to_user" class="select form-control" required>
+                        <select name="to_user" class="select form-control" data-placeholder="NEPTUN Mitarbeiter*" required>
                             <option></option>
                             @foreach($users as $user)
                                 <option value="{{$user->id}}">
-                                    {{$user->first_name}} {{$user->last_name}}
+                                    {{$user->last_name}} {{$user->first_name}} - {{$user->email}}
                                 </option>
                             @endforeach
                         </select>

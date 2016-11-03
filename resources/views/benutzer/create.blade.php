@@ -96,6 +96,13 @@ Mandantenverwaltung - Benutzer anlegen
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
+                        <!-- Telefon Mobil-->
+                        {!! ViewHelper::setInput('phone_mobile', '', old('phone_mobile'), trans('benutzerForm.phone_mobile'), trans('benutzerForm.phone_mobile'), false) !!}
+                    </div>
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
                         <!-- Kurzwahl -->
                         {!! ViewHelper::setInput('phone_short', '', old('phone_short'), trans('benutzerForm.phone_short'), trans('benutzerForm.phone_short'), false) !!}
                     </div>
@@ -104,6 +111,18 @@ Mandantenverwaltung - Benutzer anlegen
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                        {!! ViewHelper::setInput('email', '', old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), true, 'email') !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                       {!! ViewHelper::setInput('email_private', '', old('email_private'), trans('benutzerForm.email_private'), trans('benutzerForm.email_private'), false, 'email') !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                       {!! ViewHelper::setInput('email_work', '', old('email_work'), trans('benutzerForm.email_work'), trans('benutzerForm.email_work'), false, 'email') !!}
                     </div>   
                 </div>
                 
@@ -127,7 +146,26 @@ Mandantenverwaltung - Benutzer anlegen
                         {!! ViewHelper::setInput('active_to', '', old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('position', '', old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('abteilung', '', old('abteilung'), trans('benutzerForm.abteilung'), trans('benutzerForm.abteilung'), false) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('informationen', '', old('informationen'), trans('benutzerForm.informationen'), trans('benutzerForm.informationen'), false) !!}
+                    </div>   
+                </div>
             
+                <div class="clearfix"></div>
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">

@@ -1215,8 +1215,8 @@ class DocumentController extends Controller
         // dd($variantPermissions);
         // dd($document);
         //  dd('brejk jorself');
-        if($document->active == 0 
-        || ($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == false ) ||
+        // if($document->active == 0 
+        if(($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == false ) ||
         ($variantPermissions->permissionExists == false && $documentPermission == false) )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         //  dd('brejk jorself');
@@ -1560,6 +1560,7 @@ class DocumentController extends Controller
         /*Set all previous versions to arhived*/
         /*End Set all previous versions to arhived*/
         $newDocument = $document->replicate();
+        $newDocument->active = true;
         $newDocument->version = $version+1;
         $newDocument->version_parent = $version;
         $newDocument->document_status_id = 1;
@@ -1847,29 +1848,7 @@ class DocumentController extends Controller
                 $this->publishProcedure($evD->document);
             }
         }
-        /*while ($continue) {
-            $uniqeUrl = $this->generateUniqeLink();
-            if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
-                $continue = false;
-        }
-        $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
-            if($publishedDocs == null){
-                $continue = true;
-                $uniqeUrl = '';
-                while ($continue) {
-                    $uniqeUrl = $this->generateUniqeLink();
-                    if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
-                        $continue = false;
-                }
-                $publishedDocs = PublishedDocument::create(['document_id'=> $id, 'document_group_id' => $document->document_group_id,
-                            'url_unique'=>$uniqeUrl]);
-                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
-            }
-            else{
-                $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
-                if($publishedDocs->deleted_at != null)
-                    $publishedDocs->restore();
-            }  */
+        
         // dd($document->published);
         UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
         return redirect()->back();        
@@ -1979,43 +1958,35 @@ class DocumentController extends Controller
         $variants = $variantPermissions->variants;
         
         $document = Document::find($id);
-        $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+        $margins =  $this->setPdfMargins($document);
         
-        // \PDF::setHeaderHtml(view('pdf.header' )->render());
-        // \PDF::setFooterHtml(view('pdf.footer', compact('document','variants','dateNow') )->render());
-        // $pdf = \PDF::html('pdf.document', compact('document','variants','dateNow'));
-        // dd (\PDF::getFooterHtml() );
-        //   dd($render);
-        //  return $render;
-        $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
-       
-        /* If document type Iso Category load different PDF template*/    
-         if($document->document_type_id == $this->isoDocumentId){
-             
-             $html = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
-        //  return $html;
-             $pdf = \PDF::loadHTML($html);
-         }
-         
-          /*Iso doc backup*/    
-        /*if($document->document_type_id == $this->isoDocumentId){
-            \PDF::setHeaderHtml(view('pdf.headerIso1', compact('document','variants','dateNow')  )->render());
-           
-            \PDF::setFooterHtml(view('pdf.footerIso', compact('document','variants','dateNow') )->render());
-            //  return \PDF::getHtml();
-             $pdf = \PDF::html('pdf.documentIso1', compact('document','variants','dateNow'));
-            //  $html = view('pdf.documentIso1', compact('document','variants','dateNow'))->render();
-            //  return $html;
-            //  $pdf = \PDF::loadHTML($html);
-         }*/
-            
-        /* End If document type Iso Category load different PDF template*/    
-        
-        /* If landscape is true set paper to landscape */    
+        $or = "P";
         if($document->landscape == true)
-            $pdf->setPaper('A4', 'landscape');
-        /* End If landscape is true set paper to landscape */
-        // $pdf->set_option('isHtml5ParserEnabled', true);
+            $or = "L";
+            
+        $pdf = \App::make('mpdf.wrapper',['th','A4','','sans-serif',
+        $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
+       // $pdf = \App::make('mpdf.wrapper');
+          
+       
+        
+        if($document->document_type_id == $this->isoDocumentId){
+              $pdf->SetHTMLHeader( view('pdf.headerIso', compact('document','variants','dateNow') )->render() );
+              $pdf->SetHTMLFooter( view('pdf.footerIso', compact('document','variants','dateNow') )->render() );
+              
+             $render = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
+       
+        }
+        else{
+            $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+            $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
+        }
+        // return $render;
+        $pdf->AddPage($or);
+        $pdf->WriteHTML($render);
+        
+       
+         
         return $pdf->stream();
     }
     
@@ -2044,18 +2015,34 @@ class DocumentController extends Controller
         foreach($variants as $variant)
             $variant->hasPermission = true;
         
-        $pdf = \PDF::loadView('pdf.document', compact('document','variants','dateNow'));
-       
-        /* If document type Iso Category load different PDF template*/    
-         if($document->document_type_id == $this->isoDocumentId)
-            $pdf = \PDF::loadView('pdf.documentIso', compact('document','variants','dateNow'));
-        /* End If document type Iso Category load different PDF template*/    
+        $margins =  $this->setPdfMargins($document);
         
-        /* If landscape is true set paper to landscape */    
+        $or = "P";
         if($document->landscape == true)
-            $pdf->setPaper('A4', 'landscape');
-        /* End If landscape is true set paper to landscape */
+            $or = "L";
             
+        $pdf = \App::make('mpdf.wrapper',['th','A4','','',
+        $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
+       // $pdf = \App::make('mpdf.wrapper');
+          
+       
+        
+        if($document->document_type_id == $this->isoDocumentId){
+              $pdf->SetHTMLHeader( view('pdf.headerIso', compact('document','variants','dateNow') )->render() );
+              $pdf->SetHTMLFooter( view('pdf.footerIso', compact('document','variants','dateNow') )->render() );
+              
+             $render = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
+       
+        }
+        else{
+            $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+            $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
+        }
+        $pdf->AddPage($or);
+        $pdf->WriteHTML($render);
+        
+       
+         
         return $pdf->stream();
     }
     
@@ -2578,12 +2565,30 @@ class DocumentController extends Controller
      */
     public function documentStats($id)
     {
+        $approvalAllMandants = false;
+        $mandants = array();
         $document = Document::find($id);
+        
         if(ViewHelper::universalDocumentPermission($document, true, false, true ) == false){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
+        $document = $this->checkFreigabeRoles($document);
+      
+        $editorVariants = EditorVariant::where('document_id',$id)->get();
+        foreach($editorVariants as $ev){
+            if(!$ev->approval_all_mandants){
+                $allDocumentMandants = DocumentMandant::where('document_id',$id)->pluck('id')->toArray();
+                $allDocumentMandantMandants = DocumentMandantMandant::whereIn('document_mandant_id', $allDocumentMandants)->get();
+                foreach($allDocumentMandantMandants as $admm){
+                    // dd($admm->documentMandant->editorVariant->approval_all_mandants);
+                    if(!in_array($admm->mandant, $mandants)) $mandants[] = $admm->mandant;
+                }
+            } else $approvalAllMandants = true;
+        }
+        // dd($mandants);
         
-        $mandants = Mandant::all();
+        if($approvalAllMandants) $mandants = Mandant::all();
+        
         $users = User::all();
         $documentReaders = array();
         $documentReadersCount = array();
@@ -2968,11 +2973,13 @@ class DocumentController extends Controller
                 // code...
             
                 //save to Published documents
-                $document->document_status_id = 3;//aktualan
-                $document->approval_all_roles = 1;//permisija
+                $document->document_status_id = 3; //aktualan
+                $document->approval_all_roles = 1; //permisija
                 $document->save();
                 
-                $publishedDocs = $this->publishProcedure($document);
+                $this->publishProcedure($document);
+                $this->checkFreigabeRoles($document);
+                
                 $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
                                 ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
                 if($readDocument != null && $readDocument->deleted_at == null)
@@ -2980,7 +2987,7 @@ class DocumentController extends Controller
                                 
                 $otherDocuments = Document::where('document_group_id',$document->document_group_id)
                                     ->whereNotIn('id',array($document->id))->get();
-                /*Set attached documents as actuell */
+                /*Set attached documents as aktuell */
                 $variantsAttachedDocuments = EditorVariant::where('document_id',$document->id)->get();
                 foreach( $variantsAttachedDocuments as $vad ){
                     $editorVariantDocuments = $vad->editorVariantDocument;
@@ -2988,7 +2995,8 @@ class DocumentController extends Controller
                         $evd->document_status_id = 3;
                         $evd->save();
                         $doc = Document::find($evd->document_id);
-                        $doc->document_status_id = 3;
+                        $doc->document_status_id = 3; //aktualan
+                        $doc->approval_all_roles = 1; //permisija
                         $doc->save();
                     }
                 }
@@ -3383,4 +3391,66 @@ class DocumentController extends Controller
             );
         return $months[$id];    
     }
+    /**
+     * Return german months
+     * @param int $id
+     * @return string 
+     */
+    private function setPdfMargins($document){
+        
+        $margins =  new \StdClass();
+       /* Set the document orientation */
+        $margins->orientation = "P";
+        if($document->landscape == true)
+            $margins->orientation = "L";
+         
+        /* End  Set the document orientation */
+        
+        /* Set the document margins */
+        // $margins->left = 10;
+        // $margins->right = 10;
+        // $margins->top = 10;
+        // $margins->bottom = 10;
+        // $margins->headerTop = 0;
+        // $margins->footerTop = 5;
+        
+        
+        if($document->document_type_id == $this->isoDocumentId && $margins->orientation == 'P'){// if  iso document and orientation portrait
+            $margins->left = 10;
+            $margins->right = 10;
+            $margins->top = 40;
+            $margins->bottom = 25;
+            $margins->headerTop = 0;
+            $margins->footerTop = 5;
+        }
+        elseif($document->document_type_id == $this->isoDocumentId && $margins->orientation == 'L'){// if  iso document and orientation landscape
+            $margins->left = 10;
+            $margins->right = 50;
+            $margins->top = 30;
+            $margins->bottom = 10;
+            $margins->headerTop = 0;
+            $margins->footerTop = 5;
+        }
+        elseif($document->document_type_id != $this->isoDocumentId && $margins->orientation == 'P'){// if not iso document and orientation portrait
+            $margins->left = 10;
+            $margins->right = 5;
+            $margins->top = 10;
+            $margins->bottom = 20;
+            $margins->headerTop = 10;
+            $margins->footerTop = 0;
+        }
+        else{ // if not iso document and orientation landscape
+            $margins->left = 5;
+            $margins->right = 5;
+            $margins->top = 10;
+            $margins->bottom = 10;
+            $margins->headerTop = 0;
+            $margins->footerTop = 0;
+        } 
+        
+        /* End Set the document margins */
+        
+        return $margins;
+    }
+    
 }

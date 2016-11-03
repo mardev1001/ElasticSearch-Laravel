@@ -12,4 +12,8 @@ class DocumentMandantMandant extends Model
     public function documentMandant(){
        return $this->belongsTo('App\DocumentMandant') ;
     }
+    
+    public function mandant(){
+       return $this->belongsTo('App\Mandant') ;
+    }
 }

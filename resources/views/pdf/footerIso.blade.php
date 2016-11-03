@@ -1,21 +1,3 @@
-<style type="text/css">
-    #footer{
-        bottom: 5px; 
-        right: 0;        
-                
-    }
-    #footer p{
-        text-align: right;
-        margin-right: -100px;
-        color: #808080;
-        margin-bottom: 0px !important;
-        padding-bottom: 0px !important;
-        margin-top: 0 !important;
-        padding: 3px 135px 3px 0 !important;
-        font-size: 12px;
-        line-height: 12px; 
-    }
-</style>
 <div id="footer" class="footer">
        <p>&copy; Neptun GmbH</p>
        <p>Revisionsstand 05</p>

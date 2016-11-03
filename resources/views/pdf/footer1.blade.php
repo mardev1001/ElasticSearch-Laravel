@@ -14,7 +14,7 @@
     margin-top: 0px; /* negative value of footer height */
     height: 400px;
     margin-left:300px;
-    z-index: ;
+    z-index: 10;
     background: red;
     font-size: 10px;
     /*width:50%;*/

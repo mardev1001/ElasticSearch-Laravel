@@ -43,6 +43,8 @@ class BenutzerRequest extends Request
                     'first_name' => 'required',
                     'last_name' => 'required',
                     'email' => 'required|email',
+                    'email_private' => 'email',
+                    'email_work' => 'email',
                     'picture' => 'image',
                     // 'username_sso' => 'required|min:3|unique:users',
                 ];
@@ -57,6 +59,8 @@ class BenutzerRequest extends Request
                     'first_name' => 'required',
                     'last_name' => 'required',
                     'email' => 'required|email',
+                    'email_private' => 'email',
+                    'email_work' => 'email',
                     'picture' => 'image',
                 ];
             }

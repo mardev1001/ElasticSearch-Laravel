@@ -8,11 +8,12 @@ use App\User;
 use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
+use App\PublishedDocument;
 use App\DocumentCoauthor;
 use App\EditorVariant;
 use App\DocumentApproval;
-class ViewHelper
-{
+
+class ViewHelper{
     
    
     /**
@@ -366,6 +367,21 @@ class ViewHelper
     static function showUserCount($usersActive, $usersInactive) {
         $newString = view('partials.showUserCount', compact('usersActive','usersInactive'))->render();
         return $newString;
+    }
+    
+    
+    /**
+     * Show history link if history is available user count 
+     *
+     * @param Document $document
+     * @return string $link
+     */
+    static function showHistoryLink($document) {
+        if(ViewHelper::canViewHistory()){
+            if (PublishedDocument::where('document_group_id', $document->document_group_id)->count() > 1)
+                return $link = url('dokumente/historie/' . $document->id);
+                // return $link = '<a href="'. url('dokumente/historie/' . $document->id) .'" class="link history-link">'. trans('sucheForm.history-available') . '</a>';
+        }
     }
     
     

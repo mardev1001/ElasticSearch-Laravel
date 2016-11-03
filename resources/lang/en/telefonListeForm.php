@@ -30,5 +30,8 @@ return [
     'searchTextOptions' => 'Mandant/Mandantennummer/Benutzer',
     'save' => 'speichern', 
     'noResults' => 'Keine Mandanten/Benutzer gefunden.', 
+    'phone_mobile' => 'Mobil', 
+    'email_work' => 'E-Mail Geschäft', 
+    'email_private' => 'E-Mail Privat', 
     
 ];

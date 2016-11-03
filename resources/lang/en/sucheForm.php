@@ -22,5 +22,6 @@ return [
     'entries' => 'Einträge',
     'history' => 'Historie',
     'archive' => 'Nur Archiv durchsuchen',
+    'history-available' => 'Historie vorhanden',
     
 ];

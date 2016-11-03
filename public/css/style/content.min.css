@@ -9,12 +9,13 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
     line-height: 16px;
 }
 .mce-content-body  table{
-    max-width: 500px;
+    max-width: 750px;
 } 
 /*body.mce-content-body {*/
 /*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/
 /*    background-repeat: no-repeat,repeat-y;*/
 /*}*/
+
 .content h1,.tinymce-editor-class h1,.mce-content-body h1{
     font-size: 2.1em;
 }
@@ -28,6 +29,9 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
 .tinymce-editor-class td, .mce-content-body td{
     font-size: 14px !important;
     color: black;
+}
+.tinymce-editor-class td, .mce-content-body table td{
+    /*vertical-align: initial !important;*/
 }
 /*.mce-content-body{
     padding: 0 140px 10px 30px;

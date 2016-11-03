@@ -1177,10 +1177,11 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
     -o-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
+
 #return-to-top:hover {
     background: rgba(0,0,0, 0.1);
-    
 }
+
 #return-to-top:hover i {
     color: $white-color;
     top: 5px;
@@ -1191,6 +1192,20 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 .label-form-group {
     margin-top: 15px;
 }
+
+.history-link{
+    // font-weight: bold !important;
+    display: block !important;
+    float: left;
+    span.icon-history{
+        display: block;
+        width: 20px;
+        height: 20px;
+        background-size: 90%;
+    }
+}
+
+
 
 #page-wrapper table.dataTable thead .sorting:after, 
 #page-wrapper table.dataTable thead .sorting_asc:after,

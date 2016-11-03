@@ -76,7 +76,7 @@ class UtilityRepository
             ->where('category', $settingsCategory)->where('name', $settingsName)->get();
         
         if(count($settingsOld) == 0){
-            for($i = 1; $i <= 7; $i++)
+            for($i = 1; $i <= 10; $i++)
                 UserSettings::create(['user_id' => $settingsUID, 'category' => $settingsCategory, 'name' => $settingsName, 'value' => 'col'.$i ]);
         }
         

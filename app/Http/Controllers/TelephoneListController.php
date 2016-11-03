@@ -36,7 +36,7 @@ class TelephoneListController extends Controller
     {
         $partner = false; // Partner user/mandant check var
         $visible = $this->utility->getPhonelistSettings();
-        
+        // dd($visible);
         // $mandants = array();
         $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
         $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(),'mandant_id'))->get();
@@ -220,10 +220,25 @@ class TelephoneListController extends Controller
         $mandant = Mandant::find($id);
         $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
         $hauptstelle = Mandant::find($mandant->mandant_id_hauptstelle);
+        $margins =  new \StdClass();
+        $margins->left = 10;
+        $margins->right = 10;
+        $margins->top = 10;
+        $margins->bottom = 10;
+        $margins->headerTop = 0;
+        $margins->footerTop = 5;
+        $render = view('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
+        $pdf = \App::make('mpdf.wrapper',['th','A4','','',
+        $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
+        $pdf->AddPage($or);
+        $pdf->WriteHTML($render);
         
-        $pdf = \PDF::loadView('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
-        // $pdf = \PDF::html('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
+       
+         
         return $pdf->stream();
+        // $pdf = \PDF::loadView('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
+        // // $pdf = \PDF::html('pdf.mandant', compact('mandant','mandantInfo','hauptstelle','dateNow'));
+        // return $pdf->stream();
     }
     
     /**

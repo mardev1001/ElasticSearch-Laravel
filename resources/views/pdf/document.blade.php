@@ -5,25 +5,37 @@
       <title>@yield("title",'Neptun dokument')</title>
       <link rel="shortcut icon" href="/img/favicon.png">
           <style type="text/css">
+                @page {
+                    header: page-header;
+                    footer: page-footer;
+                }
              .list-style-dash {
                     list-style-image: url('/img/icons/icon_list_dash.png') !important;
                 }
+               
                 body,table,p,strong,li,h1,h2,h3,span,b,i{
                     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 }
                 p,li{
                     font-size: 14px ;
+                    background: #fff !important;
+                    background-color: #fff !important;
                 }
                 
                 table td p {
                     margin-top: 5px;
                     margin-bottom: 5px;
-                    line-height: 22px;
+                    /*line-height: 22px;*/
+                }
+
+
+                h1,h3,h3{
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 }
                 
-                 h1{
-                        font-size: 2.1em !important;
-                    }
+                h1{
+                        font-size: 2.15em !important;
+                }
                      h2{
                         font-size: 1.6em !important;
                     }
@@ -34,20 +46,35 @@
                     display:block !important;
                     clear: both !important;
                 }
+                
+                h1,h2,h3,h4,p,div{
+                   background: #fff !important;
+                }
+                p{
+                      margin: 16px 0;
+                }
+                table p{
+                    /*margin: 5px 0 !important;*/
+                     /*font-size: 30px !Important;*/
+                }
                 table{
-                    font-size: 14px;
+                    /*font-size: 30px !important;*/
                     /*height: auto !Important;*/
                     border-collapse: collapse !important;
-                    max-width: 100% !important;
-                    vertical-align: middle !important;
                 }
-                
-            table td{
-                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                /*vertical-align: middle !important;*/
-                padding: 1px;
-                line-height: 16px !important;
-                font-size: 14px !important;
+                table td{
+                    margin: 5px 0;
+                }
+               
+                table td p, table td em, table td u, table td b {
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                    font-size: 18px !important;
+                    line-height: initial !important;
+                }
+            
+            table td ul{
+                padding-left: 40px !important;
+                margin-bottom: 10px;
             }
             
           </style>
@@ -63,14 +90,16 @@
             .header,
             .footer {
                 width: 100%;
-                position: fixed;
+                /*position: fixed;*/
             }
             .header {
-                top: -15px;
+                /*top: -15px;*/
+                
+               
             }
             .div-pusher{
                 width:50%;
-                padding-left:30%;
+                /*padding-left:30%;*/
             }
             .header .div-pusher{
                 width:80%;
@@ -95,15 +124,15 @@
                 content: counter(page);
             }
             .first-title.first{
-                margin-top: 40px;
-                 margin-bottom:40px;
+                margin-top: 0px;
+                 margin-bottom:0px;
             }
             .first-title.second{
                 margin-top: 0;
-                margin-bottom:20px;
+                margin-bottom:10px;
             }
              .first-title, .content-wrapper{
-                padding: 0 80px 10px 30px;
+                padding: 0 120px 10px 30px;
             }
             .document-title-row{
                 width: 70%;
@@ -166,23 +195,45 @@
             #absolute{
                  font-size: 10px !important;
                  margin-top: -125px;
-                 margin-left: 300px;
+                 /*margin-left: 600px;*/
+                 float: right;
+                 margin-right: -40px;
+                 padding-bottom: 10px;
             }
-             .footer { position: fixed; bottom: 5px; left: 680px; }
+             .footer { 
+                 position: fixed; 
+                 bottom: 5px; right: 0px;
+                 /*background: red;*/
+                 
+             }
             .absolute, .absolute:nth-child(even){
-                width:85px;
-                margin-top: -125px;
-                margin-left: 300px;
+                width: 125px;
+                /*margin-top: -135px;*/
+                /*margin-left: 300px;*/
                 color: #808080;
             }
             .absolute p{
                 margin-bottom: 0 !important;
                 margin-top: 0 !important;
                 text-align: left;
+                 color: #808080;
+                font-size: 10px !important;
+            }
+            .page-number{
+                /*margin-left: 345px;*/
+                text-align: center;
+                margin-top: -28px;
+                background: transparent;
+                color: black;
+                z-index:999999;
+                font-size: 12px;
             }
         </style><!--end landscape css-->
         @else
             <style>
+            @page {
+                    margin-right: 20px !important;
+                }
             body,p,h1,h2,h3,h4,h5{
                 font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
             }
@@ -190,13 +241,14 @@
                 font-size: 14px;
                 margin-bottom: 25px;
             }
-            .header,
-            .footer {
-                width: 100%;
-                position: fixed;
-            }
+            /*.header,*/
+            /*.footer {*/
+            /*    width: 100%;*/
+            /*    position: fixed;*/
+            /*}*/
             .header {
-                top: -15px;
+                margin-top: -25px;
+                padding:0 40px 0 30px
             }
             .div-pusher{
                 width:50%;
@@ -209,7 +261,9 @@
             .header .image-div {
                 width:40%;
                 float:right !important;
-                padding-left:50px;
+                padding-left:55px;
+                padding-top: 0px;
+                margin-top: -20px;
                 height:auto;
             }
             .header .image-div img{
@@ -225,15 +279,18 @@
                 content: counter(page);
             }
             .first-title.first{
-                margin-top: 70px;
-                margin-bottom:70px;
+                margin-top: 10px;
+                margin-bottom:10px;
             }
             .first-title.second{
                 margin-top: 0;
                 margin-bottom:50px;
             }
+            .content-wrapper{
+                padding: 0 90px 10px 30px;
+            }
              .first-title, .content-wrapper{
-                padding: 0 80px 10px 30px;
+                padding: 0 115px 10px 30px;
             }
             .document-title-row{
                 width: 70%;
@@ -294,30 +351,47 @@
             }
             #absolute{
                  font-size: 10px !important;
-                 margin-top: -125px;
-                 margin-left: 300px;
+                 /*margin-top: -125px;*/
+                 /*margin-left: 300px;*/
             }
             .footer { position: fixed; bottom: 10px; left: 350px; }
             .absolute, .absolute:nth-child(even){
-                width:85px;
-                margin-top: -125px;
-                margin-left: 300px;
+                width: 105px;
+                margin-top: -285px;
+                margin-left: 650px;
+                right: 0;
                 color: #808080;
+                font-size: 10px !important;
+                padding-bottom: 10px;
+                
                 
             }
             .absolute p{
                 margin-bottom: 0 !important;
                 margin-top: 0 !important;
                 text-align: left;
+                font-size: 10px !important;
+                
+            }
+            .page-number{
+                /*margin-left: 345px;*/
+                text-align: center;
+                margin-top: -30px;
+                color: black;
+                z-index:999999;
+                font-size: 12px;
+                background: transparent;
+                
             }
         </style>
         @endif
     </head>
     <body>
         
+        
      <!-- if you want header on every page  set the include pdf.header here -->
-      @include('pdf.footer')
-      <div id="content">
+      
+      <div >
            @include('pdf.header')
           <h4 class="first-title first">
             @if( $document->document_type_id == 3 )
@@ -337,7 +411,7 @@
           </h4>
           <!--<div class="div-pusher"></div>-->
           <div class="content-wrapper">
-              <div class="row mb90">
+              <div class="row">
                     <div class="document-title-row">
                         @if( $document->adressat_id != null )
                           <h4 class="document-adressat">{{$document->documentAdressats->name}}</h4>
@@ -374,5 +448,8 @@
           
       </div>
 
+      <htmlpagefooter name="page-footer">
+           @include('pdf.footer')      
+       </htmlpagefooter>
      </body>
 </html>

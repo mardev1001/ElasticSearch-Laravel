@@ -6,6 +6,7 @@
       {!! Html::script(elixir('js/script.js')) !!}
       <link rel="shortcut icon" href="/img/favicon.png">
         <style type="text/css">
+           
             .list-style-dash { list-style-image: url('/img/icons/icon_list_dash.png') !important; }
             body,table,p,strong,li,h1,h2,h3,span,b,i{
                     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
@@ -35,6 +36,9 @@
                 line-height: 16px !important;
                 font-size: 14px !important;
             }
+            .footer{
+                color: #808080;
+            }
         </style>
         @if( $document->landscape == 1)
             <style>
@@ -59,8 +63,8 @@
                  /*width: auto !important;*/
             }
              @page { 
-                 margin-top: 130px;
-                 margin-bottom: 20px;
+                 /*margin-top: 130px;*/
+                 /*margin-bottom: 20px;*/
                  font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
              }
              
@@ -70,54 +74,63 @@
             }
             .header,.footer {
                 width: 100%;
-                position: fixed;
+                /*position: fixed;*/
             }
             .header{
-                top: -130px;
+                /*top: -150px;*/
                 left: 0;
+                width: 100%;
                 padding-top: 10px;
-                padding-bottom: 20px;
-                font-size: 16px !important; 
+                padding-bottom: 0px;
+                /*margin-left: 45px;*/
+                /*margin-right: 135px;*/
+                
                 clear:both;
             }
             
             .border-wrapper{
-                padding:0 135px 0 50px;
+                padding:0 0 0 50px;
             }
              .border-div{
                 border-bottom: 1px solid black;
                 height: 1px;
                 width: 100%;
+                margin-left:0;
+                padding-left: 0;
                 /*margin-top:55px;*/
              }
             .header .div-pusher{
-                width:50%;
+                width:42%;
+                padding-left: 50px;
                 float: left;
             }
             .header .div-pusher p{
-                padding-top: 15px;
-                padding-right: 60px;
-                font-size: 14px !important; 
+                padding-top: 0;
+                /*padding-right: 60px;*/
+                font-size: 16px !important; 
+                
             }
             .header .image-div {
                 width:50%;
-                float:right;
-                margin-right: 135px;
+                float:left;
+                /*margin-right: 125px;*/
+                text-align: right;
+                
             }
-            .parent-pagenum{
+            .header .image-div p{
+                padding-top: 0;
+                font-size: 16px !important; 
+            }
+            .header .image-div p.parent-pagenum{
                 margin-bottom:10px;
-                padding-right: 10px;
+                padding-right: 0;
+                font-size: 12px;
             }
             .pagenum:before {
                 content: counter(page);
             }
             .pull-right{
                 text-align: right;
-            }
-            .div-pusher{
-                width:50%;
-                padding-left: 50px;
-                float: left;
             }
             
             .first-title.first{
@@ -129,7 +142,7 @@
                 /*margin-bottom:50px;*/
             }
              .content-wrapper{
-                padding: 0 135px 10px 50px;
+                padding: 0 0 10px 50px;
             }
            
             .document-title-row{
@@ -192,6 +205,10 @@
         </style>
         @else
             <style>
+            @page { 
+                 /*margin: 120px 30px 80px 30px !important;*/
+                 font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
+             }
             body,p,h1,h2,h3,h4,h5{
                 font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
             }
@@ -207,11 +224,7 @@
             table td{
                  /*width: auto !important;*/
             }
-             @page { 
-                 margin-top: 150px;
-                 margin-bottom: 100px;
-                 font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
-             }
+             
              
             .clearfix{
                 clear: both !important;
@@ -219,19 +232,22 @@
             }
             .header,.footer {
                 width: 100%;
-                position: fixed;
+                /*position: fixed;*/
             }
             .header{
-                top: -150px;
+                /*top: -150px;*/
                 left: 0;
+                width: 75%;
                 padding-top: 10px;
                 padding-bottom: 0px;
-                font-size: 16px !important; 
+                margin-left: 45px;
+                /*margin-right: 135px;*/
+                
                 clear:both;
             }
             
             .border-wrapper{
-                padding:0 135px 0 50px;
+                /*padding:0 135px 0 50px;*/
             }
              .border-div{
                 border-bottom: 1px solid black;
@@ -244,18 +260,30 @@
                 float: left;
             }
             .header .div-pusher p{
-                padding-top: 15px;
+                padding-top: 0;
                 padding-right: 60px;
-                font-size: 14px !important; 
+                font-size: 16px !important; 
+                
             }
             .header .image-div {
                 width:50%;
-                float:right;
-                margin-right: 135px;
+                float:left;
+                /*margin-right: 125px;*/
+                text-align: right;
+                
             }
-            .parent-pagenum{
+            .header .image-div p{
+                padding-top: 0;
+                font-size: 16px !important; 
+            }
+            .header .image-div p.subcategory-title{
+                margin-bottom: 10px !important;
+                padding-bottom: 10px !important;
+            }
+            .header .image-div p.parent-pagenum{
                 margin-bottom:10px;
-                padding-right: 10px;
+                padding-right: 0;
+                font-size: 12px;
             }
             .pagenum:before {
                 content: counter(page);
@@ -265,7 +293,7 @@
             }
             .div-pusher{
                 width:50%;
-                padding-left: 50px;
+                /*padding-left: 50px;*/
                 float: left;
             }
             
@@ -276,9 +304,6 @@
             .first-title.second{
                 margin-top: 0;
                 /*margin-bottom:50px;*/
-            }
-            .content-wrapper{
-                
             }
              .content-wrapper{
                 padding: 0 135px 40px 50px;
@@ -325,9 +350,8 @@
             }
             
             .footer {
-                position: fixed; 
-                bottom: 5px; 
-                /*left: 350px; */
+                float:right;
+                 padding-bottom: 15px;
                 
             }
             
@@ -337,18 +361,19 @@
                 margin-bottom: 0px !important;
                 padding-bottom: 0px !important;
                 margin-top: 0 !important;
-                padding: 3px 135px 3px 0 !important;
+                margin-right: 140px;
+                /*padding: 3px 135px 3px 0 !important;*/
                 font-size: 12px;
-                line-height: 12px;
+                line-height: 14px;
             }
         </style>
         @endif
     </head>
     <body>
-      @include('pdf.headerIso')
-      @if( $document->landscape != 1)
-          @include('pdf.footerIso')
-      @endif
+      
+     
+       
+        
       <div id="content" >
           <div class="content-wrapper" >
               @if( count( $variants) )

@@ -13,6 +13,8 @@ return [
     'short_name' => 'Kürzel',
     'birthday' => 'Geburtsdatum',
     'email' => 'E-Mail',
+    'email_private' => 'E-Mail Privat',
+    'email_work' => 'E-Mail Geschäft',
     'email_reciever' => 'E-Mails empfangen',
     'picture' => 'Foto',
     'roleTransfer' => 'Rollenübertragung',
@@ -35,6 +37,7 @@ return [
     'save' => 'speichern',
     'reset' => 'zurücksetzen',
     'phone' => 'Telefon',
+    'phone_mobile' => 'Mobil',
     'phone_short' => 'Kurzwahl',
     
     'lastMandantRole' => 'Diese Benutzer-Rolle kann nicht gelöscht werden. Dies ist eine System relevante Benutzer-Rolle.',
