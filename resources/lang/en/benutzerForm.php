@@ -39,6 +39,9 @@ return [
     'phone' => 'Telefon',
     'phone_mobile' => 'Mobil',
     'phone_short' => 'Kurzwahl',
+    'position' => 'Position',
+    'abteilung' => 'Abteilung',
+    'informationen' => 'Informationen',
     
     'lastMandantRole' => 'Diese Benutzer-Rolle kann nicht gelöscht werden. Dies ist eine System relevante Benutzer-Rolle.',
     
