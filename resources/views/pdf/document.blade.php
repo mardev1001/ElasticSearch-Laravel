@@ -4,7 +4,7 @@
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <title>@yield("title",'Neptun dokument')</title>
       <link rel="shortcut icon" href="/img/favicon.png">
-          <style type="text/css">
+            <style type="text/css">
                 @page {
                     header: page-header;
                     footer: page-footer;

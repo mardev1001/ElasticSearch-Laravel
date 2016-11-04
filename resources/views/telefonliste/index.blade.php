@@ -161,6 +161,7 @@
                                             <th class="@if(!isset($visible['col8'])) col-hide @endif col8 no-sort">{{ trans('telefonListeForm.phone_mobile') }} </th>
                                             <th class="@if(!isset($visible['col9'])) col-hide @endif col9 no-sort">{{ trans('telefonListeForm.email_work') }} </th>
                                             <th class="@if(!isset($visible['col10'])) col-hide @endif col10 no-sort">{{ trans('telefonListeForm.email_private') }} </th>
+                                            <th class="@if(!isset($visible['col11'])) col-hide @endif col11 no-sort">{{ trans('telefonListeForm.position') }} </th>
                                         </tr>
                                         </thead>
                                         <tbody>
@@ -179,12 +180,14 @@
                                                 <td>{{ $internal->user->title }}</td>
                                                 <td>{{ $internal->user->first_name }}</td>
                                                 <td>{{ $internal->user->last_name }}</td>
-                                                <td>{{ $internal->role->name }}</td>
+                                                {{-- <td>{{ $internal->role->name }}</td> --}}
+                                                <td>{{ $internal->user->abteilung }}</td>
                                                 <td>{{ $internal->user->phone }}</td>
                                                 <td>{{ $internal->user->phone_short }}</td>
                                                 <td>{{ $internal->user->phone_mobile }}</td>
                                                 <td>{{ $internal->user->email_work }}</td>
                                                 <td>{{ $internal->user->email_private }}</td>
+                                                <td>{{ $internal->user->position }}</td>
                                             </tr>
                                         @endforeach
 
@@ -247,6 +250,7 @@
                                                 <td>{{ $user->phone_mobile }}</td>
                                                 <td>{{ $user->email_work }}</td>
                                                 <td>{{ $user->email_private }}</td>
+                                                <td>{{ $user->position }}</td>
                                             </tr>
                                             {{-- @endif --}}
                                         @endforeach
@@ -298,6 +302,7 @@
                                         <th class="no-sort">{{ trans('telefonListeForm.phone_mobile') }} </th>
                                         <th class="no-sort">{{ trans('telefonListeForm.email_work') }} </th>
                                         <th class="no-sort">{{ trans('telefonListeForm.email_private') }} </th>
+                                        <th class="no-sort">{{ trans('telefonListeForm.position') }} </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -320,12 +325,14 @@
                                                 ({{$internal->mandant->mandant_number}})
                                                 {{ $internal->mandant->kurzname }}
                                             </td>
-                                            <td>{{ $internal->role->name }}</td>
+                                            {{-- <td>{{ $internal->role->name }}</td> --}}
+                                            <td>{{ $internal->user->abteilung }}</td>
                                             <td>{{ $internal->user->phone }}</td>
                                             <td>{{ $internal->user->phone_short }}</td>
                                             <td>{{ $internal->user->phone_mobile }}</td>
                                             <td>{{ $internal->user->email_work }}</td>
                                             <td>{{ $internal->user->email_private }}</td>
+                                            <td>{{ $internal->user->position }}</td>
                                         </tr>
                                     @endforeach
 
@@ -386,6 +393,7 @@
                                             <td>{{ $user->phone_mobile }}</td>
                                             <td>{{ $user->email_work }}</td>
                                             <td>{{ $user->email_private }}</td>
+                                            <td>{{ $user->position }}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -427,28 +435,18 @@
                         <div class="col-xs-12">
                             <div class="form-inline">
                                 <label>Sichtbare Tabellenspalten</label>
-                                <select class="form-control select" name="visibleColumns[]"
-                                        data-placeholder="Sichtbare Tabellenspalten" multiple required>
-                                    <option value="col1"
-                                            @if(isset($visible['col1'])) selected @endif>{{ trans('telefonListeForm.photo') }}</option>
-                                    <option value="col2"
-                                            @if(isset($visible['col2'])) selected @endif>{{ trans('telefonListeForm.title') }}</option>
-                                    <option value="col3"
-                                            @if(isset($visible['col3'])) selected @endif>{{ trans('telefonListeForm.firstname') }}</option>
-                                    <option value="col4"
-                                            @if(isset($visible['col4'])) selected @endif>{{ trans('telefonListeForm.lastname') }}</option>
-                                    <option value="col5"
-                                            @if(isset($visible['col5'])) selected @endif>{{ trans('telefonListeForm.role') }}</option>
-                                    <option value="col6"
-                                            @if(isset($visible['col6'])) selected @endif>{{ trans('telefonListeForm.phone') }}</option>
-                                    <option value="col7"
-                                            @if(isset($visible['col7'])) selected @endif>{{ trans('telefonListeForm.phone_short') }}</option>
-                                    <option value="col8"
-                                            @if(isset($visible['col8'])) selected @endif>{{ trans('telefonListeForm.phone_mobile') }}</option>
-                                    <option value="col9"
-                                            @if(isset($visible['col9'])) selected @endif>{{ trans('telefonListeForm.email_work') }}</option>
-                                    <option value="col10"
-                                            @if(isset($visible['col10'])) selected @endif>{{ trans('telefonListeForm.email_private') }}</option>
+                                <select class="form-control select" name="visibleColumns[]" data-placeholder="Sichtbare Tabellenspalten" multiple required>
+                                    <option value="col1" @if(isset($visible['col1'])) selected @endif>{{ trans('telefonListeForm.photo') }}</option>
+                                    <option value="col2" @if(isset($visible['col2'])) selected @endif>{{ trans('telefonListeForm.title') }}</option>
+                                    <option value="col3" @if(isset($visible['col3'])) selected @endif>{{ trans('telefonListeForm.firstname') }}</option>
+                                    <option value="col4" @if(isset($visible['col4'])) selected @endif>{{ trans('telefonListeForm.lastname') }}</option>
+                                    <option value="col5" @if(isset($visible['col5'])) selected @endif>{{ trans('telefonListeForm.role') }}</option>
+                                    <option value="col6" @if(isset($visible['col6'])) selected @endif>{{ trans('telefonListeForm.phone') }}</option>
+                                    <option value="col7" @if(isset($visible['col7'])) selected @endif>{{ trans('telefonListeForm.phone_short') }}</option>
+                                    <option value="col8" @if(isset($visible['col8'])) selected @endif>{{ trans('telefonListeForm.phone_mobile') }}</option>
+                                    <option value="col9" @if(isset($visible['col9'])) selected @endif>{{ trans('telefonListeForm.email_work') }}</option>
+                                    <option value="col10" @if(isset($visible['col10'])) selected @endif>{{ trans('telefonListeForm.email_private') }}</option>
+                                    <option value="col11" @if(isset($visible['col11'])) selected @endif>{{ trans('telefonListeForm.position') }}</option>
                                 </select>
                             </div>
                         </div>

@@ -115005,7 +115005,7 @@ $(function () {
                 elementpath: false,
                 setup: function (editor) {
                     editor.on('click', function (e) {
-                        console.log(e.target.src);
+                        // console.log(e.target.src);
                         var source = e.target.src;
                         var image = $(document).find('img[src$="' + source + '"]')
                         removeCss(image, 'height');
@@ -115229,7 +115229,7 @@ $(function () {
                 elementpath: false,
                 setup: function (editor) {
                     editor.on('click', function (e) {
-                        console.log(e.target.src);
+                        // console.log(e.target.src);
                         var source = e.target.src;
                         var image = $(document).find('img[src$="' + source + '"]')
                         removeCss(image, 'height');
@@ -115467,7 +115467,7 @@ $(function () {
                 elementpath: false,
                 setup: function (editor) {
                     editor.on('click', function (e) {
-                        console.log(e.target.src);
+                        // console.log(e.target.src);
                         var source = e.target.src;
                         var image = $(document).find('img[src$="' + source + '"]')
                         removeCss(image, 'height');
@@ -115477,17 +115477,17 @@ $(function () {
                          }*/
                     });
                     editor.on('NodeChange', function (e) {
-                        /*if( e && e.element.nodeName.toLowerCase() == 'table' || e && e.element.nodeName.toLowerCase() == 'tr' ){
+                       if (e && e.element.nodeName.toLowerCase() == 'tr'){ 
+                            processTableColumn(e);
 
-                         e.find('td').each(function(){
-                         processTableColumn( $(this) );
-                         })
-                         }*/
+                        }
+                      
 
                         if (e && e.element.nodeName.toLowerCase() == 'img') {
                             processImage(e);
 
                         }
+                      
                         if (e && e.element.nodeName.toLowerCase() == 'td') {
                             processTableColumn(e);
                         }
@@ -115674,19 +115674,21 @@ $(function () {
             height = width * ratio;
         removeCss(image, 'height');
         setNewTdAttributes(image, height, 'style', true)
-        console.log('height:' + height);
+        // console.log('height:' + height);
     }
-
+    function processTableRowsAndCells(td){
+        var table = td.closest('table');
+        if( table.find('ul').length ){
+            table.find('td').each(function(){
+                
+            });
+        }
+    }
     function processTableColumn(e) {
         var td = $(e.element), maxHeight = $(e.element).height();
-        var safetyTrigger = false;
-
-        // if( safetyTrigger == false ){
-        //   if( td.parent('table').find('ul').length ){
-        //       td.parent('table').find('ul')
-        //   }    
-        // }
-
+        
+       
+        // processTableColumn(td);
 
         /*If td has images correct the whole row */
         // if(td.find('img').length){
@@ -116522,7 +116524,7 @@ $(function () {
 
     });
 
-
+    
     /* Multiple chosen with required fix */
 //   $('.freigabe-process').on('submit',function(e){
 //       e.preventDefault();

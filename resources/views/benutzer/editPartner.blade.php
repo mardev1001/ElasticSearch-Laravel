@@ -42,7 +42,8 @@ Benutzer bearbeiten
                     </div>   
                 </div>
                 
-                <!-- input box-->
+                <div class="clearfix visible-lg-block"></div>
+                
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <label class="control-label">{{trans('benutzerForm.title')}}</label>
@@ -73,8 +74,24 @@ Benutzer bearbeiten
                        {!! ViewHelper::setInput('birthday', $user, old('birthday'), trans('benutzerForm.birthday'), trans('benutzerForm.birthday'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div><!--End input box-->
+                 
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('position', $user, old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
+                    </div>   
+                </div>
                 
-                <div class="clearfix"></div>
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('abteilung', $user, old('abteilung'), trans('benutzerForm.abteilung'), trans('benutzerForm.abteilung'), false) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('informationen', $user, old('informationen'), trans('benutzerForm.informationen'), trans('benutzerForm.informationen'), false) !!}
+                    </div>   
+                </div>
                 
                 <!-- input box-->
                 <div class="col-md-4 col-lg-3"> 
@@ -134,10 +151,11 @@ Benutzer bearbeiten
                     <div class="form-group">
                         <div class="checkbox">
                             {!! ViewHelper::setCheckbox('email_reciever',$user,old('email_reciever'),trans('benutzerForm.email_reciever') ) !!}
-                         
                         </div>
                     </div>   
                 </div>
+                
+                <div class="clearfix visible-lg-block"></div>
 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
@@ -148,24 +166,6 @@ Benutzer bearbeiten
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         {!! ViewHelper::setInput('active_to', $user, old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
-                    </div>   
-                </div>
-                
-                <div class="col-md-4 col-lg-3"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('position', $user, old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
-                    </div>   
-                </div>
-                
-                <div class="col-md-4 col-lg-3"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('abteilung', $user, old('abteilung'), trans('benutzerForm.abteilung'), trans('benutzerForm.abteilung'), false) !!}
-                    </div>   
-                </div>
-                
-                <div class="col-md-4 col-lg-3"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('informationen', $user, old('informationen'), trans('benutzerForm.informationen'), trans('benutzerForm.informationen'), false) !!}
                     </div>   
                 </div>
                 

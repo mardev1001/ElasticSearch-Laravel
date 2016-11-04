@@ -17,7 +17,7 @@ class DocumentTypeController extends Controller
      */
     public function index()
     {
-        $documentTypes = DocumentType::all();
+        $documentTypes = DocumentType::orderBy('order_number', 'asc')->get();
         return view('dokument-typen.index', compact('documentTypes'));
     }
 
@@ -39,6 +39,7 @@ class DocumentTypeController extends Controller
      */
     public function store(Request $request)
     {
+        
         $documentType = new DocumentType();
         $documentType->name = $request->input('name');
         $documentType->document_art = $request->input('document_art');
@@ -46,6 +47,12 @@ class DocumentTypeController extends Controller
         if($request->has('read_required')) $documentType->read_required = true;
         if($request->has('allow_comments')) $documentType->allow_comments = true;
         if($request->has('visible_navigation')) $documentType->visible_navigation = true;
+        $documentType->active = true;
+        
+        $documentType->order_number = 1;
+        $documentTypeLast = DocumentType::orderBy('id', 'desc')->first();
+        if($documentTypeLast) $documentType->order_number = $documentTypeLast->order_number+1;
+        
         $documentType->active = true;
         $documentType->save();
         return back()->with('message', 'Dokument Typ erfolgreich gespeichert.');
@@ -106,9 +113,68 @@ class DocumentTypeController extends Controller
         
         $documentType->save();
         
-        return back()->with('message', 'Dokument Typ erfolgreich aktualisiert.');
+        return back()->with('message', trans('dokumentTypenForm.updated'));
     }
 
+    /**
+     * Increase order number for the item.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function sortUp($id)
+    {
+        // dd('up '.$id);
+        $docType = DocumentType::find($id);
+        $docTypePrev = DocumentType::where('order_number', $docType->order_number-1)->first();
+        
+        if($docTypePrev){
+            $docType->order_number -= 1;
+            $docType->save();
+            $docTypePrev->order_number += 1;
+            $docTypePrev->save();
+        }
+        
+        return back()->with('message', trans('dokumentTypenForm.updated'));
+    }
+    
+    /**
+     * Decrease order number for the item.
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function sortDown($id)
+    {
+        // dd('down '.$id);
+        $docType = DocumentType::find($id);
+        $docTypeNext = DocumentType::where('order_number', $docType->order_number+1)->first();
+        
+        if($docTypeNext){
+            $docType->order_number += 1;
+            $docType->save();
+            $docTypeNext->order_number -= 1;
+            $docTypeNext->save();
+        }
+        
+        return back()->with('message', trans('dokumentTypenForm.updated'));
+    }
+    
+    /**
+     * Reset order number for the items.
+     * @return \Illuminate\Http\Response
+     */
+    public function sortReset(Request $request)
+    {
+        if($request->get('token') == '!Webbite-1234!'){ 
+            $docTypes = DocumentType::all();
+            for ($i = 0; $i < sizeof($docTypes); $i++) {
+                $type = $docTypes[$i];
+                // dd($type);
+                $type->update(['order_number' => ($i+1)]);
+            }
+            return redirect('/')->with('messageSecondary', trans('dokumentTypenForm.updated'));
+        } else return back();
+    }
+    
     /**
      * Remove the specified resource from storage.
      *

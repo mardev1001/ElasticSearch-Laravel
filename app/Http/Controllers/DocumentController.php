@@ -67,7 +67,7 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documentTypes = DocumentType::all() ;
+        $documentTypes = DocumentType::orderBy('order_number', 'asc')->get();
         $isoCategories = IsoCategory::where('active', 1)->get();
         return view('dokumente.documentIndex', compact('documentTypes','isoCategories') );
     }

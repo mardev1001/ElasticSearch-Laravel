@@ -33,5 +33,6 @@ return [
     'phone_mobile' => 'Mobil', 
     'email_work' => 'E-Mail Geschäft', 
     'email_private' => 'E-Mail Privat', 
+    'position' => 'Position', 
     
 ];

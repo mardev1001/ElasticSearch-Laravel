@@ -27,5 +27,7 @@ return [
     'typesEntwurf' => 'Entwurf',
     'typesFreigabe' => 'im Freigabeprozess',
     'typesAll' => 'Alle',
+    'order' => 'Sortierung',
+    'updated' => 'Dokument Typ erfolgreich aktualisiert.',
     
 ];

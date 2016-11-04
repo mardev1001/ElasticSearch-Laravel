@@ -42,7 +42,8 @@ Mandantenverwaltung - Benutzer anlegen
                         </div>
                     </div>   
                 </div>
-            
+                
+                <div class="clearfix visible-lg-block"></div>
             
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
@@ -72,8 +73,24 @@ Mandantenverwaltung - Benutzer anlegen
                        {!! ViewHelper::setInput('birthday', '', old('birthday'), trans('benutzerForm.birthday'), trans('benutzerForm.birthday'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
+                                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('position', '', old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
+                    </div>   
+                </div>
                 
-                <!--<div class="clearfix"></div>-->
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('abteilung', '', old('abteilung'), trans('benutzerForm.abteilung'), trans('benutzerForm.abteilung'), false) !!}
+                    </div>   
+                </div>
+                
+                <div class="col-md-4 col-lg-3"> 
+                    <div class="form-group">
+                        {!! ViewHelper::setInput('informationen', '', old('informationen'), trans('benutzerForm.informationen'), trans('benutzerForm.informationen'), false) !!}
+                    </div>   
+                </div>
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
@@ -135,6 +152,8 @@ Mandantenverwaltung - Benutzer anlegen
                     </div>   
                 </div>
                 
+                <div class="clearfix visible-lg-block"></div>
+                
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         {!! ViewHelper::setInput('active_from', '', old('active_from'), trans('benutzerForm.active_from'), trans('benutzerForm.active_from'), false, 'text', ['datetimepicker']) !!}
@@ -146,25 +165,7 @@ Mandantenverwaltung - Benutzer anlegen
                         {!! ViewHelper::setInput('active_to', '', old('active_to'), trans('benutzerForm.active_to'), trans('benutzerForm.active_to'), false, 'text', ['datetimepicker']) !!}
                     </div>   
                 </div>
-                
-                <div class="col-md-4 col-lg-3"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('position', '', old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
-                    </div>   
-                </div>
-                
-                <div class="col-md-4 col-lg-3"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('abteilung', '', old('abteilung'), trans('benutzerForm.abteilung'), trans('benutzerForm.abteilung'), false) !!}
-                    </div>   
-                </div>
-                
-                <div class="col-md-4 col-lg-3"> 
-                    <div class="form-group">
-                        {!! ViewHelper::setInput('informationen', '', old('informationen'), trans('benutzerForm.informationen'), trans('benutzerForm.informationen'), false) !!}
-                    </div>   
-                </div>
-            
+
                 <div class="clearfix"></div>
                 
                 <div class="col-md-4 col-lg-3"> 

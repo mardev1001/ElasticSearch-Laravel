@@ -85,6 +85,7 @@
                 <div class="box box-white">
                     <table class="table">
                         <tr>
+                            <th class="col-lg-1"><!-- <strong> {{ trans('dokumentTypenForm.order') }}</strong> --></th>
                             <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></th>
                             <th class="col-lg-2"><strong>{{ trans('dokumentTypenForm.document_art') }}</strong></th>
                             <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.document_role') }}</strong></th>
@@ -96,6 +97,12 @@
                         
                             {!! Form::open(['route' => ['dokument-typen.update', 'dokument_typen' => $documentType->id], 'method' => 'PATCH']) !!}
                             <tr>
+                                <td>
+                                    <div class="text-center">
+                                        <a href="{{ url('dokument-typen/sort-up/' . $documentType->id) }}" class="inline-block"><i class="fa fa-arrow-up"></i></a>
+                                        <a href="{{ url('dokument-typen/sort-down/' . $documentType->id) }}" class="inline-block"><i class="fa fa-arrow-down"></i></a>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="form-group">
                                         <input type="text" name="name" class="form-control" placeholder="{{ trans('dokumentTypenForm.name') }}" value="{{ $documentType->name }}" required />

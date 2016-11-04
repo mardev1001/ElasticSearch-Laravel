@@ -92,6 +92,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('rollen', 'RoleController');
         Route::resource('empfangerkreis ', 'AdressatController');
         Route::resource('adressaten', 'AdressatController');
+        Route::get('dokument-typen/sort-up/{id}', 'DocumentTypeController@sortUp');
+        Route::get('dokument-typen/sort-down/{id}', 'DocumentTypeController@sortDown');
         Route::resource('dokument-typen', 'DocumentTypeController');
         Route::resource('favoriten', 'FavoritesController');
         // Route::resource('historie', 'HistoryController');
@@ -117,7 +119,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('wiki', 'WikiController');
         
         // Developer Routes
-        // Route::get('dev/status-update', 'DocumentController@documentStatusUpdate')->middleware('auth.basic');
+        // Route::get('dev/status-update', 'DocumentController@documentStatusUpdate')->middleware('auth.basic'); // /dev/status-update?token=!Webbite-1234!
+        // Route::get('dev/doctype-order-reset', 'DocumentTypeController@sortReset')->middleware('auth.basic'); // /dev/doctype-order-reset?token=!Webbite-1234!
         
         
 }); //end auth middleware

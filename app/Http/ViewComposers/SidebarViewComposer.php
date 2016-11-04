@@ -30,7 +30,7 @@ class SidebarViewComposer
      */
     public function compose(View $view)
     {   
-        $view->with('documentTypes', DocumentType::all() );
+        $view->with('documentTypes', DocumentType::orderBy('order_number', 'asc')->get() );
         $view->with('isoCategories', IsoCategory::where('active', 1)->get() );
         // $view->with('isoCategories', IsoCategory::all() );
     }

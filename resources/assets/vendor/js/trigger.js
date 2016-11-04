@@ -677,7 +677,7 @@ $(function () {
 
     });
 
-
+    
     /* Multiple chosen with required fix */
 //   $('.freigabe-process').on('submit',function(e){
 //       e.preventDefault();
