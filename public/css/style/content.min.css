@@ -3,14 +3,27 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
     color: black !important;
     font-weight: bold;
 }
-.mce-content-body body,.mce-content-body b,.mce-content-body strong,.mce-content-body p,.mce-content-body div, .mce-content-bodyspan,
-.mce-content-body i,.mce-content-body  table,.mce-content-body  table td, .mce-content-body  table th{
+.mce-content-body body,.mce-content-body b,.mce-content-body span,.mce-content-body strong,
+.mce-content-body p,.mce-content-body div, .mce-content-bodyspan,
+.mce-content-body i,.mce-content-body em,.mce-content-body  table,.mce-content-body  table td, .mce-content-body  table th{
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-    line-height: 16px;
+    /*line-height: 16px;*/
+    
 }
-.mce-content-body  table{
+.mce-content-body.landscape table{
+    max-width: 830px;
+} 
+.mce-content-body.portrait table{
     max-width: 750px;
 } 
+/*
+.mce-content-body.landscape.rundschreiben table{
+    max-width: 750px;
+} 
+.mce-content-body.portrait.iso-document table{
+    max-width: 750px;
+} */
+
 /*body.mce-content-body {*/
 /*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/
 /*    background-repeat: no-repeat,repeat-y;*/
@@ -25,13 +38,15 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
 .content h3, .tinymce-editor-class h3,.mce-content-body h3{
     font-size: 1.27em;
 }
-.mce-content-body, .tinymce-editor-class p,.tinymce-editor-class strong, .tinymce-editor-class i,.tinymce-editor-class b,
+.mce-content-body, .mce-content-body p,.mce-content-body strong, .mce-content-body i,.mce-content-body b,.mce-content-body strong, .mce-content-body em
 .tinymce-editor-class td, .mce-content-body td{
     font-size: 14px !important;
     color: black;
 }
 .tinymce-editor-class td, .mce-content-body table td{
-    /*vertical-align: initial !important;*/
+    vertical-align: middle !important;
+    padding: 5px !important;
+    margin: 5px 0 !important;
 }
 /*.mce-content-body{
     padding: 0 140px 10px 30px;
@@ -39,11 +54,23 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
 .content table,.tinymce-editor-class table,.mce-content-body table{
     border-collapse: collapse;
 }
+.tinymce-editor-class td, .mce-content-body td{
+    vertical-align: middle !important;
+}
 .list-style-dash {
     list-style-image: url('/img/icons/icon_list_dash.png') !important;
 }
 
-table td p {
+.tinymce-editor-class table td p, .mce-content-body table td p {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.tinymce-editor-class ul, .mce-content-body ul,.tinymce-editor-class ol, .mce-content-body ol {
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 20px;
+     moz-padding-start : 20px;
 }

@@ -65,13 +65,17 @@
                 <!--<label class="control-label">{{ trans('mandantenForm.user') }}*</label>-->
                 <select name="user_id" class="form-control select internal_edit internal_{{$internalUser->id}}" data-placeholder="Mitarbeiter auswählen *" required>
                     <option></option>
+                    {{--
                     @foreach($mandantUsersNeptun as $mandantUser)
                         <option value="{{ $mandantUser->user->id }}" data-mandant="{{ $mandantUser->mandant->id }}" @if($internalUser->user_id == $mandantUser->user->id) selected @endif>
                             {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }}
                             [{{$mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname}}]
                         </option>
                     @endforeach
+                    --}}
+                    {!! ViewHelper::getUsersByInternalRole($internalUser->role_id, $internalUser->user_id) !!}
                 </select>
+                
             </div>   
         </div>
         
@@ -123,6 +127,19 @@
             }
             
             // Select trigger
+            // selectElement.each(function(){
+            //     // console.log($(this).val());
+            //     var roleId = $(this).val();
+            //     if(roleId != undefined){
+            //         var selectTarget = $('select.'+$(this).data('target'));
+            //         ajaxInternalRoles(roleId, selectTarget);
+            //     }
+            // });
+            
+            // selectElement.next().click(function(){
+            //     $(this).prev().trigger('change');
+            // });
+            
             selectElement.chosen().change(function(){
                 var roleId = $(this).val();
                 var selectTarget = $('select.'+$(this).data('target'));

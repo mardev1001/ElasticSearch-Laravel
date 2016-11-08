@@ -17,7 +17,14 @@ h1, h2, h3, h4 {
     color: $dark-blue !important;
 }
 
-/* tinymce view - start */
+/* document web preview - start */
+.content,.content span, .content p, .content li, .content td, .content th, .content strong, .content b, .content i , .content u,
+.content em{
+    color: black !important;
+    font-family: $primary-font-family !important;
+    font-size: 14px !important;
+    
+}
 .content h1,.content h2,.content h3,.content h4{
     color: black !important;
     font-weight: bold;
@@ -49,8 +56,78 @@ h1, h2, h3, h4 {
 .content p{
     margin: 16px 0;
 }
+.list-style-dash {
+    list-style-image: url('/img/icons/icon_list_dash.png') !important;
+}
 
-/* tinymce view - end */
+h1,h3,h3{
+    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+}
+
+.content h1{
+    font-size: 2.1em !important;
+}
+ .content h2{
+    font-size: 1.6em !important;
+}
+ .content h3{
+    font-size: 1.27em !important;
+}
+.content img,.content h1,.content h2,.content h3,.content h4,.content p,.content div{
+    display:block !important;
+    clear: both !important;
+}
+
+.content h1,.content h2,.content h3,.content h4,.content p,.content div{
+   background: #fff !important;
+}
+.content table p{
+    /*margin: 5px 0 !important;*/
+     /*font-size: 30px !Important;*/
+}
+.content table{
+    /*font-size: 30px !important;*/
+    /*height: auto !Important;*/
+    border-collapse: collapse !important;
+}
+.content.landscape table{
+    max-width: 830px;
+}
+.content.portrait table{
+    max-width: 750px;
+}
+
+.content table td{
+    margin: 5px 0;
+    vertical-align: middle !important;
+    padding: 5px;
+    font-size: 14px !important;
+}
+.content table td ul li,.content  table td ol li,.content  table td p,.content  table td em,.content  table td u, 
+.content table td b, .content table td strong, .content table td i {
+    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+    font-size: 14px !important;
+    /*line-height: 18px !important;*/
+}
+.content ul,.content li,.content  ul li{
+    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+    font-size: 14px !important;
+    /*line-height: 18px !important;*/
+}
+.content ol,.content li,.content  ul li{
+    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+    font-size: 14px !important;
+}
+.content ul,.content ol {
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+    -webkit-padding-start: 20px;
+    moz-padding-start : 20px;
+}
+
+/* document web preview - end */
 
 hr {
     margin: 15px 0 !important; 
@@ -571,6 +648,9 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     max-height: 400px;
 }
 
+
+.col-xs-12.col-md-6{
+}
 
 .input-group label.control-label{
     display: none;

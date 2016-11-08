@@ -128,7 +128,7 @@
                                                     @endif
                                                 {!! Form::close() !!}
                                                 
-                                                {!! Form::open(['action' => 'MandantController@destroyMandantUser', 'method'=>'POST']) !!}
+                                                {!! Form::open(['action' => 'UserController@destroyMandantUser', 'method'=>'POST']) !!}
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
                                                     <button type="submit" class="btn btn-xs btn-warning delete-prompt"

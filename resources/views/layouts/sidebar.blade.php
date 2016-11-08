@@ -180,7 +180,7 @@
                 </li>
             @endif
             
-            @if( ViewHelper::universalHasPermission( array() ) == true )
+            @if( ViewHelper::universalHasPermission( array(6) ) == true )
                 <li class="">
                     <a href="{{ url('neptun-verwaltung') }}">
                         NEPTUN-{{ ucfirst( trans('navigation.verwaltung') )}}

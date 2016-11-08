@@ -53,7 +53,7 @@
                             <!--     @endif-->
                         <!--</div>-->
 
-                            <div class="content">
+                            <div class="content @if($document->landscape == true) landscape @else portrait @endif">
                                 <!--<p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>-->
                                 
                                 @if(!$document->pdf_upload)

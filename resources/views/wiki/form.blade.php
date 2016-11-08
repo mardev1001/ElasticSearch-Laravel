@@ -3,7 +3,6 @@
 @stop
 
 <input type="hidden" name="user_id" value="{{ Auth::user()->id }}" />
-
 <div class="col-md-12 box-wrapper"> 
     <div class="box box-white">
         <div class="row">
@@ -17,6 +16,7 @@
             
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
+            
                <div class="form-group">
                      {!! ViewHelper::setSelect($wikiStatuses,'status_id',$data,old('status_id'),
                             trans('wiki.status'), trans('wiki.status'),true ) !!}

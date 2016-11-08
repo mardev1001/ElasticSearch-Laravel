@@ -515,6 +515,59 @@ class UserController extends Controller
         
         return redirect('mandanten')->with('message', 'Benutzer erfolgreich entfernt.');
     }
+    
+    /**
+    * Remove the specified resource from storage.
+    *
+    * @param  Request $request
+    * @return \Illuminate\Http\Response
+    */
+    public function destroyMandantUser(Request $request)
+    {
+        $requiredUsers = array();
+        $requiredRoles = array();
+        $requiredRolesResult = array();
+        
+        $mandantUser = MandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->first();
+        $mandantUserAll = MandantUser::where('mandant_id', $request->input('mandant_id'))->get();
+        
+        foreach($mandantUser->role as $role)
+            if($role->mandant_required || $role->system_role) array_push($requiredRoles, $role);
+
+        foreach($requiredRoles as $requiredRole){
+            
+            $roleUsers = array();
+            foreach ($mandantUserAll as $mandantUser) {
+                foreach($mandantUser->mandantUserRoles as $mandantUserRole){
+                    if($requiredRole->id == $mandantUserRole->role_id){
+                        if(!in_array($mandantUser, $roleUsers)){
+                            array_push($roleUsers, $mandantUser);
+                        }
+                    }
+                }
+            }
+            $requiredRolesResult[] = array('role_id' => $requiredRole->id, 'user_count' => count($roleUsers));
+        }
+        
+        // dd($requiredRolesResult);
+
+        foreach($requiredRolesResult as $reqRole){
+            if($reqRole['user_count'] == 1 )
+                return redirect('benutzer')->with('message', 'Benutzer kann nicht entfernt werden.');
+        }
+        
+        
+        $mandantUserRoles = MandantUserRole::where('mandant_user_id',$mandantUser->id)->get();
+        foreach($mandantUserRoles as $mandantUserRole) {
+            // dd($mandantUserRole->roles);
+            $mandantUserRole->delete();
+        }
+        $mandantUser->delete();
+        InternalMandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->delete();
+        
+        return redirect('benutzer')->with('message', 'Benutzer erfolgreich entfernt.');
+        
+    }
 
     private function fileUpload($model, $path, $files)
     {

@@ -1964,10 +1964,10 @@ class DocumentController extends Controller
         if($document->landscape == true)
             $or = "L";
             
-        $pdf = \App::make('mpdf.wrapper',['th','A4','','sans-serif',
+        $pdf = \App::make('mpdf.wrapper',['th','A4','','arial',
         $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
        // $pdf = \App::make('mpdf.wrapper');
-          
+         $pdf->debug = true; 
        
         
         if($document->document_type_id == $this->isoDocumentId){

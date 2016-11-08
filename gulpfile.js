@@ -23,7 +23,7 @@ var cmsScripts = [
     // "tinymce/tinymce.js",// or plain tinymce.js
     "js-modified-plugins/**",
     "tinymce/themes/modern/theme.js",
-    "js-uploaded-plugins/themes/modern/theme.js",
+    // "js-uploaded-plugins/themes/modern/theme.js",
     "bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js",
     "moment/min/moment-with-locales.min.js",
     "eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js",

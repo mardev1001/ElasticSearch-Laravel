@@ -7,7 +7,17 @@
       <link rel="shortcut icon" href="/img/favicon.png">
         <style type="text/css">
            
-            .list-style-dash { list-style-image: url('/img/icons/icon_list_dash.png') !important; }
+           /* .list-style-dash { list-style-image: url('/img/icons/icon_list_dash.png') !important; }*/
+           
+           .list-style-dash{
+                 list-style-type: none;
+            }
+             .list-style-dash li {
+                 background-image:  url('/img/icons/icon_list_dash.png') !important;
+                background-repeat: no-repeat;
+                background-position: -5px 50%;
+                padding-left: .8em;
+            }
             body,table,p,strong,li,h1,h2,h3,span,b,i{
                     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 }
@@ -15,27 +25,35 @@
                     font-size: 14px ;
                 }
                 
-                table td p {
-                    margin-top: 5px;
-                    margin-bottom: 5px;
-                    line-height: 22px;
+              table p{
+                    /*margin: 5px 0 !important;*/
+                     /*font-size: 30px !Important;*/
                 }
-                
                 table{
-                    font-size: 14px;
+                    /*font-size: 30px !important;*/
                     /*height: auto !Important;*/
                     border-collapse: collapse !important;
-                    max-width: 100% !important;
-                    vertical-align: middle !important;
                 }
-                
-            table td{
-                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                /*vertical-align: middle !important;*/
-                padding: 1px;
-                line-height: 16px !important;
-                font-size: 14px !important;
-            }
+                table td{
+                    margin: 5px 0;
+                    vertical-align: middle !important;
+                    padding: 5px;
+                    font-size: 14px !important;
+                }
+               table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                    font-size: 14px !important;
+                    /*line-height: 18px !important;*/
+                }
+                  ul,li, ul li{
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                    font-size: 14px !important;
+                    /*line-height: 18px !important;*/
+                  }
+                  ol,li, ul li{
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                    font-size: 14px !important;
+                  }
             .footer{
                 color: #808080;
             }
@@ -218,6 +236,7 @@
             }
             table {
                 margin-left: 0 !important;
+                
                 /*width: 100% !important;*/
                 /*margin-right: 30pt !important;*/
             }

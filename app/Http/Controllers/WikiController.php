@@ -119,8 +119,10 @@ class WikiController extends Controller
     {
         if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-            
+        
         $data = WikiPage::find($id);
+       if( $data == null  )
+            return redirect('/wiki')->with('messageSecondary', trans('wiki.noWikiPage'));
         $wikiStatuses = WikiPageStatus::all();
         $wikiRoles = WikiRole::all();
         $wikiCategories = WikiCategory::all();

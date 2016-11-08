@@ -84,6 +84,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
         Route::patch('benutzer/roles-edit', 'UserController@userMandantRoleEdit');
         Route::patch('benutzer/activate', 'UserController@userActivate');
+        Route::post('benutzer/user-delete', 'UserController@destroyMandantUser');
         // Route::get('benutzer/{id}/edit/deleted', 'UserController@editDeleted');
         
         // UserController@index is used as an individual mandant link becouse of the name-ing

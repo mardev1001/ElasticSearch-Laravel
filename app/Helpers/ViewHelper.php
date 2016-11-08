@@ -462,7 +462,6 @@ class ViewHelper{
       
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
         $hasPermission = false;   
-       
         foreach($mandantUsers as $mu){
             $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
             foreach($userMandatRoles as $umr){
@@ -473,8 +472,9 @@ class ViewHelper{
                     }
                 }
                 else{
-                    if( in_array($umr->role_id, $userArray) == true ){
-                        
+                    
+                    if( in_array($umr->role_id, $userArray) == true && $umr->role_id != null ){
+                        // dd($userMandatRoles);
                         $hasPermission = true;
                     }
                     
@@ -523,7 +523,7 @@ class ViewHelper{
         if( $message == true  && $hasPermission == false)
             session()->flash('message',trans('documentForm.noPermission'));
         //if($document->id == 118)
-        //    dd($hasPermission);
+            // dd($hasPermission);
         return $hasPermission;
     }
     
@@ -791,6 +791,44 @@ class ViewHelper{
         if($mandantUser = MandantUser::where('user_id', $id)->first()){
             return Mandant::find($mandantUser->mandant_id);
         } else return false;
+    }
+    
+    
+    /**
+     * Get all user by passed role ID
+     * @param int $roleId
+     * @param int $userId
+     * @return string $options
+     */
+    static function getUsersByInternalRole($roleId, $userId){
+        // dd($roleId.' '.$userId);
+        $mandantUsersNeptun = array();
+        $mandantUsers = MandantUser::all();
+        
+        // Get all users with telefonliste roles where mandant is with neptun flag
+        foreach ($mandantUsers as $mandantUser) {
+            foreach($mandantUser->role as $role){
+                if($role->phone_role && $mandantUser->mandant->rights_admin && $role->id == $roleId){
+                    if(!in_array($mandantUser, $mandantUsersNeptun))
+                        array_push($mandantUsersNeptun, $mandantUser);
+                }
+            }
+        }
+        
+        $html = '';
+        
+        if($mandantUsersNeptun){
+            foreach($mandantUsersNeptun as $mandantUser){
+                ($userId == $mandantUser->user->id) ? $selected = "selected" : $selected = "";
+                $html .= '<option value="'. $mandantUser->user->id .'" data-mandant="'. $mandantUser->mandant->id .'" ' . $selected .'>';
+                $html .= $mandantUser->user->first_name .' '. $mandantUser->user->last_name;
+                $html .= ' ['. $mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname .']';
+                $html .= '</option>';
+            }
+        }
+        
+        return $html;
+        // dd($html);
     }
     
     /**

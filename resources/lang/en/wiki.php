@@ -21,6 +21,7 @@ return [
     'verwaltenAdmin' => 'Seiten verwalten/Administrator',
     'verwalten' => 'Seiten verwalten',
     'managment' => 'Wiki-Seiten verwalten',
+    'noWikiPage' => 'Wiki-Seiten seite existiert nicht',
     
     /* wiki category section */
     'newCategory' => 'Neue Wiki-Kategorie anlegen',
