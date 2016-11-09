@@ -11,7 +11,7 @@ return [
     'close' => 'schließen',
     'save' => 'speichern',
     'activate' => 'aktivieren',
-    'deactivate' => 'deaktivieren',
+    'deactivate' => 'archivieren',
     'new-version' => 'neue Version',
     'duplicate' => 'duplizieren',
     'history' => 'Alte Versionen',

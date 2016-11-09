@@ -186,9 +186,10 @@
                             <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                        @endif
                     @endif
-                    @if( $document->document_status_id  != 5 )
+                    
+                   {{-- @if( $document->document_status_id  != 5 ) --}}
+                    @if( in_array($document->document_status_id, [3,5] ))
                         @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
-                            @if( in_array($document->document_status_id, [3,5] ))
                                 <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
                                     @if( $document->active  == false)
                                         {{ trans('dokumentShow.activate') }}
@@ -196,7 +197,7 @@
                                         {{ trans('dokumentShow.deactivate') }}
                                     @endif</a>
                                 {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
-                            @endif
+                            {{-- @endif--}}
                         @endif
                     @endif
                     

@@ -66,7 +66,7 @@ class FormViewComposer
         $formWrapperData->form = '';
         $formWrapperData->controller = Request::segment(1);
         $formWrapperData->title = trans( 'controller.'.$formWrapperData->controller );
-        $formWrapperData->buttonMethod = trans('formWrapper.save');
+        $formWrapperData->buttonMethod = trans('documentForm.saveContinue');
         $formWrapperData->formUrl = '';
         $formWrapperData->fileUpload = '';
         if( Request::is('*/edit') ){
@@ -75,7 +75,7 @@ class FormViewComposer
             $formWrapperData->form = '';
             $formWrapperData->formUrl = '/'.Request::segment(2).'/'.Request::segment(4);
             $formWrapperData->title = trans( 'controller.'.$formWrapperData->controller );
-            $formWrapperData->buttonMethod = trans('formWrapper.update');
+            $formWrapperData->buttonMethod = trans('documentForm.saveContinue');//trans('formWrapper.update');
         } 
         elseif( Request::is('*/search') ){
             $formWrapperData->form = '';

@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-
+use Carbon\Carbon;
+use App\User;
+use App\Document;
+use App\UserReadDocument;
 use App\DocumentType;
 
 class DocumentTypeController extends Controller
@@ -185,4 +188,38 @@ class DocumentTypeController extends Controller
     {
         //
     }
+    
+    /**
+     * Development sandbox function for testing and debugging
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function devSandbox(Request $request)
+    {
+        $documents = Document::all();
+        $users = User::all();
+        // dd($documents);
+        
+        foreach($users as $user){
+            foreach($documents as $document){
+                
+                $readDocs = UserReadDocument::where('document_group_id', $document->document_group_id)
+                            ->where('user_id', $user->id)->get();
+                        
+                if(count($readDocs) == 0){
+                    UserReadDocument::create([
+                        'document_group_id'=> $document->document_group_id, 
+                        'user_id'=> $user->id, 
+                        'date_read'=> Carbon::now(), 
+                        'date_read_last'=> Carbon::now()
+                    ]);
+                }
+                
+            }
+        }
+        // dd(array_pluck($documents, 'document_status_id'));
+    }
+    
+    
 }

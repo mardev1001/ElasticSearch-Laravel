@@ -11,6 +11,8 @@ return [
     'owner' => 'Autor',
     'coauthor' => 'Co-Ersteller',
     'searchTags' => 'Stichwörter',
+    'searchTitle' => 'Firter',
+    'searchButton' => 'Filtern',
     'summary' => 'Beschreibung/Zusammenfassung',
     'datePublished' => 'Veröffentlichungstermin',
     'dateExpired' => 'Verfallsdatum',
@@ -41,6 +43,7 @@ return [
     'additionalLetter' => 'Zusätzlicher Text',
     'noPermission' => 'Sie haben keine Berechtigung für diese Seite.',
     'documentTemplates' => 'Vorlagen',
+    'saveContinue' => 'speichern und weiter',
     
     /* Freigabe process */
     'freigeben' => 'freigeben',

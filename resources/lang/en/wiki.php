@@ -22,6 +22,7 @@ return [
     'verwalten' => 'Seiten verwalten',
     'managment' => 'Wiki-Seiten verwalten',
     'noWikiPage' => 'Wiki-Seiten seite existiert nicht',
+    'deactivate' => 'deaktivieren',
     
     /* wiki category section */
     'newCategory' => 'Neue Wiki-Kategorie anlegen',

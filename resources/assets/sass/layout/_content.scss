@@ -3,6 +3,11 @@
     padding-bottom: 30px;
     margin-top: 0px;
 }
+@media screen and (min-width: 992px) and (max-width: 1200px) {
+    .container-fluid.first{
+        padding-bottom: 50px;
+    }  
+}
 
 .dl-horizontal dt{
     text-overflow: clip !important;

@@ -109,10 +109,10 @@
 <div class="clearfix"></div> @if( count($docsByTypeEntwurfPaginated) || count( $docsByTypeFreigabePaginated ) )<br>@endif
 
 <div class="col-xs-12 box-wrapper box-white">
-    <h2 class="title">{{ trans('benutzerForm.search') }} {{ $documentType->name }}</h2>
+    <h2 class="title">{{ trans('documentForm.searchTitle') }} {{ $documentType->name }}</h2>
     <div class="box">
         <div class="row">
-            {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+            {!! Form::open(['url' => '/dokumente/suche', 'method'=>'POST']) !!}
                 <div class="input-group">
                     <div class="col-md-12 col-lg-12">
                         {!! ViewHelper::setInput('search', '', old('search'), trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
@@ -121,7 +121,7 @@
                     <div class="col-md-12 col-lg-12">
                         <span class="custom-input-group-btn">
                             <button type="submit" class="btn btn-primary no-margin-bottom">
-                                {{ trans('navigation.search') }} 
+                                {{ trans('documentForm.searchButton') }} 
                             </button>
                         </span>
                     </div>

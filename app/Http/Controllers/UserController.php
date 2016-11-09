@@ -10,12 +10,15 @@ use App\Helpers\ViewHelper;
 use App\Http\Requests\BenutzerRequest;
 use Request as RequestMerge;
 
+use Carbon\Carbon;
 use App\User;
 use App\Role;
 use App\Mandant;
 use App\MandantUser;
 use App\MandantUserRole;
 use App\InternalMandantUser;
+use App\Document;
+use App\UserReadDocument;
 
 
 use App\Http\Repositories\UtilityRepository;
@@ -95,6 +98,21 @@ class UserController extends Controller
             $userModel = User::find($user->id);
             $picture = $this->fileUpload($userModel, $this->fileUploadPath, $request->file());
             $userModel->update(['picture' => $picture]);
+        }
+        
+        // Set all documents as read for new user
+        $documents = Document::all();
+        foreach($documents as $document){
+            $readDocs = UserReadDocument::where('document_group_id', $document->document_group_id)
+                        ->where('user_id', $user->id)->get();
+            if(count($readDocs) == 0){
+                UserReadDocument::create([
+                    'document_group_id'=> $document->document_group_id, 
+                    'user_id'=> $user->id, 
+                    'date_read'=> Carbon::now(), 
+                    'date_read_last'=> Carbon::now()
+                ]);
+            }
         }
         
         // dd($userUpdate);

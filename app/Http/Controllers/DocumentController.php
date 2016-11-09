@@ -378,7 +378,7 @@ class DocumentController extends Controller
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
     
-     /**
+    /**
      * Display a listing of the resource.
      *Laudantium, voluptate id odio labore voluptatibus aut maiores illum, non hic nihil vero dolor.
      * @return \Illuminate\Http\Response
@@ -492,9 +492,7 @@ class DocumentController extends Controller
         return redirect('dokumente/rechte-und-freigabe/'.$id );
     }
     
-    
-    
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -1119,7 +1117,6 @@ class DocumentController extends Controller
            
     }
     
-    
     /**
      * Display the specified resource.
      *
@@ -1645,8 +1642,6 @@ class DocumentController extends Controller
         
     }
     
-    
-
     /**
      * Remove the specified resource from storage.
      *
@@ -2020,12 +2015,11 @@ class DocumentController extends Controller
         $or = "P";
         if($document->landscape == true)
             $or = "L";
-            
+      
         $pdf = \App::make('mpdf.wrapper',['th','A4','','',
         $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
        // $pdf = \App::make('mpdf.wrapper');
-          
-       
+             
         
         if($document->document_type_id == $this->isoDocumentId){
               $pdf->SetHTMLHeader( view('pdf.headerIso', compact('document','variants','dateNow') )->render() );
@@ -2041,8 +2035,7 @@ class DocumentController extends Controller
         $pdf->AddPage($or);
         $pdf->WriteHTML($render);
         
-       
-         
+        // dd($pdf); 
         return $pdf->stream();
     }
     
@@ -2787,7 +2780,6 @@ class DocumentController extends Controller
         
     }
     
-    
     /**
      * Delete ISo category by id
      *
@@ -2947,6 +2939,23 @@ class DocumentController extends Controller
         
         $resultAllTree = $this->document->generateTreeview($resultAllPaginated, array('pageDocuments' => true));
         
+        /* qm-rundschreiben slug fix */
+        if($docTypeSlug == 'qm-rundschreiben'){
+            $docTypeSlug = 'rundschreiben-qmr';
+        }
+        /* end qm-rundschreiben slug fix */
+        
+        /* iso-document slug fix */
+        if($docType == 4){
+            $docTypeSlug = $isoCategoryName;
+        }
+        /* end iso-document slug fix */
+        
+        /* volagedokumente slug fix */
+        if($docType == 5){
+            $docTypeSlug = 'vorlagedokumente';
+        }
+        /* end vorlagedokumente slug fix */
         
         return view('dokumente.suchergebnisse')->with(compact('search', 'docType', 'docTypeSearch', 'docTypeName', 
             'resultAllPaginated', 'resultAllTree', 'searchEntwurfPaginated', 'searchEntwurfTree', 

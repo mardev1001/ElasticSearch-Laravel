@@ -61,6 +61,10 @@ $(function () {
     else if (url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }
+    else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
+        $('a[href$="/'+slug+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
+        console.log('name slug:'+ slug );
+    }
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
          
@@ -89,8 +93,6 @@ $(function () {
         }
 
         else if (documentType == "ISO Dokumente") {
-            // console.log('triggered bujanec');
-            // console.log('SEEMS LEGIT');
             if (typeof  isoCategoryName != 'undefined') {
                 detectHref = $('#side-menu').find('a:contains("' + isoCategoryName + '")').attr('href');
                  if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){

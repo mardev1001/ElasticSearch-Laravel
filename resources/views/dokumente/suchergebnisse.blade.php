@@ -130,7 +130,7 @@
                     <div class="col-md-12 col-lg-12">
                         <span class="custom-input-group-btn">
                             <button type="submit" class="btn btn-primary no-margin-bottom">
-                                {{ trans('navigation.search') }} 
+                                {{ trans('documentForm.searchButton') }} 
                             </button>
                         </span>
                     </div>
@@ -184,49 +184,8 @@
         @if($docTypeSearch)
             <!--patch for checking iso category document-->
             <script type="text/javascript">   
-              /*          var documentSlug = "{{ str_slug($docTypeSearch->name) }}";
-                        var documentId = "{{ ($docTypeSearch->id) }}";
-                     var detectHref = $('#side-menu').find('a:contains("'+documentSlug+'")');
-                    
-                    if( documentId == 3) 
-                        detectHref = 'rundschreiben-qmr';
-                    else if(documentId == 4){
-                        console.log();
-                    }
-                    console.log(documentSlug);
-                    console.log(detectHref);
-                    console.log($('a[href$="'+detectHref+'"]').length);
-                    $('a[href$="'+detectHref+'"]').addClass('active');
-                     
-                    //  $('#side-menu a').each(function(){
-                    //             if (this.href.indexOf(isoCategoryName) != -1){
-                    //                 detectHref = this.href;
-                    //             }
-                    //         });
-                         setTimeout(function(){
-                             $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
-                             if( $('a[href$="'+detectHref+'"]').next("ul").length){
-                                  $('a[href$="'+detectHref+'"]').next("ul").addClass('in');
-                             }
-                            
-                         },1200 );
-                  /*if( documentType == 'ISO Dokumente'){
-                                var isoCategoryName = '{{ $isoCategoryName }}';
-                                var detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")');
-                                $('#side-menu a').each(function(){
-                                   if (this.href.indexOf(isoCategoryName) != -1){
-                                     detectHref = this.href;
-                                   }
-                                });
-                             setTimeout(function(){
-                                 $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
-                                 if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
-                                      $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').addClass('in');
-                                 }
-                                 
-                             },500 );
-                                 
-                            }*/
-                     </script>
+                var slug = '{{$docTypeSlug}}';   
+            
+             </script>
         @endif
     @stop

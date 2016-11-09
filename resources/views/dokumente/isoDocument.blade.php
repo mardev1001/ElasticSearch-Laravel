@@ -108,11 +108,11 @@
         <div class="clearfix"></div> @if( count($isoEntwurfPaginated) || count( $isoFreigabePaginated ) )<br>@endif
         
         <div class="col-xs-12 box-wrapper box-white">
-            <h2 class="title">{{ trans('benutzerForm.search') }}  @if($isoCategoryParent) {{$isoCategoryParent->name}} -@endif
+            <h2 class="title">{{ trans('documentForm.searchTitle') }}  @if($isoCategoryParent) {{$isoCategoryParent->name}} -@endif
         @if($isoCategory) {{$isoCategory->name}}@endif</h2>
             <div class="search box">
                 <div class="row">
-                    {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                    {!! Form::open(['url' => '/dokumente/suche', 'method'=>'POST']) !!}
                         <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                         @if(isset($iso_category_id)) <input type="hidden" name="iso_category_id" value="{{ $iso_category_id }}"> @endif
                         <div class="input-group">
@@ -122,7 +122,7 @@
                             <div class="col-md-12 col-lg-12">
                                 <span class="custom-input-group-btn">
                                     <button type="submit" class="btn btn-primary no-margin-bottom">
-                                        {{ trans('navigation.search') }} 
+                                        {{ trans('documentForm.searchButton') }} 
                                     </button>
                                 </span>
                             </div>
@@ -184,7 +184,6 @@
                          $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parents("ul").not('#side-menu').addClass('in');
                         $('#side-menu').find('a.active').parent('li').find('ul').addClass('in');
                               $('a[href$="'+detectHref+'"]').parent("li").find('ul').addClass('in');
-                              console.log('test');
                         
                      },1000 );
                 </script>

@@ -498,7 +498,7 @@ class ViewHelper{
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
         $role = 0;
         $hasPermission = false;
-         
+        
         
         foreach($mandantUsers as $mu){
             $userMandatRole = MandantUserRole::where('mandant_user_id',$mu->id)->first();
@@ -514,6 +514,8 @@ class ViewHelper{
         }
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
         // dd( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1 );
+        
+        
         
         if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) 
         || ( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1 )
@@ -736,7 +738,7 @@ class ViewHelper{
         foreach($document->documentUploads as $k => $attachment){
             if($hasPdf == false){
                 $type = \File::extension(url('open/'.$document->id.'/'.$attachment->file_path) );  
-                if( $type == 'pdf')
+                if( strtolower($type) == 'pdf')
                     $hasPdf = true;
                 }
             }
@@ -752,9 +754,9 @@ class ViewHelper{
     static function htmlObjectType( $document,$attachment ){
         $type = \File::extension(url('open/'.$document->id.'/'.$attachment->file_path) );
         $htmlObjectType = null;    
-        if( $type == 'png' || $type == 'jpg' || $type == 'jpeg' || $type == 'gif')
+        if( strtolower($type) == 'png' || strtolower($type) == 'jpg' || strtolower($type) == 'jpeg' || strtolower($type) == 'gif')
             $htmlObjectType = 'image/'.$type;
-        elseif( $type == 'pdf')
+        elseif( strtolower($type) == 'pdf')
             $htmlObjectType = 'application/pdf';
         return $htmlObjectType;        
     }

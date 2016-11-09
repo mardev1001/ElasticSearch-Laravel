@@ -14,7 +14,7 @@
                     <br>
                     <span class="text">
                        <strong>
-                           ( {{ trans('dokumentShow.status') }}: {{ $data->status->name }}, {{$data->created_at}}, {{ $data->user->first_name.' '.$data->user->last_name }})
+                           ({{ trans('dokumentShow.status') }}: {{ $data->status->name }}, {{$data->created_at}}, {{ $data->user->first_name.' '.$data->user->last_name }})
                        </strong> 
                     </span>
                 </h3>
@@ -73,7 +73,7 @@
                         @if( $data->active  == false)
                             {{ trans('dokumentShow.activate') }}
                         @else
-                            {{ trans('dokumentShow.deactivate') }}
+                            {{ trans('wiki.deactivate') }}
                         @endif</a>
                     <a href="/wiki/duplicate/{{$data->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.duplicate') }}</a>
                 </div><!--end col-sm-4 col-md-3 col-lg-2 btns-->
