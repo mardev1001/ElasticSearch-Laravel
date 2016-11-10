@@ -50,7 +50,7 @@
  <div class="clearfix"></div> <br>
     
     <div class="col-xs-12 box-wrapper box-white">
-        <h2 class="title">{{ trans('benutzerForm.search') }} ISO Dokumente</h2>
+        <h2 class="title">{{ trans('documentForm.searchTitle') }} ISO Dokumente</h2>
         <div class="search box">
             <div class="row">
                 {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
@@ -63,7 +63,7 @@
                         <div class="col-md-12 col-lg-12">
                             <span class="custom-input-group-btn">
                                 <button type="submit" class="btn btn-primary no-margin-bottom">
-                                    {{ trans('navigation.search') }} 
+                                    {{ trans('documentForm.searchButton') }}
                                 </button>
                             </span>
                         </div>

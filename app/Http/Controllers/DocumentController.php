@@ -1209,7 +1209,7 @@ class DocumentController extends Controller
         $documentPermission = ViewHelper::universalDocumentPermission($document,false);
         $variantPermissions = ViewHelper::documentVariantPermission($document);
         
-        // dd($variantPermissions);
+        // dd($documentPermission);
         // dd($document);
         //  dd('brejk jorself');
         // if($document->active == 0 
@@ -2853,6 +2853,10 @@ class DocumentController extends Controller
             else{
                 $isoCategoryName = str_slug($docTypeSearch->name);
             }
+            if($isoCategory->name == '')
+                $docTypeName = $docTypeSearch->name;
+            else    
+                $docTypeName = $isoCategory->name;
         }
         
         // dd($searchEntwurfPaginated->get());

@@ -15,10 +15,10 @@
                      list-style-type: none;
                  }
                  .list-style-dash li {
-                     background-image:  url('/img/icons/icon_list_dash.png') !important;
-                    background-repeat: no-repeat;
-                    background-position: -5px 50%;
-                    padding-left: .8em;
+                    background-image:  url('/img/icons/icon_list_dash.png') !important;
+                    background-repeat: no-repeat !important;
+                    background-position: 0px 50% !important;
+                    padding-left: 1em !important;
                 }
              
                

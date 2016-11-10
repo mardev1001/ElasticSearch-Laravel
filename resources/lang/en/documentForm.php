@@ -11,7 +11,7 @@ return [
     'owner' => 'Autor',
     'coauthor' => 'Co-Ersteller',
     'searchTags' => 'Stichwörter',
-    'searchTitle' => 'Firter',
+    'searchTitle' => 'Filter',
     'searchButton' => 'Filtern',
     'summary' => 'Beschreibung/Zusammenfassung',
     'datePublished' => 'Veröffentlichungstermin',

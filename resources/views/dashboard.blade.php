@@ -15,7 +15,7 @@
     <div class="col-xs-12  
         @if(
             ( ViewHelper::universalHasPermission(array(15,16)) == false && ViewHelper::getMandantWikiPermission() == false) &&
-            ( ViewHelper::universalHasPermission( array(10) ) == false || count($freigabeEntries) < 1 ) 
+            ( ViewHelper::universalHasPermission( array(10) ) == false && count($freigabeEntries) < 1 ) 
         )
             col-md-12
         @else

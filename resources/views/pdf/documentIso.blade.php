@@ -13,10 +13,10 @@
                  list-style-type: none;
             }
              .list-style-dash li {
-                 background-image:  url('/img/icons/icon_list_dash.png') !important;
+                background-image:  url('/img/icons/icon_list_dash.png') !important;
                 background-repeat: no-repeat;
-                background-position: -5px 50%;
-                padding-left: .8em;
+                background-position: 0px 50% !important;
+                padding-left: 1em !important;
             }
             body,table,p,strong,li,h1,h2,h3,span,b,i{
                     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;

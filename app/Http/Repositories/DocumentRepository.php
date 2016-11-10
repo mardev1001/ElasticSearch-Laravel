@@ -151,9 +151,8 @@ class DocumentRepository
                 
                 // Treeview Setting for Homepage
                 if ($options['pageHome'] == true || $options['pageFavorites'] == true) {
-                    // if($document->document_status_id == 1)
-                        // dd($document);
-                    if($document->published || ($document->document_status_id == 1 && $options['myDocuments'] == true)){
+                    
+                    if($document->published || ($options['myDocuments'] == true)){
                         $node->beforeText = '';
                         if($options['pageHome'] == true && $options['myDocuments'] == true)
                             $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf

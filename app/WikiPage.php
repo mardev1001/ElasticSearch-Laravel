@@ -21,12 +21,12 @@ class WikiPage extends Model
     
     public function getCreatedAtAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y H:m:s');
+        return Carbon::parse($value)->format('d.m.Y');
     }
     
     public function getUpdatedAtAttribute($value)
     {
-        return Carbon::parse($value)->format('d.m.Y H:m:s');
+        return Carbon::parse($value)->format('d.m.Y');
     }
     
     public function user(){

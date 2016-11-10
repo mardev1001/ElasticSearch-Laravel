@@ -125,12 +125,14 @@ $(function () {
                 height: docHeight,
                 removed_menuitems: 'newdocument,',
                 elementpath: false,
-                menubar: "edit,insert,format,table",
+                menubar: "edit,format,table,insert",
                 removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
                 setup: function (editor) {
                     
                     editor.on('click', function (e) {
-                        // console.log(e.target.src);
+                        
+                        // e.target.closest('.parent-tabs').focus();
+                        // editor.focus();
                         var source = e.target.src;
                         var image = $(document).find('img[src$="' + source + '"]')
                         removeCss(image, 'height');
@@ -161,22 +163,25 @@ $(function () {
                     var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                     $(editor.getElement()).parent().append(inp);
                     
+                    
                     inp.on("change",function(){
                             var input = inp.get(0);
-                            var file = input.files[0];
+                            var file = input.files[0]; 
                             var fr = new FileReader();
-                            fr.onload = function() {
+                            fr.onload = function() { 
                                 var img = new Image();
                                 img.src = fr.result;
                                  imgWidth = img.width;
                                 imgHeight = img.height;
                                 img.onload = function () {
-                                    imgWidth = this.width;
-                                    imgHeight = this.height;
-                                }
+                                    imgWidth = img.width;
+                                    imgHeight = img.height;
                                 var ratio = imgWidth / imgHeight;
-                                editor.insertContent('<img  style="height:' + imgHeight + ';" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+                                editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+                                
                                 inp.val('');
+                                }
+                                
                             }
                             fr.readAsDataURL(file);
                         });
@@ -218,12 +223,14 @@ $(function () {
                 height: docHeight,
                 height: 350,
                 elementpath: false,
-                menubar: "edit,insert,format,table",
+                menubar: "edit,format,table,insert",
                 removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
                 setup: function (editor) {
                     
                     editor.on('click', function (e) {
-                        // console.log(e.target.src);
+                        
+                        // e.target.closest('.parent-tabs').focus();
+                        // editor.focus();
                         var source = e.target.src;
                         var image = $(document).find('img[src$="' + source + '"]')
                         removeCss(image, 'height');
@@ -254,22 +261,25 @@ $(function () {
                     var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                     $(editor.getElement()).parent().append(inp);
                     
+                    
                     inp.on("change",function(){
                             var input = inp.get(0);
-                            var file = input.files[0];
+                            var file = input.files[0]; 
                             var fr = new FileReader();
-                            fr.onload = function() {
+                            fr.onload = function() { 
                                 var img = new Image();
                                 img.src = fr.result;
                                  imgWidth = img.width;
                                 imgHeight = img.height;
                                 img.onload = function () {
-                                    imgWidth = this.width;
-                                    imgHeight = this.height;
-                                }
+                                    imgWidth = img.width;
+                                    imgHeight = img.height;
                                 var ratio = imgWidth / imgHeight;
-                                editor.insertContent('<img  style="height:' + imgHeight + ';" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+                                editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+                                
                                 inp.val('');
+                                }
+                                
                             }
                             fr.readAsDataURL(file);
                         });
@@ -324,12 +334,14 @@ $(function () {
                 ],
                 style_formats_merge: true,
                 elementpath: false,
-                menubar: "edit,insert,format,table",
+                menubar: "edit,format,table,insert",
                 removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
                 setup: function (editor) {
                     
                     editor.on('click', function (e) {
-                        // console.log(e.target.src);
+                        
+                        // e.target.closest('.parent-tabs').focus();
+                        // editor.focus();
                         var source = e.target.src;
                         var image = $(document).find('img[src$="' + source + '"]')
                         removeCss(image, 'height');
@@ -360,22 +372,25 @@ $(function () {
                     var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
                     $(editor.getElement()).parent().append(inp);
                     
+                    
                     inp.on("change",function(){
                             var input = inp.get(0);
-                            var file = input.files[0];
+                            var file = input.files[0]; 
                             var fr = new FileReader();
-                            fr.onload = function() {
+                            fr.onload = function() { 
                                 var img = new Image();
                                 img.src = fr.result;
                                  imgWidth = img.width;
                                 imgHeight = img.height;
                                 img.onload = function () {
-                                    imgWidth = this.width;
-                                    imgHeight = this.height;
-                                }
+                                    imgWidth = img.width;
+                                    imgHeight = img.height;
                                 var ratio = imgWidth / imgHeight;
-                                editor.insertContent('<img  style="height:' + imgHeight + ';" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+                                editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+                                
                                 inp.val('');
+                                }
+                                
                             }
                             fr.readAsDataURL(file);
                         });

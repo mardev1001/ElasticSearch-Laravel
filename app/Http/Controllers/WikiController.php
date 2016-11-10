@@ -164,10 +164,15 @@ class WikiController extends Controller
     public function wikiActivation($id)
     {
         $wiki = WikiPage::find($id);
-        if($wiki->active == true)
+        if($wiki->active == true){
             $wiki->active = false;
-        else
+            $wiki->status_id = 3;
+            
+        }
+        else{
             $wiki->active = true;
+            $wiki->status_id = 2;
+        }
             
         $wiki->save();
         

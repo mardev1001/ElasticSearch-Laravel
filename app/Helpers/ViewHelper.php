@@ -645,7 +645,11 @@ class ViewHelper{
                 }
             }
         }
-        
+        if($object->permissionExists == false && self::universalDocumentPermission($document,false,false, true) == true
+        && count($variants) ){
+            $object->permissionExists = true;
+            $variants[0]->hasPermission = true;
+        }
         $object->variants = $variants;
         return $object;
     }//end documentVariant permission

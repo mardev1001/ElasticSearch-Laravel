@@ -57,7 +57,6 @@
                                 <!--<p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>-->
                                 
                                 @if(!$document->pdf_upload)
-                        
                                     @foreach( $variants as $v => $variant)
                                 
                                         @if( isset($variant->hasPermission) && $variant->hasPermission == true )
@@ -149,9 +148,11 @@
                                                              <!--<a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="btn btn-primary">-->
                                                              <div class="row flexbox-container">
                                                                  <div class="col-md-12">
+                                                                @if( ViewHelper::universalDocumentPermission( $document, false, false, true ) == true )     
                                                                  <a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="no-underline">
                                                                      <span class="icon icon-edit inline-block"></span>
-                                                                 </a> 
+                                                                 </a>
+                                                                 @endif
                                                                  <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
                                                                    {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
                                                                 </div>
@@ -187,7 +188,7 @@
                        @endif
                     @endif
                     
-                   {{-- @if( $document->document_status_id  != 5 ) --}}
+                   @if( $document->document_status_id  != 5 )
                     @if( in_array($document->document_status_id, [3,5] ))
                         @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
                                 <a href="/dokumente/{{$document->id}}/activate" class="btn btn-primary pull-right">
@@ -197,7 +198,7 @@
                                         {{ trans('dokumentShow.deactivate') }}
                                     @endif</a>
                                 {{-- <a href="#" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> --}}
-                            {{-- @endif--}}
+                             @endif
                         @endif
                     @endif
                     

@@ -60,7 +60,7 @@
         <div class="clearfix"></div>@if( count($qmrEntwurfPaginated) || count( $qmrFreigabePaginated ) )<br>@endif
         
         <div class="row">
-            <div class="col-xs-12 col-md-12">
+            <div class="col-xs-12">
                 <div class="box-wrapper box-white">
                     <h2 class="title">{{ trans('documentForm.searchTitle') }} {{ $docType->name }}</h2>
                     <div class="box">
@@ -89,7 +89,7 @@
         <br/>
             
       
-        <div class="col-xs-12 col-md-12 box-wrapper box-white">
+        <div class="col-xs-12 box-wrapper box-white">
             
             <h4 class="title">
                 Alle {{ trans('rundschreibenQmr.allQmr')}}

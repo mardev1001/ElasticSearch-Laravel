@@ -4,7 +4,7 @@
 
 @section('page-title')
     @if($docTypeName)
-        {{$docTypeName}} - Übersicht
+        Dokumente - {{$docTypeName}}
     @else
         Dokumente - Übersicht
     @endif
@@ -49,7 +49,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('rundschreiben.rundEntwurf') }}</h2>
             
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center ">
                     {!! $searchEntwurfPaginated->render() !!}
                 </div>
             @else
@@ -83,7 +83,7 @@
      )
     <div class="col-xs-12 col-md-6">
         
-        <div class="box-wrapper">
+        <div class="box-wrapper box-white">
             
             <h2 class="title">{{ trans('rundschreiben.rundFreigabe') }}</h2>
             
@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 
-                <div class="text-center box box-pagination">
+                <div class="text-center ">
                     {!! $searchFreigabePaginated->render() !!}
                 </div>
             
@@ -117,25 +117,31 @@
 
 <div class="clearfix"></div> <br>
 
-<div id="search-form" class="col-xs-12 box-wrapper">
-    <div class="box">
-        <div class="row">
-            {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
-                <div class="input-group">
-                    <div class="col-md-12 col-lg-12">
-                        {!! ViewHelper::setInput('search', '', $search, trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
-                        @if(isset($docType)) <input type="hidden" name="document_type_id" value="{{ $docType }}"> @endif
-                        @if(isset($iso_category_id)) <input type="hidden" name="iso_category_id" value="{{ $iso_category_id }}"> @endif
-                    </div>
-                    <div class="col-md-12 col-lg-12">
-                        <span class="custom-input-group-btn">
-                            <button type="submit" class="btn btn-primary no-margin-bottom">
-                                {{ trans('documentForm.searchButton') }} 
-                            </button>
-                        </span>
-                    </div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div id="search-form" class="col-xs-12 box-wrapper">
+            <h2 class="title">{{ trans('documentForm.searchTitle') }} {{ $docTypeName }}</h2>
+            <div class="box">
+                <div class="row">
+                    {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                        <div class="input-group">
+                            <div class="col-md-12 col-lg-12">
+                                {!! ViewHelper::setInput('search', '', $search, trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
+                                @if(isset($docType)) <input type="hidden" name="document_type_id" value="{{ $docType }}"> @endif
+                                @if(isset($iso_category_id)) <input type="hidden" name="iso_category_id" value="{{ $iso_category_id }}"> @endif
+                            </div>
+                            <div class="col-md-12 col-lg-12">
+                                <span class="custom-input-group-btn">
+                                    <button type="submit" class="btn btn-primary no-margin-bottom">
+                                        {{ trans('documentForm.searchButton') }} 
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    {!! Form::close() !!}
                 </div>
-            {!! Form::close() !!}
+            </div>
         </div>
     </div>
 </div>
@@ -145,7 +151,7 @@
 <div class="row">
     
     <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper">
+        <div class="col-xs-12 box-wrapper box-white">
             
             <h2 class="title">
                 Alle @if($docTypeName) {{$docTypeName}} @else Dokumente @endif
@@ -161,7 +167,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="text-center box box-pagination">
+                <div class="text-center ">
                     {{ $resultAllPaginated->render() }}
                 </div>
             @else

@@ -88,6 +88,10 @@ class MandantController extends Controller
             }   
         }
         
+        $mandants = array_values(array_sort($mandants, function ($value) {
+            return $value['mandant_number'];
+        }));
+        
         return view('mandanten.administration', compact('roles','mandants', 'searchParameter', 'deletedUsers', 'deletedMandants', 'unassignedUsers', 'unassignedActiveUsers', 'unassignedInactiveUsers') );
     }
     
