@@ -53,37 +53,40 @@
                             <p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>
                             
                             @if(!$document->pdf_upload )
-                            
-                                <ul class="nav nav-tabs" id="tabs">
-                                   @if( count($document->editorVariantOrderBy) ) 
-                                       @foreach( $document->editorVariantOrderBy as $k=>$variant)
-                                           <li @if($k == 0) class="active" @endif><a href="#variant{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}</a></li>
-                                       @endforeach
-                                   @endif
-                                </ul>
-                                
-                                <div class="tab-content">
-                                   @if( count($document->editorVariant) ) 
-                                       @foreach( $document->editorVariant as $v => $variant)
-                                           <div class="tab-pane @if($v == 0) active @endif" id="variant{{$variant->variant_number}}">
-                                            
-                                               @if(count($document->documentUploads))
-                                                <div class="attachments">
-                                                    <span class="text">Dokument Anlage/n: </span>
-                                                    @foreach($document->documentUploads as $attachment)
-                                                        <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
-                                                       <a target="_blank" href="{{ url('download/'.$document->id.'/'.$attachment->file_path) }}" class="link">{{basename($attachment->file_path)}}</a>
-                                                       <br><span class="indent"></span>
-                                                    @endforeach
+                            <div class="row">
+                                <div class="parent-tabs col-xs-12 col-md-12">
+                                    <ul class="nav nav-tabs" id="tabs">
+                                       @if( count($document->editorVariantOrderBy) ) 
+                                           @foreach( $document->editorVariantOrderBy as $k=>$variant)
+                                               <li @if($k == 0) class="active" @endif><a href="#variant{{$variant->variant_number}}" data-toggle="tab">Variante {{$variant->variant_number}}</a></li>
+                                           @endforeach
+                                       @endif
+                                    </ul>
+                                    
+                                    <div class="tab-content">
+                                       @if( count($document->editorVariant) ) 
+                                           @foreach( $document->editorVariant as $v => $variant)
+                                               <div class="tab-pane @if($v == 0) active @endif" id="variant{{$variant->variant_number}}">
+                                                
+                                                   @if(count($document->documentUploads))
+                                                    <div class="attachments">
+                                                        <span class="text">Dokument Anlage/n: </span>
+                                                        @foreach($document->documentUploads as $attachment)
+                                                            <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
+                                                           <a target="_blank" href="{{ url('download/'.$document->id.'/'.$attachment->file_path) }}" class="link">{{basename($attachment->file_path)}}</a>
+                                                           <br><span class="indent"></span>
+                                                        @endforeach
+                                                    </div>
+                                                    @endif
+                                                   <div>
+                                                       {!! ViewHelper::stripTags($variant->inhalt, array('div' ) ) !!}
+                                                   </div>
                                                 </div>
-                                                @endif
-                                               <div>
-                                                   {!! ViewHelper::stripTags($variant->inhalt, array('div' ) ) !!}
-                                               </div>
-                                            </div>
-                                       @endforeach
-                                   @endif
-                                </div>
+                                           @endforeach
+                                       @endif
+                                    </div>
+                                </div><!-- end .parent-tabs -->
+                            </div><!-- end .row -->
                             @endif {{-- end if pdf upload --}}
                         </div>
                         

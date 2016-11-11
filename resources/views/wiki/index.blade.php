@@ -132,7 +132,8 @@
             </div>
         </div>
     </div>
-
+    
+    @if( ViewHelper::universalHasPermission(array(15)) )
     <div class="col-xs-12 col-md-6 ">
         <div class="col-xs-12 box-wrapper home">
             <h1 class="title">Meine Beiträge</h1>
@@ -148,6 +149,7 @@
             </div>
         </div>
     </div>
+    @endif
     
     
 </div><!-- end main row-->
