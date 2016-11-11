@@ -118,7 +118,7 @@ h1,h3,h3{
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
     font-size: 14px !important;
 }
-.content ul,.content ol {
+.content ul:not(.nav-tabs),.content ol {
     -webkit-margin-before: 0em;
     -webkit-margin-after: 0em;
     -webkit-margin-start: 0px;

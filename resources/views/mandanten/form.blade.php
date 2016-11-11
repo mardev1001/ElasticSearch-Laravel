@@ -53,7 +53,7 @@
             <!-- input box-->
             <div class="col-xs-6 col-md-6 col-lg-3">
                 <div class="checkbox-form-group">
-                    {!! ViewHelper::setCheckbox('rights_wiki',$data,old('rights_wiki'),trans('mandantenForm.rightsWiki') ) !!}
+                    <!--{!! ViewHelper::setCheckbox('rights_wiki',$data,old('rights_wiki'),trans('mandantenForm.rightsWiki') ) !!}-->
                     {!! ViewHelper::setCheckbox('rights_admin',$data,old('rights_admin'),trans('mandantenForm.redaktion') ) !!}
                 </div>
             </div><!--End input box-->

@@ -854,6 +854,11 @@ class ViewHelper{
     static function getMandantWikiPermission(){
         $user = Auth::user();
         $mandantUser = MandantUser::where('user_id', $user->id)->first();
+        /*Neptun-500 remove wiki permissions from mandants and leave only user wiki permissions*/
+        return false;
+        /* End Neptun-500 remove wiki permissions from mandants and leave only user wiki permissions */
+        
+        
         if(isset($mandantUser->mandant))
             return (bool)$mandantUser->mandant->rights_wiki;
         else return false;

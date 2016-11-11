@@ -159,7 +159,10 @@
    
             <div class="col-sm-4 col-md-3 col-lg-2 btns scrollable-document">
                 <!--<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>-->
-             
+                @if( ViewHelper::universalDocumentPermission( $document, false, false, true ) ) 
+                    <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a> 
+                @endif
+                
                 @if( $authorised == false && $canPublish == false )
                  
                     @if( count( $document->documentApprovals->where('user_id',Auth::user()->id )->where('date_approved',null) ) == 1 )
@@ -185,7 +188,6 @@
                                 ( $document->documentType->document_art == 0 &&
                                 ViewHelper::universalHasPermission( array(11) ) == true ) )
                                 && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
-                            <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                             <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
                         @endif
                 @endif
