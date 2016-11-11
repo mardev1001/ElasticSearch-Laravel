@@ -45,12 +45,12 @@
         @if( !empty($search) && $search == true )
             <h2 class="title">Suchergebnisse</h2>
         @else
-            <h2 class="title">Wiki Kategorien verwalten</h2>
+            <h2 class="title">@lang('wiki.categoryManagment')</h2>
         @endif
         <div class="box box-white">
-            <div class="row">
             
-            <table class="table">
+            <div class="row">
+                <table class="table">
                 <thead>
                     <th  class="text-center valign col-md-2">Name</th>
                     <th  class="text-center valign col-md-4">Redakteure</th>

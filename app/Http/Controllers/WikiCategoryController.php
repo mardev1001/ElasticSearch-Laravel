@@ -14,6 +14,7 @@ use App\User;
 use App\Role;
 use App\WikiPage;
 use App\Http\Repositories\DocumentRepository;
+use App\Helpers\ViewHelper;
 
 class WikiCategoryController extends Controller
 {
@@ -77,9 +78,16 @@ class WikiCategoryController extends Controller
     {
         $category = WikiCategory::find($id);
         
-        $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
+     
+        $query = WikiPage::where('category_id',$id);
+        if( ViewHelper::universalHasPermission(array(15)) == false ){
+            $query->whereNotIn('status_id',array(1,3) );
+        }
+           
+        $categoryEntries = $query->paginate(12);   
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
         // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
+        
         return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree') ); 
     }
 

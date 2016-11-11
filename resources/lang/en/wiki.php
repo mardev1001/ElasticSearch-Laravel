@@ -20,15 +20,17 @@ return [
     'user' => 'Ersteller',
     'verwaltenAdmin' => 'Seiten verwalten/Administrator',
     'verwalten' => 'Seiten verwalten',
-    'managment' => 'Wiki-Seiten verwalten',
+    'managment' => 'Wiki - Seiten verwalten',
     'noWikiPage' => 'Wiki-Seiten seite existiert nicht',
     'deactivate' => 'deaktivieren',
     
     /* wiki category section */
-    'newCategory' => 'Neue Wiki-Kategorie anlegen',
+    'newCategory' => 'Neue Kategorie anlegen',
+    'categoryManagment' => 'Kategorien verwalten',
     'topCategory' => 'Top-Kategorie',
     'wikiCreate' => 'Seite anlegen',
     'wikiCategory' => 'Kategorien',
     'wikiList' => 'Übersicht',
+    'search' => 'Suche',
     /* End wiki category section */
 ];

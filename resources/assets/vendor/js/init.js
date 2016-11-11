@@ -201,7 +201,7 @@ $(function () {
         });
     }
 
-    if ($('.content-editor').length) {
+   if ($('.content-editor').length) {
         var counter = 0;
         $('.content-editor').each(function () {
             counter++;
@@ -247,7 +247,7 @@ $(function () {
                       
 
                         if (e && e.element.nodeName.toLowerCase() == 'img') {
-                            processImage(e);
+                            // processImage(e);
 
                         }
                       
@@ -298,8 +298,7 @@ $(function () {
             });
         });
     }
-
-
+    
     if ($('.variant').length) {
         $('.variant').closest('form').addClass('.tinymce-image');
 
@@ -358,7 +357,7 @@ $(function () {
                       
 
                         if (e && e.element.nodeName.toLowerCase() == 'img') {
-                            processImage(e);
+                            // processImage(e);
 
                         }
                       

@@ -112,7 +112,7 @@
         @if($isoCategory) {{$isoCategory->name}}@endif</h2>
             <div class="search box">
                 <div class="row">
-                    {!! Form::open(['url' => '/dokumente/suche', 'method'=>'POST']) !!}
+                    {!! Form::open(['url' => '/dokumente/suche', 'method'=>'GET']) !!}
                         <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                         @if(isset($iso_category_id)) <input type="hidden" name="iso_category_id" value="{{ $iso_category_id }}"> @endif
                         <div class="input-group">

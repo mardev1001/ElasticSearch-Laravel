@@ -124,7 +124,7 @@
             <h2 class="title">{{ trans('documentForm.searchTitle') }} {{ $docTypeName }}</h2>
             <div class="box">
                 <div class="row">
-                    {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                    {!! Form::open(['action' => 'DocumentController@search', 'method'=>'GET']) !!}
                         <div class="input-group">
                             <div class="col-md-12 col-lg-12">
                                 {!! ViewHelper::setInput('search', '', $search, trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
@@ -155,8 +155,8 @@
             
             <h2 class="title">
                 Alle @if($docTypeName) {{$docTypeName}} @else Dokumente @endif
-                {{-- <a href="{{ action('DocumentController@search', ['search' => $search, 'document_type_id' => $docType, 'iso_category_id' => $iso_category_id, 'documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a> --}}
-                {{-- <a href="{{ action('DocumentController@search', ['search' => $search, 'document_type_id' => $docType, 'iso_category_id' => $iso_category_id,'documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a> --}}
+                <a href="{{ action('DocumentController@search', ['search' => $search, 'document_type_id' => $docType, 'iso_category_id' => $iso_category_id, 'documents' => 'alle'  , 'sort' => 'asc']) }}"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                <a href="{{ action('DocumentController@search', ['search' => $search, 'document_type_id' => $docType, 'iso_category_id' => $iso_category_id,'documents' => 'alle'  , 'sort' => 'desc']) }}"><i class="fa fa-arrow-down" aria-hidden="true"></i></a>
             </h2>
             
             @if(count($resultAllPaginated))
@@ -168,7 +168,7 @@
                     </div>
                 </div>
                 <div class="text-center ">
-                    {{ $resultAllPaginated->render() }}
+                    {{ $resultAllPaginated->appends(['search' => $search, 'document_type_id' => $docType, 'iso_category_id' => $iso_category_id, 'documents'=>$docs, 'sort'=>$sort])->render() }}
                 </div>
             @else
                 <div class="box">

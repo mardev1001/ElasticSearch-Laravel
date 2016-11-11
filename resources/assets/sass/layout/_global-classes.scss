@@ -649,10 +649,25 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
 }
 
 
-.box-wrapper.home{
-    // height: 530px;
+.box-wrapper.home .box.home{
+     height: 70vh;
+     max-height: initial !important;
 }
-
+@media only screen and (max-width: 1366px) and (min-width: 1200px){
+   .box-wrapper.home .box.home{
+     height: 64vh;
+    } 
+}
+@media only screen and (max-width: 1200px) and (min-width: 1024px){
+   .box-wrapper.home .box.home{
+     height: 60vh;
+    }     
+}
+@media only screen and (max-width: 1024px) and (min-width: 992px){
+   .box-wrapper.home .box.home{
+     height: 62vh;
+    } 
+}
 .input-group label.control-label{
     display: none;
 }

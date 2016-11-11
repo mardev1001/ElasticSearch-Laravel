@@ -2540,12 +2540,12 @@ class DocumentController extends Controller
             $documentsByTypePaginated = Document::where('document_type_id', $documentType->id)->where('deleted_at', null)
             ->where('document_status_id', 3)->orderBy('id', 'desc')
             ->get();
-            // ->paginate(10, ['*'], str_slug('all-'.$documentType->name));
+            
             if($docs == 'alle' && $sort == 'asc')
                 $documentsByTypePaginated = $this->document->getUserPermissionedDocuments($documentsByTypePaginated, str_slug('all-'.$documentType->name), array('field' => 'date_published', 'sort' => 'asc'));
             else $documentsByTypePaginated = $this->document->getUserPermissionedDocuments($documentsByTypePaginated, str_slug('all-'.$documentType->name), array('field' => 'date_published', 'sort' => 'desc'));
+            
             $documentsByTypeTree = $this->document->generateTreeview($documentsByTypePaginated, array('pageDocuments' => true, 'showHistory' => true) );
-            // dd($documentsByTypePaginated);
         }
         
         return view('dokumente.documentType', compact('documentType', 'documentsByTypeTree', 'documentsByTypePaginated', 'docsByTypeEntwurfPaginated', 'docsByTypeEntwurfTree', 'docsByTypeFreigabePaginated', 'docsByTypeFreigabeTree', 'docs', 'sort' ) );
@@ -2882,7 +2882,7 @@ class DocumentController extends Controller
         $searchFreigabePaginated = $searchFreigabePaginated->orderBy('date_published', 'desc')->paginate(10, ['*'], $docTypeName.'-freigabe');
         $searchFreigabeTree = $this->document->generateTreeview( $searchFreigabePaginated, array('pageDocuments' => true) );
         
-        $resultAllPaginated = Document::where(['document_type_id' =>  $docType])->where('document_status_id', 3)->where('active', 1);
+        $resultAllPaginated = Document::where('document_type_id',  $docType)->where('document_status_id', 3)->where('active', 1);
         
         // QMR query options
         if($docType == 3){
@@ -2932,16 +2932,18 @@ class DocumentController extends Controller
         
         // Set sorting field according to document type
         $sortField = 'date_published';
-        if($docType == 3) $sortField = 'qmr_number';
-        if($docType == 4) $sortField = 'iso_category_number';
+        if($docType == 3 && (stripos($search, 'QMR') !== false)) $sortField = 'qmr_number';
+        if($docType == 4 && (stripos($search, 'ISO') !== false)) $sortField = 'iso_category_number';
 
         if($docs == 'alle' && $sort == 'asc')
             $resultAllPaginated = $this->document->getUserPermissionedDocuments($resultAllPaginated, 'ergebnisse-alle', array('field' => $sortField, 'sort' => 'asc'));
         else $resultAllPaginated = $this->document->getUserPermissionedDocuments($resultAllPaginated, 'ergebnisse-alle', array('field' => $sortField, 'sort' => 'desc'));
         
+        // dd($resultAllPaginated);
+        
         // dd(DB::getQueryLog());
         
-        $resultAllTree = $this->document->generateTreeview($resultAllPaginated, array('pageDocuments' => true));
+        $resultAllTree = $this->document->generateTreeview($resultAllPaginated, array('pageDocuments' => true, 'showHistory' => true));
         
         /* qm-rundschreiben slug fix */
         if($docTypeSlug == 'qm-rundschreiben'){

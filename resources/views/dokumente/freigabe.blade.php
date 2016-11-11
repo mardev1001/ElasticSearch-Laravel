@@ -78,9 +78,9 @@
                                                         @endforeach
                                                     </div>
                                                     @endif
-                                                   <div>
+                                                    <div>
                                                        {!! ViewHelper::stripTags($variant->inhalt, array('div' ) ) !!}
-                                                   </div>
+                                                    </div>
                                                 </div>
                                            @endforeach
                                        @endif

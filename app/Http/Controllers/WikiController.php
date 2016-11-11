@@ -61,7 +61,7 @@ class WikiController extends Controller
      */
     public function create()
     {
-        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+        if( ViewHelper::universalHasPermission( array(15) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $wikiStatuses = WikiPageStatus::all();
@@ -101,10 +101,15 @@ class WikiController extends Controller
      */
     public function show($id)
     {
-        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
-            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-            
         $data = WikiPage::find($id);
+        
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/wiki')->with('messageSecondary', trans('documentForm.noPermission'));
+        
+        if( ViewHelper::universalHasPermission( array(15) ) == false && ( $data->status_id == 1 || $data->status_id == 3)  )
+            return redirect('/wiki')->with('messageSecondary', trans('documentForm.noPermission'));
+        
+        
         
         return view('wiki.show', compact('data') );
     }
@@ -117,7 +122,7 @@ class WikiController extends Controller
      */
     public function edit($id)
     {
-        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+        if( ViewHelper::universalHasPermission( array(15) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         
         $data = WikiPage::find($id);

@@ -2,11 +2,12 @@
 
 @extends('master')
 
-@section('page-title') {{ trans('wiki.managment') }} - @if( isset($admin) && $admin == true) Administrator @else User @endif @stop
+@section('page-title') {{ trans('wiki.managment') }} @stop
 
 @section('content')
 <div class="row">
     <div class="col-xs-12 box-wrapper">
+        <h2 class="title">{{ trans('wiki.search') }}</h2>
         <div class="box box-white">
             <div class="row">
                 {!! Form::open(['action' => 'WikiController@searchManagment', 'method'=>'POST']) !!}
@@ -61,6 +62,7 @@
     
     <!-- top categorie box-->
     <div class="col-xs-12 box-wrapper">
+        <h2 class="title">{{ trans('wiki.wikiList') }}</h2>
         <div class="box box-white">
              <table class="table data-table box-white">
                 <thead>
@@ -76,7 +78,7 @@
                         @foreach($wikies as $k => $data)
                         <tr>
                                 
-                                <td class="text-center valign">{{ $data->name }} </td>
+                                <td class="text-center valign"><a href="/wiki/{{$data->id}}">{{ $data->name }}</a> </td>
                                 <td class="text-center valign ">
                                     {{ $data->category->name }}
                                 </td>

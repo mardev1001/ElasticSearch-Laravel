@@ -53,7 +53,7 @@
         <h2 class="title">{{ trans('documentForm.searchTitle') }} ISO Dokumente</h2>
         <div class="search box">
             <div class="row">
-                {!! Form::open(['action' => 'DocumentController@search', 'method'=>'POST']) !!}
+                {!! Form::open(['action' => 'DocumentController@search', 'method'=>'GET']) !!}
                     <input type="hidden" name="document_type_id" value="4">
                     
                     <div class="input-group">

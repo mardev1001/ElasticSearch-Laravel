@@ -776,6 +776,9 @@ class DocumentRepository
      * @return bool || response
      */
     public function universalDocumentPermission( $document, $message=true, $freigeber=false, $filterAuthors=false ){
+        
+        return ViewHelper::universalDocumentPermission($document,$message,$freigeber,$filterAuthors);
+        
         $uid = Auth::user()->id;
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
         $role = 0;
@@ -817,6 +820,9 @@ class DocumentRepository
             1. permissionExists( this is a global hasPermissionso we dont have to iterate again to see if permission exists  )
             2. variants (to store variants)[duuh]
         */
+        return ViewHelper::documentVariantPermission($document,$message);
+        
+        
         $uid = Auth::user()->id;
         $object = new \StdClass(); 
         $object->permissionExists = false;
@@ -920,19 +926,19 @@ class DocumentRepository
         $object->variants = $variants;
         // dd($variants);
         return $object;
-    }//end documentVariant permission
+}//end documentVariant permission
    
-    public function getUserPermissionedDocuments($collection,$paginator='page', $orderBy=array('field' => 'id', 'sort' => 'desc'), $perPage = 50){
+public function getUserPermissionedDocuments($collection,$paginator='page', $orderBy=array('field' => 'id', 'sort' => 'desc'), $perPage = 50){
+        
     	foreach($collection as $key => $document){
-		    if($this->documentVariantPermission($document,false)->permissionExists == false)
+		    if(ViewHelper::documentVariantPermission($document,false)->permissionExists == false)
 		        unset($collection[$key]);
 		    
 		}
 		$documentsNewArr = $collection->pluck('id')->toArray();
 		
-        
         $collection = Document::whereIn('id',$documentsNewArr)->orderBy($orderBy['field'], $orderBy['sort'])->paginate($perPage, ['*'], $paginator);
-        // dd($collection);
+        
         return $collection;
     }
 }

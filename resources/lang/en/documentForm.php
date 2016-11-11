@@ -12,7 +12,7 @@ return [
     'coauthor' => 'Co-Ersteller',
     'searchTags' => 'Stichwörter',
     'searchTitle' => 'Filter',
-    'searchButton' => 'Filtern',
+    'searchButton' => 'filtern',
     'summary' => 'Beschreibung/Zusammenfassung',
     'datePublished' => 'Veröffentlichungstermin',
     'dateExpired' => 'Verfallsdatum',

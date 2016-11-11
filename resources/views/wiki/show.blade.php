@@ -23,9 +23,6 @@
         <div class="box box-white">
             <div class="row">
                 <div class="col-sm-8 col-md-9 col-lg-10">
-
-                    <div class="clearfix"></div>
-
                     <div class="row">
                         <div class="col-xs-12">
 
@@ -49,26 +46,18 @@
                                 @endif
 
                             </div><!-- end .content -->
-
-                            <div class="clearfix"></div> <br>
-
-                            
-
-                           
-
                         </div><!--end col-xs-12-->
                     </div><!--end row-->
 
-                    <div class="clearfix"></div> <br>
                 
 
                 </div><!-- end .col-sm-8 .col-md-9 .col-lg-10 -->
                 
-
-                <div class="col-sm-4 col-md-3 col-lg-2 btns">
-                   <a href="{{route('wiki.edit', $data->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
-                  
-
+                <div class="col-sm-4 col-md-3 col-lg-2 btns scrollable-document">
+                    @if( ViewHelper::universalHasPermission(array(15)) )
+                        <a href="{{route('wiki.edit', $data->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
+                    
+                    
                     <a href="/wiki/{{$data->id}}/activate" class="btn btn-primary pull-right">
                         @if( $data->active  == false)
                             {{ trans('dokumentShow.activate') }}
@@ -76,8 +65,8 @@
                             {{ trans('wiki.deactivate') }}
                         @endif</a>
                     <a href="/wiki/duplicate/{{$data->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.duplicate') }}</a>
+                    @endif
                 </div><!--end col-sm-4 col-md-3 col-lg-2 btns-->
-              
             </div>
           
         </div>

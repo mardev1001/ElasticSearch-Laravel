@@ -58,9 +58,9 @@ $(function () {
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1) {
         $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');
     }
-    else if (url.href.indexOf('wiki') != -1) {
+    /*else if (url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
-    }
+    }*/
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
         $('a[href$="/'+slug+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
         if($('a[href$="/'+slug+'"]').addClass('active').next('ul').length )

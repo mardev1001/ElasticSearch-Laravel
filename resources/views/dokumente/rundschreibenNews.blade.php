@@ -108,7 +108,7 @@
             <h2 class="title">{{ trans('documentForm.searchTitle') }} {{ $docType->name }}</h2>
             <div class="box">
                 <div class="row">
-                    {!! Form::open(['url' => '/dokumente/suche', 'method'=>'POST']) !!}
+                    {!! Form::open(['url' => '/dokumente/suche', 'method'=>'GET']) !!}
                     <input type="hidden" name="document_type_id" value="{{ $docType->id }}">
                         <div class="input-group">
                             <div class="col-md-12 col-lg-12">
