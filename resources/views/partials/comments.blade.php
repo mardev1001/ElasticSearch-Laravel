@@ -3,7 +3,7 @@
 <div class="row">
 @endif
     <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper home">
+        <div class="col-xs-12 box-wrapper">
             <h1 class="title">{{ $title }}</h1>
             <div class="box box-white home">
                 <div class="commentsMy">

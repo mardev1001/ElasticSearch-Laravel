@@ -98,10 +98,10 @@ class SearchRepository
      * @return object array $array
      */     
      public function searchWiki( $request ){
-         $searchParam =  $request['search'];
-         $results = WikiPage::where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )
-         ->orWhere('content','LIKE','%'.$searchParam.'%' )
-     	->paginate( 10, ['*'], 'suchergebnisse' );
+        $searchParam =  $request['search'];
+        $results = WikiPage::where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )
+        ->orWhere('content','LIKE','%'.$searchParam.'%' );
+    //  	->paginate( 10, ['*'], 'suchergebnisse' );
          //->get() ;
          return $results;
          

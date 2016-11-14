@@ -10,9 +10,27 @@
                     footer: page-footer;
                     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 }
-                
-                 .list-style-dash{
-                     list-style-type: none;
+                sub{
+                    font-size: 22px !important;
+                }
+                 ul, li, ul li{
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                    font-size: 14px !important;
+                    margin-left: 7px;
+                    padding-left: 0px;
+                    line-height: 16px !important;
+                    
+                }
+                ol, ol li{
+                    margin-left: 5px;
+                    padding-left: 5px;
+                    line-height: 16px !important;
+                }
+                .list-style-dash{
+                    list-style-type: none;
+                    margin-left: -10px;
+                    padding-left: 5px;
+                    line-height: 16px !important;
                  }
                  .list-style-dash li {
                     background-image:  url('/img/icons/icon_list_dash.png') !important;
@@ -20,8 +38,13 @@
                     background-position: 0px 50% !important;
                     padding-left: 1em !important;
                 }
-             
-               
+                
+                table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
+                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                    font-size: 14px !important;
+                    /*line-height: 18px !important;*/
+                }
+                
                 body,table,p,strong,li,h1,h2,h3,span,b,i{
                     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 }
@@ -74,15 +97,8 @@
                     font-size: 14px !important;
                     /*line-height: 18px !important;*/
                 }
-                  ul,li, ul li{
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                    font-size: 14px !important;
-                    /*line-height: 18px !important;*/
-                  }
-                  ol,li, ul li{
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                    font-size: 14px !important;
-                  }
+           
+            
         </style>
         @if( $document->landscape == true)
             <style>

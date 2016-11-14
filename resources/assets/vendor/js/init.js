@@ -1,10 +1,10 @@
 /*
  * Created by Marijan on 25.04.2016..
  */
-$(function () {
+$(function() {
 
     /*Blank space fix for textareas*/
-    $('textarea').each(function () {
+    $('textarea').each(function() {
         $(this).html($(this).html().trim());
     });
     /*End Blank space fix for textareas*/
@@ -31,8 +31,8 @@ $(function () {
 
     if ($('.tree-view').length) {
         var counter = 0; //let insted of var
-        var $treeview = [];//let insted of var
-        $('.tree-view').each(function () {
+        var $treeview = []; //let insted of var
+        $('.tree-view').each(function() {
             $treeview[counter] = $(this).treeview({
                 expandIcon: 'custom-expand-icon',
                 collapseIcon: 'custom-collapse-icon',
@@ -49,7 +49,7 @@ $(function () {
     }
 
     if ($('ul.pagination').length) {
-        $('ul.pagination').each(function () {
+        $('ul.pagination').each(function() {
             $(this).find('li').first().addClass('pull-left').find('a').html('&lt; zurück');
             $(this).find('li').first().find('span').html('&lt; zurück');
 
@@ -85,10 +85,13 @@ $(function () {
                 "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
             }
         },
-        columnDefs: [
-            {targets: 'no-sort', orderable: false},
-            {targets: 'col-hide', visible: false}
-        ],
+        columnDefs: [{
+            targets: 'no-sort',
+            orderable: false
+        }, {
+            targets: 'col-hide',
+            visible: false
+        }],
         order: [
             [$('th.defaultSort').index(), 'asc']
         ],
@@ -96,7 +99,7 @@ $(function () {
 
     if ($('.editable').length) {
         var counter = 0;
-        $('.editable').each(function () {
+        $('.editable').each(function() {
             counter++;
             if ($(this).data('id'))
                 $(this).attr('id', $(this).data('id'));
@@ -107,7 +110,8 @@ $(function () {
             if ($(this).data('classes'))
                 classes += $(this).data('classes');
 
-            var docWidth = 680, docHeight = 450;//820
+            var docWidth = 680,
+                docHeight = 450; //820
 
             if ($('.document-orientation').length) {
                 docWidth = 'auto', docHeight = 680;
@@ -126,84 +130,84 @@ $(function () {
                 removed_menuitems: 'newdocument,',
                 elementpath: false,
                 menubar: "edit,format,table,insert",
-                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
-                setup: function (editor) {
-                    
-                    editor.on('click', function (e) {
-                        
-                        // e.target.closest('.parent-tabs').focus();
-                        // editor.focus();
-                        var source = e.target.src;
-                        var image = $(document).find('img[src$="' + source + '"]')
-                        removeCss(image, 'height');
-                        /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
-                         console.log('trig');
+                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
+                setup: function(editor) {
 
-                         }*/
-                    });
-                    editor.on('NodeChange', function (e) {
-                       if (e && e.element.nodeName.toLowerCase() == 'tr'){ 
-                            processTableColumn(e);
+                        editor.on('click', function(e) {
 
-                        }
-                      
+                            // e.target.closest('.parent-tabs').focus();
+                            // editor.focus();
+                            var source = e.target.src;
+                            var image = $(document).find('img[src$="' + source + '"]')
+                            removeCss(image, 'height');
+                            /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                             console.log('trig');
 
-                        if (e && e.element.nodeName.toLowerCase() == 'img') {
-                            processImage(e);
+                             }*/
+                        });
+                        editor.on('NodeChange', function(e) {
+                            if (e && e.element.nodeName.toLowerCase() == 'tr') {
+                                processTableColumn(e);
 
-                        }
-                      
-                        if (e && e.element.nodeName.toLowerCase() == 'td') {
-                            processTableColumn(e);
-                        }
+                            }
 
-                    });
-                    
-                    /*Image setup */    
-                    var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
-                    $(editor.getElement()).parent().append(inp);
-                    
-                    
-                    inp.on("change",function(){
+
+                            if (e && e.element.nodeName.toLowerCase() == 'img') {
+                                processImage(e);
+
+                            }
+
+                            if (e && e.element.nodeName.toLowerCase() == 'td') {
+                                processTableColumn(e);
+                            }
+
+                        });
+
+                        /*Image setup */
+                        var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
+                        $(editor.getElement()).parent().append(inp);
+
+
+                        inp.on("change", function() {
                             var input = inp.get(0);
-                            var file = input.files[0]; 
+                            var file = input.files[0];
                             var fr = new FileReader();
-                            fr.onload = function() { 
+                            fr.onload = function() {
                                 var img = new Image();
                                 img.src = fr.result;
-                                 imgWidth = img.width;
+                                imgWidth = img.width;
                                 imgHeight = img.height;
-                                img.onload = function () {
+                                img.onload = function() {
                                     imgWidth = img.width;
                                     imgHeight = img.height;
-                                var ratio = imgWidth / imgHeight;
-                                editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
-                                
-                                inp.val('');
+                                    var ratio = imgWidth / imgHeight;
+                                    editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+
+                                    inp.val('');
                                 }
-                                
+
                             }
                             fr.readAsDataURL(file);
                         });
-                    editor.addMenuItem('mybutton', {
+                        editor.addMenuItem('mybutton', {
                             // type: 'button',
                             title: 'Bilder Upload',
                             text: 'Bilder Upload',
                             context: 'insert',
-                            onclick: function (e) {
-                                    inp.trigger('click');
-                                }    
-                            });
-                    /* End Image setup */  
-                }//end setup
+                            onclick: function(e) {
+                                inp.trigger('click');
+                            }
+                        });
+                        /* End Image setup */
+                    } //end setup
 
             });
         });
     }
 
-   if ($('.content-editor').length) {
+    if ($('.content-editor').length) {
         var counter = 0;
-        $('.content-editor').each(function () {
+        $('.content-editor').each(function() {
             counter++;
             var docHeight = 350;
             if ($(this).data('id'))
@@ -224,86 +228,86 @@ $(function () {
                 height: 350,
                 elementpath: false,
                 menubar: "edit,format,table,insert",
-                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
-                setup: function (editor) {
-                    
-                    editor.on('click', function (e) {
-                        
-                        // e.target.closest('.parent-tabs').focus();
-                        // editor.focus();
-                        var source = e.target.src;
-                        var image = $(document).find('img[src$="' + source + '"]')
-                        removeCss(image, 'height');
-                        /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
-                         console.log('trig');
+                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
+                setup: function(editor) {
 
-                         }*/
-                    });
-                    editor.on('NodeChange', function (e) {
-                       if (e && e.element.nodeName.toLowerCase() == 'tr'){ 
-                            processTableColumn(e);
+                        editor.on('click', function(e) {
 
-                        }
-                      
+                            // e.target.closest('.parent-tabs').focus();
+                            // editor.focus();
+                            var source = e.target.src;
+                            var image = $(document).find('img[src$="' + source + '"]')
+                            removeCss(image, 'height');
+                            /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                             console.log('trig');
 
-                        if (e && e.element.nodeName.toLowerCase() == 'img') {
-                            // processImage(e);
+                             }*/
+                        });
+                        editor.on('NodeChange', function(e) {
+                            if (e && e.element.nodeName.toLowerCase() == 'tr') {
+                                processTableColumn(e);
 
-                        }
-                      
-                        if (e && e.element.nodeName.toLowerCase() == 'td') {
-                            processTableColumn(e);
-                        }
+                            }
 
-                    });
-                    
-                    /*Image setup */    
-                    var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
-                    $(editor.getElement()).parent().append(inp);
-                    
-                    
-                    inp.on("change",function(){
+
+                            if (e && e.element.nodeName.toLowerCase() == 'img') {
+                                // processImage(e);
+
+                            }
+
+                            if (e && e.element.nodeName.toLowerCase() == 'td') {
+                                processTableColumn(e);
+                            }
+
+                        });
+
+                        /*Image setup */
+                        var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
+                        $(editor.getElement()).parent().append(inp);
+
+
+                        inp.on("change", function() {
                             var input = inp.get(0);
-                            var file = input.files[0]; 
+                            var file = input.files[0];
                             var fr = new FileReader();
-                            fr.onload = function() { 
+                            fr.onload = function() {
                                 var img = new Image();
                                 img.src = fr.result;
-                                 imgWidth = img.width;
+                                imgWidth = img.width;
                                 imgHeight = img.height;
-                                img.onload = function () {
+                                img.onload = function() {
                                     imgWidth = img.width;
                                     imgHeight = img.height;
-                                var ratio = imgWidth / imgHeight;
-                                editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
-                                
-                                inp.val('');
+                                    var ratio = imgWidth / imgHeight;
+                                    editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+
+                                    inp.val('');
                                 }
-                                
+
                             }
                             fr.readAsDataURL(file);
                         });
-                    editor.addMenuItem('mybutton', {
+                        editor.addMenuItem('mybutton', {
                             // type: 'button',
                             title: 'Bilder Upload',
                             text: 'Bilder Upload',
                             context: 'insert',
-                            onclick: function (e) {
-                                    inp.trigger('click');
-                                }    
-                            });
-                    /* End Image setup */  
-                }//end setup
+                            onclick: function(e) {
+                                inp.trigger('click');
+                            }
+                        });
+                        /* End Image setup */
+                    } //end setup
 
             });
         });
     }
-    
+
     if ($('.variant').length) {
         $('.variant').closest('form').addClass('.tinymce-image');
 
         var counter = 0;
-        $('.variant').each(function () {
+        $('.variant').each(function() {
 
             counter++;
             if ($(this).data('id'))
@@ -314,7 +318,8 @@ $(function () {
             if ($(this).data('classes'))
                 classes += $(this).data('classes');
 
-            var docWidth = 680, docHeight = 450;//820
+            var docWidth = 680,
+                docHeight = 450; //820
             if ($('.document-orientation').length)
                 docWidth = 'auto', docHeight = 680;
 
@@ -327,128 +332,137 @@ $(function () {
                 body_class: classes,
                 //width: docWidth,
                 height: docHeight,
-                style_formats: [
-                    {title: 'Spiegelstriche', selector: 'ul', classes: 'list-style-dash'},
+                style_formats: [{
+                        title: 'Spiegelstriche',
+                        selector: 'ul',
+                        classes: 'list-style-dash'
+                    },
                     // {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}, classes: 'red-text'}
                 ],
                 style_formats_merge: true,
                 elementpath: false,
                 menubar: "edit,format,table,insert",
-                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
-                setup: function (editor) {
-                    
-                    editor.on('click', function (e) {
-                        
-                        // e.target.closest('.parent-tabs').focus();
-                        // editor.focus();
-                        var source = e.target.src;
-                        var image = $(document).find('img[src$="' + source + '"]')
-                        removeCss(image, 'height');
-                        /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
-                         console.log('trig');
+                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
+                setup: function(editor) {
 
-                         }*/
-                    });
-                    editor.on('NodeChange', function (e) {
-                       if (e && e.element.nodeName.toLowerCase() == 'tr'){ 
-                            processTableColumn(e);
+                        editor.on('click', function(e) {
 
-                        }
-                      
+                            // e.target.closest('.parent-tabs').focus();
+                            // editor.focus();
+                            var source = e.target.src;
+                            var image = $(document).find('img[src$="' + source + '"]')
+                            removeCss(image, 'height');
+                            /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                             console.log('trig');
 
-                        if (e && e.element.nodeName.toLowerCase() == 'img') {
-                            // processImage(e);
+                             }*/
+                        });
+                        editor.on('NodeChange', function(e) {
+                            if (e && e.element.nodeName.toLowerCase() == 'tr') {
+                                processTableColumn(e);
 
-                        }
-                      
-                        if (e && e.element.nodeName.toLowerCase() == 'td') {
-                            processTableColumn(e);
-                        }
+                            }
 
-                    });
-                    
-                    /*Image setup */    
-                    var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
-                    $(editor.getElement()).parent().append(inp);
-                    
-                    
-                    inp.on("change",function(){
+
+                            if (e && e.element.nodeName.toLowerCase() == 'img') {
+                                // processImage(e);
+
+                            }
+
+                            if (e && e.element.nodeName.toLowerCase() == 'td') {
+                                processTableColumn(e);
+                            }
+
+                        });
+
+                        /*Image setup */
+                        var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
+                        $(editor.getElement()).parent().append(inp);
+
+
+                        inp.on("change", function() {
                             var input = inp.get(0);
-                            var file = input.files[0]; 
+                            var file = input.files[0];
                             var fr = new FileReader();
-                            fr.onload = function() { 
+                            fr.onload = function() {
                                 var img = new Image();
                                 img.src = fr.result;
-                                 imgWidth = img.width;
+                                imgWidth = img.width;
                                 imgHeight = img.height;
-                                img.onload = function () {
+                                img.onload = function() {
                                     imgWidth = img.width;
                                     imgHeight = img.height;
-                                var ratio = imgWidth / imgHeight;
-                                editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
-                                
-                                inp.val('');
+                                    var ratio = imgWidth / imgHeight;
+                                    editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+
+                                    inp.val('');
                                 }
-                                
+
                             }
                             fr.readAsDataURL(file);
                         });
-                    editor.addMenuItem('mybutton', {
+                        editor.addMenuItem('mybutton', {
                             // type: 'button',
                             title: 'Bilder Upload',
                             text: 'Bilder Upload',
                             context: 'insert',
-                            onclick: function (e) {
-                                    inp.trigger('click');
-                                }    
-                            });
-                    /* End Image setup */  
-                }//end setup
-                
+                            onclick: function(e) {
+                                inp.trigger('click');
+                            }
+                        });
+                        /* End Image setup */
+                    } //end setup
+
             });
         });
     }
+
     function processImage(e) {
-        var image = $(e.element), width = $(e.element).attr('width'),
-            height = $(e.element).attr('height'), ratio = image.data('ratio');
+        var image = $(e.element),
+            width = $(e.element).attr('width'),
+            height = $(e.element).attr('height'),
+            ratio = image.data('ratio');
         if (ratio >= 1)
             height = width / ratio;
         else
             height = width * ratio;
         removeCss(image, 'height');
         setNewTdAttributes(image, height, 'style', true)
-        // console.log('height:' + height);
+            // console.log('height:' + height);
     }
-    function processTableRowsAndCells(td){
+
+    function processTableRowsAndCells(td) {
         var table = td.closest('table');
-        table.find('tr').each(function(){
-           if( $(this).find('ul').length ||  $(this).find('ul').length ){
-                var tableRow =  $(this);
+        table.find('tr').each(function() {
+            if ($(this).find('ul').length || $(this).find('ul').length) {
+                var tableRow = $(this);
                 var maxHeight = 0
-                
-                removeCss( $(this),'height');
-                removeCss( $(this),'height','data-mce-style');
-                
-                tableRow.find('td').each(function(){
-                    removeCss( $(this),'height');
-                    removeCss( $(this),'height','data-mce-style');
+
+                removeCss($(this), 'height');
+                removeCss($(this), 'height', 'data-mce-style');
+
+                tableRow.find('td').each(function() {
+                    removeCss($(this), 'height');
+                    removeCss($(this), 'height', 'data-mce-style');
                     maxHeight = Math.max($(this).height(), maxHeight);
                 }).height(maxHeight);
-                maxHeight = maxHeight+3;
+                maxHeight = maxHeight + 3;
                 /* Iterte again trough the loop and set height */
-                    tableRow.find('td').each(function(){
-                       setNewTdAttributes($(this), maxHeight,'style',true)
-                        setNewTdAttributes($(this), maxHeight, attribute='data-mce-style',true)
-                    });
+                tableRow.find('td').each(function() {
+                    setNewTdAttributes($(this), maxHeight, 'style', true)
+                    setNewTdAttributes($(this), maxHeight, attribute = 'data-mce-style', true)
+                });
                 /* End Iterte again trough the loop and set height */
-                
-           } 
+
+            }
         });
     }
+
     function processTableColumn(e) {
-        var td = $(e.element), maxHeight = $(e.element).height();
-        
-       
+        var td = $(e.element),
+            maxHeight = $(e.element).height();
+
+
         processTableRowsAndCells(td);
 
         /*If td has images correct the whole row */
@@ -467,7 +481,7 @@ $(function () {
 
         /* Determine the biggest height in tr*/
 
-        td.closest('tr').find('td').each(function () {
+        td.closest('tr').find('td').each(function() {
             var calc = $(this).height();
             // console.log('maxHeight:'+maxHeight);
             // console.log('currentHeight:'+calc);
@@ -501,7 +515,7 @@ $(function () {
         /*removeCss( $(this),'height');
          removeCss( $(this),'height','data-mce-style');*/
         var cnt = 0;
-        td.closest('table').find('tr').each(function () {
+        td.closest('table').find('tr').each(function() {
             cnt = cnt + $(this).height();
         });
         // td.closest('table').css('height','auto')
@@ -523,8 +537,7 @@ $(function () {
             if (props[p].indexOf(toDelete) !== -1) {
                 tmp = p
             }
-        }
-        ;
+        };
         if (tmp !== -1) {
             delete props[tmp];
         }
@@ -554,8 +567,7 @@ $(function () {
             if (props[p].indexOf(toDelete) !== -1) {
                 tmp = p
             }
-        }
-        ;
+        };
         if (tmp !== -1) {
             return props[tmp];
         }
@@ -587,7 +599,7 @@ $(function () {
 
     /* Automatic trigger to open the panel heading */
     if ($('[data-open]').length) {
-        $('[data-open]').each(function () {
+        $('[data-open]').each(function() {
             $(this).click();
         });
     }

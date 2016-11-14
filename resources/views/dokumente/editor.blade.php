@@ -114,7 +114,7 @@
                         ],
                         style_formats_merge: true,
                         menubar: "edit,format,table,insert",
-                        removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
+                        removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
                         setup: function (editor) {
                     
                     editor.on('click', function (e) {
@@ -229,13 +229,13 @@
                         height: docHeight, 
                         plugins: ["image table"],
                         toolbar1: " undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ",
-                    style_formats: [
+                        style_formats: [
                             {title: 'Spiegelstriche', selector: 'ul', classes: 'list-style-dash'},
                         ],
                         style_formats_merge: true,
                         elementpath: false,
                         menubar: "edit,format,table,insert",
-                        removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
+                        removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
                         setup: function (editor) {
                     
                     editor.on('click', function (e) {

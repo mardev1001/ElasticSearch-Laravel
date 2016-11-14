@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Carbon\Carbon;
+use Auth;
+use App\Helpers\ViewHelper;
 use App\User;
 use App\Document;
 use App\UserReadDocument;
@@ -197,28 +199,7 @@ class DocumentTypeController extends Controller
      */
     public function devSandbox(Request $request)
     {
-        $documents = Document::all();
-        $users = User::all();
-        // dd($documents);
-        
-        foreach($users as $user){
-            foreach($documents as $document){
-                
-                $readDocs = UserReadDocument::where('document_group_id', $document->document_group_id)
-                            ->where('user_id', $user->id)->get();
-                        
-                if(count($readDocs) == 0){
-                    UserReadDocument::create([
-                        'document_group_id'=> $document->document_group_id, 
-                        'user_id'=> $user->id, 
-                        'date_read'=> Carbon::now(), 
-                        'date_read_last'=> Carbon::now()
-                    ]);
-                }
-                
-            }
-        }
-        // dd(array_pluck($documents, 'document_status_id'));
+        if(ViewHelper::getMandantIsNeptun(Auth::user()->id)) echo 'NEPTUN Mandant';
     }
     
     

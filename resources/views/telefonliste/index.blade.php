@@ -157,7 +157,9 @@
                                             <th class="@if(!isset($visible['col4'])) col-hide @endif col4 defaultSort">{{ trans('telefonListeForm.lastname') }} </th>
                                             <th class="@if(!isset($visible['col5'])) col-hide @endif col5 no-sort">{{ trans('telefonListeForm.role') }} </th>
                                             <th class="@if(!isset($visible['col6'])) col-hide @endif col6 no-sort">{{ trans('telefonListeForm.phone') }} </th>
+                                            @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                             <th class="@if(!isset($visible['col7'])) col-hide @endif col7 no-sort">{{ trans('telefonListeForm.phone_short') }} </th>
+                                            @endif
                                             <th class="@if(!isset($visible['col8'])) col-hide @endif col8 no-sort">{{ trans('telefonListeForm.phone_mobile') }} </th>
                                             <th class="@if(!isset($visible['col9'])) col-hide @endif col9 no-sort">{{ trans('telefonListeForm.email_work') }} </th>
                                             <th class="@if(!isset($visible['col10'])) col-hide @endif col10 no-sort">{{ trans('telefonListeForm.email_private') }} </th>
@@ -442,7 +444,9 @@
                                     <option value="col4" @if(isset($visible['col4'])) selected @endif>{{ trans('telefonListeForm.lastname') }}</option>
                                     <option value="col5" @if(isset($visible['col5'])) selected @endif>{{ trans('telefonListeForm.role') }}</option>
                                     <option value="col6" @if(isset($visible['col6'])) selected @endif>{{ trans('telefonListeForm.phone') }}</option>
+                                    @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                     <option value="col7" @if(isset($visible['col7'])) selected @endif>{{ trans('telefonListeForm.phone_short') }}</option>
+                                    @endif
                                     <option value="col8" @if(isset($visible['col8'])) selected @endif>{{ trans('telefonListeForm.phone_mobile') }}</option>
                                     <option value="col9" @if(isset($visible['col9'])) selected @endif>{{ trans('telefonListeForm.email_work') }}</option>
                                     <option value="col10" @if(isset($visible['col10'])) selected @endif>{{ trans('telefonListeForm.email_private') }}</option>

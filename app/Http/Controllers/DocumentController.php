@@ -1149,6 +1149,7 @@ class DocumentController extends Controller
                  return redirect('dokumente/'.$document->id );
              }
              elseif($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == false){
+                 
                   return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
              }
             // add UserReadDocumen
@@ -1195,11 +1196,12 @@ class DocumentController extends Controller
          $latestPublished = PublishedDocument::where('document_group_id',$document->document_group_id)->orderBy('updated_at','desc')->first();
             // dd($latestPublished);/
              if( $latestPublished != null && $latestPublished->document_id == $document->id  && $document->document_status_id != 5){
-                
+           
                  return redirect('dokumente/'.$latestPublished->url_unique );
              }
              
             else if( $document->id != $initialUrl ){
+                
                 return redirect('dokumente/'.$document->id );
             }
         }
@@ -1404,6 +1406,7 @@ class DocumentController extends Controller
     
             $documentTypes = DocumentType::all();// if struktur admin
             $docTypesArr = $documentTypes->pluck('id')->toArray();
+            
             if( $this->returnRole() != false && $this->returnRole() == 11){ // 11 Rundschreiben Verfasser
                 $documentTypes = DocumentType::where('document_art',0)->get();
                 $docTypesArr = $documentTypes->pluck('id')->toArray();
@@ -1413,7 +1416,8 @@ class DocumentController extends Controller
                $documentTypes = DocumentType::where('document_art',1)->get();    
                $docTypesArr = $documentTypes->pluck('id')->toArray(); 
             } // 13 Dokumenten Verfasser
-            if( count( $docTypesArr) ){
+            
+            if( count( $docTypesArr) && ViewHelper::universalDocumentPermission($data, true,false, true) == false ){
                 if( !in_array($data->document_type_id,$docTypesArr) ){
                         session()->flash('message',trans('documentForm.noPermission'));
                     return redirect()->back();

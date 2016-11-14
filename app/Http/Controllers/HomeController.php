@@ -110,7 +110,7 @@ class HomeController extends Controller
         $freigabeEntries = Document::whereIn('id', array_pluck($freigabeEntries, 'id'))->paginate(10, ['*'], 'freigabe-dokumente');
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
-        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::orderBy('created_at','DESC')->take(5)->get());
+        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id',2)->orderBy('created_at','DESC')->take(5)->get());
         $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('created_at', 'desc')->take(10)->get();
         
         $commentVisibility = false;

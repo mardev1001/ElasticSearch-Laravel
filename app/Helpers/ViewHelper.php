@@ -799,6 +799,18 @@ class ViewHelper{
         } else return false;
     }
     
+    /**
+     * Check if any users mandant has Neptun flag checked
+     * @param int $id
+     * @return bool
+     */
+    static function getMandantIsNeptun( $id ){
+        $mandantIds = MandantUser::where('user_id', $id)->get()->pluck('mandant_id');
+        foreach(Mandant::whereIn('id', $mandantIds)->get() as $mandant){
+            if($mandant->rights_admin) return true;
+        }
+    }
+    
     
     /**
      * Get all user by passed role ID

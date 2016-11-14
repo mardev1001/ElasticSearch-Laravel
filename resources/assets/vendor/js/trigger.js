@@ -58,6 +58,9 @@ $(function () {
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1) {
         $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');
     }
+    else if (url.href.indexOf('suche') != -1 && url.href.indexOf('wiki') != -1) {
+        $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
+    }
     /*else if (url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }*/
@@ -345,7 +348,7 @@ $(function () {
                 ],
                 style_formats_merge: true,
                 menubar: "edit,format,table,insert",
-                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,',
+                removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
                 setup: function (editor) {
                     
                     editor.on('click', function (e) {

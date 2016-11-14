@@ -193,20 +193,35 @@ class WikiController extends Controller
      */
     public function search(Request $request)
     {
-        if(empty($request->all())) return redirect('/wiki');
-        $searchInput = $request->get('search');
-        $search = $this->search->searchWiki( $request->all() );  
+        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $topCategories = WikiCategory::where('top_category',1)->get();
         
-        // $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
-        $newestWikiEntriesPagination = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        $newestWikiEntriesPagination = WikiPage::where('status_id',2)->orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
         
         $myWikiPagesPagination = WikiPage::where('user_id', Auth::user()->id)->orderBy('created_at','DESC')->paginate(10, ['*'], 'meine-beitraege');
         $myWikiPages = $this->document->generateWikiTreeview($myWikiPagesPagination);
         
-        // dd($search);
-        return view('wiki.index', compact('search','topCategories','newestWikiEntries','newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination','searchInput')); 
+        if(empty($request->all())) return redirect('/wiki');
+            $searchInput = $request->get('search');
+            
+        $search = $this->search->searchWiki( $request->all() );  
+        $topCategories = WikiCategory::where('top_category',1)->get();
+        
+        // $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        // $newestWikiEntriesPagination = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        if( count($search) )
+            $newestWikiEntriesPagination = $search->paginate(10, ['*'], 'neueste-beitraege');
+        
+        $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
+        
+        $myWikiPagesPagination = WikiPage::where('user_id', Auth::user()->id)->orderBy('created_at','DESC')->paginate(10, ['*'], 'meine-beitraege');
+        $myWikiPages = $this->document->generateWikiTreeview($myWikiPagesPagination);
+          
+    
+        return view('wiki.index', compact('topCategories','newestWikiEntries','newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination','searchInput')); 
+        // return view('wiki.index', compact('search','topCategories','newestWikiEntries','newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination','searchInput')); 
     }
     
     /**
