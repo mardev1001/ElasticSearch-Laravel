@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    Dokumente - ISO Dokumente 
+    Dokumente - ISO-Dokumente 
     @if($isoCategoryParent)- {{$isoCategoryParent->name}}@endif
     @if($isoCategory)- {{$isoCategory->name}}@endif
 @stop

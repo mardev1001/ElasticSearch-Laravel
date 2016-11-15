@@ -354,7 +354,7 @@
             <!--patch for checking iso category document-->
             @if( isset($document->isoCategories->name) )
                 <script type="text/javascript">
-                    if( documentType == 'ISO Dokumente')
+                    if( documentType == 'ISO-Dokumente')
                         var isoCategoryName =  '{{ $isoCategoryName }}' ;
                         var detectHref = $('#side-menu').find('a:contains("'+isoCategoryName+'")');
                             $('#side-menu a').each(function(){

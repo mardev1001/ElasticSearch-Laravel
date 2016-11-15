@@ -41,7 +41,7 @@
          <div class="clearfix"></div>
         <br/>
         <div class="col-xs-12 col-md-12 box">
-            <p>Datei ist angehängt an den folgenden Rundschreiben/ ISO Dokumenten</p>
+            <p>Datei ist angehängt an den folgenden Rundschreiben/ ISO-Dokumenten</p>
             <p>#1 Runschreiben QMR: QMR 213 - Mindestlohn Änderungen - 06.04.2016 [STATUS -> V oder Archiv]
                  Lorem Ispum... <a href="#" class="">mehr <span class="fa fa-angle-right"></span></a> </p>
         </div>

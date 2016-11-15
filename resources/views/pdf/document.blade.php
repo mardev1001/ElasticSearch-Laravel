@@ -4,100 +4,104 @@
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <title>@yield("title",'Neptun dokument')</title>
       <link rel="shortcut icon" href="/img/favicon.png">
-            <style type="text/css">
-                @page {
-                    header: page-header;
-                    footer: page-footer;
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                }
-                sub{
-                    font-size: 22px !important;
-                }
-                 ul, li, ul li{
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                    font-size: 14px !important;
-                    margin-left: 7px;
-                    padding-left: 0px;
-                    line-height: 16px !important;
-                    
-                }
-                ol, ol li{
-                    margin-left: 5px;
-                    padding-left: 5px;
-                    line-height: 16px !important;
-                }
-                .list-style-dash{
-                    list-style-type: none;
-                    margin-left: -10px;
-                    padding-left: 5px;
-                    line-height: 16px !important;
-                 }
-                 .list-style-dash li {
-                    background-image:  url('/img/icons/icon_list_dash.png') !important;
-                    background-repeat: no-repeat !important;
-                    background-position: 0px 50% !important;
-                    padding-left: 1em !important;
-                }
+        <style type="text/css">
+            @page {
+                header: page-header;
+                footer: page-footer;
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+            }
+            sub{
+                font-size: 22px !important;
+            }
+             ul, li, ul li{
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                font-size: 14px !important;
+                margin-left: 7px;
+                padding-left: 0px;
+                line-height: 16px !important;
                 
-                table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                    font-size: 14px !important;
-                    /*line-height: 18px !important;*/
-                }
+            }
+            ol, ol li{
+                margin-left: 5px;
+                padding-left: 5px;
+                line-height: 16px !important;
+            }
+            .list-style-dash{
+                list-style-type: none;
+                margin-left: -10px;
+                padding-left: 5px;
+                line-height: 16px !important;
+             }
+             .list-style-dash li {
+                background-image:  url('/img/icons/icon_list_dash.png') !important;
+                background-repeat: no-repeat !important;
+                background-position: 0px 50% !important;
+                padding-left: 1em !important;
+            }
+            table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                font-size: 14px !important;
+                /*line-height: 18px !important;*/
+            }
+            
+            body,table,p,strong,li,h1,h2,h3,span,b,i{
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+            }
+            p,li{
+                font-size: 14px ;
+                background: #fff !important;
+                background-color: #fff !important;
+            }
+            h1,h3,h3{
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+            }
                 
-                body,table,p,strong,li,h1,h2,h3,span,b,i{
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                }
-                p,li{
-                    font-size: 14px ;
-                    background: #fff !important;
-                    background-color: #fff !important;
-                }
-                h1,h3,h3{
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                }
+            h1{
+               font-size: 2.1em !important;
+            }
+             h2{
+                font-size: 1.6em !important;
+            }
+             h3{
+                font-size: 1.27em !important;
+            }
+            img,h1,h2,h3,h4,p,div{
+                display:block !important;
+                clear: both !important;
+            }
                 
-                h1{
-                        font-size: 2.1em !important;
-                }
-                     h2{
-                        font-size: 1.6em !important;
-                    }
-                     h3{
-                        font-size: 1.27em !important;
-                    }
-                img,h1,h2,h3,h4,p,div{
-                    display:block !important;
-                    clear: both !important;
-                }
-                
-                h1,h2,h3,h4,p,div{
-                   background: #fff !important;
-                }
-                p{
-                      margin: 16px 0;
-                }
-                table p{
-                    /*margin: 5px 0 !important;*/
-                     /*font-size: 30px !Important;*/
-                }
-                table{
-                    /*font-size: 30px !important;*/
-                    /*height: auto !Important;*/
-                    border-collapse: collapse !important;
-                }
-                table td{
-                    margin: 5px 0;
-                    vertical-align: middle !important;
-                    padding: 5px;
-                    font-size: 14px !important;
-                }
-               table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                    font-size: 14px !important;
-                    /*line-height: 18px !important;*/
-                }
-           
+            h1,h2,h3,h4,p,div{
+               background: #fff !important;
+            }
+            p{
+              margin: 16px 0;
+            }
+            table{
+                /*font-size: 30px !important;*/
+                /*height: auto !Important;*/
+                border-collapse: collapse !important;
+            }
+            table td{
+                margin: 5px 0 !important;
+                padding: 5px !important;
+                vertical-align: middle !important;
+                font-size: 14px !important;
+            }
+            table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                font-size: 14px !important;
+                /*line-height: 18px !important;*/
+            }
+            table ol, table ul{
+                padding: 5px !important;
+                margin: 5px!important;
+                -webkit-margin-before: 0 !important;
+                -webkit-margin-after: 0 !important;
+                -webkit-margin-start: 0 !important;
+                -webkit-margin-end: 0 !important;
+                -webkit-padding-start: 20px !important;
+                moz-padding-start: 20px !important;
+            }  
             
         </style>
         @if( $document->landscape == true)

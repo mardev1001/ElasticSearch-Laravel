@@ -12,6 +12,7 @@ use App\PublishedDocument;
 use App\DocumentCoauthor;
 use App\EditorVariant;
 use App\DocumentApproval;
+use App\DocumentType;
 
 class ViewHelper{
     
@@ -485,7 +486,17 @@ class ViewHelper{
     
         return $hasPermission;
     }
-    
+     /**
+     * Universal document permission check
+     * @param array $userArray
+     * @param collection $document
+     * @param bool $message
+     * @return bool || response
+     */
+    static function getDocumentNewsData(){
+        $news = DocumentType::find(1);//document type news
+        return $news;
+    }
    /**
      * Universal document permission check
      * @param array $userArray

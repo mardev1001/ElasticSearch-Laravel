@@ -10,30 +10,30 @@
            /* .list-style-dash { list-style-image: url('/img/icons/icon_list_dash.png') !important; }*/
            
            ul, li, ul li{
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                    font-size: 14px !important;
-                    margin-left: 7px;
-                    padding-left: 0px;
-                    line-height: 16px !important;
-                    
-                }
-                ol, ol li{
-                    margin-left: 5px;
-                    padding-left: 5px;
-                    line-height: 16px !important;
-                }
-                .list-style-dash{
-                    list-style-type: none;
-                    margin-left: -10px;
-                    padding-left: 5px;
-                    line-height: 16px !important;
-                 }
-                 .list-style-dash li {
-                    background-image:  url('/img/icons/icon_list_dash.png') !important;
-                    background-repeat: no-repeat !important;
-                    background-position: 0px 50% !important;
-                    padding-left: 1em !important;
-                }
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                font-size: 14px !important;
+                margin-left: 7px;
+                padding-left: 0px;
+                line-height: 16px !important;
+                
+            }
+            ol, ol li{
+                margin-left: 5px;
+                padding-left: 5px;
+                line-height: 16px !important;
+            }
+            .list-style-dash{
+                list-style-type: none;
+                margin-left: -10px;
+                padding-left: 5px;
+                line-height: 16px !important;
+             }
+             .list-style-dash li {
+                background-image:  url('/img/icons/icon_list_dash.png') !important;
+                background-repeat: no-repeat !important;
+                background-position: 0px 50% !important;
+                padding-left: 1em !important;
+            }
             body,table,p,strong,li,h1,h2,h3,span,b,i{
                     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 }
@@ -41,26 +41,20 @@
                     font-size: 14px ;
                 }
                 
-              table p{
-                    /*margin: 5px 0 !important;*/
-                     /*font-size: 30px !Important;*/
-                }
-                table{
-                    /*font-size: 30px !important;*/
-                    /*height: auto !Important;*/
-                    border-collapse: collapse !important;
-                }
-                table td{
-                    margin: 5px 0;
-                    vertical-align: middle !important;
-                    padding: 5px;
-                    font-size: 14px !important;
-                }
-               table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
-                    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-                    font-size: 14px !important;
-                    /*line-height: 18px !important;*/
-                }
+            table{
+                border-collapse: collapse !important;
+            }
+            table td{
+                margin: 5px 0 !important;
+                padding: 5px !important;
+                vertical-align: middle !important;
+                font-size: 14px !important;
+            }
+            table td ul li, table td ol li, table td p, table td em, table td u, table td b, table td strong, table td i {
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                font-size: 14px !important;
+                /*line-height: 18px !important;*/
+            }
                
             .footer{
                 color: #808080;

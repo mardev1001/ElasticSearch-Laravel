@@ -97,7 +97,7 @@ $(function () {
             locker = true;
         }
 
-        else if (documentType == "ISO Dokumente") {
+        else if (documentType == "ISO-Dokumente") {
             if (typeof  isoCategoryName != 'undefined') {
                 detectHref = $('#side-menu').find('a:contains("' + isoCategoryName + '")').attr('href');
                  if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){

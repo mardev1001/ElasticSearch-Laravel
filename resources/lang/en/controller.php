@@ -13,7 +13,7 @@ return [
     'mandantenverwaltung' => 'Mandantenverwaltung',
     'qmr' => 'QM-Rundschreiben',
     'attachment' => 'Dokument anlegen - Anlagen',
-    'isoDocument' => 'ISO Dokumente - Übersicht',
+    'isoDocument' => 'ISO-Dokumente - Übersicht',
     'rundschreiben' => 'Rundschreiben',
     'rundschreibenNews' => 'Rundschreiben News',
     'documentTemplates' => 'Vorlagen - Übersicht',

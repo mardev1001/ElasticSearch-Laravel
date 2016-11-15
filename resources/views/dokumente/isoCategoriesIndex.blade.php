@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    {{ ucfirst( trans('controller.dokumente')) }} - ISO Dokumente 
+    {{ ucfirst( trans('controller.dokumente')) }} - ISO-Dokumente 
 @stop
 
 
@@ -50,7 +50,7 @@
  <div class="clearfix"></div> <br>
     
     <div class="col-xs-12 box-wrapper box-white">
-        <h2 class="title">{{ trans('documentForm.searchTitle') }} ISO Dokumente</h2>
+        <h2 class="title">{{ trans('documentForm.searchTitle') }} ISO-Dokumente</h2>
         <div class="search box">
             <div class="row">
                 {!! Form::open(['action' => 'DocumentController@search', 'method'=>'GET']) !!}

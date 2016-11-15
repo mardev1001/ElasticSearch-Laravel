@@ -537,6 +537,8 @@ class MandantController extends Controller
         $mandantUser = MandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->first();
         $mandantUserAll = MandantUser::where('mandant_id', $request->input('mandant_id'))->get();
         
+        // dd($mandantUser->user);
+        
         foreach($mandantUser->role as $role)
             if($role->mandant_required || $role->system_role) array_push($requiredRoles, $role);
             // if($role->mandant_required) array_push($requiredRoles, $role);

@@ -334,7 +334,7 @@
     <!--patch for checking iso category document-->
     @if( isset($data->isoCategories->name) )
         <script type="text/javascript">
-            if (documentType == 'ISO Dokumente')
+            if (documentType == 'ISO-Dokumente')
                 var isoCategoryName = '{{ $data->isoCategories->name}}';
         </script>
         @endif

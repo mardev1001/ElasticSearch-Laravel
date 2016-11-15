@@ -36,9 +36,7 @@
                             
                                 @if($documentType->visible_navigation)
                             
-                                    @if($documentType->id == 1)
-                                        <li> <a href="{{ url('dokumente/news') }}">{{ $documentType->name }}</a> </li>
-                                    @elseif($documentType->id == 2)
+                                    @if($documentType->id == 2)
                                         <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
                                     @elseif($documentType->id == 3)
                                         <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
@@ -69,7 +67,7 @@
                                         </li>
                                     @elseif($documentType->id == 5)
                                         <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentType->name }}</a> </li>
-                                    @else
+                                    @elseif($documentType->id != 1 )
                                         <li> <a href="{{ url('dokumente/typ/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
                                     @endif
                             
@@ -91,8 +89,13 @@
                 </ul>
 
             </li>
-
-
+            @if(ViewHelper::getDocumentNewsData()->active)
+                @if(ViewHelper::getDocumentNewsData()->visible_navigation)
+                    <li> 
+                        <a href="{{ url('dokumente/news') }}">{{ ViewHelper::getDocumentNewsData()->name }}</a> 
+                    </li>
+                @endif
+            @endif
             <li>
                 <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>
