@@ -153,7 +153,7 @@ class UserController extends Controller
         else $user = null;
         
         // $user = User::find($id);
-        $usersAll = User::all();
+        $usersAll = User::orderBy('last_name','asc')->get();
         $mandantsAll = Mandant::all();
         // $rolesAll = Role::all();
         // $rolesAll = Role::where('phone_role', false)->get();

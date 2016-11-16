@@ -24,7 +24,7 @@
                             <option></option>
                             @foreach($mandantUsersNeptun as $mandantUser)
                                 <option value="{{ $mandantUser->id }}" data-mandant="{{ $mandantUser->mandant->id }}">
-                                    {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }}
+                                    {{ $mandantUser->user->last_name }} {{ $mandantUser->user->first_name }} 
                                     [{{$mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname}}]
                                 </option>
                             @endforeach
@@ -68,7 +68,7 @@
                     {{--
                     @foreach($mandantUsersNeptun as $mandantUser)
                         <option value="{{ $mandantUser->user->id }}" data-mandant="{{ $mandantUser->mandant->id }}" @if($internalUser->user_id == $mandantUser->user->id) selected @endif>
-                            {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }}
+                            {{ $mandantUser->user->last_name }} {{ $mandantUser->user->first_name }} 
                             [{{$mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname}}]
                         </option>
                     @endforeach

@@ -25,7 +25,7 @@
                                 @foreach($mandantUsers as $mandatUser)
                                 <option value="{{$mandatUser->id}}"
                                         {!! ViewHelper::setMultipleSelect($data->documentApprovals, $mandatUser->id, 'user_id') !!}
-                                        >{{ $mandatUser->first_name }} {{ $mandatUser->last_name }}</option>
+                                        >{{ $mandatUser->last_name }} {{ $mandatUser->first_name }} </option>
                                 @endforeach
                             </select>
                         

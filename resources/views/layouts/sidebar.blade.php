@@ -23,8 +23,16 @@
                         </li>
                     </ul>
             </li>
+            
+            @if(ViewHelper::getDocumentNewsData()->active)
+                @if(ViewHelper::getDocumentNewsData()->visible_navigation)
+                    <li> 
+                        <a href="{{ url('dokumente/news') }}">{{ ViewHelper::getDocumentNewsData()->name }}</a> 
+                    </li>
+                @endif
+            @endif
                 
-           <li class="">
+            <li class="">
                 <a href="{{ url('dokumente') }}">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     
@@ -36,7 +44,9 @@
                             
                                 @if($documentType->visible_navigation)
                             
-                                    @if($documentType->id == 2)
+                                    @if($documentType->id == 1)
+                                        <li> <a href="{{ url('dokumente/news') }}">{{ $documentType->name }}</a> </li>
+                                    @elseif($documentType->id == 2)
                                         <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
                                     @elseif($documentType->id == 3)
                                         <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
@@ -89,13 +99,7 @@
                 </ul>
 
             </li>
-            @if(ViewHelper::getDocumentNewsData()->active)
-                @if(ViewHelper::getDocumentNewsData()->visible_navigation)
-                    <li> 
-                        <a href="{{ url('dokumente/news') }}">{{ ViewHelper::getDocumentNewsData()->name }}</a> 
-                    </li>
-                @endif
-            @endif
+            
             <li>
                 <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>

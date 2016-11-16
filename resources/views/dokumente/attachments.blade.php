@@ -254,7 +254,7 @@
                                                         <option value="0"></option>
                                                         @foreach($mandantUsers as $mandantUser)
                                                             <option value="{{$mandantUser->id}}" @if(isset($documentCoauthor)) {!! ViewHelper::setMultipleSelect($documentCoauthor, $mandantUser->id, 'user_id') !!} @endif > 
-                                                                {{ $mandantUser->first_name }} {{ $mandantUser->last_name }} 
+                                                               {{ $mandantUser->last_name }}  {{ $mandantUser->first_name }} 
                                                             </option>
                                                         @endforeach
                                                     </select>

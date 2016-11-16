@@ -100,7 +100,14 @@
                                 
                             @endforeach
                         @else
-                            <tr><td colspan="6" class="text-center"> Keine Daten vorhanden. </td></tr>
+                            <tr>
+                                <td class"valign"></td>
+                                <td class"valign"></td>
+                                <td class"valign"></td>
+                                <td class"valign">Keine Daten vorhanden</td>
+                                <td class"valign"></td>
+                                <td class"valign"></td>
+                            </tr>
                         @endif
                     
                     </tbody>

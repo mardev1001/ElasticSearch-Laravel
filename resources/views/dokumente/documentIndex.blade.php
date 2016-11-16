@@ -29,7 +29,9 @@
                                     
                                         @if($documentType->visible_navigation)
                                     
-                                            @if($documentType->id == 2)
+                                            @if($documentType->id == 1)
+                                                <li> <a href="{{ url('dokumente/news') }}">{{ $documentType->name }}</a> </li>
+                                            @elseif($documentType->id == 2)
                                                 <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
                                             @elseif($documentType->id == 3)
                                                 <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>

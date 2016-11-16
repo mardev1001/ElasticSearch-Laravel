@@ -18,7 +18,7 @@ data-placeholder="{{ ucfirst($placeholder) }}@if( $required !=false )* @endif"
                 @if( !empty( $data->$inputName) && $collection->id == $data->$inputName)
                     selected
                 @endif >
-               {{$collection->first_name}} {{$collection->last_name}}
+               {{$collection->last_name}} {{$collection->first_name}} 
            </option>
         @endforeach
     @endif

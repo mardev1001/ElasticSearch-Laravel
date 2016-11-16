@@ -833,7 +833,16 @@ class ViewHelper{
         // dd($roleId.' '.$userId);
         $mandantUsersNeptun = array();
         $mandantUsers = MandantUser::all();
+        $muAA = $mandantUsers->pluck('user_id')->toArray();
         
+        //Order last name asc fix
+        $userArray = User::whereIn('id',$muAA)->orderBy('last_name','asc')->pluck('id')->toArray();
+        $orderString = '';
+        foreach($userArray as $ua){
+            $orderString .= ', '.$ua;
+        }
+        
+        $mandantUsers= MandantUser::orderByRaw( \DB::raw("FIELD(user_id ".$orderString.")") )->get();
         // Get all users with telefonliste roles where mandant is with neptun flag
         foreach ($mandantUsers as $mandantUser) {
             foreach($mandantUser->role as $role){
@@ -850,7 +859,7 @@ class ViewHelper{
             foreach($mandantUsersNeptun as $mandantUser){
                 ($userId == $mandantUser->user->id) ? $selected = "selected" : $selected = "";
                 $html .= '<option value="'. $mandantUser->user->id .'" data-mandant="'. $mandantUser->mandant->id .'" ' . $selected .'>';
-                $html .= $mandantUser->user->first_name .' '. $mandantUser->user->last_name;
+                $html .= $mandantUser->user->last_name .' '. $mandantUser->user->first_name;
                 $html .= ' ['. $mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname .']';
                 $html .= '</option>';
             }

@@ -95,13 +95,13 @@
                         @foreach($mandantUsers as $mandantUser)
                                 <option value="{{$mandantUser->user->id}}" 
                                 @if(isset($data->owner_user_id) ) 
-                                    @if($mandantUser->user->id == $data->owner_user_id) 
+                                    @if($mandantUser->id == $data->owner_user_id) 
                                         selected  
                                     @endif 
                                 @elseif( isset( Auth::user()->id )  )
-                                    @if($mandantUser->user->id ==  Auth::user()->id ) selected @endif 
+                                    @if($mandantUser->id ==  Auth::user()->id ) selected @endif 
                                 @endif> 
-                                    {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
+                                    {{ $mandantUser->last_name }} {{ $mandantUser->first_name }}  
                                 </option>
                         @endforeach
                     </select>
@@ -114,8 +114,8 @@
                     <label class="control-label"> {{ trans('documentForm.user') }} *</label>
                     <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}" required>
                         @foreach( $documentUsers as $documentUser )
-                            <option value="{{$documentUser->user->id}}" @if( isset($data->user_id) && $documentUser->user->id == $data->user_id) selected @endif >
-                                {{ $documentUser->user->first_name }} {{ $documentUser->user->last_name }} 
+                            <option value="{{$documentUser->id}}" @if( isset($data->user_id) && $documentUser->id == $data->user_id) selected @endif >
+                                {{ $documentUser->last_name }} {{ $documentUser->first_name }}  
                             </option>
                         @endforeach
                     </select>
@@ -128,12 +128,12 @@
                     <select name="document_coauthor[]" class="form-control select empty-select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">
                         <option value="" @if( Request::is('*/create') ) select @endif >&nbsp;</option>
                         @foreach($mandantUsers as $mandantUser)
-                            <option value="{{$mandantUser->user->id}}"
+                            <option value="{{$mandantUser->id}}"
                             @if( Request::is('*/edit') )
-                                @if(isset($documentCoauthors)) {!! ViewHelper::setMultipleSelect($documentCoauthors, $mandantUser->user->id, 'user_id') !!} @endif
+                                @if(isset($documentCoauthors)) {!! ViewHelper::setMultipleSelect($documentCoauthors, $mandantUser->id, 'user_id') !!} @endif
                             @endif
                             > 
-                                {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
+                                {{ $mandantUser->last_name }} {{ $mandantUser->first_name }}  
                             </option>
                         @endforeach
                     </select>

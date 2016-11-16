@@ -143,7 +143,7 @@
                                     <option value="">Alle</option>
                                     @foreach($mandantUsers as $mandantUser)
                                         <option value="{{$mandantUser->user->id}}" @if(old('user_id') == $mandantUser->user->id) selected @endif > 
-                                            {{ $mandantUser->user->first_name }} {{ $mandantUser->user->last_name }} 
+                                             {{ $mandantUser->user->last_name }} {{ $mandantUser->user->first_name }}
                                         </option>
                                     @endforeach
                                 </select>

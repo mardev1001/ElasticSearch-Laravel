@@ -80,7 +80,7 @@ class DocumentController extends Controller
     public function create()
     {
         if( $this->canCreateEditDoc() == true ){
-            $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+           
             $documentTypes = DocumentType::all();// if struktur admin
             
             if( $this->returnRole() != false && $this->returnRole() == 11) // 11 Rundschreiben Verfasser
@@ -95,8 +95,14 @@ class DocumentController extends Controller
            
             $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
             ->where('mandant_id', $mandantId)->get();
+            
+            $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
             $mandantUsers =  MandantUser::whereIn('mandant_id',$mandantId)->get() ;  
             $mandantUsers = $this->clearUsers($mandantUsers);
+            
+            $pluckIdMandantUsers = $mandantUsers->pluck('user_id')->toArray();
+            $mandantUsers = User::whereIn('id',$pluckIdMandantUsers)->orderBy('last_name','asc')->get();
+            
             $incrementedQmr = Document::where('document_type_id',$this->qmRundId )->orderBy('qmr_number','desc')->first();
             if( count($incrementedQmr) < 1 )
                 $incrementedQmr = 1;
@@ -567,6 +573,10 @@ class DocumentController extends Controller
        
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
+        $mandantUsers = $this->clearUsers($mandantUsers);
+            
+        $pluckIdMandantUsers = $mandantUsers->pluck('user_id')->toArray();
+        $mandantUsers = User::whereIn('id',$pluckIdMandantUsers)->orderBy('last_name','asc')->get();
          
         $collections = array();
         $roles = Role::all();
@@ -752,7 +762,7 @@ class DocumentController extends Controller
         //
         $mandantUserRoles = MandantUserRole::where('role_id',10)->pluck('mandant_user_id');
         $mandantUsersTable = MandantUser::whereIn('id',$mandantUserRoles)->pluck('user_id');
-        $mandantUsers = User::whereIn('id',$mandantUsersTable)->get();
+        $mandantUsers = User::whereIn('id',$mandantUsersTable)->orderBy('last_name','asc')->get();
         $mandants = Mandant::whereNull('deleted_at')->get();
         
         $documentMandats = DocumentMandant::where('document_id',$data->id)->get();
@@ -1435,6 +1445,10 @@ class DocumentController extends Controller
             $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
             $mandantUsers =  MandantUser::distinct('user_id')->whereIn('mandant_id',$mandantId)->get();  
             $mandantUsers = $this->clearUsers($mandantUsers);
+            
+            $pluckIdMandantUsers = $mandantUsers->pluck('user_id')->toArray();
+            $mandantUsers = User::whereIn('id',$pluckIdMandantUsers)->orderBy('last_name','asc')->get();
+            
             $documentCoauthor = $mandantUsers;
                 
             //this is until Neptun inserts the documents
@@ -1456,7 +1470,7 @@ class DocumentController extends Controller
                 $incrementedIso = $incrementedIso->iso_category_number;
                 $incrementedIso = $incrementedIso+1;
             }
-           
+            
             return view('formWrapper', compact('data','method','url','documentTypes','isoDocuments',
             'documentStatus','mandantUsers','documentUsers', 'documentCoauthor','documentCoauthors','incrementedQmr','incrementedIso') );
         }   
@@ -1980,7 +1994,7 @@ class DocumentController extends Controller
             $render = view('pdf.document', compact('document','variants','dateNow'))->render();
             $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
         }
-        // return $render;
+        return $render;
         $pdf->AddPage($or);
         $pdf->WriteHTML($render);
         

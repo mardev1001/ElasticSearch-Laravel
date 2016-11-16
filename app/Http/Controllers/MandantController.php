@@ -290,6 +290,17 @@ class MandantController extends Controller
         $mandantUsersNeptun = array();
         $mandantUsers = MandantUser::all();
         
+        $muAA = $mandantUsers->pluck('user_id')->toArray();
+        
+        //Order last name asc fix
+        $userArray = User::whereIn('id',$muAA)->orderBy('last_name','asc')->pluck('id')->toArray();
+        $orderString = '';
+        foreach($userArray as $ua){
+            $orderString .= ', '.$ua;
+        }
+        
+        $mandantUsers= MandantUser::orderByRaw( \DB::raw("FIELD(user_id ".$orderString.")") )->get();
+        // dd($mandantUsers);
         // Get all users with telefonliste roles where mandant is with neptun flag
         foreach ($mandantUsers as $mandantUser) {
             foreach($mandantUser->role as $role){
@@ -501,7 +512,16 @@ class MandantController extends Controller
         $mandantUsersNeptun = array();
         $roleId = $request->get('role_id');
         $mandantUsers = MandantUser::all();
+        $muAA = $mandantUsers->pluck('user_id')->toArray();
         
+        //Order last name asc fix
+        $userArray = User::whereIn('id',$muAA)->orderBy('last_name','asc')->pluck('id')->toArray();
+        $orderString = '';
+        foreach($userArray as $ua){
+            $orderString .= ', '.$ua;
+        }
+        
+        $mandantUsers= MandantUser::orderByRaw( \DB::raw("FIELD(user_id ".$orderString.")") )->get();
         // Get all users with telefonliste roles where mandant is with neptun flag
         foreach ($mandantUsers as $mandantUser) {
             foreach($mandantUser->role as $role){
@@ -514,7 +534,7 @@ class MandantController extends Controller
         
         foreach ($mandantUsersNeptun as $mandantUser) {
             $html .= '<option value="'. $mandantUser->user->id .'" data-mandant="'. $mandantUser->mandant->id .'">'. 
-            $mandantUser->user->first_name .' '. $mandantUser->user->last_name .
+            $mandantUser->user->last_name .' '. $mandantUser->user->first_name .
             ' ['. $mandantUser->mandant->mandant_number .' - '. $mandantUser->mandant->kurzname .']</option>';
         }
         
@@ -536,8 +556,6 @@ class MandantController extends Controller
         
         $mandantUser = MandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->first();
         $mandantUserAll = MandantUser::where('mandant_id', $request->input('mandant_id'))->get();
-        
-        // dd($mandantUser->user);
         
         foreach($mandantUser->role as $role)
             if($role->mandant_required) array_push($requiredRoles, $role);

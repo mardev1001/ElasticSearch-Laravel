@@ -99,12 +99,18 @@ class SearchRepository
      */     
      public function searchWiki( $request ){
         $searchParam =  $request['search'];
-        $results = WikiPage::where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )
-        ->orWhere('content','LIKE','%'.$searchParam.'%' );
-    //  	->paginate( 10, ['*'], 'suchergebnisse' );
-         //->get() ;
-         return $results;
-         
+        $filterWikiPages = WikiPage::all();
+        $wikiIds = array();
+        foreach($filterWikiPages as $wikiPage){
+            // Filter out images to only get the content
+            $filterContent = preg_replace("/<img[^>]+\>/i", "", $wikiPage->content);
+            if(stripos($filterContent, $searchParam) !== false){
+                $wikiIds[] = $wikiPage->id;    
+            }
+        }
+       
+        $results = WikiPage::where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);
+        return $results;
      }
      
     /**
