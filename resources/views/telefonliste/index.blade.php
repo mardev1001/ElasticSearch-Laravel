@@ -185,7 +185,11 @@
                                                 {{-- <td>{{ $internal->role->name }}</td> --}}
                                                 <td>{{ $internal->user->abteilung }}</td>
                                                 <td>{{ $internal->user->phone }}</td>
+                                                
+                                                @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                                 <td>{{ $internal->user->phone_short }}</td>
+                                                @endif
+                                                
                                                 <td>{{ $internal->user->phone_mobile }}</td>
                                                 <td>{{ $internal->user->email_work }}</td>
                                                 <td>{{ $internal->user->email_private }}</td>
@@ -248,7 +252,11 @@
                                                     {{ $user->abteilung }}
                                                 </td>
                                                 <td>{{ $user->phone }}</td>
+                                                
+                                                @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                                 <td>{{ $user->phone_short }}</td>
+                                                @endif
+                                                
                                                 <td>{{ $user->phone_mobile }}</td>
                                                 <td>{{ $user->email_work }}</td>
                                                 <td>{{ $user->email_private }}</td>
@@ -300,7 +308,11 @@
                                         <th>{{ trans('telefonListeForm.mandant') }} </th>
                                         <th class="no-sort">{{ trans('telefonListeForm.role') }} </th>
                                         <th class="no-sort">{{ trans('telefonListeForm.phone') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.phone_short') }} </th>
+                                        
+                                        @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
+                                            <th class="no-sort">{{ trans('telefonListeForm.phone_short') }} </th>
+                                        @endif
+                                        
                                         <th class="no-sort">{{ trans('telefonListeForm.phone_mobile') }} </th>
                                         <th class="no-sort">{{ trans('telefonListeForm.email_work') }} </th>
                                         <th class="no-sort">{{ trans('telefonListeForm.email_private') }} </th>
@@ -330,7 +342,11 @@
                                             {{-- <td>{{ $internal->role->name }}</td> --}}
                                             <td>{{ $internal->user->abteilung }}</td>
                                             <td>{{ $internal->user->phone }}</td>
+                                            
+                                            @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                             <td>{{ $internal->user->phone_short }}</td>
+                                            @endif
+                                            
                                             <td>{{ $internal->user->phone_mobile }}</td>
                                             <td>{{ $internal->user->email_work }}</td>
                                             <td>{{ $internal->user->email_private }}</td>
@@ -391,7 +407,11 @@
                                                 {{ $user->abteilung }}
                                             </td>
                                             <td>{{ $user->phone }}</td>
+                                            
+                                            @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                             <td>{{ $user->phone_short }}</td>
+                                            @endif
+                                            
                                             <td>{{ $user->phone_mobile }}</td>
                                             <td>{{ $user->email_work }}</td>
                                             <td>{{ $user->email_private }}</td>

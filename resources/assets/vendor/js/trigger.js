@@ -65,13 +65,16 @@ $(function () {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }*/
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
+        if(slug == 'aktuelle-meldungen')
+            slug = 'dokumente/news';
         $('a[href$="/'+slug+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
+        
         if($('a[href$="/'+slug+'"]').addClass('active').next('ul').length )
             $('a[href$="/'+slug+'"]').addClass('active').next('ul').addClass('in');
-        // console.log('name slug:'+ slug );
     }
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
+        
          
     
     }

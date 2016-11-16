@@ -540,8 +540,8 @@ class MandantController extends Controller
         // dd($mandantUser->user);
         
         foreach($mandantUser->role as $role)
-            if($role->mandant_required || $role->system_role) array_push($requiredRoles, $role);
-            // if($role->mandant_required) array_push($requiredRoles, $role);
+            if($role->mandant_required) array_push($requiredRoles, $role);
+            // if($role->mandant_required || $role->system_role) array_push($requiredRoles, $role);
         
         /* 
         
