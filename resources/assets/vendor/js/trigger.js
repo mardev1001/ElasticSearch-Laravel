@@ -352,77 +352,109 @@ $(function () {
                 style_formats_merge: true,
                 menubar: "edit,format,table,insert",
                 removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
-                setup: function (editor) {
-                    
-                    editor.on('click', function (e) {
-                        
-                        // e.target.closest('.parent-tabs').focus();
-                        // editor.focus();
-                        var source = e.target.src;
-                        var image = $(document).find('img[src$="' + source + '"]')
-                        removeCss(image, 'height');
-                        /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
-                         console.log('trig');
+                setup: function(editor) {
 
-                         }*/
-                    });
-                    editor.on('NodeChange', function (e) {
-                       if (e && e.element.nodeName.toLowerCase() == 'tr'){ 
-                            processTableColumn(e);
+                        editor.on('click', function(e) {
 
-                        }
-                      
+                            // e.target.closest('.parent-tabs').focus();
+                            // editor.focus();
+                            var source = e.target.src;
+                            var image = $(document).find('img[src$="' + source + '"]')
+                            removeCss(image, 'height');
+                            /*if( e && e.element.nodeName.toLowerCase() == 'img' ){
+                             console.log('trig');
 
-                        if (e && e.element.nodeName.toLowerCase() == 'img') {
-                            processImage(e);
+                             }*/
+                        });
+                        editor.on('NodeChange', function(e) {
+                            if (e && e.element.nodeName.toLowerCase() == 'tr') {
+                                processTableColumn(e);
 
-                        }
-                      
-                        if (e && e.element.nodeName.toLowerCase() == 'td') {
-                            processTableColumn(e);
-                        }
+                            }
 
-                    });
-                    
-                    /*Image setup */    
-                    var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
-                    $(editor.getElement()).parent().append(inp);
-                    
-                    
-                    inp.on("change",function(){
+
+                            if (e && e.element.nodeName.toLowerCase() == 'img') {
+                                // processImage(e);
+
+                            }
+
+                            if (e && e.element.nodeName.toLowerCase() == 'td') {
+                                processTableColumn(e);
+                            }
+                            if (e && e.element.nodeName.toLowerCase() == 'p') {
+                                if($(e.element).parent('td')){
+                                    var table = $(e.element).closest('table');
+                                    if( table.find('li').length ){
+                                        table.find('td').each(function(){
+                                           tableFontCorrection($(this)); 
+                                        });
+                                        table.find('p').each(function(){
+                                           tableFontCorrection($(this)); 
+                                        });
+                                    }
+                                    
+                                }
+                            }
+                            if (e && e.element.nodeName.toLowerCase() == 'li') {
+                                if($(e.element).parent('td')){
+                                    tableRow = $(e.element).closest('tr');
+                                      tableRow.find('td').each(function(){
+                                        removeCss($(this), 'font-size');
+                                        removeCss($(this), 'font-size', 'data-mce-style');
+                                        removeCss($(this), 'line-height');
+                                        removeCss($(this), 'line-height', 'data-mce-style');
+                                        setNewElementAttributes($(this), 'font-size' , 'style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height' , 'style', '20px ; ');
+                                        
+                                        setNewElementAttributes($(this), 'font-size' , 'data-mce-style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height' , 'data-mce-style', '22px ; ');
+                                    });
+                                }
+                              
+                            }
+                           
+                        });
+
+                        /*Image setup */
+                        var inp = $('<input id="tinymce-uploader" type="file" name="pic" accept="image/*" style="display:none">');
+                        $(editor.getElement()).parent().append(inp);
+
+
+                        inp.on("change", function() {
                             var input = inp.get(0);
-                            var file = input.files[0]; 
+                            var file = input.files[0];
                             var fr = new FileReader();
-                            fr.onload = function() { 
+                            fr.onload = function() {
                                 var img = new Image();
                                 img.src = fr.result;
-                                 imgWidth = img.width;
+                                imgWidth = img.width;
                                 imgHeight = img.height;
-                                img.onload = function () {
+                                img.onload = function() {
                                     imgWidth = img.width;
                                     imgHeight = img.height;
-                                var ratio = imgWidth / imgHeight;
-                                editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
-                                
-                                inp.val('');
+                                    var ratio = imgWidth / imgHeight;
+                                    editor.insertContent('<img  style="height:' + imgHeight + 'px;" data-ratio="' + ratio + '" src="' + img.src + '"/>');
+
+                                    inp.val('');
                                 }
-                                
+
                             }
                             fr.readAsDataURL(file);
                         });
-                    editor.addMenuItem('mybutton', {
+                        editor.addMenuItem('mybutton', {
                             // type: 'button',
                             title: 'Bilder Upload',
                             text: 'Bilder Upload',
                             context: 'insert',
-                            onclick: function (e) {
-                                    inp.trigger('click');
-                                }    
-                            });
-                    /* End Image setup */  
-                }//end setup
+                            onclick: function(e) {
+                                inp.trigger('click');
+                            }
+                        });
+                        /* End Image setup */
+                    } //end setup
             });
         });
+        
         if ($('.nav-tabs li.active').length < 1) {
             $('.nav-tabs li').first().addClass('active');
             $('.tab-content .tab-pane').first().addClass('active');

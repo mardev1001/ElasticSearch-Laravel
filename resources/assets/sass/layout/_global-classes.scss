@@ -27,7 +27,7 @@ h1, h2, h3, h4 {
 }
 .content h1,.content h2,.content h3,.content h4{
     color: black !important;
-    font-weight: bold;
+    // font-weight: normal !Important;
 }
 .content h1,.tinymce-editor-class h1{
     font-size: 2.1em;
@@ -39,6 +39,23 @@ h1, h2, h3, h4 {
     font-size: 1.27em;
 }
 
+
+.content h1 strong,.content h1 em,.content h2 strong,.content h2 em,
+.content h3 strong,.content h3 em{
+    font-size: 1em !important;
+    font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+}
+
+.content h1 > strong > sub,.content h1 > em > sub,
+.content h2 > strong > sub,.content h2 > em > sub,
+.content h3 > strong > sub,.content h3 > em > sub,
+{
+    font-size: smaller !important;
+    
+}
+.content h1 > strong,.content h2 > strong,.content h3 > strong{
+    font-weight: 900 !important;
+}
 .content,.content p,.content strong, .content i,.content u,.content b, .content td, .content th{
     font-size: 14px !important;
     color: black;

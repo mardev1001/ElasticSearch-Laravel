@@ -10,9 +10,9 @@
                 footer: page-footer;
                 font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
             }
-            sub{
-                font-size: 22px !important;
-            }
+            /*sub{*/
+            /*    font-size: 22px !important;*/
+            /*}*/
              ul, li, ul li{
                 font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 font-size: 14px !important;
@@ -25,6 +25,8 @@
                 margin-left: 5px;
                 padding-left: 5px;
                 line-height: 16px !important;
+                font-size: 14px !important;
+            
             }
             .list-style-dash{
                 list-style-type: none;
@@ -52,29 +54,62 @@
                 background: #fff !important;
                 background-color: #fff !important;
             }
-            h1,h3,h3{
-                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
-            }
+            
                 
             h1{
-               font-size: 2.1em !important;
+                font-size: 2.1em !important;
+                font-weight: normal !important;
+                margin-top: 17px !important;
+                margin-bottom: 4px !important;
+                -webkit-margin-before:10px !important;
+                -webkit-margin-after:20px !important;
+                -webkit-margin-end:0px !important;
+                -webkit-margin-start:0px !important;
             }
              h2{
                 font-size: 1.6em !important;
+                font-weight: normal !important;
+                margin : 0 !important;
+                -webkit-margin-before: 18.592px !important;
+                -webkit-margin-after: 18.592px !important;
+                -webkit-margin-start: 0px;
+                -webkit-margin-end: 0px;
             }
              h3{
                 font-size: 1.27em !important;
+                font-weight: normal !important;
+                margin : 0 !important;
+                -webkit-margin-before: 17.78px !important;
+                -webkit-margin-after: 17.78px !important;
+                -webkit-margin-start: 0px;
+                -webkit-margin-end: 0px;
             }
-            img,h1,h2,h3,h4,p,div{
+            
+            h1,h3,h3{
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                font-weight: normal !important;
+            }
+            h1 em, h1 strong, h2 em, h2 strong, h3 em, h3 strong{
+                font-size: 1em !important;
+            }
+             h1 > strong, h2 > strong , h3 > strong{
+                font-weight: bolder	 !important;
+            }
+            h1 sub, h2 > sub, h2 > em > sub, h2 > strong > sub, h3 > sub, 
+            h3 > em > sub, h3 > strong > sub{
+               font-size: smaller !important;
+            }
+            
+            /*img,h1,h2,h3,h4,p,div{
                 display:block !important;
                 clear: both !important;
             }
                 
             h1,h2,h3,h4,p,div{
                background: #fff !important;
-            }
+            }*/
             p{
-              margin: 16px 0;
+              margin: 14px 0;
             }
             table{
                 /*font-size: 30px !important;*/
@@ -95,6 +130,8 @@
             table ol, table ul{
                 padding: 5px !important;
                 margin: 5px!important;
+                /*line-height: 38px !important;*/
+                /*font-size: 33px !important;*/
                 -webkit-margin-before: 0 !important;
                 -webkit-margin-after: 0 !important;
                 -webkit-margin-start: 0 !important;
@@ -102,6 +139,7 @@
                 -webkit-padding-start: 20px !important;
                 moz-padding-start: 20px !important;
             }  
+            
             
         </style>
         @if( $document->landscape == true)
@@ -111,7 +149,7 @@
             }
             p{
                 font-size: 14px;
-                margin-bottom: 25px;
+                /*margin-bottom: 25px;*/
             }
             .header,
             .footer {
@@ -265,7 +303,7 @@
             }
             p{
                 font-size: 14px;
-                margin-bottom: 25px;
+                /*margin-bottom: 25px;*/
             }
             /*.header,*/
             /*.footer {*/

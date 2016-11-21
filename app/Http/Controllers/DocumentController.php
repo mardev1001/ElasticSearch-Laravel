@@ -1994,7 +1994,7 @@ class DocumentController extends Controller
             $render = view('pdf.document', compact('document','variants','dateNow'))->render();
             $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
         }
-        return $render;
+        // return $render;
         $pdf->AddPage($or);
         $pdf->WriteHTML($render);
         
