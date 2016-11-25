@@ -290,8 +290,8 @@
 
                         <div class="panel-heading">
                             <h4 class="panel-title col-xs-10">
-                                <a data-toggle="collapse" data-target="#userSearch" href="#userSearch">
-                                    Liste der Benutzer
+                                <a data-toggle="collapse" data-target="#userSearch" href="#userSearch" class="transform-normal">
+                                    {{ trans('telefonListeForm.userList') }}
                                 </a>
                             </h4>
                         </div>
@@ -301,22 +301,19 @@
                                 <table class="table data-table">
                                     <thead>
                                     <tr>
-                                        <th class="no-sort">{{ trans('telefonListeForm.photo') }} </th>
-                                        <th>{{ trans('telefonListeForm.title') }} </th>
-                                        <th>{{ trans('telefonListeForm.firstname') }} </th>
-                                        <th class="defaultSort">{{ trans('telefonListeForm.lastname') }} </th>
-                                        <th>{{ trans('telefonListeForm.mandant') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.role') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.phone') }} </th>
-                                        
+                                        <th class="@if(!isset($visible['col1'])) col-hide @endif col1 no-sort">{{ trans('telefonListeForm.photo') }} </th>
+                                        <th class="@if(!isset($visible['col2'])) col-hide @endif col2">{{ trans('telefonListeForm.title') }} </th>
+                                        <th class="@if(!isset($visible['col3'])) col-hide @endif col3">{{ trans('telefonListeForm.firstname') }} </th>
+                                        <th class="@if(!isset($visible['col4'])) col-hide @endif col4 defaultSort">{{ trans('telefonListeForm.lastname') }} </th>
+                                        <th class="@if(!isset($visible['col5'])) col-hide @endif col5 no-sort">{{ trans('telefonListeForm.role') }} </th>
+                                        <th class="@if(!isset($visible['col6'])) col-hide @endif col6 no-sort">{{ trans('telefonListeForm.phone') }} </th>
                                         @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
-                                            <th class="no-sort">{{ trans('telefonListeForm.phone_short') }} </th>
+                                        <th class="@if(!isset($visible['col7'])) col-hide @endif col7 no-sort">{{ trans('telefonListeForm.phone_short') }} </th>
                                         @endif
-                                        
-                                        <th class="no-sort">{{ trans('telefonListeForm.phone_mobile') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.email_work') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.email_private') }} </th>
-                                        <th class="no-sort">{{ trans('telefonListeForm.position') }} </th>
+                                        <th class="@if(!isset($visible['col8'])) col-hide @endif col8 no-sort">{{ trans('telefonListeForm.phone_mobile') }} </th>
+                                        <th class="@if(!isset($visible['col9'])) col-hide @endif col9 no-sort">{{ trans('telefonListeForm.email_work') }} </th>
+                                        <th class="@if(!isset($visible['col10'])) col-hide @endif col10 no-sort">{{ trans('telefonListeForm.email_private') }} </th>
+                                        <th class="@if(!isset($visible['col11'])) col-hide @endif col11 no-sort">{{ trans('telefonListeForm.position') }} </th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -335,11 +332,14 @@
                                             <td>{{ $internal->user->title }}</td>
                                             <td>{{ $internal->user->first_name }}</td>
                                             <td>{{ $internal->user->last_name }}</td>
+                                            
+                                            {{--
                                             <td>
                                                 ({{$internal->mandant->mandant_number}})
                                                 {{ $internal->mandant->kurzname }}
                                             </td>
-                                            {{-- <td>{{ $internal->role->name }}</td> --}}
+                                            --}}
+                                            
                                             <td>{{ $internal->user->abteilung }}</td>
                                             <td>{{ $internal->user->phone }}</td>
                                             
@@ -368,44 +368,14 @@
                                             <td>{{ $user->title }}</td>
                                             <td>{{ $user->first_name }}</td>
                                             <td>{{ $user->last_name }}</td>
+                                            {{--
                                             <td>
-                                                ({{ ViewHelper::getMandant($user->id)->mandant_number}})
-                                                {{ ViewHelper::getMandant($user->id)->kurzname }}
-                                            </td>
-                                            <td>
-                                                {{-- User roles --}}
-                                                {{--
-                                                <div class="user-roles">
-                                                @foreach( $user->mandantRoles as $mandantUserRole)
-                                                    @if(ViewHelper::getMandant(Auth::user()->id)->rights_admin || ViewHelper::universalHasPermission())
-                                                        @if( $mandantUserRole->role->phone_role || $mandantUserRole->role->mandant_role )
-                                                            @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
-                                                                {{ ( $mandantUserRole->role->name ) }}
-                                                            @endif
-                                                        @endif
-                                                    @else
-                                                        @if(isset($mandant))
-                                                            @if($mandant->rights_admin)
-                                                                @if( $mandantUserRole->role->phone_role )
-                                                                    @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
-                                                                        {{ ( $mandantUserRole->role->name ) }}
-                                                                    @endif
-                                                                @endif
-                                                            @else
-                                                                @if( $mandantUserRole->role->mandant_role )
-                                                                    @if( !in_array($mandantUserRole->role->id, array_pluck($usersInternal,'role_id')) )
-                                                                        {{ ( $mandantUserRole->role->name ) }}
-                                                                    @endif
-                                                                @endif
-                                                            @endif
-                                                        @endif
-                                                    @endif
+                                                @foreach(ViewHelper::getUserMandants($user->id) as $mandant)
+                                                    ({{$mandant->mandant_number}}) {{$mandant->kurzname}};
                                                 @endforeach
-                                                </div>
-                                                --}}
-                                                
-                                                {{ $user->abteilung }}
                                             </td>
+                                            --}}
+                                            <td>{{ $user->abteilung }}</td>
                                             <td>{{ $user->phone }}</td>
                                             
                                             @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))

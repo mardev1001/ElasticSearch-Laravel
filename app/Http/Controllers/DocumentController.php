@@ -525,7 +525,7 @@ class DocumentController extends Controller
         $data = Document::find($id);
         /* Trigger document visibility */
         
-        if( $this->document->universalDocumentPermission($data) == false ){
+        if( ViewHelper::universalDocumentPermission($data) == false ){
             session()->flash('message',trans('documentForm.noPermission'));
             return redirect('/');
         }
@@ -1240,8 +1240,8 @@ class DocumentController extends Controller
         else
             $document->hasFavorite = true;
             //user_id, owner_user_id,
-        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->orderBy('id','DESC')->get();
-        $myComments = DocumentComment::where('document_id',$id)->where('user_id',Auth::user()->id)->orderBy('id','DESC')->get();
+        $documentComments = DocumentComment::where('document_id',$id)->where('freigeber',0)->orderBy('created_at','DESC')->get();
+        $myComments = DocumentComment::where('document_id',$id)->where('user_id',Auth::user()->id)->orderBy('created_at','DESC')->get();
         
         /* User and freigabe comment visibility */
         $commentVisibility = $this->commentVisibility($document);
@@ -1324,7 +1324,7 @@ class DocumentController extends Controller
         }
          
         $variants = $variantPermissions->variants;
-        $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('id','DESC')->get();
+        $documentCommentsFreigabe = DocumentComment::where('document_id',$id)->where('freigeber',1)->orderBy('created_at','DESC')->get();
         
         
         
@@ -3302,7 +3302,7 @@ class DocumentController extends Controller
      * @return bool || response
      */
     private function universalDocumentPermission( $document,$message=true,$freigeber=false ){
-        return $this->document->universalDocumentPermission($document,$message,$freigeber);
+        return ViewHelper::universalDocumentPermission($document,$message,$freigeber);
     }
     
     

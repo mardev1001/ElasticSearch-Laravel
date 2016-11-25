@@ -93,7 +93,7 @@
                     <label class="control-label"> {{ ucfirst(trans('documentForm.owner')) }}*</label>
                     <select name="owner_user_id" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.owner')) }}">
                         @foreach($mandantUsers as $mandantUser)
-                                <option value="{{$mandantUser->user->id}}" 
+                                <option value="{{$mandantUser->id}}" 
                                 @if(isset($data->owner_user_id) ) 
                                     @if($mandantUser->id == $data->owner_user_id) 
                                         selected  

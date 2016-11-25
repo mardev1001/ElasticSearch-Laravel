@@ -93,7 +93,7 @@
                                     @else
                                         <select name="role_id[]" class="form-control select" required multiple data-placeholder="Rolle">
                                         <option></option>
-                                        <option value="Alle">Alle</option>
+                                        <option value="Alle" @if($data->all_roles == 1) selected @endif</option>Alle</option>
                                           @foreach($roles as $role)
                                             <option value="{{$role->id}}"
                                             @if( isset($data->wikiRoles) ) 

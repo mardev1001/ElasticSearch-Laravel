@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Request as RequestMerge;
+use App\Http\Repositories\SearchRepository;
 
 use App\WikiRole;
 use App\WikiCategory;
 use App\WikiCategoryUser;
 use App\User;
 use App\Role;
+use App\MandantRole;
+use App\MandantUser;
 use App\WikiPage;
 use App\Http\Repositories\DocumentRepository;
 use App\Helpers\ViewHelper;
@@ -19,11 +22,12 @@ use App\Helpers\ViewHelper;
 class WikiCategoryController extends Controller
 {
     
-    public function __construct(DocumentRepository $docRepo)
+    public function __construct(SearchRepository $searchRepo, DocumentRepository $docRepo)
     {
       $this->middleware('wiki')->only('show');
       $this->middleware('wiki.editor')->except('show');
       $this->document = $docRepo;
+      $this->search = $searchRepo;
     }
 
 
@@ -35,9 +39,11 @@ class WikiCategoryController extends Controller
      */
     public function index()
     {
+        $usersWithWikiRoles = ViewHelper::getUsersByRole( array(15) ); //Wiki Redakteur == 15
+        // dd($usersWithWikiRoles);
         $wikiCategories = WikiCategory::all();
         $wikiRoles = WikiRole::all();
-        $users = User::all();
+        $users = User::whereIn('id',$usersWithWikiRoles)->get();
         $roles = Role::where('wiki_role',1)->get();
         $roleSelect = '';
         $userSelect = '';
@@ -63,6 +69,7 @@ class WikiCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $request->merge( array('all_roles' => 1) );
         $wikiCat = WikiCategory::create($request->all());
         session()->flash('message',trans('wiki.wikiCategoryCreateSuccess'));
         return redirect()->back();
@@ -111,6 +118,14 @@ class WikiCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $allRoles = false;
+        foreach($request->all() as $k => $r){
+             if (strpos($k, 'role_id') !== false ){
+                 if($r == 'Alle')
+                    $allRoles = true;
+             }
+        }
+        
        $wikiCat = WikiCategory::find($id);
         if( !$request->has('top_category') )
             RequestMerge::merge(['top_category' => 0] );
@@ -139,8 +154,11 @@ class WikiCategoryController extends Controller
         if( $request->has('role_id') ){
             
             if( in_array('Alle',$request->get('role_id') )  ){
-               $wikiRoles =WikiRole::where('wiki_category_id',$id)->pluck('role_id')->toArray();
-               $roles= Role::where('wiki_role',1)->get();
+                $wikiCat->all_roles = 1;
+                $wikiCat->save();
+                WikiRole::where('wiki_category_id',$id)->delete(); 
+               //$wikiRoles =WikiRole::where('wiki_category_id',$id)->pluck('role_id')->toArray();
+               /*$roles= Role::where('wiki_role',1)->get();
                foreach($roles as $r){
                    if( !in_array($r->id,$wikiRoles) ){
                         $wr = new WikiRole();
@@ -149,9 +167,11 @@ class WikiCategoryController extends Controller
                         $wr->save();
                    }
                    
-               }
+               }*/
             }
             else{
+                $wikiCat->all_roles = 0;
+                $wikiCat->save();
                 
                 WikiRole::where('wiki_category_id',$id)->delete(); 
                 foreach($request->get('role_id') as $gid){
@@ -184,5 +204,29 @@ class WikiCategoryController extends Controller
         // dd($id);
         $destory = WikiCategory::destroy($id);
         return redirect()->back();
+    }
+    
+     /**
+     * Search documents by request parameters.
+     *
+     * @param  Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $id = $request->get('category');
+        $category = WikiCategory::find($id);
+        
+     
+        $query = WikiPage::where('category_id',$id);
+        if( ViewHelper::universalHasPermission(array(15)) == false ){
+            $query->whereNotIn('status_id',array(1,3) );
+        }
+        $querySearch = $this->search->searchWikiCategories( $request->all() );  
+        $categoryEntries = $querySearch->paginate(12);   
+        $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
+        // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
+        
+        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree') ); 
     }
 }

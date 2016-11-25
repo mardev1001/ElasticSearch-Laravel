@@ -15,6 +15,7 @@ use App\Mandant;
 use App\MandantUser;
 use App\User;
 use App\WikiPage;
+use App\WikiCategory;
 
 class SearchRepository
 {
@@ -110,6 +111,34 @@ class SearchRepository
         }
        
         $results = WikiPage::where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);
+        return $results;
+     }
+     
+    /**
+     * Search Wiki subject or inhalt
+     *
+     * @return object array $array
+     */     
+     public function searchWikiCategories( $request ){
+        $searchParam =  $request['search'];
+        $categoryId = $request['category'];
+        // $wikiCategory = WikiCategory::find($categoryId);
+        
+         $filterWikiPages = WikiPage::all();
+        $wikiIds = array();
+        foreach($filterWikiPages as $wikiPage){
+            // Filter out images to only get the content
+            $filterContent = preg_replace("/<img[^>]+\>/i", "", $wikiPage->content);
+            if(stripos($filterContent, $searchParam) !== false){
+                $wikiIds[] = $wikiPage->id;    
+            }
+        }
+       
+        $results = WikiPage::where('category_id',$categoryId)
+        ->where(function ($query) use($searchParam,$wikiIds) {
+                $query->where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);
+            });
+            
         return $results;
      }
      

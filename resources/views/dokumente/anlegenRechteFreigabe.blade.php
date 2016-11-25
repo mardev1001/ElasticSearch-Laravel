@@ -136,17 +136,23 @@
                                     <!--<span class="fa fa-chevron-left"></span> -->
                                     Zurück</a>
                             @endif
-                            @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8
-                            || (ViewHelper::universalDocumentPermission($data, false,false, true) == true && $data->document_status_id ==2 ) )
-                                <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
-                                    <!--<span class="fa fa-exclamation-triangle"></span>  -->
-                                    {{ trans('rightsRelease.fastPublish') }}
+                            
+                            
+                            @if( $data->document_status_id != 3 )
+                                @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8
+                                || (ViewHelper::universalDocumentPermission($data, false,false, true) == true && $data->document_status_id ==2 ) )
+                                    <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
+                                        <!--<span class="fa fa-exclamation-triangle"></span>  -->
+                                        {{ trans('rightsRelease.fastPublish') }}
+                                    </button>
+                                @endif
+                                
+                                <button type="submit" class="btn btn-primary no-margin-bottom validate"  name="ask_publishers" value="ask_publishers">
+                                    <!--<span class="fa fa-share"></span>  -->
+                                    {{ trans('rightsRelease.share') }}
                                 </button>
                             @endif
-                            <button type="submit" class="btn btn-primary no-margin-bottom validate"  name="ask_publishers" value="ask_publishers">
-                                <!--<span class="fa fa-share"></span>  -->
-                                {{ trans('rightsRelease.share') }}
-                            </button>
+                            
                             <button type="submit" class="btn btn-primary no-margin-bottom no-validate"  name="save" value="save">
                                 <!--<span class="fa fa-floppy-o"></span>  -->
                                 {{ trans('rightsRelease.save') }}

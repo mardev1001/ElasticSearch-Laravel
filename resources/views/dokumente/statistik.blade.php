@@ -36,21 +36,23 @@
                                     <th>{{ trans('statistikForm.date') }} {{ trans('statistikForm.last') }}</th>
                                 </tr>
                             @foreach( $mandant->mandantUsers as $mandantUser )
-                                @if(isset($documentReaders[$mandantUser->user_id]))
-                                    <tr>
-                                        <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
-                                        <td>Ja</td>
-                                        <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read'])->format('d.m.Y H:i:s')}}</td>
-                                        <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->format('d.m.Y H:i:s')}}</td>
-                                    </tr>
-                                @else
-                                    <tr>
-                                        <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
-                                        <td>Nein</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                    </tr>
-                                @endif
+                                
+                                    @if(isset($documentReaders[$mandantUser->user_id]))
+                                        <tr>
+                                            <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
+                                            <td>Ja</td>
+                                            <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read'])->format('d.m.Y H:i:s')}}</td>
+                                            <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->format('d.m.Y H:i:s')}}</td>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
+                                            <td>Nein</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+                                    @endif
+                                
                             @endforeach
                         </table>
                     </div>

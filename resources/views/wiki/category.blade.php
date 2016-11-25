@@ -2,14 +2,16 @@
 
 @extends('master')
 
-@section('page-title') Wiki Kategorien {{$category->name}} @stop
+@section('page-title')Kategorien: {{$category->name}} @stop
 
 @section('content')
 <div class="row">
-    <div class="col-xs-12 box-wrapper">
+    <div class="col-xs-12 col-md-6 box-wrapper">
+        <h1 class="title">@lang('sucheForm.search-results')</h1>
         <div class="box box-white">
             <div class="row">
-                {!! Form::open(['action' => 'WikiController@search', 'method'=>'POST']) !!}
+                {!! Form::open(['action' => 'WikiCategoryController@search', 'method'=>'POST']) !!}
+                    <input type="hidden" name="category" value="{{$category->id}}" />
                     <div class="input-group">
                         <div class="col-md-12 col-lg-12">
                             {!! ViewHelper::setInput('search', '',old('search'), trans('navigation.wikiSearchPlaceholder'), trans('navigation.wikiSearchPlaceholder'), true) !!}
@@ -29,8 +31,7 @@
     </div><!-- end box wrapper-->
     
     
-    
-    @if( $categoryEntries )
+    @if( count($categoryEntries) )
     <!-- top categorie box-->
     <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper home">

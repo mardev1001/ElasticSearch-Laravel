@@ -43,7 +43,13 @@ $(function () {
         if ($(this).attr('href') != currentLink)
             $(this).removeClass('active');
     });
+  
+    var parts = url.href.split('/'), lastLinkPart = parts[parts.length-1], isNumeric = false;;
+    // parts.pop();
     
+    // console.log( lastLinkPart );    
+    if(Math.floor(lastLinkPart) == lastLinkPart && $.isNumeric(lastLinkPart)) 
+        isNumeric = true;   
 
     if ((location.protocol + "//" + location.host + '/') == url.href) {
         $('a[href="/"]').addClass('active');
@@ -55,15 +61,27 @@ $(function () {
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1) {
         $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
     }
+    else if (url.href.indexOf('wiki-kategorie') != -1 ) {
+        $('a[href$="wiki-kategorie"]').addClass('active').next('ul').addClass('in'); 
+    }
+    else if (url.href.indexOf('verwalten-admin') != -1 ) {
+        $('a[href$="wiki/verwalten-admin"]').addClass('active').next('ul').addClass('in'); 
+    }
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1) {
+        $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');
+    }
+    else if (url.href.indexOf('create') != -1 && url.href.indexOf('wiki') != -1) {
         $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');
     }
     else if (url.href.indexOf('suche') != -1 && url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }
-    /*else if (url.href.indexOf('wiki') != -1) {
+    else if (url.href.indexOf('wiki') != -1 && isNumeric == true) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
-    }*/
+    }
+    else if (url.href.indexOf('wiki') != -1) {
+        $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
+    }
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
         if(slug == 'aktuelle-meldungen')
             slug = 'dokumente/news';
@@ -95,9 +113,12 @@ $(function () {
             locker = true;
         }
 
-        else if (documentType == "News") {
-            detectHref = '/dokumente/news';
+        else if ( documentType == "aktuelle Meldungen" ) {
+            console.log(documentSlug);
+            detectHref = documentSlug;
+            detectHref = 'news'
             locker = true;
+            
         }
 
         else if (documentType == "ISO-Dokumente") {

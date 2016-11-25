@@ -37,7 +37,7 @@
     
     @if( count( $topCategories ) )
     <!-- top categorie box-->
-    <div class="col-xs-6 ">
+    <div class="col-xs-6">
         <div class="box-wrapper">
             <h2 class="title">Top Kategorien</h2>
             <div class="box box-white">
@@ -116,7 +116,31 @@
     
     @endif
     --}}
+    @if( $searchResults )
+        <div class="col-xs-12 col-md-6 ">
+        <div class="col-xs-12 box-wrapper home">
+            <h1 class="title">@lang('sucheForm.search-results')</h1>
+                @if( count( $searchResults ) )
+                <div class="box home">
+                    <div class="tree-view" data-selector="newestWikiEntries">
+                        <div class="newestWikiEntries hide">
+                            {{ $searchResultsTree }}
+                        </div>
+                    </div>
+                </div>
+              <div class="text-center">
+                {!! $searchResults->render() !!}
+            </div>
+            @else
+            <div class="box home">
+                Es wurde kein passender Eintrag gefunden.
+            </div>
+            @endif
+        </div>
+    </div>
+    @endif
     
+    @if( count( $newestWikiEntriesPagination ) )
     <div class="col-xs-12 col-md-6 ">
         <div class="col-xs-12 box-wrapper home">
             <h1 class="title">Neueste Beiträge (Änderungen)</h1>
@@ -132,6 +156,12 @@
             </div>
         </div>
     </div>
+    @endif
+    
+    <!-- fix so the grid dosen't mess up -->
+    @if( $searchResults )
+        <div class="clearfix"></div>
+    @endif
     
     @if( ViewHelper::universalHasPermission(array(15)) )
     <div class="col-xs-12 col-md-6 ">

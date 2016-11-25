@@ -120,36 +120,35 @@
     </div> --}}
     
     @if( ViewHelper::universalHasPermission( array(10) ) == true || count($freigabeEntries) > 0 ) 
-    <div class="col-xs-12 col-md-6 ">
-        <div class="col-xs-12 box-wrapper box-white home">
-            <h1 class="title">Dokumente im Freigabeprozess</h1>
-            
-            @if(count($freigabeEntries))
-                <div class="box home">
-                    <div class="tree-view" data-selector="freigabeEntries">
-                        <div class="freigabeEntries hide">
-                            {{ $freigabeEntriesTree }}
+        <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 box-wrapper box-white home">
+                <h1 class="title">Dokumente im Freigabeprozess</h1>
+                
+                @if(count($freigabeEntries))
+                    <div class="box home">
+                        <div class="tree-view" data-selector="freigabeEntries">
+                            <div class="freigabeEntries hide">
+                                {{ $freigabeEntriesTree }}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="text-center">
-                    {!! $freigabeEntries->render() !!}
-                </div>
-            @else
-                <div class="box">
-                    <span class="text">Keine Dokumente gefunden.</span>
-                </div>
-            @endif
+                    <div class="text-center">
+                        {!! $freigabeEntries->render() !!}
+                    </div>
+                @else
+                    <div class="box">
+                        <span class="text">Keine Dokumente gefunden.</span>
+                    </div>
+                @endif
+            </div>
         </div>
-    </div>
     @endif
      
     <div class="clearfix"></div><br>
     
-        @if(count($commentsMy))
-            {!! ViewHelper::generateCommentBoxes($commentsMy, 'Meine letzten Kommentare' ) !!}
-        @endif
-        
+    @if(count($commentsMy))
+        {!! ViewHelper::generateCommentBoxes($commentsMy, 'Meine letzten Kommentare' ) !!}
+    @endif
     
     <div class="clearfix"></div><br>
     

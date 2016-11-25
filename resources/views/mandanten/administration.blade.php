@@ -219,7 +219,7 @@
                         
                         <div class="panel-heading">
                             <h4 class="panel-title pull-left">
-                                <span class="panel-title">
+                                <span class="panel-title transform-normal">
                                     {{$user->first_name}} @if($user->short_name)({{$user->short_name}})@endif {{$user->last_name}}
                                 </span>
                             </h4>

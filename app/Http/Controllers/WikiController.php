@@ -19,6 +19,8 @@ use App\WikiCategory;
 use App\WikiCategoryUser;
 use App\WikiPageHistory;
 use App\User;
+use App\MandantUser;
+use App\MandantUserRole;
 
 class WikiController extends Controller
 {
@@ -43,7 +45,21 @@ class WikiController extends Controller
         if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
-        $topCategories = WikiCategory::where('top_category',1)->get();
+        $userRoles = ViewHelper::getUserRole( Auth::user()->id );
+        // dd(WikiRole::where('role_id', $userRoles)->get());
+        $wikiRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
+        
+        $topCategories = WikiCategory::where('top_category',1)
+        ->where(function ($query) use($wikiRoles) {
+                $query
+                ->whereIn('id', $wikiRoles)
+                ->orWhere('all_roles',1);
+            })
+        ->get();
+        
+        if( ViewHelper::universalHasPermission(array()) )
+            $topCategories = WikiCategory::where('top_category',1)->get();
+        
         
         $newestWikiEntriesPagination = WikiPage::where('status_id',2)->orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
@@ -66,7 +82,13 @@ class WikiController extends Controller
             
         $wikiStatuses = WikiPageStatus::all();
         $wikiRoles = WikiRole::all();
-        $wikiCategories = WikiCategory::all();
+        if( ViewHelper::universalHasPermission(array()) )
+            $wikiCategories = WikiCategory::all();
+        else{
+            $wikiCategoryUsers = WikiCategoryUser::where('user_id', Auth::user()->id)->pluck('wiki_category_id')->toArray();
+            $wikiCategories = WikiCategory::whereIn('id',$wikiCategoryUsers)->get();
+        }
+        
         return view('formWrapper', compact('data','wikiCategories','wikiStatuses','wikiRoles') );
     }
 
@@ -195,7 +217,21 @@ class WikiController extends Controller
     {
         if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-        $topCategories = WikiCategory::where('top_category',1)->get();
+        $userRoles = ViewHelper::getUserRole( Auth::user()->id );
+        // dd(WikiRole::where('role_id', $userRoles)->get());
+        $wikiRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
+        
+        \DB::enableQueryLog();
+        $topCategories = WikiCategory::where('top_category',1)
+        ->where(function ($query) use($wikiRoles) {
+                $query
+                ->whereIn('id', $wikiRoles)
+                ->orWhere('all_roles',1);
+            })
+        ->get();
+        
+        if( ViewHelper::universalHasPermission(array()) )
+            $topCategories = WikiCategory::where('top_category',1)->get();
         
         $newestWikiEntriesPagination = WikiPage::where('status_id',2)->orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
@@ -207,20 +243,37 @@ class WikiController extends Controller
             $searchInput = $request->get('search');
             
         $search = $this->search->searchWiki( $request->all() );  
-        $topCategories = WikiCategory::where('top_category',1)->get();
+        $userRoles = ViewHelper::getUserRole( Auth::user()->id );
+        // dd(WikiRole::where('role_id', $userRoles)->get());
+        $wikiRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
         
-        // $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
-        // $newestWikiEntriesPagination = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
-        if( count($search) )
-            $newestWikiEntriesPagination = $search->paginate(10, ['*'], 'neueste-beitraege');
+        // \DB::enableQueryLog();
+        $topCategories = WikiCategory::where('top_category',1)
+        ->where(function ($query) use($wikiRoles) {
+                $query
+                ->whereIn('id', $wikiRoles)
+                ->orWhere('all_roles',1);
+            })
+        ->get();
         
-        $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
+        if( ViewHelper::universalHasPermission(array()) )
+            $topCategories = WikiCategory::where('top_category',1)->get();
+        
+       // $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        //$newestWikiEntriesPagination = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        // if( count($search) )
+        //     $newestWikiEntriesPagination = 
+        
+        // $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
         
         $myWikiPagesPagination = WikiPage::where('user_id', Auth::user()->id)->orderBy('created_at','DESC')->paginate(10, ['*'], 'meine-beitraege');
         $myWikiPages = $this->document->generateWikiTreeview($myWikiPagesPagination);
-          
+        
+        $searchResults = $search->paginate(10, ['*'], 'wiki-suche');
+        $searchResultsTree = $this->document->generateWikiTreeview( $searchResults );
     
-        return view('wiki.index', compact('topCategories','newestWikiEntries','newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination','searchInput')); 
+        return view('wiki.index', compact('topCategories','searchResults','searchResultsTree','newestWikiEntries',
+        'newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination','searchInput')); 
         // return view('wiki.index', compact('search','topCategories','newestWikiEntries','newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination','searchInput')); 
     }
     

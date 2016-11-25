@@ -454,6 +454,28 @@ class ViewHelper{
     }
     
     /**
+     * Get all roles associated with the user
+     * @param int $userId 
+     * @return array $roles
+     */
+    static function getUserRole($userId){
+        //fetch all mandant Users id's by $userId
+        $mandantUserIds = MandantUser::where('user_id',$userId)->pluck('id')->toArray();
+        $roles = MandantUserRole::whereIn('mandant_user_id', $mandantUserIds)->pluck('role_id')->toArray();
+        return $roles;
+    }
+    /**
+     * Get all user by role ids
+     * @param array $roles 
+     * @return array $ids
+     */
+    static function getUsersByRole($roles){
+        $mandantUserRoles = MandantUserRole::whereIn('role_id', $roles)->pluck('mandant_user_id')->toArray();
+        $mandantUserIds = MandantUser::whereIn('id',$mandantUserRoles)->pluck('user_id')->toArray();
+        return $mandantUserIds;
+    }
+    
+    /**
      * Universal user has permissions check
      * @param array $userArray
      * @return bool 
@@ -800,13 +822,28 @@ class ViewHelper{
     }
     
     /**
-     * Get Mandant by User ID
+     * Get First Mandant by User ID
      * @param int $id
      * @return Mandant | bool
      */
     static function getMandant( $id ){
         if($mandantUser = MandantUser::where('user_id', $id)->first()){
             return Mandant::find($mandantUser->mandant_id);
+        } else return false;
+    }
+    
+    /**
+     * Get all mandants by User ID
+     * @param int $id
+     * @return Collection | bool
+     */
+    static function getUserMandants( $id ){
+        if($mandantUsers = MandantUser::where('user_id', $id)->groupBy('mandant_id')->get()){
+            $mandants = array();
+            foreach($mandantUsers as $mandantUser){
+                $mandants[] = Mandant::find($mandantUser->mandant_id);
+            }
+            return collect($mandants);
         } else return false;
     }
     

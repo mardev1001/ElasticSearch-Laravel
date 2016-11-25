@@ -203,7 +203,8 @@
                     @endif
                     
                     @if( $document->documentType->document_art == 1)
-                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true || ViewHelper::universalHasPermission( array(13) ) == true )
+                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true || 
+                        ViewHelper::universalHasPermission( array(13) ) == true )
                             <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> 
                         @endif
                     @else
@@ -234,7 +235,7 @@
                                 {{ trans('dokumentShow.unFavorite') }}
                             @endif</a>  
                             
-                            @if( $document->documentType->allow_comments == 1 && (ViewHelper::universalHasPermission( array(13) ) == true ||  ViewHelper::documentVariantPermission($document)->permissionExists ) )
+                            @if( $document->documentType->allow_comments == 1 && ViewHelper::documentVariantPermission($document)->permissionExists )
                                 <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
                             @endif
                         
@@ -331,10 +332,11 @@
         @endif
     @endif
     
-    @if( $commentVisibility->freigabe == true )
-    
-        @if(count($documentCommentsFreigabe) )
-            {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
+    @if( ViewHelper::universalDocumentPermission($document)->hasPermission == true )
+        @if( $commentVisibility->freigabe == true )
+            @if(count($documentCommentsFreigabe) )
+                {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
+            @endif
         @endif
     @endif
     
@@ -345,8 +347,11 @@
         @section('preScript')
                 <!-- variable for expanding document sidebar-->
         <script type="text/javascript">
+        console.log('yes');
             var documentType = "{{ $document->documentType->name}}";
             var documentSlug = "{{ str_slug( $document->documentType->name ) }}";
+            console.log(documentType);
+            console.log(documentSlug);
         </script>
         @stop
         

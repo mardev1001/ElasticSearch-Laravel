@@ -77,6 +77,19 @@ class DummyDocumentTypeSeeder extends Seeder
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+                [
+                    'name' => 'Anlagen',
+                    'document_art' => '1',
+                    'document_role' => '0',
+                    'read_required' => '0',
+                    'allow_comments' => '0',
+                    'visible_navigation' => '1',
+                    'order_number' => '6',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]
                 
             ]

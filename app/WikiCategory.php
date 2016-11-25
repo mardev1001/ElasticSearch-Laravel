@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class WikiCategory extends Model
 {
     protected $guarded = []; //blacklist
-    protected $fillable = [ 'name', 'top_category' ]; //whitelist
+    protected $fillable = [ 'name', 'top_category','all_roles' ]; //whitelist
     
     public function wikiRoles(){
         return $this->hasMany('App\WikiRole','wiki_category_id','id');
