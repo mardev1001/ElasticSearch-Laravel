@@ -162,6 +162,7 @@ class MandantController extends Controller
      */
     public function searchSingle(Request $request)
     {
+        $uid = Auth::user()->id;
         if( ViewHelper::universalHasPermission( array(2,4), false ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
@@ -178,9 +179,9 @@ class MandantController extends Controller
         $roles = Role::all();
        // \DB::enableQueryLog();
         $mandantU = MandantUser::where('user_id',$uid)->pluck('mandant_id')->toArray();
-        $usersM  = MandantUser::where('mandant_id',$mandantU)->pluck('user_id')->toArray();
+        $usersM  = MandantUser::whereIn('mandant_id',$mandantU)->pluck('user_id')->toArray();
         $users = User::whereIn('id',$usersM);
-        
+        // dd($users->get() );
         if( !empty($searchParameter))
         $users = $users->where(function ($query) use($searchParameter) {
             $query->where('first_name', 'LIKE', '%'. $searchParameter .'%')

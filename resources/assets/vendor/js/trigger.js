@@ -54,9 +54,15 @@ $(function () {
     if ((location.protocol + "//" + location.host + '/') == url.href) {
         $('a[href="/"]').addClass('active');
     }
+    else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search-single') != -1) {
+        // console.log(element);
+        $('a[href$="/benutzer"]').addClass('active');
+        $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
+    }
     else if (url.href.indexOf('benutzer') != -1 && url.href.indexOf('partner') != -1) {
         // console.log(element);
-        $('a[href*="/benutzer"]').addClass('active').closest('ul').addClass('in');
+        $('a[href$="/benutzer"]').addClass('active');
+        $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
     }
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1) {
         $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
@@ -90,11 +96,11 @@ $(function () {
         if($('a[href$="/'+slug+'"]').addClass('active').next('ul').length )
             $('a[href$="/'+slug+'"]').addClass('active').next('ul').addClass('in');
     }
+    else if (url.href.indexOf('suche') != -1 && url.href.indexOf('telefonliste') != -1) {
+        $('a[href*="telefonliste"]').addClass('active').parent('li').find('ul').addClass('in');
+    }
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
-        
-         
-    
     }
     else if (typeof documentType !== 'undefined' && documentType.length) {
         var detectHref = '';

@@ -530,8 +530,14 @@
                                     <h4>Hauptstelle</h4>
                                     <dl class="dl-horizontal">
 
+                                        <dt>Name</dt>
+                                        <dd>{{ViewHelper::getHauptstelle($mandant)->name}}</dd>
+
                                         <dt>Mandantnummer</dt>
                                         <dd>{{ViewHelper::getHauptstelle($mandant)->mandant_number}}</dd>
+
+                                        <dt>Mandantname Kurz</dt>
+                                        <dd>{{ViewHelper::getHauptstelle($mandant)->kurzname}}</dd>
 
                                         <dt>Adresszusatz</dt>
                                         <dd>{{ViewHelper::getHauptstelle($mandant)->adresszusatz}}</dd>
@@ -544,11 +550,14 @@
                                         <dd>{{ViewHelper::getHauptstelle($mandant)->plz}}
                                             / {{ViewHelper::getHauptstelle($mandant)->ort}}</dd>
 
+                                        <dt>Bundesland</dt>
+                                        <dd>{{ViewHelper::getHauptstelle($mandant)->bundesland}}</dd>
+
                                         <dt>Telefon</dt>
                                         <dd>{{ViewHelper::getHauptstelle($mandant)->telefon}}</dd>
 
                                         <dt>Kurzwahl</dt>
-                                        <dd>{{$mandant->kurzwahl}}</dd>
+                                        <dd>{{ViewHelper::getHauptstelle($mandant)->kurzwahl}}</dd>
 
                                         <dt>Fax</dt>
                                         <dd>{{ViewHelper::getHauptstelle($mandant)->fax}}</dd>

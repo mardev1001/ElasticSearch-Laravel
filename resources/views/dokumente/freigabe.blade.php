@@ -165,7 +165,8 @@
                 @if( ViewHelper::universalDocumentPermission( $document, false, false, true ) ) 
                     <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a> 
                 @endif
-                
+                    
+                    
                 @if( $authorised == false && $canPublish == false )
                  
                     @if( count( $document->documentApprovals->where('user_id',Auth::user()->id )->where('date_approved',null) ) == 1 )
@@ -193,6 +194,17 @@
                                 && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
                             <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
                         @endif
+                @endif
+                
+                @if(count($document->documentUploads) && ($document->pdf_upload == 1 ) )
+                    {{-- The PDF download button is only shown if the document has PDF Rundschreiben / PDF uploads --}}
+                    @foreach($document->documentUploads as $k => $attachment)
+                        @if($k > 0) @break @endif
+                        <a href="{{url('download/'. $document->id .'/'. $attachment->file_path)}}" class="btn btn-primary pull-right">Download / Druck</a>
+                    @endforeach
+                @else
+                    {{-- The link for generating PDF from the document content should be here (the content you see on the overview) --}}
+                    <a target="_blank" href="/dokumente/{{$document->id}}/pdf" class="btn btn-primary pull-right">Druckvorschau</a>
                 @endif
                 
             </div>

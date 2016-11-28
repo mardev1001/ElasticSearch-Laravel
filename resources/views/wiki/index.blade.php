@@ -164,21 +164,23 @@
     @endif
     
     @if( ViewHelper::universalHasPermission(array(15)) )
-    <div class="col-xs-12 col-md-6 ">
-        <div class="col-xs-12 box-wrapper home">
-            <h1 class="title">Meine Beiträge</h1>
-            <div class="box home">
-                <div class="tree-view" data-selector="myWikiPages">
-                    <div class="myWikiPages hide">
-                        {{ $myWikiPages }}
+        @if( count( $myWikiPagesPagination ) )
+            <div class="col-xs-12 col-md-6 ">
+            <div class="col-xs-12 box-wrapper home">
+                <h1 class="title">Meine Beiträge</h1>
+                <div class="box home">
+                    <div class="tree-view" data-selector="myWikiPages">
+                        <div class="myWikiPages hide">
+                            {{ $myWikiPages }}
+                        </div>
                     </div>
                 </div>
-            </div>
-              <div class="text-center">
-                {!! $myWikiPagesPagination->render() !!}
+                  <div class="text-center">
+                    {!! $myWikiPagesPagination->render() !!}
+                </div>
             </div>
         </div>
-    </div>
+        @endif
     @endif
     
     

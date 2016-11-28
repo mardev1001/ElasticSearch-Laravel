@@ -3136,7 +3136,7 @@ class DocumentController extends Controller
         
         $id = $document->id;
         $document->document_status_id = 3;
-        // $document->date_published = Carbon::now();
+        $document->date_published = Carbon::now(); // NEPTUN-582, NEPTUN-590
         $document->save();
         // dd($document);
         // if($debug == true)

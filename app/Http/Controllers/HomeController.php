@@ -107,7 +107,8 @@ class HomeController extends Controller
         ->orderBy('documents.id', 'desc')->limit(50)->get(['documents.id as id']);
         // ->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ],'freigabe-dokumente');
         
-        $freigabeEntries = Document::whereIn('id', array_pluck($freigabeEntries, 'id'))->paginate(10, ['*'], 'freigabe-dokumente');
+        $freigabeEntries = Document::whereIn('id', array_pluck($freigabeEntries, 'id'))->orderBy('documents.id', 'desc')
+        ->paginate(10, ['*'], 'freigabe-dokumente');
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
         $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id',2)->orderBy('created_at','DESC')->take(5)->get());

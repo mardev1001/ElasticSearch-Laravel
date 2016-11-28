@@ -223,10 +223,14 @@ class WikiCategoryController extends Controller
             $query->whereNotIn('status_id',array(1,3) );
         }
         $querySearch = $this->search->searchWikiCategories( $request->all() );  
-        $categoryEntries = $querySearch->paginate(12);   
+        
+        $categoryEntries = $query->paginate(12);   
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
+        
+        $search = $querySearch->paginate(12);   
+        $searchTreeView = $this->document->generateWikiTreeview( $search );
         // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
         
-        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree') ); 
+        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree','search','searchTreeView') ); 
     }
 }

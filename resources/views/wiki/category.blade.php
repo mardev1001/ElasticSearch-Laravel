@@ -2,12 +2,12 @@
 
 @extends('master')
 
-@section('page-title')Kategorien: {{$category->name}} @stop
+@section('page-title')Kategorie: {{$category->name}} @stop
 
 @section('content')
 <div class="row">
     <div class="col-xs-12 col-md-6 box-wrapper">
-        <h1 class="title">@lang('sucheForm.search-results')</h1>
+        <h1 class="title">@lang('wiki.search') Wiki</h1>
         <div class="box box-white">
             <div class="row">
                 {!! Form::open(['action' => 'WikiCategoryController@search', 'method'=>'POST']) !!}
@@ -49,8 +49,34 @@
                 </div><!-- end pagination box -->
             </div>
         </div><!--end  top categorie box wrapper-->
+        <div class="clearfix"></div>
     @endif
     
+        <!-- top categorie box-->
+        <div class="col-xs-12 col-md-6 box-wrapper">
+            <!--<div class="row">-->
+                <div class=" home">
+                    <h1 class="title">Suchergebnisse</h1>
+                    <div class="box home box-white">
+                        @if( count($search) )
+                        
+                        <div class="tree-view hide-icons wiki" data-selector="wikiEntries">
+                            <div class="wikiEntries hide">
+                                {{ $searchTreeView }}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- pagination box -->
+                    <div class="text-ceter">
+                        {!! $search->render() !!}
+                    </div><!-- end pagination box -->
+                    @else
+                    <div class="box home box-white">
+                        Es wurde kein passender Eintrag gefunden
+                    </div>
+                    @endif
+                    </div>
+                </div><!--end  top categorie box wrapper-->
 </div><!-- end main row-->
 
 

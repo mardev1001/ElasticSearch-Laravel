@@ -54,7 +54,7 @@
                 </div><!-- end .col-sm-8 .col-md-9 .col-lg-10 -->
                 
                 <div class="col-sm-4 col-md-3 col-lg-2 btns scrollable-document">
-                    @if( ViewHelper::universalHasPermission(array(15)) )
+                    @if( ViewHelper::universalHasPermission(array(15)) && ViewHelper::wikiCanEditByCatId($data->category_id) )
                         <a href="{{route('wiki.edit', $data->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
                     
                     

@@ -69,14 +69,10 @@ class TelephoneListController extends Controller
             // $localUser = MandantUser::where('mandant_id', $mandant->id)->where('user_id', Auth::user()->id)->first();
             
             // Get all InternalMandantUsers
-            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $mandant->id)->get();
-                
-            // $internalMandantUsers = InternalMandantUser::where('mandant_id', $myMandant->id)
-            //     ->where('mandant_id_edit', $mandant->id)->get();
-            
+            // NOTE: groupBy eliminates duplicates with same role_id, user_id and mandant_id_edit
+            // TODO: Add groupBy also to search
             $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($myMandants, 'id'))
-                ->where('mandant_id_edit', $mandant->id)->get();
-            // dd($internalMandantUsers);
+                ->where('mandant_id_edit', $mandant->id)->groupBy('role_id','user_id','mandant_id_edit')->get();
                 
             foreach ($internalMandantUsers as $user){
                 $usersInternal[] = $user;
@@ -86,13 +82,10 @@ class TelephoneListController extends Controller
             // partner user -> for other mandants - partner roles; 
             // admin user/neptun user -> for all mandants - phone and partner roles; 
             
-            
-            // dd($mandant->users);
-            // dd(array_pluck($usersInternal,'role_id'));
-            // dd(!in_array( $mUser->id, array_pluck($usersInternal,'user_id')));
             foreach($mandant->users as $k2 => $mUser){
                 
                 foreach($mUser->mandantRoles as $mr){
+                    // do not add the user if he is in $usersInternal array
                     if($mUser->active && !in_array($mUser->id, array_pluck($usersInternal,'user_id')) ){
                         // Check for phone roles
                         if( $mr->role->phone_role || $mr->role->mandant_role ) {
@@ -106,12 +99,12 @@ class TelephoneListController extends Controller
 
             } // end second foreach
             
+            // if($mandant->id == 1) dd($usersInternal);
+            
             $mandant->usersInternal = $usersInternal;
             $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
             
         }
-        
-        
         
         return view('telefonliste.index', compact('mandants','visible', 'partner') );
     }

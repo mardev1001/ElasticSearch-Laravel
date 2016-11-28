@@ -16,6 +16,7 @@ use App\MandantUser;
 use App\User;
 use App\WikiPage;
 use App\WikiCategory;
+use App\Helpers\ViewHelper;
 
 class SearchRepository
 {
@@ -109,8 +110,15 @@ class SearchRepository
                 $wikiIds[] = $wikiPage->id;    
             }
         }
+       $wikiCategories = ViewHelper::getAvailableWikiCategories() ;
        
-        $results = WikiPage::where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);
+        $results = WikiPage::whereIn('category_id',$wikiCategories)
+        ->where(function ($query) use($searchParam,$wikiIds) {
+          $query->where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);
+        //   ->where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);  
+        });
+        
+        
         return $results;
      }
      

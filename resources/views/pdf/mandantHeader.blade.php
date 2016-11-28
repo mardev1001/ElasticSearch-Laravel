@@ -2,11 +2,11 @@
     <div class="div-pusher">
         <p></p>
     </div>
-    <div class="image-div">
-         @if($mandant->logo)
-            <img class="img-responsive" src="{{url('/files/pictures/mandants/'. $mandant->logo)}}"/>
+    <div class="image-div text-right">
+        @if($mandant->logo)
+            <img src="{{url('/files/pictures/mandants/'. $mandant->logo)}}"/>
         @else
-            <img class="img-responsive" src="{{url('/img/mandant-default.png')}}"/>
+            <img src="{{url('/img/mandant-default.png')}}"/>
         @endif
     </div>
 </div>

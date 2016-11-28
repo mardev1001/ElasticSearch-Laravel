@@ -13,6 +13,8 @@ use App\DocumentCoauthor;
 use App\EditorVariant;
 use App\DocumentApproval;
 use App\DocumentType;
+use App\WikiRole;
+use App\WikiCategory;
 
 class ViewHelper{
     
@@ -796,6 +798,36 @@ class ViewHelper{
         elseif( strtolower($type) == 'pdf')
             $htmlObjectType = 'application/pdf';
         return $htmlObjectType;        
+    }
+    
+    /**
+     * Get Availabe Wiki 
+     * @return Mandant | bool
+     */
+    static function getAvailableWikiCategories(){
+        $userRoles = self::getUserRole( Auth::user()->id );
+        
+        $wikiCatByRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
+        
+        $wikiCategories = WikiCategory::where(function ($query) use($wikiCatByRoles) {
+                $query
+                ->whereIn('id', $wikiCatByRoles)
+                ->orWhere('all_roles',1);
+            })
+        ->pluck('id')->toArray();
+        return $wikiCategories;
+    }
+    /**
+     * Get Availabe Wiki 
+     * @return Mandant | bool
+     */
+    static function wikiCanEditByCatId($category){
+        $userRoles = self::getUserRole( Auth::user()->id );
+        
+        $wikiCatByRoles = WikiRole::whereIn('role_id', $userRoles)->where('wiki_category_id',$category)->get();
+        if( count($wikiCatByRoles) ||  self::universalHasPermission( array() ) )
+            return true;
+        return false;
     }
     
     /**

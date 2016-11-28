@@ -97,11 +97,13 @@
             width: 30%;
             vertical-align: top;
             font-weight: 700 !important;
+            font-size: 12px;
         }
 
         .col-2 {
             width: 70%;
             vertical-align: top;
+            font-size: 12px;
         }
 
         div.page-break {
@@ -123,23 +125,27 @@
     <div class="table-container">
         <h4>Allgemeine Informationen</h4>
         <table>
+            
             <tr>
-                <td class="col-1">Mandantname Kurz</td>
-                <td class="col-2">{{$mandant->kurzname}}</td>
+                <td class="col-1">Name</td>
+                <td class="col-2">{{$mandant->name}}</td>
             </tr>
-            <tr>
-                <td class="col-1">Kurzwahl</td>
-                <td class="col-2">{{$mandant->kurzwahl}}</td>
-            </tr>
+            
             <tr>
                 <td class="col-1">Mandantnummer</td>
                 <td class="col-2">{{$mandant->mandant_number}}</td>
             </tr>
+            
+            <tr>
+                <td class="col-1">Mandantname Kurz</td>
+                <td class="col-2">{{$mandant->kurzname}}</td>
+            </tr>
+            
             <tr>
                 <td class="col-1">Adresszusatz</td>
                 <td class="col-2">{{$mandant->adresszusatz}}</td>
             </tr>
-
+            
             <tr>
                 <td class="col-1">Strasse/ Nr.</td>
                 <td class="col-2">{{$mandant->strasse}}/ {{$mandant->hausnummer}}</td>
@@ -151,10 +157,20 @@
             </tr>
 
             <tr>
+                <td class="col-1">Bundesland</td>
+                <td class="col-2">{{$mandant->bundesland}}</td>
+            </tr>
+
+            <tr>
                 <td class="col-1">Telefon</td>
                 <td class="col-2">{{$mandant->telefon}}</td>
             </tr>
-
+            
+            <tr>
+                <td class="col-1">Kurzwahl</td>
+                <td class="col-2">{{$mandant->kurzwahl}}</td>
+            </tr>
+            
             <tr>
                 <td class="col-1">Fax</td>
                 <td class="col-2">{{$mandant->fax}}</td>
@@ -162,13 +178,14 @@
 
             <tr>
                 <td class="col-1">E-Mail</td>
-                <td class="col-2">{{$mandant->email}}</td>
+                <td class="col-2"><a href="mailto:{{$mandant->email}}">{{$mandant->email}}</a></td>
             </tr>
 
             <tr>
                 <td class="col-1">Website</td>
-                <td class="col-2">{{$mandant->website}}</td>
+                <td class="col-2"><a href="{{$mandant->website}}">{{$mandant->website}}</a></td>
             </tr>
+            
         </table>
     </div>
 </div>
@@ -177,29 +194,30 @@
     <div class="table-container">
         <h4>Hauptstelle</h4>
         <table>
+            
             <tr>
-                <td class="col-1">Mandantname Kurz</td>
-                <td class="col-2">{{$hauptstelle->kurzname}}</td>
+                <td class="col-1">Name</td>
+                <td class="col-2">{{$hauptstelle->name}}</td>
             </tr>
-            <tr>
-                <td class="col-1">Kurzwahl</td>
-                <td class="col-2">{{$hauptstelle->kurzwahl}}</td>
-            </tr>
-
+            
             <tr>
                 <td class="col-1">Mandantnummer</td>
                 <td class="col-2">{{$hauptstelle->mandant_number}}</td>
             </tr>
-
+            
+            <tr>
+                <td class="col-1">Mandantname Kurz</td>
+                <td class="col-2">{{$hauptstelle->kurzname}}</td>
+            </tr>
+            
             <tr>
                 <td class="col-1">Adresszusatz</td>
                 <td class="col-2">{{$hauptstelle->adresszusatz}}</td>
             </tr>
-
+            
             <tr>
                 <td class="col-1">Strasse/ Nr.</td>
-                <td class="col-2">{{$hauptstelle->strasse}}
-                    / {{$hauptstelle->hausnummer}}</td>
+                <td class="col-2">{{$hauptstelle->strasse}}/ {{$hauptstelle->hausnummer}}</td>
             </tr>
 
             <tr>
@@ -208,10 +226,20 @@
             </tr>
 
             <tr>
+                <td class="col-1">Bundesland</td>
+                <td class="col-2">{{$hauptstelle->bundesland}}</td>
+            </tr>
+
+            <tr>
                 <td class="col-1">Telefon</td>
                 <td class="col-2">{{$hauptstelle->telefon}}</td>
             </tr>
-
+            
+            <tr>
+                <td class="col-1">Kurzwahl</td>
+                <td class="col-2">{{$hauptstelle->kurzwahl}}</td>
+            </tr>
+            
             <tr>
                 <td class="col-1">Fax</td>
                 <td class="col-2">{{$hauptstelle->fax}}</td>
@@ -219,13 +247,14 @@
 
             <tr>
                 <td class="col-1">E-Mail</td>
-                <td class="col-2">{{$hauptstelle->email}}</td>
+                <td class="col-2"><a href="mailto:{{$hauptstelle->email}}">{{$hauptstelle->email}}</a></td>
             </tr>
 
             <tr>
                 <td class="col-1">Website</td>
-                <td class="col-2">{{$hauptstelle->website}}</td>
+                <td class="col-2"><a href="{{$hauptstelle->website}}">{{$hauptstelle->website}}</a></td>
             </tr>
+            
         </table>
     </div>
 @endif

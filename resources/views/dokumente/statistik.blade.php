@@ -20,7 +20,7 @@
                 
                 <div class="panel-heading" role="tab" id="heading-{{$mandant->id}}">
                     <h4 class="panel-title">
-                        <a class="collapsed" role="button" data-toggle="collapse" href="#collapse-{{$mandant->id}}" aria-expanded="false" aria-controls="collapse-{{$mandant->id}}">
+                        <a class="collapsed transform-normal" role="button" data-toggle="collapse" href="#collapse-{{$mandant->id}}" aria-expanded="false" aria-controls="collapse-{{$mandant->id}}">
                             ({{ $mandant->mandant_number }}) {{$mandant->kurzname}} [{{count($documentReadersCount[$mandant->id])}}/{{count($mandant->mandantUsers)}}]
                         </a>
                     </h4>

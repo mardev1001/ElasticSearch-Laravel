@@ -332,8 +332,9 @@
         @endif
     @endif
     
-    @if( ViewHelper::universalDocumentPermission($document)->hasPermission == true )
-        @if( $commentVisibility->freigabe == true )
+    @if( ViewHelper::universalDocumentPermission($document) == true )
+    
+        @if( $commentVisibility->freigabe == true || ViewHelper::universalDocumentPermission($document, false,false,true) )
             @if(count($documentCommentsFreigabe) )
                 {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
             @endif
