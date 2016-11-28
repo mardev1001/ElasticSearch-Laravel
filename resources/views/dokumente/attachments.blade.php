@@ -187,8 +187,21 @@
                                                 </div>   
                                             </div><!--End input box-->
                                             
+                                            <!-- input box date_published-->
+                                            <div class="col-lg-4"> 
+                                                <div class="form-group">
+                                                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
+                                                </div>   
+                                            </div><!--End input box-->
                                             
-                                            <!-- input box-->
+                                            <!-- input box date_expired-->
+                                            <div class="col-lg-4"> 
+                                                <div class="form-group">
+                                                    {!! ViewHelper::setInput('date_expired',$data,old('date_expired'), trans('documentForm.dateExpired') , trans('documentForm.dateExpired') , false ,'text', ['datetimepicker'] ) !!}
+                                                </div>   
+                                            </div><!--End input box-->
+                                            
+                                            <!-- input box owner owner-->
                                             <div class="col-lg-4"> 
                                                 <div class="form-group">
                                                     <label class="control-label">{{ ucfirst( trans('documentForm.owner') ) }}*</label> 
@@ -210,20 +223,38 @@
                                             </div><!--End input box-->
                                             
                                             <!-- input box-->
-                                            <div class="col-lg-4"> 
+                                            <div class="col-md-4 col-lg-4"> 
                                                 <div class="form-group">
-                                                    {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
-                                                </div>   
+                                                    <label class="control-label"> {{ trans('documentForm.user') }} *</label>
+                                                    <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}" required>
+                                                        @foreach( $documentUsers as $documentUser )
+                                                            <option value="{{$documentUser->id}}" @if( isset($data->user_id) && $documentUser->id == $data->user_id) selected @endif >
+                                                                {{ $documentUser->last_name }} {{ $documentUser->first_name }}  
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div><!--End input box-->
                                             
-                                            <!-- input box-->
-                                            <div class="col-lg-4"> 
+                                            <div class="col-md-4 col-lg-4">
                                                 <div class="form-group">
-                                                    {!! ViewHelper::setInput('date_expired',$data,old('date_expired'), trans('documentForm.dateExpired') , trans('documentForm.dateExpired') , false ,'text', ['datetimepicker'] ) !!}
-                                                </div>   
+                                                    <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
+                                                    <select name="document_coauthor[]" class="form-control select empty-select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">
+                                                        <option value="" @if( Request::is('*/create') ) select @endif >&nbsp;</option>
+                                                        @foreach($mandantUsers as $mandantUser)
+                                                            <option value="{{$mandantUser->id}}"
+                                                            @if( Request::is('*/edit') )
+                                                                @if(isset($documentCoauthors)) {!! ViewHelper::setMultipleSelect($documentCoauthors, $mandantUser->id, 'user_id') !!} @endif
+                                                            @endif
+                                                            > 
+                                                                {{ $mandantUser->last_name }} {{ $mandantUser->first_name }}  
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div><!--End input box-->
                                             
-                                           <!-- input box-->
+                                            <!-- input box status-->
                                             <div class="col-lg-4"> 
                                                 <div class="form-group">
                                                     <label class="control-label"> {{ ucfirst(trans('documentForm.status')) }} </label>
@@ -247,19 +278,19 @@
                                             </div><!--End input box-->
                                             
                                             <!-- input box-->
-                                            <div class="col-lg-4"> 
-                                                <div class="form-group">
-                                                    <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>
-                                                    <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">
-                                                        <option value="0"></option>
-                                                        @foreach($mandantUsers as $mandantUser)
-                                                            <option value="{{$mandantUser->id}}" @if(isset($documentCoauthor)) {!! ViewHelper::setMultipleSelect($documentCoauthor, $mandantUser->id, 'user_id') !!} @endif > 
-                                                               {{ $mandantUser->last_name }}  {{ $mandantUser->first_name }} 
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>   
-                                            </div><!--End input box-->
+                                            <!--<div class="col-lg-4"> -->
+                                            <!--    <div class="form-group">-->
+                                            <!--        <label class="control-label"> {{ trans('documentForm.coauthor') }} </label>-->
+                                            <!--        <select name="document_coauthor[]" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.coauthor') ) }}">-->
+                                            <!--            <option value="0"></option>-->
+                                            <!--            @foreach($mandantUsers as $mandantUser)-->
+                                            <!--                <option value="{{$mandantUser->id}}" @if(isset($documentCoauthor)) {!! ViewHelper::setMultipleSelect($documentCoauthor, $mandantUser->id, 'user_id') !!} @endif > -->
+                                            <!--                   {{ $mandantUser->last_name }}  {{ $mandantUser->first_name }} -->
+                                            <!--                </option>-->
+                                            <!--            @endforeach-->
+                                            <!--        </select>-->
+                                            <!--    </div>   -->
+                                            <!--</div><!--End input box-->
                                             
                                             <!-- input box-->
                                             <div class="col-lg-12">
@@ -268,7 +299,9 @@
                                                 </div>   
                                             </div><!--End input box-->  
                                             
-                                             <!-- input box-->
+                                            <div class="clearfix"></div>
+                                            
+                                            <!-- input box-->
                                                 <div class="col-lg-6"> 
                                                     <div class="form-group">
                                                         <label>Dokumentenupload</label>

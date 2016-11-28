@@ -11,7 +11,6 @@
 
 @section('content')
 <div class="row">
-    
     <div class="col-xs-12  
         @if(
             ( ViewHelper::universalHasPermission(array(15,16)) == false && ViewHelper::getMandantWikiPermission() == false) &&

@@ -111,8 +111,8 @@ class HomeController extends Controller
         ->paginate(10, ['*'], 'freigabe-dokumente');
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
-        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id',2)->orderBy('created_at','DESC')->take(5)->get());
-        $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('created_at', 'desc')->take(10)->get();
+        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id',2)->orderBy('updated_at','DESC')->take(5)->get());
+        $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('updated_at', 'desc')->take(10)->get();
         
         $commentVisibility = false;
         $uid = Auth::user()->id;  

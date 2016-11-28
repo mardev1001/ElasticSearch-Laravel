@@ -478,3 +478,15 @@ a.transform-normal, span.transform-normal{
         margin-left: 25px;
     }
 /* End Iso category page*/
+
+/* Wiki category search*/
+.corrected-search-margin{
+    margin-top:-50px;
+}
+
+@media screen and (min-width: 992px) and (max-width: 1100px) {
+   .corrected-search-margin{
+        margin-top: -75px;
+    } 
+}
+/* End Wiki category search*/

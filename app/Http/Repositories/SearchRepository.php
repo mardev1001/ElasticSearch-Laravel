@@ -10,13 +10,14 @@ use Auth;
 use DB;
 
 use Carbon\Carbon;
+use App\Helpers\ViewHelper;
 
 use App\Mandant;
 use App\MandantUser;
 use App\User;
 use App\WikiPage;
 use App\WikiCategory;
-use App\Helpers\ViewHelper;
+use App\WikiCategoryUser;
 
 class SearchRepository
 {
@@ -156,20 +157,31 @@ class SearchRepository
      * @return object array $array
      */     
      public function searchManagmentSearch( $request ){
-         $query = WikiPage::orderBy('created_at','desc');
-         if( $request->admin != 1)
-            $query = WikiPage::where()->orderBy('created_at','desc');
-        //  dd($request);
+         
+        //  $query = WikiPage::orderBy('updated_at','desc');
+        //  if( $request->admin != 1)
+        //     $query = WikiPage::where()->orderBy('updated_at','desc');
+         $categoriesId = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
+     
+        $query = WikiPage::whereIn('category_id',$categoriesId)->orderBy('updated_at','desc');
+            if( ViewHelper::universalHasPermission(array()) ){
+                $categoriesId = WikiCategory::pluck('id')->toArray();
+                // $categories = WikiCategory::whereIn('id',$categoriesId)->get();
+                $usersId = WikiCategoryUser::whereIn('user_id', $categoriesId )->pluck('user_id')->toArray();
+                
+                $query = WikiPage::whereIn('category_id',$categoriesId)->orderBy('updated_at','desc');
+        }
+        
          if( $request->name != '' )
              $query->where('name','like','%'.$request->name.'%');
-         if( $request->subject != '' )
-             $query->where('subject','like','%'.$request->subject.'%');
+        //  if( $request->subject != '' )
+        //      $query->where('subject','like','%'.$request->subject.'%');
          
          if( $request->date_from != '' )
-             $query->where('created_at','>', Carbon::parse($request->date_from) );
+             $query->where('updated_at','>=', Carbon::parse($request->date_from) );
          
          if( $request->date_to != '' )
-             $query->where('created_at','<', Carbon::parse($request->date_to));
+             $query->where('updated_at','<=', Carbon::parse($request->date_to));
          
          if( $request->category != '' )
              $query->where( 'category_id',$request->category );
@@ -179,9 +191,9 @@ class SearchRepository
          
          if( isset($request->ersteller) && $request->ersteller != '' )
              $query->where( 'user_id',$request->ersteller );
-         
+        //  \DB::enableQueryLog();
          $results = $query->get() ;
-         
+        //  dd( \DB::getQueryLog() );
          return $results;
          
      }

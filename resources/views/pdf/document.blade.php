@@ -343,8 +343,8 @@
                 content: counter(page);
             }
             .first-title.first{
-                margin-top: 10px;
-                margin-bottom:10px;
+                margin-top: -10px;
+                margin-bottom: 10px;
             }
             .first-title.second{
                 margin-top: 0;
@@ -364,7 +364,8 @@
                 width: 30%;
                 float:right;
                 font-size: 14px;
-                padding-top: 7px;
+                margin-top: -20px;
+                /*padding-top: 7px;*/
             }
             .date-div{
                 width:100%;
@@ -457,7 +458,7 @@
       
       <div >
            @include('pdf.header')
-          <h4 class="first-title first">
+          <h4 class="first-title first" style="float:left; ">
             @if( $document->document_type_id == 3 )
               QMR
             @else

@@ -522,7 +522,7 @@ class DocumentRepository
             // $icon = $icon2 = '';
                    
             $node->beforeText = '';
-            $node->beforeText .= Carbon::parse($wikiPage->date_created)->format('d.m.Y').' - '.
+            $node->beforeText .= Carbon::parse($wikiPage->updated_at)->format('d.m.Y').' - '.
                 $wikiPage->user->first_name .' '. $wikiPage->user->last_name;
             
             $node->afterText = $wikiPage->category->name;

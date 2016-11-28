@@ -33,19 +33,21 @@
             
             
             <!-- input box-->
-            <div class="col-md-4 col-lg-4"> 
+            <!--<div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
                     {!! ViewHelper::setInput('subject',$data,old('subject'),trans('wiki.subject'),
                     trans('wiki.subject') ,true  ) !!}
                 </div>   
-            </div><!--End input box-->
+            </div>-->
+            <!--End input box-->
             
          <!-- input box-->
-            <div class="col-md-4 col-lg-4"> 
-                <div class="form-group no-margin-top">
-                    {!! ViewHelper::setCheckbox('allow_all',$data,old('allow_all'),trans('wiki.allowAll') ) !!}
-                </div>   
-            </div><!--End input box-->
+            <!--<div class="col-md-4 col-lg-4"> -->
+            <!--    <div class="form-group no-margin-top">-->
+            <!--        {!! ViewHelper::setCheckbox('allow_all',$data,old('allow_all'),trans('wiki.allowAll') ) !!}-->
+            <!--    </div>   -->
+            <!--</div>-->
+            <!--End input box-->
             
             <div class="clearfix"></div>
             <div class="col-xs-12">

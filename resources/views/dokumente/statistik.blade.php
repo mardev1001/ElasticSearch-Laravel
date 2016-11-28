@@ -21,7 +21,7 @@
                 <div class="panel-heading" role="tab" id="heading-{{$mandant->id}}">
                     <h4 class="panel-title">
                         <a class="collapsed transform-normal" role="button" data-toggle="collapse" href="#collapse-{{$mandant->id}}" aria-expanded="false" aria-controls="collapse-{{$mandant->id}}">
-                            ({{ $mandant->mandant_number }}) {{$mandant->kurzname}} [{{count($documentReadersCount[$mandant->id])}}/{{count($mandant->mandantUsers)}}]
+                            ({{ $mandant->mandant_number }}) {{$mandant->kurzname}} [{{count($documentReadersCount[$mandant->id])}}/{{count(ViewHelper::getActiveUsers($mandant))}}]
                         </a>
                     </h4>
                 </div>
@@ -37,13 +37,24 @@
                                 </tr>
                             @foreach( $mandant->mandantUsers as $mandantUser )
                                 
+                                
+                                @if($mandantUser->user->active)
                                     @if(isset($documentReaders[$mandantUser->user_id]))
-                                        <tr>
-                                            <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
-                                            <td>Ja</td>
-                                            <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read'])->format('d.m.Y H:i:s')}}</td>
-                                            <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->format('d.m.Y H:i:s')}}</td>
-                                        </tr>
+                                        @if(\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->eq(\Carbon\Carbon::parse('0000-00-00 00:00:00')))
+                                            <tr>
+                                                <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
+                                                <td>Neu</td>
+                                                <td>-</td>
+                                                <td>-</td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
+                                                <td>Ja</td>
+                                                <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read'])->format('d.m.Y H:i:s')}}</td>
+                                                <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->format('d.m.Y H:i:s')}}</td>
+                                            </tr>
+                                        @endif
                                     @else
                                         <tr>
                                             <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
@@ -52,6 +63,7 @@
                                             <td>-</td>
                                         </tr>
                                     @endif
+                                @endif
                                 
                             @endforeach
                         </table>

@@ -153,7 +153,8 @@ class ViewHelper{
      * @param array $dataAttr
      * @return string $value || $old
      */
-    static function setUserSelect($collections=array(), $inputName, $data , $old, $label='', $placeholder='', $required=false, $classes=array(), $dataTag=array(), $attributes=array()  ){
+    static function setUserSelect($collections=array(), $inputName, $data , $old, $label='', $placeholder='', $required=false, 
+    $classes=array(), $dataTag=array(), $attributes=array() ){
         if( $placeholder == '')
             $placeholder = $label;
             
@@ -162,7 +163,7 @@ class ViewHelper{
             
         $string = '';
         $string = view('partials.inputUserSelect',
-                    compact('collections','inputName','data','label','old','placeholder','required','classes','dataTag','attributes')
+                    compact('collections','inputName','data','label','old','placeholder','required','classes','dataTag','attributes','emptyValue')
                 )->render();
        
      
@@ -1007,6 +1008,16 @@ class ViewHelper{
         }
         
         return $rolesCount;
+    }
+    
+    /**
+     * Return active users in a mandant
+     * @return Collection
+     */
+    static function getActiveUsers($mandant){
+        $userIds = MandantUser::where('mandant_id', $mandant->id)->pluck('user_id');
+        $activeUsers = User::where('active', 1)->whereIn('id', $userIds)->get();
+        return $activeUsers;
     }
     
 }

@@ -599,8 +599,21 @@ class DocumentController extends Controller
             $incrementedIso = $incrementedIso->iso_category_number;
             $incrementedIso = $incrementedIso+1;
         }
+        
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantUsers =  MandantUser::distinct('user_id')->whereIn('mandant_id',$mandantId)->get();  
+        $mandantUsers = $this->clearUsers($mandantUsers);
+        
+        $pluckIdMandantUsers = $mandantUsers->pluck('user_id')->toArray();
+        $mandantUsers = User::whereIn('id',$pluckIdMandantUsers)->orderBy('last_name','asc')->get();
+        
+        $documentCoauthor = $mandantUsers;
+            
+        //this is until Neptun inserts the documents
+        $documentUsers = $mandantUsers;
+        
         return view('dokumente.attachments', compact('collections','data','data2','attachmentArray','documents', 'documentsFormulare', 'documentStatus', 'url', 'documentTypes',
-        'isoDocuments','mandantUsers','backButton','nextButton','preparedVariant','incrementedQmr','incrementedIso') );
+        'isoDocuments','mandantUsers','documentUsers','backButton','nextButton','preparedVariant','incrementedQmr','incrementedIso') );
     }
     
     /**
@@ -2612,9 +2625,11 @@ class DocumentController extends Controller
             $documentReadersCount[$mandant->id] = array();
             foreach($mandant->mandantUsers as $mandantUser){
                 foreach($documentReadersObj as $docReader){
-                    if($mandantUser->user_id == $docReader->user_id){
-                        if(!in_array($docReader, $documentReadersCount[$mandant->id]))
-                            array_push($documentReadersCount[$mandant->id], $docReader);
+                    if($mandantUser->user->active){
+                        if($mandantUser->user_id == $docReader->user_id){
+                            if(!in_array($docReader, $documentReadersCount[$mandant->id]))
+                                array_push($documentReadersCount[$mandant->id], $docReader);
+                        }
                     }
                 }
             }

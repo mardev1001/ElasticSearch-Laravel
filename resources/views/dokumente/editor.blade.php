@@ -389,8 +389,7 @@
             <!-- variable for expanding document sidebar-->
     <script type="text/javascript">
         var documentType = "{{ $data->documentType->name}}";
-
-
+        var documentSlug = "{{ str_slug($data->documentType->name)}}";
     </script>
 
     <!--patch for checking iso category document-->

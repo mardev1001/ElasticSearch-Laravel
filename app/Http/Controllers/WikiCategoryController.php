@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Request as RequestMerge;
 use App\Http\Repositories\SearchRepository;
+use Auth;
 
 use App\WikiRole;
 use App\WikiCategory;
@@ -86,16 +87,22 @@ class WikiCategoryController extends Controller
         $category = WikiCategory::find($id);
         
      
-        $query = WikiPage::where('category_id',$id);
+        $query = WikiPage::where('category_id',$id)->orderBy('updated_at','desc');
         if( ViewHelper::universalHasPermission(array(15)) == false ){
             $query->whereNotIn('status_id',array(1,3) );
         }
+        
+        $myQuery = $query->where('user_id', Auth::user()->id);
+        $myCategory = $myQuery->paginate(12);   
+        $myCategoryEntriesTree = $this->document->generateWikiTreeview( $myCategory );
            
         $categoryEntries = $query->paginate(12);   
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
+        
+       
         // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
         
-        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree') ); 
+        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree','myCategory','myCategoryEntriesTree') ); 
     }
 
     /**
@@ -216,13 +223,19 @@ class WikiCategoryController extends Controller
     {
         $id = $request->get('category');
         $category = WikiCategory::find($id);
+        $searchInput = new \StdClass();
+        $searchInput->search = $request->get('search');
         
-     
-        $query = WikiPage::where('category_id',$id);
+        $query = WikiPage::where('category_id',$id)->orderBy('updated_at','desc');
         if( ViewHelper::universalHasPermission(array(15)) == false ){
             $query->whereNotIn('status_id',array(1,3) );
         }
         $querySearch = $this->search->searchWikiCategories( $request->all() );  
+        
+        
+        $myQuery = $query->where('user_id', Auth::user()->id);
+        $myCategory = $myQuery->paginate(12);   
+        $myCategoryEntriesTree = $this->document->generateWikiTreeview( $myCategory );
         
         $categoryEntries = $query->paginate(12);   
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
@@ -231,6 +244,7 @@ class WikiCategoryController extends Controller
         $searchTreeView = $this->document->generateWikiTreeview( $search );
         // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
         
-        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree','search','searchTreeView') ); 
+        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree','search','searchTreeView','searchInput',
+        'myCategory','myCategoryEntriesTree') ); 
     }
 }

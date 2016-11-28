@@ -107,10 +107,10 @@ class UserController extends Controller
                         ->where('user_id', $user->id)->get();
             if(count($readDocs) == 0){
                 UserReadDocument::create([
-                    'document_group_id'=> $document->document_group_id, 
-                    'user_id'=> $user->id, 
-                    'date_read'=> Carbon::now(), 
-                    'date_read_last'=> Carbon::now()
+                    'document_group_id'=> $document->document_group_id,
+                    'user_id'=> $user->id,
+                    'date_read'=> Carbon::now(),
+                    // 'date_read_last'=> Carbon::parse('1999-01-01 00:00:00')
                 ]);
             }
         }
@@ -311,6 +311,7 @@ class UserController extends Controller
      */
     public function userRoleTransfer(Request $request)
     {
+        // TODO: Missing read docs from the copied user, don't delete existing read docs :)
         
         // dd($request->all() );
         $user = $request->input('user_id'); //primary user

@@ -22,9 +22,9 @@
                             <div class="col-md-3 mb-20">
                                 {!! ViewHelper::setInput('name', $data,old('name'), trans('wiki.name') ) !!}
                             </div>
-                            <div class="col-md-3 mb-20">
-                                {!! ViewHelper::setInput('subject',  $data,old('name'), trans('wiki.subject') ) !!}
-                            </div>
+                            <!--<div class="col-md-3 mb-20">-->
+                            <!--    {!! ViewHelper::setInput('subject',  $data,old('subject'), trans('wiki.subject') ) !!}-->
+                            <!--</div>-->
                           
                             <div class="col-md-3 mb-20">
                                 {!! ViewHelper::setInput('date_from',  $data,old('date_from'), trans('wiki.dateFrom'), trans('wiki.dateFrom') 
