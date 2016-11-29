@@ -109,7 +109,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('suche', 'SearchController');
         
         // Wiki routes
-        Route::any('wiki-kategorie/suche', 'WikiCategoryController@search');
+        Route::post('wiki-kategorie/suche', 'WikiCategoryController@search');
         Route::resource('wiki-kategorie', 'WikiCategoryController');
         Route::any('wiki/suche', 'WikiController@search');
         Route::get('wiki/verwalten', 'WikiController@managmentUser');

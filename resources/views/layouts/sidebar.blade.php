@@ -149,18 +149,18 @@
                 </li>
             @endif
             
-            @if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == true ) 
+            @if( ViewHelper::universalHasPermission( array(6,18) ) == true ) <!-- ,19,20 -->
                 <li class="">
                     <a href="{{ url('mandantenverwaltung') }}">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                         <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        @if( ViewHelper::universalHasPermission( array(6,19,20) ) == true ) 
+                        @if( ViewHelper::universalHasPermission( array(6) ) == true ) <!-- ,19,20 -->
                             <li>
                                 <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
                             </li>
                         @endif
                         
-                        @if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == true ) 
+                        @if( ViewHelper::universalHasPermission( array(6,18) ) == true ) <!-- ,19,20 -->
                             <li>
                                 <a href="{{ url('mandanten/export') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.export') }}</a>
                             </li>

@@ -136,10 +136,7 @@
                                                     >{{ trans('benutzerForm.remove') }}</button><br>
                                                 {!! Form::close() !!}
                                                 
-                                                {{-- <a href="{{route('benutzer.edit', ['id'=> $mandantUser->user->id])}}" class="btn btn-xs btn-primary">{{ trans('benutzerForm.edit') }}</a> --}}
                                                 {!! Form::open(['url' => '/benutzer/'. $mandantUser->user->id .'/partner/'. $mandantUser->mandant->id .'/edit', 'method'=>'POST']) !!}
-                                                    <!--<input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">-->
-                                                    <!--<input type="hidden" name="mandant_id" value="{{ $mandant->id }}">-->
                                                     <button type="submit" class="btn btn-xs btn-primary">{{ trans('benutzerForm.edit') }}</button>
                                                 {!! Form::close() !!}
                                             </td>
@@ -173,25 +170,35 @@
     
     @if( !empty($search) && $search == true )
     
-        <h2 class="title">Suchergebnisse für Benutzer ({{count($users)}})</h2>
+        <h2 class="title ">Suchergebnisse für Benutzer ({{count($mandantUsersSearch)}})</h2>
         
-        @if( !empty($users)  ) 
+        @if( !empty($mandantUsersSearch)  ) 
             
             <div class="panel-group">
                 
-                @foreach( $users as $user)
-                    
+                @foreach( $mandantUsersSearch as $mandantUser)
+                        
                     <div class="panel panel-primary" id="panelUsers">
                         
                         <div class="panel-heading">
+                            
                             <h4 class="panel-title pull-left">
-                                <span class="panel-title">
-                                    {{$user->first_name}} @if($user->short_name)({{$user->short_name}})@endif {{$user->last_name}}
+                                <span class="panel-title transform-normal">
+                                    {{$mandantUser->user->first_name}} @if($mandantUser->user->short_name)({{$mandantUser->user->short_name}})@endif {{$mandantUser->user->last_name}} 
+                                    [{{$mandantUser->mandant->kurzname}}]
                                 </span>
+                                {{--
+                                <br>
+                                <span class="panel-options transform-normal">
+                                    ({{$mandantUser->mandant->kurzname}})
+                                </span>
+                                --}}
                             </h4>
                         
                             <span class="pull-right">
-                                 <a href="{{route('benutzer.edit', ['id'=> $user->id])}}" class="btn btn-xs btn-primary no-arrow no-margin-bottom">{{ trans('benutzerForm.edit') }}</a>
+                                {!! Form::open(['url' => '/benutzer/'. $mandantUser->user->id .'/partner/'. $mandantUser->mandant->id .'/edit', 'method'=>'POST']) !!}
+                                     <button type="submit" class="btn btn-xs btn-primary no-margin-bottom">{{ trans('benutzerForm.edit') }}</button>
+                                {!! Form::close() !!}
                             </span>
                             
                         </div>

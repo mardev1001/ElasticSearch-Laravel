@@ -12,6 +12,7 @@ use File;
 use Mail;
 use URL;
 
+use App\Helpers\ViewHelper;
 use App\Document;
 use App\DocumentComment;
 use App\DocumentCoauthor;
@@ -20,6 +21,8 @@ use App\User;
 use App\MandantUser;
 use App\MandantUserRole;
 use App\WikiPage;
+use App\WikiCategory;
+use App\WikiCategoryUser;
 use App\DocumentApproval;
 use App\Http\Repositories\DocumentRepository;
 
@@ -111,7 +114,18 @@ class HomeController extends Controller
         ->paginate(10, ['*'], 'freigabe-dokumente');
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
         
-        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id',2)->orderBy('updated_at','DESC')->take(5)->get());
+        /* Wiki setup */
+            $categoriesId = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
+            if( ViewHelper::universalHasPermission(array()) ){
+                $categoriesId = WikiCategory::pluck('id')->toArray();
+            }
+            $wikiPermissions = ViewHelper::getWikiUserCategories();
+            $categoriesId = $wikiPermissions->categoriesIdArray;
+            // dd($categoriesId);
+        /* End Wiki setup */
+        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id',2)->whereIn('category_id',$categoriesId)
+        ->orderBy('updated_at','DESC')->take(5)->get());
+        
         $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('updated_at', 'desc')->take(10)->get();
         
         $commentVisibility = false;

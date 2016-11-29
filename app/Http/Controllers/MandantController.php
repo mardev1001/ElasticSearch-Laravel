@@ -177,27 +177,40 @@ class MandantController extends Controller
         
         $uid = Auth::user()->id;
         $roles = Role::all();
-       // \DB::enableQueryLog();
+        // \DB::enableQueryLog();
         $mandantU = MandantUser::where('user_id',$uid)->pluck('mandant_id')->toArray();
-        $usersM  = MandantUser::whereIn('mandant_id',$mandantU)->pluck('user_id')->toArray();
-        $users = User::whereIn('id',$usersM);
+        // $usersM  = MandantUser::whereIn('mandant_id',$mandantU)->pluck('user_id')->toArray();
+        // $users = User::whereIn( 'id', $usersM );
         // dd($users->get() );
-        if( !empty($searchParameter))
-        $users = $users->where(function ($query) use($searchParameter) {
-            $query->where('first_name', 'LIKE', '%'. $searchParameter .'%')
-        ->orWhere('last_name', 'LIKE', '%'. $searchParameter .'%')
-        ->orWhere('short_name', 'LIKE', '%'. $searchParameter .'%');
-        }); 
+        $users = null;
+        if( !empty($searchParameter) ){
+            // $users = $users->where(function ($query) use($searchParameter) {
+            $users = User::where(function ($query) use($searchParameter) {
+                $query->where('first_name', 'LIKE', '%'. $searchParameter .'%')
+            ->orWhere('last_name', 'LIKE', '%'. $searchParameter .'%')
+            ->orWhere('short_name', 'LIKE', '%'. $searchParameter .'%');
+            });
+        }
         if($deletedUsers) 
             if( $users != null && !empty($searchParameter) )
                 $users = $users->withTrashed();
             else
                 $users = User::onlyTrashed();
         if($users != null)
-        $users = $users ->get();
+        $users = $users->orderBy('first_name', 'ASC')->orderBy('id', 'ASC')->get();
+        
+        $mandantUsersSearch = array();
+        foreach($users as $usr){ 
+            $mUsrs = MandantUser::whereIn('mandant_id',$mandantU)->where('user_id', $usr->id)->get();
+            foreach($mUsrs as $mUsr){
+                $mandantUsersSearch[] = $mUsr;
+            }
+        }
+        
         //dd( \DB::getQueryLog() );
         
         $mandants = Mandant::whereIn('id',$mandantU);
+        
         if( !empty($searchParameter))
         $mandants =$mandants->where(function ($query) use($searchParameter) {
             $query-> where('name','LIKE', '%'. $searchParameter .'%')
@@ -214,7 +227,7 @@ class MandantController extends Controller
         if( $mandants != null )
         $mandants = $mandants->get();
         // $mandants = $this->search->phonelistSearch($request);
-        return view('mandanten.individualAdministration', compact('search', 'searchParameter', 'mandants', 'users', 'roles', 'deletedUsers', 'deletedMandants' ) );
+        return view('mandanten.individualAdministration', compact('search', 'searchParameter', 'mandants', 'users', 'roles', 'deletedUsers', 'deletedMandants', 'mandantUsersSearch' ) );
     }
 
     /**

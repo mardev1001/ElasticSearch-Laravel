@@ -47,14 +47,15 @@ class WikiController extends Controller
             
         // $userRoles = ViewHelper::getUserRole( Auth::user()->id );
         // // dd(WikiRole::where('role_id', $userRoles)->get());
-        $wikiCategories =ViewHelper::getAvailableWikiCategories();
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        $wikiCategories = $wikiPermissions->categoriesIdArray;
         
         $topCategories = WikiCategory::where('top_category',1)->whereIn('id',$wikiCategories)->get();
         
-        if( ViewHelper::universalHasPermission(array()) ){
-            $topCategories = WikiCategory::where('top_category',1)->get();
-            $wikiCategories = WikiCategory::pluck('id')->toArray();
-        }
+        // if( ViewHelper::universalHasPermission(array()) ){
+        //     $topCategories = WikiCategory::where('top_category',1)->get();
+        //     $wikiCategories = WikiCategory::pluck('id')->toArray();
+        // }
         
         
         $newestWikiEntriesPagination = WikiPage::where('status_id',2)->whereIn('category_id',$wikiCategories)
@@ -222,12 +223,14 @@ class WikiController extends Controller
         $userRoles = ViewHelper::getUserRole( Auth::user()->id );
         // dd(WikiRole::where('role_id', $userRoles)->get());
         $wikiRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
-        $wikiCategories =ViewHelper::getAvailableWikiCategories();
+        // $wikiCategories =ViewHelper::getAvailableWikiCategories();
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        $wikiCategories = $wikiPermissions->categoriesIdArray;
         // \DB::enableQueryLog();
         $topCategories = WikiCategory::where('top_category',1)->whereIn('id',$wikiCategories)->get();
         
-        if( ViewHelper::universalHasPermission(array()) )
-            $topCategories = WikiCategory::where('top_category',1)->get();
+        // if( ViewHelper::universalHasPermission(array()) )
+        //     $topCategories = WikiCategory::where('top_category',1)->get();
         
         $newestWikiEntriesPagination = WikiPage::whereIn('category_id',$wikiCategories)->where('status_id',2)->orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
@@ -245,10 +248,10 @@ class WikiController extends Controller
         
         $topCategories = WikiCategory::where('top_category',1)->whereIn('id',$wikiCategories)->get();
         
-        if( ViewHelper::universalHasPermission(array()) ){
-            $topCategories = WikiCategory::where('top_category',1)->get();
-            $wikiCategories = WikiCategory::pluck('id')->toArray();
-        }
+        // if( ViewHelper::universalHasPermission(array()) ){
+        //     $topCategories = WikiCategory::where('top_category',1)->get();
+        //     $wikiCategories = WikiCategory::pluck('id')->toArray();
+        // }
         
        // $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         //$newestWikiEntriesPagination = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
@@ -283,13 +286,16 @@ class WikiController extends Controller
         $statuses = WikiPageStatus::all();
         $wikiUsers = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
         
-        $categories = WikiCategory::whereIn('id',$wikiUsers)->get();
-        $wikies = WikiPage::whereIn('category_id',$wikiUsers)->orderBy('created_at','desc')->get();
-           if( ViewHelper::universalHasPermission(array()) ){
-            $categoriesId = WikiCategory::pluck('id')->toArray();
-            $categories = WikiCategory::whereIn('id',$categoriesId)->get();
-            $wikies = WikiPage::whereIn('category_id',$categoriesId)->orderBy('created_at','desc')->get();
-        }
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        $wikiCategories = $wikiPermissions->categoriesIdArray;
+        
+        $categories = WikiCategory::whereIn('id',$wikiCategories)->get();
+        $wikies = WikiPage::whereIn('category_id',$wikiCategories)->orderBy('updated_at','desc')->get();
+        //   if( ViewHelper::universalHasPermission(array()) ){
+        //     $categoriesId = WikiCategory::pluck('id')->toArray();
+        //     $categories = WikiCategory::whereIn('id',$categoriesId)->get();
+        //     $wikies = WikiPage::whereIn('category_id',$categoriesId)->orderBy('created_at','desc')->get();
+        // }
         $users = WikiPage::orderBy('id','asc')->pluck('user_id')->toArray();
         $wikiUsers = User::whereIn('id',$users)->get();
         $admin = true;
@@ -348,14 +354,15 @@ class WikiController extends Controller
         
         $categoriesId = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
         // $categoriesId = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
-        
-        $categories = WikiCategory::whereIn('id',$categoriesId)->get();
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        $wikiCategories = $wikiPermissions->categoriesIdArray;
+        $categories = WikiCategory::whereIn('id',$wikiCategories)->get();
         // $wikies = WikiPage::whereIn('category_id',$wikiUsers)->orderBy('created_at','desc')->get();
-           if( ViewHelper::universalHasPermission(array()) ){
-            $categoriesId = WikiCategory::pluck('id')->toArray();
-            $categories = WikiCategory::whereIn('id',$categoriesId)->get();
-            // $wikies = WikiPage::whereIn('category_id',$categoriesId)->orderBy('created_at','desc')->get();
-        }
+        //   if( ViewHelper::universalHasPermission(array()) ){
+        //     $categoriesId = WikiCategory::pluck('id')->toArray();
+        //     $categories = WikiCategory::whereIn('id',$categoriesId)->get();
+        //     // $wikies = WikiPage::whereIn('category_id',$categoriesId)->orderBy('created_at','desc')->get();
+        // }
         $users = WikiPage::orderBy('id','asc')->pluck('user_id')->toArray();
         
         $wikiUsers = User::whereIn('id',$users)->get();

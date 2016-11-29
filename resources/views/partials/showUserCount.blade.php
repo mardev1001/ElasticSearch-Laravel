@@ -6,6 +6,7 @@
             ({{count($usersActive) . " aktive" }}
         @endif
     @else
+        (0 aktive /
     @endif
     
     @if(count($usersInactive)>0)

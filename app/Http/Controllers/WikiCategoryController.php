@@ -84,21 +84,25 @@ class WikiCategoryController extends Controller
      */
     public function show($id)
     {
+       
         $category = WikiCategory::find($id);
         
      
         $query = WikiPage::where('category_id',$id)->orderBy('updated_at','desc');
+       
         if( ViewHelper::universalHasPermission(array(15)) == false ){
             $query->whereNotIn('status_id',array(1,3) );
         }
-        
-        $myQuery = $query->where('user_id', Auth::user()->id);
-        $myCategory = $myQuery->paginate(12);   
-        $myCategoryEntriesTree = $this->document->generateWikiTreeview( $myCategory );
-           
+      
+        $myQuery = $query;
         $categoryEntries = $query->paginate(12);   
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
         
+        $myQuery = $myQuery->where('user_id', Auth::user()->id);
+        $myCategory = $myQuery->paginate(12);   
+        $myCategoryEntriesTree = $this->document->generateWikiTreeview( $myCategory );
+           
+      
        
         // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
         
@@ -221,6 +225,8 @@ class WikiCategoryController extends Controller
      */
     public function search(Request $request)
     {
+        if( !$request->has('category') )
+            return redirect('wiki');
         $id = $request->get('category');
         $category = WikiCategory::find($id);
         $searchInput = new \StdClass();
@@ -233,15 +239,16 @@ class WikiCategoryController extends Controller
         $querySearch = $this->search->searchWikiCategories( $request->all() );  
         
         
-        $myQuery = $query->where('user_id', Auth::user()->id);
-        $myCategory = $myQuery->paginate(12);   
-        $myCategoryEntriesTree = $this->document->generateWikiTreeview( $myCategory );
         
         $categoryEntries = $query->paginate(12);   
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
         
         $search = $querySearch->paginate(12);   
         $searchTreeView = $this->document->generateWikiTreeview( $search );
+        
+        $myQuery = $query->where('user_id', Auth::user()->id);
+        $myCategory = $myQuery->paginate(12);   
+        $myCategoryEntriesTree = $this->document->generateWikiTreeview( $myCategory );
         // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
         
         return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree','search','searchTreeView','searchInput',

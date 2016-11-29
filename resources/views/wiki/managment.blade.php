@@ -7,7 +7,7 @@
 @section('content')
 <div class="row">
     <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper">
+        <div class="col-xs-12 box-wrapper ">
             
             <h2 class="title">{{ trans('wiki.search') }}</h2>
             
@@ -18,7 +18,7 @@
                          @else 
                              <input type="hidden" name="admin" value="0" />
                          @endif
-                        <div class="wiki-managment-search">
+                        <div class="wiki-managment-search row">
                             <div class="col-md-3 mb-20">
                                 {!! ViewHelper::setInput('name', $data,old('name'), trans('wiki.name') ) !!}
                             </div>

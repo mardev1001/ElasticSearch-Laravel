@@ -111,7 +111,9 @@ class SearchRepository
                 $wikiIds[] = $wikiPage->id;    
             }
         }
-       $wikiCategories = ViewHelper::getAvailableWikiCategories() ;
+        // $wikiCategories = ViewHelper::getAvailableWikiCategories() ;
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        $wikiCategories = $wikiPermissions->categoriesIdArray;
        
         $results = WikiPage::whereIn('category_id',$wikiCategories)
         ->where(function ($query) use($searchParam,$wikiIds) {

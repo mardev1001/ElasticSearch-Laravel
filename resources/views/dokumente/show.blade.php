@@ -348,11 +348,11 @@
         @section('preScript')
                 <!-- variable for expanding document sidebar-->
         <script type="text/javascript">
-        console.log('yes');
+            // console.log('yes');
             var documentType = "{{ $document->documentType->name}}";
             var documentSlug = "{{ str_slug( $document->documentType->name ) }}";
-            console.log(documentType);
-            console.log(documentSlug);
+            // console.log(documentType);
+            // console.log(documentSlug);
         </script>
         @stop
         

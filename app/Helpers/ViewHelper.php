@@ -13,8 +13,10 @@ use App\DocumentCoauthor;
 use App\EditorVariant;
 use App\DocumentApproval;
 use App\DocumentType;
+use App\WikiPage;
 use App\WikiRole;
 use App\WikiCategory;
+use App\WikiCategoryUser;
 
 class ViewHelper{
     
@@ -445,6 +447,63 @@ class ViewHelper{
     }
     
     /**
+     * Get available wiki categories for the current user
+     * @params array $whereInArrayParams
+     * @return bool 
+     */
+    static function getWikiUserCategories( $whereInArrayParams=array() ){
+        $uid = Auth::user()->id;
+        $wiki = new \StdClass();
+        $categoriesPluck = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
+        $userRoles = self::getUserRole($uid);
+        $roles = self::getAvailableWikiCategories();
+        $categoriesId = array_merge($categoriesPluck,$roles);
+        
+        $categories = WikiCategory::whereIn('id',$categoriesId)->get();
+        if( ViewHelper::universalHasPermission(array()) ){
+            $categoriesId = WikiCategory::pluck('id')->toArray();
+        }
+        
+        $categories = WikiCategory::whereIn('id',$categoriesId);
+        $wikies = WikiPage::whereIn('category_id',$categoriesId)->orderBy('updated_at','desc');
+       
+        $wiki->categoriesIdArray = $categoriesId;
+        $wiki->categories = $categories;
+        $wiki->pages = $wikies;
+        
+        return $wiki;
+    }
+    /**
+     * Get Availabe Wiki 
+     * @return Mandant | bool
+     */
+    static function getAvailableWikiCategories(){
+        $userRoles = self::getUserRole( Auth::user()->id );
+        
+        $wikiCatByRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
+        
+        $wikiCategories = WikiCategory::where(function ($query) use($wikiCatByRoles) {
+                $query
+                ->whereIn('id', $wikiCatByRoles)
+                ->orWhere('all_roles',1);
+            })
+        ->pluck('id')->toArray();
+        return $wikiCategories;
+    }
+    /**
+     * Get Availabe Wiki 
+     * @return Mandant | bool
+     */
+    static function wikiCanEditByCatId($category){
+        $userRoles = self::getUserRole( Auth::user()->id );
+        
+        $wikiCatByRoles = WikiRole::whereIn('role_id', $userRoles)->where('wiki_category_id',$category)->get();
+        if( count($wikiCatByRoles) ||  self::universalHasPermission( array() ) )
+            return true;
+        return false;
+    }
+    
+    /**
      * Generate comment boxes
      * @param Collection $collection 
      * @param string $title
@@ -801,35 +860,7 @@ class ViewHelper{
         return $htmlObjectType;        
     }
     
-    /**
-     * Get Availabe Wiki 
-     * @return Mandant | bool
-     */
-    static function getAvailableWikiCategories(){
-        $userRoles = self::getUserRole( Auth::user()->id );
-        
-        $wikiCatByRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
-        
-        $wikiCategories = WikiCategory::where(function ($query) use($wikiCatByRoles) {
-                $query
-                ->whereIn('id', $wikiCatByRoles)
-                ->orWhere('all_roles',1);
-            })
-        ->pluck('id')->toArray();
-        return $wikiCategories;
-    }
-    /**
-     * Get Availabe Wiki 
-     * @return Mandant | bool
-     */
-    static function wikiCanEditByCatId($category){
-        $userRoles = self::getUserRole( Auth::user()->id );
-        
-        $wikiCatByRoles = WikiRole::whereIn('role_id', $userRoles)->where('wiki_category_id',$category)->get();
-        if( count($wikiCatByRoles) ||  self::universalHasPermission( array() ) )
-            return true;
-        return false;
-    }
+    
     
     /**
      * Get Mandants parent Mandant if he has one
