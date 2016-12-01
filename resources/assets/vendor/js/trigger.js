@@ -15,7 +15,6 @@ $(function () {
         } else {
             $('div.navbar-collapse').removeClass('collapse');
         }
-
         height = ((this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height) - 1;
         height = height - topOffset;
         if (height < 1) height = 1;
@@ -48,8 +47,9 @@ $(function () {
     // parts.pop();
     
     // console.log( lastLinkPart );    
-    if(Math.floor(lastLinkPart) == lastLinkPart && $.isNumeric(lastLinkPart)) 
+    if(Math.floor(lastLinkPart) == lastLinkPart && $.isNumeric(lastLinkPart)) {
         isNumeric = true;   
+    }
 
     if ((location.protocol + "//" + location.host + '/') == url.href) {
         $('a[href="/"]').addClass('active');
@@ -60,15 +60,20 @@ $(function () {
         $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
     }
     else if (url.href.indexOf('benutzer') != -1 && url.href.indexOf('partner') != -1) {
-        // console.log(element);
         $('a[href$="/benutzer"]').addClass('active');
         $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
     }
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1) {
         $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
     }
+    else if (url.href.indexOf('wiki-kategorie') != -1  && isNumeric == true) {
+        $('a[href$="wiki"]').addClass('active').closest('ul').addClass('in'); 
+    }
+    else if (url.href.indexOf('wiki-kategorie') != -1  && url.href.indexOf('suche') != -1 ) {
+        $('a[href$="wiki"]').addClass('active').closest('ul').addClass('in'); 
+    }
     else if (url.href.indexOf('wiki-kategorie') != -1 ) {
-        $('a[href$="wiki-kategorie"]').addClass('active').next('ul').addClass('in'); 
+        $('a[href$="wiki-kategorie"]').addClass('active').closest('ul').addClass('in'); 
     }
     else if (url.href.indexOf('verwalten-admin') != -1 ) {
         $('a[href$="wiki/verwalten-admin"]').addClass('active').next('ul').addClass('in'); 
@@ -134,8 +139,6 @@ $(function () {
                       $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').next('ul').addClass('in');
                      
                  }
-               
-
             }
             else
                 detectHref = '/iso-dokumente';
@@ -146,23 +149,16 @@ $(function () {
             detectHref = '/dokumente/typ/' + documentSlug;
         }
         $('a[href$="' + detectHref + '"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
-
-
     }
     else {
         $('a[href="' + url.href + '"]').addClass('active');
         if( $('a[href="' + url.href + '"]').next('ul').length )
             $('a[href="' + url.href + '"]').next('ul').addClass('in').hide().show("fast");
     }
-
     if (element.is('li')) {
-        // console.log($(this));
         element.addClass('active');
     }
 
-    // else console.log($(this));
-    
-    
     var activeLink = $('#side-menu li a.active');
     activeLink.parents('li').addClass('active');
     
@@ -250,16 +246,12 @@ $(function () {
             },
             error: function (data) {
                 // console.log(data);
-
-
             },
-
         });
 
         e.preventDefault();
     };
-
-    // $('[data-adder]').on('click touch', addRow);
+    
     /*End copy new line*/
     /*
      *Prevent accordion collapse trigger from adding hashtags at the address bar. 

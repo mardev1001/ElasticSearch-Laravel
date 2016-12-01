@@ -326,17 +326,18 @@
         {!! ViewHelper::generateCommentBoxes($myComments, trans('dokumentShow.myComments'), true ) !!}
     @endif
     
-    @if( $commentVisibility->user == true || $commentVisibility->freigabe == true )
-        @if(count($documentComments) && ViewHelper::universalHasPermission( array(16) ))
-                {!! ViewHelper::generateCommentBoxes($documentComments, trans('wiki.commentUser'),true ) !!}
+    @if(ViewHelper::universalHasPermission( array(9)) || ViewHelper::universalDocumentPermission($document, false,false,true))
+        @if( $commentVisibility->user == true || $commentVisibility->freigabe == true )
+            @if(count($documentComments) )
+                    {!! ViewHelper::generateCommentBoxes($documentComments, trans('wiki.commentUser'),true ) !!}
+            @endif
         @endif
-    @endif
-    
-    @if( ViewHelper::universalDocumentPermission($document) == true )
-    
-        @if( $commentVisibility->freigabe == true || ViewHelper::universalDocumentPermission($document, false,false,true) )
-            @if(count($documentCommentsFreigabe) )
-                {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
+        
+        @if( ViewHelper::universalDocumentPermission($document) == true )
+            @if( $commentVisibility->freigabe == true || ViewHelper::universalDocumentPermission($document, false,false,true) )
+                @if(count($documentCommentsFreigabe) )
+                    {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
+                @endif
             @endif
         @endif
     @endif

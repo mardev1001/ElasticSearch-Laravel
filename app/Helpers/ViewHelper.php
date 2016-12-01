@@ -546,41 +546,42 @@ class ViewHelper{
         $uid = Auth::user()->id;
       
         $mandantUsers =  MandantUser::where('user_id',$uid)->get();
+        
         $hasPermission = false;   
         foreach($mandantUsers as $mu){
-            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
-            foreach($userMandatRoles as $umr){
-               if($withAdmin == true){
-                    if( $umr->role_id == 1 || in_array($umr->role_id, $userArray) ){
-                        
-                        $hasPermission = true;
+            if( $mu->mandant->active == true ){  // if user mandant is active
+                $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
+                foreach($userMandatRoles as $umr){
+                   if($withAdmin == true){
+                        if( $umr->role_id == 1 || in_array($umr->role_id, $userArray) ){
+                            $hasPermission = true;
+                        }
+                    }
+                    else{
+                        if( in_array($umr->role_id, $userArray) == true && $umr->role_id != null ){
+                            $hasPermission = true;
+                        }
                     }
                 }
-                else{
-                    
-                    if( in_array($umr->role_id, $userArray) == true && $umr->role_id != null ){
-                        // dd($userMandatRoles);
-                        $hasPermission = true;
-                    }
-                    
-                }
-                   
             }
+                
         }
-    
         return $hasPermission;
     }
-     /**
-     * Universal document permission check
-     * @param array $userArray
-     * @param collection $document
-     * @param bool $message
-     * @return bool || response
-     */
+    
+    /**
+    * Universal document permission check
+    * @param array $userArray
+    * @param collection $document
+    * @param bool $messagen
+    * @return bool || response
+    */
     static function getDocumentNewsData(){
         $news = DocumentType::find(1);//document type news
         return $news;
     }
+    
+    
    /**
      * Universal document permission check
      * @param array $userArray
@@ -594,7 +595,6 @@ class ViewHelper{
         $role = 0;
         $hasPermission = false;
         
-        
         foreach($mandantUsers as $mu){
             $userMandatRole = MandantUserRole::where('mandant_user_id',$mu->id)->first();
             if( $userMandatRole != null && $userMandatRole->role_id == 1 )
@@ -605,12 +605,8 @@ class ViewHelper{
             $documentAprrovers = DocumentApproval::where('document_id', $document->id)->where('user_id',$uid)->get();
             if( count($documentAprrovers) )
                 $hasPermission = true;
-               
         }
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
-        // dd( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1 );
-        
-        
         
         if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) 
         || ( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1 )
@@ -622,28 +618,6 @@ class ViewHelper{
         //if($document->id == 118)
             // dd($hasPermission);
         return $hasPermission;
-    }
-    
-    /**
-     * Check if user has mandant variant
-     * @param collection $document
-     * @return int 
-     */
-    static function userHasMandantVariant( $document ){
-        $uid = Auth::user()->id;
-        $variants = EditorVariant::where('document_id',$document->id)->get();
-        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
-        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
-        $mandantIdArr = $mandantUserMandant->toArray();
-        $hasOwnMandant = 0;
-        foreach($variants as $variant){
-            foreach( $variant->documentMandantMandants as $mandant){
-                if( in_array($mandant->mandant_id,$mandantIdArr) ){
-                    $hasOwnMandant = $variant->id;
-                }
-            }
-        }
-        return $hasOwnMandant;
     }
     
     /**
@@ -669,14 +643,11 @@ class ViewHelper{
         $variants = EditorVariant::where('document_id',$document->id)->get();
         $hasPermission = false;
         
-        
         foreach($variants as $variant){
             //  dd($variant);
             if($hasPermission == false){//check if hasPermission is already set
             
                 if($variant->approval_all_mandants == true){//database check
-            //   dd($variant);
-                    // dd($document);
                     if($document->approval_all_roles == true){//database check
                         $hasPermission = true;
                         $variant->hasPermission = true;
@@ -696,7 +667,6 @@ class ViewHelper{
                                     $object->permissionExists = true;
                                 }    
                             }
-                            // dd($hasPermission);
                         }//end foreach documentMandantRoles
                     }
                 }
@@ -748,6 +718,28 @@ class ViewHelper{
         $object->variants = $variants;
         return $object;
     }//end documentVariant permission
+    
+    /**
+     * Check if user has mandant variant
+     * @param collection $document
+     * @return int 
+     */
+    static function userHasMandantVariant( $document ){
+        $uid = Auth::user()->id;
+        $variants = EditorVariant::where('document_id',$document->id)->get();
+        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+        $mandantIdArr = $mandantUserMandant->toArray();
+        $hasOwnMandant = 0;
+        foreach($variants as $variant){
+            foreach( $variant->documentMandantMandants as $mandant){
+                if( in_array($mandant->mandant_id,$mandantIdArr) ){
+                    $hasOwnMandant = $variant->id;
+                }
+            }
+        }
+        return $hasOwnMandant;
+    }
     
     
     /**
@@ -1041,14 +1033,15 @@ class ViewHelper{
         return $rolesCount;
     }
     
-    /**
-     * Return active users in a mandant
-     * @return Collection
+     /**
+     * detect if model is dirty or not
+     * @return bool 
      */
-    static function getActiveUsers($mandant){
-        $userIds = MandantUser::where('mandant_id', $mandant->id)->pluck('user_id');
-        $activeUsers = User::where('active', 1)->whereIn('id', $userIds)->get();
-        return $activeUsers;
+    static function isDirty($model,$dirty=false){
+        if( $model->isDirty() ||  $dirty == true )
+            return true;
+        return false;
+       
     }
     
 }

@@ -71,4 +71,33 @@
           
         </div>
     </div>
-    @stop
+   @if( count($data->histories) )
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="col-xs-12 box-wrapper home">
+                    <h1 class="title">Wiki Änderungen</h1>
+                    <div class="box box-white home">
+                        @foreach( $data->histories as $history )
+                             <div class=" row flexbox-container-notnow">
+                               <!-- delete box -->
+                                <div class="pull-left">
+                                    <div class="col-xs-12">
+                                        <span class="comment-body">
+                                          {{ $history->created_at }} - 
+                                          <strong>
+                                              {{ $history->user->last_name }} {{ $history->user->first_name }}
+                                          </strong>
+                                        </span>
+                                    </div>
+                                </div><!-- end delete box -->
+                                
+                            </div>
+                            <hr/>
+                            <div class="clearfix"></div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+@stop

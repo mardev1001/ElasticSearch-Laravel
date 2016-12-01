@@ -49,10 +49,10 @@ class UserController extends Controller
         $searchParameter = null;
         $deletedUsers = null;
         $deletedMandants = null;
-        if( ViewHelper::universalHasPermission( array(2,4), false ) == false )
+        if( ViewHelper::universalHasPermission( array(2,4,17), false ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
-        $mandantUserIds = MandantUserRole::whereIn('role_id', array(2,4))->pluck('mandant_user_id')->toArray();
+        $mandantUserIds = MandantUserRole::whereIn('role_id', array(2,4,17))->pluck('mandant_user_id')->toArray();
         $mandantIds = MandantUser::where('user_id', $uid)->whereIn('id', $mandantUserIds)->pluck('mandant_id')->toArray();
         $roles = Role::all();
         $mandants = Mandant::whereIn('id', $mandantIds)->get();
@@ -68,7 +68,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        if(!$this->utils->universalHasPermission([6,17])) 
+        if(!$this->utils->universalHasPermission([2,4,17,18])) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         return view('benutzer.create');
@@ -182,7 +182,7 @@ class UserController extends Controller
         
         $mandantId = $mandant_id;
         
-        if(!$this->utils->universalHasPermission([2,4]))
+        if(!$this->utils->universalHasPermission([2,4,17]))
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         $restored = false;

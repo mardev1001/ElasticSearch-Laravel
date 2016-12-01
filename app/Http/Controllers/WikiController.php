@@ -169,8 +169,21 @@ class WikiController extends Controller
     public function update(Request $request, $id)
     {
         // dd( $request->all() );
+        $dirty = false;
         $data = WikiPage::find($id);
-        $data->fill( $request->all() )->save();
+        $dirty = ViewHelper::isDirty($data);
+        $data->fill( $request->all() );
+        $dirty = $data->isDirty();
+        $data->save();
+       
+        if( $dirty ){
+            WikiPageHistory::create([
+            'user_id' => Auth::user()->id,
+            'wiki_page_id' => $id,
+            'created_at' => Carbon::now(),
+            'updated_at' => Carbon::now(),
+            ]);
+        }
         session()->flash('message',trans('wiki.wikiEditSuccess'));
         return redirect()->back();
     }

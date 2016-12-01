@@ -215,7 +215,7 @@
                                                             @elseif( isset( Auth::user()->id )  )
                                                                 @if($mandantUser->id ==  Auth::user()->id ) selected @endif 
                                                             @endif> 
-                                                                {{ $mandantUser->first_name }} {{ $mandantUser->last_name }} 
+                                                               {{ $mandantUser->last_name }} {{ $mandantUser->first_name }} 
                                                             </option>
                                                         @endforeach
                                                     </select>

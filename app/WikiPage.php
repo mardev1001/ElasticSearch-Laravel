@@ -40,4 +40,8 @@ class WikiPage extends Model
     public function status(){
         return $this->belongsTo('App\WikiPageStatus', 'status_id', 'id');
     }
+    
+    public function histories(){
+        return $this->hasMany('App\WikiPageHistory', 'wiki_page_id', 'id')->orderBy('wiki_page_histories.updated_at','desc');
+    }
 }

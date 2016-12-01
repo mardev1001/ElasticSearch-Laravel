@@ -683,7 +683,8 @@ class DocumentController extends Controller
             $lastId->save();
             
             
-             if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0" ){
+            if($request->has('document_coauthor') && $request->input('document_coauthor')[0] != "0"
+            && $request->input('document_coauthor')[0] != 0){
                 $coauthors = $request->input('document_coauthor');
                 foreach($coauthors as $coauthor)
                     if( $coauthor != '0');
@@ -2589,13 +2590,13 @@ class DocumentController extends Controller
      */
     public function documentStats($id)
     {
+        if(ViewHelper::universalDocumentPermission($document, true, false, true ) == false)
+             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+             
         $approvalAllMandants = false;
         $mandants = array();
         $document = Document::find($id);
         
-        if(ViewHelper::universalDocumentPermission($document, true, false, true ) == false){
-             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-        }
         $document = $this->checkFreigabeRoles($document);
       
         $editorVariants = EditorVariant::where('document_id',$id)->get();
@@ -2616,26 +2617,44 @@ class DocumentController extends Controller
         $users = User::all();
         $documentReaders = array();
         $documentReadersCount = array();
+        $usersCountRead = array();
+        $usersCountUnread = array();
+        $usersCountNew = array();
+        $usersCountActive = array();
 
         if(!isset($document)) return back();
         
         $documentReadersObj = UserReadDocument::where('document_group_id', $document->published->document_group_id)->get();
         
         foreach($mandants as $mandant){
+            $usersCountRead[$mandant->id] = 0;
+            $usersCountNew[$mandant->id] = 0;
             $documentReadersCount[$mandant->id] = array();
+            
             foreach($mandant->mandantUsers as $mandantUser){
                 foreach($documentReadersObj as $docReader){
                     if($mandantUser->user->active){
                         if($mandantUser->user_id == $docReader->user_id){
-                            if(!in_array($docReader, $documentReadersCount[$mandant->id]))
+                            if(!in_array($docReader, $documentReadersCount[$mandant->id])){
                                 array_push($documentReadersCount[$mandant->id], $docReader);
+                            }
                         }
                     }
                 }
             }
+            
+            foreach($documentReadersCount[$mandant->id] as $reader){
+                if(Carbon::parse($reader->date_read_last)->eq(Carbon::parse('0000-00-00 00:00:00')))
+                    $usersCountNew[$mandant->id] += 1;
+                else $usersCountRead[$mandant->id] += 1;
+            }
+            
+            $userIds = MandantUser::where('mandant_id', $mandant->id)->pluck('user_id');
+            $usersCountActive[$mandant->id] = count(User::where('active', 1)->whereIn('id', $userIds)->get());
+            $usersCountUnread[$mandant->id] = $usersCountActive[$mandant->id] - $usersCountRead[$mandant->id];
         }
         
-        // dd($documentReadersCount);
+        // dd($usersCountUnread);
         
         foreach($documentReadersObj as $documentReader){
             $documentReaders[$documentReader->user_id] = [
@@ -2648,7 +2667,7 @@ class DocumentController extends Controller
         // dd($documentReaders);
         
         // $data = '';
-        return view('dokumente.statistik', compact('documentReaders', 'documentReadersCount', 'mandants', 'users', 'document') );
+        return view('dokumente.statistik', compact('documentReaders', 'documentReadersCount', 'usersCountRead', 'usersCountUnread', 'usersCountNew', 'usersCountActive', 'mandants', 'users', 'document') );
     }
     
     /**
@@ -3213,7 +3232,8 @@ class DocumentController extends Controller
     
         $commentVisibility->user = false;
         $commentVisibility->freigabe = false;
-        if($uid == $document->user_id ||( $document->documentCoauthor != null && $uid == $document->documentCoauthor->user_id ) || $uid == $document->owner_user_id)
+        // if($uid == $document->user_id || ( $document->documentCoauthor != null && $uid == $document->documentCoauthor->user_id ) || $uid == $document->owner_user_id)
+        if( ViewHelper::universalDocumentPermission($document,false,false,true) )
             $commentVisibility->user = true;
         /* End Common user */
         

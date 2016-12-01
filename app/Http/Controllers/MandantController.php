@@ -63,7 +63,7 @@ class MandantController extends Controller
      */
     public function index()
     {
-        if( ViewHelper::universalHasPermission( array(6,19,20) ) == false )
+        if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
          
         $searchParameter = null;
@@ -237,7 +237,7 @@ class MandantController extends Controller
      */
     public function create()
     {
-        if( ViewHelper::universalHasPermission( array(6) ) == false )
+        if( ViewHelper::universalHasPermission( array(6, 18) ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         // $mandantsAll = Mandant::all();
         $bundeslander = $this->bundeslandList;

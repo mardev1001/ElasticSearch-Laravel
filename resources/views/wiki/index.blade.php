@@ -143,7 +143,7 @@
     @if( count( $newestWikiEntriesPagination ) )
     <div class="col-xs-12 col-md-6 ">
         <div class="col-xs-12 box-wrapper home">
-            <h1 class="title">Neueste Beiträge (Änderungen)</h1>
+            <h1 class="title">Alle Wiki-Einträge</h1>
             <div class="box home">
                 <div class="tree-view" data-selector="newestWikiEntries">
                     <div class="newestWikiEntries hide">
