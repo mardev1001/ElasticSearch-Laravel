@@ -6,7 +6,9 @@
             ({{count($usersActive) . " aktive" }}
         @endif
     @else
-        (0 aktive /
+        @if(count($usersActive) == 0 && count($usersInactive) != 0)
+            (0 aktive /
+        @endif
     @endif
     
     @if(count($usersInactive)>0)
@@ -18,5 +20,5 @@
         @endif
     @endif
     
-    @if(count($usersActive) == 0 && count($usersInactive) == 0) (0 Aktive @endif
+    @if(count($usersActive) == 0 && count($usersInactive) == 0) (0 aktive @endif
     Benutzer)

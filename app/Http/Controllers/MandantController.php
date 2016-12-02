@@ -103,7 +103,7 @@ class MandantController extends Controller
      */
     public function search(Request $request)
     {
-       if( ViewHelper::universalHasPermission( array(6,19,20) ) == false )
+       if( ViewHelper::universalHasPermission( array(6, 18, 19, 20) ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
        if( ( !$request->has('search') && !$request->has('deleted_users') && !$request->has('deleted_mandants') ) 
@@ -282,7 +282,7 @@ class MandantController extends Controller
      */
     public function edit($id)
     {   
-        if( ViewHelper::universalHasPermission( array(6) ) == false )
+        if( ViewHelper::universalHasPermission( array(6, 18) ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $restored = false;
         

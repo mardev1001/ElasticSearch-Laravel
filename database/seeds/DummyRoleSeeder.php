@@ -238,7 +238,7 @@ class DummyRoleSeeder extends Seeder
                     'name' => 'Mandanten Verfasser',
                     'mandant_required' => '0',
                     'admin_role' => '1',
-                    'system_role' => '0',
+                    'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',
                     'phone_role' => '0',

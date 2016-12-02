@@ -2,25 +2,33 @@
 
 namespace App\Console\Commands;
 
-use App\User;
 use Illuminate\Console\Command;
-use Illuminate\Foundation\Inspiring;
 
-class UserLogout extends Command
+class UsersAssignRoles extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'userLogout';
+    protected $signature = 'users:assignRoles';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Logout users by night';
+    protected $description = 'Assigns specified user roles.';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
@@ -29,10 +37,6 @@ class UserLogout extends Command
      */
     public function handle()
     {
-        $users = User::whereNotNull('remember_token')->get();
-        foreach( $users as $user){
-            $user->remember_token = null;
-            $user->save();
-        }
+        //
     }
 }

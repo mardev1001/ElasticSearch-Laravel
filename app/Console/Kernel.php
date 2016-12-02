@@ -14,9 +14,10 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\Inspire::class,
-        // Commands\UserLogout::class,
         Commands\DocumentsArchiveExpired::class,
         Commands\DocumentsMarkAsRead::class,
+        Commands\UsersAssignRoles::class,
+        Commands\UsersLogout::class,
     ];
 
     /**
@@ -27,11 +28,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('userLogout')
-        //     // ->dailyAt('03:00');
-        //     ->everyMinute();
-                
-        $schedule->command('documentsArchiveExpired')
+        $schedule->command('documents:archiveExpired')
             ->dailyAt('03:00');
     }
 }

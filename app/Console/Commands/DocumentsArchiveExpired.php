@@ -13,7 +13,7 @@ class DocumentsArchiveExpired extends Command
      *
      * @var string
      */
-    protected $signature = 'documentsArchiveExpired';
+    protected $signature = 'documents:archiveExpired';
 
     /**
      * The console command description.

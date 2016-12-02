@@ -138,7 +138,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if(!$this->utils->universalHasPermission([6,17])) 
+        if(!$this->utils->universalHasPermission([6, 17, 18])) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         $restored = false;
@@ -311,12 +311,26 @@ class UserController extends Controller
      */
     public function userRoleTransfer(Request $request)
     {
-        // TODO: Missing read docs from the copied user, don't delete existing read docs :)
-        
-        // dd($request->all() );
+        // dd($request->all());
         $user = $request->input('user_id'); //primary user
         $selectedUser = $request->input('user_transfer_id'); //dropdown user
         $userMandants = MandantUser::where('user_id',$user)->pluck('mandant_id')->toArray(); //pUser Mandants
+        
+        $sourceUserId = $user;
+        $targetUserId = $selectedUser;
+        
+        $targetUserDocs = UserReadDocument::where('user_id', $targetUserId)->get();
+        $sourceUserDocs = UserReadDocument::where('user_id', $sourceUserId)->whereNotIn('document_group_id', array_pluck($targetUserDocs, 'document_group_id'))->get();
+        
+        // Copy missing read documents from source to target user
+        foreach ($sourceUserDocs as $readDoc){
+            UserReadDocument::create([
+                'document_group_id' => $readDoc->document_group_id,
+                'user_id' => $targetUserId,
+                'date_read' => Carbon::now(),
+                'date_read_last' => Carbon::now()
+            ]);
+        }
         
         $mandantUsers = MandantUser::where('user_id',$selectedUser)->get(); //ddUser in user mandant
         

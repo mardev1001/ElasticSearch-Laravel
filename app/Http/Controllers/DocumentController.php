@@ -1152,8 +1152,8 @@ class DocumentController extends Controller
         $datePublished = null;
         $document = Document::find($id);
         $initialUrl = $id;
-               
-        if( ctype_alnum($id) && !is_numeric($id) ){ 
+        $publishedDocumentLink = PublishedDocument::where('url_unique',$id)->first();      
+        if( (ctype_alnum($id) && !is_numeric($id) ) || $publishedDocumentLink != null ){ 
             $publishedDocs = PublishedDocument::where('url_unique',$id)->orderBy('id','DESC')->first();
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
@@ -1943,8 +1943,8 @@ class DocumentController extends Controller
      */
     public function generatePdf($id)
     {
-        
-        if( ctype_alnum($id) && !is_numeric($id) ){
+        $publishedDocumentLink = PublishedDocument::where('url_unique',$id)->first();      
+        if( (ctype_alnum($id) && !is_numeric($id) ) || $publishedDocumentLink != null ){ 
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
             $document = Document::find($id);
@@ -2024,8 +2024,8 @@ class DocumentController extends Controller
      */
     public function generatePdfPreview($id,$editorId)
     {
-        
-        if( ctype_alnum($id) && !is_numeric($id) ){
+        $publishedDocumentLink = PublishedDocument::where('url_unique',$id)->first();      
+        if( (ctype_alnum($id) && !is_numeric($id) ) || $publishedDocumentLink != null ){ 
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
             $document = Document::find($id);
@@ -2079,8 +2079,8 @@ class DocumentController extends Controller
      */
     public function previewDocument($id,$editorId)
     {
-        
-        if( ctype_alnum($id) && !is_numeric($id) ){
+        $publishedDocumentLink = PublishedDocument::where('url_unique',$id)->first();      
+        if( (ctype_alnum($id) && !is_numeric($id) ) || $publishedDocumentLink != null ){ 
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
             $document = Document::find($id);
@@ -2129,7 +2129,8 @@ class DocumentController extends Controller
      */
     public function previewPdf($id)
     {
-        if( ctype_alnum($id) && !is_numeric($id) ){
+        $publishedDocumentLink = PublishedDocument::where('url_unique',$id)->first();      
+        if( (ctype_alnum($id) && !is_numeric($id) ) || $publishedDocumentLink != null ){ 
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
             $document = Document::find($id);
@@ -3263,7 +3264,8 @@ class DocumentController extends Controller
     private function setDocumentReturnUrl($document,$uid=0){
         
         $document = Document::find($id);
-        if( ctype_alnum($id) && !is_numeric($id) ){
+        $publishedDocumentLink = PublishedDocument::where('url_unique',$id)->first();      
+        if( (ctype_alnum($id) && !is_numeric($id) ) || $publishedDocumentLink != null ){ 
             $publishedDocs = PublishedDocument::where('url_unique',$id)->first();
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;

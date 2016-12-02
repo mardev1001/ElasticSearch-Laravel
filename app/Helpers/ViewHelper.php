@@ -581,8 +581,7 @@ class ViewHelper{
         return $news;
     }
     
-    
-   /**
+    /**
      * Universal document permission check
      * @param array $userArray
      * @param collection $document

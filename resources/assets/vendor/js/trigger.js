@@ -48,11 +48,17 @@ $(function () {
     
     // console.log( lastLinkPart );    
     if(Math.floor(lastLinkPart) == lastLinkPart && $.isNumeric(lastLinkPart)) {
-        isNumeric = true;   
+        isNumeric = true;
     }
 
     if ((location.protocol + "//" + location.host + '/') == url.href) {
         $('a[href="/"]').addClass('active');
+    }
+    else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('edit') != -1) {
+        $('a[href$="mandanten/create"]').addClass('active').closest('ul').addClass('in');
+    }
+    else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search') != -1) {
+        $('a[href$="mandanten"]').addClass('active').closest('ul').addClass('in');
     }
     else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search-single') != -1) {
         // console.log(element);
