@@ -291,7 +291,7 @@ class ViewHelper{
      * @return string $newstring
      */
     static function highlightKeywords($needles = array(), $haystack){
-        $parsedText = $haystack;
+        $parsedText = ViewHelper::replaceHtmlTags($haystack);
         
         foreach ($needles as $keyword) {
             if(stripos($parsedText, $keyword) !== false ){
@@ -299,6 +299,17 @@ class ViewHelper{
             }
         }
         return $parsedText;
+    }
+    
+    /**
+     * Swap all html tags with blank or desired string
+     *
+     * @param string $html
+     * @param string $replacement
+     * @return string
+     */
+    static function replaceHtmlTags($html, $replacement = ' '){
+        return preg_replace('#<[^>]+>#', $replacement, $html);
     }
     
     /**
@@ -341,11 +352,11 @@ class ViewHelper{
     static function extractText($needle, $haystack) {
         if(empty($haystack)) return;
         $newstring = '';
-        $haystack = html_entity_decode(strip_tags($haystack));
+        $haystack = html_entity_decode(ViewHelper::replaceHtmlTags($haystack));
         $extractLenght = 128;
         $needlePosition = strpos($haystack , $needle);
         $newstring = '... ' . substr($haystack, $needlePosition, 128) . ' ...';
-        return strip_tags($newstring);    
+        return ViewHelper::replaceHtmlTags($newstring);    
     }
     
     /**
@@ -356,11 +367,11 @@ class ViewHelper{
      */
     static function extractTextSimple($haystack){
         if(empty($haystack)) return;
-        $haystack = html_entity_decode(strip_tags(trim($haystack)));
+        $haystack = html_entity_decode(ViewHelper::replaceHtmlTags(trim($haystack)));
         $extractLenght = 128;
         $needlePosition = 0;
         $newstring = substr($haystack, $needlePosition, 128) . ' ...';
-        return strip_tags($newstring);
+        return ViewHelper::replaceHtmlTags($newstring);
     }
     
     /**
@@ -606,7 +617,7 @@ class ViewHelper{
                 $hasPermission = true;
         }
         $coAuthors = DocumentCoauthor::where('document_id',$document->id)->pluck('user_id')->toArray();
-        
+       
         if( $uid == $document->user_id  || $uid == $document->owner_user_id || in_array($uid, $coAuthors) 
         || ( $freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1 )
             $hasPermission = true;

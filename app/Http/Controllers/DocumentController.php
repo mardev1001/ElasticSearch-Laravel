@@ -2591,12 +2591,12 @@ class DocumentController extends Controller
      */
     public function documentStats($id)
     {
+        $document = Document::find($id);
         if(ViewHelper::universalDocumentPermission($document, true, false, true ) == false)
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
              
         $approvalAllMandants = false;
         $mandants = array();
-        $document = Document::find($id);
         
         $document = $this->checkFreigabeRoles($document);
       
@@ -2665,7 +2665,10 @@ class DocumentController extends Controller
             ];
         }
         
-        // dd($documentReaders);
+        // dd($mandants);
+        $mandants = array_values(array_sort($mandants, function ($value) {
+            return $value['mandant_number'];
+        }));
         
         // $data = '';
         return view('dokumente.statistik', compact('documentReaders', 'documentReadersCount', 'usersCountRead', 'usersCountUnread', 'usersCountNew', 'usersCountActive', 'mandants', 'users', 'document') );

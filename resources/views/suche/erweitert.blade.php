@@ -232,7 +232,7 @@
                                     @if(isset($parameter) && !empty($parameter)) 
                                         {!! ViewHelper::highlightKeywords(array($parameter, old('name')), $document->name_long) !!} -
                                     @else
-                                        {!! ViewHelper::highlightKeyword(old('name'), $document->name_long) !!} -
+                                        {!! ViewHelper::highlightKeywords(array(old('name')), $document->name_long) !!} -
                                     @endif
                                     
                                     {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
@@ -246,7 +246,7 @@
                                     @endif
                                     
                                     @if(isset($parameter) && !empty($parameter)) 
-                                        {!! ViewHelper::highlightKeyword($parameter, $document->name_long) !!} -
+                                        {!! ViewHelper::highlightKeywords(array($parameter), $document->name_long) !!}
                                     @else
                                         {!! $document->name_long !!} - 
                                     @endif
@@ -268,10 +268,10 @@
                             <div class="summary">
                                 <strong>
                                     @if(old('beschreibung')) 
-                                        {!! ViewHelper::highlightKeyword(old('beschreibung'), $document->summary) !!}
+                                        {!! ViewHelper::highlightKeywords(array(old('beschreibung')), $document->summary) !!}
                                     @else
                                         @if(isset($parameter) && !empty($parameter)) 
-                                            {!! ViewHelper::highlightKeyword($parameter, $document->summary) !!}    
+                                            {!! ViewHelper::highlightKeywords(array($parameter), $document->summary) !!}    
                                         @else
                                             {!! $document->summary !!}
                                         @endif
@@ -281,10 +281,10 @@
                             <div class="content">
                                 @foreach(ViewHelper::documentVariantPermission($document)->variants as $variant)
                                     @if(old('inhalt'))
-                                        {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
+                                        {!! ViewHelper::highlightKeywords(array(old('inhalt')), ViewHelper::extractText(old('inhalt'), $variant->inhalt)) !!}
                                     @else
                                         @if(isset($parameter) && !empty($parameter))
-                                            {!! ViewHelper::highlightKeyword($parameter, ViewHelper::extractText($parameter, $variant->inhalt)) !!}
+                                            {!! ViewHelper::highlightKeywords(array($parameter), ViewHelper::extractText($parameter, $variant->inhalt)) !!}
                                         @else
                                             {!! ViewHelper::extractTextSimple($variant->inhalt) !!}
                                         @endif
@@ -323,7 +323,7 @@
                                         #{{$key+1}} {{$wiki->category->name}} - 
                                         
                                         @if(old('name')) 
-                                            {!! ViewHelper::highlightKeyword(old('name'), $wiki->name) !!} -
+                                            {!! ViewHelper::highlightKeywords(array(old('name')), $wiki->name) !!} -
                                         @else
                                             {!! $wiki->name !!} - 
                                         @endif
@@ -335,7 +335,7 @@
                             <div class="document-text"> 
                                 <div class="content">
                                     @if(old('inhalt')) 
-                                        {!! ViewHelper::highlightKeyword(old('inhalt'), ViewHelper::extractText(old('inhalt'), $wiki->content)) !!}
+                                        {!! ViewHelper::highlightKeywords(array(old('inhalt')), ViewHelper::extractText(old('inhalt'), $wiki->content)) !!}
                                     @else
                                         {{ $wiki->content }}
                                     @endif
