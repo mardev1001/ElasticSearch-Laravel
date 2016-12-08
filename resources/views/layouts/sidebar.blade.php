@@ -91,7 +91,7 @@
                    
                     
                    
-                    @if( ViewHelper::canCreateEditDoc() == true )
+                    @if( ViewHelper::canCreateEditDoc() == true ) {{-- 11,13 --}}
                         <li>
                             <a href="{{ url('dokumente/create') }}">{{ ucfirst( trans('navigation.document') ) }} {{ trans('navigation.anlegen') }}</a>
                         </li>
@@ -122,7 +122,7 @@
                         </li>
                         --}}
                         
-                        @if( ViewHelper::canViewWikiManagmentAdmin() == true )
+                        @if( ViewHelper::canViewWikiManagmentAdmin() == true ) {{-- 15 --}}
                             <li>
                                 <a href="{{ url('wiki/verwalten-admin') }}">{{ ucfirst( trans('wiki.verwalten') ) }} </a>
                             </li>
@@ -149,7 +149,7 @@
                 </li>
             @endif
             
-            @if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == true ) 
+            @if( ViewHelper::universalHasPermission( array(2,4,6,17,18,19,20) ) == true ) 
                 <li class="">
                     <a href="{{ url('mandantenverwaltung') }}">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                         <span class="fa arrow"></span></a>

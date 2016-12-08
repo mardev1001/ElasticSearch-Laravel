@@ -561,11 +561,13 @@ class ViewHelper{
         $hasPermission = false;   
         foreach($mandantUsers as $mu){
             if( $mu->mandant->active == true ){  // if user mandant is active
+                
                 $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
                 foreach($userMandatRoles as $umr){
                    if($withAdmin == true){
-                        if( $umr->role_id == 1 || in_array($umr->role_id, $userArray) ){
+                        if(  $umr->role_id == 1 || in_array($umr->role_id, $userArray)  ){
                             $hasPermission = true;
+                           
                         }
                     }
                     else{

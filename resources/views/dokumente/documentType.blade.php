@@ -44,7 +44,8 @@
 <div class="row">
      @if( 
      ( $documentType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
-      ||  ( $documentType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ) 
+      ||  ( $documentType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) 
+      || ViewHelper::universalHasPermission( array(10) ) == true ) 
      )
     <div class="col-xs-12 col-md-6">
         
@@ -76,7 +77,7 @@
     @if( 
      ( $documentType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
       ||  ( $documentType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ) 
-     )
+      || ViewHelper::universalHasPermission( array(10) ) == true )  
     <div class="col-xs-12 col-md-6">
         
         <div class="box-wrapper box-white">

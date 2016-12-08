@@ -2284,13 +2284,21 @@ class DocumentController extends Controller
     {
         $docs = $request->get('documents');
         $sort = $request->get('sort');
+        $myRundCoauthorArr = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+        $myRundCoauthor = Document::whereIn('id',$myRundCoauthorArr)->where('document_type_id',$docType)->pluck('id')->toArray();
         
         $docType = $this->rundId;
-        
+        if(  ViewHelper::universalHasPermission( array(10) ) == true  ){
+            $highRole = true;
+        }
         // status entwurf
         $rundEntwurfPaginated = Document::where('document_type_id' , $docType )
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         ->where('document_status_id' , 1)
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-entwurf');
@@ -2299,8 +2307,12 @@ class DocumentController extends Controller
         
         // status im freigabe prozess
         $rundFreigabePaginated = Document::where('document_type_id' , $docType )
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         ->whereIn('document_status_id', [2,6])
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-freigabe');
@@ -2363,10 +2375,20 @@ class DocumentController extends Controller
         
         $docType = $this->qmRundId;
         
+        if(  ViewHelper::universalHasPermission( array(10) ) == true  ){
+            $highRole = true;
+        }
+        $myRundCoauthorArr = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+        $myRundCoauthor = Document::whereIn('id',$myRundCoauthorArr)->where('document_type_id',$docType)->pluck('id')->toArray();
+        
         // status entwurf
         $qmrEntwurfPaginated = Document::where('document_type_id' , $docType)
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         ->where('document_status_id' , 1)
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-entwurf');
@@ -2375,8 +2397,12 @@ class DocumentController extends Controller
         
         // status im freigabe prozess
         $qmrFreigabePaginated = Document::where('document_type_id' , $docType )
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         ->whereIn('document_status_id' , [2,6])
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
@@ -2414,13 +2440,21 @@ class DocumentController extends Controller
     {
         $docs = $request->get('documents');
         $sort = $request->get('sort');
-        
         $docType = $this->newsId;
-        
+        $myRundCoauthorArr = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+        $myRundCoauthor = Document::whereIn('id',$myRundCoauthorArr)->where('document_type_id',$docType)->pluck('id')->toArray();
+       
+        if(  ViewHelper::universalHasPermission( array(10) ) == true  ){
+            $highRole = true;
+        }
         // status entwurf
         $newsEntwurfPaginated = Document::where('document_type_id' , $docType )
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         ->where('document_status_id' , 1);
         //   ->orderBy('id', 'desc')->paginate(10, ['*'], 'news-entwurf')
@@ -2434,8 +2468,12 @@ class DocumentController extends Controller
         
         // status im freigabe prozess
         $newsFreigabePaginated = Document::where('document_type_id' , $docType )
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         ->whereIn('document_status_id' , [2,6]);
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'news-freigabe');
@@ -2480,12 +2518,31 @@ class DocumentController extends Controller
     {
         $docs = $request->get('documents');
         $sort = $request->get('sort');
-        
+        $highRole = false;
+        if(  ViewHelper::universalHasPermission( array(10) ) == true  ){
+            $highRole = true;
+        }
+             $myRundCoauthorArr = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+            $myRundCoauthor = Document::whereIn('id',$myRundCoauthorArr)->where('document_type_id',$docType)->pluck('id')->toArray();
+        //     $isoEntwurfPaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
+        //     // ->join('editor_variants','documents.id','=','editor_variants.document_id')
+        //   ->where(function($query) use ($myRundCoauthor,$highRole) {
+        //             if($highRole == false){
+        //                 $query->where('user_id', Auth::user()->id)
+        //                       ->orWhere('owner_user_id', Auth::user()->id);
+        //                 $query->orWhereIn('documents.id',$myRundCoauthor);
+        //             }
+        //         }
+        //     )
         $docType = $this->formulareId;
         
         $formulareEntwurfPaginated = Document::where('document_type_id' ,$docType)
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         ->where('document_status_id', 1)
         // ->orderBy('id', 'desc')->paginate(10, ['*'], 'meine-formulare');
@@ -2494,8 +2551,12 @@ class DocumentController extends Controller
         // $formulareEntwurfTree = $this->document->generateTreeview( $formulareEntwurfPaginated, array('pageDocuments' => true,'formulare' => true) );
         
         $formulareFreigabePaginated = Document::where('document_type_id' ,$docType)
-        ->where(function($query){
-            $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+        ->where(function($query) use ($highRole,$myRundCoauthor){
+            if($highRole == false){
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id );
+                $query->orWhereIn('documents.id',$myRundCoauthor);
+            }
         })
         // ->whereIn('document_status_id', [2,6])->orderBy('id', 'desc')
         ->whereIn('document_status_id', [2,6])->orderBy('date_published', 'desc')
@@ -2539,7 +2600,10 @@ class DocumentController extends Controller
         $docsByTypeEntwurfTree = array();
         $docsByTypeFreigabePaginated = array();
         $docsByTypeFreigabeTree = array();
-        
+        $highRole = false;
+        if(  ViewHelper::universalHasPermission( array(10) ) == true  ){
+            $highRole = true;
+        }
         foreach(DocumentType::all() as $docType){
             if(str_slug($docType->name) == $type){
                 $documentType = $docType;
@@ -2548,10 +2612,16 @@ class DocumentController extends Controller
         }
         
         if(isset($documentType)){
-            
+            $myRundCoauthorArr = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+            $myRundCoauthor = Document::whereIn('id',$myRundCoauthorArr)->where('document_type_id',$docType)->pluck('id')->toArray();
+        
             $docsByTypeEntwurfPaginated = Document::where('document_type_id', $documentType->id)
-            ->where(function($query){
-                $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+            ->where(function($query) use ($highRole, $myRundCoauthor){
+                if($highRole == false){
+                    $query->where('owner_user_id', Auth::user()->id)
+                    ->orWhere('user_id', Auth::user()->id );
+                     $query->orWhereIn('documents.id',$myRundCoauthor);
+                }
             })
             ->where('deleted_at', null)
             ->where('document_status_id', 1)
@@ -2559,10 +2629,14 @@ class DocumentController extends Controller
             ->orderBy('date_published', 'desc')->paginate(10, ['*'], str_slug($documentType->name.'-entwurf'));
             
             $docsByTypeEntwurfTree = $this->document->generateTreeview($docsByTypeEntwurfPaginated, array('pageDocuments' => true) );
-            
+         
             $docsByTypeFreigabePaginated = Document::where('document_type_id', $documentType->id)
-            ->where(function($query){
-                $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
+             ->where(function($query) use ($highRole, $myRundCoauthor){
+                if($highRole == false){
+                    $query->where('owner_user_id', Auth::user()->id)
+                    ->orWhere('user_id', Auth::user()->id );
+                     $query->orWhereIn('documents.id',$myRundCoauthor);
+                }
             })
             ->where('deleted_at', null)
             ->whereIn('document_status_id', [2,6])
@@ -2761,7 +2835,9 @@ class DocumentController extends Controller
     {
         $docs = $request->get('documents');
         $sort = $request->get('sort');
-        
+        if(  ViewHelper::universalHasPermission( array(10) ) == true  ){
+            $highRole = true;
+        }
         $docType = $this->isoDocumentId;
         
         $canDeleteButton = false;
@@ -2789,15 +2865,16 @@ class DocumentController extends Controller
         $isoAllTree = $this->document->generateTreeview($isoAllPaginated, array('pageDocuments' => true, 'showHistory' => true));
         
         $uid=Auth::user()->id;
-        $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+        $myRundCoauthorArr = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+        $myRundCoauthor = Document::whereIn('id',$myRundCoauthorArr)->where('document_type_id',$docType)->pluck('id')->toArray();
         $isoEntwurfPaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         // ->join('editor_variants','documents.id','=','editor_variants.document_id')
-        ->where(
-            function($query) use ($myRundCoauthor) {
-                $query->where('user_id', Auth::user()->id)
-                      ->orWhere('owner_user_id', Auth::user()->id);
-                    //   ->documentCoauthors('',);
-                $query->orWhereIn('documents.id',$myRundCoauthor);
+       ->where(function($query) use ($myRundCoauthor,$highRole) {
+                if($highRole == false){
+                    $query->where('user_id', Auth::user()->id)
+                          ->orWhere('owner_user_id', Auth::user()->id);
+                    $query->orWhereIn('documents.id',$myRundCoauthor);
+                }
             }
         )
         ->where('documents.document_type_id', $docType)
@@ -2811,17 +2888,18 @@ class DocumentController extends Controller
         
         $isoFreigabePaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         // ->join('editor_variants','documents.id','=','editor_variants.document_id')
-       ->where(
-            function($query) use ($approval) {
-                $query->where('user_id', Auth::user()->id)
-                      ->orWhere('owner_user_id', Auth::user()->id);
-                    //   ->documentCoauthors('',);
-                $query->orWhereIn('documents.id',$approval);
+        ->where(function($query) use ($myRundCoauthor,$highRole) {
+                if($highRole == false){
+                    $query->where('user_id', Auth::user()->id)
+                          ->orWhere('owner_user_id', Auth::user()->id);
+                    $query->orWhereIn('documents.id',$myRundCoauthor);
+                }
             }
         )
         ->where('documents.document_type_id', $docType)
         ->where('slug', $slug)
         ->whereIn('documents.document_status_id' , [2,6])
+        ->orWhereIn('documents.id',$approval)
         ->orderBy('documents.name', 'asc')
         ->paginate(10, ['*','iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'iso-dokumente-freigabe');
         $isoFreigabeTree = $this->document->generateTreeview($isoFreigabePaginated, array('pageDocuments' => true));

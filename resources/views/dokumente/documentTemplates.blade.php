@@ -11,7 +11,7 @@
     @if( 
      ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
       ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
-     )
+     || ViewHelper::universalHasPermission( array(10) ) == true ) 
      
     <div class="col-xs-12 col-md-6">
         <div class="box-wrapper box-white">
@@ -39,7 +39,7 @@
     @if( 
      ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
       ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) ) 
-     )
+      || ViewHelper::universalHasPermission( array(10) ) == true ) 
     <div class="col-xs-12 col-md-6">
         <div class="box-wrapper box-white">
             <h2 class="title">{{ trans('documentTemplates.templateFreigabe') }}</h2>

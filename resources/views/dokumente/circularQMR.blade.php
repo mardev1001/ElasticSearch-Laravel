@@ -9,7 +9,7 @@
             @if( 
              ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
               ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
-             )
+             || ViewHelper::universalHasPermission( array(10) ) == true ) 
             <div class="col-xs-12 col-md-6 ">
                 <div class="box-wrapper box-white">
                     <h4 class="title">{{ trans('rundschreibenQmr.qmrEntwurf')}}</h4>
@@ -34,7 +34,7 @@
             @if( 
              ( $docType->document_art == 1 &&  ViewHelper::universalHasPermission( array(13) ) == true )
               ||  ( $docType->document_art == 0 && ( ViewHelper::universalHasPermission( array(11) ) == true) )
-             )
+             || ViewHelper::universalHasPermission( array(10) ) == true ) 
             <div class="col-xs-12 col-md-6 ">
                 <div class="box-wrapper  box-white">
                     <h4 class="title">{{ trans('rundschreibenQmr.qmrFreigabe')}}</h4>
