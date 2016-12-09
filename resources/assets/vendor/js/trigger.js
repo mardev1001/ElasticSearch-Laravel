@@ -54,16 +54,16 @@ $(function () {
     if ((location.protocol + "//" + location.host + '/') == url.href) {
         $('a[href="/"]').addClass('active');
     }
+    else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search-single') != -1) {
+        // console.log(element);
+        $('a[href$="/benutzer"]').addClass('active');
+        $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
+    }
     else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('edit') != -1) {
         $('a[href$="mandanten/create"]').addClass('active').closest('ul').addClass('in');
     }
     else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search') != -1) {
         $('a[href$="mandanten"]').addClass('active').closest('ul').addClass('in');
-    }
-    else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search-single') != -1) {
-        // console.log(element);
-        $('a[href$="/benutzer"]').addClass('active');
-        $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
     }
     else if (url.href.indexOf('benutzer') != -1 && url.href.indexOf('partner') != -1) {
         $('a[href$="/benutzer"]').addClass('active');

@@ -122,7 +122,7 @@
                             
                             <table class="table @if( count($mandant->mandantUsers) > 1) data-table @endif ">
                             <thead>
-                                <th>Name</th>
+                                <th class="defaultSort">Name</th>
                                 <th class="col-md-8 no-sort">Rollen</th>
                                 <th class="no-sort">Mandanten</th>
                                 <th class="text-center no-sort">Optionen</th>
@@ -133,8 +133,8 @@
                                     
                                     @foreach( $mandant->mandantUsers as $mandantUser )
                                         <tr>
-                                            <td class="valign @if( empty($mandantUser->user->first_name) ) || empty($mandantUser->user->first_name) ) no-sort @endif">
-                                                {{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} 
+                                            <td class="valign">
+                                                {{ $mandantUser->user->last_name ." ". $mandantUser->user->first_name }} 
                                                 </td>
                                             <td class="col-md-8 valign">
                                                 
@@ -220,7 +220,7 @@
                         <div class="panel-heading">
                             <h4 class="panel-title pull-left">
                                 <span class="panel-title transform-normal">
-                                    {{$user->first_name}} @if($user->short_name)({{$user->short_name}})@endif {{$user->last_name}}
+                                    {{$user->last_name}} @if($user->short_name)({{$user->short_name}})@endif {{$user->first_name}}
                                 </span>
                             </h4>
                         
@@ -264,7 +264,7 @@
                             @if(count($unassignedUsers) > 0)
                                     <table class="table @if(count($unassignedUsers) > 1 ) data-table @endif">
                                     <thead>
-                                        <th class="col-md-10 no-sort">Name</th>
+                                        <th class="col-md-10 defaultSort">Name</th>
                                         <th class="col-md-2 text-center no-sort">Optionen</th>
                                     </thead>
                                     <tbody>
@@ -272,7 +272,7 @@
                                         @foreach( $unassignedUsers as $unassignedUser )
                                              {{-- @if( $mandantUser->deleted_at == null ) --}}
                                                 <tr>
-                                                    <td class="valign">{{ $unassignedUser->first_name ." ". $unassignedUser->last_name }} </td>
+                                                    <td class="valign">{{ $unassignedUser->last_name ." ". $unassignedUser->first_name }} </td>
                                                     <td class="valign table-options text-center no-sort">
                                                         {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                             <input type="hidden" name="user_id" value="{{ $unassignedUser->id }}">

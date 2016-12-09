@@ -131,7 +131,7 @@ class MandantController extends Controller
             else
                 $users = User::onlyTrashed();
         if($users != null)
-        $users = $users ->get();
+        $users = $users->orderBy('last_name', 'asc')->get();
         //dd( \DB::getQueryLog() );
         
         $mandants = null;
@@ -149,7 +149,7 @@ class MandantController extends Controller
                 $mandants = Mandant::onlyTrashed();
         // if($deletedMandants) $mandants = $mandants->onlyTrashed();
         if( $mandants != null )
-        $mandants = $mandants->get();
+        $mandants = $mandants->orderBy('mandant_number', 'asc')->get();
         // $mandants = $this->search->phonelistSearch($request);
         return view('mandanten.administration', compact('search', 'searchParameter', 'mandants', 'users', 'roles', 'deletedUsers', 'deletedMandants' ) );
     }
@@ -162,6 +162,7 @@ class MandantController extends Controller
      */
     public function searchSingle(Request $request)
     {
+        // dd($request);
         $uid = Auth::user()->id;
         if( ViewHelper::universalHasPermission( array(2,4), false ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
@@ -197,7 +198,7 @@ class MandantController extends Controller
             else
                 $users = User::onlyTrashed();
         if($users != null)
-        $users = $users->orderBy('first_name', 'ASC')->orderBy('id', 'ASC')->get();
+        $users = $users->orderBy('last_name', 'asc')->get();
         
         $mandantUsersSearch = array();
         foreach($users as $usr){ 
@@ -225,7 +226,7 @@ class MandantController extends Controller
                 $mandants = Mandant::onlyTrashed();
         // if($deletedMandants) $mandants = $mandants->onlyTrashed();
         if( $mandants != null )
-        $mandants = $mandants->get();
+        $mandants = $mandants->orderBy('mandant_number', 'asc')->get();
         // $mandants = $this->search->phonelistSearch($request);
         return view('mandanten.individualAdministration', compact('search', 'searchParameter', 'mandants', 'users', 'roles', 'deletedUsers', 'deletedMandants', 'mandantUsersSearch' ) );
     }
@@ -241,7 +242,7 @@ class MandantController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         // $mandantsAll = Mandant::all();
         $bundeslander = $this->bundeslandList;
-        $mandantsAll = Mandant::where('hauptstelle', true)->get();
+        $mandantsAll = Mandant::where('hauptstelle', true)->orderBy('mandant_number', 'asc')->get();
         return view('formWrapper', compact('data', 'mandantsAll', 'bundeslander'));
     }
 
@@ -299,7 +300,7 @@ class MandantController extends Controller
         $bundeslander = $this->bundeslandList;
         $internalMandantUsers = InternalMandantUser::where('mandant_id', $id)->get();
         // $mandantsAll = Mandant::all();
-        $mandantsAll = Mandant::where('hauptstelle', true)->where('id', '!=', $id)->get();
+        $mandantsAll = Mandant::where('hauptstelle', true)->where('id', '!=', $id)->orderBy('mandant_number', 'asc')->get();
         
         $mandantUsersNeptun = array();
         $mandantUsers = MandantUser::all();

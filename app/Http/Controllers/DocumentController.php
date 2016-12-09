@@ -2884,7 +2884,7 @@ class DocumentController extends Controller
         ->paginate(10, ['*','iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'iso-dokumente-entwurf');
         $isoEntwurfTree = $this->document->generateTreeview($isoEntwurfPaginated, array('pageDocuments' => true));
         // dd($isoEntwurfPaginated);
-        $approval = DocumentApproval::where('user_id',$uid)->where('approved', 0)->pluck('document_id')->toArray();
+        $approval = DocumentApproval::where('user_id',$uid)->where('date_approved', null)->pluck('document_id')->toArray();
         
         $isoFreigabePaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
         // ->join('editor_variants','documents.id','=','editor_variants.document_id')

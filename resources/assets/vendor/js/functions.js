@@ -115,6 +115,7 @@ $(function() {
         // console.log(mandantHauptstelleSelect.prop('required'));
         if(mandantHauptstelleCheckbox.prop('checked') == true){
             $('select[name="mandant_id_hauptstelle"]').prop('required', false);
+            $('select[name="mandant_id_hauptstelle"]').val('').trigger('chosen:updated');
             mandantHauptstelleSelect.hide(400);
         } else {
             $('select[name="mandant_id_hauptstelle"]').prop('required', true);

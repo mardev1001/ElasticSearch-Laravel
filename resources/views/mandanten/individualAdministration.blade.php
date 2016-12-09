@@ -95,7 +95,7 @@
                             
                             <table class="table data-table box-white">
                             <thead>
-                                <th>Name</th>
+                                <th class="defaultSort">Name</th>
                                 <th class="col-md-8 no-sort">Rollen</th>
                                 <th class="no-sort">Mandanten</th>
                                 <th class="text-center no-sort">Optionen</th>
@@ -106,7 +106,7 @@
                                     
                                     @foreach( $mandant->mandantUsers as $mandantUser )
                                         <tr>
-                                            <td class="valign"> {{ $mandantUser->user->first_name ." ". $mandantUser->user->last_name }} </td>
+                                            <td class="valign"> {{ $mandantUser->user->last_name ." ". $mandantUser->user->first_name }} </td>
                                             <td class="col-md-8 valign">
                                                 @foreach( $roles as $role)
                                                     @foreach( $mandantUser->mandantUserRoles as $mandantUserRole)
@@ -237,7 +237,7 @@
                             @if(count($unassignedUsers) > 0)
                                     <table class="table data-table">
                                     <thead>
-                                        <th class="col-md-10">Name</th>
+                                        <th class="col-md-10 defaultSort">Name</th>
                                         <th class="col-md-2 text-center no-sort">Optionen</th>
                                     </thead>
                                     <tbody>
@@ -245,7 +245,7 @@
                                         @foreach( $unassignedUsers as $unassignedUser )
                                              {{-- @if( $mandantUser->deleted_at == null ) --}}
                                                 <tr>
-                                                    <td class="valign">{{ $unassignedUser->first_name ." ". $unassignedUser->last_name }} </td>
+                                                    <td class="valign">{{ $unassignedUser->last_name ." ". $unassignedUser->first_name }} </td>
                                                     <td class="valign table-options text-center">
                                                         {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                             <input type="hidden" name="user_id" value="{{ $unassignedUser->id }}">

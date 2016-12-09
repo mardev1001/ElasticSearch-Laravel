@@ -172,7 +172,7 @@
                             </li>
                         @endif
                         
-                        @if( ViewHelper::universalHasPermission( array(2,4,17,18) ) == true )
+                        @if( ViewHelper::universalHasPermission( array(2,4) ) == true )
                             <li>
                                 <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
                             </li>

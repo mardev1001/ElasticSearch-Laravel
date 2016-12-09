@@ -96,7 +96,7 @@ class HomeController extends Controller
         $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true,'myDocuments' => true));
         
         $uid = Auth::user()->id;
-        $approval = DocumentApproval::where('user_id',$uid)->where('approved', 0)->pluck('document_id')->toArray();
+        $approval = DocumentApproval::where('user_id',$uid)->where('date_approved', null)->pluck('document_id')->toArray();
         
         $freigabeEntries = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->whereIn('document_status_id', [2,6]) 

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Auth;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -160,6 +161,10 @@ class Document extends Model
     
     public function documentApprovals(){
         return $this->hasMany('App\DocumentApproval');
+    }
+    
+    public function documentApprovalFreigeber(){
+        return $this->hasOne('App\DocumentApproval')->where('user_id', Auth::user()->id) ;
     }
     public function documentApprovalsApprovedDateNotNull(){
         return $this->hasMany('App\DocumentApproval')->whereNotNull('date_approved');

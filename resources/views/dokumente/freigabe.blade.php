@@ -166,17 +166,17 @@
                     <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a> 
                 @endif
                     
-                
+               
                 @if( $authorised == false && $canPublish == false )
-                     
-                    @if( count( $document->documentApprovals->where('user_id',Auth::user()->id )->where('date_approved',null) ) == 1 )
-                  
-                        @if( (ViewHelper::universalHasPermission( array(10),false,true ) == true && ViewHelper::isThisDocumentFreigeber($document) == true )
+                    @if( count( $document->documentApprovalFreigeber ) == 1 ) {{-- Check if user exists for the doc--}}
+                       @if($document->documentApprovalFreigeber->date_approved == null ) {{-- Check if user approved the doc --}} 
+                           
+                            @if( (ViewHelper::universalHasPermission( array(10) ) == true && ViewHelper::isThisDocumentFreigeber($document) == true )
                             || ViewHelper::universalHasPermission( array() ) == true )
                           
                                  <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#freigeben">{{ trans('documentForm.freigeben') }}</button>
                                  <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#noFreigeben">{{ trans('documentForm.noFreigeben') }}</button>
-                            
+                            @endif
                         @endif
                     @endif 
                 @elseif( ($authorised == false && $canPublish == true && $published == false ) ||  

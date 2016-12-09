@@ -12,9 +12,8 @@ data-placeholder="{{ ucfirst($placeholder) }}@if( $required !=false )* @endif"
     @endif
     >
     <option></option>
-    @if( count($collections) >0 ){
-           
-       @foreach($collections as $collection){
+    @if( count($collections) > 0 )
+        @foreach($collections as $collection)
            <option value="{{$collection->id}}" 
                 @if( !empty( $data->$inputName) && $collection->id == $data->$inputName)
                     selected

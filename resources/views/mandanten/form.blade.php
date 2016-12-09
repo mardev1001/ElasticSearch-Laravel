@@ -15,7 +15,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="form-group">
                     {!! ViewHelper::setInput('name',$data,old('name'),trans('mandantenForm.name') , 
-                    trans('mandantenForm.name') , false  ) !!}
+                    trans('mandantenForm.name') , true  ) !!}
                 </div>
             </div><!--End input box-->
         
@@ -30,14 +30,35 @@
             <div class="col-md-6 col-lg-4 "> <!-- add class hidden when activating js hidden -->
                 <div class="form-group">
                     {!! ViewHelper::setInput('mandant_number',$data,old('mandant_number'),trans('mandantenForm.mandantenNum') , 
-                     trans('mandantenForm.mandantenNum') , false  ) !!}
+                     trans('mandantenForm.mandantenNum') , true  ) !!}
                 </div>
             </div><!--End input box-->
         
             <!-- input box-->
             <div class="col-md-6 col-lg-5 select-mandants">
                 <div class="form-group">
-                    {!! ViewHelper::setSelect($mandantsAll, 'mandant_id_hauptstelle', $data, old('mandant_id_hauptstelle'), trans('mandantenForm.num-hauptstelle'), trans('mandantenForm.num-hauptstelle'), true) !!}
+                    {{-- {!! ViewHelper::setSelect($mandantsAll, 'mandant_id_hauptstelle', $data, old('mandant_id_hauptstelle'), trans('mandantenForm.num-hauptstelle'), trans('mandantenForm.num-hauptstelle'), true) !!} --}}
+                    
+                    <label class="control-label">
+                        {{ trans('mandantenForm.num-hauptstelle') }}*
+                    </label>
+                    
+                    <select name="mandant_id_hauptstelle" class="form-control select" data-placeholder="{{ trans('mandantenForm.num-hauptstelle') }}*" required>
+                        <option></option>
+                        @if(count($mandantsAll))
+                            @foreach($mandantsAll as $mandant)
+                                <option value="{{$mandant->id}}"
+                                    @if( !empty(old('mandant_id_hauptstelle')) && $mandant->id == old('mandant_id_hauptstelle'))
+                                        selected
+                                    @elseif( !empty($data->mandant_id_hauptstelle) && $mandant->id == $data->mandant_id_hauptstelle)
+                                        selected
+                                    @endif >
+                                   {{ $mandant->mandant_number }} - {{ $mandant->kurzname }}
+                                </option>
+                            @endforeach
+                        @endif
+                    </select>
+                    
                 </div>
             </div><!--End input box-->
          
@@ -46,7 +67,7 @@
             <!-- input box-->
             <div class="col-md-6 col-lg-4"> <!-- add class hidden when activating js hidden -->
                 <div class="form-group">
-                    {!! ViewHelper::setInput('kurzname',$data,old('kurzname'),trans('mandantenForm.kurzname') ) !!}
+                    {!! ViewHelper::setInput('kurzname',$data,old('kurzname'),trans('mandantenForm.kurzname'),trans('mandantenForm.kurzname'), true  ) !!}
                 </div>
             </div><!--End input box-->
             
