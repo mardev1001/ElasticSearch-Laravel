@@ -656,7 +656,10 @@ class SearchController extends Controller
                     if($mUser->active && !in_array($mUser->id, array_pluck($usersInternal,'user_id'))){
                         // Check for phone roles
                         if( $mr->role->phone_role || $mr->role->mandant_role ) {
-                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
+                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
+                                ->whereIn('mandant_id', array_pluck($loggedUserMandants, 'id'))->where('mandant_id_edit', $mandant->id)
+                                ->groupBy('role_id','user_id','mandant_id_edit')->get();
+                            // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
                             if(!count($internalRole)){
                                 $userArr[] = $mandant->users[$k2]->id;
                             }
@@ -710,7 +713,10 @@ class SearchController extends Controller
                     if($mUser->active && !in_array($mUser->id, array_pluck($usersInternal,'user_id'))){
                         // Check for phone roles
                         if( $mr->role->phone_role || $mr->role->mandant_role ) {
-                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
+                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
+                                ->whereIn('mandant_id', array_pluck($loggedUserMandants, 'id'))->where('mandant_id_edit', $mandant->id)
+                                ->groupBy('role_id','user_id','mandant_id_edit')->get();
+                            // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
                             if(!count($internalRole)){
                                 // if( $mr->role->phone_role && !in_array($mandant->users[$k2]->id, $usersInMandants) )
                                      $usersInMandants[] = $mandant->users[$k2]->id;
