@@ -213,9 +213,9 @@
                                         </td>
                                         <td>
                                             @foreach($mandantUser->mandantUserRoles as $mur)
-                                                @if($mur->role->phone_role || $mur->role->mandant_role)
+                                                {{-- @if($mur->role->phone_role || $mur->role->mandant_role) --}}
                                                     {{ $mur->role->name }}; 
-                                                @endif
+                                                {{-- @endif --}}
                                             @endforeach
                                         </td>
                                     </tr>

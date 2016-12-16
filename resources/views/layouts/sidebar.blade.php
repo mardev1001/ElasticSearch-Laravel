@@ -149,30 +149,31 @@
                 </li>
             @endif
             
-            @if( ViewHelper::universalHasPermission( array(2,4,6,17,18,19,20) ) == true ) 
+            @if( ViewHelper::universalHasPermission( array(6, 17, 18, 20) ) == true )
+                {{-- removed neptun Verwalter NEPTUN-610 --}}
                 <li class="">
                     <a href="{{ url('mandantenverwaltung') }}">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                         <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        @if( ViewHelper::universalHasPermission( array(6,18) ) == true ) <!-- ,19,20 | removed neptun Verwalter NEPTUN-610 -->
+                        @if( ViewHelper::universalHasPermission( array(6,18) ) == true ) 
                             <li>
                                 <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
                             </li>
                         @endif
                         
-                        @if( ViewHelper::universalHasPermission( array(19,20) ) == true ) <!-- ,19,20 | removed neptun Verwalter NEPTUN-610 -->
+                        @if( ViewHelper::universalHasPermission( array(20) ) == true ) 
                             <li>
                                 <a href="{{ url('mandanten/export') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.export') }}</a>
                             </li>
                         @endif
                         
-                        @if( ViewHelper::universalHasPermission( array(6,18) ) == true )<!--  removed neptun Verwalter NEPTUN-610  -->
+                        @if( ViewHelper::universalHasPermission( array(6,18) ) == true )
                             <li>
                                 <a href="{{ url('mandanten/create') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.anlegen') }}</a>
                             </li>
                         @endif
                         
-                        @if( ViewHelper::universalHasPermission( array(2,4) ) == true )
+                        @if( ViewHelper::universalHasPermission( array(6, 17) ) == true )
                             <li>
                                 <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
                             </li>
@@ -181,9 +182,15 @@
                 </li>
             @endif
             
-            @if( ViewHelper::universalHasPermission( array(2,4,17), false ) == true ) <!--2,4 NEPTUN-605 -->
+            @if( (ViewHelper::universalHasPermission() == false) && (ViewHelper::universalHasPermission( array(2,4)) == true) ) {{-- 2,4 NEPTUN-605 --}}
                 <li>
-                    <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}</a>
+                    <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}
+                    <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
+                        </li>
+                    </ul>
                 </li>
             @endif
             

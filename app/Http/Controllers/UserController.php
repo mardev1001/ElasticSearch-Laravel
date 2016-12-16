@@ -68,7 +68,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        if(!$this->utils->universalHasPermission([2,4,17,18])) 
+        if(!$this->utils->universalHasPermission([2,4,17])) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         return view('benutzer.create');
@@ -138,7 +138,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if(!$this->utils->universalHasPermission([6, 17, 18])) 
+        if(!$this->utils->universalHasPermission([2, 4, 6, 17])) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         $restored = false;

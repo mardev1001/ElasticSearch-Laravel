@@ -634,7 +634,7 @@ class MandantController extends Controller
      */
     public function xlsExport(){
         
-        if( ViewHelper::universalHasPermission( array(6, 18, 19, 20) ) == false )
+        if( ViewHelper::universalHasPermission( array(18, 19, 20) ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         // $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
