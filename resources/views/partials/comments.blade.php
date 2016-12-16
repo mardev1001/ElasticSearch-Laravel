@@ -9,13 +9,13 @@
 
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-target="#commentsPanel" href="#commentsPanel" class="transform-normal collapsed">
+                    <a data-toggle="collapse" data-target="#commentsPanel-{{str_slug($title)}}" href="#commentsPanel-{{str_slug($title)}}" class="transform-normal collapsed">
                         {{ $title }}
                     </a>
                 </h4>
             </div>
 
-            <div id="commentsPanel" class="panel-collapse collapse" role="tabpanel">
+            <div id="commentsPanel-{{str_slug($title)}}" class="panel-collapse collapse" role="tabpanel">
                 
                 <div class="panel-body">
                         
