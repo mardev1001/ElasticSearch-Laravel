@@ -19,7 +19,7 @@
             <div class="box iso-category-overview">
                 
                 <ul class="level-1">
-                    @if( ViewHelper::universalHasPermission( array(6, 18) ) == true ) 
+                    @if( ViewHelper::universalHasPermission( array(18) ) == true ) 
                         <li>
                             <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
                         </li>
@@ -31,13 +31,13 @@
                         </li>
                     @endif
                     
-                    @if( ViewHelper::universalHasPermission( array(6, 18) ) == true )
+                    @if( ViewHelper::universalHasPermission( array(18) ) == true )
                         <li>
                             <a href="{{ url('mandanten/create') }}">{{ ucfirst( trans('navigation.mandanten') ) }} {{ trans('navigation.anlegen') }}</a>
                         </li>
                     @endif
                     
-                    @if( ViewHelper::universalHasPermission( array(6, 17) ) == true )
+                    @if( ViewHelper::universalHasPermission( array(17) ) == true )
                         <li>
                             <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
                         </li>

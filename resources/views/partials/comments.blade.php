@@ -1,30 +1,44 @@
 <!-- {{ $title }} comments -->
 @if( $withRow == true)
-<div class="row">
+    <div class="row">
 @endif
+
     <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper home">
-            <h1 class="title">{{ $title }}</h1>
-            <div class="box box-white home">
-                <div class="commentsMy">
-                    @if(count($collection))
-                        @foreach( $collection as $k => $comment )
-                            @if( $comment->deleted_at == null )
-                            
+
+        <div class="panel panel-primary" id="panelComments">
+
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-target="#commentsPanel" href="#commentsPanel" class="transform-normal collapsed">
+                        {{ $title }}
+                    </a>
+                </h4>
+            </div>
+
+            <div id="commentsPanel" class="panel-collapse collapse" role="tabpanel">
+                
+                <div class="panel-body">
+                        
+                    <div class="commentsMy">
+                        @if(count($collection))
+                            @foreach( $collection as $k => $comment )
+                                @if( $comment->deleted_at == null )
+
                                     <div class="comment-{{++$k}} row flexbox-container">
                                         <!-- delete comment box -->
                                         <div class="pull-left delete-comment">
-                                             <a href="/comment-delete/{{$comment->id}}/{{ $comment->document_id }}" class="no-underline delete-prompt"
-                                             data-text="Wollen Sie diesen Kommentar wirklich löschen?">
-                                                 <span class="icon icon-trash inline-block delete-prompt"
-                                             data-text="Wollen Sie diesen Kommentar wirklich löschen?" title="Entfernen"></span>
-                                             </a> 
-                                        </div><!-- end delete comment box -->
-                                        
-                                        <!-- delete box -->
+                                            <a href="/comment-delete/{{$comment->id}}/{{ $comment->document_id }}" class="no-underline delete-prompt"
+                                               data-text="Wollen Sie diesen Kommentar wirklich löschen?">
+                                             <span class="icon icon-trash inline-block delete-prompt"
+                                                   data-text="Wollen Sie diesen Kommentar wirklich löschen?" title="Entfernen"></span>
+                                            </a>
+                                        </div>
+                                        <!-- end delete comment box -->
+
                                         <div class="pull-left">
+                                            
                                             <span class="comment-header">
-                                                
+    
                                                 @if($comment->freigeber == 1 &&  $comment->published != null)
                                                     <strong>
                                                         @if( $comment->published->approved == 1)
@@ -32,54 +46,62 @@
                                                         @else
                                                             Nicht Freigegeben
                                                         @endif
-                                                   </strong><br/>
+                                                    </strong><br/>
                                                 @endif
-                                                
+    
                                                 <strong>
                                                     @if( isset($comment->betreff) && !empty($comment->betreff) )
                                                         {{ $comment->betreff }} -&nbsp;
                                                     @endif
-                                                </strong> 
-                                                
+                                                </strong>
+    
                                                 @if( isset($comment->user) && !empty($comment->user) )
                                                     {{ $comment->user->title }} {{ $comment->user->first_name }} {{ $comment->user->last_name }}, {{ $comment->created_at }} <br>
                                                 @endif
-                                                
-                                            </span> 
-                                            
+    
+                                            </span>
+    
                                             <span class="comment-body">
                                                 @if( isset($comment->comment) && !empty($comment->comment) )
                                                     {!! str_limit( str_replace(["\r\n", "\r", "\n"], "<br/>", $comment->comment) , $limit = 200, $end = ' ...') !!}
                                                 @endif
                                             </span>
-                                            
+
                                             <div class="clearfix"></div>
+                                            
                                             @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
                                                 @if( $comment->document->published != null )
                                                     <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
                                                         <strong> {{ $comment->document->name }} </strong>
                                                     </a>
                                                 @else
-                                                    <a href="{{url('/dokumente/'. $comment->document->id)}}"> 
+                                                    <a href="{{url('/dokumente/'. $comment->document->id)}}">
                                                         <strong> {{ $comment->document->name }} </strong>
                                                     </a>
                                                 @endif
                                             @endif
-                                            
-                                        </div><!-- end delete box -->
-                                        
+
+                                        </div>
+
                                     </div>
-                                    <hr/>
-                                    <div class="clearfix"></div>
-                                
-                            @endif
-                        @endforeach
-                    @endif
+                                    
+                                    <hr/> <div class="clearfix"></div>
+
+                                @endif
+                            @endforeach
+                        @endif
+                    </div>
+                    
                 </div>
+                
             </div>
+            
         </div>
+        
     </div>
+
+            
 @if( $withRow == true)
-</div><!-- end .row -->
+    </div> <!-- end .row -->
 @endif
 <!-- end {{ $title }} comments -->

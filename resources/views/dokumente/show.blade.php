@@ -323,56 +323,65 @@
      
     <div class="clearfix"></div><br>
     
-    @if($document->document_status_id == 3 && count($document->documentApprovalsApprovedDateNotNull) )
-    <!-- freigeber -->
-    <div class="row">
-        <div class="col-xs-12">
-        <div class="col-xs-12 box-wrapper home">
-            <h1 class="title">Freigeber</h1>
-            <div class="box box-white home">
-                <div class="commentsMy">
-                    @foreach( $document->documentApprovalsApprovedDateNotNull as $k => $approved )
-                    <div class="comment-{{++$k}} row flexbox-container col-xs-12">
-                        <!-- delete box -->
-                        <div class="pull-left">
-                            <span class="comment-header">
-                                <strong>
-                                    {{ $approved->user->first_name }} {{ $approved->user->last_name }}
-                                </strong><br/>
-                                     @if( $approved->published->approved == 1)
-                                            Freigegeben,
+    @if(ViewHelper::universalHasPermission( array(9)))
+        @if($document->document_status_id == 3 && count($document->documentApprovalsApprovedDateNotNull) )
+        
+        <div class="panel panel-primary" id="panelFreigeber">
+        
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-target="#freigeberPanel" href="#freigeberPanel" class="transform-normal collapsed">
+                        Freigeber
+                    </a>
+                </h4>
+            </div>
+            <div id="freigeberPanel" class="panel-collapse collapse" role="tabpanel">
+                <div class="panel-body">
+        
+                    <div class="commentsMy">
+                        @foreach( $document->documentApprovalsApprovedDateNotNull as $k => $approved )
+                            <div class="comment-{{++$k}} row flexbox-container col-xs-12">
+                                <div class="pull-left">                                
+                                        <span class="comment-header">
+                                            <strong> {{ $approved->user->first_name }} {{ $approved->user->last_name }} </strong> <br>
+        
+                                            @if( $approved->approved == 1)
+                                                Freigegeben,
+                                            @else
+                                                Nicht Freigegeben,
+                                            @endif
+        
+                                            {{ $approved->date_approved }} <br>
+                                        </span>
+        
+                                    <div class="clearfix"></div>
+        
+                                    @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
+                                        @if( $approved->document->published != null )
+                                            <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                                <strong> {{ $approved->document->name }} </strong>
+                                            </a>
                                         @else
-                                            Nicht Freigegeben,
-                                        @endif {{ $approved->date_approved }} <br>
-                                
-                                
-                            </span> 
+                                            <a href="{{url('/dokumente/'. $comment->document->id)}}">
+                                                <strong> {{ $approved->document->name }} </strong>
+                                            </a>
+                                        @endif
+                                    @endif
+        
+                                </div>
+                            </div>
+        
                             <div class="clearfix"></div>
-                            @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
-                                @if( $approved->document->published != null )
-                                    <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                        <strong> {{ $approved->document->name }} </strong>
-                                    </a>
-                                @else
-                                    <a href="{{url('/dokumente/'. $comment->document->id)}}"> 
-                                        <strong> {{ $approved->document->name }} </strong>
-                                    </a>
-                                @endif
-                            @endif
-                            
-                        </div><!-- end delete box -->
-                        
+                            <hr/>
+                        @endforeach
                     </div>
-                    
-                    <div class="clearfix"></div>
-                    <hr/>
-                    @endforeach
+        
                 </div>
             </div>
+        
         </div>
-    </div>
-    </div><!-- end .row -->
-    <!-- end freigeber -->    
+
+        @endif
     @endif
     
     @if( count($myComments) )
