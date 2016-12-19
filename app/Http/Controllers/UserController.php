@@ -68,7 +68,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        if(!$this->utils->universalHasPermission([2,4,17])) 
+        // if(!$this->utils->universalHasPermission([2,4,17])) 
+        if(!$this->utils->universalHasPermission([17])) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         return view('benutzer.create');
