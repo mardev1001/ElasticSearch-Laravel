@@ -12,7 +12,6 @@ use File;
 use Mail;
 use URL;
 
-use App\Helpers\ViewHelper;
 use App\Document;
 use App\DocumentComment;
 use App\DocumentCoauthor;
@@ -24,6 +23,10 @@ use App\WikiPage;
 use App\WikiCategory;
 use App\WikiCategoryUser;
 use App\DocumentApproval;
+use App\ContactMessage;
+use App\MessageFile;
+
+use App\Helpers\ViewHelper;
 use App\Http\Repositories\DocumentRepository;
 
 class HomeController extends Controller
@@ -36,6 +39,7 @@ class HomeController extends Controller
     public function __construct(DocumentRepository $docRepo)
     {
       $this->document = $docRepo;
+      $this->uploadPath = public_path() . '/files/contacts/';
     }
 
 
@@ -205,43 +209,90 @@ class HomeController extends Controller
      */
     public function contactSend(Request $request) 
     {
+        $this->validate($request, [
+            'to_user' => 'required',
+            'subject' => 'required|max:255',
+            'summary' => 'required',
+            'files' => 'max:2000000',
+        ]);
+        
         $uid = Auth::user()->id;
         $copy = false;
-        if($request->has('copy') )
+        if($request->has('copy'))
             $copy = true;
+        $files = $request->file();
         $request = $request->all();
         $from = User::find($uid);
         $request['logo'] = asset('/img/logo-neptun-new.png');
         $request['from'] = $from;
         
         $template = view('email.contact' ,compact('request') )->render();
-        $sent= Mail::send([], [], function ($message) use($template,$request,$from){
-            // dd($request['to_user']);
-            $uid = Auth::user()->id;
+        
+        // Store message data
+        $messageContact = ContactMessage::create(['user_id' => $request['to_user'], 'title' => $request['subject'], 'message' => $request['summary'], 'send_copy' => $copy]);
+        
+        // Store message attachment files
+        $uploads = ViewHelper::fileUpload(User::find($request['to_user']), $this->uploadPath, $files);
+
+        // Store message attachment files data
+        if(isset($messageContact) && isset($uploads)){
+            foreach($uploads as $file)
+                MessageFile::create(['contact_message_id' => $messageContact->id, 'filename' => $file]);
+        }
+        
+        $sent= Mail::send([], [], function ($message) use($template, $request, $from, $uploads){
             $to = User::find($request['to_user']);
             $message->from(  $from->email, $from->first_name.' '.$from->last_name  )
             ->to( $to->email, $to->first_name.' '.$to->last_name )
             ->subject($request['subject'] )
             ->setBody($template, 'text/html');
+            foreach($uploads as $file) $message->attach($this->uploadPath . $to->id .'/'. $file);
         });
+        
         if($copy == true){
             $request['copy'] = 'yes';
             $request['subject'] = 'E-Mail Kopie "'.$request['subject'].'"';
             $template = view('email.contact' ,compact('request') )->render();
-            $sent= Mail::send([], [], function ($message) use($template,$request,$from){
-                // dd($request['to_user']);
-                $uid = Auth::user()->id;
+            $sent= Mail::send([], [], function ($message) use($template, $request, $from, $uploads){
                 $to = User::find($request['to_user']);
                 $message->from(  $from->email, $from->first_name.' '.$from->last_name  )
                 ->to( $from->email, $from->first_name.' '.$from->last_name )
                 ->subject($request['subject'] )
                 ->setBody($template, 'text/html');
+                foreach($uploads as $file) $message->attach($this->uploadPath . $to->id .'/'. $file);
             });   
         }
         
-        
-        return redirect()->back()->with('message', 'Email wurde erfolgreich Versendet.');
+        return redirect()->back()->with('message', trans('contactForm.sendSuccess'));
     }
+    
+     /**
+     * Contact messages overview
+     * @return \Illuminate\Http\Response
+     */
+    public function contactIndex()
+    {
+        if(!ViewHelper::universalHasPermission( array(6)))
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+        $userId = null;
+        $messagesAll = ContactMessage::orderBy('created_at', 'desc')->get();
+        $usersAll = User::whereIn('id', array_unique(array_pluck($messagesAll, 'user_id')))->get();
+        return view('kontakt.index', compact('messagesAll', 'usersAll','userId'));
+    }
+    
+     /**
+     * Contact messages overview
+     * @return \Illuminate\Http\Response
+     */
+    public function contactSearch(Request $request)
+    {
+        $userId = $request->get('user_id');
+        if(empty($userId)) return back()->with('message', 'Benutzer kann nicht gefunden werden.');
+        $messagesAll = ContactMessage::where('user_id', $userId)->orderBy('created_at', 'desc')->get();
+        $usersAll = User::whereIn('id', array_unique(array_pluck(ContactMessage::all(), 'user_id')))->get();
+        return view('kontakt.index', compact('messagesAll', 'usersAll', 'userId'));
+    }
+    
     
     /**
      * Download document

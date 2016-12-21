@@ -75,7 +75,7 @@
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
-                        {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , false, 'text' , ['datetimepicker']  ) !!}
+                        {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , true, 'text' , ['datetimepicker']  ) !!}
                     
                 </div>   
             </div><!--End input box-->

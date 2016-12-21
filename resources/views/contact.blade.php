@@ -12,9 +12,7 @@
     <div class="col-xs-12 col-md-6 ">
         <div class="col-xs-12 box-wrapper">
             <h1 class="title">Bitte wählen Sie Ihren Kontakt:</h1>
-             {!! Form::open([
-                'method'=>'POST' 
-                ]) !!}
+             {!! Form::open(['method'=>'POST', files => true]) !!}
             <div class="box">
                
                 
@@ -48,6 +46,15 @@
                 <div class="col-md-12 col-lg-12">
                     <div class="form-group">
                         {!! ViewHelper::setArea('summary',$data,old('summary'),trans('contactForm.message'),trans('contactForm.message'),true ) !!}
+                    </div>
+                </div><!--End input box-->  
+                
+                <!-- input box-->
+                <div class="col-md-12 col-lg-12">
+                    <div class="form-group">
+                        <label>Anhänge</label>
+                        <input type="file" name="files[]" class="form-control" multiple 
+                            accept=".doc, .docx, .xls, .xlsx, .ppt, .pptx, .pdf" />
                     </div>
                 </div><!--End input box-->  
                 

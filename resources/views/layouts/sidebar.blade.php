@@ -155,7 +155,7 @@
                     <a href="{{ url('mandantenverwaltung') }}">{{ ucfirst(trans('navigation.mandantenverwaltung')) }}
                         <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
-                        @if( ViewHelper::universalHasPermission( array(18) ) == true ) 
+                        @if( ViewHelper::universalHasPermission( array(17, 18) ) == true ) 
                             <li>
                                 <a href="{{ url('mandanten') }}">{{ ucfirst(trans('navigation.ubersicht')) }}</a>
                             </li>
@@ -184,17 +184,15 @@
             
             @if( (ViewHelper::universalHasPermission() == false) && (ViewHelper::universalHasPermission( array(2,4)) == true) ) {{-- 2,4 NEPTUN-605 --}}
                 <li>
-                    <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}
-                    @if( ViewHelper::universalHasPermission() == true )
+                    <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}</a>
+                    {{--
                     <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li>
                             <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
                         </li>
                     </ul>
-                    @else
-                    </a>
-                    @endif
+                    --}}
                 </li>
             @endif
             
@@ -205,6 +203,9 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="{{ url('kontaktmeldungen') }}">{{ ucfirst( trans('navigation.kontaktmeldungen') ) }}</a>
+                        </li>
                         <li>
                             <a href="{{ url('empfangerkreis') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
                         </li>

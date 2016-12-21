@@ -63,7 +63,7 @@ class MandantController extends Controller
      */
     public function index()
     {
-        if( ViewHelper::universalHasPermission( array(6,18,19,20) ) == false )
+        if( ViewHelper::universalHasPermission( array(17,18,19,20) ) == false )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
          
         $searchParameter = null;

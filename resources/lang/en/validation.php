@@ -122,7 +122,9 @@ return [
     */
 
     'attributes' => [
-        //
+        'to_user' => trans('contactForm.user'),
+        'subject' => trans('contactForm.subject'),
+        'summary' => trans('contactForm.message')
     ],
 
 ];

@@ -1,4 +1,4 @@
-{{-- TELEFONLISTE --}}
+{{-- WIKI MANAGEMENT --}}
 
 @extends('master')
 
