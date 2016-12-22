@@ -199,7 +199,7 @@
                                     @if( isset($request['copy']) && $request['copy'] == 'yes' )
                                         Dies ist eine E-Mail-Kopie
                                     @else
-                                        Sie haben eine Nachricht von Neptun Intranet
+                                        Sie haben eine Nachricht von NEPTUN Intranet
                                     @endif
                                     <br><br>
                                     <!-- Button : BEGIN -->
