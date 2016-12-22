@@ -229,7 +229,7 @@ class HomeController extends Controller
         $template = view('email.contact' ,compact('request') )->render();
         
         // Store message data
-        $messageContact = ContactMessage::create(['user_id' => $request['to_user'], 'title' => $request['subject'], 'message' => $request['summary'], 'send_copy' => $copy]);
+        $messageContact = ContactMessage::create(['user_id' => $request['to_user'], 'user_id_from' => $uid, 'title' => $request['subject'], 'message' => $request['summary'], 'send_copy' => $copy]);
         
         // Store message attachment files
         $uploads = ViewHelper::fileUpload(User::find($request['to_user']), $this->uploadPath, $files);

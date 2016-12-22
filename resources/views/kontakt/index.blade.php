@@ -2,14 +2,14 @@
 
 @extends('master')
 
-@section('page-title') {{ trans('contactForm.verwaltung') }} - {{ trans('contactForm.kontaktmeldungen') }} @stop
+@section('page-title') {{ trans('contactForm.verwaltung') }} - {{ trans('contactForm.kontaktanfragen') }} @stop
 
 @section('content')
 <div class="row">
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper ">
             
-            <h2 class="title">{{ trans('contactForm.searchTitle') }} {{ trans('contactForm.kontaktmeldungen') }}</h2>
+            <h2 class="title">{{ trans('contactForm.searchTitle') }} {{ trans('contactForm.kontaktanfragen') }}</h2>
             
             <div class="box box-white">
                 {!! Form::open(['action' => 'HomeController@contactSearch', 'method'=>'POST']) !!}
@@ -33,7 +33,7 @@
                                 {{ trans('contactForm.search') }} 
                             </button>
                             @if(isset($userId))
-                            <a href="{{url('kontaktmeldungen')}}" class="btn btn-primary no-margin-bottom">{{ trans('contactForm.reset') }}</a>
+                            <a href="{{url('kontaktanfragen')}}" class="btn btn-primary no-margin-bottom">{{ trans('contactForm.reset') }}</a>
                             @endif
                             
                         </div>
@@ -49,24 +49,29 @@
             <h2 class="title">{{ trans('contactForm.overview') }}</h2>
             <div class="box box-white">
                  <table class="table data-table box-white">
+                     <!--Datum/Sender/Empfänger/Betreff/Mailinhalt-->
                     <thead>
-                        <th class="text-center valign">{{ trans('contactForm.subject') }}</th>
-                        <th class="text-center valign">{{ trans('contactForm.mitarbeiter') }}</th>
                         <th class="text-center valign no-sort">{{ trans('contactForm.datum') }}</th>
+                        <th class="text-center valign">{{ trans('contactForm.sender') }}</th>
+                        <th class="text-center valign">{{ trans('contactForm.reciever') }}</th>
+                        <th class="text-center valign">{{ trans('contactForm.subject') }}</th>
                         <th class="text-center valign no-sort">{{ trans('contactForm.options') }}</th>
                     </thead>
                     <tbody>
                         @if(count($messagesAll) > 0)
                             @foreach($messagesAll as $k => $data)
                                 <tr>
-                                    <td class="text-center valign ">
-                                        {{ $data->title }}
+                                    <td class="text-center valign"> 
+                                        {{ $data->created_at->format('d.m.Y H:i:s') }}
+                                    </td>
+                                    <td class="text-center valign"> 
+                                        {{ $data->userFrom->first_name }} {{ $data->userFrom->last_name }}
                                     </td>
                                     <td class="text-center valign"> 
                                         {{ $data->user->first_name }} {{ $data->user->last_name }}
                                     </td>
-                                    <td class="text-center valign"> 
-                                        {{ $data->created_at->format('d.m.Y H:i:s') }}
+                                    <td class="text-center valign ">
+                                        {{ $data->title }}
                                     </td>
                                     <td class="valign table-options text-center">
                                         <a href="#" data-toggle="modal" data-target="#details{{$data->id}}" class="btn btn-xs btn-primary">

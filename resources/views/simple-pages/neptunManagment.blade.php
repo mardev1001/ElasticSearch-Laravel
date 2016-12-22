@@ -20,7 +20,7 @@
                 
                 <ul class="level-1">
                     <li>
-                        <a href="{{ url('kontaktmeldungen') }}">{{ ucfirst( trans('contactForm.kontaktmeldungen') ) }}</a>
+                        <a href="{{ url('kontaktanfragen') }}">{{ ucfirst( trans('contactForm.kontaktanfragen') ) }}</a>
                     </li>
                     <li>
                         <a href="{{ url('empfangerkreis') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>

@@ -571,11 +571,11 @@ class UserController extends Controller
         foreach($requiredRoles as $requiredRole){
             
             $roleUsers = array();
-            foreach ($mandantUserAll as $mandantUser) {
-                foreach($mandantUser->mandantUserRoles as $mandantUserRole){
+            foreach ($mandantUserAll as $mu) {
+                foreach($mu->mandantUserRoles as $mandantUserRole){
                     if($requiredRole->id == $mandantUserRole->role_id){
-                        if(!in_array($mandantUser, $roleUsers)){
-                            array_push($roleUsers, $mandantUser);
+                        if(!in_array($mu, $roleUsers)){
+                            array_push($roleUsers, $mu);
                         }
                     }
                 }
