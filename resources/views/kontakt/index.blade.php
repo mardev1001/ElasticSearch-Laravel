@@ -83,6 +83,7 @@
                         @else
                             <tr>
                                 <td class"valign"></td>
+                                <td class"valign"></td>
                                 <td class"valign">Keine Daten vorhanden</td>
                                 <td class"valign"></td>
                                 <td class"valign"></td>

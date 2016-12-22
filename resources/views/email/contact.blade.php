@@ -169,7 +169,7 @@
             2. MSO tags for Desktop Windows Outlook enforce a 680px width.
             Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.  
         -->
-        <div style="max-width: 680px; margin: auto; background-color:rgb(244,244,244);">
+        <div style="max-width: 680px; margin: auto; /* background-color:rgb(244,244,244); */">
             <!--[if mso]>
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="680" align="center">
             <tr>
@@ -177,14 +177,16 @@
             <![endif]-->
 
             <!-- Email Body : BEGIN -->
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="background-color:rgb(244,244,244); max-width: 680px;">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="/* background-color:rgb(244,244,244); */ max-width: 680px;">
                 
                 <!-- Hero Image, Flush : BEGIN -->
+                <!--
                 <tr>
                     <td bgcolor="#ffffff" style="text-align:center; padding-top:20px;">
                         <img src="{{ $request['logo'] }}"  height="" alt="alt_text" border="0" align="center" class="fluid" style="  background: #dddddd; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
                     </td>
                 </tr>
+                -->
                 <!-- Hero Image, Flush : END -->
 
                 <!-- 1 Column Text + Button : BEGIN -->
@@ -364,9 +366,10 @@
             <!-- Email Footer : BEGIN -->
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
                 <tr>
-                    <td style="padding: 40px 10px;width: 100%;font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height:18px; text-align: center; color: #888888;">
-                        
-                        Neptun GmBH<br><span class="mobile-link--footer">Eschenstraße, 82024 Taufkirchen, DE</span><br><span class="mobile-link--footer">089/612 90 10</span>
+                    <td style="padding: 40px 10px;width: 100%;font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height:18px; text-align: center; color: #888888; background-color:rgb(244,244,244);">
+                        NEPTUN Verwaltungs- und Beteiligungsgesellschaft mbH<br>
+                        <span class="mobile-link--footer">Eschenstraße 8, 82024 Taufkirchen</span><br>
+                        <span class="mobile-link--footer">Telefon: +49 89 61 29 010</span>
                         
                     </td>
                 </tr>
