@@ -41,7 +41,5 @@ return [
     'newsSearchPlaceholder' => 'Titel, Stichwörter',
     'wikiSearchPlaceholder' => 'Titel, Inhalt',
     'export'                => 'Export',
-    'kontaktmeldungen'      => 'Kontaktmeldungen'
-    
 
 ];

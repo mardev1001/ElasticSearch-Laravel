@@ -204,7 +204,7 @@
                     </a>
                     <ul class="nav nav-second-level collapse">
                         <li>
-                            <a href="{{ url('kontaktmeldungen') }}">{{ ucfirst( trans('navigation.kontaktmeldungen') ) }}</a>
+                            <a href="{{ url('kontaktmeldungen') }}">{{ ucfirst( trans('contactForm.kontaktmeldungen') ) }}</a>
                         </li>
                         <li>
                             <a href="{{ url('empfangerkreis') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>

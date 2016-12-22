@@ -8,7 +8,7 @@ return [
     'mitarbeiter' => 'NEPTUN Mitarbeiter',
     'send' => 'Nachricht senden',
     'verwaltung' => 'NEPTUN-Verwaltung',
-    'kontaktmeldungen' => 'Kontaktmeldungen',
+    'kontaktmeldungen' => 'Kontaktanfragen',
     'searchTitle' => 'Filter',
     'search' => 'filtern',
     'overview' => 'Übersicht',
