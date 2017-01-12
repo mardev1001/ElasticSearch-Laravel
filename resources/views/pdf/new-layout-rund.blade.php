@@ -136,7 +136,33 @@
                 moz-padding-start: 20px !important;
             }  
             
-            
+            .text-upper{
+                text-transform: uppercase;
+            }
+            .bold{
+                font-weight: bold;
+            }
+            .page-num-p{
+                text-align:right; 
+                font-size:14px;
+            }
+            .mb30{
+                margin-bottom: 30px;
+            }
+            .mb60{
+                margin-bottom: 60px;
+            }
+            .mb90{
+                margin-bottom: 90px;
+            }
+            .clearfix{
+                clear: both !important;
+                height:1px;
+            }
+            .half-width{
+                width:50% !important;
+                float:left;
+            }
         </style>
         @if( $document->landscape == true)
             <style>
@@ -291,53 +317,18 @@
         </style><!--end landscape css-->
         @else
             <style>
-            @page {
-                    margin-right: 20px !important;
-                }
-            body,p,h1,h2,h3,h4,h5{
-                font-family: "Arial", sans-serif, "helvetica Neue", Helvetica !important;
-            }
-            p{
-                font-size: 14px;
-                /*margin-bottom: 25px;*/
-            }
-            /*.header,*/
-            /*.footer {*/
-            /*    width: 100%;*/
-            /*    position: fixed;*/
-            /*}*/
-            .header {
-                margin-top: -25px;
-                padding:0 40px 0 30px
+            body{ padding-top:20px; }
+            .header{
+                margin: -10px -40px 0 -35px;
             }
             .div-pusher{
                 width:50%;
                 padding-left:30%;
             }
-            .header .div-pusher{
-                width:60%;
-                padding-left:30%;
-            }
-            .header .image-div {
-                width:40%;
-                float:right !important;
-                padding-left:55px;
-                padding-top: 0px;
-                margin-top: -20px;
-                height:auto;
-            }
-            .header .image-div img{
-               margin-left:0px;
-               width:100%;
-               height:auto;
-               display:block;
-            }
             .footer {
-                bottom: 5px;
+               
             }
-            .pagenum:before {
-                content: counter(page);
-            }
+           
             .first-title.first{
                 margin-top: -10px;
                 margin-bottom: 10px;
@@ -372,79 +363,7 @@
                 margin-right: -5px;
             }
             
-            .clearfix{
-                clear: both !important;
-                height:1px;
-            }
-            .half-width{
-                width:50% !important;
-                float:left;
-            }
-            .footer .half-width{
-               
-            }
-            .text-upper{
-                text-transform: uppercase;
-            }
-            .bold{
-                font-weight: bold;
-            }
-            .page-num-p{
-                text-align:right; 
-                font-size:14px;
-            }
-            .mb30{
-                margin-bottom: 30px;
-            }
-            .mb60{
-                margin-bottom: 60px;
-            }
-            .mb90{
-                margin-bottom: 90px;
-            }
-            table {
-                margin-left: 0 !important;
-                /*width: 100% !important;*/
-                /*margin-right: 30pt !important;*/
-            }
-            table td{
-                 /*width: auto !important;*/
-            }
-            #absolute{
-                 font-size: 10px !important;
-                 /*margin-top: -125px;*/
-                 /*margin-left: 300px;*/
-            }
-            .footer { position: fixed; bottom: 10px; left: 350px; }
-            .absolute, .absolute:nth-child(even){
-                width: 105px;
-                margin-top: -285px;
-                margin-left: 650px;
-                right: 0;
-                color: #808080;
-                font-size: 10px !important;
-                padding-bottom: 10px;
-                
-                
-            }
-            .absolute p{
-                margin-bottom: 0 !important;
-                margin-top: 0 !important;
-                text-align: left;
-                font-size: 10px !important;
-                
-            }
-            .page-number{
-                /*margin-left: 345px;*/
-                text-align: center;
-                margin-top: -30px;
-                color: black;
-                z-index:999999;
-                font-size: 12px;
-                background: transparent;
-                
-            }
-        </style>
+         </style>
         @endif
     </head>
     <body style=" fon-family: 'Arial', Arial">
@@ -453,7 +372,7 @@
      <!-- if you want header on every page  set the include pdf.header here -->
       
       <div >
-           @include('pdf.header')
+           @include('pdf.new-layout-rund-header')
           <h4 class="first-title first" style="float:left; ">
             @if( $document->document_type_id == 3 )
               QMR

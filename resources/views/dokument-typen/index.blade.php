@@ -60,6 +60,15 @@
                     <div class="checkbox no-margin-top">
                         <input type="checkbox" name="visible_navigation" id="visible_navigation-0"><label for="visible_navigation-0">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
                     </div>
+                    <div class="clearfix"></div>
+                    <div>
+                        <select name="menu_position" id="menu_position" class="form-control select" data-placeholder="anzeigen in ... *" required>
+                            <option></option>
+                            <option value="1">Untermenü</option>
+                            <option value="2">Hauptmenü</option>
+                        </select>
+                    </div>
+                    
                 </div>
                 
             </div>
@@ -73,15 +82,12 @@
     </div>
 </fieldset>
 
-
 <fieldset class="form-group">
     
-    <!--<h4 class="title">{{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.types') }} {{ trans('dokumentTypenForm.overview') }}</h4>-->
-    <br>
     <div class="box-wrapper">
         <div class="row">
             <div class="col-md-12">
-                <h4 class="title"> {{ trans('dokumentTypenForm.overview') }}</h4>
+                <h4 class="title"> {{ trans('dokumentTypenForm.overview-menu') }}</h4>
                 <div class="box box-white">
                     <table class="table">
                         <tr>
@@ -93,32 +99,32 @@
                             <th class="col-lg-1"></th>
                         </tr>
                         
-                        @foreach($documentTypes as $documentType)
+                        @foreach($documentTypesMenu as $documentTypeMenu)
                         
-                            {!! Form::open(['route' => ['dokument-typen.update', 'dokument_typen' => $documentType->id], 'method' => 'PATCH']) !!}
+                            {!! Form::open(['route' => ['dokument-typen.update', 'dokument_typen' => $documentTypeMenu->id], 'method' => 'PATCH']) !!}
                             <tr>
                                 <td>
                                     <div class="text-center">
-                                        <a href="{{ url('dokument-typen/sort-up/' . $documentType->id) }}" class="inline-block"><i class="fa fa-arrow-up"></i></a>
-                                        <a href="{{ url('dokument-typen/sort-down/' . $documentType->id) }}" class="inline-block"><i class="fa fa-arrow-down"></i></a>
+                                        <a href="{{ url('dokument-typen/sort-up/' . $documentTypeMenu->id) }}" class="inline-block"><i class="fa fa-arrow-up"></i></a>
+                                        <a href="{{ url('dokument-typen/sort-down/' . $documentTypeMenu->id) }}" class="inline-block"><i class="fa fa-arrow-down"></i></a>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="form-group">
-                                        <input type="text" name="name" class="form-control" placeholder="{{ trans('dokumentTypenForm.name') }}" value="{{ $documentType->name }}" required />
+                                        <input type="text" name="name" class="form-control" placeholder="{{ trans('dokumentTypenForm.name') }}" value="{{ $documentTypeMenu->name }}" required />
                                     </div>
                                 </td>   
                                 <td>
                                     <div class="">
-                                        @if($documentType->documents->isEmpty())
+                                        @if($documentTypeMenu->documents->isEmpty())
                                             <div class="radio no-margin-top">
-                                                <label><input type="radio" name="document_art" value="0" @if(!$documentType->document_art) checked @endif >{{ trans('dokumentTypenForm.editor') }}</label>
+                                                <label><input type="radio" name="document_art" value="0" @if(!$documentTypeMenu->document_art) checked @endif >{{ trans('dokumentTypenForm.editor') }}</label>
                                             </div>
                                             <div class="radio">
-                                                <label><input type="radio" name="document_art" value="1" @if($documentType->document_art) checked @endif >{{ trans('dokumentTypenForm.upload') }}</label>
+                                                <label><input type="radio" name="document_art" value="1" @if($documentTypeMenu->document_art) checked @endif >{{ trans('dokumentTypenForm.upload') }}</label>
                                             </div>
                                         @else
-                                            @if($documentType->document_art || $documentType->id == 5)    
+                                            @if($documentTypeMenu->document_art || $documentTypeMenu->id == 5)    
                                                 {{ trans('dokumentTypenForm.upload') }} {{-- trans('dokumentTypenForm.document') --}}
                                             @else
                                                 {{ trans('dokumentTypenForm.editor') }}
@@ -130,13 +136,13 @@
                                     <div class="">
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="document_role" value="0" @if(!$documentType->document_role) checked @endif>
+                                                <input type="radio" name="document_role" value="0" @if(!$documentTypeMenu->document_role) checked @endif>
                                                 {{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.verfasser') }}
                                             </label>
                                         </div>
                                         <div class="radio">
                                             <label>
-                                                <input type="radio" name="document_role" value="1" @if($documentType->document_role) checked @endif>
+                                                <input type="radio" name="document_role" value="1" @if($documentTypeMenu->document_role) checked @endif>
                                                 {{ trans('dokumentTypenForm.rundschreiben') }} {{ trans('dokumentTypenForm.verfasser') }}
                                             </label>
                                         </div>
@@ -146,22 +152,136 @@
                                     <div class="">
                                         
                                         <div class="checkbox no-margin-top">
-                                            <input type="checkbox" name="read_required" id="read_required-{{$documentType->id}}" @if($documentType->read_required) checked @endif>
-                                            <label for="read_required-{{$documentType->id}}">{{ trans('dokumentTypenForm.read_required') }}</label>
+                                            <input type="checkbox" name="read_required" id="read_required-{{$documentTypeMenu->id}}" @if($documentTypeMenu->read_required) checked @endif>
+                                            <label for="read_required-{{$documentTypeMenu->id}}">{{ trans('dokumentTypenForm.read_required') }}</label>
                                         </div>
                                         <div class="checkbox no-margin-top">
-                                            <input type="checkbox" name="allow_comments" id="allow_comments-{{$documentType->id}}" @if($documentType->allow_comments) checked @endif>
-                                            <label for="allow_comments-{{$documentType->id}}">{{ trans('dokumentTypenForm.allow_comments') }}</label>
+                                            <input type="checkbox" name="allow_comments" id="allow_comments-{{$documentTypeMenu->id}}" @if($documentTypeMenu->allow_comments) checked @endif>
+                                            <label for="allow_comments-{{$documentTypeMenu->id}}">{{ trans('dokumentTypenForm.allow_comments') }}</label>
                                         </div>
                                         <div class="checkbox no-margin-top">
-                                            <input type="checkbox" name="visible_navigation" id="visible_navigation-{{$documentType->id}}" @if($documentType->visible_navigation) checked @endif>
-                                            <label for="visible_navigation-{{$documentType->id}}">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
+                                            <input type="checkbox" name="visible_navigation" id="visible_navigation-{{$documentTypeMenu->id}}" @if($documentTypeMenu->visible_navigation) checked @endif>
+                                            <label for="visible_navigation-{{$documentTypeMenu->id}}">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
                                         </div>
                                     </div>
                                  </td> 
                                  <td>
                                     <div class=" table-options text-right">
-                                        @if($documentType->active)
+                                        
+                                        <button class="btn btn-primary dark-blue" type="submit" name="switch_menu" value="1"> {{ trans('dokumentTypenForm.toSubmenu') }} </button>
+                                        
+                                        @if($documentTypeMenu->active)
+                                            <button class="btn btn-success" type="submit" name="activate" value="1"> {{ trans('dokumentTypenForm.active') }} </button>
+                                        @else
+                                            <button class="btn btn-danger" type="submit" name="activate" value="0"> {{ trans('dokumentTypenForm.inactive') }} </button>
+                                        @endif
+                                        
+                                        <button class="btn btn-primary" type="submit" name="save" value="1"> {{ trans('dokumentTypenForm.save') }} </button>
+                                    </div>
+                                </td>
+                             
+                                    {!! Form::close() !!}
+                           
+                            </tr>  
+                        @endforeach
+                        
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</fieldset>
+
+<fieldset class="form-group">
+    
+    <div class="box-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="title"> {{ trans('dokumentTypenForm.overview-submenu') }}</h4>
+                <div class="box box-white">
+                    <table class="table">
+                        <tr>
+                            <th class="col-lg-1"><!-- <strong> {{ trans('dokumentTypenForm.order') }}</strong> --></th>
+                            <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.name') }}*</strong></th>
+                            <th class="col-lg-2"><strong>{{ trans('dokumentTypenForm.document_art') }}</strong></th>
+                            <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.document_role') }}</strong></th>
+                            <th class="col-lg-3"><strong>{{ trans('dokumentTypenForm.options') }}</strong></th>
+                            <th class="col-lg-1"></th>
+                        </tr>
+                        
+                        @foreach($documentTypesSubmenu as $documentTypeSubmenu)
+                        
+                            {!! Form::open(['route' => ['dokument-typen.update', 'dokument_typen' => $documentTypeSubmenu->id], 'method' => 'PATCH']) !!}
+                            <tr>
+                                <td>
+                                    <div class="text-center">
+                                        <a href="{{ url('dokument-typen/sort-up/' . $documentTypeSubmenu->id) }}" class="inline-block"><i class="fa fa-arrow-up"></i></a>
+                                        <a href="{{ url('dokument-typen/sort-down/' . $documentTypeSubmenu->id) }}" class="inline-block"><i class="fa fa-arrow-down"></i></a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <input type="text" name="name" class="form-control" placeholder="{{ trans('dokumentTypenForm.name') }}" value="{{ $documentTypeSubmenu->name }}" required />
+                                    </div>
+                                </td>   
+                                <td>
+                                    <div class="">
+                                        @if($documentTypeSubmenu->documents->isEmpty())
+                                            <div class="radio no-margin-top">
+                                                <label><input type="radio" name="document_art" value="0" @if(!$documentTypeSubmenu->document_art) checked @endif >{{ trans('dokumentTypenForm.editor') }}</label>
+                                            </div>
+                                            <div class="radio">
+                                                <label><input type="radio" name="document_art" value="1" @if($documentTypeSubmenu->document_art) checked @endif >{{ trans('dokumentTypenForm.upload') }}</label>
+                                            </div>
+                                        @else
+                                            @if($documentTypeSubmenu->document_art || $documentTypeSubmenu->id == 5)    
+                                                {{ trans('dokumentTypenForm.upload') }} {{-- trans('dokumentTypenForm.document') --}}
+                                            @else
+                                                {{ trans('dokumentTypenForm.editor') }}
+                                            @endif
+                                        @endif
+                                    </div>
+                                </td>
+                                <td>     
+                                    <div class="">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="document_role" value="0" @if(!$documentTypeSubmenu->document_role) checked @endif>
+                                                {{ trans('dokumentTypenForm.document') }} {{ trans('dokumentTypenForm.verfasser') }}
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="document_role" value="1" @if($documentTypeSubmenu->document_role) checked @endif>
+                                                {{ trans('dokumentTypenForm.rundschreiben') }} {{ trans('dokumentTypenForm.verfasser') }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                 </td>  
+                                 <td>
+                                    <div class="">
+                                        
+                                        <div class="checkbox no-margin-top">
+                                            <input type="checkbox" name="read_required" id="read_required-{{$documentTypeSubmenu->id}}" @if($documentTypeSubmenu->read_required) checked @endif>
+                                            <label for="read_required-{{$documentTypeSubmenu->id}}">{{ trans('dokumentTypenForm.read_required') }}</label>
+                                        </div>
+                                        <div class="checkbox no-margin-top">
+                                            <input type="checkbox" name="allow_comments" id="allow_comments-{{$documentTypeSubmenu->id}}" @if($documentTypeSubmenu->allow_comments) checked @endif>
+                                            <label for="allow_comments-{{$documentTypeSubmenu->id}}">{{ trans('dokumentTypenForm.allow_comments') }}</label>
+                                        </div>
+                                        <div class="checkbox no-margin-top">
+                                            <input type="checkbox" name="visible_navigation" id="visible_navigation-{{$documentTypeSubmenu->id}}" @if($documentTypeSubmenu->visible_navigation) checked @endif>
+                                            <label for="visible_navigation-{{$documentTypeSubmenu->id}}">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
+                                        </div>
+                                    </div>
+                                 </td> 
+                                 <td>
+                                    <div class=" table-options text-right">
+                                        
+                                        <button class="btn btn-primary dark-blue" type="submit" name="switch_menu" value="2"> {{ trans('dokumentTypenForm.toMenu') }} </button>
+                                        
+                                        @if($documentTypeSubmenu->active)
                                             <button class="btn btn-success" type="submit" name="activate" value="1"> {{ trans('dokumentTypenForm.active') }} </button>
                                         @else
                                             <button class="btn btn-danger" type="submit" name="activate" value="0"> {{ trans('dokumentTypenForm.inactive') }} </button>

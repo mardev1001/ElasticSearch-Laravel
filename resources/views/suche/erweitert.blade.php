@@ -204,12 +204,6 @@
                 <div class="row">
                     <div class="col-xs-12 text result">
                         <div class="headline"> 
-                                
-                            @if(ViewHelper::showHistoryLink($document))
-                                <a href="{!! ViewHelper::showHistoryLink($document) !!}" class="history-link" title="{{trans('sucheForm.history-available')}}">
-                                    <span class="icon-history"></span>
-                                </a>&nbsp;
-                            @endif
                             
                             @if(old('history'))
                                 <a href="{{url('/dokumente/'. $document->id)}}" class="link">
@@ -218,43 +212,52 @@
                             @endif
                             
                                 <strong>
-                                #{{$key+1}} 
-                                @if(old('name')) 
-                                    
+                                #{{$key+1}}
+                                - 
+                                @if(old('name'))
                                     @if($document->documentType->id == 3)
-                                        {!! "QMR " . $document->qmr_number.$document->additional_letter !!} -
+                                        {!! "QMR " . $document->qmr_number.$document->additional_letter !!}
                                     @elseif($document->documentType->id == 4)
-                                        {{ $document->documentType->name }} -
+                                        {{ $document->documentType->name }}
                                     @else
-                                        {{ $document->documentType->name }} -
+                                        {{ $document->documentType->name }}
                                     @endif
-                                    
+                                    -
+                                    {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }}
+                                    -
+                                    {{ $document->owner->first_name . " " .$document->owner->last_name }}
+                                    -
                                     @if(isset($parameter) && !empty($parameter)) 
-                                        {!! ViewHelper::highlightKeywords(array($parameter, old('name')), $document->name_long) !!} -
+                                        {!! ViewHelper::highlightKeywords(array($parameter, old('name')), $document->name_long) !!}
                                     @else
-                                        {!! ViewHelper::highlightKeywords(array(old('name')), $document->name_long) !!} -
+                                        {!! ViewHelper::highlightKeywords(array(old('name')), $document->name_long) !!}
                                     @endif
-                                    
-                                    {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                 @else
                                     @if($document->documentType->id == 3)
-                                        QMR {{$document->qmr_number.$document->additional_letter}} - 
+                                        QMR {{$document->qmr_number.$document->additional_letter}}
                                     @elseif($document->documentType->id == 4)
-                                        {{$document->documentType->name}} - 
+                                        {{$document->documentType->name}}
                                     @else
-                                        {{$document->documentType->name}} - 
+                                        {{$document->documentType->name}}
                                     @endif
-                                    
+                                    -
+                                    {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                                    -
+                                    {{ $document->owner->first_name . " " .$document->owner->last_name }}
+                                    -
                                     @if(isset($parameter) && !empty($parameter)) 
                                         {!! ViewHelper::highlightKeywords(array($parameter), $document->name_long) !!}
                                     @else
-                                        {!! $document->name_long !!} - 
+                                        {!! $document->name_long !!}
                                     @endif
-                                    
-                                    {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                 @endif
                                 </strong> 
                             </a>
+                            @if(ViewHelper::showHistoryLink($document))
+                                <a href="{!! ViewHelper::showHistoryLink($document) !!}" class="history-link" title="{{trans('sucheForm.history-available')}}">
+                                    <span class="icon-history"></span>
+                                </a>&nbsp;
+                            @endif
                         </div>
                         <div class="document-text"> 
                             

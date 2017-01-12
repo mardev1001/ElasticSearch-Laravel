@@ -313,7 +313,7 @@ $(function () {
         if (tabsNumber >= 1) {
             var variantId = $(this).data('delete-variant');
             tinymce.execCommand('mceRemoveControl', true, 'variant-' + variantId);
-            $('#variant' + variantId).remove();
+            $('#variant' + variantId).remove(); 
             $('#variation' + variantId).remove();
             $(this).closest('li').remove();
             $('.nav-tabs li.active').removeClass('active');

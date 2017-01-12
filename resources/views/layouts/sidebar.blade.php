@@ -24,35 +24,80 @@
                     </ul>
             </li>
             
-            @if(ViewHelper::getDocumentNewsData()->active)
-                @if(ViewHelper::getDocumentNewsData()->visible_navigation)
-                    <li> 
-                        <a href="{{ url('dokumente/news') }}">{{ ViewHelper::getDocumentNewsData()->name }}</a> 
-                    </li>
-                @endif
+            @if(!empty($documentTypesMenu))
+                        
+                @foreach($documentTypesMenu as $documentTypeMenu)
+                
+                    @if($documentTypeMenu->active)
+                    
+                        @if($documentTypeMenu->visible_navigation)
+                    
+                            @if($documentTypeMenu->id == 1)
+                                <li> <a href="{{ url('dokumente/news') }}">{{ $documentTypeMenu->name }}</a> </li>
+                            @elseif($documentTypeMenu->id == 2)
+                                <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentTypeMenu->name }}</a> </li>
+                            @elseif($documentTypeMenu->id == 3)
+                                <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentTypeMenu->name }}</a> </li>
+                            @elseif($documentTypeMenu->id == 4)
+                                <li>
+                                    <a href="{{url('iso-dokumente')}}">{{ $documentTypeMenu->name }}
+                                        @if(!empty($isoCategories)) <span class="fa arrow"></span> @endif
+                                    </a>
+                                    
+                                    @if(!empty($isoCategories))
+                                    <ul class="nav nav-third-level">
+                                        @foreach($isoCategories as $isoCategory)
+                                            @if($isoCategory->parent)
+                                            <li>
+                                                <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                                <ul class="nav nav-fourth-level">
+                                                @foreach($isoCategories as $isoCategoryChild)
+                                                    @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
+                                                        <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
+                                                    @endif
+                                                @endforeach
+                                                </ul>
+                                            </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                    @endif
+                                </li>
+                            @elseif($documentTypeMenu->id == 5)
+                                <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentTypeMenu->name }}</a> </li>
+                            @elseif($documentTypeMenu->id != 1 )
+                                <li> <a href="{{ url('dokumente/typ/' . str_slug($documentTypeMenu->name)) }}">{{ $documentTypeMenu->name }}</a> </li>
+                            @endif
+                    
+                        @endif
+                    
+                    @endif
+                    
+                @endforeach
+                
             @endif
                 
-            <li class="">
+            <li>
                 <a href="{{ url('dokumente') }}">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     
-                    @if(!empty($documentTypes))
+                    @if(!empty($documentTypesSubmenu))
                         
-                        @foreach($documentTypes as $documentType)
+                        @foreach($documentTypesSubmenu as $documentTypeSubmenu)
                         
-                            @if($documentType->active)
+                            @if($documentTypeSubmenu->active)
                             
-                                @if($documentType->visible_navigation)
+                                @if($documentTypeSubmenu->visible_navigation)
                             
-                                    @if($documentType->id == 1)
-                                        <li> <a href="{{ url('dokumente/news') }}">{{ $documentType->name }}</a> </li>
-                                    @elseif($documentType->id == 2)
-                                        <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentType->name }}</a> </li>
-                                    @elseif($documentType->id == 3)
-                                        <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentType->name }}</a> </li>
-                                    @elseif($documentType->id == 4)
+                                    @if($documentTypeSubmenu->id == 1)
+                                        <li> <a href="{{ url('dokumente/news') }}">{{ $documentTypeSubmenu->name }}</a> </li>
+                                    @elseif($documentTypeSubmenu->id == 2)
+                                        <li> <a href="{{ url('dokumente/rundschreiben') }}">{{ $documentTypeSubmenu->name }}</a> </li>
+                                    @elseif($documentTypeSubmenu->id == 3)
+                                        <li> <a href="{{ url('dokumente/rundschreiben-qmr') }}">{{ $documentTypeSubmenu->name }}</a> </li>
+                                    @elseif($documentTypeSubmenu->id == 4)
                                         <li>
-                                            <a href="{{url('iso-dokumente')}}">{{ $documentType->name }}
+                                            <a href="{{url('iso-dokumente')}}">{{ $documentTypeSubmenu->name }}
                                                 @if(!empty($isoCategories)) <span class="fa arrow"></span> @endif
                                             </a>
                                             
@@ -75,10 +120,10 @@
                                             </ul>
                                             @endif
                                         </li>
-                                    @elseif($documentType->id == 5)
-                                        <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentType->name }}</a> </li>
-                                    @elseif($documentType->id != 1 )
-                                        <li> <a href="{{ url('dokumente/typ/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
+                                    @elseif($documentTypeSubmenu->id == 5)
+                                        <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentTypeSubmenu->name }}</a> </li>
+                                    @elseif($documentTypeSubmenu->id != 1 )
+                                        <li> <a href="{{ url('dokumente/typ/' . str_slug($documentTypeSubmenu->name)) }}">{{ $documentTypeSubmenu->name }}</a> </li>
                                     @endif
                             
                                 @endif

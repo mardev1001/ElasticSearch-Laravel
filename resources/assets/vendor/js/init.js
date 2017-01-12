@@ -122,8 +122,8 @@ $(function() {
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
-                plugins: ["table"],
-                toolbar1: " undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                plugins: ["table",'link'],
+                toolbar1: " link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 //width: docWidth,
                 height: docHeight,
@@ -252,8 +252,8 @@ $(function() {
             tinymce.init({
                 selector: '.content-editor',
                 skin_url: '/css/style',
-                plugins: ["table"],
-                toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                plugins: ["table",'anchor'],
+                toolbar1: " link |undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 height: docHeight,
                 height: 350,
@@ -388,9 +388,8 @@ $(function() {
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
-                plugins: ["table"],
-                // toolbar1: " mybutton | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect  ",
-                toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                plugins: ["table",'link'], 
+                toolbar1: " link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 //width: docWidth,
                 height: docHeight,

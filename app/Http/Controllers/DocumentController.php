@@ -67,7 +67,7 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documentTypes = DocumentType::orderBy('order_number', 'asc')->get();
+        $documentTypes = DocumentType::where('menu_position', 1)->orderBy('order_number', 'asc')->get();
         $isoCategories = IsoCategory::where('active', 1)->get();
         return view('dokumente.documentIndex', compact('documentTypes','isoCategories') );
     }
@@ -1405,9 +1405,23 @@ class DocumentController extends Controller
 			}
         }
         
-            
         
-            
+        // JIRA Task NEPTUN-653
+        // If the document is "upload" type, show a treeview of documents where it is attached
+        // $documentsAttached = array();
+        // if( $document->documentType->document_art == 1 ){
+        //     foreach($document->variantDocuments as $key => $dc){
+        //         if(isset($dc->editorVariant->document->published)) $docPublished = $dc->editorVariant->document->published;
+        //         if(isset($docPublished)) $docStatus = in_array($docPublished->document->document_status_id, [3, 5]);
+        //         if($key != 0 && $docStatus && isset($docPublished->url_unique)) {
+        //             if($this->universalDocumentPermission($docPublished->document)){
+        //                 if(!in_array($docPublished->document_id, $documentsAttached)) array_push($documentsAttached, $docPublished->document_id);
+        //             }
+        //         }
+        //     }
+        // }
+        // dd($documentsAttached);
+        
         return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 
         'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility','myComments',
         'isoCategoryName','isoCategoryParent','isoCategory') );
@@ -2005,8 +2019,8 @@ class DocumentController extends Controller
        
         }
         else{
-            $render = view('pdf.document', compact('document','variants','dateNow'))->render();
-            $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
+            $render = view('pdf.new-layout-rund', compact('document','variants','dateNow'))->render();
+            $pdf->SetHTMLFooter( view('pdf.new-layout-rund-footer', compact('document','variants','dateNow') )->render() );
         }
         // return $render;
         $pdf->AddPage($or);
@@ -2666,7 +2680,7 @@ class DocumentController extends Controller
     public function documentStats($id)
     {
         $document = Document::find($id);
-        if(ViewHelper::universalDocumentPermission($document, true, false, true ) == false)
+        if( (ViewHelper::universalDocumentPermission($document, true, false, true ) == false) || (ViewHelper::universalHasPermission(array(26)) == false) ) // JIRA Task NEPTUN-650
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
              
         $approvalAllMandants = false;
@@ -3584,11 +3598,19 @@ class DocumentController extends Controller
         }
         elseif($document->document_type_id != $this->isoDocumentId && $margins->orientation == 'P'){// if not iso document and orientation portrait
             $margins->left = 10;
+            $margins->right = 8;
+            $margins->top = 0;
+            $margins->bottom = 20;
+            $margins->headerTop = -10;
+            $margins->footerTop = 0;
+            /*
+            $margins->left = 10;
             $margins->right = 5;
             $margins->top = 10;
             $margins->bottom = 20;
             $margins->headerTop = 10;
             $margins->footerTop = 0;
+            */
         }
         else{ // if not iso document and orientation landscape
             $margins->left = 5;

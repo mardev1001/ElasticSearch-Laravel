@@ -56,6 +56,11 @@ h1, h2, h3, h4 {
 .content h1 > strong,.content h2 > strong,.content h3 > strong{
     font-weight: 900 !important;
 }
+.content a{
+    font-size: 14px !important;
+    color: #337ab7; 
+    font-family: $primary-font-family !important;
+}
 .content,.content p,.content strong, .content i,.content u,.content b, .content td, .content th{
     font-size: 14px !important;
     color: black;
@@ -926,9 +931,11 @@ ul.level-1 .arrow,ul.level-2 .arrow,ul.level-3 .arrow{
 }
 
 span.highlight{
+    font-size: 12px !important;
+    font-weight: bold !important;
     color: #4094dc !important;
-    font-weight: bold;
 }
+
 .fa-1-5x{
     font-size: 1.3em;
 }
@@ -1043,12 +1050,13 @@ page[size="A4"][layout="portrait"] {
 select.form-control.select{
     display: block !important; 
     opacity: 0 !important;
-    width: 0 !important;
-    height: 5px !important;
+    width: 100% !important;
+    height: 40px !important;
+    // height: 5px !important;
     position: absolute; 
     z-index: -1;
-    top: 40%;
-    /*padding: 0 !important;*/
+    // top: 40%;
+    // padding: 0 !important;
     border: 0 !important;
     min-height: initial !important;
 }
@@ -1310,13 +1318,15 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 
 .history-link{
     // font-weight: bold !important;
-    display: block !important;
-    float: left;
+    display: inline-block !important;
+    // float: right;
     span.icon-history{
         display: block;
         width: 20px;
         height: 20px;
         background-size: 90%;
+        margin-bottom: -4px;
+        margin-left: 4px;
     }
 }
 

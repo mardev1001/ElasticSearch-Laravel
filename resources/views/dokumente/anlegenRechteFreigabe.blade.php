@@ -139,7 +139,7 @@
                             
                             
                             @if( $data->document_status_id != 3 )
-                                @if( Auth::user()->mandantRoles[0]->role_id == 1 || Auth::user()->mandantRoles[0]->role_id == 8
+                                @if( ViewHelper::universalHasPermission(array(8) )
                                 || (ViewHelper::universalDocumentPermission($data, false,false, true) == true && $data->document_status_id ==2 ) )
                                     <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
                                         <!--<span class="fa fa-exclamation-triangle"></span>  -->

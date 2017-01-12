@@ -368,7 +368,8 @@ class ViewHelper
     {
         if (empty($haystack)) return;
         $newstring = '';
-        $haystack = html_entity_decode(ViewHelper::replaceHtmlTags($haystack));
+        // $haystack = html_entity_decode(ViewHelper::replaceHtmlTags($haystack)); // JIRA Task NEPTUN-652
+        $haystack = ViewHelper::replaceHtmlTags($haystack);
         $extractLenght = 128;
         $needlePosition = strpos($haystack, $needle);
         $newstring = '... ' . substr($haystack, $needlePosition, 128) . ' ...';
@@ -384,7 +385,8 @@ class ViewHelper
     static function extractTextSimple($haystack)
     {
         if (empty($haystack)) return;
-        $haystack = html_entity_decode(ViewHelper::replaceHtmlTags(trim($haystack)));
+        // $haystack = html_entity_decode(ViewHelper::replaceHtmlTags(trim($haystack)));
+        $haystack = ViewHelper::replaceHtmlTags(trim($haystack)); // JIRA Task NEPTUN-652
         $extractLenght = 128;
         $needlePosition = 0;
         $newstring = substr($haystack, $needlePosition, 128) . ' ...';
@@ -1103,13 +1105,34 @@ class ViewHelper
      * @param array $files
      * @return \Illuminate\Http\Response
      */
-    static function fileUpload($model, $path, $files)
+    static function fileUpload($model, $path, $files, $sizeLimit = false)
     {
         $folder = $path . str_slug($model->id);
         $uploadedNames = array();
         if (!\File::exists($folder)) {
             \File::makeDirectory($folder, $mod = 0777, true, true);
         }
+        
+        // File size validation
+        if($sizeLimit){
+            $totalSize = 0;
+            if (is_array($files)) {
+                foreach ($files as $tmp) {
+                    if (is_array($tmp)){
+                        foreach ($tmp as $t) {
+                            $totalSize += \File::size($t);
+                        }
+                    } else {
+                        $totalSize += \File::size($tmp);
+                    }
+                }
+            } 
+            
+            if($totalSize > $sizeLimit)
+                return false; 
+        }
+        
+        // Move uploaded files
         if (is_array($files)) {
             $uploadedNames = array();
             $counter = 0;

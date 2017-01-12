@@ -20,5 +20,6 @@ return [
     'attachments' => 'Anhänge',
     'reset' => 'zurücksetzen',
     'sendSuccess' => 'Email wurde erfolgreich versendet.',
+    'fileSizeExceeded' => 'Maximale Filegröße: 4 MB',
     
 ];

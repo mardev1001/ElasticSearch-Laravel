@@ -16,7 +16,7 @@ class DocumentsMarkAsRead extends Command
      *
      * @var string
      */
-    protected $signature = 'documents:markAsRead';
+    protected $signature = 'documents:mark-read';
 
     /**
      * The console command description.

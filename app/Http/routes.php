@@ -123,7 +123,6 @@ Route::group( array('middleware' => ['auth']), function(){
         
         // Developer Routes
         // Route::get('dev/status-update', 'DocumentController@documentStatusUpdate')->middleware('auth.basic'); // /dev/status-update?token=!Webbite-1234!
-        // Route::get('dev/doctype-order-reset', 'DocumentTypeController@sortReset'); // /dev/doctype-order-reset?token=!Webbite-1234!
         // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
         
         

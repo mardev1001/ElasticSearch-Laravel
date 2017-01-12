@@ -2,25 +2,25 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
-use App\Document;
 use Illuminate\Console\Command;
 
-class DocumentsArchiveExpired extends Command
+use App\DocumentType;
+
+class DocumentsResetTypes extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'documents:archive-expired';
+    protected $signature = 'documents:reset-types';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Sets document status to "Archiv" for documents whose date of expiration is due.';
+    protected $description = 'Document Types sorting and positions reset.';
 
     /**
      * Create a new command instance.
@@ -39,11 +39,10 @@ class DocumentsArchiveExpired extends Command
      */
     public function handle()
     {
-        $documents = Document::whereNotNull('date_expired')->get();
-        foreach ($documents as $document) {
-            if(Carbon::parse($document->date_expired)->lt(Carbon::today())){
-                $document->update(['document_status_id' => 5]);
-            }
+        $docTypes = DocumentType::all();
+        for ($i = 0; $i < sizeof($docTypes); $i++) {
+            $type = $docTypes[$i];
+            $type->update(['order_number' => ($i+1), 'menu_position' => 1]);
         }
     }
 }

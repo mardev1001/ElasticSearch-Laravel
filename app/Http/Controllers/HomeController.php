@@ -213,14 +213,16 @@ class HomeController extends Controller
             'to_user' => 'required',
             'subject' => 'required|max:255',
             'summary' => 'required',
-            'files' => 'max:2000000',
+            // 'files[]' => 'max:4096',
         ]);
+        
         
         $uid = Auth::user()->id;
         $copy = false;
         if($request->has('copy'))
             $copy = true;
         $files = $request->file();
+        $sizeLimit = 4096000;
         $request = $request->all();
         $from = User::find($uid);
         $request['logo'] = asset('/img/logo-neptun-new.png');
@@ -232,7 +234,10 @@ class HomeController extends Controller
         $messageContact = ContactMessage::create(['user_id' => $request['to_user'], 'user_id_from' => $uid, 'title' => $request['subject'], 'message' => $request['summary'], 'send_copy' => $copy]);
         
         // Store message attachment files
-        $uploads = ViewHelper::fileUpload(User::find($request['to_user']), $this->uploadPath, $files);
+        $uploads = ViewHelper::fileUpload(User::find($request['to_user']), $this->uploadPath, $files, $sizeLimit);
+        
+        if($uploads == false) return redirect()->back()->with(['message' => trans('contactForm.fileSizeExceeded'), 'alert-class' => 'alert-danger' ]);
+        // if($uploads == false) return redirect()->back()->with('alert-class', 'danger');
 
         // Store message attachment files data
         if(isset($messageContact) && isset($uploads)){

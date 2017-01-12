@@ -16,18 +16,12 @@ body{background-color:#fff;color:#000;font-family:Verdana,Arial,Helvetica,sans-s
 .mce-content-body.portrait table{
     max-width: 750px;
 } 
-/*
-.mce-content-body.landscape.rundschreiben table{
-    max-width: 750px;
-} 
-.mce-content-body.portrait.iso-document table{
-    max-width: 750px;
-} */
 
-/*body.mce-content-body {*/
-/*    background-image: url("../../img/editor-bg-bordered2-2.png"),url("../../img/editor-bg-bordered.png");*/
-/*    background-repeat: no-repeat,repeat-y;*/
-/*}*/
+.tinymce-editor-class a,.mce-content-body a{
+    font-size: 14px;
+    color: #337ab7;
+    text-decoration: none;
+}
 
 .content h1,.tinymce-editor-class h1,.mce-content-body h1{
     font-size: 2.1em !important;

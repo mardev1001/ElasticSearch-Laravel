@@ -52,12 +52,6 @@ class WikiController extends Controller
         
         $topCategories = WikiCategory::where('top_category',1)->whereIn('id',$wikiCategories)->get();
         
-        // if( ViewHelper::universalHasPermission(array()) ){
-        //     $topCategories = WikiCategory::where('top_category',1)->get();
-        //     $wikiCategories = WikiCategory::pluck('id')->toArray();
-        // }
-        
-        
         $newestWikiEntriesPagination = WikiPage::where('status_id',2)->whereIn('category_id',$wikiCategories)
         ->orderBy('updated_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
         $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);

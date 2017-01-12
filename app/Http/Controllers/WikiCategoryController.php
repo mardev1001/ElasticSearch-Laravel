@@ -84,18 +84,24 @@ class WikiCategoryController extends Controller
      */
     public function show($id)
     {
-       
         $category = WikiCategory::find($id);
         
-     
         $query = WikiPage::where('category_id',$id)->orderBy('updated_at','desc');
        
+        $myQuery = $query;
         if( ViewHelper::universalHasPermission(array(15)) == false ){
             $query->whereNotIn('status_id',array(1,3) );
         }
+        else{
+            $query->whereNotIn('status_id',array(1) );
+        }
       
-        $myQuery = $query;
-        $categoryEntries = $query->paginate(12);   
+        
+        $generalEntries = $query->pluck('id')->toArray();
+        
+        $generalEntries = $query->paginate(12);
+        
+        
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
         
         $myQuery = $myQuery->where('user_id', Auth::user()->id);

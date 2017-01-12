@@ -102,37 +102,42 @@
                                     @endif
                                 @endif
                                 
-                                <!--if doc type formulare display where it's attached-->
+                                {{--
+                                <!-- if doc type formulare display where it's attached -->
+                                <!-- JIRA Task NEPTUN-653 -->
                                 @if( $document->documentType->document_art == 1 && count( $document->variantDocuments )  )
+                                
                                 <div class="attachments document-attachments">
                                     <span class="text"> <strong>{{$document->name}}</strong> ist in folgenden Dokumenten angehängt: </span>
                                     <div class="clearfix"></div> <br>
-                                        <div class="">
-                                            @foreach($document->variantDocuments as $key =>$dc)
-                                                @if( $dc->editorVariant->document->document_status_id == 3 )
-                                                    <div class="row flexbox-container">
-                                                        <div class="col-md-12 link-padding">
-                                                           <span class="text">
-                                                                <span>@if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif</span><br/>
-                                                                @if($dc->editorVariant->document->published != null)
-                                                                    <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
-                                                                @else
-                                                                    <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
-                                                                @endif    
-                                                                    <strong>  {!! $dc->editorVariant->document->name !!} </strong>
-                                                                </a><br/>
-                                                                <span>
-                                                                    {{ $dc->editorVariant->document->documentType->name }}
-                                                                </span>
+                                    <div class="">
+                                        @foreach($document->variantDocuments as $key =>$dc)
+                                            @if( in_array($dc->editorVariant->document->document_status_id, [3, 5]))
+                                                <div class="row flexbox-container">
+                                                    <div class="col-md-12 link-padding">
+                                                       <span class="text">
+                                                            <span>@if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif</span><br/>
+                                                            @if($dc->editorVariant->document->published != null)
+                                                                <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
+                                                            @else
+                                                                <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
+                                                            @endif    
+                                                                <strong>  {!! $dc->editorVariant->document->name !!} </strong>
+                                                            </a><br/>
+                                                            <span>
+                                                                {{ $dc->editorVariant->document->documentType->name }}
                                                             </span>
-                                                            
-                                                        </div>
-                                                    </div><!-- end flexbox container -->
-                                                @endif
-                                            @endforeach
-                                        </div>
+                                                        </span>
+                                                        
+                                                    </div>
+                                                </div><!-- end flexbox container -->
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 </div>
+                                
                                 @endif
+                                --}}
                                 
                                 @foreach( $variants as $v => $variant)
                                     @if( ( isset($variant->hasPermission) && $variant->hasPermission == true ))
@@ -219,7 +224,7 @@
                     
                 
                     @if( $document->document_status_id  != 5 )
-                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true )  )
+                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) && ViewHelper::universalHasPermission(array(26)) ) 
                             @if($document->document_status_id == 3)
                                 <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
                             @endif
@@ -321,11 +326,71 @@
         </div>
     </div>
      
-    <div class="clearfix"></div><br>
+    <div class="clearfix"></div> <br>
     
-    @if(ViewHelper::universalHasPermission( array(9)))
-        @if($document->document_status_id == 3 && count($document->documentApprovalsApprovedDateNotNull) )
+    @if( $document->documentType->document_art == 1 && count( $document->variantDocuments )  )
+    
+        <div class="panel panel-primary" id="panelDokumente">
         
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-target="#dokumentePanel" href="#dokumentePanel" class="transform-normal collapsed">
+                        Dokumente
+                    </a>
+                </h4>
+            </div>
+            <div id="dokumentePanel" class="panel-collapse collapse" role="tabpanel">
+                <div class="panel-body">
+        
+                    <div class="documentsAttached">
+                                    
+                        @foreach($document->variantDocuments as $key =>$dc)
+                            @if( in_array($dc->editorVariant->document->document_status_id, [3, 5]))
+                                <div class="row flexbox-container padding-left">
+                                    
+                                   <span class="text col-xs-12">
+                                        <span>
+                                            @if($dc->editorVariant->document->version) Version {{$dc->editorVariant->document->version}}, @endif
+                                            {{ $dc->editorVariant->document->documentStatus->name }} -
+                                            @if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif 
+                                            @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif
+                                        </span><br/>
+                                        
+                                        @if($dc->editorVariant->document->published != null)
+                                            <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
+                                        @else
+                                            <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
+                                        @endif    
+                                            <strong>  {!! $dc->editorVariant->document->name !!} </strong>
+                                        </a><br/>
+                                        
+                                        <span>
+                                            {{ $dc->editorVariant->document->documentType->name }}
+                                        </span>
+                                    </span>
+                                    
+                                </div>
+                                
+                                <div class="clearfix"></div>
+                                <hr/>
+                            @endif
+                        @endforeach
+                        
+                    </div>
+        
+                </div>
+            </div>
+        
+        </div>
+    
+    @endif
+
+    <div class="clearfix"></div>
+    
+    {{--@if(ViewHelper::universalHasPermission( array(9)))<!-- changed @task NEPTUN-630 --> --}}
+    @if( ViewHelper::universalDocumentPermission($document, false, $freigeber = false, true) || ViewHelper::universalHasPermission( array()) )
+        @if($document->document_status_id == 3 && count($document->documentApprovalsApprovedDateNotNull) )
+        <!-- freigeber panel -->
         <div class="panel panel-primary" id="panelFreigeber">
         
             <div class="panel-heading">
@@ -379,7 +444,7 @@
                 </div>
             </div>
         
-        </div>
+        </div><!-- end freigeber panel -->
 
         @endif
     @endif

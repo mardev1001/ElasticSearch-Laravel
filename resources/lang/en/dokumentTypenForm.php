@@ -15,6 +15,8 @@ return [
     'management' => 'Verwalten',
     'name' => 'Name',
     'overview' => 'Übersicht',
+    'overview-menu' => 'Dokument-Typen im Hauptmenü',
+    'overview-submenu' => 'Dokument-Typen im Untermenü',
     'add' => 'hinzufügen',
     'save' => 'speichern',
     'active' => 'aktiv',
@@ -28,6 +30,8 @@ return [
     'typesFreigabe' => 'im Freigabeprozess',
     'typesAll' => 'Alle',
     'order' => 'Sortierung',
+    'toMenu' => 'In Hauptmenü',
+    'toSubmenu' => 'In Untermenü',
     'updated' => 'Dokument Typ erfolgreich aktualisiert.',
     
 ];

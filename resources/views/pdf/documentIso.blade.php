@@ -25,6 +25,10 @@
                 font-size: 14px !important;
             
             }
+            a{
+                color: #337ab7;
+                text-decoration: none;
+            }
             .list-style-dash{
                 list-style-type: none;
                 margin-left: -10px;

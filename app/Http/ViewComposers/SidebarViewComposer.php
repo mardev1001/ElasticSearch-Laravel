@@ -31,6 +31,8 @@ class SidebarViewComposer
     public function compose(View $view)
     {   
         $view->with('documentTypes', DocumentType::orderBy('order_number', 'asc')->get() );
+        $view->with('documentTypesSubmenu', DocumentType::where('menu_position', 1)->orderBy('order_number', 'asc')->get() );
+        $view->with('documentTypesMenu', DocumentType::where('menu_position', 2)->orderBy('order_number', 'asc')->get() );
         $view->with('isoCategories', IsoCategory::where('active', 1)->get() );
         // $view->with('isoCategories', IsoCategory::all() );
     }

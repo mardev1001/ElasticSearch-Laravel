@@ -25,7 +25,9 @@ class DocumentTypeController extends Controller
     public function index()
     {
         $documentTypes = DocumentType::orderBy('order_number', 'asc')->get();
-        return view('dokument-typen.index', compact('documentTypes'));
+        $documentTypesSubmenu = DocumentType::where('menu_position', 1)->orderBy('order_number', 'asc')->get();
+        $documentTypesMenu = DocumentType::where('menu_position', 2)->orderBy('order_number', 'asc')->get();
+        return view('dokument-typen.index', compact('documentTypes','documentTypesMenu','documentTypesSubmenu'));
     }
 
     /**
@@ -46,7 +48,7 @@ class DocumentTypeController extends Controller
      */
     public function store(Request $request)
     {
-        
+        // dd($request->all());
         $documentType = new DocumentType();
         $documentType->name = $request->input('name');
         $documentType->document_art = $request->input('document_art');
@@ -55,6 +57,7 @@ class DocumentTypeController extends Controller
         if($request->has('allow_comments')) $documentType->allow_comments = true;
         if($request->has('visible_navigation')) $documentType->visible_navigation = true;
         $documentType->active = true;
+        $documentType->menu_position = $request->input('menu_position');
         
         $documentType->order_number = 1;
         $documentTypeLast = DocumentType::orderBy('id', 'desc')->first();
@@ -117,6 +120,16 @@ class DocumentTypeController extends Controller
         
         if($request->has('activate'))
             $documentType->active = !$request->input('activate');
+            
+        if($request->has('switch_menu')){
+            $menuPosition = $request->input('switch_menu');
+            $documentType->menu_position = $menuPosition;
+            $lastDocType = DocumentType::where('menu_position', $menuPosition)->orderBy('order_number', 'desc')->first();
+            // dd(count($lastDocType));
+            if(count($lastDocType)) $documentType->order_number = $lastDocType->order_number += 1;
+            else $documentType->order_number = 1;
+        }
+            
         
         $documentType->save();
         
@@ -132,7 +145,8 @@ class DocumentTypeController extends Controller
     {
         // dd('up '.$id);
         $docType = DocumentType::find($id);
-        $docTypePrev = DocumentType::where('order_number', $docType->order_number-1)->first();
+        $docTypePrev = DocumentType::where('menu_position', $docType->menu_position)->where('order_number', $docType->order_number-1)->first();
+        // dd($docTypePrev);
         
         if($docTypePrev){
             $docType->order_number -= 1;
@@ -153,8 +167,8 @@ class DocumentTypeController extends Controller
     {
         // dd('down '.$id);
         $docType = DocumentType::find($id);
-        $docTypeNext = DocumentType::where('order_number', $docType->order_number+1)->first();
-        
+        $docTypeNext = DocumentType::where('menu_position', $docType->menu_position)->where('order_number', $docType->order_number+1)->first();
+        // dd($docTypeNext);
         if($docTypeNext){
             $docType->order_number += 1;
             $docType->save();
@@ -163,23 +177,6 @@ class DocumentTypeController extends Controller
         }
         
         return back()->with('message', trans('dokumentTypenForm.updated'));
-    }
-    
-    /**
-     * Reset order number for the items.
-     * @return \Illuminate\Http\Response
-     */
-    public function sortReset(Request $request)
-    {
-        if($request->get('token') == '!Webbite-1234!'){ 
-            $docTypes = DocumentType::all();
-            for ($i = 0; $i < sizeof($docTypes); $i++) {
-                $type = $docTypes[$i];
-                // dd($type);
-                $type->update(['order_number' => ($i+1)]);
-            }
-            return redirect('/')->with('messageSecondary', trans('dokumentTypenForm.updated'));
-        } else return back();
     }
     
     /**
