@@ -6,11 +6,25 @@
       {!! Html::script(elixir('js/script.js')) !!}
       <link rel="shortcut icon" href="/img/favicon.png">
         <style type="text/css">
-           @page{
+           @page {
                 header: page-header;
                 footer: page-footer;
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                
             }
-           ul, li, ul li{
+           @page {
+                header: page-header;
+                footer: page-footer;
+                font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                
+            }
+            @page:first {
+                margin-top: 0px !Important;
+            }
+            /*sub{*/
+            /*    font-size: 22px !important;*/
+            /*}*/
+             ul, li, ul li{
                 font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
                 font-size: 14px !important;
                 margin-left: 7px;
@@ -25,16 +39,16 @@
                 font-size: 14px !important;
             
             }
-            a{
-                color: #337ab7;
-                text-decoration: none;
-            }
             .list-style-dash{
                 list-style-type: none;
                 margin-left: -10px;
                 padding-left: 5px;
                 line-height: 16px !important;
              }
+              a{
+                    color: #337ab7;
+                    text-decoration: none;
+                }
              .list-style-dash li {
                 background-image:  url('/img/icons/icon_list_dash.png') !important;
                 background-repeat: no-repeat !important;
@@ -55,8 +69,6 @@
                 background: #fff !important;
                 background-color: #fff !important;
             }
-            
-                
             h1{
                 font-size: 2.1em !important;
                 font-weight: normal !important;
@@ -101,16 +113,9 @@
                font-size: smaller !important;
             }
             
-            /*img,h1,h2,h3,h4,p,div{
-                display:block !important;
-                clear: both !important;
-            }
-                
-            h1,h2,h3,h4,p,div{
-               background: #fff !important;
-            }*/
             p{
               margin: 14px 0;
+              font-size:14px;
             }
             table{
                 /*font-size: 30px !important;*/
@@ -140,6 +145,34 @@
                 -webkit-padding-start: 20px !important;
                 moz-padding-start: 20px !important;
             }  
+            
+            .text-upper{
+                text-transform: uppercase;
+            }
+            .bold{
+                font-weight: bold;
+            }
+            .page-num-p{
+                text-align:right; 
+                font-size:14px;
+            }
+            .mb30{
+                margin-bottom: 30px;
+            }
+            .mb60{
+                margin-bottom: 60px;
+            }
+            .mb90{
+                margin-bottom: 90px;
+            }
+            .clearfix{
+                clear: both !important;
+                height:1px;
+            }
+            .half-width{
+                width:50% !important;
+                float:left;
+            }
                
             .footer{
                 color: #808080;

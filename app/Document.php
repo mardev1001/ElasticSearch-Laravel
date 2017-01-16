@@ -142,6 +142,9 @@ class Document extends Model
     public function editorVariantNoDeleted(){
         return $this->hasMany('App\EditorVariant')->where('deleted_at',null);
     }
+    public function editorVariantTrashed(){
+        return $this->hasMany('App\EditorVariant')->onlyTrashed();
+    }
     public function editorVariantOrderBy(){
         return $this->hasMany('App\EditorVariant')->orderBy('variant_number');
     }

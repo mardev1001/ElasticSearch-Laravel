@@ -252,14 +252,14 @@
                     if ($(this).data('height')) {
                         docWidth = 'auto', docHeight = $(this).data('height');
                     }
-                    
+                    //not found where this is triggered
                     tinymce.init({
                         selector: '.editable',
                         skin_url: '/css/style',
                         width: docWidth,
                         height: docHeight, 
-                        plugins: ["image table"],
-                        toolbar1: " undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ",
+                        plugins: ["image table link"],
+                        toolbar1: "link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                         style_formats: [
                             {title: 'Spiegelstriche', selector: 'ul', classes: 'list-style-dash'},
                         ],
@@ -368,6 +368,8 @@
                         /* End Image setup */
                     } //end setup
                     });
+                    
+                    
                 });
             }
 

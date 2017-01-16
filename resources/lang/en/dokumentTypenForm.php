@@ -23,7 +23,7 @@ return [
     'inactive' => 'inaktiv',
     'allow_comments' => 'Kommentare erlauben',
     'read_required' => 'muss gelesen werden',
-    'visible_navigation' => 'Navigationsleiste',
+    'visible_navigation' => 'Menüeintrag anzeigen',
     'rundschreiben' => 'Rundschreiben',
     'verfasser' => 'Verfasser',
     'typesEntwurf' => 'Entwurf',

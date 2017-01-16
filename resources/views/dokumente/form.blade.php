@@ -169,6 +169,10 @@
                     <label class="control-label"> {{ ucfirst(trans('documentForm.documentTemplates')) }}*</label>
                     <select name="document_template" class="form-control select" data-placeholder="{{ ucfirst(trans('documentForm.documentTemplates')) }}" required>
                         <option value="1" @if((isset($data->document_template)) && ($data->document_template == 1)) selected @endif> Vorlage 1</option>
+                        @if($data->document_type_id != 4)
+                            <!--not shown if ISO documente-for now-->
+                            <option value="2" @if((isset($data->document_template)) && ($data->document_template == 2)) selected @endif> Vorlage 2 - 2017</option>
+                        @endif
                     </select>
                 </div>   
             </div>

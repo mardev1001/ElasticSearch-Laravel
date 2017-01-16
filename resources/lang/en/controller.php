@@ -9,6 +9,7 @@ return [
     'administration' => 'Mandantenverwaltung',
     'benutzer'  => 'Benutzer',
     'adressaten' => 'Empfänger',
+    'trash' => 'Papierkorb',
     'favorites' => 'Favoriten',//Meine Favoriten
     'mandantenverwaltung' => 'Mandantenverwaltung',
     'qmr' => 'QM-Rundschreiben',

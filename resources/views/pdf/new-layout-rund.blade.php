@@ -5,10 +5,14 @@
       <title>@yield("title",'Neptun dokument')</title>
       <link rel="shortcut icon" href="/img/favicon.png">
         <style type="text/css">
-            @page {
+             @page {
                 header: page-header;
                 footer: page-footer;
                 font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica !important;
+                
+            }
+            @page:first {
+                margin-top: 0px !Important;
             }
             /*sub{*/
             /*    font-size: 22px !important;*/
@@ -58,8 +62,6 @@
                 background: #fff !important;
                 background-color: #fff !important;
             }
-            
-                
             h1{
                 font-size: 2.1em !important;
                 font-weight: normal !important;
@@ -163,6 +165,41 @@
                 width:50% !important;
                 float:left;
             }
+            
+            .footer-box{
+                margin-top:10px;
+                width: 19.5%;
+                float: left;
+                padding-left:10px;
+                
+            }
+            .footer-box p{
+                margin-top: 20px;
+                /*padding-top: 10px;*/
+                font-size: 9px !Important;
+                color: #425a61;
+            }
+            
+            .page-number{
+                text-align: center;
+                margin-top: -110px;
+                color: black;
+                z-index:999999;
+                font-size: 12px;
+                background: transparent;
+            }
+            .footer-line-right img{
+                height: 100px;
+            }
+           
+           .box-1, .box-3, .box-4{
+                border-left: 1px solid #5f5f5f;
+            }
+            .box-2{
+                border-left: 1px solid #1552ff;
+            }
+           
+            
         </style>
         @if( $document->landscape == true)
             <style>
@@ -175,40 +212,18 @@
             }
             .header,
             .footer {
-                width: 100%;
+                /*width: 100%;*/
                 /*position: fixed;*/
             }
-            .header {
-                /*top: -15px;*/
-                
-               
+           .header{
+               width: 120% !Important;
+                margin: -0px -40px 0 -18px !important;
             }
             .div-pusher{
                 width:50%;
                 /*padding-left:30%;*/
             }
-            .header .div-pusher{
-                width:80%;
-                padding-left:30%;
-            }
-            .header .image-div {
-                width:20%;
-                float:right !important;
-                padding-left:50px;
-                height:auto;
-            }
-            .header .image-div img{
-               margin-left:0px;
-               width:100%;
-               height:auto;
-               display:block;
-            }
-            .footer {
-                bottom: 5px;
-            }
-            .pagenum:before {
-                content: counter(page);
-            }
+            
             .first-title.first{
                 margin-top: 0px;
                  margin-bottom:0px;
@@ -218,7 +233,7 @@
                 margin-bottom:10px;
             }
              .first-title, .content-wrapper{
-                padding: 0 120px 10px 30px;
+                padding: 0 70px 10px 70px;
             }
             .document-title-row{
                 width: 70%;
@@ -228,7 +243,7 @@
                 width: 30%;
                 float:right;
                 font-size: 14px;
-                padding-top: 7px;
+                padding-top: 0px;
             }
             .date-div{
                 width:100%;
@@ -247,87 +262,138 @@
                 width:50% !important;
                 float:left;
             }
-            .footer .half-width{
-               
+           .footer { 
+                position: fixed; 
+                bottom: 0; 
+                left: 0;
+                margin-left: -155px;
+                margin-right: -160px;
+                padding-top: 50px;
+                /*width: 1005px;*/
+                
             }
-            .text-upper{
-                text-transform: uppercase;
-            }
-            .bold{
-                font-weight: bold;
-            }
-            .page-num-p{
-                text-align:right; 
-                font-size:14px;
-            }
-            .mb30{
-                margin-bottom: 30px;
-            }
-            .mb60{
-                margin-bottom: 60px;
-            }
-            .mb90{
-                margin-bottom: 90px;
-            }
-            table {
-                margin-left: 0 !important;
-              
-                /*width: 100% !important;*/
-                /*margin-right: 30pt !important;*/
-            }
-            table td{
-                 /*width: auto !important;*/
-            }
-            #absolute{
-                 font-size: 10px !important;
-                 margin-top: -125px;
-                 /*margin-left: 600px;*/
-                 float: right;
-                 margin-right: -40px;
-                 padding-bottom: 10px;
-            }
-             .footer { 
-                 position: fixed; 
-                 bottom: 5px; right: 0px;
-                 /*background: red;*/
-                 
-             }
-            .absolute, .absolute:nth-child(even){
-                width: 125px;
-                /*margin-top: -135px;*/
-                /*margin-left: 300px;*/
-                color: #808080;
-            }
-            .absolute p{
-                margin-bottom: 0 !important;
-                margin-top: 0 !important;
-                text-align: left;
-                 color: #808080;
+            .absolute{
+                margin-left: -35px;
+                margin-right: -45px;
+                right: 0;
                 font-size: 10px !important;
+                padding-bottom: 0px;
             }
             .page-number{
-                /*margin-left: 345px;*/
-                text-align: center;
-                margin-top: -28px;
-                background: transparent;
-                color: black;
-                z-index:999999;
-                font-size: 12px;
+                margin-top: -120px;
+               
+            }
+            .footer-box{
+                margin-top: 40px !important;
+            }
+             .footer-line{
+                width: 8.5%;
+                float:left;
+            }
+            .footer-line-left  {
+                /*border: 1px solid red;*/
+                /*margin-top:10px;*/
+                /*margin-left:-5px;*/
+                width:3%;
+            }
+            .left-image{
+                max-height: 135px;
+            }
+            .footer-line-right  {
+                /*border: 1px solid red;*/
+                /*padding-top:5px;*/
+                /*margin-top:20px;*/
+                margin-right: -40px;
+                width:7.5%;
+            }
+            .box-1{
+                width: 20%;
+                /*margin-left: 15px;*/
+            }
+            
+            .box-2{
+                margin-top: -2px;
+            }
+            .box-3{
+                margin-top: 5px;
+            }
+            .box-3 p{
+                margin-top: 15px;
+            }
+            .box-4{
+                width: 16%;
+                margin-top: -5px;
+                margin-left: 20px;
             }
         </style><!--end landscape css-->
         @else
             <style>
             body{ padding-top:20px; }
             .header{
-                margin: -10px -40px 0 -35px;
+                margin: -10px -40px 0 -40px;
             }
             .div-pusher{
                 width:50%;
                 padding-left:30%;
             }
-            .footer {
-               
+            .footer { 
+                position: fixed; 
+                bottom: 0; 
+                left: 0;
+                margin-left: -155px;
+                margin-right: -150px;
+                padding-top: 30px;
+                /*width: 1005px;*/
+                
             }
+            .absolute{
+                
+                /*margin-top: -45px;*/
+                margin-left: -35px;
+                margin-right: -45px;
+                
+                right: 0;
+                font-size: 10px !important;
+                padding-bottom: 0px;
+            }
+            .footer-line{
+                width: 7%;
+                float:left;
+            }
+            .footer-line-left  {
+                /*border: 1px solid red;*/
+                margin-top:10px;
+                margin-left:-5px;
+                width:8.5%;
+            }
+            .footer-line-right  {
+                /*border: 1px solid red;*/
+                /*padding-top:5px;*/
+                margin-top:4px;
+                /*margin-right: -20px;*/
+                width:9.5%;
+            }
+            
+            .box-1{
+                width: 20%;
+                margin-left: 15px;
+            }
+            
+            .box-2{
+                margin-top: -2px;
+            }
+            .box-3{
+                margin-top: 5px;
+            }
+            .box-3 p{
+                margin-top: 15px;
+            }
+            .box-4{
+                width: 16%;
+                margin-top: -5px;
+                margin-left: 5px;
+            }
+           
            
             .first-title.first{
                 margin-top: -10px;
@@ -341,7 +407,7 @@
                 padding: 0 90px 10px 30px;
             }
              .first-title, .content-wrapper{
-                padding: 0 115px 10px 30px;
+                padding: 0 20px 10px 30px;
             }
             .document-title-row{
                 width: 70%;
@@ -351,7 +417,7 @@
                 width: 30%;
                 float:right;
                 font-size: 14px;
-                margin-top: -20px;
+                margin-top: -60px;
                 /*padding-top: 7px;*/
             }
             .date-div{
@@ -366,13 +432,13 @@
          </style>
         @endif
     </head>
-    <body style=" fon-family: 'Arial', Arial">
+    <body style=" font-family: 'Arial', Arial">
         
         
      <!-- if you want header on every page  set the include pdf.header here -->
       
-      <div >
-           @include('pdf.new-layout-rund-header')
+      <div style="">
+           {{-- @include('pdf.new-layout-rund-header')--}}
           <h4 class="first-title first" style="float:left; ">
             @if( $document->document_type_id == 3 )
               QMR

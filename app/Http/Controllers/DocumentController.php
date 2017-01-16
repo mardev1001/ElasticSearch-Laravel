@@ -71,6 +71,77 @@ class DocumentController extends Controller
         $isoCategories = IsoCategory::where('active', 1)->get();
         return view('dokumente.documentIndex', compact('documentTypes','isoCategories') );
     }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexTrash()
+    {
+        $trashedDocuments = array();
+        $onlyTrashed = Document::onlyTrashed()->get();
+        foreach($onlyTrashed as $trashed){
+            if(ViewHelper::universalDocumentPermission($trashed)) $trashedDocuments[] = $trashed;
+        }
+        return view('papierkorb.index', compact('trashedDocuments') );
+    }
+    
+    
+    /**
+     * Permanently delete trashed resources specified in the request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyTrash(Request $request)
+    {
+        $data = $request->all();
+        $documentsIds = $data['documentIds'];
+        
+        if($data['delete']){
+            if(count($documentsIds)){
+                foreach ($documentsIds as $id) {
+                    $document = Document::onlyTrashed()->where('id', $id)->first();
+                    $directory = $this->pdfPath . $document->id;
+                    if(($document->id) && (\File::exists($directory)))
+                        \File::deleteDirectory($directory);
+                    $document->forceDelete();
+                }
+                return back()->with('message', trans('documentForm.trashDeleted'));
+            } else return back()->with('message', trans('documentForm.noSelection'));
+        }
+        
+        elseif($data['restore']){
+            if(count($documentsIds)){
+                foreach ($documentsIds as $id) {
+                    $document = Document::onlyTrashed()->where('id', $id)->first();
+                    $document->restore();
+                    foreach($document->editorVariantTrashed as $ev){
+                        foreach($ev->documentUploadTrashed as $du) $du->restore();
+                        foreach($ev->editorVariantDocumentTrashed as $evd) $evd->restore();
+                        $ev->restore();
+                    }
+                }
+                return back()->with('message', trans('documentForm.trashRestored'));
+            } else return back()->with('message', trans('documentForm.noSelection'));
+        }
+        
+        elseif($data['empty-trash']){
+            $trashed = Document::onlyTrashed()->get();
+            foreach($trashed as $markedForDeletion){
+                if(ViewHelper::universalDocumentPermission($markedForDeletion)){
+                    $directory = $this->pdfPath . $markedForDeletion->id;
+                    if(($markedForDeletion->id) && (\File::exists($directory)))
+                        \File::deleteDirectory($directory);
+                    $markedForDeletion->forceDelete();
+                }
+            }
+            return back()->with('message', trans('documentForm.trashEmptied'));
+        }
+        
+        else return back();
+    }
+    
 
      /**
      * Display a listing of the resource.
@@ -1703,6 +1774,7 @@ class DocumentController extends Controller
        
         return redirect('/dokumente/anlagen/'.$documentId)->with('message', 'Dokument wurde entfernt.');
     }
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -1711,10 +1783,16 @@ class DocumentController extends Controller
      */
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        
-        return redirect('mandanten')->with('message', 'Benutzer erfolgreich entfernt.');
+        $document = Document::find($id);
+        if(isset($document) && $document->document_status_id == 1){
+            foreach($document->editorVariant as $ev){
+                foreach($ev->documentUpload as $du) $du->delete();
+                foreach($ev->editorVariantDocument as $evd) $evd->delete();
+                $ev->delete();
+            }
+            $document->delete();
+            return redirect('/')->with('message', trans('dokumentShow.movedToTrash'));    
+        } else return redirect('/')->with('message', trans('dokumentShow.movedToTrashError'));
     }
     
      /**
@@ -1730,7 +1808,7 @@ class DocumentController extends Controller
         //  dd( $request->all() );
         $comment =  DocumentComment::create( $request->all() );
         $document = Document::find($id);
-        session()->flash('message',trans('documentForm.savedComment'));
+        session()->flash('message', trans('documentForm.savedComment'));
         if( $request->has('page') ){
                 $publishedDocs = PublishedDocument::where('document_id',$document->id)->where('document_group_id',$document->document_group_id)->first();
                 if($publishedDocs != null)
@@ -2008,10 +2086,11 @@ class DocumentController extends Controller
         $pdf = \App::make('mpdf.wrapper',['th','A4','','arial',
         $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
        // $pdf = \App::make('mpdf.wrapper');
-         $pdf->debug = true; 
+        $pdf->debug = true; 
        
-        
         if($document->document_type_id == $this->isoDocumentId){
+            //   $pdf->setAutoTopMargin = 'stretch';
+              
               $pdf->SetHTMLHeader( view('pdf.headerIso', compact('document','variants','dateNow') )->render() );
               $pdf->SetHTMLFooter( view('pdf.footerIso', compact('document','variants','dateNow') )->render() );
               
@@ -2019,10 +2098,21 @@ class DocumentController extends Controller
        
         }
         else{
-            $render = view('pdf.new-layout-rund', compact('document','variants','dateNow'))->render();
-            $pdf->SetHTMLFooter( view('pdf.new-layout-rund-footer', compact('document','variants','dateNow') )->render() );
+            if( $document->document_template == 1){
+                $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+                $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
+            }
+            else{
+                $render = view('pdf.new-layout-rund', compact('document','variants','dateNow'))->render();
+                $header = view('pdf.new-layout-rund-header', compact('document','variants','dateNow'))->render();
+                $footer = view('pdf.new-layout-rund-footer', compact('document','variants','dateNow') )->render();
+                // return $footer;
+                $pdf->SetHTMLHeader( $header );
+                $pdf->SetHTMLFooter( $footer  );
+            }
+            
         }
-        // return $render;
+        // return $footer;
         $pdf->AddPage($or);
         $pdf->WriteHTML($render);
         
@@ -2066,8 +2156,11 @@ class DocumentController extends Controller
         $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
        // $pdf = \App::make('mpdf.wrapper');
              
-        
+        $pdf->debug = true; 
+       
         if($document->document_type_id == $this->isoDocumentId){
+            //   $pdf->setAutoTopMargin = 'stretch';
+              
               $pdf->SetHTMLHeader( view('pdf.headerIso', compact('document','variants','dateNow') )->render() );
               $pdf->SetHTMLFooter( view('pdf.footerIso', compact('document','variants','dateNow') )->render() );
               
@@ -2075,9 +2168,20 @@ class DocumentController extends Controller
        
         }
         else{
-            $render = view('pdf.document', compact('document','variants','dateNow'))->render();
-            $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
+            if( $document->document_template == 1){
+                $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+                $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
+            }
+            else{
+                $render = view('pdf.new-layout-rund', compact('document','variants','dateNow'))->render();
+                $header = view('pdf.new-layout-rund-header', compact('document','variants','dateNow'))->render();
+                $footer = view('pdf.new-layout-rund-footer', compact('document','variants','dateNow') )->render();
+                // return $footer;
+                $pdf->SetHTMLHeader( $header );
+                $pdf->SetHTMLFooter( $footer  );
+            }
         }
+        // return $footer;
         $pdf->AddPage($or);
         $pdf->WriteHTML($render);
         
@@ -2680,7 +2784,7 @@ class DocumentController extends Controller
     public function documentStats($id)
     {
         $document = Document::find($id);
-        if( (ViewHelper::universalDocumentPermission($document, true, false, true ) == false) || (ViewHelper::universalHasPermission(array(26)) == false) ) // JIRA Task NEPTUN-650
+        if( (ViewHelper::universalDocumentPermission($document) == false) || (ViewHelper::universalHasPermission(array(26)) == false) ) // JIRA Task NEPTUN-650
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
              
         $approvalAllMandants = false;
@@ -3599,26 +3703,37 @@ class DocumentController extends Controller
         elseif($document->document_type_id != $this->isoDocumentId && $margins->orientation == 'P'){// if not iso document and orientation portrait
             $margins->left = 10;
             $margins->right = 8;
-            $margins->top = 0;
-            $margins->bottom = 20;
-            $margins->headerTop = -10;
+            $margins->top = 65;
+            $margins->bottom = 30;
+            $margins->headerTop = -0;
             $margins->footerTop = 0;
-            /*
-            $margins->left = 10;
-            $margins->right = 5;
-            $margins->top = 10;
-            $margins->bottom = 20;
-            $margins->headerTop = 10;
-            $margins->footerTop = 0;
-            */
+            
+            if($document->document_template == 1){
+                $margins->left = 10;
+                $margins->right = 5;
+                $margins->top = 10;
+                $margins->bottom = 20;
+                $margins->headerTop = 10;
+                $margins->footerTop = 0;
+            }
+            
         }
         else{ // if not iso document and orientation landscape
             $margins->left = 5;
-            $margins->right = 5;
-            $margins->top = 10;
-            $margins->bottom = 10;
+            $margins->right = 0;
+            $margins->top = 50;
+            $margins->bottom = 40;
             $margins->headerTop = 0;
             $margins->footerTop = 0;
+            if($document->document_template == 1){
+                $margins->left = 5;
+                $margins->right = 5;
+                $margins->top = 10;
+                $margins->bottom = 10;
+                $margins->headerTop = 0;
+                $margins->footerTop = 0;
+            }
+            /**/
         } 
         
         /* End Set the document margins */

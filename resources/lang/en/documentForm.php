@@ -46,6 +46,13 @@ return [
     'documentTemplates' => 'Vorlagen',
     'saveContinue' => 'speichern und weiter',
     
+    'trashDeleted' => 'Dokumente wurden erfolgreich gelöscht.',
+    'trashRestored' => 'Dokumente wurden erfolgreich wiederhergestellt.',
+    'trashEmptied' => 'Papierkorb wurde geleert.',
+    'noSelection' => 'Keine Dokumente ausgewählt.',
+    'warningDeleteTrash' => 'Wollen Sie die ausgewählten Dokumente wirklich löschen?',
+    'warningEmptyTrash' => 'Alle Dokumente im Papierkorb werden unwiederuflich gelöscht. Fortfahren?',
+    
     /* Freigabe process */
     'freigeben' => 'freigeben',
     'noFreigeben' => 'nicht freigeben',

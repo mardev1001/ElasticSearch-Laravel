@@ -369,8 +369,8 @@ $(function () {
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
-                plugins: ["table"],
-                toolbar1: "undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent ",
+                plugins: ["table link"],
+                toolbar1: "link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 //width: 680,
                 // height: 820,
                 height: 450,

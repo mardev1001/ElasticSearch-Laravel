@@ -34,5 +34,9 @@ return [
     'userCommentTitle' => 'Benutzerkommentare',
     'freigabeCommentTitle' => 'Kommentare Freigeber',
     'CommentTitle' => 'Kommentare Freigeber',
+    'delete' => 'Papierkorb',
+    'delete-prompt' => 'Wollen Sie dieses Dokument wirklich entfernen?',
+    'movedToTrash' => 'Das Dokument wurde in den Papierkorb verlegt.',
+    'movedToTrashError' => 'Das Dokument konnte nicht entfernt werden.',
     
 ];

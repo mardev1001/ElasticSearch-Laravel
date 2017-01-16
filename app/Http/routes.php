@@ -58,6 +58,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');
         Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
         Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
+        Route::get('papierkorb', 'DocumentController@indexTrash');
+        Route::post('papierkorb/manage', 'DocumentController@destroyTrash');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         Route::post('comment/{id}', 'DocumentController@saveComment');
         Route::get('comment-delete/{comment_id}/{document_id}', 'DocumentController@deleteComment');

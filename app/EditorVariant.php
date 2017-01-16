@@ -20,8 +20,16 @@ class EditorVariant extends Model
         return $this->hasMany('App\DocumentUpload');
     }
 
+    public function documentUploadTrashed(){
+        return $this->hasMany('App\DocumentUpload')->onlyTrashed();
+    }
+
     public function editorVariantDocument(){
         return $this->hasMany('App\EditorVariantDocument');
+    }
+
+    public function editorVariantDocumentTrashed(){
+        return $this->hasMany('App\EditorVariantDocument')->onlyTrashed();
     }
     
     public function documentMandants(){

@@ -18,6 +18,16 @@ $(function() {
             return false;
     });
     
+    // Select all trash items (mark checkboxes)
+    $('.trashed-documents a.select-all-checkboxes').on('click touch', function(e) {
+        $('.item-trash input:checkbox').prop('checked', true);
+    });
+    
+    // Unselect all trash items (mark checkboxes)
+    $('.trashed-documents a.unselect-all-checkboxes').on('click touch', function(e) {
+        $('.item-trash input:checkbox').prop('checked', false);
+    });
+    
 
     // $('[data-hideswitch]').on('click', function(e) {
     //     $(this).toggle();
@@ -34,9 +44,7 @@ $(function() {
     //         noClass.removeClass('hidden');
     //         yesClass.addClass('hidden');
     //     }
-
     // });
-
    
     // Toggle legende btn in sidebar navigation
     var position = 'expanded';

@@ -798,6 +798,20 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     display: inline-block !important;
 }
 
+.treeview .attached-documents{
+    display: block;
+    width: 94% !important;
+    padding-top: 2px;
+    padding-left: 60px;
+    a{
+        line-height: 12px !important;
+        &:hover{
+            text-decoration: underline !important;
+        }
+    }
+    
+}
+
 .tree {
     min-height: 20px;
     padding: 19px;
@@ -1025,6 +1039,24 @@ a > .link-after-text:first-of-type{
 }
 .nav.icons-top li:nth-child(4) {
 	background: url("/img/icons/icon_kontakt_active.png") no-repeat -9999px -9999px;
+}
+
+.trashed-documents .item-trash{
+    border-top: 1px solid #efefef;
+    padding: 5px 0;
+}
+
+.trashed-documents .row:last-child .item-trash{
+    border-bottom: 1px solid #efefef;
+}
+
+.trashed-documents .item-trash .checkbox{
+    width: 30px;
+    margin: 20px 0 !important;
+}
+
+.trashed-documents .box.scrollable{
+    // max-height: 600px;
 }
 
 /*A4 paper simulation*/¸
@@ -1339,5 +1371,3 @@ select.form-control + .chosen-container-multi .chosen-results li.result-selected
 #page-wrapper table.dataTable thead .sorting_desc_disabled:after {
    bottom: 15px;
 }
-
-

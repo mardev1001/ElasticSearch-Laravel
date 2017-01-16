@@ -145,6 +145,12 @@
 
             </li>
             
+            @if( ViewHelper::universalHasPermission( array(11,13) ) == true ) 
+                <li>
+                    <a href="{{ url('papierkorb') }}">{{ ucfirst( trans('navigation.trash') ) }}</a>
+                </li>
+            @endif
+            
             <li>
                 <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>

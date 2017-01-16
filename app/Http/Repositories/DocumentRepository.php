@@ -220,24 +220,18 @@ class DocumentRepository
                         $variants = $this->documentVariantPermission($document, false)->variants;
                         
                         $links = null;
-                        // $document->variantDocuments->editorVariant
-                        // foreach($document->variantDocuments as $key => $dc){
-                        // if(count($document->variantDocuments))
-                        // dd($document->variantDocuments);
-                        // dd($document->variantDocuments);
                         foreach($document->variantDocuments as $key => $dc){
-                            
-                            if(isset($dc->editorVariant->document->published)) $docPublished = $dc->editorVariant->document->published;
-                            if(isset($docPublished)) $docStatus = $docPublished->document->document_status_id == 3;
-                            
-                            if($key != 0 && $docStatus && isset($docPublished->url_unique)) {
-                                if($this->universalDocumentPermission($docPublished->document)){
-                                    $links .= trim('<a href="/dokumente/'. $docPublished->url_unique . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                            if( in_array($dc->editorVariant->document->document_status_id, [3, 5])){
+                                if($this->universalDocumentPermission($dc->editorVariant->document)){
+                                    if($dc->editorVariant->document->published != null) {
+                                        $links .= trim('<a href="/dokumente/'. $dc->editorVariant->document->published->url_unique . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                                    } else {
+                                        $links .= trim('<a href="/dokumente/'. $dc->editorVariant->document->id . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                                    }
                                 }
                             }
                         }
-                        $node->afterLink = $links;
-                        // if(isset($links)) dd($links);
+                        if($links) $node->afterLink = '<span class="attached-documents">'.$links.'</span>';
                     }
                 }
                 

@@ -218,13 +218,23 @@
                         @endif
                     @endif
                     
+                    {{-- JIRA Task NEPTUN-649 --}}
+                    @if($document->document_status_id == 1)
+                        @if( ViewHelper::universalHasPermission( array(11, 13) ) == true )
+                            {{--  delete-prompt" data-text="{{trans('dokumentShow.delete-prompt')}} --}}
+                            {!! Form::open(['route'=>['dokumente.destroy', 'id'=> $document->id], 'method'=>'DELETE']) !!}
+                                <button type="submit" class="btn btn-primary pull-right">{{ trans('dokumentShow.delete') }}</button> <br>
+                            {!! Form::close() !!}
+                        @endif
+                    @endif
+                    
                     @if( ViewHelper::universalHasPermission( array(14) ) == true  && count( $document->documentHistory ) > 1  )
                         <a href="/dokumente/historie/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.history') }}</a>
                     @endif
                     
                 
                     @if( $document->document_status_id  != 5 )
-                        @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) && ViewHelper::universalHasPermission(array(26)) ) 
+                        @if( ViewHelper::universalDocumentPermission($document) && ViewHelper::universalHasPermission(array(26)) ) 
                             @if($document->document_status_id == 3)
                                 <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
                             @endif
