@@ -54,7 +54,6 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/{id}/freigabe', 'DocumentController@freigabeApproval');
         Route::get('dokumente/{id}/activate', 'DocumentController@documentActivation');
         Route::get('dokumente/{id}/publish', 'DocumentController@publishApproval');
-        Route::get('dokumente/{id}/favorit', 'DocumentController@favorites');
         Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');
         Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
         Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
@@ -79,6 +78,10 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('mandanten/export/xls', 'TelephoneListController@xlsExport');
         Route::resource('mandanten', 'MandantController');
         
+        Route::get('benutzer/create-partner', ['as'=>'benutzer.create-partner', 'uses' => 'UserController@createPartner']);
+        Route::post('benutzer/create-partner/store', ['as'=>'benutzer.create-partner-store', 'uses' => 'UserController@createPartnerStore']);
+        Route::get('benutzer/standard-benutzer', 'UserController@defaultUser');
+        Route::post('benutzer/standard-benutzer/save', 'UserController@defaultUserSave');
         Route::get('benutzer/profil', 'UserController@profile');
         Route::get('benutzer/{id}/edit-partner/{mandant_id}', 'UserController@editPartner');
         Route::match(['post', 'get'], 'benutzer/{id}/partner/{mandant_id}/edit', 'UserController@editPartner');
@@ -99,7 +102,15 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokument-typen/sort-up/{id}', 'DocumentTypeController@sortUp');
         Route::get('dokument-typen/sort-down/{id}', 'DocumentTypeController@sortDown');
         Route::resource('dokument-typen', 'DocumentTypeController');
+        
+        // Favorites routes
+        Route::get('dokumente/{id}/favorit', 'DocumentController@favorites');
+        Route::get('favoriten/category/{id}/delete', 'FavoritesController@destroyCategory');
+        Route::get('favoriten/kategorieverwaltung', 'FavoritesController@editCategories');
+        Route::post('favoriten/kategorieverwaltung/store', 'FavoritesController@storeFavoriteCategory');
+        Route::patch('favoriten/kategorieverwaltung/update', 'FavoritesController@updateFavoriteCategory');
         Route::resource('favoriten', 'FavoritesController');
+        
         // Route::resource('historie', 'HistoryController');
         // Route::resource('statistik', 'StatsController');
         Route::get('telefonliste/{id}/pdf', 'TelephoneListController@pdfExport');
@@ -123,8 +134,17 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
         Route::resource('wiki', 'WikiController');
         
+        // inventory routes
+        Route::get('inventarliste/kategorien','InventoryController@categories');
+        Route::post('inventarliste/kategorien','InventoryController@postCategories');
+        Route::post('inventarliste/kategorien/{id}/update','InventoryController@updateCategories');
+        Route::post('inventarliste/sizes','InventoryController@postSizes');
+        Route::post('inventarliste/sizes/{id}/update','InventoryController@updateSizes');
+        Route::get('inventarliste/groessen','InventoryController@sizes');
+        Route::post('inventarliste/suche','InventoryController@search');
+        Route::resource('inventarliste', 'InventoryController');
+        
         // Developer Routes
-        // Route::get('dev/status-update', 'DocumentController@documentStatusUpdate')->middleware('auth.basic'); // /dev/status-update?token=!Webbite-1234!
         // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
         
         

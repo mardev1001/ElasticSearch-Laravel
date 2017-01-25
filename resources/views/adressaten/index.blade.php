@@ -8,7 +8,6 @@
 
 @section('content') 
 
-
 <fieldset class="form-group">
     <div class="box-wrapper">
         <h4 class="title">{{ trans('adressatenForm.adressat') }} {{ trans('adressatenForm.add') }}</h4>
@@ -17,19 +16,17 @@
                 <!-- input box-->
                 <div class="col-md-5"> 
                     {!! Form::open(['route' => 'adressaten.store']) !!}
-                    <div class="">
-                        <label>{{ trans('adressatenForm.name') }}*</label>
-                        <input type="text" class="form-control" name="name" placeholder="{{ trans('adressatenForm.name') }}*" required/>
-                        <div class="custom-input-group-btn"><button class="btn btn-primary no-margin-bottom"> {{ trans('adressatenForm.add') }} </button></div>
-                      
-                    </div>
+                        <div class="">
+                            <label>{{ trans('adressatenForm.name') }}*</label>
+                            <input type="text" class="form-control" name="name" placeholder="{{ trans('adressatenForm.name') }}*" required/>
+                            <div class="custom-input-group-btn"><button class="btn btn-primary no-margin-bottom">{{trans('adressatenForm.add')}}</button></div>
+                        </div>
                     {!! Form::close() !!}
                 </div><!--End input box-->
             </div>
         </div>
     </div>
 </fieldset>
-
 
 <fieldset class="form-group">
     

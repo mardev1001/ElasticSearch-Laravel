@@ -40,6 +40,9 @@ class WikiCategoryController extends Controller
      */
     public function index()
     {
+        if(ViewHelper::canViewWikiManagmentAdmin() == false){
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
         $usersWithWikiRoles = ViewHelper::getUsersByRole( array(15) ); //Wiki Redakteur == 15
         // dd($usersWithWikiRoles);
         $wikiCategories = WikiCategory::all();
@@ -48,7 +51,6 @@ class WikiCategoryController extends Controller
         $roles = Role::where('wiki_role',1)->get();
         $roleSelect = '';
         $userSelect = '';
-        
         return view('wiki.categories', compact('wikiCategories', 'wikiRoles','users','roles') );
     }
 
@@ -86,6 +88,11 @@ class WikiCategoryController extends Controller
     {
         $category = WikiCategory::find($id);
         
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        $wikiCategories = $wikiPermissions->categoriesIdArray;
+        if( !in_array($category->id, $wikiCategories) ){
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
         $query = WikiPage::where('category_id',$id)->orderBy('updated_at','desc');
        
         $myQuery = $query;
@@ -99,7 +106,7 @@ class WikiCategoryController extends Controller
         
         $generalEntries = $query->pluck('id')->toArray();
         
-        $generalEntries = $query->paginate(12);
+        $categoryEntries = $query->paginate(12);
         
         
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );
@@ -135,6 +142,10 @@ class WikiCategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $wikiCat = WikiCategory::find($id);
+        
+        //fetch all records
+        $oldCategoryEntries = WikiCategoryUser::where('wiki_category_id',$id)->pluck('user_id')->toArray();
         $allRoles = false;
         foreach($request->all() as $k => $r){
              if (strpos($k, 'role_id') !== false ){
@@ -142,8 +153,7 @@ class WikiCategoryController extends Controller
                     $allRoles = true;
              }
         }
-        
-       $wikiCat = WikiCategory::find($id);
+         
         if( !$request->has('top_category') )
             RequestMerge::merge(['top_category' => 0] );
         
@@ -153,6 +163,7 @@ class WikiCategoryController extends Controller
         $rolesArray = array();
         if( $request->has('user_id') ){
             WikiCategoryUser::where('wiki_category_id',$id)->delete();
+            // dd('brejk');
             foreach($request->get('user_id') as $uid){
                 $wku= WikiCategoryUser::where('user_id',$uid)->where('wiki_category_id',$id)->first();
                 if( $wku == null ){
@@ -231,6 +242,7 @@ class WikiCategoryController extends Controller
      */
     public function search(Request $request)
     {
+        // dd( $request->all() );
         if( !$request->has('category') )
             return redirect('wiki');
         $id = $request->get('category');
@@ -244,7 +256,7 @@ class WikiCategoryController extends Controller
         }
         $querySearch = $this->search->searchWikiCategories( $request->all() );  
         
-        
+       
         
         $categoryEntries = $query->paginate(12);   
         $categoryEntriesTree = $this->document->generateWikiTreeview( $categoryEntries );

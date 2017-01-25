@@ -56,9 +56,9 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() 
-    {
-        
+    public function index(Request $request) 
+    {   
+        $filter = $request->get('filter');
         /*
             if role Struktur admin view all ()
             maybe if document/Rundscriben verfasser
@@ -79,6 +79,7 @@ class HomeController extends Controller
         
         $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
         // dd($myRundCoauthor);
+
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('documents.active', 1)
         ->where('document_types.document_art', 0)
@@ -88,11 +89,26 @@ class HomeController extends Controller
                 $query->where('user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id);
                 $query->orWhereIn('documents.id', $myRundCoauthor);
             }
-        )
-        // ->where('documents.document_type_id', '!=', 5)
-        // ->where('documents.document_status_id', '!=', 5)
-        ->limit(50)
+        );
+                
+        // JIRA Task NEPTUN-657
+        if($filter){
+            
+            // Released ($document->document_status_id == 3)
+            // Not Released in_array($document->document_status_id, [2,6])
+            // Approved ($document->document_status_id == 2)
+            // Not Approved ($document->document_status_id != 2)
+            
+            if($filter == "approved") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 2);
+            if($filter == "not-approved") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 6);
+            if($filter == "published") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 3);
+            if($filter == "not-published") $rundschreibenMy = $rundschreibenMy->whereIn('documents.document_status_id', [2, 6]);
+            
+        }
+        
+        $rundschreibenMy = $rundschreibenMy->limit(50)
         ->orderBy('documents.id', 'desc')->get(['documents.id as id']);
+        
         
         $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->orderBy('date_published', 'desc' )
         ->paginate(10, ['*'], 'meine-rundschrieben');
@@ -148,7 +164,7 @@ class HomeController extends Controller
         /* End Freigabe user */
         $commentsMy = DocumentComment::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->take(10)->get();
         
-        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'wikiEntries', 'commentsNew', 'commentsMy','commentVisibility'));
+        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'wikiEntries', 'commentsNew', 'commentsMy','commentVisibility', 'filter'));
     }
 
     /**
@@ -158,6 +174,8 @@ class HomeController extends Controller
      */
     public function neptunManagment()
     {
+        if(ViewHelper::universalHasPermission( array(6) ) == false )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         return view('simple-pages.neptunManagment');
     }
 

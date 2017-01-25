@@ -19,6 +19,8 @@ use App\WikiPage;
 use App\WikiRole;
 use App\WikiCategory;
 use App\WikiCategoryUser;
+use App\InventoryCategory;
+use App\InventorySize;
 
 class ViewHelper
 {
@@ -132,17 +134,18 @@ class ViewHelper
      * @param array $dataAttr
      * @return string $value || $old
      */
-    static function setSelect($collections = array(), $inputName, $data, $old, $label = '', $placeholder = '', $required = false, $classes = array(), $dataTag = array(), $attributes = array())
+    static function setSelect($collections = array(), $inputName, $data, $old, $label = '', $placeholder = '', $required = false, $classes = array(), 
+    $dataTag = array(), $attributes = array(), $emptyOption=false)
     {
         if ($placeholder == '')
             $placeholder = $label;
 
         if ($old == '' && isset($data->$inputName) && !empty($data->$inputName))
             $value = $data->$inputName;
-
+            
         $string = '';
         $string = view('partials.inputSelect',
-            compact('collections', 'inputName', 'data', 'label', 'old', 'placeholder', 'required', 'classes', 'dataTag', 'attributes')
+            compact('collections', 'inputName', 'data', 'label', 'old', 'placeholder', 'required', 'classes', 'dataTag', 'attributes','emptyOption')
         )->render();
 
 
@@ -164,7 +167,7 @@ class ViewHelper
      * @return string $value || $old
      */
     static function setUserSelect($collections = array(), $inputName, $data, $old, $label = '', $placeholder = '', $required = false,
-                                  $classes = array(), $dataTag = array(), $attributes = array())
+                                  $classes = array(), $dataTag = array(), $attributes = array(), $emptyOption=false)
     {
         if ($placeholder == '')
             $placeholder = $label;
@@ -174,7 +177,8 @@ class ViewHelper
 
         $string = '';
         $string = view('partials.inputUserSelect',
-            compact('collections', 'inputName', 'data', 'label', 'old', 'placeholder', 'required', 'classes', 'dataTag', 'attributes', 'emptyValue')
+            compact('collections', 'inputName', 'data', 'label', 'old', 'placeholder', 'required',
+            'classes', 'dataTag', 'attributes', 'emptyValue','emptyOption')
         )->render();
 
 
@@ -466,6 +470,7 @@ class ViewHelper
     /**
      * Check if is
      * @return bool
+     * HINT same as universalHasPermission(15)
      */
     static function canViewWikiManagmentAdmin()
     {
@@ -491,11 +496,12 @@ class ViewHelper
         $uid = Auth::user()->id;
         $wiki = new \StdClass();
         $categoriesPluck = WikiCategoryUser::where('user_id', Auth::user()->id)->pluck('wiki_category_id')->toArray();
+        // dd( WikiCategoryUser::where('user_id', Auth::user()->id)->get() );
         $userRoles = self::getUserRole($uid);
         $roles = self::getAvailableWikiCategories();
         $categoriesId = array_merge($categoriesPluck, $roles);
-
-        $categories = WikiCategory::whereIn('id', $categoriesId)->get();
+        
+        // $categories = WikiCategory::whereIn('id', $categoriesId)->get();
         if (ViewHelper::universalHasPermission(array())) {
             $categoriesId = WikiCategory::pluck('id')->toArray();
         }
@@ -1168,6 +1174,53 @@ class ViewHelper
         $uploadSuccess = $file->move($folder, $newName);
         \File::delete($folder . '/' . $filename);
         return $newName;
+    }
+    
+    /**
+     * generate edit inventory modal
+     *
+     * @param collection $item
+     * @return template
+     */
+    static function generateInventoryEditModal($item){
+        $categories = InventoryCategory::all();
+        $sizes = InventorySize::all();
+        return view('inventarliste.partials.editModal',compact('item', 'categories', 'sizes'))->render();
+    }
+    
+    /**
+     * generate history inventory modal
+     *
+     * @param collection $item
+     * @return template
+     */
+    static function generateInventoryHistoryModal($item){
+        return view('inventarliste.partials.historyModal',compact('item'))->render();
+    }
+    
+    /**
+     * inventory history modal comma space fix
+     *
+     * @param collection $history
+     * @return string $string
+     */
+    static function genterateHistoryModalString($history){
+        $string = $history->user->first_name.''.$history->user->last_name; 
+        if( $history->inventory_category_id != null ){
+            $string .= ', '.trans('inventoryList.category').': '.$history->category->name;
+        }
+        if( $history->inventory_size_id != null ){
+            $string .= ', '.trans('inventoryList.category').': '.$history->category->name;
+        }
+        if( $history->inventory_category_id != null ){
+            $string .= ', '.trans('inventoryList.size').': '.$history->size->name;
+        }
+        if( $history->value != null ){
+            $string .= ', '.trans('inventoryList.number').': '.$history->value;
+        }
+        $string .= ', '.$history->created_at;
+        
+        return $string;
     }
 
 

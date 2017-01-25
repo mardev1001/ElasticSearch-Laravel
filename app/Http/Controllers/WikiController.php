@@ -48,6 +48,7 @@ class WikiController extends Controller
         // $userRoles = ViewHelper::getUserRole( Auth::user()->id );
         // // dd(WikiRole::where('role_id', $userRoles)->get());
         $wikiPermissions = ViewHelper::getWikiUserCategories();
+        // dd($wikiPermissions);
         $wikiCategories = $wikiPermissions->categoriesIdArray;
         
         $topCategories = WikiCategory::where('top_category',1)->whereIn('id',$wikiCategories)->get();
@@ -116,13 +117,15 @@ class WikiController extends Controller
     public function show($id)
     {
         $data = WikiPage::find($id);
-        
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        if( !in_array($data->category_id,$wikiPermissions->categoriesIdArray) )
+            return redirect('/wiki')->with('messageSecondary', trans('documentForm.noPermission'));
+            
         if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
             return redirect('/wiki')->with('messageSecondary', trans('documentForm.noPermission'));
         
         if( ViewHelper::universalHasPermission( array(15) ) == false && ( $data->status_id == 1 || $data->status_id == 3)  )
             return redirect('/wiki')->with('messageSecondary', trans('documentForm.noPermission'));
-        
         
         
         return view('wiki.show', compact('data') );
@@ -240,6 +243,7 @@ class WikiController extends Controller
         //     $topCategories = WikiCategory::where('top_category',1)->get();
         
         $newestWikiEntriesPagination = WikiPage::whereIn('category_id',$wikiCategories)->where('status_id',2)->orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
+        
         $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
         
         $myWikiPagesPagination = WikiPage::where('user_id', Auth::user()->id)->whereIn('category_id',$wikiCategories)->orderBy('created_at','DESC')->paginate(10, ['*'], 'meine-beitraege');
@@ -249,28 +253,19 @@ class WikiController extends Controller
             $searchInput = $request->get('search');
             
         $search = $this->search->searchWiki( $request->all() );  
+        
         $userRoles = ViewHelper::getUserRole( Auth::user()->id );
         // dd(WikiRole::where('role_id', $userRoles)->get());
         $wikiRoles = WikiRole::whereIn('role_id', $userRoles)->pluck('wiki_category_id')->toArray();
         
         $topCategories = WikiCategory::where('top_category',1)->whereIn('id',$wikiCategories)->get();
         
-        // if( ViewHelper::universalHasPermission(array()) ){
-        //     $topCategories = WikiCategory::where('top_category',1)->get();
-        //     $wikiCategories = WikiCategory::pluck('id')->toArray();
-        // }
-        
-       // $newestWikiEntries = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
-        //$newestWikiEntriesPagination = WikiPage::orderBy('created_at','DESC')->paginate(10, ['*'], 'neueste-beitraege');
-        // if( count($search) )
-        //     $newestWikiEntriesPagination = 
-        
-        // $newestWikiEntries = $this->document->generateWikiTreeview($newestWikiEntriesPagination);
-        
+       
         $myWikiPagesPagination = WikiPage::whereIn('category_id',$wikiCategories)->where('user_id', Auth::user()->id)->orderBy('created_at','DESC')->paginate(10, ['*'], 'meine-beitraege');
         $myWikiPages = $this->document->generateWikiTreeview($myWikiPagesPagination);
         
         $searchResults = $search->paginate(10, ['*'], 'wiki-suche');
+        // dd( $searchResults );
         $searchResultsTree = $this->document->generateWikiTreeview( $searchResults );
     
         return view('wiki.index', compact('topCategories','searchResults','searchResultsTree','newestWikiEntries',
@@ -288,9 +283,12 @@ class WikiController extends Controller
     {  
         if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-            
+        $empty = new \StdClass();
+        $empty->id = '';
+        $empty->name = 'Alle';
         $data = array();
         $statuses = WikiPageStatus::all();
+     
         $wikiUsers = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
         
         $wikiPermissions = ViewHelper::getWikiUserCategories();
@@ -318,7 +316,7 @@ class WikiController extends Controller
      */
     public function managmentUser()
     {  
-        if( ViewHelper::universalHasPermission( array(15,16) ) == false  )
+        if( ViewHelper::universalHasPermission( array(27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $data = array();

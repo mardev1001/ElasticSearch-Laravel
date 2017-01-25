@@ -12,6 +12,7 @@ use DB;
 use App\MandantUser;
 use App\UserSettings;
 use App\MandantUserRole;
+use App\GlobalSettings;
 
 
 class UtilityRepository
@@ -91,6 +92,18 @@ class UtilityRepository
         return $visible;
     }
     
+    /**
+     * Get global settings for default user roles
+     * @return array
+     */
+    static function getDefaultUserRoleSettings(){
+        
+        $defaultRoles = array(16); // Wiki Leser
+        $existingRoles = GlobalSettings::where('category', 'users')->where('name', 'defaultRoles')->pluck('value')->toArray();
+        if($existingRoles) $defaultRoles = $existingRoles;
+        
+        return $defaultRoles;
+    }
     
      
 }

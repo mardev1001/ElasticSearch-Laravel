@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
         Commands\DocumentsArchiveExpired::class,
         Commands\DocumentsMarkAsRead::class,
         Commands\DocumentsResetTypes::class,
+        Commands\DocumentsPublishForms::class,
         Commands\UsersAssignRoles::class,
         Commands\UsersLogout::class,
     ];

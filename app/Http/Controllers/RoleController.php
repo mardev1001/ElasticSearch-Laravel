@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Helpers\ViewHelper;
+
 use App\Role;
 use App\User;
 
@@ -18,6 +20,8 @@ class RoleController extends Controller
      */
     public function index()
     {
+        if(!ViewHelper::universalHasPermission( array(6)))
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
         $roles = Role::all();
         $users = User::all();
         return view('rollen.index', compact('roles', 'users'));

@@ -24,6 +24,9 @@ class DocumentTypeController extends Controller
      */
     public function index()
     {
+        if(!ViewHelper::universalHasPermission( array(6)))
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+            
         $documentTypes = DocumentType::orderBy('order_number', 'asc')->get();
         $documentTypesSubmenu = DocumentType::where('menu_position', 1)->orderBy('order_number', 'asc')->get();
         $documentTypesMenu = DocumentType::where('menu_position', 2)->orderBy('order_number', 'asc')->get();

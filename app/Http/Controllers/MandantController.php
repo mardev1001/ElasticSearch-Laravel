@@ -662,6 +662,8 @@ class MandantController extends Controller
      */
     public function clientManagment()
     {
+        if(!ViewHelper::universalHasPermission( array(17,18,20)))
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
         return view('simple-pages.clientManagment');
     }
     

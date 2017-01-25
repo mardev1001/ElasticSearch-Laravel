@@ -36,17 +36,21 @@
                                 
                             </div>
                             <div class="col-md-3 mb-20">
-                                 {!! ViewHelper::setSelect($categories,'category',$data,old('category'), trans('wiki.category') ) !!}
-                                
+                                 {!! ViewHelper::setSelect($categories,'category',$data,old('category'), trans('wiki.category'),
+                                 trans('wiki.category'), false, array(), array(), array(), true) !!}
+                               
                             </div>
                            
                             <div class="col-md-3 mb-20">
-                                 {!! ViewHelper::setSelect($statuses,'status',$data,old('status'),trans('wiki.status') ) !!}
-                                
+                                 {!! ViewHelper::setSelect($statuses,'status',$data,old('status'),trans('wiki.status'),
+                                 trans('wiki.status'), false, array(), array(), array(), true) !!}
+                              
                             </div>
                             @if( isset($admin) && $admin == true) 
                                 <div class="col-md-3 mb-20">
-                                    {!! ViewHelper::setUserSelect($wikiUsers,'ersteller',$data,old('ersteller'),trans('wiki.user') ) !!}
+                                    {!! ViewHelper::setUserSelect($wikiUsers,'ersteller',$data,old('ersteller'),trans('wiki.user'),
+                                    trans('wiki.user'), false, array(), array(), array(), true) !!}
+                            
                                 </div>
                             @endif
                             <div class="col-md-3 col-lg-3 mb-20">
@@ -64,7 +68,8 @@
         
         <!-- top categorie box-->
         <div class="col-xs-12 box-wrapper">
-            <h2 class="title">{{ trans('wiki.wikiList') }}</h2>
+            <h2 class="title">{{ trans('adressatenForm.overview') }}</h2>
+            
             <div class="box box-white">
                  <table class="table data-table box-white">
                     <thead>

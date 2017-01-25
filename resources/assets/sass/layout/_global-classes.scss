@@ -6,6 +6,9 @@ body {
     margin: 0 !important;
 }
 
+.position-relative {
+    position: relative !important;
+}
 
 /*@media screen and (max-width: 1360px) { 
     body {
@@ -16,7 +19,9 @@ h1, h2, h3, h4 {
     font-family: $primary-font-family !important;
     color: $dark-blue !important;
 }
-
+.bigger{
+    font-size: $bigger-font;
+}
 /* document web preview - start */
 .content,.content span, .content p, .content li, .content td, .content th, .content strong, .content b, .content i , .content u,
 .content em{
@@ -670,6 +675,12 @@ input.form-control:-ms-input-placeholder { /* Internet Explorer 10+ */
     max-height: 400px;
 }
 
+.home .filter-buttons a.filter{
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+}
+
 /*
 .box-wrapper.home .box.home{
      height: 70vh;
@@ -1014,6 +1025,14 @@ a.node-icon.icon-trash{
     position: absolute;
     // bottom: -5px;
     top: 25px;
+}
+
+.favorite-categories i.icon-trash{
+    display: block;
+    width: 25px;
+    height: 25px;
+    margin-top: 12px;
+    margin-right: 6px;
 }
 
 .node-icon {

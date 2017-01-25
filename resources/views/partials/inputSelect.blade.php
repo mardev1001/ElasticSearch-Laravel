@@ -11,7 +11,8 @@ data-placeholder="{{ strtoupper($placeholder) }}@if( $required !=false )* @endif
         required 
     @endif
     >
-    <option></option>
+   
+    @if($emptyOption == true) <option value="">Alle</option> @endif
     @if( count($collections) > 0 )
         @foreach($collections as $collection)
            <option value="{{$collection->id}}" 

@@ -243,17 +243,24 @@
                     
 
                     @if(count(Request::segments() ) == 2 && (!is_numeric(Request::segment(2) )) )
-                        <a href="/dokumente/{{$document->id}}/favorit" class="btn btn-primary pull-right">
-                            @if( $document->hasFavorite == false)
-                                {{ trans('dokumentShow.favorite') }}
-                            @else
-                                {{ trans('dokumentShow.unFavorite') }}
-                            @endif</a>  
-                            
-                            @if( $document->documentType->allow_comments == 1 && ViewHelper::documentVariantPermission($document)->permissionExists )
-                                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
-                            @endif
                         
+                        <a href="#" class="btn btn-primary pull-right" data-toggle="modal" data-target="#favoriten">
+                            {{ trans('dokumentShow.favorite') }}
+                        </a>
+                    
+                        {{--
+                        <!-- NEPTUN-657 -->
+                        @if( $document->hasFavorite == false)
+                            {{ trans('dokumentShow.favorite') }}
+                        @else
+                            <a href="/dokumente/{{$document->id}}/favorit" class="btn btn-primary pull-right">
+                            {{ trans('dokumentShow.unFavorite') }}
+                        @endif</a>  
+                        --}}
+                        
+                        @if( $document->documentType->allow_comments == 1 && ViewHelper::documentVariantPermission($document)->permissionExists )
+                            <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>
+                        @endif
                     @endif
                     
                     @if( $document->document_status_id  != 5 && $document->document_status_id != 1 )
@@ -283,7 +290,7 @@
                         @endif
                     @endif<!-- end if document is deleted -->
                     
-                    @if(count($document->documentUploads) && ($document->pdf_upload == 1 ) )
+                    @if( count($document->documentUploads) || ($document->pdf_upload == 1 ) || $document->documentType->document_art == 1 ) 
                         {{-- The PDF download button is only shown if the document has PDF Rundschreiben / PDF uploads --}}
                         @foreach($document->documentUploads as $k => $attachment)
                             @if($k > 0) @break @endif
@@ -329,6 +336,50 @@
                             </div>
                             </form>
 
+                        </div>
+                    </div>
+                </div>  <!-- modal end -->
+                
+                <div class="clearfix"></div>
+                <!-- modal start -->
+                <div id="favoriten" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title">{{ trans('dokumentShow.favorite') }}</h4>
+                            </div>
+                            {{ Form::open(['action' => 'FavoritesController@store', 'class' => 'horizontal-form']) }}
+                                <input type="hidden" name="document_id" value="{{$document->id}}" />
+                                <div class="modal-body">
+                                    <h5>{{trans('dokumentShow.default-category')}}: {{ $document->documentType->name }} </h5>
+                                    <h5>{{trans('dokumentShow.assign-category')}}:</h5>
+                                    <div class="form-group">
+                                        <!--<label class="form-label">{{ trans('dokumentShow.favoriteCategoryNew') }}</label>-->
+                                        <input type="text" name="category_name" class="form-control" placeholder="{{ trans('dokumentShow.favoriteCategoryNew') }}">
+                                    </div>
+                                    <div class="form-group">
+                                        <select name="category_id" id="favorite_category_id" class="form-control select" data-placeholder="{{ strtoupper(trans('dokumentShow.favoriteCategorySelect')) }}">
+                                            <option></option>
+                                            @foreach($favoriteCategories as $category)
+                                            <option value="{{$category->id}}" @if($document->favorite->favorite_categories_id == $category->id) selected @endif >
+                                                {{$category->name}}
+                                            </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('dokumentShow.close') }}</button>
+                                    @if($document->hasFavorite)
+                                        <a href="{{ url('dokumente/'.$document->id.'/favorit') }}" class="btn btn-danger">{{ trans('dokumentShow.remove') }}</a>
+                                    @endif
+                                    <button type="submit" name="save" value="1" class="btn btn-primary">{{ trans('dokumentShow.save') }}</button>
+                                </div>
+                            {{ Form::close() }}
+                
                         </div>
                     </div>
                 </div>  <!-- modal end -->
@@ -518,3 +569,4 @@
                     <!-- End variable for expanding document sidebar-->
         @stop
     @endif
+

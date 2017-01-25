@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Requests\IsoCategoryRequest;
+use App\Helpers\ViewHelper;
 
 use App\IsoCategory;
 
@@ -18,6 +19,8 @@ class IsoCategoryController extends Controller
      */
     public function index()
     {
+        if(!ViewHelper::universalHasPermission( array(6)))
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
         $isoCategories = $isoCategoryOptions = IsoCategory::all();
         return view('iso-kategorien.index', compact('isoCategories', 'isoCategoryOptions'));
     }

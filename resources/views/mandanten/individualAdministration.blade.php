@@ -110,7 +110,8 @@
                                             <td class="col-md-8 valign">
                                                 @foreach( $roles as $role)
                                                     @foreach( $mandantUser->mandantUserRoles as $mandantUserRole)
-                                                        @if(($mandantUserRole->role_id == $role->id) && $role->mandant_role)
+                                                        {{-- @if(($mandantUserRole->role_id == $role->id) && $role->mandant_role) --}} {{-- JIRA Task NEPTUN-666 --}}
+                                                        @if($mandantUserRole->role_id == $role->id)
                                                             {{ $role->name }};
                                                         @endif
                                                     @endforeach

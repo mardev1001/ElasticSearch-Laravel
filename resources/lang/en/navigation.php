@@ -33,6 +33,7 @@ return [
     'type'                  => 'Typ',
     'types'                 => 'Typen',
     'favorites'             => 'Favoriten',
+    'kategorieverwaltung'   => 'Kategorieverwaltung',
     'search'                => 'Suche',
     'advanced_search'       => 'erweiterte Suche',
     'searchParameter'       => 'Suchbegriff',
@@ -42,5 +43,8 @@ return [
     'wikiSearchPlaceholder' => 'Titel, Inhalt',
     'export'                => 'Export',
     'trash'                 => 'Papierkorb',
+    'inventoryList'         => 'Inventarliste',
+    'inventarCategory'      => 'Kategorien',
+    'inventarSizes'          => 'Größen',
 
 ];

@@ -20,6 +20,9 @@
                 
                 <ul class="level-1">
                     <li>
+                        <a href="{{ url('benutzer/standard-benutzer') }}">{{ ucfirst( trans('contactForm.defaultUser') ) }}</a>
+                    </li>
+                    <li>
                         <a href="{{ url('kontaktanfragen') }}">{{ ucfirst( trans('contactForm.kontaktanfragen') ) }}</a>
                     </li>
                     <li>

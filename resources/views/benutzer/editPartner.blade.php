@@ -245,15 +245,26 @@ Benutzer bearbeiten
                                             <input type="hidden" name="mandant_id" value="{{$mandantUser->mandant_id}}">
                                         </td>
                                         <td>
-                                            <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
-                                                @foreach($rolesAll as $role)
-                                                    {{-- @if($role->mandant_role) --}}
-                                                    <option value="{{$role->id}}" {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}> 
-                                                        {{$role->name}}
-                                                    </option>
-                                                    {{-- @endif --}}
-                                                @endforeach
-                                            </select>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple required>
+                                                        @foreach($rolesAll as $role)
+                                                            {{-- @if($role->mandant_role) --}}
+                                                            <option value="{{$role->id}}" 
+                                                                {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}
+                                                                @if(in_array($role->id, $defaultRoles)) disabled @endif> 
+                                                                {{$role->name}}
+                                                            </option>
+                                                            {{-- @endif --}}
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            @foreach($defaultRoles as $def)
+                                            <input type="hidden" name="role_id[]" value="{{$def}}">
+                                            @endforeach
+                                            
                                             <input type="hidden" name="partner-role" value="1">
                                         </td>
                                         <td class="table-options text-right">

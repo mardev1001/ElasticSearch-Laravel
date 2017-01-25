@@ -341,7 +341,7 @@ class DummyRoleSeeder extends Seeder
                 [
                     'name' => 'Statistikleser',
                     'mandant_required' => '0',
-                    'admin_role' => '0',
+                    'admin_role' => '1',
                     'system_role' => '1',
                     'mandant_role' => '0',
                     'wiki_role' => '0',

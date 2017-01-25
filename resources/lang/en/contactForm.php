@@ -21,5 +21,6 @@ return [
     'reset' => 'zurücksetzen',
     'sendSuccess' => 'Email wurde erfolgreich versendet.',
     'fileSizeExceeded' => 'Maximale Filegröße: 4 MB',
+    'defaultUser' => 'Standard Benutzer',
     
 ];

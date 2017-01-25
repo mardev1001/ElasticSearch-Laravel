@@ -22,13 +22,14 @@ class WikiEditor
      */
     public function handle($request, Closure $next)
     {
-        $userWikiEditor = $this->utility->universalHasPermission([15]);
+         return $next($request);
+        /*$userWikiEditor = $this->utility->universalHasPermission([15]);
 
         if($userWikiEditor){
             return $next($request);
         } else {
             return back()->with('messageSecondary', trans('controller.noPermission'));
-        }
+        }*/
         
         // return $next($request);
     }

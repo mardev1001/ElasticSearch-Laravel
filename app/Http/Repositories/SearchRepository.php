@@ -114,14 +114,14 @@ class SearchRepository
         // $wikiCategories = ViewHelper::getAvailableWikiCategories() ;
         $wikiPermissions = ViewHelper::getWikiUserCategories();
         $wikiCategories = $wikiPermissions->categoriesIdArray;
-       
+        
         $results = WikiPage::whereIn('category_id',$wikiCategories)
         ->where(function ($query) use($searchParam,$wikiIds) {
           $query->where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);
         //   ->where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);  
         });
-        
-        
+        if( ViewHelper::universalHasPermission( array(15) ) == false   )
+            $results->whereNotIn('status_id',array(1,3) );
         return $results;
      }
      
@@ -135,7 +135,7 @@ class SearchRepository
         $categoryId = $request['category'];
         // $wikiCategory = WikiCategory::find($categoryId);
         
-         $filterWikiPages = WikiPage::all();
+        $filterWikiPages = WikiPage::all();
         $wikiIds = array();
         foreach($filterWikiPages as $wikiPage){
             // Filter out images to only get the content
@@ -150,6 +150,9 @@ class SearchRepository
                 $query->where('name','LIKE','%'.$searchParam.'%' )->orWhere('subject','LIKE','%'.$searchParam.'%' )->orWhereIn('id', $wikiIds);
             });
             
+        if( ViewHelper::universalHasPermission( array(15) ) == false   )
+            $results->whereNotIn('status_id',array(1,3) );
+            
         return $results;
      }
      
@@ -159,43 +162,34 @@ class SearchRepository
      * @return object array $array
      */     
      public function searchManagmentSearch( $request ){
-         
-        //  $query = WikiPage::orderBy('updated_at','desc');
-        //  if( $request->admin != 1)
-        //     $query = WikiPage::where()->orderBy('updated_at','desc');
-         $categoriesId = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
+        $categoriesId = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
      
         $query = WikiPage::whereIn('category_id',$categoriesId)->orderBy('updated_at','desc');
-            if( ViewHelper::universalHasPermission(array()) ){
-                $categoriesId = WikiCategory::pluck('id')->toArray();
-                // $categories = WikiCategory::whereIn('id',$categoriesId)->get();
-                $usersId = WikiCategoryUser::whereIn('user_id', $categoriesId )->pluck('user_id')->toArray();
-                
-                $query = WikiPage::whereIn('category_id',$categoriesId)->orderBy('updated_at','desc');
+        if( ViewHelper::universalHasPermission(array()) ){
+            $categoriesId = WikiCategory::pluck('id')->toArray();
+            $usersId = WikiCategoryUser::whereIn('user_id', $categoriesId )->pluck('user_id')->toArray();
+            $query = WikiPage::whereIn('category_id',$categoriesId)->orderBy('updated_at','desc');
         }
         
-         if( $request->name != '' )
-             $query->where('name','like','%'.$request->name.'%');
-        //  if( $request->subject != '' )
-        //      $query->where('subject','like','%'.$request->subject.'%');
-         
-         if( $request->date_from != '' )
+        if( $request->name != '' )
+            $query->where('name','like','%'.$request->name.'%');
+        
+        if( $request->date_from != '' )
              $query->where('updated_at','>=', Carbon::parse($request->date_from) );
          
-         if( $request->date_to != '' )
-             $query->where('updated_at','<=', Carbon::parse($request->date_to));
+        if( $request->date_to != '' )
+            $query->where('updated_at','<=', Carbon::parse($request->date_to));
          
-         if( $request->category != '' )
-             $query->where( 'category_id',$request->category );
+        if( $request->category != '' )
+            $query->where( 'category_id',$request->category );
              
-         if( $request->status != '' )
-             $query->where( 'status_id',$request->status );
+        if( $request->status != '' )
+            $query->where( 'status_id',$request->status );
          
-         if( isset($request->ersteller) && $request->ersteller != '' )
-             $query->where( 'user_id',$request->ersteller );
-        //  \DB::enableQueryLog();
-         $results = $query->get() ;
-        //  dd( \DB::getQueryLog() );
+        if( isset($request->ersteller) && $request->ersteller != '' )
+            $query->where( 'user_id',$request->ersteller );
+        $results = $query->get() ;
+        
          return $results;
          
      }

@@ -11,7 +11,13 @@
             </li>
             
             <li>
-                <a href="{{ url('favoriten') }}">{{ ucfirst( trans('navigation.favorites') ) }}</a>
+                <a href="{{ url('favoriten') }}">{{ ucfirst( trans('navigation.favorites') ) }}
+                    <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level collapse">
+                         <li>
+                            <a href="{{ url('favoriten/kategorieverwaltung') }}">{{ ucfirst( trans('navigation.kategorieverwaltung') ) }}</a>
+                        </li>
+                    </ul>
             </li>
             
             <li>
@@ -235,15 +241,31 @@
             
             @if( (ViewHelper::universalHasPermission() == false) && (ViewHelper::universalHasPermission( array(2,4)) == true) ) {{-- 2,4 NEPTUN-605 --}}
                 <li>
-                    <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}</a>
-                    {{--
-                    <span class="fa arrow"></span></a>
+                    <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level collapse">
                         <li>
-                            <a href="{{ url('benutzer/create') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
+                            <a href="{{ url('benutzer/create-partner') }}">{{ ucfirst( trans('navigation.benutzer') ) }} {{ trans('navigation.anlegen') }}</a>
                         </li>
                     </ul>
-                    --}}
+                    
+                </li>
+            @endif
+            
+            @if( ViewHelper::universalHasPermission( array(27) ) == true )
+                <li class="">
+                    <a href="{{ url('inventarliste') }}">
+                        {{ ucfirst( trans('navigation.inventoryList') )}}
+                        <span class="fa arrow"></span>
+                    </a>
+                    <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="{{ url('inventarliste/kategorien') }}">{{ ucfirst( trans('navigation.inventarCategory') )}}</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('inventarliste/groessen') }}">{{ ucfirst( trans('navigation.inventarSizes') )}}</a>
+                        </li>
+                       
+                    </ul>
                 </li>
             @endif
             
@@ -254,6 +276,9 @@
                         <span class="fa arrow"></span>
                     </a>
                     <ul class="nav nav-second-level collapse">
+                        <li>
+                            <a href="{{ url('benutzer/standard-benutzer') }}">{{ ucfirst( trans('contactForm.defaultUser') ) }}</a>
+                        </li>
                         <li>
                             <a href="{{ url('kontaktanfragen') }}">{{ ucfirst( trans('contactForm.kontaktanfragen') ) }}</a>
                         </li>

@@ -279,7 +279,20 @@ Mandantenverwaltung - Benutzer bearbeiten
                 </div>
                 <div class="col-md-4">
                     <div class="form-group">
-                       {!! ViewHelper::setSelect($rolesAll, 'role_id[]', '', old('role_id'), trans('benutzerForm.role'), trans('benutzerForm.role'), true, [], [], ['multiple']) !!}
+                        {{-- JIRA Task NEPTUN-656 --}}
+                        {{-- ViewHelper::setSelect($rolesAll, 'role_id[]', '', old('role_id'), trans('benutzerForm.role'), trans('benutzerForm.role'), true, [], [], ['multiple']) --}}
+                       
+                        <label>{{trans('benutzerForm.role')}}*</label>
+                        <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple required>
+                            @foreach($rolesAll as $role)
+                                @if($defaultRoles)
+                                    <option value="{{$role->id}}" @if(in_array($role->id, $defaultRoles)) selected @endif> {{$role->name}}</option>
+                                @else
+                                    <option value="{{$role->id}}" {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}> {{$role->name}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        
                     </div>
                 </div>
                 
@@ -327,11 +340,15 @@ Mandantenverwaltung - Benutzer bearbeiten
                                             <input type="hidden" name="mandant_id" value="{{$mandantUser->mandant_id}}">
                                         </td>
                                         <td>
-                                            <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
-                                                @foreach($rolesAll as $role)
-                                                    <option value="{{$role->id}}" {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}> {{$role->name}}</option>
-                                                @endforeach
-                                            </select>
+                                            <div class="row">
+                                            <div class="col-xs-12">
+                                                <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple>
+                                                    @foreach($rolesAll as $role)
+                                                        <option value="{{$role->id}}" {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}> {{$role->name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            </div>
                                         </td>
                                         <td class="table-options text-right">
                                             <button class="btn btn-danger delete-prompt" name="remove" value="1" type="submit">{{ trans('benutzerForm.remove') }}</button>

@@ -31,6 +31,9 @@ return [
     'attachments' => 'Anhänge',
     'content' => 'Inhalte',
     'download' => 'download',
+    'remove' => 'entfernen',
+    'default-category' => 'Vorbelegte Kategorie',
+    'assign-category' => 'Eigene Kategorie zuweisen',
     'userCommentTitle' => 'Benutzerkommentare',
     'freigabeCommentTitle' => 'Kommentare Freigeber',
     'CommentTitle' => 'Kommentare Freigeber',
@@ -38,5 +41,9 @@ return [
     'delete-prompt' => 'Wollen Sie dieses Dokument wirklich entfernen?',
     'movedToTrash' => 'Das Dokument wurde in den Papierkorb verlegt.',
     'movedToTrashError' => 'Das Dokument konnte nicht entfernt werden.',
+    'favoriteCategoryNew' => 'Neue Kategorie anlegen',
+    'favoriteCategorySelect' => 'Kategorie auswählen',
+    'favoriteSaved' => 'Dokument wurde als Favorit gespeichert.',
+    'favoriteRemoved' => 'Dokument wurde aus Favoriten entfernt.',
     
 ];

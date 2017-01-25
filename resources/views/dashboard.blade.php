@@ -48,8 +48,17 @@
     @if( ViewHelper::universalHasPermission( array(11,13) ) == true && count( $rundschreibenMy) ) <!--  array(10,11,12,13)  NEPTUN-276, count is 275-->
         <div class="col-xs-12 col-md-6 ">
             <div class="col-xs-12 box-wrapper box-white home">
-                <h1 class="title">Meine Dokumente/Rundschreiben</h1>
+                <h1 class="title">
+                    Meine Dokumente/Rundschreiben 
+                    <div class="filter-buttons pull-right">
+                        <a href="{{url('/?filter=approved')}}" title="freigegeben" class="filter icon-open"></a>
+                        <a href="{{url('/?filter=not-approved')}}" title="nicht freigegeben" class="filter icon-blocked"></a>
+                        <a href="{{url('/?filter=published')}}" title="veröffentlicht" class="filter icon-released"></a>
+                        <a href="{{url('/?filter=not-published')}}" title="nicht veröffentlicht" class="filter icon-notreleased"></a>
+                    </div>
+                </h1>
                 
+                <div class="clearfix"></div>
                 @if(count($rundschreibenMy))
                     <div class="box home">
                         <div class="tree-view" data-selector="rundschreibenMy">
@@ -59,7 +68,11 @@
                         </div>
                     </div>
                     <div class="text-center">
-                        {!! $rundschreibenMy->render() !!}
+                        @if($filter)
+                            {{ $rundschreibenMy->appends(['filter' => $filter])->render() }}
+                        @else
+                            {!! $rundschreibenMy->render() !!}
+                        @endif
                     </div>
                 @else
                     <div class="box">

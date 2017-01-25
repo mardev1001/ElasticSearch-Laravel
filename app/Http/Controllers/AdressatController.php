@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Helpers\ViewHelper;
 
 use App\Adressat;
 
@@ -17,6 +18,8 @@ class AdressatController extends Controller
      */
     public function index()
     {
+        if(!ViewHelper::universalHasPermission( array(6)))
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
         $adressate = Adressat::all();
         return view('adressaten.index', compact('adressate'));
     }

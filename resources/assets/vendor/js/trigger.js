@@ -68,6 +68,9 @@ $(function () {
     else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search') != -1) {
         $('a[href$="mandanten"]').addClass('active').closest('ul').addClass('in');
     }
+    else if (url.href.indexOf('benutzer') != -1 && url.href.indexOf('create-partner') != -1) {
+        $('a[href*="benutzer/create-partner"]').addClass('active').closest('ul').addClass('in');
+    }
     else if (url.href.indexOf('benutzer') != -1 && url.href.indexOf('partner') != -1) {
         $('a[href$="/benutzer"]').addClass('active');
         $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
@@ -101,6 +104,9 @@ $(function () {
     }
     else if (url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
+    }
+    else if (url.href.indexOf('suche') != -1 && url.href.indexOf('inventarliste') != -1) {
+        $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
     }
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
         if(slug == 'aktuelle-meldungen')

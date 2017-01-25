@@ -19,6 +19,7 @@ use App\MandantUserRole;
 use App\InternalMandantUser;
 use App\Document;
 use App\UserReadDocument;
+use App\GlobalSettings;
 
 
 use App\Http\Repositories\UtilityRepository;
@@ -69,7 +70,7 @@ class UserController extends Controller
     public function create()
     {
         // if(!$this->utils->universalHasPermission([2,4,17])) 
-        if(!$this->utils->universalHasPermission([17])) 
+        if(ViewHelper::universalHasPermission([17]) == false)
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         return view('benutzer.create');
@@ -117,6 +118,9 @@ class UserController extends Controller
         }
         
         // dd($userUpdate);
+        // if($this->utils->universalHasPermission([2, 4, 17]) && !$this->utils->universalHasPermission())
+        //     return redirect()->route('benutzer.edit-user-partner', [$user])->with('message', 'Benutzer erfolgreich gespeichert.');
+        // else
         return redirect()->route('benutzer.edit', [$user])->with('message', 'Benutzer erfolgreich gespeichert.');
     }
 
@@ -139,7 +143,8 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if(!$this->utils->universalHasPermission([2, 4, 17])) 
+        // if(!$this->utils->universalHasPermission([2, 4, 17])) 
+        if(ViewHelper::universalHasPermission([17]) == false) 
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         $restored = false;
@@ -165,9 +170,11 @@ class UserController extends Controller
         $mandantUserRoles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
         $roles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
         
+        $defaultRoles = $this->utils->getDefaultUserRoleSettings();
+        
         // dd($mandantUserRoles);
         if(isset($user))
-            return view('benutzer.edit', compact('user', 'usersAll', 'mandantsAll', 'rolesAll'));
+            return view('benutzer.edit', compact('user', 'usersAll', 'mandantsAll', 'rolesAll', 'defaultRoles'));
         else
             return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
     }
@@ -183,7 +190,7 @@ class UserController extends Controller
         
         $mandantId = $mandant_id;
         
-        if(!$this->utils->universalHasPermission([2,4,17]))
+        if(ViewHelper::universalHasPermission([2,4,17], false) == false)
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
         $restored = false;
@@ -203,13 +210,20 @@ class UserController extends Controller
         // $rolesAll = Role::where('phone_role', false)->get();
         $rolesAll = Role::where('mandant_role', 1)->get();
         
+        $defaultRoles = $this->utils->getDefaultUserRoleSettings();
+        
         $loggedUserRoles = MandantUserRole::where('mandant_user_id', MandantUser::where('user_id', Auth::user()->id)->where('mandant_id', $mandantId)->first()->id)->get();
         
         foreach ($loggedUserRoles as $tmp) {
             if(!in_array($tmp->role_id, array_pluck($rolesAll,'id')))
                $rolesAll->push(Role::find($tmp->role_id));
         }
-    
+        
+        foreach ($defaultRoles as $def) {
+            if(!in_array($def, array_pluck($rolesAll,'id')))
+               $rolesAll->push(Role::find($def));
+        }
+        
         // dd($rolesAll);
         
         $mandantUsers = MandantUser::where('user_id', $id)->where('mandant_id', $mandantId)->get();
@@ -219,9 +233,89 @@ class UserController extends Controller
         
         // dd($mandantUserRoles);
         if(isset($user))
-            return view('benutzer.editPartner', compact('user', 'usersAll', 'mandantsAll', 'rolesAll', 'mandantUsers'));
+            return view('benutzer.editPartner', compact('user', 'usersAll', 'mandantsAll', 'rolesAll', 'mandantUsers', 'defaultRoles'));
         else
             return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
+    }
+    
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function createPartner(Request $request)
+    {
+        if(ViewHelper::universalHasPermission([2,4,17], false) == false)
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+        
+        $rolesAll = Role::where('mandant_role', 1)->get();
+        $loggedUserMandants = MandantUser::where('user_id', Auth::user()->id)->get();
+        // $loggedUserRoles = MandantUserRole::whereIn('mandant_user_id', $loggedUserMandants->pluck('id'))->get();
+        $mandantsAll = Mandant::whereIn('id', $loggedUserMandants->pluck('mandant_id'))->get();
+    
+        $defaultRoles = $this->utils->getDefaultUserRoleSettings();
+        
+        // foreach ($loggedUserRoles as $tmp) {
+        //     if(!in_array($tmp->role_id, array_pluck($rolesAll,'id')))
+        //       $rolesAll->push(Role::find($tmp->role_id));
+        // }
+        
+        return view('benutzer.createPartner', compact('user', 'mandantsAll', 'rolesAll', 'defaultRoles'));
+    }
+
+    /**
+     * Save user/role data for partner roles (GF, NL etc.)
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createPartnerStore(Request $request) 
+    {
+        // dd( $request->all() );
+        
+        if(!$request->has('username_sso') || $request->get('username_sso') == '' || empty($request->get('username_sso')) )
+             $request->merge(array('username_sso' => null) );
+        
+        $user = User::create($request->all());
+        
+        $userUpdate = User::find($user->id);
+        $userUpdate->created_by = Auth::user()->id;
+        $userUpdate->last_login = null;
+        $userUpdate->save();
+        
+        $defaultRoles = $this->utils->getDefaultUserRoleSettings();
+        $mandantId = $request->get('mandant_id');
+        $roles = $request->get('role_id');
+        
+        $mandantUser = MandantUser::create(['mandant_id' => $mandantId, 'user_id' => $user->id ]);
+        foreach($roles as $role) MandantUserRole::create(['mandant_user_id' => $mandantUser->id, 'role_id' => $role]);
+        foreach($defaultRoles as $def) {
+            if(!in_array($def, $roles)) MandantUserRole::create(['mandant_user_id' => $mandantUser->id, 'role_id' => $def]);
+        }
+        
+        if ($request->file()) {
+            $userModel = User::find($user->id);
+            $picture = $this->fileUpload($userModel, $this->fileUploadPath, $request->file());
+            $userModel->update(['picture' => $picture]);
+        }
+        
+        // Set all documents as read for new user
+        $documents = Document::all();
+        foreach($documents as $document){
+            $readDocs = UserReadDocument::where('document_group_id', $document->document_group_id)
+                        ->where('user_id', $user->id)->get();
+            if(count($readDocs) == 0){
+                UserReadDocument::create([
+                    'document_group_id'=> $document->document_group_id,
+                    'user_id'=> $user->id,
+                    'date_read'=> Carbon::now(),
+                    // 'date_read_last'=> Carbon::parse('1999-01-01 00:00:00')
+                ]);
+            }
+        }
+        // benutzer/{id}/edit-partner/{mandant_id}
+        return redirect('benutzer/'. $user->id .'/edit-partner/'. $mandantId)->with('message', 'Benutzer erfolgreich gespeichert.');
     }
 
     /**
@@ -301,6 +395,35 @@ class UserController extends Controller
             return view('benutzer.profile', compact('user', 'rolesAll'));
         else
             return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
+    }
+    
+    
+     /**
+     * Show the form for editing the defaults for new users.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function defaultUser()
+    {
+        if(ViewHelper::universalHasPermission( array(6) ) == false )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        $defaultRoles = $this->utils->getDefaultUserRoleSettings();
+        $rolesAll = Role::all();
+        return view('benutzer.defaultUser', compact('rolesAll', 'defaultRoles'));
+    }
+     
+     /**
+     * Save defaults for new users.
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function defaultUserSave(Request $request)
+    {
+        GlobalSettings::where('category', 'users')->where('name', 'defaultRoles')->delete();
+        if($roleIds = $request->get('role_id')){
+            foreach($roleIds as $roleId) GlobalSettings::create(['category' => 'users', 'name' => 'defaultRoles', 'value' => $roleId]);
+        }
+        return back()->with('message', trans('benutzerForm.saveSuccess'));
     }
     
     /**

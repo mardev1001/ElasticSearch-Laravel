@@ -42,6 +42,9 @@ return [
     'position' => 'Position',
     'abteilung' => 'Abteilung',
     'informationen' => 'Informationen',
+    'defaultUser' => 'Standard Benutzer',
+    'defaultUserRoles' => 'Rollen Zuweisung',
+    'saveSuccess' => 'Standard Benutzer erfolgreich aktualisiert.',
     
     'lastMandantRole' => 'Diese Benutzer-Rolle kann nicht gelöscht werden. Dies ist eine System relevante Benutzer-Rolle.',
     

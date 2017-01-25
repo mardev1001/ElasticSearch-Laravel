@@ -29,6 +29,7 @@ use App\DocumentComment;
 use App\UserReadDocument;
 use App\PublishedDocument;
 use App\FavoriteDocument;
+use App\FavoriteCategory;
 use App\Role;
 use App\IsoCategory;
 use App\User;
@@ -1493,9 +1494,12 @@ class DocumentController extends Controller
         // }
         // dd($documentsAttached);
         
+        $favoriteCategories = FavoriteCategory::where('user_id', Auth::user()->id)->get();
+        $document->favorite = FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
+        
         return view('dokumente.show', compact('document', 'documentComments','documentCommentsFreigabe', 
         'variants', 'published', 'datePublished', 'canPublish', 'authorised','commentVisibility','myComments',
-        'isoCategoryName','isoCategoryParent','isoCategory') );
+        'isoCategoryName','isoCategoryParent','isoCategory', 'favoriteCategories') );
     }
 
     /**
@@ -1506,7 +1510,7 @@ class DocumentController extends Controller
      */
     public function edit($id)
     {
-         $data = Document::find($id);
+        $data = Document::find($id);
             // dd($data);
             if($data == null)
                 return redirect('dokumente/create');
@@ -1588,8 +1592,7 @@ class DocumentController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
-        $data = Document::find( $id );
+        $data = Document::find($id);
         $adressats = Adressat::where('active',1)->get();
         //fix if document type not iso category -> don't save iso_category_id
         if( $request->get('document_type_id') !=  $this->isoDocumentId )
@@ -1987,17 +1990,19 @@ class DocumentController extends Controller
         $document = Document::find($id);
         $favoriteCheck = FavoriteDocument::where('document_group_id',$document->document_group_id)->where('user_id', Auth::user()->id)->first();
         // dd($document->published);
-        if( $favoriteCheck == null )
+        if( $favoriteCheck == null ){
             $favorite = FavoriteDocument::create( ['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id ]);
-        else
+            return back();
+        } else {
             $favoriteCheck->delete();
+            return back()->with('message', trans('dokumentShow.favoriteRemoved'));
+        }
             
         // if($document->published->url_unique)    
         //     return redirect('dokumente/'.$document->published->url_unique);
         // else
         //     return redirect('dokumente/'.$id);
-        
-        return back();
+        // return back();
     }
      /**
      * Display a listing of the resource.
@@ -3220,68 +3225,6 @@ class DocumentController extends Controller
             'searchFreigabePaginated', 'searchFreigabeTree', 'iso_category_id','isoCategoryName','docTypeSlug', 'docs', 'sort'));
     }
     
-    /**
-     * Function used to update document statuses for all attached documents in case they are not correctly set
-     */
-    public function documentStatusUpdate(Request $request){
-        
-        if($request->get('token') == '!Webbite-1234!'){
-            
-            // get all documents with doc-type 5 (formulare)
-            $documentsUpdated = Document::where('document_type_id', 5)->get();
-            
-            // update their doc-status to 3 (aktuell)
-            // Document::whereIn('id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
-            
-            // get all editor_variant_documents with above mentioned document-ids, update their doc-status to 3 (aktuell) also
-            // EditorVariantDocument::whereIn('document_id', array_pluck($documentsUpdated, 'id'))->update(['document_status_id' => 3]);
-            
-            foreach ($documentsUpdated as $document) {
-                // code...
-            
-                //save to Published documents
-                $document->document_status_id = 3; //aktualan
-                $document->approval_all_roles = 1; //permisija
-                $document->save();
-                
-                $this->publishProcedure($document);
-                $this->checkFreigabeRoles($document);
-                
-                $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
-                                ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
-                if($readDocument != null && $readDocument->deleted_at == null)
-                                $readDocument->delete();
-                                
-                $otherDocuments = Document::where('document_group_id',$document->document_group_id)
-                                    ->whereNotIn('id',array($document->id))->get();
-                /*Set attached documents as aktuell */
-                $variantsAttachedDocuments = EditorVariant::where('document_id',$document->id)->get();
-                foreach( $variantsAttachedDocuments as $vad ){
-                    $editorVariantDocuments = $vad->editorVariantDocument;
-                    foreach($editorVariantDocuments as $evd){
-                        $evd->document_status_id = 3;
-                        $evd->save();
-                        $doc = Document::find($evd->document_id);
-                        $doc->document_status_id = 3; //aktualan
-                        $doc->approval_all_roles = 1; //permisija
-                        $doc->save();
-                    }
-                }
-                /* End set attached documents as actuell */
-                
-                foreach($otherDocuments as $oDoc){
-                    if( $oDoc->document_status_id != 6 && $oDoc->document_status_id != 2 ){
-                        $oDoc->document_status_id = 5;
-                        $oDoc->save();
-                    }
-                }                
-            }
-            
-            // return list of changed docs
-            return view('dokumente.statusUpdate', compact('documentsUpdated'));
-            
-        } else return back();
-    }
     
     /**
      * Set back button
