@@ -44,15 +44,6 @@ class InventoryController extends Controller
         $seachCategories = InventoryCategory::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->get();
         $seachInventory = Inventory::where('name','LIKE','%'.$searchInput.'%')->get();
         
-        //eliminate items from inactive categories
-        if($seachInventory != null && count($searchInventory) ){
-            foreach( $seachInventory as $k => $inventory ){
-                if($inventory->category->active != 1){
-                   $searchInventory->forget($inventory->id);
-                }
-            }  
-        }
-        
         $categories = InventoryCategory::where('active',1)->get();
         $sizes = InventorySize::all();
         return view('inventarliste.index', compact('categories', 'sizes','seachCategories','seachInventory','searchInput') );
@@ -68,6 +59,10 @@ class InventoryController extends Controller
     {
         if( ViewHelper::universalHasPermission( array(27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        
+        $categories = InventoryCategory::where('active',1)->get();
+        $sizes = InventorySize::all();
+        return view('formWrapper', compact('categories', 'sizes') );
             
     }
 
@@ -105,6 +100,10 @@ class InventoryController extends Controller
     {
         if( ViewHelper::universalHasPermission( array(27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        $data = Inventory::find($id);    
+        $categories = InventoryCategory::where('active',1)->get();
+        $sizes = InventorySize::all();
+        return view('formWrapper', compact('data','categories', 'sizes') );
     }
 
     /**
@@ -119,6 +118,13 @@ class InventoryController extends Controller
         // dd( $request->all() );
         $item =  Inventory::find($id);
         $oldItem =  Inventory::find($id);
+        if( !$request->has('neptun_intern')){
+            $request->merge(['neptun_intern'=> 0]);
+        }
+        if( $request->has('taken') ){
+            $newValue = $item->value- intval($request->get('taken') );
+            $request->merge(['value'=>$newValue ]);
+        }
         $item->fill( $request->all() )->save();
         
         $request->merge(['user_id' => Auth::user()->id,'inventory_id' => $id]);
@@ -132,12 +138,15 @@ class InventoryController extends Controller
             $request->merge(['inventory_size_id' => null]);
         }
         //prevent filling up the database when all three values are null
-        if( !is_null( $request->get('value') ) || !is_null( $request->get('inventory_category_id') ) || !is_null( $request->get('inventory_size_id') )  )
+        if( !is_null( $request->get('value') ) || !is_null( $request->get('inventory_category_id') ) || 
+        !is_null( $request->get('inventory_size_id') )  ){
             $history = InventoryHistory::create($request->all());
+            
+        }
         
         return redirect()->back()->with( 'messageSecondary', trans('inventoryList.inventoryUpdated') );
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -148,6 +157,29 @@ class InventoryController extends Controller
     {
         //
     }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroyCategory($id)
+    {
+        //
+    }
+    
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroySize($id)
+    {
+        //
+    }
+    
     /**
      * Display a listing of the resource.
      *

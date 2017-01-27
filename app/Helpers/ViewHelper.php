@@ -1189,6 +1189,18 @@ class ViewHelper
     }
     
     /**
+     * generate inventory taken modal
+     *
+     * @param collection $item
+     * @return template
+     */
+    static function generateInventoryTakenModal($item){
+        $categories = InventoryCategory::all();
+        $sizes = InventorySize::all();
+        return view('inventarliste.partials.takenModal',compact('item', 'categories', 'sizes'))->render();
+    }
+    
+    /**
      * generate history inventory modal
      *
      * @param collection $item

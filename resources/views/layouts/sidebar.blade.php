@@ -151,23 +151,47 @@
 
             </li>
             
-            @if( ViewHelper::universalHasPermission( array(11,13) ) == true ) 
-                <li>
-                    <a href="{{ url('papierkorb') }}">{{ ucfirst( trans('navigation.trash') ) }}</a>
-                </li>
-            @endif
-            
-            <li>
+            <!--telefonliste-->
+           <li>
                 <a href="{{ url('telefonliste') }}">{{ ucfirst( trans('navigation.phonebook') ) }}</a>
             </li>
-
+            <!--end telefonliste-->
+            
             {{--
             <li>
                 <a href="#">{{ ucfirst( trans('navigation.wiki') ) }}</a>
             </li>
             --}}
             
+              
+            @if( ViewHelper::universalHasPermission( array(7,27) ) == true )
+                <!--inventarliste-->
+                <li class="">
+                    <a href="{{ url('inventarliste') }}">
+                        {{ ucfirst( trans('navigation.inventoryList') )}}
+                        <span class="fa arrow"></span>
+                    </a>
+                    @if( ViewHelper::universalHasPermission( array(27) ) == true )
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href="{{ url('inventarliste/kategorien') }}">{{ ucfirst( trans('navigation.inventarCategory') )}}</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('inventarliste/groessen') }}">{{ ucfirst( trans('navigation.inventarSizes') )}}</a>
+                            </li>
+                            <li>
+                                <a href="{{ url('inventarliste/create') }}">{{ ucfirst( trans('navigation.newInventory') )}}</a>
+                            </li>
+                            <!--<li>-->
+                            <!--    <a href="{{ url('inventarliste/materialien-abrechnen') }}">{{ ucfirst( trans('navigation.deduct') )}}</a>-->
+                            <!--</li>-->
+                           
+                        </ul>
+                    @endif
+                </li><!--end inventarliste-->
+            @endif
             @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
+                <!--wiki-->
                 <li class="">
                     <a href="{{ url('wiki') }}">{{ ucfirst(trans('navigation.wiki')) }}
                         <span class="fa arrow"></span></a>
@@ -203,7 +227,7 @@
                             </li>
                         @endif
                     </ul>
-                </li>
+                </li><!-- end wiki -->
             @endif
             
             @if( ViewHelper::universalHasPermission( array(17, 18, 20) ) == true )
@@ -251,24 +275,7 @@
                 </li>
             @endif
             
-            @if( ViewHelper::universalHasPermission( array(27) ) == true )
-                <li class="">
-                    <a href="{{ url('inventarliste') }}">
-                        {{ ucfirst( trans('navigation.inventoryList') )}}
-                        <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level collapse">
-                        <li>
-                            <a href="{{ url('inventarliste/kategorien') }}">{{ ucfirst( trans('navigation.inventarCategory') )}}</a>
-                        </li>
-                        <li>
-                            <a href="{{ url('inventarliste/groessen') }}">{{ ucfirst( trans('navigation.inventarSizes') )}}</a>
-                        </li>
-                       
-                    </ul>
-                </li>
-            @endif
-            
+            <!--neptun verwalten-->
             @if( ViewHelper::universalHasPermission( array(6) ) == true )
                 <li class="">
                     <a href="{{ url('neptun-verwaltung') }}">
@@ -297,6 +304,18 @@
                     </ul>
                 </li>
             @endif
+            <!--end neptun verwalten-->
+            
+            <!--papierkorb-->
+            @if( ViewHelper::universalHasPermission( array(11,13) ) == true ) 
+                <li>
+                    <a href="{{ url('papierkorb') }}">{{ ucfirst( trans('navigation.trash') ) }}</a>
+                </li>
+            @endif
+            <!--end papierkorb-->
+            
+            
+            
             <li class="legend"> <!-- legend - start -->
                 <span class="legend-text">Legende</span>
                 <span id="btn-legend" class="icon-legend pull-right" title="Legende Ein-/Ausblenden"></span>

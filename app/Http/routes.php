@@ -138,11 +138,16 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('inventarliste/kategorien','InventoryController@categories');
         Route::post('inventarliste/kategorien','InventoryController@postCategories');
         Route::post('inventarliste/kategorien/{id}/update','InventoryController@updateCategories');
+        Route::delete('inventarliste/destroy-category', 
+        [ 'as'=>'inventarliste.destroyCategory', 'uses'=>'InventoryController@destroyCategory']);
+        
+        Route::delete('inventarliste/destroy-size', [ 'as'=>'inventarliste.destroySize', 'uses'=>'InventoryController@destroySize' ]);
         Route::post('inventarliste/sizes','InventoryController@postSizes');
         Route::post('inventarliste/sizes/{id}/update','InventoryController@updateSizes');
         Route::get('inventarliste/groessen','InventoryController@sizes');
         Route::post('inventarliste/suche','InventoryController@search');
         Route::resource('inventarliste', 'InventoryController');
+
         
         // Developer Routes
         // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');

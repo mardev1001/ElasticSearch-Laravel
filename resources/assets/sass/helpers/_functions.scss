@@ -9,9 +9,19 @@
   }
 }
 
-@each $el in favorites, edit, blocked, open, notread, read, notreleased, released, history, download, goto, comment, legend, arrow, trash {
+@each $el in favorites, edit, blocked, open, notread, read, notreleased, released, history, download, goto, comment, legend, arrow, trash, reset {
   .icon-#{$el} {
     background: url('/img/icons/icon_#{$el}.png') no-repeat center center;
+    width: 25px;
+    height: 25px;
+  }
+}
+
+
+// Homepage filter buttons functionality
+@each $el in blocked, open, notreleased, released {
+  .filter-buttons .filter-active.icon-#{$el} {
+    background: url('/img/icons/icon_#{$el}_active.png') no-repeat center center;
     width: 25px;
     height: 25px;
   }

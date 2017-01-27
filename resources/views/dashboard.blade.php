@@ -51,10 +51,11 @@
                 <h1 class="title">
                     Meine Dokumente/Rundschreiben 
                     <div class="filter-buttons pull-right">
-                        <a href="{{url('/?filter=approved')}}" title="freigegeben" class="filter icon-open"></a>
-                        <a href="{{url('/?filter=not-approved')}}" title="nicht freigegeben" class="filter icon-blocked"></a>
-                        <a href="{{url('/?filter=published')}}" title="veröffentlicht" class="filter icon-released"></a>
-                        <a href="{{url('/?filter=not-published')}}" title="nicht veröffentlicht" class="filter icon-notreleased"></a>
+                        <a href="{{url('/?filter=not-approved')}}" title="nicht freigegeben" class="@if($filter == 'not-approved') filter-active @endif filter icon-blocked"></a>
+                        <a href="{{url('/?filter=approved')}}" title="freigegeben" class="@if($filter == 'approved') filter-active @endif filter icon-open"></a>
+                        <a href="{{url('/?filter=not-published')}}" title="nicht veröffentlicht" class="@if($filter == 'not-published') filter-active @endif filter icon-notreleased"></a>
+                        <a href="{{url('/?filter=published')}}" title="veröffentlicht" class="@if($filter == 'published') filter-active @endif filter icon-released"></a>
+                        <a href="{{url('/')}}" title="Auswahl aufheben" class="filter icon-reset"></a>
                     </div>
                 </h1>
                 

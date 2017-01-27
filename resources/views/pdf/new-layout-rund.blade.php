@@ -13,6 +13,10 @@
             }
             @page:first {
                 margin-top: 0px !Important;
+                
+            }
+            .number-1{
+                display: none;
             }
             /*sub{*/
             /*    font-size: 22px !important;*/
@@ -280,8 +284,7 @@
                 padding-bottom: 0px;
             }
             .page-number{
-                margin-top: -120px;
-               
+                margin-top: -30px;
             }
             .footer-box{
                 margin-top: 40px !important;

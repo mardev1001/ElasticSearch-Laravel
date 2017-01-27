@@ -243,8 +243,10 @@ class HomeController extends Controller
         $sizeLimit = 4096000;
         $request = $request->all();
         $from = User::find($uid);
+        $toUser = User::find($request['to_user']);
         $request['logo'] = asset('/img/logo-neptun-new.png');
         $request['from'] = $from;
+        $request['to'] = $toUser;
         
         $template = view('email.contact' ,compact('request') )->render();
         
@@ -254,7 +256,7 @@ class HomeController extends Controller
         // Store message attachment files
         $uploads = ViewHelper::fileUpload(User::find($request['to_user']), $this->uploadPath, $files, $sizeLimit);
         
-        if($uploads == false) return redirect()->back()->with(['message' => trans('contactForm.fileSizeExceeded'), 'alert-class' => 'alert-danger' ]);
+        if($uploads === false) return redirect()->back()->with(['message' => trans('contactForm.fileSizeExceeded'), 'alert-class' => 'alert-danger' ]);
         // if($uploads == false) return redirect()->back()->with('alert-class', 'danger');
 
         // Store message attachment files data

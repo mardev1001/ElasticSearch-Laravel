@@ -6,7 +6,7 @@
 
 @section('content')
 
-<!-- add row-->
+{{--<!-- add row-->
 <div class="row">
     <div class="col-sm-12 ">
         <div class="box-wrapper">
@@ -44,7 +44,7 @@
             </div><!-- end box -->
         </div><!-- end box wrapper-->
     </div>
-</div><!-- end add row -->
+</div><!-- end add row --> --}}
 
 <!--search row-->
 <div class="row">
@@ -80,6 +80,82 @@
 </div><!-- end search row -->
     @if( $seachCategories || $seachInventory )
         <!-- search results categories categorie box-->
+        @if($searchCategories)
+            @foreach( $searchCategories as $category)
+                    <div class="panel-group">
+                        <div class="panel panel-primary" id="panelInventory{{$category->id}}">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-target="#collapseInventory{{$category->id}}" class="collapsed transform-normal" 
+                                           href="#collapseInventory{{$category->id}}">
+                                          {{$category->name}} ({{ $category->items->count() }})
+                                        </a>
+                                </h4>
+                            </div><!--end .panel-heading -->    
+                        </div><!--end .panel.panel-primary -->
+                    
+                        <div id="collapseInventory{{$category->id}}" class="panel-collapse collapse">
+                            <div class="panel-body box-white">
+                                <table class="table data-table box-white">
+                                <thead>
+                                    <th  class="text-center valign">@lang('inventoryList.name')</th>
+                                    <th  class="text-center valign">@lang('inventoryList.number')</th>
+                                    <th class="text-center valign">@lang('inventoryList.size')</th>
+                                    <th class="text-center valign">@lang('inventoryList.changes')</th>
+                                    <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                                    <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
+                                </thead>
+                                <tbody>
+                                    @if(count($category->items->count()) )
+                                        @foreach($category->items as $k => $item)
+                                            <tr>
+                                            <td class="text-center valign">
+                                                {{ $item->name }}
+                                            </td>
+                                            <td class="text-center valign ">
+                                                {{ $item->value }}
+                                            </td>
+                                            <td class="text-center valign ">
+                                                {{ $item->size->name }}
+                                            </td>
+                                            <td class="text-center valign ">
+                                                {{ $item->updated_at }}
+                                            </td>
+                                            <td class="text-center valign"> 
+                                                <a href="#" data-toggle="modal" data-target="#edit-inventory-{{$item->id}}">
+                                                    @lang('inventoryList.edit')
+                                                </a>
+                                                {!! ViewHelper::generateInventoryEditModal($item) !!}    
+                                            </td>
+                                            <td class="text-center valign"> 
+                                                <a href="#" data-toggle="modal" data-target="#history-inventory-{{$item->id}}">
+                                                    @lang('inventoryList.history')
+                                                </a>
+                                                {!! ViewHelper::generateInventoryHistoryModal($item) !!}  
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td class"valign"></td>
+                                            <td class"valign"></td>
+                                            <td class"valign"></td>
+                                            <td class"valign">Keine Daten vorhanden</td>
+                                            <td class"valign"></td>
+                                            <td class"valign"></td>
+                                        </tr>
+                                    @endif
+                                
+                                </tbody>
+                            </table>    
+                            </div><!-- end .panel-body -->
+                        </div><!-- end .panel-collapse -->
+                    
+                    </div><!--end .panel-group-->  
+            @endforeach
+        @endif
+        
+        
         <div class="col-xs-12 box-wrapper">
             <h2 class="title">{{ trans('inventoryList.categorySearchResults') }}</h2>
             @if( count($seachCategories) )
@@ -230,71 +306,89 @@
         </div><!--end  regular categorie box wrapper-->
     @else
         <!-- regular categorie box-->
-        <div class="col-xs-12 box-wrapper">
-            <h2 class="title">{{ trans('inventoryList.overview') }}</h2>
-            
-            @if($categories)
+        @if($categories)
                 @foreach( $categories as $category)
-                    <div class="box box-white">
-                        <h4>{{ $category->name }}</h4>
-                        <table class="table data-table box-white">
-                            <thead>
-                                <th  class="text-center valign">@lang('inventoryList.name')</th>
-                                <th  class="text-center valign">@lang('inventoryList.number')</th>
-                                <th class="text-center valign">@lang('inventoryList.size')</th>
-                                <th class="text-center valign">@lang('inventoryList.changes')</th>
-                                <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
-                                <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
-                            </thead>
-                            <tbody>
-                                @if(count($category->items->count()) )
-                                    @foreach($category->items as $k => $item)
+                    <div class="panel-group">
+                        <div class="panel panel-primary" id="panelInventory{{$category->id}}">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                        <a data-toggle="collapse" data-target="#collapseInventory{{$category->id}}" class="collapsed transform-normal" 
+                                           href="#collapseInventory{{$category->id}}">
+                                          {{$category->name}} ({{ $category->items->count() }})
+                                        </a>
+                                </h4>
+                            </div><!--end .panel-heading -->    
+                        </div><!--end .panel.panel-primary -->
+                    
+                        <div id="collapseInventory{{$category->id}}" class="panel-collapse collapse">
+                            <div class="panel-body box-white">
+                                <table class="table data-table box-white">
+                                <thead>
+                                    <th  class="text-center valign">@lang('inventoryList.name')</th>
+                                    <th  class="text-center valign">@lang('inventoryList.number')</th>
+                                    <th class="text-center valign">@lang('inventoryList.size')</th>
+                                    <th class="text-center valign">@lang('inventoryList.changes')</th>
+                                    <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                                    <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
+                                    <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
+                                </thead>
+                                <tbody>
+                                    @if(count($category->items->count()) )
+                                        @foreach($category->items as $k => $item)
+                                            <tr>
+                                            <td class="text-center valign">
+                                                {{ $item->name }}
+                                            </td>
+                                            <td class="text-center valign ">
+                                                <a href="#" data-toggle="modal" data-target="#item-taken-{{$item->id}}">
+                                                    {{ $item->value }}
+                                                </a>
+                                                {!! ViewHelper::generateInventoryTakenModal($item) !!}  
+                                            </td>
+                                            <td class="text-center valign ">
+                                                {{ $item->size->name }}
+                                            </td>
+                                            <td class="text-center valign ">
+                                                {{ $item->updated_at }}
+                                            </td>
+                                            <td class="text-center valign"> 
+                                                <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
+                                                    @lang('inventoryList.edit')
+                                                </a>   
+                                            </td>
+                                            <td class="text-center valign"> 
+                                                <a href="#">
+                                                    @lang('inventoryList.view')
+                                                </a>   
+                                            </td>
+                                            <td class="text-center valign"> 
+                                                <a href="#" data-toggle="modal" data-target="#history-inventory-{{$item->id}}">
+                                                    @lang('inventoryList.history')
+                                                </a>
+                                                {!! ViewHelper::generateInventoryHistoryModal($item) !!}  
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                        <td class="text-center valign">
-                                            {{ $item->name }}
-                                        </td>
-                                        <td class="text-center valign ">
-                                            {{ $item->value }}
-                                        </td>
-                                        <td class="text-center valign ">
-                                            {{ $item->size->name }}
-                                        </td>
-                                        <td class="text-center valign ">
-                                            {{ $item->updated_at }}
-                                        </td>
-                                        <td class="text-center valign"> 
-                                            <a href="#" data-toggle="modal" data-target="#edit-inventory-{{$item->id}}">
-                                                @lang('inventoryList.edit')
-                                            </a>
-                                            {!! ViewHelper::generateInventoryEditModal($item) !!}    
-                                        </td>
-                                        <td class="text-center valign"> 
-                                            <a href="#" data-toggle="modal" data-target="#history-inventory-{{$item->id}}">
-                                                @lang('inventoryList.history')
-                                            </a>
-                                            {!! ViewHelper::generateInventoryHistoryModal($item) !!}  
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td class"valign"></td>
-                                        <td class"valign"></td>
-                                        <td class"valign"></td>
-                                        <td class"valign">Keine Daten vorhanden</td>
-                                        <td class"valign"></td>
-                                        <td class"valign"></td>
-                                    </tr>
-                                @endif
-                            
-                            </tbody>
-                        </table>
-                    </div><!-- end box -->
-                    <div class="clearfix"></div>
-                    <br/>
+                                            <td class"valign"></td>
+                                            <td class"valign"></td>
+                                            <td class"valign"></td>
+                                            <td class"valign">Keine Daten vorhanden</td>
+                                            <td class"valign"></td>
+                                            <td class"valign"></td>
+                                        </tr>
+                                    @endif
+                                
+                                </tbody>
+                            </table>    
+                            </div><!-- end .panel-body -->
+                        </div><!-- end .panel-collapse -->
+                    
+                    </div><!--end .panel-group-->  
                 @endforeach
-             @endif
-        </div><!--end  regular categorie box wrapper-->
+        @endif
+       
     @endif
 
 @stop

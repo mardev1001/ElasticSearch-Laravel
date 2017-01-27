@@ -231,7 +231,7 @@
                                             <tr>
                                                 <td dir="ltr" style="font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
                                                     <strong style="color:#111111;">Von:</strong>
-													@if(isset($request['from']->first_name ) ) {{ $request['from']->first_name }} @endif @if(isset($request['from']->last_name ) ) {{ $request['from']->last_name }} @endif @if(isset($request['from']->email ) ) <<a class="email" href="mailto:{{ $request['from']->email }}">{{ $request['from']->email }}</a> > @endif
+													@if(isset($request['from']->first_name ) ) {{ $request['from']->first_name }} @endif @if(isset($request['from']->last_name ) ) {{ $request['from']->last_name }} @endif @if(isset($request['from']->email ) ) <<a class="email" href="mailto:{{ $request['from']->email }}">{{ $request['from']->email }}</a>> @endif
                                                     <!-- Button : Begin -->
                                                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
                                                     
@@ -322,7 +322,53 @@
                                                 <td dir="ltr" style="font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
                                                     <strong style="color:#111111;">Nachricht:</strong><br>
 													{{ $request['summary'] }}
-													<br><br>
+													
+                                                    <!-- Button : Begin -->
+                                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
+                                                        
+                                                    </table>
+                                                    <!-- Button : END -->
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                    <!--[if mso]>
+                                    </td>
+                                    </tr>
+                                    </table>
+                                    <![endif]-->
+                                </td>
+                            </tr>
+                        </table>
+                        <!--[if mso]>
+                        </td>
+                        </tr>
+                        </table>
+                        <![endif]-->
+                    </td>
+                </tr>
+                <!-- Thumbnail Left, Text Right : END -->
+                
+				<!-- Thumbnail Left, Text Right : BEGIN -->
+                <tr>
+                    <!-- dir=ltr is where the magic happens. This can be changed to dir=rtl to swap the alignment on wide while maintaining stack order on narrow. -->
+                    <td dir="ltr" bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%" style="padding: 0 0;">
+                        <!--[if mso]>
+                        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
+                        <tr>
+                        <td align="center" valign="top" width="660">
+                        <![endif]-->
+                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:660px;">
+                            <tr>
+                                <td align="center" valign="top" style="font-size:0; padding: 0 0;">
+                                    
+                                    <div style="display:inline-block; margin: 0 -2px; max-width:66.66%; min-width:320px; vertical-align:top;" class="stack-column">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr>
+                                                <td dir="ltr" style="font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
+                                                    <strong style="color:#111111;">Empfänger:</strong>
+													{{ $request['to']->first_name . " " . $request['to']->last_name }} <<a class="email" href="mailto:{{$request['to']->email}}">{{$request['to']->email}}</a>>
+													
                                                     <!-- Button : Begin -->
                                                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
                                                         

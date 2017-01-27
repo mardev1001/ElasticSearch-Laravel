@@ -48,15 +48,17 @@
                              <input type="text" class="form-control" name="name" value="{{ $category->name }}" placeholder="Name"/>
                         </div>
                         <div class="col-xs-12 col-md-6 col-lg-5">
-                            
                             @if($category->active )
                                 <button class="btn btn-success" type="submit" name="active" value="0">{{ trans('adressatenForm.active') }}</button>
                             @else
                                 <button class="btn btn-danger" type="submit" name="active" value="1">{{ trans('adressatenForm.inactive') }}</button>
                             @endif
-                            
                             <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                            
+                            @if( !count($category->items ) )
+                                {!! Form::open(['route'=>['inventarliste.destroyCategory', 'id'=> $category->id], 'method'=>'DELETE']) !!}
+                                    <button type="submit" class="btn btn-xs btn-warning">entfernen</button><br>
+                                {!! Form::close() !!}
+                            @endif
                         </div>
                         
                         {!! Form::close() !!}

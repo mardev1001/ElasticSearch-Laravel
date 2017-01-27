@@ -1845,7 +1845,6 @@ class DocumentController extends Controller
      */
     public function freigabeApproval($id)
     {
-        
         $document = Document::find($id);
         $variantPermissions = $this->document->documentVariantPermission($document);
         
@@ -2325,7 +2324,6 @@ class DocumentController extends Controller
      */
     public function authorizeDocument(Request $request, $id)
     {
-        // dd($request->all());
         if( $request->get('validation_status') == 1 ) 
             $approved = true;
         else
@@ -2383,11 +2381,35 @@ class DocumentController extends Controller
                 // $document->date_published = Carbon::now();
                 $document->document_status_id = 3;
                 $document->save();
+                
+                
+                $otherDocuments = Document::where('document_group_id',$document->document_group_id)
+                                ->whereNotIn('id',array($document->id))->get();
+                /*Set attached documents as actuell */
+                $variantsAttachedDocuments = EditorVariant::where('document_id',$document->id)->get();
+                foreach( $variantsAttachedDocuments as $vad ){
+                    $editorVariantDocuments = $vad->editorVariantDocument;
+                    foreach($editorVariantDocuments as $evd){
+                        $evd->document_status_id = 3;
+                        $evd->save();
+                        $doc = Document::find($evd->document_id);
+                        $doc->document_status_id = 3;
+                        $doc->save();
+                    }
+                }
+                /* End set attached documents as actuell */
+                foreach($otherDocuments as $oDoc){
+                    if( $oDoc->document_status_id != 6 && $oDoc->document_status_id != 2 ){
+                        $oDoc->document_status_id = 5;
+                        $oDoc->save();
+                }
+            }  
+                
             }
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
             
-        }
+            }
             
         }
       
@@ -3665,7 +3687,7 @@ class DocumentController extends Controller
             $margins->left = 5;
             $margins->right = 0;
             $margins->top = 50;
-            $margins->bottom = 40;
+            $margins->bottom = 10;
             $margins->headerTop = 0;
             $margins->footerTop = 0;
             if($document->document_template == 1){

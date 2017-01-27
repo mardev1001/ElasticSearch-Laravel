@@ -8,7 +8,8 @@ use Carbon\Carbon;
 class Inventory extends Model
 {
     protected $guarded = []; //blacklist
-    protected $fillable = ['name','inventory_category_id','inventory_size_id','value']; //whitelist
+    protected $fillable = ['name','inventory_category_id','inventory_size_id','value', 'min_stock','sell_price',
+    'purchase_price', 'neptun_intern']; //whitelist
     
     protected $dates = ['created_at', 'updated_at'];
     

@@ -43,8 +43,10 @@ return [
     'wikiSearchPlaceholder' => 'Titel, Inhalt',
     'export'                => 'Export',
     'trash'                 => 'Papierkorb',
-    'inventoryList'         => 'Inventarliste',
+    'inventoryList'         => 'Materialien',
     'inventarCategory'      => 'Kategorien',
-    'inventarSizes'          => 'Größen',
+    'inventarSizes'         => 'Größen',
+    'newInventory'          => 'neu anlegen',
+    'deduct'                => 'Materialien abrechnen',
 
 ];
