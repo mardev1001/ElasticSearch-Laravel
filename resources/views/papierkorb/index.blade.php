@@ -39,9 +39,24 @@
                                         <label for="delete-{{ $document->id }}"></label>
                                     </span>
                                     <span class="delete-details btn-block">
+                                        Version {{ $document->version }},
+                                        {{ $document->documentStatus->name }} -
                                         {{ Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                         @if(isset($document->owner)) - {{ $document->owner->first_name .' '. $document->owner->last_name }} @endif <br>
-                                        <strong>{{ $document->name }}</strong><br>
+                                        
+                                        @if( ($document->pdf_upload == 1) || ($document->documentType->document_art == 1) )
+                                            @if($document->propAttachment)
+                                                <a href="{{url('download/'. $document->id .'/'. $document->propAttachment)}}" target="_blank">
+                                                    <strong>{{ $document->name }}</strong>
+                                                </a>
+                                            @else
+                                                <strong>{{ $document->name }}</strong>
+                                            @endif
+                                            <br>
+                                        @else    
+                                            <a href="{{url('/papierkorb/download/' . $document->id)}}" target="_blank"> <strong>{{ $document->name }}</strong></a> <br>
+                                        @endif
+                                        
                                         {{ $document->documentType->name }}<br>
                                     </span>
                                 </div>

@@ -741,8 +741,9 @@ class SearchController extends Controller
         $users = $users->whereIn('id', $usersInMandants)->get();
         
         // dd($usersInternal);
+        $searchSuggestions = ViewHelper::getTelephonelistSearchSuggestions();
         
-        return view('telefonliste.index', compact('search', 'partner','searchParameter', 'mandants', 'users', 'usersInternal', 'roles', 'visible') );
+        return view('telefonliste.index', compact('search', 'partner','searchParameter', 'mandants', 'users', 'usersInternal', 'roles', 'visible', 'searchSuggestions') );
     }
     
     // Function to filter out documents by permissions

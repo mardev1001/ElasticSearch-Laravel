@@ -353,11 +353,9 @@
                           <h4 class="document-adressat">{{$document->documentAdressats->name}}</h4>
                         @endif
                     </div>
-                  <div class="document-date-row">
-                      <div class="date-div"><p>
-                          @if( $document->date_published != null)
-                              <span class="right-correction">{{$document->date_published}}</span>
-                          @endif
+                    <div class="document-date-row">
+                        <div class="date-div"><p>
+                            <span class="right-correction">{{$document->date_published}}</span>
                           <br/>
                           @if($document->show_name != 1) 
                               {{-- Inverted at the end of the project --}}

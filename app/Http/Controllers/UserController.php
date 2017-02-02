@@ -185,11 +185,8 @@ class UserController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function editPartner(Request $request, $id, $mandant_id)
+    public function editPartner($id)
     {
-        
-        $mandantId = $mandant_id;
-        
         if(ViewHelper::universalHasPermission([2,4,17], false) == false)
             return redirect('/')->with('message', trans('documentForm.noPermission'));
             
@@ -210,14 +207,17 @@ class UserController extends Controller
         // $rolesAll = Role::where('phone_role', false)->get();
         $rolesAll = Role::where('mandant_role', 1)->get();
         
+        $loggedUserMandants = MandantUser::where('user_id', Auth::user()->id)->get();
+        $mandantsUser = Mandant::whereIn('id', $loggedUserMandants->pluck('mandant_id'))->get();
+        
         $defaultRoles = $this->utils->getDefaultUserRoleSettings();
         
-        $loggedUserRoles = MandantUserRole::where('mandant_user_id', MandantUser::where('user_id', Auth::user()->id)->where('mandant_id', $mandantId)->first()->id)->get();
+        // $loggedUserRoles = MandantUserRole::where('mandant_user_id', MandantUser::where('user_id', Auth::user()->id)->where('mandant_id', $mandantId)->first()->id)->get();
         
-        foreach ($loggedUserRoles as $tmp) {
-            if(!in_array($tmp->role_id, array_pluck($rolesAll,'id')))
-               $rolesAll->push(Role::find($tmp->role_id));
-        }
+        // foreach ($loggedUserRoles as $tmp) {
+        //     if(!in_array($tmp->role_id, array_pluck($rolesAll,'id')))
+        //       $rolesAll->push(Role::find($tmp->role_id));
+        // }
         
         foreach ($defaultRoles as $def) {
             if(!in_array($def, array_pluck($rolesAll,'id')))
@@ -226,14 +226,16 @@ class UserController extends Controller
         
         // dd($rolesAll);
         
-        $mandantUsers = MandantUser::where('user_id', $id)->where('mandant_id', $mandantId)->get();
+        $mandantUsers = MandantUser::where('user_id', $id)->whereIn('mandant_id', $mandantsUser->pluck('id'))->get();
         $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
         $mandantUserRoles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
         $roles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
         
-        // dd($mandantUserRoles);
-        if(isset($user))
-            return view('benutzer.editPartner', compact('user', 'usersAll', 'mandantsAll', 'rolesAll', 'mandantUsers', 'defaultRoles'));
+        // Check permission to edit user (user should belong to mandants you own)
+        if($user) $canEdit = count(MandantUser::where('user_id', $user->id)->whereIn('mandant_id', $mandantsUser->pluck('id'))->get());
+        
+        if($canEdit)
+            return view('benutzer.editPartner', compact('user', 'usersAll', 'mandantsAll', 'mandantsUser', 'rolesAll', 'mandantUsers', 'defaultRoles'));
         else
             return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
     }
@@ -315,7 +317,33 @@ class UserController extends Controller
             }
         }
         // benutzer/{id}/edit-partner/{mandant_id}
-        return redirect('benutzer/'. $user->id .'/edit-partner/'. $mandantId)->with('message', 'Benutzer erfolgreich gespeichert.');
+        return redirect('benutzer/'. $user->id .'/partner/edit')->with('message', 'Benutzer erfolgreich gespeichert.');
+    }
+    
+    /**
+     * Save mandant/user/role data for partner roles (GF, NL etc.)
+     *
+     * @param  Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function createPartnerRolesStore(Request $request) 
+    {
+        // dd($request->all());
+        $checkMandant =  MandantUser::where('mandant_id', $request->get('mandant_id'))->where('user_id', $request->get('user_id'))->count();
+        if( $checkMandant > 0)
+             return back()->with('message', 'Dieser Mandant ist dem Benutzer bereits zugeordnet.');
+        
+        $mandantUser = MandantUser::create($request->all());
+        
+        foreach($request->input('role_id') as $roleId){
+            $tmpRole = Role::find($roleId);
+            $mandantUserRole = new MandantUserRole();
+            $mandantUserRole->mandant_user_id = $mandantUser->id;
+            $mandantUserRole->role_id = $roleId;
+            $mandantUserRole->save();
+        }
+        // return back()->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
+        return redirect('benutzer/'.$mandantUser->user_id.'/partner/edit#mandant-role-'.$mandantUser->id)->with('message', 'Mandant und Rollen erfolgreich gespeichert.');
     }
 
     /**
@@ -551,10 +579,6 @@ class UserController extends Controller
                 $del = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereNotIn('role_id',$noDeleteArr)->delete();
             }
             
-            // $internalRoleArray = InternalMandantUser::where('user_id', $request->input('user_id'))->pluck('role_id')->toArray();
-            // $exists = InternalMandantUser::where('user_id', $request->input('user_id'))->where('mandant_id', $request->input('mandant_id'))->delete();
-            // dd($internalRoleArray);
-            
             $requestRoleArray = array();
             if($request->has('role_id')){
                 foreach($request->input('role_id') as $roleId){
@@ -562,26 +586,7 @@ class UserController extends Controller
                     $mandantUserRole->mandant_user_id = $request->input('mandant_user_id');
                     $mandantUserRole->role_id = $roleId;
                     $mandantUserRole->save();
-                    
-                    // $roleTest = Role::find($roleId);
-                    // if( $roleTest->phone_role == true ){
-                    //   $checkInternal = InternalMandantUser::where('mandant_id',$request->input('mandant_id'))
-                    //   ->where('role_id',$roleId)->where('user_id',$request->input('user_id'))->get();
-                    //   if( count($checkInternal) < 1 ){
-                    //     $internalMandantUser = InternalMandantUser::create(['mandant_id' => $request->input('mandant_id'), 
-                    //     'role_id' => $roleId, 'user_id' => $request->input('user_id')]);
-                    //     // dd($internalMandantUser);
-                    //   }
-                    // }
                 }
-                //   dd($requestRoleArray);
-                // $difference = array_diff($requestRoleArray,$internalRoleArray);
-               
-                // dd($internalRoleArray);
-                 
-                // dd($exists);
-                // InternalMandantUser::where('user_id', $request->input('user_id'))->whereIn('role_id',$difference)->delete();
-                
              }
             // return back()->with('message', 'Rollen erfolgreich aktualisiert.');
             $message = '';
@@ -598,6 +603,7 @@ class UserController extends Controller
         }
         
         if($request->has('remove')){
+            // dd($request->all());
             $mandantUserRoles = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->pluck('role_id')->toArray();
             $noDeleteArr = array();
 
@@ -617,19 +623,106 @@ class UserController extends Controller
             MandantUser::where('id', $request->input('mandant_user_id'))->delete();
             MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
             
-            // if($request->has('role_id')){
-            //     foreach($request->input('role_id') as $roleId){
-            //         $roleTest = Role::find($roleId);
-            //         if( $roleTest->phone_role == true ){
-            //           InternalMandantUser::where('mandant_id',$request->input('mandant_id'))
-            //             ->where('role_id',$roleId)->where('user_id',$request->input('user_id'))->delete();
-            //         }
-            //     }
-            //  }
-            
-            // return back()->with('message', 'Rollen wurden entfernt.');
-            return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandants-roles')->with('message', 'Rollen wurden entfernt.');
+            return back()->with('message', 'Rollen wurden entfernt.');
+            // return redirect('benutzer/'.$mandantUser->user_id.'/edit#mandants-roles')->with('message', 'Rollen wurden entfernt.');
         }
+    }
+    
+    /**
+     * Update mandant roles for the user
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function userMandantRoleEditPartner(Request $request)
+    {
+        // dd($request->all());
+        $mandantUser = MandantUser::where('id', $request->input('mandant_user_id'))->first();
+        
+        if($request->has('save')){
+            $clearedRoles = $request->has('role_id');
+            $mandantUserRoles = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->pluck('role_id')->toArray();
+            $noDeleteArr = array();
+            
+            if($request->has('partner-role')){
+                // Delete all "partner" roles for the "mandant_user_id"
+                $partnerRoles = Role::where('mandant_role', 1)->pluck('id')->toArray();
+                // dd($partnerRoles);
+                // MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereIn('role_id', $partnerRoles)->delete();
+                MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
+            } else {
+                
+                if(!count($request->input('role_id'))) 
+                    return back()->with('message', 'Rollen dürfen nicht leer sein.');
+            
+                $temp = $this->preventDeleteRoles(
+                    $mandantUserRoles, $request->input('role_id'), 
+                    $request->input('mandant_id'),  
+                    $request->input('mandant_user_id')
+                );
+                
+                if( count($temp) )
+                    $noDeleteArr = $temp;
+                
+                $del = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->whereNotIn('role_id',$noDeleteArr)->delete();
+            }
+            
+            $requestRoleArray = array();
+            if($request->has('role_id')){
+                foreach($request->input('role_id') as $roleId){
+                    $mandantUserRole = new MandantUserRole();
+                    $mandantUserRole->mandant_user_id = $request->input('mandant_user_id');
+                    $mandantUserRole->role_id = $roleId;
+                    $mandantUserRole->save();
+                }
+             }
+            // return back()->with('message', 'Rollen erfolgreich aktualisiert.');
+            $message = '';
+           
+            if( count($noDeleteArr) )
+                $message .= trans('benutzerForm.lastMandantRole').'<br/>';
+            $message .= 'Rollen erfolgreich aktualisiert.';
+            //  dd($message);
+            
+            if($request->has('partner-role'))
+                return back()->with('message', $message);
+                
+            return redirect('benutzer/'.$mandantUser->user_id.'/partner/edit#mandant-role-'.$mandantUser->id)->with('message', $message);
+        }
+        
+        if($request->has('remove')){
+            // dd($request->all());
+            $mandantUserRoles = MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->pluck('role_id')->toArray();
+            $noDeleteArr = array();
+
+            if($request->has('role_id')){
+                $temp = $this->preventDeleteRoles($mandantUserRoles,$request->input('role_id'),
+                    $request->input('mandant_id'),  $request->input('mandant_user_id'), true );
+                
+                if( count($temp) )
+                    $noDeleteArr = $temp;
+            }
+            
+            $message = '';
+            if( count($noDeleteArr) ){
+                $message .= trans('benutzerForm.lastMandantRole');
+                return redirect('benutzer/'.$mandantUser->user_id.'/partner/edit#mandant-role-'.$mandantUser->id)->with('message', $message);
+            }
+            
+            // Count for mandants where the user belongs, and where you are able do manage users
+            $loggedUserMandants = MandantUser::where('user_id', Auth::user()->id)->get();
+            $mandantsUser = Mandant::whereIn('id', $loggedUserMandants->pluck('mandant_id'))->get();
+            $muCount = count(MandantUser::where('user_id', $request->input('user_id'))->whereIn('mandant_id', $mandantsUser->pluck('id'))->get());
+            
+            // Prevent deletion if only 1 mandant is assigned
+            if($muCount > 1) {
+                MandantUser::where('id', $request->input('mandant_user_id'))->delete();
+                MandantUserRole::where('mandant_user_id', $request->input('mandant_user_id'))->delete();
+                // return back()->with('message', 'Rollen wurden entfernt.');
+                return redirect('benutzer/'.$mandantUser->user_id.'/partner/edit#mandants-roles')->with('message', 'Rollen wurden entfernt.');
+            } else return redirect('benutzer/'.$mandantUser->user_id.'/partner/edit#mandants-roles')->with('message', 'Mindestens ein Mandant muss zugeordnet sein.');
+        }
+    
     }
 
     /**

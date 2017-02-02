@@ -11,8 +11,11 @@
 
 {{-- DOCUMENT TYPE FAVORITES --}}
 @if($hasFavorites)
+    {{-- 
     <h2 class="title">{{ trans('favoriten.document-types') }}</h2>
     <div class="row">
+    --}}
+    
     @foreach($favoritesAll as $favorites)
         
         @if(count($favorites['favoritesPaginated']))
@@ -57,7 +60,8 @@
         @endif
 
     @endforeach
-    </div><!-- end .row -->
+    
+    {{-- </div><!-- end .row --> --}}
     
 @endif
 
@@ -65,8 +69,11 @@
 {{-- USER DEFINED FAVORITES CATEGORIES --}}
 @if($hasFavoriteCategories)
     
+    {{--
     <h2 class="title">{{ trans('favoriten.my-categories') }}</h2>
     <div class="row favorite-categories">
+    --}}
+    
     @foreach($favoritesCategorised as $favorites)
         @if(count($favorites['favoritesPaginated']))
                 <div class="col-md-6">
@@ -96,7 +103,8 @@
             
         @endif
     @endforeach
-    </div><!-- end .row -->
+    
+    {{-- </div><!-- end .row --> --}}
     
 @endif
 

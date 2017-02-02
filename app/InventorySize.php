@@ -10,4 +10,8 @@ class InventorySize extends Model
     protected $fillable = ['name','active']; //whitelist
     
     protected $dates = ['created_at', 'updated_at'];
+    
+     public function items(){
+        return $this->hasMany(Inventory::class,'inventory_size_id');
+    }
 }

@@ -156,8 +156,12 @@ class DocumentRepository
                         $node->beforeText = '';
                         if($options['pageHome'] == true && $options['myDocuments'] == true)
                             $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
-                            
-                        $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - ';
+                        if( $document->published_at != null ){
+                            $node->beforeText .= Carbon::parse($document->published_at)->format('d.m.Y').' - ';
+                        }
+                        else{
+                            $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - ';
+                        }
                         if(isset($document->owner))
                             $node->beforeText .= $document->owner->first_name.' '.$document->owner->last_name;
                         
@@ -408,8 +412,8 @@ class DocumentRepository
                             foreach ($documentsAttached as $secondDoc) {
                                 
                                 // $node->href = route('dokumente.show', $secondDoc->id);
-            
-                                if (!$secondDoc->documentUploads->isEmpty()) {
+                                
+                                if (isset($secondDoc) && (!$secondDoc->documentUploads->isEmpty())) {
                                     
                                     // $subNode->nodes = array();
                                     

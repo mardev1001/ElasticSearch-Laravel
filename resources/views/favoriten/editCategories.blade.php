@@ -41,7 +41,7 @@
                             <div class="col-xs-12 col-md-6 col-lg-5">
                                 <input type="hidden" name="category_id" value="{{ $category->id }}">
                                 <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('favoriten.save') }}</button>
-                                <button class="btn btn-danger" type="submit" name="delete" value="1">{{ trans('favoriten.remove') }}</button>
+                                <button class="btn btn-danger delete-prompt" type="submit" name="delete" value="1">{{ trans('favoriten.remove') }}</button>
                             </div>
                         {!! Form::close() !!}
                     </div>

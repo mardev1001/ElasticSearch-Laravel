@@ -626,7 +626,22 @@ $(function () {
         });
 
     });
-
+    
+    /* Prevent letterss from input type number */
+    $("input[type=number]").on("keyup blur",function (e) {
+        var inputValue = $(this).val();
+        //8 backspace,37 left arrow,39 right arrow,46 delete
+        if(e.which < 46 || e.which > 59 && (e.which !== 8 && e.which !== 37 && e.which !== 39 && e.which !== 46)) { 
+            e.preventDefault();
+        } // prevent if not number/dot
+        var valString = $(this).val().toString();
+            console.log( valString.indexOf('.') !== -1 );
+            console.log( inputValue.search( '.' ) );
+        if(e.keyCode == 190 && $(this).val().toString().indexOf('.') != -1){
+            e.preventDefault();
+        } // prevent if already dot
+    });
+    /* end Prevent letterss from input type number */
     
     /* Multiple chosen with required fix */
 //   $('.freigabe-process').on('submit',function(e){
@@ -638,12 +653,6 @@ $(function () {
 //   });
 
 
-    /*$.validator.setDefaults({ ignore: ":hidden:not(select)" })
-     $(".select.freigabe-mandant").validate({
-     rules: {chosen:"required"},
-     message: {chosen:"Feld ist erforderlich"}
-     });
-     */
     /* End multiple chosen with required fix */
 
 });

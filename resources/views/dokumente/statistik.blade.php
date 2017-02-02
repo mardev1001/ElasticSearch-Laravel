@@ -32,14 +32,15 @@
                 <div id="collapse-{{$mandant->id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading-{{$mandant->id}}">
                     <div class="box">
                         <table class="table data-table">
-                                <tr>
-                                    <th>{{ trans('statistikForm.user') }}</th>
-                                    <th>{{ trans('statistikForm.read') }}</th>
-                                    <th>{{ trans('statistikForm.date') }} {{ trans('statistikForm.first') }}</th>
-                                    <th>{{ trans('statistikForm.date') }} {{ trans('statistikForm.last') }}</th>
-                                </tr>
+                            
+                            <tr>
+                                <th>{{ trans('statistikForm.user') }}</th>
+                                <th>{{ trans('statistikForm.read') }}</th>
+                                <th>{{ trans('statistikForm.date') }} {{ trans('statistikForm.first') }}</th>
+                                <th>{{ trans('statistikForm.date') }} {{ trans('statistikForm.last') }}</th>
+                            </tr>
+                            
                             @foreach( $mandant->mandantUsers as $mandantUser )
-                                
                                 
                                 @if($mandantUser->user->active)
                                     @if(isset($documentReaders[$mandantUser->user_id]))
@@ -69,6 +70,7 @@
                                 @endif
                                 
                             @endforeach
+                            
                         </table>
                     </div>
                 </div>

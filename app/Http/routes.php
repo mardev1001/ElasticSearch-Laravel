@@ -58,6 +58,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
         Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
         Route::get('papierkorb', 'DocumentController@indexTrash');
+        Route::get('papierkorb/download/{id}', 'DocumentController@downloadTrash');
         Route::post('papierkorb/manage', 'DocumentController@destroyTrash');
         Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
         Route::post('comment/{id}', 'DocumentController@saveComment');
@@ -80,15 +81,17 @@ Route::group( array('middleware' => ['auth']), function(){
         
         Route::get('benutzer/create-partner', ['as'=>'benutzer.create-partner', 'uses' => 'UserController@createPartner']);
         Route::post('benutzer/create-partner/store', ['as'=>'benutzer.create-partner-store', 'uses' => 'UserController@createPartnerStore']);
+        Route::post('benutzer/create-partner-roles/store', ['as'=>'benutzer.partner-roles-store', 'uses' => 'UserController@createPartnerRolesStore']);
         Route::get('benutzer/standard-benutzer', 'UserController@defaultUser');
         Route::post('benutzer/standard-benutzer/save', 'UserController@defaultUserSave');
         Route::get('benutzer/profil', 'UserController@profile');
-        Route::get('benutzer/{id}/edit-partner/{mandant_id}', 'UserController@editPartner');
-        Route::match(['post', 'get'], 'benutzer/{id}/partner/{mandant_id}/edit', 'UserController@editPartner');
+        Route::get('benutzer/{id}/partner/edit', 'UserController@editPartner');
+        // Route::match(['post', 'get'], 'benutzer/{id}/partner/{mandant_id}/edit', 'UserController@editPartner');
         Route::post('benutzer/profil', 'UserController@saveProfile');
         Route::post('benutzer/role-transfer', 'UserController@userRoleTransfer');
         Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
         Route::patch('benutzer/roles-edit', 'UserController@userMandantRoleEdit');
+        Route::patch('benutzer/roles-edit-partner', 'UserController@userMandantRoleEditPartner');
         Route::patch('benutzer/activate', 'UserController@userActivate');
         Route::post('benutzer/user-delete', 'UserController@destroyMandantUser');
         // Route::get('benutzer/{id}/edit/deleted', 'UserController@editDeleted');
@@ -138,10 +141,9 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('inventarliste/kategorien','InventoryController@categories');
         Route::post('inventarliste/kategorien','InventoryController@postCategories');
         Route::post('inventarliste/kategorien/{id}/update','InventoryController@updateCategories');
-        Route::delete('inventarliste/destroy-category', 
-        [ 'as'=>'inventarliste.destroyCategory', 'uses'=>'InventoryController@destroyCategory']);
-        
-        Route::delete('inventarliste/destroy-size', [ 'as'=>'inventarliste.destroySize', 'uses'=>'InventoryController@destroySize' ]);
+        Route::get('inventarliste/destroy-category/{id}', 'InventoryController@destroyCategory');
+        Route::get('inventarliste/destroy-size/{id}', 'InventoryController@destroySize');
+        Route::get('inventarliste/historie/{id}', 'InventoryController@history');
         Route::post('inventarliste/sizes','InventoryController@postSizes');
         Route::post('inventarliste/sizes/{id}/update','InventoryController@updateSizes');
         Route::get('inventarliste/groessen','InventoryController@sizes');

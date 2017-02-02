@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'addCategory' => 'Kategorie hinzufügen.',
+    'addCategory' => 'Kategorie hinzufügen',
     'name' => 'Name',
     'overview' => 'Übersicht',
     'add' => 'hinzufügen',
@@ -38,5 +38,10 @@ return [
     'purchasePrice' => 'Kaufpreis',
     'sellPrice' => 'Verkaufspreis',
     'neptunIntern' => 'Artikel nur NEPTUN intern',
+    'text' => 'Text',
+    'invetoryCategoryDeleted' => 'Kategorie gelöscht',
+    'invetorySizeDeleted' => 'Größe gelöscht',
+    'lowerThanZero' => 'Unter Null',
+    'emailSubject' => 'Warnung: Niedriger Lagerestand',
     
 ];

@@ -19,7 +19,7 @@ return [
     'options' => 'Optionen',
     'attachments' => 'Anhänge',
     'reset' => 'zurücksetzen',
-    'sendSuccess' => 'Email wurde erfolgreich versendet.',
+    'sendSuccess' => 'E-Mail wurde erfolgreich versendet.',
     'fileSizeExceeded' => 'Maximale Filegröße: 4 MB',
     'defaultUser' => 'Standard Benutzer',
     

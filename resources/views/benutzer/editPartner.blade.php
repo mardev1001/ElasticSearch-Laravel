@@ -216,6 +216,55 @@ Benutzer bearbeiten
     
 <fieldset class="form-group">
     
+    {!! Form::open(['action' => 'UserController@createPartnerRolesStore', 'method'=>'POST']) !!}
+    
+    <div class="box-wrapper">
+        <h4 class="title">{{ trans('benutzerForm.roles') }} {{ trans('benutzerForm.assignment') }}</h4>
+         <div class="box">
+            <div class="row inline">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">{{trans('benutzerForm.mandant')}}*</label>
+                        <select name="mandant_id" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.mandant')) }}" required>
+                            <option></option>
+                            @foreach($mandantsUser as $mandant)
+                                <option value="{{$mandant->id}}">{{ $mandant->mandant_number }} - {{ $mandant->kurzname }}</option>
+                            @endforeach
+                        </select>
+                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label>{{trans('benutzerForm.role')}}*</label>
+                        <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple required>
+                            @foreach($rolesAll as $role)
+                                <option value="{{$role->id}}" @if(in_array($role->id, $defaultRoles)) disabled selected @endif>
+                                    {{$role->name}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                
+                @foreach($defaultRoles as $def)
+                <input type="hidden" name="role_id[]" value="{{$def}}">
+                @endforeach
+                
+                <div class="col-md-4 vertical-center">
+                     <div class="form-group custom-input-group-btn">
+                        <input type="hidden" name="user_id" value="{{$user->id}}">
+                        <button class="btn btn-primary" type"submit">{{ ucfirst(trans('benutzerForm.add')) }}</button>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    {!! Form::close() !!}
+    
+    
     @if(count($mandantUsers))
     
         <div class="box-wrapper">
@@ -236,7 +285,7 @@ Benutzer bearbeiten
                             </tr>
                             @foreach($mandantUsers as $mandantUser)
                                 @if($mandantUser->deleted_at == null)
-                                {!! Form::open(['action' => 'UserController@userMandantRoleEdit', 'method'=>'PATCH']) !!}
+                                {!! Form::open(['action' => 'UserController@userMandantRoleEditPartner', 'method'=>'PATCH']) !!}
                                     <tr id="mandant-role-{{$mandantUser->id}}">
                                         <td>
                                             ({{ $mandantUser->mandant->mandant_number }}) {{ $mandantUser->mandant->kurzname }}
@@ -249,13 +298,11 @@ Benutzer bearbeiten
                                                 <div class="col-xs-12">
                                                     <select name="role_id[]" class="form-control select" data-placeholder="{{ trans('benutzerForm.roles') }}" multiple required>
                                                         @foreach($rolesAll as $role)
-                                                            {{-- @if($role->mandant_role) --}}
                                                             <option value="{{$role->id}}" 
                                                                 {!! ViewHelper::setMultipleSelect($mandantUser->mandantUserRoles, $role->id, 'role_id') !!}
                                                                 @if(in_array($role->id, $defaultRoles)) disabled @endif> 
                                                                 {{$role->name}}
                                                             </option>
-                                                            {{-- @endif --}}
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -268,6 +315,7 @@ Benutzer bearbeiten
                                             <input type="hidden" name="partner-role" value="1">
                                         </td>
                                         <td class="table-options text-right">
+                                            <button class="btn btn-danger delete-prompt" name="remove" value="1" type="submit">{{ trans('benutzerForm.remove') }}</button>
                                             <button class="btn btn-primary" name="save" value="1" type="submit">{{ trans('benutzerForm.save') }}</button>
                                         </td>
                                     </tr>

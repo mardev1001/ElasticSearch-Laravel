@@ -137,9 +137,9 @@
                                                     >{{ trans('benutzerForm.remove') }}</button><br>
                                                 {!! Form::close() !!}
                                                 
-                                                {!! Form::open(['url' => '/benutzer/'. $mandantUser->user->id .'/partner/'. $mandantUser->mandant->id .'/edit', 'method'=>'POST']) !!}
-                                                    <button type="submit" class="btn btn-xs btn-primary">{{ trans('benutzerForm.edit') }}</button>
-                                                {!! Form::close() !!}
+                                                <a href="{{url('/benutzer/'. $mandantUser->user->id .'/partner/edit')}}" class="btn btn-xs btn-primary">
+                                                    {{ trans('benutzerForm.edit') }}
+                                                </a>
                                             </td>
                                         </tr>
                                         

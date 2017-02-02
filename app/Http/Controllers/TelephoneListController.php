@@ -109,7 +109,19 @@ class TelephoneListController extends Controller
             
         }
         
-        return view('telefonliste.index', compact('mandants','visible', 'partner') );
+        // // Search suggestion array for telephone list select box
+        // $searchSuggestions = array();
+        // foreach ($mandants as $m) {
+        //     $name = $m->mandant_number ." - ". $m->kurzname;
+        //     $searchSuggestions[$m->mandant_number] = $name;
+        //     foreach ($m->usersInternal as $ui) $searchSuggestions[$ui->user->first_name] = $ui->user->first_name ." ". $ui->user->last_name;
+        //     foreach ($m->usersInMandants as $um) $searchSuggestions[$um->first_name] = $um->first_name ." ". $um->last_name;
+        // }
+        // $searchSuggestions = array_unique($searchSuggestions);
+        // ksort($searchSuggestions);
+        $searchSuggestions = ViewHelper::getTelephonelistSearchSuggestions();
+        
+        return view('telefonliste.index', compact('mandants','visible', 'partner', 'searchSuggestions') );
     }
 
     /**

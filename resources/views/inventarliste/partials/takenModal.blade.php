@@ -12,13 +12,29 @@
                 <p class="text-left"><strong class="bigger">@lang('inventoryList.howManyTaken')</strong></p>
                 <div class="row">
                     <div class="col-md-6 col-lg-6">
-                        <label class="control-label">
-                           @lang('inventoryList.number')* 
-                        </label> 
-                       <input type="number" min="1" max="{{$item->value}}" name="taken" class="form-control" value="1" required />
+                        <div class="form-group">
+                            <label class="control-label">
+                               @lang('inventoryList.number')* 
+                            </label> 
+                           <input type="number" min="1" max="{{$item->value}}" name="taken" class="form-control" value="1" required />
+                        </div>
                     </div>
                     @if( $item->neptun_intern )
+                        <div class="col-md-6 col-lg-6">
+                              <div class="form-group">
+                                {!! ViewHelper::setSelect($mandants,'mandant_id',$data,old('mandant_id'),
+                                trans('benutzerForm.mandant'), trans('benutzerForm.mandant'),true ) !!}
+                            </div>
+                        </div>
                         
+                        <div class="clearfix"></div><br/>
+                        
+                        <!-- input box-->
+                        <div class="col-md-12 col-lg-12">
+                            <div class="form-group">
+                                {!! ViewHelper::setArea('text',$data,old('text'),trans('inventoryList.text') ) !!}
+                            </div>
+                        </div><!--End input box-->  
                     @endif
                 </div><!--end .row-->
             </div>

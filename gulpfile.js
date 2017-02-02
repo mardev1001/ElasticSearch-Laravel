@@ -20,6 +20,7 @@ var cmsScripts = [
     "bootstrap/dist/js/bootstrap.min.js",
     // "metisMenu/dist/metisMenu.min.js",
     "chosen/chosen.jquery.js",
+    // "js/custom-plugins/modernizr-custom.js",
     // "tinymce/tinymce.js",// or plain tinymce.js
     "js-modified-plugins/**",
     "tinymce/themes/modern/theme.js",

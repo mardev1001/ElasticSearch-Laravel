@@ -354,15 +354,12 @@
                             {{ Form::open(['action' => 'FavoritesController@store', 'class' => 'horizontal-form']) }}
                                 <input type="hidden" name="document_id" value="{{$document->id}}" />
                                 <div class="modal-body">
-                                    <h5>{{trans('dokumentShow.default-category')}}: {{ $document->documentType->name }} </h5>
-                                    <h5>{{trans('dokumentShow.assign-category')}}:</h5>
-                                    <div class="form-group">
-                                        <!--<label class="form-label">{{ trans('dokumentShow.favoriteCategoryNew') }}</label>-->
-                                        <input type="text" name="category_name" class="form-control" placeholder="{{ trans('dokumentShow.favoriteCategoryNew') }}">
-                                    </div>
+                                    <h5>{{trans('favoriten.default-category')}}: {{ $document->documentType->name }} </h5>
+                                    <h5>{{trans('favoriten.assign-category')}}:</h5>
                                     <div class="form-group">
                                         <select name="category_id" id="favorite_category_id" class="form-control select" data-placeholder="{{ strtoupper(trans('dokumentShow.favoriteCategorySelect')) }}">
                                             <option></option>
+                                            <option value="0">{{trans('favoriten.new-category')}}</option>
                                             @foreach($favoriteCategories as $category)
                                             <option value="{{$category->id}}" @if($document->favorite->favorite_categories_id == $category->id) selected @endif >
                                                 {{$category->name}}
@@ -370,13 +367,16 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div class="form-group">
+                                        <input type="text" name="category_name" id="favorite_category_new" class="form-control" placeholder="{{ trans('favoriten.favorite-category-new') }}">
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('dokumentShow.close') }}</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">{{ trans('favoriten.close') }}</button>
                                     @if($document->hasFavorite)
-                                        <a href="{{ url('dokumente/'.$document->id.'/favorit') }}" class="btn btn-danger">{{ trans('dokumentShow.remove') }}</a>
+                                        <a href="{{ url('dokumente/'.$document->id.'/favorit') }}" class="btn btn-danger">{{ trans('favoriten.remove-favorite') }}</a>
                                     @endif
-                                    <button type="submit" name="save" value="1" class="btn btn-primary">{{ trans('dokumentShow.save') }}</button>
+                                    <button type="submit" name="save" value="1" class="btn btn-primary">{{ trans('favoriten.save-favorite') }}</button>
                                 </div>
                             {{ Form::close() }}
                 

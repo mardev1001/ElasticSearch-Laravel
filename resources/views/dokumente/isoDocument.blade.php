@@ -26,16 +26,18 @@
                     
                     <ul class="level-1">
                         @foreach($categoryIsParent as $isoCategory)
-                            <li>
-                                <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}</a>
-                                <ul class="level-2">
-                                @foreach($categoryIsParent as $isoCategoryChild)
-                                    @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
-                                        <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
-                                    @endif
-                                @endforeach
-                                </ul>
-                            </li>
+                            @if($isoCategory->active)
+                                <li>
+                                    <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}</a>
+                                    <ul class="level-2">
+                                    @foreach($categoryIsParent as $isoCategoryChild)
+                                        @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
+                                            <li><a href="{{ url('iso-dokumente/'. $isoCategoryChild->slug ) }}">{{$isoCategoryChild->name}}</a></li>
+                                        @endif
+                                    @endforeach
+                                    </ul>
+                                </li>
+                            @endif
                         @endforeach
                     </ul>
                 @else

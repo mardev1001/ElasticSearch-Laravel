@@ -14,7 +14,7 @@ class InventarRoleSeeder extends Seeder
         DB::table('roles')->insert(
             [
                 [
-                    'name' => 'Inventar',
+                    'name' => 'Inventar Verwalter',
                     'mandant_required' => '0',
                     'admin_role' => '0',
                     'system_role' => '1',

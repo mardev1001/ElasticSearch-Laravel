@@ -2,8 +2,6 @@
  * Created by Marijan on 27.04.2016..
  */
 $(function() {
-    
-    
     // Delete prompt for buttons and anchors
     $('.delete-prompt').on('click touch', function(e) {
         // e.preventDefault();
@@ -329,4 +327,20 @@ $(function() {
     
     /* End Hide or show additional letter field for QMR or ISO category */
 
+    
+    // Hide or show new favorite input field
+    
+    var categorySelect = $('select#favorite_category_id').chosen();
+    var categoryNew = $('input#favorite_category_new');
+
+    categorySelect.change(function(event){
+        if(event.target == this){
+            // console.log($(this).val());
+            if($(this).val() == 0 ){
+                categoryNew.val('');
+                categoryNew.show(400);
+            } else categoryNew.hide(400);
+        }
+    });
+    
 });

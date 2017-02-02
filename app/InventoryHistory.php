@@ -8,10 +8,13 @@ use Carbon\Carbon;
 class InventoryHistory extends Model
 {
     protected $guarded = []; //blacklist
-    protected $fillable = ['inventory_id', 'user_id','inventory_category_id', 'inventory_size_id', 'value']; //whitelist
+    protected $fillable = ['inventory_id', 'user_id','inventory_category_id', 'inventory_size_id', 'value','mandant_id','text']; //whitelist
     
     protected $dates = ['created_at', 'updated_at'];
     
+    public function item(){
+        return $this->hasOne(Inventory::class,'id','inventory_id');
+    }
      public function category(){
         return $this->hasOne(InventoryCategory::class,'id','inventory_category_id');
     }

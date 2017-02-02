@@ -55,9 +55,9 @@
                             @endif
                             <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
                             @if( !count($category->items ) )
-                                {!! Form::open(['route'=>['inventarliste.destroyCategory', 'id'=> $category->id], 'method'=>'DELETE']) !!}
-                                    <button type="submit" class="btn btn-xs btn-warning">entfernen</button><br>
-                                {!! Form::close() !!}
+                                <a href="{{url('inventarliste/destroy-category/'.$category->id)}}" class="btn btn-xs btn-warning delete-prompt">
+                                    entfernen
+                                </a><br>
                             @endif
                         </div>
                         

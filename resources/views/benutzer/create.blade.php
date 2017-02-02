@@ -58,13 +58,13 @@ Mandantenverwaltung - Benutzer anlegen
         
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('first_name', '', old('first_name'), trans('benutzerForm.first_name'), trans('benutzerForm.first_name'), true) !!}
+                       {!! ViewHelper::setInput('first_name', '', old('first_name'), trans('benutzerForm.first_name'), trans('benutzerForm.first_name'), false) !!}
                     </div>   
                 </div>
         
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('last_name', '', old('last_name'), trans('benutzerForm.last_name'), trans('benutzerForm.last_name'), true) !!}
+                       {!! ViewHelper::setInput('last_name', '', old('last_name'), trans('benutzerForm.last_name'), trans('benutzerForm.last_name'), false) !!}
                     </div>   
                 </div>
         
@@ -76,7 +76,7 @@ Mandantenverwaltung - Benutzer anlegen
                                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                        {!! ViewHelper::setInput('position', '', old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
+                        {!! ViewHelper::setInput('position', '', old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), false) !!}
                     </div>   
                 </div>
                 
@@ -127,7 +127,7 @@ Mandantenverwaltung - Benutzer anlegen
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('email', '', old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), true, 'email') !!}
+                       {!! ViewHelper::setInput('email', '', old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), false, 'email') !!}
                     </div>   
                 </div>
                 

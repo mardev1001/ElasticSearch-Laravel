@@ -18,7 +18,7 @@ class Document extends Model
     [
         'document_type_id', 'document_status_id', 'user_id','date_created','version',
         'name','name_long','owner_user_id','search_tags',
-        'summary','date_published','date_modified','date_expired',
+        'summary','date_published','published_at','date_modified','date_expired',
         'version_parent','document_group_id','iso_category_id',
         'show_name','adressat_id','betreff','document_replaced_id',
         'date_approved','email_approval','approval_all_roles', 'document_template',
@@ -26,7 +26,7 @@ class Document extends Model
         'qmr_number','landscape','additional_letter',
     ]; //whitelist
     
-    protected $dates = ['created_at', 'updated_at', 'date_published'];
+    protected $dates = ['created_at', 'updated_at', 'date_published','published_at'];
      
     public function getDatePublishedAttribute($value)
     {
@@ -42,6 +42,22 @@ class Document extends Model
             $this->attributes['date_published'] = null;
         else
             $this->attributes['date_published'] = Carbon::parse($value);
+    }
+    
+    public function getPublishedAtAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == '')
+            return null;
+        else
+            return Carbon::parse($value)->format('d.m.Y');
+    }
+    
+    public function setPublishedAtAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == '')
+            $this->attributes['published_at'] = null;
+        else
+            $this->attributes['published_at'] = Carbon::parse($value);
     }
     
     

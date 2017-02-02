@@ -21,6 +21,7 @@ use App\WikiCategory;
 use App\WikiCategoryUser;
 use App\InventoryCategory;
 use App\InventorySize;
+use App\InternalMandantUser;
 
 class ViewHelper
 {
@@ -1189,6 +1190,18 @@ class ViewHelper
     }
     
     /**
+     * generate Inventory view modal
+     * @param collection $item
+     * @return template
+     */
+    static function generateInventoryViewModal($item){
+        $categories = InventoryCategory::all();
+        $sizes = InventorySize::all();
+        $mandants = Mandant::all();
+        return view('inventarliste.partials.inventoryViewModal',compact('item', 'categories', 'sizes','mandants'))->render();
+    }
+    
+    /**
      * generate inventory taken modal
      *
      * @param collection $item
@@ -1197,7 +1210,8 @@ class ViewHelper
     static function generateInventoryTakenModal($item){
         $categories = InventoryCategory::all();
         $sizes = InventorySize::all();
-        return view('inventarliste.partials.takenModal',compact('item', 'categories', 'sizes'))->render();
+        $mandants = Mandant::all();
+        return view('inventarliste.partials.takenModal',compact('item', 'categories', 'sizes','mandants'))->render();
     }
     
     /**
@@ -1217,7 +1231,7 @@ class ViewHelper
      * @return string $string
      */
     static function genterateHistoryModalString($history){
-        $string = $history->user->first_name.''.$history->user->last_name; 
+        $string = $history->user->first_name.' '.$history->user->last_name; 
         if( $history->inventory_category_id != null ){
             $string .= ', '.trans('inventoryList.category').': '.$history->category->name;
         }
@@ -1234,6 +1248,91 @@ class ViewHelper
         
         return $string;
     }
+    
+    /**
+     * Return list of search suggestions (mandants, users) for use in search suggestions on telephone list
+     *
+     * @return array $searchSuggestions
+     */
+    static function getTelephonelistSearchSuggestions(){
+        
+        $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+        $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(),'mandant_id'))->get();
 
+        if(ViewHelper::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1)
+            $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
+        else {
+            $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+        }
+        
+        foreach($myMandants as $tmp){
+            if(!$mandants->contains($tmp))
+                $mandants->prepend($tmp);
+        }
+        
+        // Sort by Mandant No.
+        $mandants = array_values(array_sort($mandants, function ($value) {
+            return $value['mandant_number'];
+        }));
+
+        foreach($mandants as $k => $mandant){
+            
+            $userArr = array();
+            $usersInternal = array();
+
+            $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($myMandants, 'id'))
+                ->where('mandant_id_edit', $mandant->id)->groupBy('role_id','user_id','mandant_id_edit')->get();
+                
+            foreach ($internalMandantUsers as $user){
+                $usersInternal[] = $user;
+            }
+            
+            foreach($mandant->users as $k2 => $mUser){
+                
+                foreach($mUser->mandantRoles as $mr){
+                    // do not add the user if he is in $usersInternal array
+                    if($mUser->active && !in_array($mUser->id, array_pluck($usersInternal,'user_id')) ){
+                        // Check for phone roles
+                        if( $mr->role->phone_role || $mr->role->mandant_role ) {
+                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
+                                ->whereIn('mandant_id', array_pluck($myMandants, 'id'))->where('mandant_id_edit', $mandant->id)
+                                ->groupBy('role_id','user_id','mandant_id_edit')->get();
+                            // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
+                            if(!count($internalRole)){
+                                $userArr[] = $mandant->users[$k2]->id;
+                            }
+                        }
+                    }
+                }
+
+            } // end second foreach
+            
+            // if($mandant->id == 1) dd($usersInternal);
+            
+            $mandant->usersInternal = $usersInternal;
+            $mandant->usersInMandants = $mandant->users->whereIn('id',$userArr);
+            
+        }
+        
+        // Search suggestion array for telephone list select box
+        $searchSuggestions = array();
+        foreach ($mandants as $m) {
+            $searchSuggestions[] = $m->mandant_number;
+            $searchSuggestions[] = $m->kurzname;
+            foreach ($m->usersInternal as $ui) {
+                $searchSuggestions[] = $ui->user->first_name;
+                $searchSuggestions[] = $ui->user->last_name;
+            }
+            foreach ($m->usersInMandants as $um) {
+                $searchSuggestions[] = $um->first_name;
+                $searchSuggestions[] = $um->last_name;
+            }
+        }
+        $searchSuggestions = array_unique($searchSuggestions);
+        natcasesort($searchSuggestions);
+        // dd($searchSuggestions);
+        
+        return $searchSuggestions;
+    }
 
 }

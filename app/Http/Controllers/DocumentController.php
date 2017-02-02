@@ -83,11 +83,114 @@ class DocumentController extends Controller
         $trashedDocuments = array();
         $onlyTrashed = Document::onlyTrashed()->get();
         foreach($onlyTrashed as $trashed){
-            if(ViewHelper::universalDocumentPermission($trashed)) $trashedDocuments[] = $trashed;
+            if(ViewHelper::universalDocumentPermission($trashed)) {
+                // Assign download link for upload-type documents
+                if(($trashed->pdf_upload == 1) || ($trashed->documentType->document_art == 1)){
+                    foreach($trashed->editorVariantTrashed as $ev){
+                        foreach($ev->documentUploadTrashed as $key => $du) {
+                            if($key > 0) break;
+                            $trashed->propAttachment = $du->file_path;
+                        }
+                    }
+                }
+                $trashedDocuments[] = $trashed;
+            }
         }
         return view('papierkorb.index', compact('trashedDocuments') );
     }
     
+     /**
+     * Download a trashed document copy
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function downloadTrash($id)
+    {
+        // First check if document exists
+        $document = Document::onlyTrashed()->where('id', $id)->first();
+        
+        if($document){
+            // Restore deleted doc
+            $document->restore();
+            foreach($document->editorVariantTrashed as $ev){
+                foreach($ev->documentUploadTrashed as $du) $du->restore();
+                foreach($ev->editorVariantDocumentTrashed as $evd) $evd->restore();
+                $ev->restore();
+            }
+            
+            // PDF generating procedure
+            $variantPermissions = $this->document->documentVariantPermission($document);
+            if( $variantPermissions->permissionExists == false ){
+                session()->flash('message', trans('documentForm.noPermission'));
+                return redirect('/');
+            }
+            
+            $datePublished = new Carbon($document->date_published);
+            $dateNow = $this->getGermanMonthName( intval( $datePublished->format('m') ) );
+            
+            $dateNow .= ' '.$datePublished->format('Y');
+            
+            $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
+            $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
+            $mandantIdArr = $mandantId->toArray();
+            $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
+            $mandantRolesArr =  $mandantRoles->toArray();
+            
+            $hasPermission = false;
+            $variants = $variantPermissions->variants;
+            
+            $document = Document::find($id);
+            $margins =  $this->setPdfMargins($document);
+            
+            $or = "P";
+            if($document->landscape == true)
+                $or = "L";
+                
+            $pdf = \App::make('mpdf.wrapper',['th','A4','','arial',
+            $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
+           // $pdf = \App::make('mpdf.wrapper');
+            $pdf->debug = true; 
+           
+            if($document->document_type_id == $this->isoDocumentId){
+                //   $pdf->setAutoTopMargin = 'stretch';
+                  
+                  $pdf->SetHTMLHeader( view('pdf.headerIso', compact('document','variants','dateNow') )->render() );
+                  $pdf->SetHTMLFooter( view('pdf.footerIso', compact('document','variants','dateNow') )->render() );
+                  
+                 $render = view('pdf.documentIso', compact('document','variants','dateNow'))->render();
+           
+            }
+            else{
+                if( $document->document_template == 1){
+                    $render = view('pdf.document', compact('document','variants','dateNow'))->render();
+                    $pdf->SetHTMLFooter( view('pdf.footer', compact('document','variants','dateNow') )->render() );
+                }
+                else{
+                    $render = view('pdf.new-layout-rund', compact('document','variants','dateNow'))->render();
+                    $header = view('pdf.new-layout-rund-header', compact('document','variants','dateNow'))->render();
+                    $footer = view('pdf.new-layout-rund-footer', compact('document','variants','dateNow') )->render();
+                    // return $footer;
+                    $pdf->SetHTMLHeader( $header );
+                    $pdf->SetHTMLFooter( $footer  );
+                }
+                
+            }
+            // return $footer;
+            $pdf->AddPage($or);
+            $pdf->WriteHTML($render);
+            
+            // Delete document
+            foreach($document->editorVariant as $ev){
+                foreach($ev->documentUpload as $du) $du->delete();
+                foreach($ev->editorVariantDocument as $evd) $evd->delete();
+                $ev->delete();
+            }
+            $document->delete();
+            
+            // Return PDF
+            return $pdf->stream();
+        } else return redirect('/papierkorb')->with('message', trans('documentForm.noPermission'));
+    }
     
     /**
      * Permanently delete trashed resources specified in the request
@@ -1147,6 +1250,7 @@ class DocumentController extends Controller
             $document->save();
             
             $publishedDocs = $this->publishProcedure($document);
+            
             $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
                             ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
             if($readDocument != null && $readDocument->deleted_at == null)
@@ -1275,7 +1379,7 @@ class DocumentController extends Controller
         }
         else{
            $oldStatus = $document->document_status_id; 
-             /*
+         /*
             Check if document is latest published. if not redirect from unique url to id url
             This is used as a failsafe for documents accessed from browser history
          */
@@ -1951,7 +2055,6 @@ class DocumentController extends Controller
     public function publishApproval($id)
     {
         $document = Document::find($id);
-        // dd($test);
         $otherDocuments = Document::where('document_group_id',$document->document_group_id)->whereNotIn('id',array($document->id))->get();
         foreach($otherDocuments as $oDoc){
             $oDoc->document_status_id = 5;
@@ -2348,13 +2451,13 @@ class DocumentController extends Controller
             $document->document_status_id = 2; 
             $document->save();
             
-            $continue = true;
+               /* $continue = true;
         $uniqeUrl = '';
         while ($continue) {
             $uniqeUrl = $this->generateUniqeLink();
             if (PublishedDocument::where('url_unique',$uniqeUrl)->count() != 1)
                 $continue = false;
-        }
+        }*/
         $now = Carbon::now();
         // dd($document->date_published);
         if( $document->date_published == null ){
@@ -2363,9 +2466,9 @@ class DocumentController extends Controller
         }
         $publishTime = $now->gt( Carbon::parse($document->date_published) ) ; //if true you can publish
         // dd($publishTime);
-        $publishedDocs =  PublishedDocument::where('document_id',$id)->first();
+        //$publishedDocs =  PublishedDocument::where('document_id',$id)->first();
         
-        if( $publishTime == true || $publishedDocs != null){
+        /*if( $publishTime == true || $publishedDocs != null){
             
             if($publishedDocs == null){
                 $continue = true;
@@ -2386,7 +2489,7 @@ class DocumentController extends Controller
                 $otherDocuments = Document::where('document_group_id',$document->document_group_id)
                                 ->whereNotIn('id',array($document->id))->get();
                 /*Set attached documents as actuell */
-                $variantsAttachedDocuments = EditorVariant::where('document_id',$document->id)->get();
+               /* $variantsAttachedDocuments = EditorVariant::where('document_id',$document->id)->get();
                 foreach( $variantsAttachedDocuments as $vad ){
                     $editorVariantDocuments = $vad->editorVariantDocument;
                     foreach($editorVariantDocuments as $evd){
@@ -2398,7 +2501,7 @@ class DocumentController extends Controller
                     }
                 }
                 /* End set attached documents as actuell */
-                foreach($otherDocuments as $oDoc){
+               /*foreach($otherDocuments as $oDoc){
                     if( $oDoc->document_status_id != 6 && $oDoc->document_status_id != 2 ){
                         $oDoc->document_status_id = 5;
                         $oDoc->save();
@@ -2409,7 +2512,7 @@ class DocumentController extends Controller
             else
                 $publishedDocs->fill(['document_id'=> $id, 'document_group_id' => $document->document_group_id])->save();
             
-            }
+            }*/
             
         }
       
@@ -3335,7 +3438,8 @@ class DocumentController extends Controller
         
         $id = $document->id;
         $document->document_status_id = 3;
-        $document->date_published = Carbon::now(); // NEPTUN-582, NEPTUN-590
+        $document->published_at = Carbon::now(); // NEPTUN-679 publish procedure upgrade
+        // $document->date_published = Carbon::now(); // NEPTUN-582, NEPTUN-590
         $document->save();
         // dd($document);
         // if($debug == true)
@@ -3626,9 +3730,9 @@ class DocumentController extends Controller
         return $months[$id];    
     }
     /**
-     * Return german months
-     * @param int $id
-     * @return string 
+     * Return pdf margins
+     * @param collection $document
+     * @return object $margins
      */
     private function setPdfMargins($document){
         

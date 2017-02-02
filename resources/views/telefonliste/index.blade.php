@@ -22,11 +22,24 @@
                     <div class="box box-white">
                         <div class="clearfix"></div>
                         <div class="row">
+                            {{--
                             <div class="col-xs-12 col-md-8 col-lg-4 form-group no-margin-bottom">
                                 <input type="text" class="form-control" name="search"
                                        placeholder="{{ trans('telefonListeForm.search').' '.trans('telefonListeForm.searchTextOptions') }}"
                                        required
                                        @if(isset($searchParameter)) value="{{$searchParameter}}" @endif>
+                            </div>
+                            --}}
+                            <div class="clearfix"></div><br>
+                            <div class="col-xs-12 col-md-8 col-lg-4 form-group no-margin-bottom">
+                                <select name="search" class="form-control select" data-placeholder="{{ strtoupper(trans('telefonListeForm.search').' '.trans('telefonListeForm.searchTextOptions')) }}" required>
+                                    <option></option>
+                                    @foreach($searchSuggestions as $suggestion)
+                                        <option @if(isset($searchParameter) && ($searchParameter == $suggestion)) selected @endif value="{{$suggestion}}">
+                                            {{$suggestion}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="row">
                                 <div class="col-xs-12 col-md-12 col-lg-12 form-group no-margin-bottom">
@@ -281,7 +294,7 @@
 
             @if( !empty($search) && $search == true )
 
-                <h2 class="title">Suchergebnisse für Benutzer ({{count($users)}})</h2>
+                <h2 class="title">Suchergebnisse für Benutzer ({{count($users)+count($usersInternal)}})</h2>
 
                 @if(count($users))
 

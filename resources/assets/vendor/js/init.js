@@ -2,7 +2,6 @@
  * Created by Marijan on 25.04.2016..
  */
 $(function() {
-
     /*Blank space fix for textareas*/
     $('textarea').each(function() {
         $(this).html($(this).html().trim());

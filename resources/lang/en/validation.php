@@ -122,6 +122,9 @@ return [
     */
 
     'attributes' => [
+        'email' => trans('benutzerForm.email'),
+        'password' => trans('benutzerForm.password'),
+        'password_repeat' => trans('benutzerForm.password_repeat'),
         'to_user' => trans('contactForm.user'),
         'subject' => trans('contactForm.subject'),
         'summary' => trans('contactForm.message')

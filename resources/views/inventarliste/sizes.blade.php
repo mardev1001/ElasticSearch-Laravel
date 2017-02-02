@@ -55,7 +55,11 @@
                             @endif
                             
                             <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                            
+                            @if( !count($size->items ) )
+                                <a href="{{url('inventarliste/destroy-size/'.$size->id)}}" class="btn btn-xs btn-warning delete-prompt">
+                                    entfernen
+                                </a><br>
+                            @endif
                         </div>
                         
                         {!! Form::close() !!}
