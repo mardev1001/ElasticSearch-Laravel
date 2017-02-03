@@ -2,14 +2,14 @@
 
 @extends('master')
 
-@section('page-title') {{ trans('navigation.inventoryList') }} {{ trans('navigation.inventarCategory') }} @stop
+@section('page-title') {{ trans('navigation.inventoryList') }} {{ trans('navigation.inventarSizes') }} @stop
 
 @section('content')
 <!--add row-->
 <div class="row">
     <div class="col-sm-12 ">
         <div class="box-wrapper">
-            <h2 class="title"> @lang('inventoryList.addCategory')</h2>
+            <h2 class="title"> @lang('inventoryList.addSize')</h2>
             <div class="box  box-white">
                 <div class="row">
                     {!! Form::open(['action' => 'InventoryController@postSizes', 'method'=>'POST']) !!}

@@ -108,6 +108,12 @@ $(function () {
     else if (url.href.indexOf('suche') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
     }
+    else if (url.href.indexOf('edit') != -1 && url.href.indexOf('inventarliste') != -1) {
+        $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
+    }
+    else if (url.href.indexOf('historie') != -1 && url.href.indexOf('inventarliste') != -1) {
+        $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
+    }
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
         if(slug == 'aktuelle-meldungen')
             slug = 'dokumente/news';

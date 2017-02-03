@@ -301,8 +301,9 @@ class HomeController extends Controller
             return redirect('/')->with('message', trans('documentForm.noPermission'));
         $userId = null;
         $messagesAll = ContactMessage::orderBy('created_at', 'desc')->get();
+        $messagesAllPaginated = ContactMessage::orderBy('created_at', 'desc')->paginate(20, ['*'], 'seite');
         $usersAll = User::whereIn('id', array_unique(array_pluck($messagesAll, 'user_id')))->get();
-        return view('kontakt.index', compact('messagesAll', 'usersAll','userId'));
+        return view('kontakt.index', compact('messagesAll', 'messagesAllPaginated', 'usersAll', 'userId'));
     }
     
      /**
@@ -314,8 +315,9 @@ class HomeController extends Controller
         $userId = $request->get('user_id');
         if(empty($userId)) return back()->with('message', 'Benutzer kann nicht gefunden werden.');
         $messagesAll = ContactMessage::where('user_id', $userId)->orderBy('created_at', 'desc')->get();
+        $messagesAllPaginated = ContactMessage::where('user_id', $userId)->orderBy('created_at', 'desc')->paginate(20, ['*'], 'seite');
         $usersAll = User::whereIn('id', array_unique(array_pluck(ContactMessage::all(), 'user_id')))->get();
-        return view('kontakt.index', compact('messagesAll', 'usersAll', 'userId'));
+        return view('kontakt.index', compact('messagesAll', 'messagesAllPaginated', 'usersAll', 'userId'));
     }
     
     

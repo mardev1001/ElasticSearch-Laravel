@@ -5,7 +5,7 @@
 
 @section('content')
 
-@if(!$hasFavorites)
+@if(!$hasFavorites && !$hasFavoriteCategories)
 <p>Sie haben noch keine Favoriten angelegt.</p>
 @endif
 

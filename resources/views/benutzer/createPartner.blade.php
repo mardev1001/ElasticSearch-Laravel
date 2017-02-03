@@ -24,13 +24,13 @@ Benutzer bearbeiten
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('password', '', '', trans('benutzerForm.password'), trans('benutzerForm.password'), false, 'password') !!}
+                       {!! ViewHelper::setInput('password', '', '', trans('benutzerForm.password'), trans('benutzerForm.password'), true, 'password') !!}
                     </div>   
                 </div>
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('password_repeat', '', '', trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), false, 'password') !!}
+                       {!! ViewHelper::setInput('password_repeat', '', '', trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), true, 'password') !!}
                     </div>   
                 </div>
                 

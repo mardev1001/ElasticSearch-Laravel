@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\DocumentsMarkAsRead::class,
         Commands\DocumentsResetTypes::class,
         Commands\DocumentsPublishForms::class,
+        // Commands\FavoritesCreateCategories::class,
         Commands\UsersAssignRoles::class,
         Commands\UsersLogout::class,
     ];

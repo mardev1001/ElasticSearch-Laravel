@@ -336,7 +336,7 @@ $(function() {
     categorySelect.change(function(event){
         if(event.target == this){
             // console.log($(this).val());
-            if($(this).val() == 0 ){
+            if($(this).val() == 'new' ){
                 categoryNew.val('');
                 categoryNew.show(400);
             } else categoryNew.hide(400);

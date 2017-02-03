@@ -354,12 +354,12 @@
                             {{ Form::open(['action' => 'FavoritesController@store', 'class' => 'horizontal-form']) }}
                                 <input type="hidden" name="document_id" value="{{$document->id}}" />
                                 <div class="modal-body">
-                                    <h5>{{trans('favoriten.default-category')}}: {{ $document->documentType->name }} </h5>
+                                    {{-- <h5>{{trans('favoriten.default-category')}}: {{ $document->documentType->name }} </h5> --}}
                                     <h5>{{trans('favoriten.assign-category')}}:</h5>
                                     <div class="form-group">
                                         <select name="category_id" id="favorite_category_id" class="form-control select" data-placeholder="{{ strtoupper(trans('dokumentShow.favoriteCategorySelect')) }}">
-                                            <option></option>
-                                            <option value="0">{{trans('favoriten.new-category')}}</option>
+                                            <option value="0">{{ $document->documentType->name }}</option>
+                                            <option value="new">{{trans('favoriten.new-category')}}</option>
                                             @foreach($favoriteCategories as $category)
                                             <option value="{{$category->id}}" @if($document->favorite->favorite_categories_id == $category->id) selected @endif >
                                                 {{$category->name}}

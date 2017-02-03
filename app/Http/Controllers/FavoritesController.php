@@ -12,6 +12,8 @@ use App\DocumentType;
 use App\PublishedDocument;
 use App\FavoriteDocument;
 use App\FavoriteCategory;
+
+use App\Helpers\ViewHelper;
 use App\Http\Repositories\DocumentRepository;
 
 class FavoritesController extends Controller
@@ -31,6 +33,7 @@ class FavoritesController extends Controller
         $favorites =  $favoriteDocuments = $favoritesTreeview = $favoritesPaginated = array();
         $favoriteDocuments = FavoriteDocument::where('user_id', Auth::user()->id)->get();
         $documentTypes = DocumentType::all();
+        
         $favoriteCategories = FavoriteCategory::where('user_id', Auth::user()->id)->get();
         
         $hasFavorites = $hasFavoriteCategories = false;
@@ -174,15 +177,21 @@ class FavoritesController extends Controller
                     $favorite->update(['favorite_categories_id' => $favCat->id]);
                 else 
                     FavoriteDocument::create(['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id, 'favorite_categories_id' => $favCat->id ]);
-            } elseif ($request->has('category_id')){
+            } elseif ($request->has('category_id') && (in_array($request->get('category_id'), [0, 'new']) == false)){
                 // Save with selected/existing category ID
-                if($favorite)
-                    $favorite->update(['favorite_categories_id' => $request->get('category_id')]);
-                else
-                    FavoriteDocument::create( ['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id, 'favorite_categories_id' => $request->get('category_id') ]);
+                $favCat = FavoriteCategory::where('id', $request->get('category_id'))->where('user_id', Auth::user()->id)->first();
+                if($favCat){
+                    if($favorite)
+                        $favorite->update(['favorite_categories_id' => $request->get('category_id')]);
+                    else
+                        FavoriteDocument::create( ['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id, 'favorite_categories_id' => $request->get('category_id') ]);
+                } else return back()->with('message', trans('favoriten.category-unavailable'));
             } else {
                 // Save without category, will show by Document-Type
-                if(!$favorite) FavoriteDocument::create( ['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id ]);
+                if($favorite)
+                    $favorite->update(['favorite_categories_id' => NULL]);
+                else 
+                    FavoriteDocument::create( ['document_group_id'=> $document->document_group_id, 'user_id' => Auth::user()->id ]);
             }
         }
         return back()->with('message', trans('dokumentShow.favoriteSaved'));

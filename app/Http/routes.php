@@ -16,7 +16,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::get('kontakt', 'HomeController@contact');
         Route::post('kontakt', 'HomeController@contactSend');
         Route::get('kontaktanfragen', 'HomeController@contactIndex');
-        Route::post('kontaktanfragen', 'HomeController@contactSearch');
+        Route::get('kontaktanfragen/suche', 'HomeController@contactSearch');
+        // Route::post('kontaktanfragen/suche', 'HomeController@contactSearch');
         Route::get('tipps-und-tricks', 'HomeController@tipsAndTricks');
         Route::get('neptun-verwaltung', 'HomeController@neptunManagment');
         

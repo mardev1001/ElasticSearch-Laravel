@@ -12,7 +12,7 @@
             <h2 class="title">{{ trans('contactForm.searchTitle') }} {{ trans('contactForm.kontaktanfragen') }}</h2>
             
             <div class="box box-white">
-                {!! Form::open(['action' => 'HomeController@contactSearch', 'method'=>'POST']) !!}
+                {!! Form::open(['action' => 'HomeController@contactSearch', 'method'=>'GET']) !!}
                     <div class="contact-message-search row">
                         
                         <div class="col-md-3">
@@ -58,8 +58,8 @@
                         <th class="text-center valign no-sort">{{ trans('contactForm.options') }}</th>
                     </thead>
                     <tbody>
-                        @if(count($messagesAll) > 0)
-                            @foreach($messagesAll as $k => $data)
+                        @if(count($messagesAllPaginated) > 0)
+                            @foreach($messagesAllPaginated as $k => $data)
                                 <tr>
                                     <td class="text-center valign"> 
                                         {{ $data->created_at->format('d.m.Y H:i:s') }}
@@ -92,14 +92,19 @@
                     
                     </tbody>
                 </table>
+                
+                <div class="text-center">
+                    {{ $messagesAllPaginated->appends(['user_id' => Request::get('user_id')])->render() }}
+                </div>
+                
             </div><!-- end box -->
              
-        </div><!--end  top categorie box wrapper-->
-    </div><!-- end .col-xs-12 -->    
-</div><!-- end main row-->
+        </div><!-- end top categorie box wrapper -->
+    </div><!-- end .col-xs-12 -->
+</div><!-- end main row -->
 
 {{-- Message details modals --}}
-@foreach($messagesAll as $message)
+@foreach($messagesAllPaginated as $message)
     <div class="modal fade contactMessage" id="details{{$message->id}}" tabindex="-1" role="dialog"
          aria-labelledby="details{{$message->id}}" aria-hidden="true">
         <div class="modal-dialog modal-lg">

@@ -33,7 +33,7 @@ return [
     'type'                  => 'Typ',
     'types'                 => 'Typen',
     'favorites'             => 'Favoriten',
-    'kategorieverwaltung'   => 'Kategorieverwaltung',
+    'kategorieverwaltung'   => 'Kategorie Verwaltung',
     'search'                => 'Suche',
     'advanced_search'       => 'erweiterte Suche',
     'searchParameter'       => 'Suchbegriff',

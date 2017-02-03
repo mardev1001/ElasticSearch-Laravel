@@ -272,7 +272,7 @@ class UserController extends Controller
      * @param  Request $request
      * @return \Illuminate\Http\Response
      */
-    public function createPartnerStore(Request $request) 
+    public function createPartnerStore(BenutzerRequest $request) 
     {
         // dd( $request->all() );
         

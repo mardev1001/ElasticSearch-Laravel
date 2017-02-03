@@ -80,9 +80,8 @@
 </div><!-- end search row -->
     @if( $searchCategories || $searchInventory )
         <!-- search results categories categorie box-->
-        <h2 class="title">{{ trans('inventoryList.categorySearchResults') }}</h2>
-        
-            @if( count($searchCategories) )
+        @if( count($searchCategories) )
+            <h2 class="title">{{ trans('inventoryList.categorySearchResults') }}</h2>
                 @foreach( $searchCategories as $category)
                     <div class="panel-group">
                         <div class="panel panel-primary" id="panelInventory{{$category->id}}">
@@ -104,8 +103,9 @@
                                     <th  class="text-center valign">@lang('inventoryList.number')</th>
                                     <th class="text-center valign">@lang('inventoryList.size')</th>
                                     <th class="text-center valign">@lang('inventoryList.changes')</th>
-                                    <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
-                                    @if( ViewHelper::universalHasPermission( array(7) ) )
+                                    @if( ViewHelper::universalHasPermission( array(27) ) )
+                                        <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                                    @else
                                         <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
                                     @endif
                                     <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
@@ -129,12 +129,13 @@
                                                 <td class="text-center valign ">
                                                     {{ $item->updated_at }}
                                                 </td>
+                                                @if( ViewHelper::universalHasPermission( array(27) ) )
                                                 <td class="text-center valign"> 
                                                     <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
                                                         @lang('inventoryList.edit')
                                                     </a>   
                                                 </td>
-                                                @if( ViewHelper::universalHasPermission( array(7) ) )
+                                                @else
                                                     <td class="text-center valign"> 
                                                         <a href="#" data-toggle="modal" data-target="#item-view-{{$item->id}}">
                                                             @lang('inventoryList.view')
@@ -166,39 +167,8 @@
                         </div><!-- end .panel-collapse -->
                     
                     </div><!--end .panel-group-->
-                
                 @endforeach
-            @else
-                <div class="box box-white">
-                    <table class="table data-table box-white">
-                        <thead>
-                            <th  class="text-center valign">@lang('inventoryList.name')</th>
-                            <th  class="text-center valign">@lang('inventoryList.number')</th>
-                            <th class="text-center valign">@lang('inventoryList.size')</th>
-                            <th class="text-center valign">@lang('inventoryList.changes')</th>
-                            <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
-                            @if( ViewHelper::universalHasPermission( array(7) ) )
-                                <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
-                            @endif
-                            <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class"valign"></td>
-                                <td class"valign"></td>
-                                <td class"valign"></td>
-                                <td class"valign">Keine Daten vorhanden</td>
-                                <td class"valign"></td>
-                                <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
-                                @if( ViewHelper::universalHasPermission( array(7) ) )
-                                    <td class="text-center valign no-sort"></td>
-                                @endif
-                                <td class"valign"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </div><!-- end box -->
-            @endif
+        @endif
         
         <!-- search results categories categorie box-->
         <div class="col-xs-12 box-wrapper">
@@ -210,8 +180,9 @@
                             <th  class="text-center valign">@lang('inventoryList.number')</th>
                             <th class="text-center valign">@lang('inventoryList.size')</th>
                             <th class="text-center valign">@lang('inventoryList.changes')</th>
-                            <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
-                            @if( ViewHelper::universalHasPermission( array(7) ) )
+                            @if( ViewHelper::universalHasPermission( array(27) ) )    
+                                <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                            @else
                                 <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
                             @endif
                             <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
@@ -235,12 +206,13 @@
                                         <td class="text-center valign ">
                                             {{ $item->updated_at }}
                                         </td>
+                                        @if( ViewHelper::universalHasPermission( array(27) ) )
                                         <td class="text-center valign"> 
                                             <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
                                                 @lang('inventoryList.edit')
                                             </a>   
                                         </td>
-                                        @if( ViewHelper::universalHasPermission( array(7) ) )
+                                        @else
                                             <td class="text-center valign"> 
                                                 <a href="#" data-toggle="modal" data-target="#item-view-{{$item->id}}">
                                                     @lang('inventoryList.view')
@@ -262,8 +234,9 @@
                                     <td class"valign"></td>
                                     <td class"valign">Keine Daten vorhanden</td>
                                     <td class"valign"></td>
-                                    <td class="text-center valign no-sort">@lang('inventoryList.edit')</td>
-                                    @if( ViewHelper::universalHasPermission( array(7) ) )
+                                    @if( ViewHelper::universalHasPermission( array(27) ) )
+                                        <td class="text-center valign no-sort">@lang('inventoryList.edit')</td>
+                                    @else
                                         <td class="text-center valign no-sort"></tdh>
                                     @endif
                                     <td class"valign"></td>
@@ -300,8 +273,9 @@
                                 <th  class="text-center valign">@lang('inventoryList.number')</th>
                                 <th class="text-center valign">@lang('inventoryList.size')</th>
                                 <th class="text-center valign">@lang('inventoryList.changes')</th>
-                                <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
-                                @if( ViewHelper::universalHasPermission( array(7) ) )
+                                @if( ViewHelper::universalHasPermission( array(27) ) )
+                                    <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                                @else
                                     <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
                                 @endif
                                 <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
@@ -325,12 +299,13 @@
                                         <td class="text-center valign ">
                                             {{ $item->updated_at }}
                                         </td>
+                                        @if( ViewHelper::universalHasPermission( array(27) ) )
                                         <td class="text-center valign"> 
                                             <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
                                                 @lang('inventoryList.edit')
                                             </a>   
                                         </td>
-                                        @if( ViewHelper::universalHasPermission( array(7) ) )
+                                        @else
                                             <td class="text-center valign"> 
                                                 <a href="#" data-toggle="modal" data-target="#item-view-{{$item->id}}">
                                                     @lang('inventoryList.view')

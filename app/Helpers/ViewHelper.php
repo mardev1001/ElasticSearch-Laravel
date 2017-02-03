@@ -22,6 +22,7 @@ use App\WikiCategoryUser;
 use App\InventoryCategory;
 use App\InventorySize;
 use App\InternalMandantUser;
+use App\FavoriteCategory;
 
 class ViewHelper
 {
@@ -1333,6 +1334,19 @@ class ViewHelper
         // dd($searchSuggestions);
         
         return $searchSuggestions;
+    }
+    
+    /**
+     * Populate favorite categories for the logged user with existing document types
+     *
+     * @return null
+     */
+    static function setFavoriteCategories(){
+        $documentTypes = DocumentType::all();
+        foreach($documentTypes as $dt){
+            $favCat = FavoriteCategory::where('name', $dt->name)->where('user_id', Auth::user()->id)->first();
+            if(isset($favCat) == false) FavoriteCategory::create(['name' => $dt->name, 'user_id' => Auth::user()->id]);
+        }
     }
 
 }

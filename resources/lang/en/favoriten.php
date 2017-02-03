@@ -23,6 +23,7 @@ return [
     'category-removed-error' => 'Kategorie konnte nicht entfernt werden.',
     'category-saved' => 'Kategorie wurde erfolgreich gespeichert.',
     'category-updated' => 'Kategorie wurde erfolgreich aktualisiert.',
+    'category-unavailable' => 'Kategorie existiert nicht.',
     'favorite-category-new' => 'Kategoriename',
     
 ];

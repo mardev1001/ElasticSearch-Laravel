@@ -26,7 +26,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(6,27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $categories = InventoryCategory::where('active',1)->get();
@@ -41,7 +41,7 @@ class InventoryController extends Controller
      */
     public function search(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(6,27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $searchInput = $request->get('search');    
         $searchCategories = InventoryCategory::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->get();
@@ -64,7 +64,7 @@ class InventoryController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         
         $categories = InventoryCategory::where('active',1)->get();
-        $sizes = InventorySize::all();
+        $sizes = InventorySize::where('active',1)->get();
         return view('formWrapper', compact('categories', 'sizes') );
             
     }
@@ -105,7 +105,7 @@ class InventoryController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $data = Inventory::find($id);    
         $categories = InventoryCategory::where('active',1)->get();
-        $sizes = InventorySize::all();
+        $sizes = InventorySize::where('active',1)->get();
         return view('formWrapper', compact('data','categories', 'sizes') );
     }
 
@@ -204,6 +204,8 @@ class InventoryController extends Controller
      */
     public function destroyCategory($id)
     {
+         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $category = InventoryCategory::find($id);
         
         if( !is_null($category) ){
@@ -222,6 +224,8 @@ class InventoryController extends Controller
      */
     public function destroySize($id)
     {
+         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $size = InventorySize::find($id);
         if( !is_null($size) ){
             $size->delete();
@@ -238,6 +242,8 @@ class InventoryController extends Controller
      */
     public function history($itemId)
     {
+         if( ViewHelper::universalHasPermission( array(6,27) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));   
         $item =  Inventory::find($itemId);
         $histories =  InventoryHistory::where('inventory_id',$itemId)
         ->orderBy('updated_at','desc')->paginate(20);
@@ -265,6 +271,8 @@ class InventoryController extends Controller
      */
     public function postCategories(Request $request)
     {
+         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $exists = InventoryCategory::where('name',$request->get('name') )->first();
         if( !is_null($exists) )
             return redirect()->back()->with('messageSecondary', trans('inventoryList.categoryExists') );
@@ -283,6 +291,8 @@ class InventoryController extends Controller
      */
     public function updateCategories(Request $request, $id)
     {
+         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $category = InventoryCategory::find($id);
         $category->fill( $request->all() )->save();
         return redirect()->back()->with('messageSecondary', trans('inventoryList.categoryUpdated') );;
