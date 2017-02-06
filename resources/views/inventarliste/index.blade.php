@@ -235,11 +235,10 @@
                                     <td class"valign">Keine Daten vorhanden</td>
                                     <td class"valign"></td>
                                     @if( ViewHelper::universalHasPermission( array(27) ) )
-                                        <td class="text-center valign no-sort">@lang('inventoryList.edit')</td>
+                                        <td class="text-center valign no-sort"></td>
                                     @else
                                         <td class="text-center valign no-sort"></tdh>
                                     @endif
-                                    <td class"valign"></td>
                                 </tr>
                             @endif
                         

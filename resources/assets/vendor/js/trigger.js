@@ -145,9 +145,13 @@ $(function () {
             locker = true;
         }
 
-        else if ( documentType == "aktuelle Meldungen" ) {
-            console.log(documentSlug);
+        else if ( documentType == "aktuelle Meldungen" && typeof(documentSlug) !== 'undefined' ) {
             detectHref = documentSlug;
+            detectHref = 'news'
+            locker = true;
+            
+        }
+        else if ( documentType == "aktuelle Meldungen" ) {
             detectHref = 'news'
             locker = true;
             
