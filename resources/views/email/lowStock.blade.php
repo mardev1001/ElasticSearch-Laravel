@@ -180,12 +180,13 @@
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="/* background-color:rgb(244,244,244); */ max-width: 680px;">
                 
                 <!-- Hero Image, Flush : BEGIN -->
-                
+                <!--
                 <tr>
                     <td bgcolor="#ffffff" style="text-align:center; padding-top:20px;">
                         <img src="{{ $request['logo'] }}"  height="" alt="alt_text" border="0" align="center" class="fluid" style="  background: #dddddd; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
                     </td>
                 </tr>
+                -->
                 <!-- Hero Image, Flush : END -->
 
                 <!-- 1 Column Text + Button : BEGIN -->
@@ -224,7 +225,7 @@
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                             <tr>
                                                 <td dir="ltr" style="font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
-                                                    Der Artikel {{$item->name}} ist in niedrigen Lagerbestand. Derzeit sind {{$item->value}} übrig.
+                                                    Der Artikel {{$item->name}} ist in niedrigen Lagerestand. Derzeit sind {{$item->value}} übrig.
 													<!-- Button : Begin -->
                                                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
                                                         

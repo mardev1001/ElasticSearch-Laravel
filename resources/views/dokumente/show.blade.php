@@ -449,64 +449,18 @@
     <div class="clearfix"></div>
     
     {{--@if(ViewHelper::universalHasPermission( array(9)))<!-- changed @task NEPTUN-630 --> --}}
-    @if( ViewHelper::universalDocumentPermission($document, false, $freigeber = false, true) || ViewHelper::universalHasPermission( array()) )
-        @if($document->document_status_id == 3 && count($document->documentApprovalsApprovedDateNotNull) )
-        <!-- freigeber panel -->
-        <div class="panel panel-primary" id="panelFreigeber">
-        
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-target="#freigeberPanel" href="#freigeberPanel" class="transform-normal collapsed">
-                        Freigeber
-                    </a>
-                </h4>
-            </div>
-            <div id="freigeberPanel" class="panel-collapse collapse" role="tabpanel">
-                <div class="panel-body">
-        
-                    <div class="commentsMy">
-                        @foreach( $document->documentApprovalsApprovedDateNotNull as $k => $approved )
-                            <div class="comment-{{++$k}} row flexbox-container col-xs-12">
-                                <div class="pull-left">                                
-                                        <span class="comment-header">
-                                            <strong> {{ $approved->user->first_name }} {{ $approved->user->last_name }} </strong> <br>
-        
-                                            @if( $approved->approved == 1)
-                                                Freigegeben,
-                                            @else
-                                                Nicht Freigegeben,
-                                            @endif
-        
-                                            {{ $approved->date_approved }} <br>
-                                        </span>
-        
-                                    <div class="clearfix"></div>
-        
-                                    @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
-                                        @if( $approved->document->published != null )
-                                            <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                                <strong> {{ $approved->document->name }} </strong>
-                                            </a>
-                                        @else
-                                            <a href="{{url('/dokumente/'. $comment->document->id)}}">
-                                                <strong> {{ $approved->document->name }} </strong>
-                                            </a>
-                                        @endif
-                                    @endif
-        
-                                </div>
-                            </div>
-        
-                            <div class="clearfix"></div>
-                            <hr/>
-                        @endforeach
-                    </div>
-        
-                </div>
-            </div>
-        
-        </div><!-- end freigeber panel -->
-
+    @if( ViewHelper::universalDocumentPermission($document, false, $freigeber = false, true) || 
+    ViewHelper::universalDocumentPermission($document, false, true, true) || ViewHelper::universalHasPermission( array())  )
+        {!! ViewHelper::generateFreigabeBox($document) !!}
+    @endif
+    
+     @if(ViewHelper::universalHasPermission( array(9)) || ViewHelper::universalDocumentPermission($document, false,false,true))
+        @if( ViewHelper::universalDocumentPermission($document) == true )
+           @if( $commentVisibility->freigabe == true || ViewHelper::universalDocumentPermission($document, false,false,true) )
+                @if(count($documentCommentsFreigabe) )
+                    {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
+                @endif
+            @endif
         @endif
     @endif
     
@@ -518,14 +472,6 @@
         @if( $commentVisibility->user == true || $commentVisibility->freigabe == true )
             @if(count($documentComments) )
                     {!! ViewHelper::generateCommentBoxes($documentComments, trans('wiki.commentUser'),true ) !!}
-            @endif
-        @endif
-        
-        @if( ViewHelper::universalDocumentPermission($document) == true )
-            @if( $commentVisibility->freigabe == true || ViewHelper::universalDocumentPermission($document, false,false,true) )
-                @if(count($documentCommentsFreigabe) )
-                    {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
-                @endif
             @endif
         @endif
     @endif

@@ -641,15 +641,33 @@ $(function () {
     $("input[type=number]").on("keyup blur",function (e) {
         var inputValue = $(this).val();
         //8 backspace,37 left arrow,39 right arrow,46 delete
-        if(e.which < 46 || e.which > 59 && (e.which !== 8 && e.which !== 37 && e.which !== 39 && e.which !== 46)) { 
+        if(e.which < 46 || e.which > 59 && (e.which !== 8 && e.which !== 37 && e.which !== 39 && e.which !== 46 && e.keyCode !== 188)) { 
             e.preventDefault();
-        } // prevent if not number/dot
+        } // prevent if not number/dot 
         var valString = $(this).val().toString();
-            console.log( valString.indexOf('.') !== -1 );
-            console.log( inputValue.search( '.' ) );
-        if(e.keyCode == 190 && $(this).val().toString().indexOf('.') != -1){
+            
+        if(e.keyCode == 188 && $(this).val().toString().indexOf('.') != -1){
             e.preventDefault();
         } // prevent if already dot
+    });
+    
+    /*Float fix*/
+    $("input[type=text].float").on("keyup",function (e) {
+        var str = $(this).val();
+        var regex = /^(?!0+\.00)(?=.{1,9}(\.|$))(?!0(?!\.))\d{1,3}(,\d{3})*(\.\d+)?$/;
+        var count = str.match(/,/g);
+        var cleanCount = !count ? false : count.length;
+        var i = 0;
+        if(cleanCount > 1 ){
+            str = str.replace(/[\,\%]/g, function(match) { 
+                return match === "," ? (i++ === 0 ? ',' : '') : ''; 
+            });
+        }
+        if(regex.test(str) == false){
+           str = str.replace('.','');
+        }
+            $(this).val(str);
+        
     });
     /* end Prevent letterss from input type number */
     

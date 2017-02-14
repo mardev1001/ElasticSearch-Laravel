@@ -94,11 +94,13 @@ class HomeController extends Controller
         // JIRA Task NEPTUN-657
         if($filter){
             
+            // Draft ($document->document_status_id == 1)
             // Released ($document->document_status_id == 3)
             // Not Released in_array($document->document_status_id, [2,6])
             // Approved ($document->document_status_id == 2)
             // Not Approved ($document->document_status_id != 2)
             
+            if($filter == "draft") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 1);
             if($filter == "approved") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 2);
             if($filter == "not-approved") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 6);
             if($filter == "published") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 3);

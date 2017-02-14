@@ -216,7 +216,9 @@
        @endif
   
   <div class="clearfix"></div><br/>
-  
+    
+    {!! ViewHelper::generateFreigabeBox($document) !!}
+    
     <!-- freigaber comments -->
     @if(count($documentCommentsFreigabe) )
         {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'), true ) !!}

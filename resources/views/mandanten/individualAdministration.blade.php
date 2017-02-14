@@ -122,24 +122,29 @@
                                                 {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                                    @if($mandantUser->user->active)
-                                                        <button class="btn btn-xs btn-success" type="submit" name="active" value="1">{{ trans('benutzerForm.active') }}</button><br>
-                                                    @else
-                                                        <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">{{ trans('benutzerForm.inactive') }}</button><br>
+                                                    @if($mandantUser->user->id != 1)
+                                                        @if($mandantUser->user->active)
+                                                            <button class="btn btn-xs btn-success" type="submit" name="active" value="1">{{ trans('benutzerForm.active') }}</button><br>
+                                                        @else
+                                                            <button class="btn btn-xs btn-danger" type="submit" name="active" value="0">{{ trans('benutzerForm.inactive') }}</button><br>
+                                                        @endif
                                                     @endif
                                                 {!! Form::close() !!}
                                                 
-                                                {!! Form::open(['action' => 'UserController@destroyMandantUser', 'method'=>'POST']) !!}
-                                                    <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
-                                                    <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
-                                                    <button type="submit" class="btn btn-xs btn-warning delete-prompt"
-                                                    data-text="Wollen Sie diesen Benutzer wirklich löschen?"
-                                                    >{{ trans('benutzerForm.remove') }}</button><br>
-                                                {!! Form::close() !!}
+                                                @if($mandantUser->user->id != 1)
+                                                    {!! Form::open(['action' => 'UserController@destroyMandantUser', 'method'=>'POST']) !!}
+                                                        <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
+                                                        <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
+                                                        <button type="submit" class="btn btn-xs btn-warning delete-prompt"
+                                                        data-text="Wollen Sie diesen Benutzer wirklich löschen?"
+                                                        >{{ trans('benutzerForm.remove') }}</button><br>
+                                                    {!! Form::close() !!}
+                                                @endif
                                                 
                                                 <a href="{{url('/benutzer/'. $mandantUser->user->id .'/partner/edit')}}" class="btn btn-xs btn-primary">
                                                     {{ trans('benutzerForm.edit') }}
                                                 </a>
+                                                
                                             </td>
                                         </tr>
                                         

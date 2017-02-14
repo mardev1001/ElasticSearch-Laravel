@@ -164,7 +164,7 @@
             --}}
             
               
-            @if( ViewHelper::universalHasPermission( array(6,27) ) == true )
+            @if( ViewHelper::universalHasPermission( array(7,27) ) == true )
                 <!--inventarliste-->
                 <li class="">
                     <a href="{{ url('inventarliste') }}">
@@ -349,12 +349,20 @@
                 <span class="legend-icons icon-read"></span>
             </li>
             <li>
+                <span class="legend-text">Entwurf</span>
+                <span class="legend-icons icon-draft"></span>
+            </li>
+            <li>
                 <span class="legend-text">nicht veröffentlicht</span>
                 <span class="legend-icons icon-notreleased"></span>
             </li>
             <li>
                 <span class="legend-text">veröffentlicht</span>
                 <span class="legend-icons icon-released"></span>
+            </li>
+            <li>
+                <span class="legend-text">freigegeben, nicht veröffentlicht</span>
+                <span class="legend-icons icon-approvedunpublished"></span>
             </li>
             <li>
                 <span class="legend-text">Historie vorhanden</span>

@@ -257,7 +257,7 @@ class UserController extends Controller
         $mandantsAll = Mandant::whereIn('id', $loggedUserMandants->pluck('mandant_id'))->get();
     
         $defaultRoles = $this->utils->getDefaultUserRoleSettings();
-        
+        $defaultRoles = Role::whereIn('id', $defaultRoles)->get();
         // foreach ($loggedUserRoles as $tmp) {
         //     if(!in_array($tmp->role_id, array_pluck($rolesAll,'id')))
         //       $rolesAll->push(Role::find($tmp->role_id));
@@ -286,7 +286,8 @@ class UserController extends Controller
         $userUpdate->last_login = null;
         $userUpdate->save();
         
-        $defaultRoles = $this->utils->getDefaultUserRoleSettings();
+        // $defaultRoles = $this->utils->getDefaultUserRoleSettings();
+        $defaultRoles = array();
         $mandantId = $request->get('mandant_id');
         $roles = $request->get('role_id');
         

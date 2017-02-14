@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Helpers\ViewHelper;
 use Auth;
 use Mail;
+use Carbon\Carbon;
 //Models
 use App\User;
 use App\MandantUser;
@@ -26,7 +27,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        if( ViewHelper::universalHasPermission( array(6,27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $categories = InventoryCategory::where('active',1)->get();
@@ -41,13 +42,15 @@ class InventoryController extends Controller
      */
     public function search(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(6,27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $searchInput = $request->get('search');    
         $searchCategories = InventoryCategory::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->get();
-        $searchInventory = Inventory::where('name','LIKE','%'.$searchInput.'%')->get();
-        
         $categories = InventoryCategory::where('active',1)->get();
+        $activeCategories = $categories->pluck('id')->toArray();
+        $searchInventory = Inventory::whereIn('inventory_category_id',$activeCategories)->where('name','LIKE','%'.$searchInput.'%')->get();
+        
+        
         $sizes = InventorySize::all();
         return view('inventarliste.index', compact('categories', 'sizes','searchCategories','searchInventory','searchInput') );
     }
@@ -78,6 +81,20 @@ class InventoryController extends Controller
     public function store(Request $request)
     {
         $inventory = Inventory::create( $request->all() );
+        $text = trans('inventoryList.itemCreated').', '.trans('inventoryList.name').': '.$inventory->name;
+        $text .=', '.trans('inventoryList.category').': '.$inventory->category->name;
+        $text .= ', '.trans('inventoryList.size').': '.$inventory->size->name.', '.trans('inventoryList.number').': '.$inventory->value;
+        $text .= ', '.trans('inventoryList.minStock').': '.$inventory->min_stock;
+        $text .= ', '.trans('inventoryList.purchasePrice').': '.$inventory->purchase_price;
+        $text .= ', '.trans('inventoryList.sellPrice').': '.$inventory->sell_price;
+        if(  $inventory->neptun_intern == 1 ){
+            $text .= ', '.trans('inventoryList.neptunIntern').': Ja';
+        }
+        else{
+            $text .= ', '.trans('inventoryList.neptunIntern').': Nein';
+        }
+        $request->merge(['inventory_id'=>$inventory->id, 'user_id'=>Auth::user()->id,'description_text'=>$text]);
+        $history = InventoryHistory::create($request->all());
         return redirect()->back()->with( 'messageSecondary', trans('inventoryList.inventoryAdded') );
     }
 
@@ -118,7 +135,7 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd( $request->all() );
+        //  dd($request->all() );
         $item =  Inventory::find($id);
         $oldItem =  Inventory::find($id);
         if( !$request->has('neptun_intern') && !$request->has('taken')){
@@ -131,23 +148,51 @@ class InventoryController extends Controller
             }
             $request->merge(['value'=>$newValue ]);
         }
+        else{
+            $request->merge( ['is_updated'=> Carbon::now()] );
+        }
+         if( $request->has('text') && empty($request->get('text') ) ){
+            $request->merge(['text'=>null]);
+        }
+        if( $request->has('mandant_id') && $request->get('mandant_id') == ''){
+            $request->merge(['mandant_id'=>null]);
+        }
+        
         $item->fill( $request->all() )->save();
         
+        //change for InventoryHistory
+        if( $request->has('taken') ){
+           $request->merge(['value'=>$request->get('taken') ]);
+        }
+        $descriptionString = '';
         $request->merge(['user_id' => Auth::user()->id,'inventory_id' => $id]);
         if( $oldItem->value == $item->value ){
             $request->merge(['value' => null]);
         }
+        else{
+            $descriptionString .= $this->formatDescriptionString($descriptionString, trans('inventoryList.itemTaken'));
+        }
+        
         if( $oldItem->inventory_category_id == $item->inventory_category_id ){
             $request->merge(['inventory_category_id' => null]);
         }
+        else{
+            $descriptionString .= $this->formatDescriptionString($descriptionString, trans('inventoryList.itemUpdated'));
+        }
+        
         if( $oldItem->inventory_size_id == $item->inventory_size_id ){
             $request->merge(['inventory_size_id' => null]);
         }
+        else{
+            $descriptionString .= $this->formatDescriptionString($descriptionString, trans('inventoryList.itemUpdated'));
+        }
+       
+        
         //prevent filling up the database when all three values are null
         if(  !is_null( $request->get('value') ) || !is_null( $request->get('inventory_category_id') ) || 
         !is_null( $request->get('inventory_size_id') )  ){
-            $history = InventoryHistory::create($request->all());
-            
+            // dd($request->all() );
+            $history = InventoryHistory::create( $request->all() );
             //send email if value under the database marked value
             if( (!is_null( $request->get('value') ) && $request->has('taken') ) && $item->min_stock >= $item->value ){
                 $request = $request->all();
@@ -242,7 +287,7 @@ class InventoryController extends Controller
      */
     public function history($itemId)
     {
-         if( ViewHelper::universalHasPermission( array(6,27) ) == false  )
+         if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));   
         $item =  Inventory::find($itemId);
         $histories =  InventoryHistory::where('inventory_id',$itemId)
@@ -341,7 +386,24 @@ class InventoryController extends Controller
     {
         $sizes = InventorySize::find($id);
         $sizes->fill( $request->all() )->save();
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.sizeUpdated') );;
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.sizeUpdated') );
+    }
+    
+    /**
+     * Format description text string
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    private function formatDescriptionString($string,$message)
+    {
+       if(empty($string)){
+           return strtoupper($message);
+       }
+       else{
+           return ', '.$message;
+       }
     }
     
 }

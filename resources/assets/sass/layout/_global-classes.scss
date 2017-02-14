@@ -194,6 +194,23 @@ hr {
 	-webkit-box-align: center;
     align-items: center;
 }
+
+.flexbox-wrapper{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+ 
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.flexbox-item{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+}
+
 .pl10{
     padding-left: 10px;
 }

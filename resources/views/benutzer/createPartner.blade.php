@@ -183,13 +183,20 @@ Benutzer bearbeiten
                 
                 <div class="col-md-4 col-lg-3">
                     <label for="mandant_id">{{ trans('benutzerForm.roles') }}*</label>
-                    <select name="role_id[]" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.roles')) }}*" multiple required>
+                    
+                    <select name="role_id[]" class="form-control select" data-placeholder="{{ strtoupper(trans('benutzerForm.roles')) }}*" multiple>
+                        @foreach($defaultRoles as $def)
+                            <option selected disabled> {{ $def->name }} <option>
+                        @endforeach
                         @foreach($rolesAll as $role)
-                            <option value="{{$role->id}}" @if(in_array($role->id, $defaultRoles)) selected @endif> 
+                            <option value="{{$role->id}}"> 
                                 {{$role->name}}
                             </option>
                         @endforeach
                     </select>
+                    @foreach($defaultRoles as $def)
+                        <input type="hidden" name="role_id[]" value="{{$def->id}}">
+                    @endforeach
                 </div>
                 
                 <div class="clearfix"></div> <br>

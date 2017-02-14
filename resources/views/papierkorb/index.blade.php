@@ -22,10 +22,12 @@
                             </div>
                             <div class="pull-right">
                                 <button type="submit" value="1" name="restore" class="btn btn-success">Wiederherstellen</button>
-                                <button type="submit" value="1" name="delete" class="btn btn-warning delete-prompt" 
+                                <button type="submit" value="1" name="delete" class="btn btn-danger delete-prompt" 
                                     data-text="{{trans('documentForm.warningDeleteTrash')}}">Löschen</button>
+                                {{--
                                 <button type="submit" value="1" name="empty-trash" class="btn btn-danger delete-prompt" 
                                     data-text="{{trans('documentForm.warningEmptyTrash')}}">Papierkorb Leeren</button>
+                                --}}
                             </div>
                             <div class="clearfix"></div>
                         </div>

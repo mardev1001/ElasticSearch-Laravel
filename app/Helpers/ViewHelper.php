@@ -563,6 +563,18 @@ class ViewHelper
         $string = view('partials.comments', compact('collection', 'title', 'withRow'))->render();
         echo $string;
     }
+    
+    /**
+     * Freigabe boxes
+     * @param Collection $document
+     * @return string $string (html template)
+     */
+    static function generateFreigabeBox($document)
+    {
+        $string = '';
+        $string = view('partials.freigabeBox', compact('document'))->render();
+        echo $string;
+    }
 
     /**
      * Get all roles associated with the user
@@ -667,7 +679,6 @@ class ViewHelper
             || ($freigeber == false && $filterAuthors == false && $document->approval_all_roles == 1) || $role == 1
         )
             $hasPermission = true;
-        //   dd($coAuthors); 
 
         if ($message == true && $hasPermission == false)
             session()->flash('message', trans('documentForm.noPermission'));
@@ -1232,19 +1243,49 @@ class ViewHelper
      * @return string $string
      */
     static function genterateHistoryModalString($history){
-        $string = $history->user->first_name.' '.$history->user->last_name; 
-        if( $history->inventory_category_id != null ){
-            $string .= ', '.trans('inventoryList.category').': '.$history->category->name;
+        $string = $history->user->first_name.' '.$history->user->last_name;
+        $tableFielsArray = ['inventory_category_id','inventory_size_id','value','text','mandant_id'];
+        $countAffectedRows = 0;
+        foreach($tableFielsArray as $field){
+            if( $history->$field != null){
+                $countAffectedRows++;
+            }
         }
-        if( $history->inventory_size_id != null ){
-            $string .= ', '.trans('inventoryList.category').': '.$history->category->name;
+        if( $history->is_updated != null && ( ($countAffectedRows == 1 && $history->value == null ) || $countAffectedRows > 1) ){
+            $string .= ', '.trans('inventoryList.itemUpdated');
         }
-        if( $history->inventory_category_id != null ){
-            $string .= ', '.trans('inventoryList.size').': '.$history->size->name;
+        if( !empty($history->description_text) ){
+             $string .= ', '.$history->description_text;
         }
-        if( $history->value != null ){
-            $string .= ', '.trans('inventoryList.number').': '.$history->value;
+        else{
+            if( $history->inventory_category_id != null ){
+                $string .= ', '.trans('inventoryList.category').': '.$history->category->name;
+            }
+            
+            if( $history->inventory_size_id != null ){
+                $string .= ', '.trans('inventoryList.size').': '.$history->size->name;
+            }
+           
+            if( $history->value != null ){
+                if( $history->is_updated == null && $countAffectedRows == 1){
+                    $string .= ', '.trans('inventoryList.itemTaken').': '.$history->value;
+                }
+                elseif( $history->is_updated != null && $countAffectedRows == 1){
+                     $string .= ', '.trans('inventoryList.valueUpdated').': '.$history->value;
+                }
+                else{
+                    $string .= ', '.trans('inventoryList.number').': '.$history->value;
+                }
+            }
+           
+            if( $history->mandant_id != null ){
+                $string .= ', '.trans('inventoryList.mandant').': '.$history->mandant->name;
+            }
+            if( $history->text != null ){
+                $string .= ', '.trans('inventoryList.text').': '.$history->text;
+            }
         }
+        
         $string .= ', '.$history->created_at;
         
         return $string;

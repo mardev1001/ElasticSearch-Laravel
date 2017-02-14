@@ -23,7 +23,7 @@
                         <div class="col-md-6 col-lg-6">
                               <div class="form-group">
                                 {!! ViewHelper::setSelect($mandants,'mandant_id',$data,old('mandant_id'),
-                                trans('benutzerForm.mandant'), trans('benutzerForm.mandant'),true ) !!}
+                                trans('benutzerForm.mandant'), trans('inventoryList.select'), false, array(), array(), array(), true  ) !!}
                             </div>
                         </div>
                         

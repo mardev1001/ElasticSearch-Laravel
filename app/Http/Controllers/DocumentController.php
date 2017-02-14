@@ -1406,14 +1406,12 @@ class DocumentController extends Controller
             }
         }
         
+       
         $document = $this->checkFreigabeRoles($document);
          
         $documentPermission = ViewHelper::universalDocumentPermission($document,false);
         $variantPermissions = ViewHelper::documentVariantPermission($document);
         
-        // dd($documentPermission);
-        // dd($document);
-        //  dd('brejk jorself');
         // if($document->active == 0 
         if(($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == false ) ||
         ($variantPermissions->permissionExists == false && $documentPermission == false) )

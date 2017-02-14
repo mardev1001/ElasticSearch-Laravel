@@ -176,8 +176,9 @@
                 <div class="box box-white">
                     <table class="table data-table box-white">
                         <thead>
-                            <th  class="text-center valign">@lang('inventoryList.name')</th>
-                            <th  class="text-center valign">@lang('inventoryList.number')</th>
+                            <th class="text-center valign">@lang('inventoryList.name')</th>
+                            <th class="text-center valign">@lang('inventoryList.category')</th>
+                            <th class="text-center valign">@lang('inventoryList.number')</th>
                             <th class="text-center valign">@lang('inventoryList.size')</th>
                             <th class="text-center valign">@lang('inventoryList.changes')</th>
                             @if( ViewHelper::universalHasPermission( array(27) ) )    
@@ -191,8 +192,11 @@
                             @if(count( $searchInventory ) > 0)
                                 @foreach($searchInventory as $k => $item)
                                     <tr>
-                                    <td class="text-center valign">
+                                        <td class="text-center valign">
                                             {{ $item->name }}
+                                        </td>
+                                        <td class="text-center valign">
+                                            {{ $item->category->name }}
                                         </td>
                                         <td class="text-center valign ">
                                             <a href="#" data-toggle="modal" data-target="#item-taken-{{$item->id}}">
@@ -229,6 +233,7 @@
                                 @endforeach
                             @else
                                 <tr>
+                                    <td class"valign"></td>
                                     <td class"valign"></td>
                                     <td class"valign"></td>
                                     <td class"valign"></td>

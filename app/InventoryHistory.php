@@ -8,9 +8,10 @@ use Carbon\Carbon;
 class InventoryHistory extends Model
 {
     protected $guarded = []; //blacklist
-    protected $fillable = ['inventory_id', 'user_id','inventory_category_id', 'inventory_size_id', 'value','mandant_id','text']; //whitelist
+    protected $fillable = ['inventory_id', 'user_id','inventory_category_id', 'inventory_size_id', 
+    'value','mandant_id','text','description_text', 'is_updated']; //whitelist
     
-    protected $dates = ['created_at', 'updated_at'];
+    protected $dates = ['created_at', 'updated_at','is_updated'];
     
     public function item(){
         return $this->hasOne(Inventory::class,'id','inventory_id');
@@ -24,6 +25,9 @@ class InventoryHistory extends Model
     }
     public function user(){
         return $this->hasOne(User::class,'id','user_id');
+    }
+    public function mandant(){
+        return $this->hasOne(Mandant::class,'id','mandant_id');
     }
     
     public function getCreatedAtAttribute($value)

@@ -28,8 +28,16 @@ class FavoritesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {//->where('active',1)
+    public function index(Request $request)
+    {
+        
+        // if($request->all())
+            // dd($request->all());
+        
+        $sort = $request->get('sort');
+        $categoryParam = $request->get('category');
+        $type = $request->get('type');
+        
         $favorites =  $favoriteDocuments = $favoritesTreeview = $favoritesPaginated = array();
         $favoriteDocuments = FavoriteDocument::where('user_id', Auth::user()->id)->get();
         $documentTypes = DocumentType::all();
@@ -60,7 +68,12 @@ class FavoritesController extends Controller
                 }
             }
     
-            $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('name', 'asc')->paginate(10, ['*'], 'seite');
+            // $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('name', 'asc')->paginate(10, ['*'], 'seite');
+            if($sort && ($type == $docType->id)){
+                if($sort == 'asc') $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('date_published', 'asc')->paginate(10, ['*'], 'page-type-'.str_slug($docType->id));
+                else $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('date_published', 'desc')->paginate(10, ['*'], 'page-type-'.str_slug($docType->id));
+            } else $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('date_published', 'desc')->paginate(10, ['*'], 'page-type-'.str_slug($docType->id));
+            
             $favoritesTreeview = $this->favorites->generateTreeview($favoritesPaginated, array('pageFavorites' => true,'showDelete' => true,'showAttachments' => true ));
             
             $favsArray['favoritesPaginated'] = $favoritesPaginated;
@@ -88,7 +101,11 @@ class FavoritesController extends Controller
                 }
             }
     
-            $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('name', 'asc')->paginate(10, ['*'], 'seite');
+            // $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('name', 'asc')->paginate(10, ['*'], 'seite');
+            if($sort && ($categoryParam == $category->id)){
+                if($sort == 'asc') $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('date_published', 'asc')->paginate(10, ['*'], 'page-category-'. str_slug($category->id));
+                else $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('date_published', 'desc')->paginate(10, ['*'], 'page-category-'. str_slug($category->id));
+            } else $favoritesPaginated = Document::whereIn('id', array_pluck($favsTmp, 'id'))->orderBy('date_published', 'desc')->paginate(10, ['*'], 'page-category-'. str_slug($category->id));
             $favoritesTreeview = $this->favorites->generateTreeview($favoritesPaginated, array('pageFavorites' => true,'showDelete' => true,'showAttachments' => true ));
             
             $favsArray['favoritesPaginated'] = $favoritesPaginated;

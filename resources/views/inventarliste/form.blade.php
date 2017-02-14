@@ -37,13 +37,13 @@
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
                     {!! ViewHelper::setInput('purchase_price', $data,old('purchase_price'), 
-                    trans('inventoryList.purchasePrice'), trans('inventoryList.purchasePrice'), true,'number', array(),array('min="1"', 'step="0.1"') ) !!}
+                    trans('inventoryList.purchasePrice'), trans('inventoryList.purchasePrice'), true,'text', array('float'),array('min="1"', 'step="0.1"') ) !!}
                 </div>
             </div>
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
                     {!! ViewHelper::setInput('sell_price', $data,old('sell_price'), 
-                    trans('inventoryList.sellPrice'), trans('inventoryList.sellPrice'), true,'number', array(),array('min="1"', 'step="0.1"') ) !!}
+                    trans('inventoryList.sellPrice'), trans('inventoryList.sellPrice'), true,'text', array('float'),array('min="1"', 'step="0.1"') ) !!}
                 </div>
            </div>
             <div class="col-md-4 col-lg-3">

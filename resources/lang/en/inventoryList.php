@@ -44,9 +44,15 @@ return [
     'sellPrice' => 'Verkaufspreis',
     'neptunIntern' => 'Artikel nur NEPTUN intern',
     'text' => 'Text',
+    'mandant' => 'Mandant',
     'invetoryCategoryDeleted' => 'Kategorie gelöscht',
     'invetorySizeDeleted' => 'Größe gelöscht',
     'lowerThanZero' => 'Unter Null',
     'emailSubject' => 'Warnung: Niedriger Lagerestand',
+    'itemCreated' => 'Daten hinzugefügt',
+    'itemUpdated' => 'Daten aktualisiert',
+    'valueUpdated' => 'Anzahl antualisier',
+    'itemTaken' => 'Anzahl Entnahme',
+    'select' => 'wählen',
     
 ];
