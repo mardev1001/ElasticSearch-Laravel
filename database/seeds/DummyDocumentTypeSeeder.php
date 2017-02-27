@@ -90,6 +90,19 @@ class DummyDocumentTypeSeeder extends Seeder
                     'active' => '1',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
+                ],
+                
+                [
+                    'name' => 'Juristendokumente',
+                    'document_art' => '0',
+                    'document_role' => '0',
+                    'read_required' => '0',
+                    'allow_comments' => '1',
+                    'visible_navigation' => '0',
+                    'order_number' => '7',
+                    'active' => '1',
+                    'created_at' => date("Y-m-d H:i:s"),
+                    'updated_at' => date("Y-m-d H:i:s")
                 ]
                 
             ]

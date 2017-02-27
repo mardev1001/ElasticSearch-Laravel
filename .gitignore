@@ -4,6 +4,7 @@
 /public/files/*
 /public/files/contacts/*
 /public/files/documents/*
+/public/files/juristenportal/*
 /public/files/pictures/*
 /resources/assets/vendor/*
 !/resources/assets/vendor/js/

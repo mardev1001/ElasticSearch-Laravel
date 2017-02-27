@@ -9,7 +9,6 @@
 <fieldset class="form-group">
     <div class="box-wrapper">
         <h4 class="title">{{ trans('sucheForm.search-title') }}</h4>
-        
         {!! Form::open(['action' => 'SearchController@searchAdvanced', 'method'=>'GET']) !!}
             <div class="box box-white">
                 
@@ -177,11 +176,8 @@
                 </div>
                 
             </div>
-            
         {!! Form::close() !!}
-    
-    </div>    
-    
+    </div>
 </fieldset>
 
 @if(count($results) || Request::has('parameter'))
@@ -189,7 +185,7 @@
 <div class="search-results">
     <div class="box-wrapper">
         {{-- <h4 class="title">{{ trans('sucheForm.search-results') }}@if(isset($parameter)) für "{{$parameter}}"@endif: <span class="text"> {{count($results)}} Ergebnisse gefunden</span></h4> --}}
-        <h4 class="title">{{ trans('sucheForm.search-results') }}: <span class="text"> {{count($results)}} Treffer</span></h4>
+        <h4 class="title">{{ trans('sucheForm.search-results') }}: <span class="text"> {{ $results->total() }} Treffer</span></h4>
         
         <div class="sort-urls">
             <a href="{{ Request::fullUrl() }}&sort=asc" class="link">{{ trans('sucheForm.publish-date') }} <i class="fa fa-arrow-up" aria-hidden="true"></i></a> / 
@@ -212,7 +208,8 @@
                             @endif
                             
                                 <strong>
-                                #{{$key+1}}
+                                {{-- #{{$key+1}} --}}
+                                #{{ ( ($results->currentPage() - 1) * $results->perPage() ) + ($key+1) }}
                                 - 
                                 @if(old('name'))
                                     @if($document->documentType->id == 3)
@@ -228,7 +225,7 @@
                                     {{ $document->owner->first_name . " " .$document->owner->last_name }}
                                     -
                                     @if(isset($parameter) && !empty($parameter)) 
-                                        {!! ViewHelper::highlightKeywords(array($parameter, old('name')), $document->name_long) !!}
+                                        {!! ViewHelper::highlightKeywords(array($parameter), $document->name_long) !!}
                                     @else
                                         {!! ViewHelper::highlightKeywords(array(old('name')), $document->name_long) !!}
                                     @endif
@@ -303,63 +300,15 @@
             @endforeach
         
         </div>
-    </div>
-</div>
-
-@endif
-
-<div class="clearfix"></div> <br>
-
-@if(count($resultsWiki))
-
-<div class="search-results-wiki">
-    <div class="box-wrapper">
-        <h4 class="title">{{ trans('sucheForm.search-results') }} Wiki: <span class="text"> {{count($resultsWiki)}} Treffer</span></h4> <br>
-        <div class="box box-white">
-
-                @foreach($resultsWiki as $key=>$wiki)
-                    <div class="row">
-                        <div class="col-xs-12 text result">
-                            <div class="healine"> 
-                                <a href="{{route('wiki.show', $wiki)}}" class="link">
-                                    <strong>
-                                        #{{$key+1}} {{$wiki->category->name}} - 
-                                        
-                                        @if(old('name')) 
-                                            {!! ViewHelper::highlightKeywords(array(old('name')), $wiki->name) !!} -
-                                        @else
-                                            {!! $wiki->name !!} - 
-                                        @endif
-                                        
-                                        {{\Carbon\Carbon::parse($wiki->created_at)->format('d.m.Y H:i:s')}} 
-                                    </strong> 
-                                </a>
-                            </div>
-                            <div class="document-text"> 
-                                <div class="content">
-                                    @if(old('inhalt')) 
-                                        {!! ViewHelper::highlightKeywords(array(old('inhalt')), ViewHelper::extractText(old('inhalt'), $wiki->content)) !!}
-                                    @else
-                                        {{ $wiki->content }}
-                                    @endif
-                                </div>
-                                            
-                                
-                            </div>
-                        </div>
-                        <div class="clearfix"></div> <br>
-                    </div>
-                @endforeach
-           
-           
-        
+        <div class="pagination text-center">
+            {{ $results->appends(Request::all())->render() }}
         </div>
     </div>
 </div>
 
-<div class="clearfix"></div> <br>
-
 @endif
+
+<div class="clearfix"></div> <br>
 
 @stop
 

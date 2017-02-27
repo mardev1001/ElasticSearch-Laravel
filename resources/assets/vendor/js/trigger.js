@@ -638,7 +638,7 @@ $(function () {
     });
     
     /* Prevent letterss from input type number */
-    $("input[type=number]").on("keyup blur",function (e) {
+    $("input[type=number]").on("keyup blur scroll change",function (e) {
         var inputValue = $(this).val();
         //8 backspace,37 left arrow,39 right arrow,46 delete
         if(e.which < 46 || e.which > 59 && (e.which !== 8 && e.which !== 37 && e.which !== 39 && e.which !== 46 && e.keyCode !== 188)) { 
@@ -649,10 +649,14 @@ $(function () {
         if(e.keyCode == 188 && $(this).val().toString().indexOf('.') != -1){
             e.preventDefault();
         } // prevent if already dot
+            var countMinus = inputValue.match(/-/g);
+            if( countMinus != null){
+                $(this).val(Math.abs($(this).val())) 
+            }
     });
     
     /*Float fix*/
-    $("input[type=text].float").on("keyup",function (e) {
+    $("input[type=text].float").on("keyup blur",function (e) {
         var str = $(this).val();
         var regex = /^(?!0+\.00)(?=.{1,9}(\.|$))(?!0(?!\.))\d{1,3}(,\d{3})*(\.\d+)?$/;
         var count = str.match(/,/g);
@@ -666,8 +670,12 @@ $(function () {
         if(regex.test(str) == false){
            str = str.replace('.','');
         }
-            $(this).val(str);
         
+        var countMinus = str.match(/-/g);
+        if( countMinus != null){
+           str = str.replace('-','');
+        }
+            $(this).val(str);
     });
     /* end Prevent letterss from input type number */
     

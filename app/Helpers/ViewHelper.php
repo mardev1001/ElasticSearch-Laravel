@@ -896,6 +896,21 @@ class ViewHelper
         }
         return $hasPdf;
     }
+    
+    /**
+     * Check if file has extension
+     * @param collection $document
+     * @return bool
+     */
+    static function fileTypeAllowed($file,$exclude=array())
+    {
+       $allowedFileArray = ['txt','doc','docx','xls','xlsx','ppt','pptx','pdf'];//,'png','jpg','jpeg','gif'
+       $extension = $file->getClientOriginalExtension();
+            if (in_array($extension,$allowedFileArray) ) {
+                return true;
+            }
+        return false;
+    }
 
     /**
      * Get type of file
@@ -1270,6 +1285,9 @@ class ViewHelper
                 if( $history->is_updated == null && $countAffectedRows == 1){
                     $string .= ', '.trans('inventoryList.itemTaken').': '.$history->value;
                 }
+                elseif( $history->is_updated == null && ($history->mandant_id != null || $history->text) ){
+                     $string .= ', '.trans('inventoryList.itemTaken').': '.$history->value;
+                }
                 elseif( $history->is_updated != null && $countAffectedRows == 1){
                      $string .= ', '.trans('inventoryList.valueUpdated').': '.$history->value;
                 }
@@ -1278,11 +1296,26 @@ class ViewHelper
                 }
             }
            
+            if( $history->min_stock != null ){
+                $string .= ', '.trans('inventoryList.minStock').': '.$history->min_stock;
+            }
+            if( $history->purchase_price != null ){
+                $string .= ', '.trans('inventoryList.purchasePrice').': '.$history->purchase_price;
+            }
+            if( $history->sell_price != null ){
+                $string .= ', '.trans('inventoryList.sellPrice').': '.$history->sell_price;
+            }
             if( $history->mandant_id != null ){
                 $string .= ', '.trans('inventoryList.mandant').': '.$history->mandant->name;
             }
             if( $history->text != null ){
                 $string .= ', '.trans('inventoryList.text').': '.$history->text;
+            }
+            if( ($history->neptun_intern == null || $history->neptun_intern == 0) && $history->is_updated != null ){
+                $string .= ', '.trans('inventoryList.neptunInternShort').': Nein';
+            }
+            elseif($history->is_updated != null && $history->neptun_intern == 1){
+                $string .= ', '.trans('inventoryList.neptunInternShort').': Ja';
             }
         }
         

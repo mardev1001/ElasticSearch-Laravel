@@ -48,5 +48,8 @@ return [
     'inventarSizes'         => 'Größen',
     'newInventory'          => 'neu anlegen',
     'deduct'                => 'Materialien abrechnen',
+    'notes'                 => 'Notiz',
+    'juristenPortal'        => 'Juristenportal',
+    'inventoryAbrechnen'        => 'Materialien abrechnen',
 
 ];

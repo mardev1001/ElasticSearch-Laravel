@@ -8,6 +8,7 @@
                 <!--<h4 class="modal-title">@lang('inventoryList.edit') {{ $item->name }} ({{ $item->category->name }})</h4>-->
             </div>        
             {!! Form::open(['route' => ['inventarliste.update', 'inventarliste'=> $item->id], 'method' => 'PATCH']) !!}
+                <input type="hidden" name="href" value="#collapseInventory{{$item->category->id}}" />
             <div class="modal-body">
                 <p class="text-left"><strong class="bigger">@lang('inventoryList.howManyTaken')</strong></p>
                 <div class="row">
@@ -19,20 +20,20 @@
                            <input type="number" min="1" max="{{$item->value}}" name="taken" class="form-control" value="1" required />
                         </div>
                     </div>
-                    @if( $item->neptun_intern )
+                    @if( !$item->neptun_intern )
                         <div class="col-md-6 col-lg-6">
                               <div class="form-group">
                                 {!! ViewHelper::setSelect($mandants,'mandant_id',$data,old('mandant_id'),
-                                trans('benutzerForm.mandant'), trans('inventoryList.select'), false, array(), array(), array(), true  ) !!}
+                                trans('benutzerForm.mandant'), trans('inventoryList.select'), true, array(), array(), array(), true  ) !!}
                             </div>
                         </div>
                         
                         <div class="clearfix"></div><br/>
-                        
+                        $inputName, $data, $old, $label = '', $placeholder = '', $required = false,
                         <!-- input box-->
                         <div class="col-md-12 col-lg-12">
                             <div class="form-group">
-                                {!! ViewHelper::setArea('text',$data,old('text'),trans('inventoryList.text') ) !!}
+                                {!! ViewHelper::setArea('text',$data,old('text'),trans('inventoryList.text'),trans('inventoryList.text'),true ) !!}
                             </div>
                         </div><!--End input box-->  
                     @endif

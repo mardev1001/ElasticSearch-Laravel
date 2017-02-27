@@ -9,7 +9,7 @@ class InventoryHistory extends Model
 {
     protected $guarded = []; //blacklist
     protected $fillable = ['inventory_id', 'user_id','inventory_category_id', 'inventory_size_id', 
-    'value','mandant_id','text','description_text', 'is_updated']; //whitelist
+    'value','mandant_id','neptun_intern','text','description_text', 'is_updated','min_stock','purchase_price','sell_price']; //whitelist
     
     protected $dates = ['created_at', 'updated_at','is_updated'];
     

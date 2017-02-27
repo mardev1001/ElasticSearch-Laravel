@@ -95,6 +95,16 @@ $(function() {
             [$('th.defaultSort').index(), 'asc']
         ],
     });
+    
+    /*Universal  panel openner*/
+    if( $('.panel-group').length){
+        if(window.location.hash) {
+         $("a[href='"+window.location.hash+"']").click();
+        }
+    }
+    
+
+    /*Universal  panel openner*/
 
     if ($('.editable').length) {
         var counter = 0;

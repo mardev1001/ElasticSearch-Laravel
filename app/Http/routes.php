@@ -65,6 +65,11 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('comment/{id}', 'DocumentController@saveComment');
         Route::get('comment-delete/{comment_id}/{document_id}', 'DocumentController@deleteComment');
         
+        Route::get('juristenportal/notiz', 'JuristenPortalController@notiz');
+        Route::get('juristenportal/upload', 'JuristenPortalController@uploadView');
+        Route::post('juristenportal/upload', ['as'=>'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
+        Route::resource('juristenportal', 'JuristenPortalController');
+        
         // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
         Route::get('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
         Route::post('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
@@ -100,6 +105,7 @@ Route::group( array('middleware' => ['auth']), function(){
         // UserController@index is used as an individual mandant link becouse of the name-ing
         Route::resource('benutzer', 'UserController');
         Route::resource('iso-kategorien', 'IsoCategoryController');
+        Route::resource('juristenportal-kategorien', 'JuristenPortalCategoryController');
         Route::resource('rollen', 'RoleController');
         Route::resource('empfangerkreis ', 'AdressatController');
         Route::resource('adressaten', 'AdressatController');
@@ -139,6 +145,8 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::resource('wiki', 'WikiController');
         
         // inventory routes
+        Route::get('inventarliste/abrechnen','InventoryController@abrechnen');
+        Route::post('inventarliste/suche-abrechnen','InventoryController@searchAbrechnen');
         Route::get('inventarliste/kategorien','InventoryController@categories');
         Route::post('inventarliste/kategorien','InventoryController@postCategories');
         Route::post('inventarliste/kategorien/{id}/update','InventoryController@updateCategories');
@@ -148,6 +156,7 @@ Route::group( array('middleware' => ['auth']), function(){
         Route::post('inventarliste/sizes','InventoryController@postSizes');
         Route::post('inventarliste/sizes/{id}/update','InventoryController@updateSizes');
         Route::get('inventarliste/groessen','InventoryController@sizes');
+        Route::get('inventarliste/suche', function(){ return redirect('inventarliste'); });
         Route::post('inventarliste/suche','InventoryController@search');
         Route::resource('inventarliste', 'InventoryController');
 

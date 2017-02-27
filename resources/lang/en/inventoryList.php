@@ -25,6 +25,7 @@ return [
     'category' => 'Kategorie',
     'size' => 'Größe',
     'number' => 'Anzahl',
+    'numberTaken' => 'Anzahl Entnahme',
     'changes' => 'Letzte Änderung',
     'view' => 'ansehen',
     'history' => 'Historie',
@@ -43,6 +44,7 @@ return [
     'purchasePrice' => 'Einkaufspreis',
     'sellPrice' => 'Verkaufspreis',
     'neptunIntern' => 'Artikel nur NEPTUN intern',
+    'neptunInternShort' => 'NEPTUN intern',
     'text' => 'Text',
     'mandant' => 'Mandant',
     'invetoryCategoryDeleted' => 'Kategorie gelöscht',
@@ -54,5 +56,8 @@ return [
     'valueUpdated' => 'Anzahl antualisier',
     'itemTaken' => 'Anzahl Entnahme',
     'select' => 'wählen',
-    
+    'dateWithdrawal' => 'Datum Entnahme',
+    'billed' => 'Abgerechnt',
+    'searchDeduct' => 'Materialien abrechnen suche',
+    'open' => 'offene',
 ];

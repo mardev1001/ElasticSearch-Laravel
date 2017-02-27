@@ -21,6 +21,7 @@ class Kernel extends ConsoleKernel
         // Commands\FavoritesCreateCategories::class,
         Commands\UsersAssignRoles::class,
         Commands\UsersLogout::class,
+        Commands\JuristenPortalImport::class,
     ];
 
     /**

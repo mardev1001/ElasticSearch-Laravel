@@ -68,7 +68,7 @@ class DocumentController extends Controller
      */
     public function index()
     {
-        $documentTypes = DocumentType::where('menu_position', 1)->orderBy('order_number', 'asc')->get();
+        $documentTypes = DocumentType::where('menu_position', 1)->whereNotIn('name',['Juristendokumente'])->orderBy('order_number', 'asc')->get();
         $isoCategories = IsoCategory::where('active', 1)->get();
         return view('dokumente.documentIndex', compact('documentTypes','isoCategories') );
     }
@@ -256,13 +256,13 @@ class DocumentController extends Controller
     {
         if( $this->canCreateEditDoc() == true ){
            
-            $documentTypes = DocumentType::all();// if struktur admin
+            $documentTypes = DocumentType::whereNotIn('name',['Juristendokumente'])->get();// if struktur admin
             
             if( $this->returnRole() != false && $this->returnRole() == 11) // 11 Rundschreiben Verfasser
-                $documentTypes = DocumentType::where('document_art',0)->get();
+                $documentTypes = DocumentType::where('document_art',0)->whereNotIn('name',['Juristendokumente'])->get();
             
             elseif( $this->returnRole() != false && $this->returnRole() == 13) // 13 Dokumenten Verfasser
-               $documentTypes = DocumentType::where('document_art',1)->get();
+               $documentTypes = DocumentType::where('document_art',1)->whereNotIn('name',['Juristendokumente'])->get();
                
             $isoDocuments = IsoCategory::all();
             $documentStatus = DocumentStatus::all(); 
@@ -1417,7 +1417,9 @@ class DocumentController extends Controller
         ($variantPermissions->permissionExists == false && $documentPermission == false) )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         //  dd('brejk jorself');
-        
+        if( $this->document->universalDocumentPermission($document,true, true) == false ){
+            return redirect('/')->with('messageSecondary',trans('documentForm.noPermission') ) ;
+        }
         
         $favorite = null;
         if( isset($document->document_group_id) && isset(Auth::user()->id) )

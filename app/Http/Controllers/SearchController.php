@@ -47,6 +47,7 @@ class SearchController extends Controller
     public function index(Request $request)
     {
         $parameter = null;
+        $parameterArray = array();
         $searchQmrIso = false;
         $results = array();
         $resultsWiki = array();
@@ -155,15 +156,18 @@ class SearchController extends Controller
             // $resultIds = array_pluck($results, 'id');
             
             if($sort == 'asc')
-                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->paginate(20, ['*'], 'seite');
+                // $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
             else
-                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
+                $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->paginate(20, ['*'], 'seite');
+                // $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
             
             // Sort by results
             // $results = array_values(array_sort($results, function ($value) {
             //     return $value['date_published'];
             // }));
         }
+        
         $request->flush();
         return view('suche.erweitert', compact('parameter','results','resultsWiki','variants','documentTypes','mandantUsers'));
         // return view('suche.erweitert', compact('parameter', 'resultsWiki', 'documentTypes','mandantUsers', 'searchResultsTree', 'searchResultsPaginated'));
@@ -566,9 +570,11 @@ class SearchController extends Controller
         // $resultIds = array_pluck($results, 'id');
     
         if($sort == 'asc')
-            $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
+            $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->paginate(20, ['*'], 'seite');
+            // $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
         else
-            $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
+            $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->paginate(20, ['*'], 'seite');;
+            // $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'desc')->get();
         
         // if($emptySearch) $searchResultsPaginated = array();
         if($emptySearch) $results = array();

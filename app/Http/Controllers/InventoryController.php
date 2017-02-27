@@ -136,6 +136,10 @@ class InventoryController extends Controller
     public function update(Request $request, $id)
     {
         //  dd($request->all() );
+        $href = '';
+        if($request->has('href') && !empty( $request->get('href') ) ){
+            $href = $request->get('href');
+        }
         $item =  Inventory::find($id);
         $oldItem =  Inventory::find($id);
         if( !$request->has('neptun_intern') && !$request->has('taken')){
@@ -154,10 +158,9 @@ class InventoryController extends Controller
          if( $request->has('text') && empty($request->get('text') ) ){
             $request->merge(['text'=>null]);
         }
-        if( $request->has('mandant_id') && $request->get('mandant_id') == ''){
+        if( empty($request->get('mandant_id') ) ){
             $request->merge(['mandant_id'=>null]);
         }
-        
         $item->fill( $request->all() )->save();
         
         //change for InventoryHistory
@@ -166,31 +169,13 @@ class InventoryController extends Controller
         }
         $descriptionString = '';
         $request->merge(['user_id' => Auth::user()->id,'inventory_id' => $id]);
-        if( $oldItem->value == $item->value ){
-            $request->merge(['value' => null]);
-        }
-        else{
-            $descriptionString .= $this->formatDescriptionString($descriptionString, trans('inventoryList.itemTaken'));
-        }
-        
-        if( $oldItem->inventory_category_id == $item->inventory_category_id ){
-            $request->merge(['inventory_category_id' => null]);
-        }
-        else{
-            $descriptionString .= $this->formatDescriptionString($descriptionString, trans('inventoryList.itemUpdated'));
-        }
-        
-        if( $oldItem->inventory_size_id == $item->inventory_size_id ){
-            $request->merge(['inventory_size_id' => null]);
-        }
-        else{
-            $descriptionString .= $this->formatDescriptionString($descriptionString, trans('inventoryList.itemUpdated'));
-        }
-       
         
         //prevent filling up the database when all three values are null
         if(  !is_null( $request->get('value') ) || !is_null( $request->get('inventory_category_id') ) || 
-        !is_null( $request->get('inventory_size_id') )  ){
+        !is_null( $request->get('inventory_size_id') ) || 
+        !is_null( $request->get('min_stock') ) || 
+        !is_null( $request->get('purchase_price') ) || 
+        !is_null( $request->get('sell_price') )  ){
             // dd($request->all() );
             $history = InventoryHistory::create( $request->all() );
             //send email if value under the database marked value
@@ -226,8 +211,10 @@ class InventoryController extends Controller
             }
            
         }
-        
-        return redirect()->back()->with( 'messageSecondary', trans('inventoryList.inventoryUpdated') );
+        $previousUrl = app('url')->previous();
+
+        return redirect()->to($previousUrl.$href)->with( 'messageSecondary', trans('inventoryList.inventoryUpdated') ) ;
+        // return redirect()->back($href);
     }
     
     /**
@@ -387,6 +374,42 @@ class InventoryController extends Controller
         $sizes = InventorySize::find($id);
         $sizes->fill( $request->all() )->save();
         return redirect()->back()->with('messageSecondary', trans('inventoryList.sizeUpdated') );
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function abrechnen()
+    {
+        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
+        $categories = InventoryCategory::where('active',1)->get();
+        $sizes = InventorySize::where('active',1)->get();
+        return view('inventarliste.deduct', compact('categories', 'sizes') );
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function searchAbrechnen(Request $request)
+    {
+        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        dd('currently on break');
+        $searchInput = $request->get('search');    
+        $searchCategories = InventoryCategory::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->get();
+        $categories = InventoryCategory::where('active',1)->get();
+        $activeCategories = $categories->pluck('id')->toArray();
+        $searchInventory = Inventory::whereIn('inventory_category_id',$activeCategories)->where('name','LIKE','%'.$searchInput.'%')->get();
+        
+        
+        $sizes = InventorySize::all();
+        return view('inventarliste.deduct', compact('categories', 'sizes','searchCategories','searchInventory','searchInput') );
     }
     
     /**

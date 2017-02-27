@@ -36,7 +36,7 @@
                 
                     @if($documentTypeMenu->active)
                     
-                        @if($documentTypeMenu->visible_navigation)
+                        @if($documentTypeMenu->visible_navigation && strpos(strtolower($documentTypeMenu->name), 'jurist') === false)
                     
                             @if($documentTypeMenu->id == 1)
                                 <li> <a href="{{ url('dokumente/news') }}">{{ $documentTypeMenu->name }}</a> </li>
@@ -93,7 +93,7 @@
                         
                             @if($documentTypeSubmenu->active)
                             
-                                @if($documentTypeSubmenu->visible_navigation)
+                                @if($documentTypeSubmenu->visible_navigation && strpos(strtolower($documentTypeSubmenu->name), 'jurist') === false)
                             
                                     @if($documentTypeSubmenu->id == 1)
                                         <li> <a href="{{ url('dokumente/news') }}">{{ $documentTypeSubmenu->name }}</a> </li>
@@ -230,6 +230,40 @@
                 </li><!-- end wiki -->
             @endif
             
+            {{--
+            @if( ViewHelper::universalHasPermission( array(28,29) ) == true ) 
+                <!--notiz-->
+                <li class="">
+                    <a href="{{ url('#') }}">{{ ucfirst(trans('navigation.notes')) }}</a>
+                    <!--<a href="{{ url('juristenportal/notiz') }}">{{ ucfirst(trans('navigation.notes')) }}</a>-->
+                </li><!-- end notiz -->
+            @endif
+            @if( ViewHelper::universalHasPermission( array(28,29) ) == true ) 
+                <!--juristenportal-->
+                <li class="">
+                    <a href="{{ url('juristenportal') }}">{{ ucfirst(trans('navigation.juristenPortal')) }}
+                        <span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse">
+                            <li>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.dokumente') ) }} </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('juristenportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.kalender') ) }} </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.akte') ) }} </a>
+                            </li>
+                            <li>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createAkte') ) }} </a>
+                            </li>
+                        </ul>
+                </li><!-- end juristenportal -->
+            @endif
+            --}}
+            
             @if( ViewHelper::universalHasPermission( array(17, 18, 20) ) == true )
                 {{-- removed neptun Verwalter NEPTUN-610 --}}
                 <li class="">
@@ -298,6 +332,11 @@
                         <li>
                             <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }}-{{ trans('navigation.kategorien') }} </a>
                         </li>
+                        {{--
+                        <li>
+                            <a href="{{ url('juristenpotal-kategorien') }}">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
+                        </li>
+                        --}}
                         <li>
                             <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
                         </li>
