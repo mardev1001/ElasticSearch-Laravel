@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
         // $this->call(DummyDocumentSeeder::class);
         // $this->call(DummyWikiCategorySeeder::class);
         // $this->call(DummyWikiStatusSeeder::class);
-        // $this->call(InventarRoleSeeder::class);
-        // $this->call(SatistikRoleSeeder::class);
+        $this->call(SatistikRoleSeeder::class);
+        $this->call(InventarRoleSeeder::class);
         $this->call(JuristenPortalSeeder::class);
     }
 }
