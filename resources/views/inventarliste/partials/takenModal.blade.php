@@ -29,7 +29,6 @@
                         </div>
                         
                         <div class="clearfix"></div><br/>
-                        $inputName, $data, $old, $label = '', $placeholder = '', $required = false,
                         <!-- input box-->
                         <div class="col-md-12 col-lg-12">
                             <div class="form-group">
