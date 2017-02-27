@@ -135,7 +135,7 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //  dd($request->all() );
+        //   dd($request->all() );
         $href = '';
         if($request->has('href') && !empty( $request->get('href') ) ){
             $href = $request->get('href');
