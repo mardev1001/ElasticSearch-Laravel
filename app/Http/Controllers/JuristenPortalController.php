@@ -34,7 +34,7 @@ class JuristenPortalController extends Controller
      */
     public function index()
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         return view('juristenportal.index');
@@ -47,7 +47,7 @@ class JuristenPortalController extends Controller
      */
     public function create()
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
     }
@@ -60,7 +60,7 @@ class JuristenPortalController extends Controller
      */
     public function store(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
     }
@@ -73,7 +73,7 @@ class JuristenPortalController extends Controller
      */
     public function show($id)
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
     }
@@ -86,7 +86,7 @@ class JuristenPortalController extends Controller
      */
     public function edit($id)
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
     }
@@ -100,7 +100,7 @@ class JuristenPortalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
     }
@@ -123,7 +123,7 @@ class JuristenPortalController extends Controller
      */
     public function uploadView()
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         return view('juristenportal.upload');
@@ -138,7 +138,7 @@ class JuristenPortalController extends Controller
      */
     public function upload(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(28,29) ) == false ){
+        if( ViewHelper::universalHasPermission( array(35,36) ) == false ){
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $uploaded = $this->fileUpload($request->file);

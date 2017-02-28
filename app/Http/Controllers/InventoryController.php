@@ -27,7 +27,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $categories = InventoryCategory::where('active',1)->get();
@@ -42,7 +42,7 @@ class InventoryController extends Controller
      */
     public function search(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $searchInput = $request->get('search');    
         $searchCategories = InventoryCategory::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->get();
@@ -63,7 +63,7 @@ class InventoryController extends Controller
      */
     public function create()
     {
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         
         $categories = InventoryCategory::where('active',1)->get();
@@ -106,7 +106,7 @@ class InventoryController extends Controller
      */
     public function show($id)
     {
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
     }
 
@@ -118,7 +118,7 @@ class InventoryController extends Controller
      */
     public function edit($id)
     {
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $data = Inventory::find($id);    
         $categories = InventoryCategory::where('active',1)->get();
@@ -190,7 +190,7 @@ class InventoryController extends Controller
                 
                 $request['subject'] = trans('inventoryList.emailSubject');
                 $template = view('email.lowStock' ,compact('request', 'item') )->render();
-                $mandantUserIds = MandantUserRole::where('role_id', 27)->pluck('mandant_user_id')->toArray();
+                $mandantUserIds = MandantUserRole::where('role_id', 34)->pluck('mandant_user_id')->toArray();
                 $mandatUsers =  MandantUser::whereIn('id',$mandantUserIds)->pluck('user_id')->toArray();
                 // dd($from);
                  
@@ -236,7 +236,7 @@ class InventoryController extends Controller
      */
     public function destroyCategory($id)
     {
-         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+         if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $category = InventoryCategory::find($id);
         
@@ -256,7 +256,7 @@ class InventoryController extends Controller
      */
     public function destroySize($id)
     {
-         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+         if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $size = InventorySize::find($id);
         if( !is_null($size) ){
@@ -274,7 +274,7 @@ class InventoryController extends Controller
      */
     public function history($itemId)
     {
-         if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
+         if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));   
         $item =  Inventory::find($itemId);
         $histories =  InventoryHistory::where('inventory_id',$itemId)
@@ -289,7 +289,7 @@ class InventoryController extends Controller
      */
     public function categories()
     {
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $categories =  InventoryCategory::all();
         return view('inventarliste.categories', compact('categories') );
@@ -303,7 +303,7 @@ class InventoryController extends Controller
      */
     public function postCategories(Request $request)
     {
-         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+         if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $exists = InventoryCategory::where('name',$request->get('name') )->first();
         if( !is_null($exists) )
@@ -323,7 +323,7 @@ class InventoryController extends Controller
      */
     public function updateCategories(Request $request, $id)
     {
-         if( ViewHelper::universalHasPermission( array(27) ) == false  )
+         if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $category = InventoryCategory::find($id);
         $category->fill( $request->all() )->save();
@@ -337,7 +337,7 @@ class InventoryController extends Controller
      */
     public function sizes()
     {
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $sizes = InventorySize::all();
             
@@ -383,7 +383,7 @@ class InventoryController extends Controller
      */
     public function abrechnen()
     {
-        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $categories = InventoryCategory::where('active',1)->get();
@@ -398,7 +398,7 @@ class InventoryController extends Controller
      */
     public function searchAbrechnen(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(7,27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         dd('currently on break');
         $searchInput = $request->get('search');    

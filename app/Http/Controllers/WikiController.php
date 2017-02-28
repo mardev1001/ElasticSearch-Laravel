@@ -316,7 +316,7 @@ class WikiController extends Controller
      */
     public function managmentUser()
     {  
-        if( ViewHelper::universalHasPermission( array(27) ) == false  )
+        if( ViewHelper::universalHasPermission( array(15) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $data = array();
@@ -362,12 +362,7 @@ class WikiController extends Controller
         $wikiPermissions = ViewHelper::getWikiUserCategories();
         $wikiCategories = $wikiPermissions->categoriesIdArray;
         $categories = WikiCategory::whereIn('id',$wikiCategories)->get();
-        // $wikies = WikiPage::whereIn('category_id',$wikiUsers)->orderBy('created_at','desc')->get();
-        //   if( ViewHelper::universalHasPermission(array()) ){
-        //     $categoriesId = WikiCategory::pluck('id')->toArray();
-        //     $categories = WikiCategory::whereIn('id',$categoriesId)->get();
-        //     // $wikies = WikiPage::whereIn('category_id',$categoriesId)->orderBy('created_at','desc')->get();
-        // }
+        
         $users = WikiPage::orderBy('id','asc')->pluck('user_id')->toArray();
         
         $wikiUsers = User::whereIn('id',$users)->get();

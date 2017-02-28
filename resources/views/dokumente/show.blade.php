@@ -234,7 +234,7 @@
                     
                 
                     @if( $document->document_status_id  != 5 )
-                        @if( ViewHelper::universalDocumentPermission($document) && ViewHelper::universalHasPermission(array(26)) ) 
+                        @if( ViewHelper::universalDocumentPermission($document) && ViewHelper::universalHasPermission(array(33)) ) 
                             @if($document->document_status_id == 3)
                                 <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
                             @endif

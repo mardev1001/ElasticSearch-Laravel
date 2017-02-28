@@ -1416,8 +1416,10 @@ class DocumentController extends Controller
         if(($document->document_status_id == 5 && ViewHelper::universalHasPermission( array(14) ) == false ) ||
         ($variantPermissions->permissionExists == false && $documentPermission == false) )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-        //  dd('brejk jorself');
-        if( $this->document->universalDocumentPermission($document,true, true) == false ){
+        
+        //this is the fix  to prevent non document users(authors,freigabe,struktur) to view when document is authorized and not published
+        if( $this->document->universalDocumentPermission($document,false, true) == false &&  
+        ($document->document_status_id == 2  || $document->document_status_id == 6)  ){
             return redirect('/')->with('messageSecondary',trans('documentForm.noPermission') ) ;
         }
         
@@ -2914,7 +2916,7 @@ class DocumentController extends Controller
     public function documentStats($id)
     {
         $document = Document::find($id);
-        if( (ViewHelper::universalDocumentPermission($document) == false) || (ViewHelper::universalHasPermission(array(26)) == false) ) // JIRA Task NEPTUN-650
+        if( (ViewHelper::universalDocumentPermission($document) == false) || (ViewHelper::universalHasPermission(array(33)) == false) ) // JIRA Task NEPTUN-650
              return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
              
         $approvalAllMandants = false;

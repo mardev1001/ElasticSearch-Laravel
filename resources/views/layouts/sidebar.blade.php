@@ -164,14 +164,14 @@
             --}}
             
               
-            @if( ViewHelper::universalHasPermission( array(7,27) ) == true )
+            @if( ViewHelper::universalHasPermission( array(7,34) ) == true )
                 <!--inventarliste-->
                 <li class="">
                     <a href="{{ url('inventarliste') }}">
                         {{ ucfirst( trans('navigation.inventoryList') )}}
                         <span class="fa arrow"></span>
                     </a>
-                    @if( ViewHelper::universalHasPermission( array(27) ) == true )
+                    @if( ViewHelper::universalHasPermission( array(34) ) == true )
                         <ul class="nav nav-second-level collapse">
                             <li>
                                 <a href="{{ url('inventarliste/kategorien') }}">{{ ucfirst( trans('navigation.inventarCategory') )}}</a>
@@ -231,14 +231,14 @@
             @endif
             
             {{--
-            @if( ViewHelper::universalHasPermission( array(28,29) ) == true ) 
+            @if( ViewHelper::universalHasPermission( array(35,36) ) == true ) 
                 <!--notiz-->
                 <li class="">
                     <a href="{{ url('#') }}">{{ ucfirst(trans('navigation.notes')) }}</a>
                     <!--<a href="{{ url('juristenportal/notiz') }}">{{ ucfirst(trans('navigation.notes')) }}</a>-->
                 </li><!-- end notiz -->
             @endif
-            @if( ViewHelper::universalHasPermission( array(28,29) ) == true ) 
+            @if( ViewHelper::universalHasPermission( array(35,36) ) == true ) 
                 <!--juristenportal-->
                 <li class="">
                     <a href="{{ url('juristenportal') }}">{{ ucfirst(trans('navigation.juristenPortal')) }}

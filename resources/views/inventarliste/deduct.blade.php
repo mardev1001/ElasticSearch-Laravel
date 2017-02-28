@@ -70,7 +70,7 @@
                                 <th  class="text-center valign">@lang('inventoryList.number')</th>
                                 <th class="text-center valign">@lang('inventoryList.size')</th>
                                 <th class="text-center valign">@lang('inventoryList.changes')</th>
-                                @if( ViewHelper::universalHasPermission( array(27) ) )
+                                @if( ViewHelper::universalHasPermission( array(34) ) )
                                     <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
                                 @else
                                     <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
@@ -96,7 +96,7 @@
                                             <td class="text-center valign ">
                                                 {{ $item->updated_at }}
                                             </td>
-                                            @if( ViewHelper::universalHasPermission( array(27) ) )
+                                            @if( ViewHelper::universalHasPermission( array(34) ) )
                                             <td class="text-center valign"> 
                                                 <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
                                                     @lang('inventoryList.edit')
@@ -147,7 +147,7 @@
                         <th class="text-center valign">@lang('inventoryList.number')</th>
                         <th class="text-center valign">@lang('inventoryList.size')</th>
                         <th class="text-center valign">@lang('inventoryList.changes')</th>
-                        @if( ViewHelper::universalHasPermission( array(27) ) )    
+                        @if( ViewHelper::universalHasPermission( array(34) ) )    
                             <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
                         @else
                             <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
@@ -176,7 +176,7 @@
                                     <td class="text-center valign ">
                                         {{ $item->updated_at }}
                                     </td>
-                                    @if( ViewHelper::universalHasPermission( array(27) ) )
+                                    @if( ViewHelper::universalHasPermission( array(34) ) )
                                     <td class="text-center valign"> 
                                         <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
                                             @lang('inventoryList.edit')
@@ -205,7 +205,7 @@
                                 <td class"valign"></td>
                                 <td class"valign">Keine Daten vorhanden</td>
                                 <td class"valign"></td>
-                                @if( ViewHelper::universalHasPermission( array(27) ) )
+                                @if( ViewHelper::universalHasPermission( array(34) ) )
                                     <td class="text-center valign no-sort"></td>
                                 @else
                                     <td class="text-center valign no-sort"></tdh>
@@ -267,7 +267,7 @@
                                         <td class="text-center valign ">
                                             {{ $item->updated_at }}
                                         </td>
-                                        @if( ViewHelper::universalHasPermission( array(27) ) )
+                                        @if( ViewHelper::universalHasPermission( array(34) ) )
                                         <td class="text-center valign"> 
                                             <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
                                                 @lang('inventoryList.edit')

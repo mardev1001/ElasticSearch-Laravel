@@ -84,7 +84,7 @@ class HomeController extends Controller
         ->where('documents.active', 1)
         ->where('document_types.document_art', 0)
         ->where(
-            /* Neptun-275 */
+            /* Neptun-345 */
             function($query) use ($myRundCoauthor) {
                 $query->where('user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id);
                 $query->orWhereIn('documents.id', $myRundCoauthor);
