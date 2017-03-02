@@ -5,7 +5,7 @@
             name="{{$inputName}}"
             id="{{$inputName}}@if($number != -1)-{{$number}} @endif"
             class="@foreach( $classes as $class) {{ $class }} @endforeach" 
-            @foreach ($dataTags as $dataTag ) {{$dataTag}} @endforeach
+            @foreach ($dataTags as $dataTag ) {{$dataTag}} @endforeach 
              @if( $required !=false ) required @endif
              @if( isset( $data->$inputName ) && ( $data->$inputName == 1  ) )
         		checked

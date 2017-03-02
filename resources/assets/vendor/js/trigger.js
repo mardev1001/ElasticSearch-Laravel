@@ -105,6 +105,13 @@ $(function () {
     else if (url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }
+    else if (  url.href.indexOf('suche-abrechnen-abgerechnt') != -1 && url.href.indexOf('inventarliste') != -1) {
+        $('a[href$="abrechnen"]').addClass('active').closest('ul').addClass('in').next('ul').addClass('in');
+        console.log('init1');
+    }
+    else if (  url.href.indexOf('suche-abrechnen') != -1 && url.href.indexOf('inventarliste') != -1) {
+        $('a[href$="abrechnen"]:not(.no-margin-bottom)').addClass('active').closest('ul').addClass('in').next('ul').addClass('in');
+    }
     else if (url.href.indexOf('suche') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
     }
@@ -113,6 +120,11 @@ $(function () {
     }
     else if (url.href.indexOf('historie') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
+    }
+   
+    else if ( url.href.indexOf('abrechnen-abgerechnt') != -1     && url.href.indexOf('inventarliste') != -1) {
+        $('a[href$="abrechnen"]').addClass('active').next('ul').addClass('in');
+         console.log('init2');
     }
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
         if(slug == 'aktuelle-meldungen')
@@ -195,6 +207,34 @@ $(function () {
     // activeLink.closest('li').children('ul').addClass('in');
     
     /*End Exapand active class*/
+    
+    /*fix when adding a active to button*/
+        $('a.no-margin-bottom.active').removeClass('active');
+    /* end fix when adding a active to button*/
+    
+    /* Remove required if checkbox is not checked*/
+        $('.trigger-required').on('click touch change',function(){
+            var checkbox = $(this).find('input:checkbox');
+            var checkboxChecked = $(this).find(':checked');
+            var removeRequiredInput = $('.remove-required').find('input');
+            var removeRequiredLabel = $('.remove-required').find('label');
+            console.log(checkbox.attr('id'));
+            console.log(checkboxChecked.attr('id'));
+            if(checkbox.attr('id') == checkboxChecked.attr('id') ){
+               removeRequiredInput.removeAttr('required');
+               removeRequiredLabel.html(removeRequiredLabel.html().replace('*','') );
+            }
+            else{
+                console.log('trigered2');
+                removeRequiredInput.attr('required',true);
+                if(removeRequiredLabel.html().indexOf('*') == -1){
+                    removeRequiredLabel.html(removeRequiredLabel.html()+'*' );
+                }
+                   
+            }
+        });
+    /* End Remove required if checkbox is not checked*/
+    
 
     /* If clicked on arrow expand DD*/
     $('a[href="#"]:contains("fa arrow")').on('click touch',function(){

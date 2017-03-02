@@ -146,7 +146,15 @@ Route::group( array('middleware' => ['auth']), function(){
         
         // inventory routes
         Route::get('inventarliste/abrechnen','InventoryController@abrechnen');
+        Route::get('inventarliste/abrechnen-abgerechnt','InventoryController@abrechnenAbgerechnt');
+        // Route::get('inventarliste/abrechnen/','InventoryController@abrechnen');
+        Route::post('inventarliste/abrechnen/{id}/update','InventoryController@updateAbrechnen');
+        Route::get('inventarliste/suche-abrechnen', function(){ return redirect('inventarliste/abrechnen'); });
         Route::post('inventarliste/suche-abrechnen','InventoryController@searchAbrechnen');
+        Route::get('inventarliste/suche-abrechnen-abgerechnt', function(){ return redirect('inventarliste/abrechnen-abgerechnt'); });
+        Route::post('inventarliste/suche-abrechnen-abgerechnt','InventoryController@searchAbrechnenAbgerechnt');
+        Route::post('inventarliste/abrechnen/pdf','InventoryController@abrechnenPdf');
+        
         Route::get('inventarliste/kategorien','InventoryController@categories');
         Route::post('inventarliste/kategorien','InventoryController@postCategories');
         Route::post('inventarliste/kategorien/{id}/update','InventoryController@updateCategories');

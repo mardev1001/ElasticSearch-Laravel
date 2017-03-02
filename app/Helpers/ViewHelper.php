@@ -87,6 +87,7 @@ class ViewHelper
     static function setCheckbox($inputName, $data, $old, $label = '', $required = false, $classes = array(), $dataTags = array(), $number = -1)
     {
         $string = '';
+      
         $string = view('partials.inputCheckbox',
             compact('inputName', 'classes', 'dataTags', 'data', 'label', 'old', 'required', 'number')
         )->render();

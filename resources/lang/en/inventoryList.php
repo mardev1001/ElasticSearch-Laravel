@@ -57,7 +57,8 @@ return [
     'itemTaken' => 'Anzahl Entnahme',
     'select' => 'wählen',
     'dateWithdrawal' => 'Datum Entnahme',
-    'billed' => 'Abgerechnt',
+    'billed' => 'Abgerechnete',
     'searchDeduct' => 'Materialien abrechnen suche',
     'open' => 'offene',
+    'downloadPDF' => 'Drucken',
 ];

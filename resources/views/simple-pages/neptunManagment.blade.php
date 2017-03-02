@@ -35,7 +35,7 @@
                         <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }}-{{ trans('navigation.kategorien') }} </a>
                     </li>
                     <li>
-                        <a href="{{ url('juristenportal-kategorien') }}">{{ ucfirst( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
+                        <a href="{{ url('juristenportal-kategorien') }}">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
                     </li>
                     <li>
                         <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>

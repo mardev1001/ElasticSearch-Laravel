@@ -12,8 +12,10 @@ use Carbon\Carbon;
 //Models
 use App\User;
 use App\MandantUser;
+use App\Mandant;
 use App\MandantUserRole;
 use App\Inventory;
+use App\MandantInventoryAccounting;
 use App\InventoryCategory;
 use App\InventorySize;
 use App\InventoryHistory;
@@ -42,7 +44,7 @@ class InventoryController extends Controller
      */
     public function search(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         $searchInput = $request->get('search');    
         $searchCategories = InventoryCategory::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->get();
@@ -163,10 +165,17 @@ class InventoryController extends Controller
         }
         $item->fill( $request->all() )->save();
         
+       
         //change for InventoryHistory
         if( $request->has('taken') ){
            $request->merge(['value'=>$request->get('taken') ]);
         }
+         if($request->has('taken') &&  !empty($request->get('mandant_id') )){
+             $request->merge(['inventory_id'=>$item->id,'inventory_category_id' => $item->inventory_category_id,
+             'inventory_size_id' => $item->inventory_size_id, 'sell_price' => $item->sell_price]);
+            MandantInventoryAccounting::create($request->all());
+        }
+        
         $descriptionString = '';
         $request->merge(['user_id' => Auth::user()->id,'inventory_id' => $id]);
         
@@ -274,7 +283,7 @@ class InventoryController extends Controller
      */
     public function history($itemId)
     {
-         if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
+         if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));   
         $item =  Inventory::find($itemId);
         $histories =  InventoryHistory::where('inventory_id',$itemId)
@@ -383,12 +392,66 @@ class InventoryController extends Controller
      */
     public function abrechnen()
     {
-        if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
             
         $categories = InventoryCategory::where('active',1)->get();
         $sizes = InventorySize::where('active',1)->get();
-        return view('inventarliste.deduct', compact('categories', 'sizes') );
+        $mandants = MandantInventoryAccounting::groupBy('mandant_id')
+        ->orderBy('created_at','desc')->where('accounted_for',0)->get();
+        foreach($mandants as $mandant){
+            $items = MandantInventoryAccounting::where('mandant_id',$mandant->mandant_id)->where('accounted_for',0)->get();
+          
+            $mandant->items = $items;
+        }
+        return view('inventarliste.deduct', compact('mandants','categories', 'sizes') );
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function abrechnenAbgerechnt()
+    {
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+            
+        $categories = InventoryCategory::where('active',1)->get();
+        $sizes = InventorySize::where('active',1)->get();
+        $mandants = MandantInventoryAccounting::groupBy('mandant_id')->where('accounted_for',1)->get();
+        foreach($mandants as $mandant){
+            $items = MandantInventoryAccounting::where('mandant_id',$mandant->mandant_id)
+            ->orderBy('created_at','desc')->where('accounted_for',1)->get();
+            $mandant->items = $items;
+        }
+        return view('inventarliste.deduct', compact('mandants','categories', 'sizes') );
+    }
+    
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAbrechnen(Request $request, $id)
+    {
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        $accounting = MandantInventoryAccounting::find($id);
+        if(!$request->has('accounted_for')){
+            $request->merge(['accounted_for' => 0]);
+        }
+        $accounting->fill( $request->all() )->save();
+        
+        $href = '';
+        if($request->has('href') && !empty( $request->get('href') ) ){
+            $href = $request->get('href');
+        }
+        $previousUrl = app('url')->previous();
+
+        return redirect()->to($previousUrl.$href)->with('messageSecondary', trans('inventoryList.itemUpdated') );;
     }
     
     /**
@@ -398,20 +461,93 @@ class InventoryController extends Controller
      */
     public function searchAbrechnen(Request $request)
     {
-        if( ViewHelper::universalHasPermission( array(7,34) ) == false  )
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
-        dd('currently on break');
+        
         $searchInput = $request->get('search');    
-        $searchCategories = InventoryCategory::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->get();
-        $categories = InventoryCategory::where('active',1)->get();
-        $activeCategories = $categories->pluck('id')->toArray();
-        $searchInventory = Inventory::whereIn('inventory_category_id',$activeCategories)->where('name','LIKE','%'.$searchInput.'%')->get();
+        $mandants = Mandant::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->pluck('id');
         
-        
-        $sizes = InventorySize::all();
-        return view('inventarliste.deduct', compact('categories', 'sizes','searchCategories','searchInventory','searchInput') );
+        $searchMandants = MandantInventoryAccounting::groupBy('mandant_id')->whereIn('mandant_id',$mandants)
+        ->where('accounted_for',0)->get();
+        foreach($searchMandants as $mandant){
+            $items = MandantInventoryAccounting::where('mandant_id',$mandant->mandant_id)->where('accounted_for',0)
+            ->orderBy('created_at','desc')->get();
+            $mandant->items = $items;
+        }
+        return view('inventarliste.deduct', compact('searchMandants','searchInput','categories', 'sizes') );
     }
     
+    public function searchAbrechnenAbgerechnt(Request $request)
+    {
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        
+        $searchInput = $request->get('search');    
+        $mandants = Mandant::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->pluck('id');
+        
+        $searchMandants = MandantInventoryAccounting::groupBy('mandant_id')->whereIn('mandant_id',$mandants)
+        ->where('accounted_for',1)->get();
+        foreach($searchMandants as $mandant){
+            $items = MandantInventoryAccounting::where('mandant_id',$mandant->mandant_id)->where('accounted_for',1)
+            ->orderBy('created_at','desc')->get();
+            $mandant->items = $items;
+        }
+        return view('inventarliste.deduct', compact('searchMandants','searchInput','categories', 'sizes') );
+    }
+    
+    public function abrechnenPdf(Request $request)
+    {
+        if( ViewHelper::universalHasPermission( array(34) ) == false  )
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        $searchInput = $request->get('search');
+        $accountedFor = $request->get('accounted_for');
+        $mandants = Mandant::where('active',1)->where('name','LIKE','%'.$searchInput.'%')->pluck('id');
+        
+        $mandants = MandantInventoryAccounting::groupBy('mandant_id')->whereIn('mandant_id',$mandants)
+        ->where('accounted_for',$accountedFor)->get();
+        foreach($mandants as $mandant){
+            $items = MandantInventoryAccounting::where('mandant_id',$mandant->mandant_id)->where('accounted_for',$accountedFor)
+            ->orderBy('created_at','desc')->get();
+            $mandant->items = $items;
+        }
+        
+        $margins =  $this->setPdfMargins($document);
+        $or = "P";
+        
+        $pdf = \App::make('mpdf.wrapper',['th','A4','','',
+        $margins->left,$margins->right,$margins->top,$margins->bottom,$margins->headerTop,$margins->footerTop,$or]);
+             
+        $pdf->debug = true; 
+       
+        // return $footer;
+        $render = view('pdf.abrechnen', compact('mandants'))->render();
+        $pdf->AddPage($or);
+        $pdf->WriteHTML($render);
+        
+        // dd($pdf); 
+        return $pdf->stream();
+    }
+    
+    /**
+     * Return pdf margins
+     * @param collection $document
+     * @return object $margins
+     */
+    private function setPdfMargins($document){
+        
+        $margins =  new \StdClass();
+       /* Set the document orientation */
+        $margins->orientation = "P";
+        $margins->left = 10;
+        $margins->right = 10;
+        $margins->top = 10;
+        $margins->bottom = 10;
+        $margins->headerTop = 0;
+        $margins->footerTop = 5;
+        
+        
+        return $margins;
+    }
     /**
      * Format description text string
      *

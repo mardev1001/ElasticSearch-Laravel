@@ -182,9 +182,9 @@
                             <li>
                                 <a href="{{ url('inventarliste/create') }}">{{ ucfirst( trans('navigation.newInventory') )}}</a>
                             </li>
-                            <!--<li>-->
-                            <!--    <a href="{{ url('inventarliste/materialien-abrechnen') }}">{{ ucfirst( trans('navigation.deduct') )}}</a>-->
-                            <!--</li>-->
+                            <li>
+                                <a href="{{ url('inventarliste/abrechnen') }}">{{ ucfirst( trans('navigation.deduct') )}}</a>
+                            </li>
                            
                         </ul>
                     @endif
@@ -230,39 +230,39 @@
                 </li><!-- end wiki -->
             @endif
             
-            {{--
+            
             @if( ViewHelper::universalHasPermission( array(35,36) ) == true ) 
                 <!--notiz-->
                 <li class="">
-                    <a href="{{ url('#') }}">{{ ucfirst(trans('navigation.notes')) }}</a>
+                    <a href="{{ url('#') }}">{{ ucfirst(trans('juristenPortal.notes')) }}</a>
                     <!--<a href="{{ url('juristenportal/notiz') }}">{{ ucfirst(trans('navigation.notes')) }}</a>-->
                 </li><!-- end notiz -->
             @endif
             @if( ViewHelper::universalHasPermission( array(35,36) ) == true ) 
                 <!--juristenportal-->
                 <li class="">
-                    <a href="{{ url('juristenportal') }}">{{ ucfirst(trans('navigation.juristenPortal')) }}
+                    <a href="{{ url('juristenportal') }}">{{ ucfirst(trans('juristenPortal.juristenportal')) }}
                         <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.dokumente') ) }} </a>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.documents') ) }} </a>
                             </li>
                             <li>
                                 <a href="{{ url('juristenportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
                             </li>
                             <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.kalender') ) }} </a>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.calendar') ) }} </a>
                             </li>
                             <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.akte') ) }} </a>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.files') ) }} </a>
                             </li>
                             <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createAkte') ) }} </a>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createFile') ) }} </a>
                             </li>
                         </ul>
                 </li><!-- end juristenportal -->
             @endif
-            --}}
+            
             
             @if( ViewHelper::universalHasPermission( array(17, 18, 20) ) == true )
                 {{-- removed neptun Verwalter NEPTUN-610 --}}
@@ -332,11 +332,11 @@
                         <li>
                             <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }}-{{ trans('navigation.kategorien') }} </a>
                         </li>
-                        {{--
+                        
                         <li>
                             <a href="{{ url('juristenpotal-kategorien') }}">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
                         </li>
-                        --}}
+                        
                         <li>
                             <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
                         </li>

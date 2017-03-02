@@ -41,13 +41,20 @@
                 </div>
             </div>
             <div class="col-md-4 col-lg-3">
-                <div class="form-group">
-                    {!! ViewHelper::setInput('sell_price', $data,old('sell_price'), 
-                    trans('inventoryList.sellPrice'), trans('inventoryList.sellPrice'), true,'text', array('float'),array('min="1"', 'step="0.1"') ) !!}
+                <div class="form-group remove-required">
+                    
+                    @if( $data->neptun_intern == 1 && Request::is('*/edit') )
+                    
+                        {!! ViewHelper::setInput('sell_price', $data,old('sell_price'), 
+                        trans('inventoryList.sellPrice'), trans('inventoryList.sellPrice'), false,'text', array('float'),array('min="1"', 'step="0.1"') ) !!}
+                    @else
+                        {!! ViewHelper::setInput('sell_price', $data,old('sell_price'), 
+                        trans('inventoryList.sellPrice'), trans('inventoryList.sellPrice'), true,'text', array('float'),array('min="1"', 'step="0.1"') ) !!}
+                    @endif
                 </div>
            </div>
             <div class="col-md-4 col-lg-3">
-                <div class="form-group">
+                <div class="form-group trigger-required">
                     <br/>
                    {!! ViewHelper::setCheckbox('neptun_intern',$data,old('neptun_intern'),trans('inventoryList.neptunIntern') ) !!}
                 </div>

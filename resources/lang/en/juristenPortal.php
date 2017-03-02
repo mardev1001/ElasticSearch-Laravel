@@ -1,12 +1,13 @@
 <?php
 
 return [
-    'juristenPortal' => 'JuristenPortal',
-    'dokumente' => 'Dokumente',
+    'juristenportal' => 'Juristenportal',
+    'documents' => 'Dokumente',
     'upload' => 'Upload',
     'calendar' => 'Kalender',
-    'akte' => 'Akte',
-    'createAkte' => 'Akte anlegen',
+    'files' => 'Akten',
+    'notes' => 'Notizen',
+    'createFile' => 'Akte anlegen',
     'overview' => 'Übersicht',
     'category' => 'Kategorie',
     'categories' => 'Kategorien',
