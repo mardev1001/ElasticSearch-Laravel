@@ -50,7 +50,7 @@ return [
     'invetoryCategoryDeleted' => 'Kategorie gelöscht',
     'invetorySizeDeleted' => 'Größe gelöscht',
     'lowerThanZero' => 'Unter Null',
-    'emailSubject' => 'Warnung: Niedriger Lagerbestand',
+    'emailSubject' => 'Achtung: Mindestbestand erreicht',
     'itemCreated' => 'Daten hinzugefügt',
     'itemUpdated' => 'Daten aktualisiert',
     'valueUpdated' => 'Anzahl antualisier',

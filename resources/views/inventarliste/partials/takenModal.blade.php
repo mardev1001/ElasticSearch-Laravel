@@ -9,6 +9,7 @@
             </div>        
             {!! Form::open(['route' => ['inventarliste.update', 'inventarliste'=> $item->id], 'method' => 'PATCH']) !!}
                 <input type="hidden" name="href" value="#collapseInventory{{$item->category->id}}" />
+                <input type="hidden" name="search" value="{{$searchParam}}" />
             <div class="modal-body">
                 <p class="text-left"><strong class="bigger">@lang('inventoryList.howManyTaken')</strong></p>
                 <div class="row">

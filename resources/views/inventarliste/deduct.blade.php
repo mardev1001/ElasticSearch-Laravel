@@ -126,7 +126,7 @@
                                @foreach($mandant->items as $k => $item)
                                     <tr>
                                 {!! Form::open(['url' => ['inventarliste/abrechnen/'.$item->id.'/update'], 'method' => 'POST']) !!}
-                                <input type="hidden" name="href" value="#collapseInventory{{$mandant->id}}" />
+                                    <input type="hidden" name="href" value="#collapseInventory{{$mandant->id}}" />
                                     <td class="text-center valign">
                                         {{ $item->item->name }}
                                     </td>

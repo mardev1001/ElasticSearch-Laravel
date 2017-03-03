@@ -56,13 +56,8 @@
                     {!! Form::open(['action' => 'InventoryController@search', 'method'=>'POST']) !!}
                         <div class="input-group">
                             <div class="col-md-12 col-lg-12">
-                                @if( isset($searchInput) ) 
-                                    {!! ViewHelper::setInput('search', '',$searchInput, 
-                                    trans('inventoryList.name'), trans('inventoryList.name'), true) !!}
-                                @else
-                                    {!! ViewHelper::setInput('search', '',old('search'), trans('inventoryList.name'),
+                              {!! ViewHelper::setInput('search', '',old('search',$searchInput), trans('inventoryList.name'),
                                     trans('inventoryList.name'), true) !!}
-                                @endif
                             </div>
                             <div class="col-md-12 col-lg-12">
                                 <span class="custom-input-group-btn">
@@ -81,6 +76,7 @@
     @if( $searchCategories || $searchInventory )
         <!-- search results categories categorie box-->
         @if( count($searchCategories) )
+    
             <h2 class="title">{{ trans('inventoryList.categorySearchResults') }}</h2>
                 @foreach( $searchCategories as $category)
                     <div class="panel-group">
@@ -117,11 +113,12 @@
                                                 <td class="text-center valign">
                                                     {{ $item->name }}
                                                 </td>
+                                             
                                                 <td class="text-center valign ">
                                                     <a href="#" data-toggle="modal" data-target="#item-taken-{{$item->id}}">
                                                         {{ $item->value }}
                                                     </a>
-                                                    {!! ViewHelper::generateInventoryTakenModal($item) !!}  
+                                                    {!! ViewHelper::generateInventoryTakenModal($item,$searchInput) !!}  
                                                 </td>
                                                 <td class="text-center valign ">
                                                     {{ $item->size->name }}
@@ -202,7 +199,7 @@
                                             <a href="#" data-toggle="modal" data-target="#item-taken-{{$item->id}}">
                                                 {{ $item->value }}
                                             </a>
-                                            {!! ViewHelper::generateInventoryTakenModal($item) !!}  
+                                            {!! ViewHelper::generateInventoryTakenModal($item,$searchInput) !!}  
                                         </td>
                                         <td class="text-center valign ">
                                             {{ $item->size->name }}

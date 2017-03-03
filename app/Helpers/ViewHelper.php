@@ -1358,13 +1358,13 @@ class ViewHelper
      *
      * @return template
      */
-    public static function generateInventoryTakenModal($item)
+    public static function generateInventoryTakenModal($item, $searchParam = '')
     {
         $categories = InventoryCategory::all();
         $sizes = InventorySize::all();
         $mandants = Mandant::whereNotIn('id', array(1))->get();
 
-        return view('inventarliste.partials.takenModal', compact('item', 'categories', 'sizes', 'mandants'))->render();
+        return view('inventarliste.partials.takenModal', compact('item', 'categories', 'sizes', 'mandants', 'searchParam'))->render();
     }
 
     /**

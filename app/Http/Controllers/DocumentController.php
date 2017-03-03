@@ -1000,12 +1000,15 @@ class DocumentController extends Controller
              $document->approval_all_roles = 0; 
              $dirty=$this->dirty(false,$document);
              $document->save();
-             if( in_array('Alle',$request->get('roles') ) ){
+             if( !count($request->get('roles')) || ( $request->get('roles') != null && in_array('Alle',$request->get('roles') ) )   ){
                 //  dd( $request->get('roles') );
-                 $key = array_search('Alle', $request->get('roles') );
-                 $tempArr = $request->get('roles');
-                 unset($tempArr[$key] );
-                 $request->merge( array( 'roles' => $tempArr ) );
+                if( is_null($request->get('roles')) ){
+                    $request->merge(array('roles'=>array('Alle'=>'Alle')));
+                }
+                $key = array_search('Alle', $request->get('roles') );
+                $tempArr = $request->get('roles');
+                unset($tempArr[$key] );
+                $request->merge( array( 'roles' => $tempArr ) );
              }
         }
         

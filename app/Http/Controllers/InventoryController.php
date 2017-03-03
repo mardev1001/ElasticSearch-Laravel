@@ -145,7 +145,10 @@ class InventoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //   dd($request->all() );
+        $search = '';
+        if ($request->has('search') && !empty($request->get('search'))) {
+            $search = $request->get('search');
+        }
         $href = '';
         if ($request->has('href') && !empty($request->get('href'))) {
             $href = $request->get('href');
@@ -224,6 +227,9 @@ class InventoryController extends Controller
             }
         }
         $previousUrl = app('url')->previous();
+       /* if (strpos($previousUrl, 'suche') !== false && ($search)) {
+            return redirect()->back()->withInput();
+        }*/
 
         return redirect()->to($previousUrl.$href)->with('messageSecondary', trans('inventoryList.inventoryUpdated'));
         // return redirect()->back($href);

@@ -225,7 +225,8 @@
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                             <tr>
                                                 <td dir="ltr" style="font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
-                                                    Der Artikel {{$item->name}} ist in niedrigen Lagerbestand. Derzeit sind {{$item->value}} übrig.
+                                                    Der Artikel {{$item->name}} hat den Mindestbestand erreicht.
+                                                    Derzeit ist der Restbestand bei {{$item->value}} Artikeln. 
 													<!-- Button : Begin -->
                                                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
                                                         
