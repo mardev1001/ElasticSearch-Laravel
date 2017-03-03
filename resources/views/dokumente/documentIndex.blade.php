@@ -62,6 +62,8 @@
                                                 </li>
                                             @elseif($documentType->id == 5)
                                                 <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentType->name }}</a> </li>
+                                            @elseif(in_array($documentType->id, [7,8]))
+                                                {{-- DONT SHOW JURIST DOKUS --}}
                                             @elseif($documentType->id != 1)
                                                 <li> <a href="{{ url('dokumente/typ/' . str_slug($documentType->name)) }}">{{ $documentType->name }}</a> </li>
                                             @endif

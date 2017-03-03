@@ -36,7 +36,7 @@
                 
                     @if($documentTypeMenu->active)
                     
-                        @if($documentTypeMenu->visible_navigation && strpos(strtolower($documentTypeMenu->name), 'jurist') === false)
+                        @if($documentTypeMenu->visible_navigation)
                     
                             @if($documentTypeMenu->id == 1)
                                 <li> <a href="{{ url('dokumente/news') }}">{{ $documentTypeMenu->name }}</a> </li>
@@ -71,6 +71,8 @@
                                 </li>
                             @elseif($documentTypeMenu->id == 5)
                                 <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentTypeMenu->name }}</a> </li>
+                            @elseif(in_array($documentTypeMenu->id, [7,8]))
+                                {{-- DONT SHOW JURIST DOKUS --}}
                             @elseif($documentTypeMenu->id != 1 )
                                 <li> <a href="{{ url('dokumente/typ/' . str_slug($documentTypeMenu->name)) }}">{{ $documentTypeMenu->name }}</a> </li>
                             @endif
@@ -93,7 +95,7 @@
                         
                             @if($documentTypeSubmenu->active)
                             
-                                @if($documentTypeSubmenu->visible_navigation && strpos(strtolower($documentTypeSubmenu->name), 'jurist') === false)
+                                @if($documentTypeSubmenu->visible_navigation)
                             
                                     @if($documentTypeSubmenu->id == 1)
                                         <li> <a href="{{ url('dokumente/news') }}">{{ $documentTypeSubmenu->name }}</a> </li>
@@ -128,6 +130,8 @@
                                         </li>
                                     @elseif($documentTypeSubmenu->id == 5)
                                         <li> <a href="{{ url('dokumente/vorlagedokumente') }}">{{ $documentTypeSubmenu->name }}</a> </li>
+                                    @elseif(in_array($documentTypeSubmenu->id, [7,8]))
+                                        {{-- DONT SHOW JURIST DOKUS --}}
                                     @elseif($documentTypeSubmenu->id != 1 )
                                         <li> <a href="{{ url('dokumente/typ/' . str_slug($documentTypeSubmenu->name)) }}">{{ $documentTypeSubmenu->name }}</a> </li>
                                     @endif
