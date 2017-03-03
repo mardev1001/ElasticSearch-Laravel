@@ -201,15 +201,21 @@ class DocumentTypeController extends Controller
      */
     public function devSandbox(Request $request)
     {
-        if(ViewHelper::getMandantIsNeptun(Auth::user()->id)) echo 'NEPTUN Mandant';
+        // if(ViewHelper::getMandantIsNeptun(Auth::user()->id)) echo 'NEPTUN Mandant';
         
-        // $roleIds = array(16); // Assign all roles IDs to populate the MandantUserRole-s
-        // $mandantUsersRoles = MandantUserRole::whereIn('role_id', $roleIds)->groupBy('mandant_user_id')->get();
+        // $mandantUsersRoles = MandantUserRole::where('role_id', 40)->groupBy('mandant_user_id')->get();
         // $mandantUsers = MandantUser::whereNotIn('id', array_pluck($mandantUsersRoles, 'mandant_user_id'))->orderBy('mandant_id')->orderBy('user_id')->get();
         // foreach($mandantUsers as $mu){
-        //     foreach($roleIds as $roleId){
-        //         MandantUserRole::create(['mandant_user_id' => $mu->id, 'role_id' => $roleId]);
-        //     }
+        //     if($mu->mandant->rights_admin == false)
+        //         MandantUserRole::create(['mandant_user_id' => $mu->id, 'role_id' => 40]);
+        // }
+        
+        // $mandantUsersRoles = MandantUserRole::where('role_id', 14)->groupBy('mandant_user_id')->get();
+        // dd($mandantUsersRoles);
+        // foreach($mandantUsersRoles as $mur) $mur->forceDelete();
+        // $mandantUsers = MandantUser::whereNotIn('id', array_pluck($mandantUsersRoles, 'mandant_user_id'))->orderBy('mandant_id')->orderBy('user_id')->get();
+        // foreach($mandantUsers as $mu){
+        //     MandantUserRole::create(['mandant_user_id' => $mu->id, 'role_id' => 14]);
         // }
         
     }

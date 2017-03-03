@@ -71,7 +71,11 @@
 
     @foreach( $mandants as $mandant)
         <div class="first-title first">
-            <h3>({{$mandant->mandant->mandant_number}}) {{$mandant->mandant->name}} </h3>
+            @if($mandant->mandant)
+                <h3>({{$mandant->mandant->mandant_number}}) {{$mandant->mandant->name}} </h3>
+            @else
+                <h3>({{$mandant->mandant_number}}) {{$mandant->name}} </h3>
+            @endif
         </div>
     
         <div class="table-container">

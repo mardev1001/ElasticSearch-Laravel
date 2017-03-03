@@ -6,7 +6,6 @@
 
 @section('content')
 
-
 <!--search row-->
 <div class="row">
     <div class="col-sm-12 ">
@@ -14,15 +13,23 @@
             <h2 class="title"> @lang('inventoryList.searchDeduct')</h2>
             <div class="box  box-white">
                 <div class="row">
-                @if(Request::is('*/abrechnen-abgerechnt*') )    
+                @if(Request::is('*abrechnen-abgerechnt*') )    
                     {!! Form::open(['url' => 'inventarliste/suche-abrechnen-abgerechnt', 'method'=>'POST']) !!}
+                @elseif(Request::is('*abrechnen-alle*') )    
+                    {!! Form::open(['url' => 'inventarliste/suche-abrechnen-alle', 'method'=>'POST']) !!}
                 @else    
                     {!! Form::open(['url' => 'inventarliste/suche-abrechnen', 'method'=>'POST']) !!}
                 @endif
-                        <div class="input-group">
-                            <div class="col-md-12 col-lg-12">
-                                {!! ViewHelper::setInput('search', '',old('search',$searchInput), trans('navigation.mandant'),
-                                trans('inventoryList.mandant'), true) !!}
+                      
+                            <div class="col-xs-12 col-md-8 col-lg-4">
+                                <select name="search" class="form-control select" width="120px!important;" data-placeholder="{{ strtoupper(trans('inventoryList.search').' '.trans('inventoryList.searchTextOptions')) }}" required>
+                                    <option></option>
+                                    @foreach($searchSuggestions as $suggestion)
+                                        <option @if(isset($searchInput) && ($searchInput == $suggestion)) selected @endif value="{{$suggestion}}">
+                                            {{$suggestion}}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-12 col-lg-12">
                                 <span class="custom-input-group-btn">
@@ -31,7 +38,6 @@
                                     </button>
                                 </span>
                             </div>
-                        </div>
                     {!! Form::close() !!}
                 </div>
             </div><!-- end box -->
@@ -54,6 +60,10 @@
                             <a href="{{ url('inventarliste/abrechnen-abgerechnt')}}" class="btn btn-primary no-margin-bottom">
                                 {{ trans('inventoryList.billed') }} 
                             </a>
+                            
+                            <a href="{{ url('inventarliste/abrechnen-alle')}}" class="btn btn-primary no-margin-bottom">
+                                {{ trans('inventoryList.all') }} 
+                            </a>
                            
                         </span>
                     </div>
@@ -63,8 +73,10 @@
                             {!! Form::open(['url' => 'inventarliste/abrechnen/pdf', 'method'=>'POST','target'=>'_blank']) !!}
                        
                                 <input type="hidden" name="accounted_for"
-                                @if(Request::is('*/abrechnen-abgerechnt*') )  
-                                value="1" 
+                                @if(Request::is('*abrechnen-abgerechnt*') )  
+                                    value="1" 
+                                @elseif(Request::is('*abrechnen-alle*') )  
+                                    value="all"
                                 @else    
                                     value="0"
                                 @endif />
@@ -104,7 +116,7 @@
                                     <th class="text-center valign">@lang('inventoryList.number')</th>
                                     <th class="text-center valign">@lang('inventoryList.size')</th>
                                     <th class="text-center valign">@lang('inventoryList.sellPrice')</th>
-                                    <th class="text-center valign no-sort">@lang('inventoryList.dateWithdrawal')</th>
+                                    <th class="text-center valign ">@lang('inventoryList.dateWithdrawal')</th>
                                     <th class="text-center valign no-sort">@lang('inventoryList.billed')</th>
                                     <th class="text-center valign no-sort"></th>
                                 </tr>
@@ -212,7 +224,7 @@
                             <h4 class="panel-title">
                                     <a data-toggle="collapse" data-target="#collapseInventory{{$mandant->id}}" class="collapsed transform-normal" 
                                        href="#collapseInventory{{$mandant->id}}">
-                                      ({{$mandant->mandant->mandant_number}}) {{$mandant->mandant->name}} 
+                                      ({{$mandant->mandant_number}}) {{$mandant->name}} 
                                     </a>
                             </h4>
                         </div><!--end .panel-heading -->    
@@ -227,7 +239,7 @@
                                         <th  class="text-center valign">@lang('inventoryList.number')</th>
                                         <th class="text-center valign">@lang('inventoryList.size')</th>
                                         <th class="text-center valign">@lang('inventoryList.sellPrice')</th>
-                                        <th class="text-center valign no-sort">@lang('inventoryList.dateWithdrawal')</th>
+                                        <th class="text-center valign">@lang('inventoryList.dateWithdrawal')</th>
                                         <th class="text-center valign no-sort">@lang('inventoryList.billed')</th>
                                         <th class="text-center valign no-sort"></th>
                                     </tr>

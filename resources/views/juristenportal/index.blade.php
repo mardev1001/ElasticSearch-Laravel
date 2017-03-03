@@ -14,25 +14,25 @@
     <div class="col-xs-12">
         <div class="col-xs-12 box-wrapper box-white">
             
-            <h2 class="title">{{ ucfirst( trans('navigation.juristenPortal') )}}</h2>
+            <h2 class="title">{{ ucfirst( trans('juristenPortal.juristenportal') )}}</h2>
             
             <div class="box iso-category-overview">
                 
                 <ul class="level-1">
                     <li>
-                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.dokumente') ) }} </a>
+                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.documents') ) }} </a>
                     </li>
                     <li>
                         <a href="{{ url('juristenportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
                     </li>
                     <li>
-                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.kalender') ) }} </a>
+                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.calendar') ) }} </a>
                     </li>
                     <li>
-                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.akte') ) }} </a>
+                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.files') ) }} </a>
                     </li>
                     <li>
-                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createAkte') ) }} </a>
+                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createFile') ) }} </a>
                     </li>
                 </ul>
                 

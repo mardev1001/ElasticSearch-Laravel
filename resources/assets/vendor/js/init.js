@@ -95,14 +95,14 @@ $(function() {
             [$('th.defaultSort').index(), 'asc']
         ],
     });
-    
+
     /*Universal  panel openner*/
-    if( $('.panel-group').length){
-        if(window.location.hash) {
-         $("a[href='"+window.location.hash+"']").click();
+    if ($('.panel-group').length) {
+        if (window.location.hash) {
+            $(".container-fluid a[href='" + window.location.hash + "']").click();
         }
     }
-    
+
 
     /*Universal  panel openner*/
 
@@ -131,7 +131,7 @@ $(function() {
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
-                plugins: ["table",'link'],
+                plugins: ["table", 'link'],
                 toolbar1: "link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 //width: docWidth,
@@ -170,37 +170,37 @@ $(function() {
                                 processTableColumn(e);
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'p') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     var table = $(e.element).closest('table');
-                                    if( table.find('li').length ){
-                                        table.find('td').each(function(){
-                                           tableFontCorrection($(this)); 
+                                    if (table.find('li').length) {
+                                        table.find('td').each(function() {
+                                            tableFontCorrection($(this));
                                         });
-                                        table.find('p').each(function(){
-                                           tableFontCorrection($(this)); 
+                                        table.find('p').each(function() {
+                                            tableFontCorrection($(this));
                                         });
                                     }
-                                    
+
                                 }
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'li') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     tableRow = $(e.element).closest('tr');
-                                      tableRow.find('td').each(function(){
+                                    tableRow.find('td').each(function() {
                                         removeCss($(this), 'font-size');
                                         removeCss($(this), 'font-size', 'data-mce-style');
                                         removeCss($(this), 'line-height');
                                         removeCss($(this), 'line-height', 'data-mce-style');
-                                        setNewElementAttributes($(this), 'font-size' , 'style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'style', '20px ; ');
-                                        
-                                        setNewElementAttributes($(this), 'font-size' , 'data-mce-style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'data-mce-style', '22px ; ');
+                                        setNewElementAttributes($(this), 'font-size', 'style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'style', '20px ; ');
+
+                                        setNewElementAttributes($(this), 'font-size', 'data-mce-style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'data-mce-style', '22px ; ');
                                     });
                                 }
-                              
+
                             }
-                           
+
                         });
 
                         /*Image setup */
@@ -261,7 +261,7 @@ $(function() {
             tinymce.init({
                 selector: '.content-editor',
                 skin_url: '/css/style',
-                plugins: ["table",'link'],
+                plugins: ["table", 'link'],
                 toolbar1: " link |undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 height: docHeight,
@@ -299,37 +299,37 @@ $(function() {
                                 processTableColumn(e);
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'p') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     var table = $(e.element).closest('table');
-                                    if( table.find('li').length ){
-                                        table.find('td').each(function(){
-                                           tableFontCorrection($(this)); 
+                                    if (table.find('li').length) {
+                                        table.find('td').each(function() {
+                                            tableFontCorrection($(this));
                                         });
-                                        table.find('p').each(function(){
-                                           tableFontCorrection($(this)); 
+                                        table.find('p').each(function() {
+                                            tableFontCorrection($(this));
                                         });
                                     }
-                                    
+
                                 }
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'li') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     tableRow = $(e.element).closest('tr');
-                                      tableRow.find('td').each(function(){
+                                    tableRow.find('td').each(function() {
                                         removeCss($(this), 'font-size');
                                         removeCss($(this), 'font-size', 'data-mce-style');
                                         removeCss($(this), 'line-height');
                                         removeCss($(this), 'line-height', 'data-mce-style');
-                                        setNewElementAttributes($(this), 'font-size' , 'style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'style', '20px ; ');
-                                        
-                                        setNewElementAttributes($(this), 'font-size' , 'data-mce-style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'data-mce-style', '22px ; ');
+                                        setNewElementAttributes($(this), 'font-size', 'style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'style', '20px ; ');
+
+                                        setNewElementAttributes($(this), 'font-size', 'data-mce-style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'data-mce-style', '22px ; ');
                                     });
                                 }
-                              
+
                             }
-                           
+
                         });
 
                         /*Image setup */
@@ -397,7 +397,7 @@ $(function() {
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
-                plugins: ["table",'link'], 
+                plugins: ["table", 'link'],
                 toolbar1: "link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 //width: docWidth,
@@ -443,37 +443,37 @@ $(function() {
                                 processTableColumn(e);
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'p') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     var table = $(e.element).closest('table');
-                                    if( table.find('li').length ){
-                                        table.find('td').each(function(){
-                                           tableFontCorrection($(this)); 
+                                    if (table.find('li').length) {
+                                        table.find('td').each(function() {
+                                            tableFontCorrection($(this));
                                         });
-                                        table.find('p').each(function(){
-                                           tableFontCorrection($(this)); 
+                                        table.find('p').each(function() {
+                                            tableFontCorrection($(this));
                                         });
                                     }
-                                    
+
                                 }
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'li') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     tableRow = $(e.element).closest('tr');
-                                      tableRow.find('td').each(function(){
+                                    tableRow.find('td').each(function() {
                                         removeCss($(this), 'font-size');
                                         removeCss($(this), 'font-size', 'data-mce-style');
                                         removeCss($(this), 'line-height');
                                         removeCss($(this), 'line-height', 'data-mce-style');
-                                        setNewElementAttributes($(this), 'font-size' , 'style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'style', '20px ; ');
-                                        
-                                        setNewElementAttributes($(this), 'font-size' , 'data-mce-style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'data-mce-style', '22px ; ');
+                                        setNewElementAttributes($(this), 'font-size', 'style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'style', '20px ; ');
+
+                                        setNewElementAttributes($(this), 'font-size', 'data-mce-style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'data-mce-style', '22px ; ');
                                     });
                                 }
-                              
+
                             }
-                           
+
                         });
 
                         /*Image setup */
@@ -531,20 +531,20 @@ $(function() {
         setNewTdAttributes(image, height, 'style', true)
             // console.log('height:' + height);
     }
-    
-    function tableFontCorrection(element){
-        
+
+    function tableFontCorrection(element) {
+
         removeCss(element, 'font-size');
         removeCss(element, 'font-size', 'data-mce-style');
         removeCss(element, 'line-height');
         removeCss(element, 'line-height', 'data-mce-style');
-        setNewElementAttributes(element, 'font-size' , 'style', '18px ; ');
-        setNewElementAttributes(element, 'line-height' , 'style', '20px ; ');
-        
-        setNewElementAttributes(element, 'font-size' , 'data-mce-style', '18px ; ');
-        setNewElementAttributes(element, 'line-height' , 'data-mce-style', '22px ; ');
+        setNewElementAttributes(element, 'font-size', 'style', '18px ; ');
+        setNewElementAttributes(element, 'line-height', 'style', '20px ; ');
+
+        setNewElementAttributes(element, 'font-size', 'data-mce-style', '18px ; ');
+        setNewElementAttributes(element, 'line-height', 'data-mce-style', '22px ; ');
     }
-    
+
     function processTableRowsAndCells(td) {
         var table = td.closest('table');
         table.find('tr').each(function() {
@@ -574,16 +574,16 @@ $(function() {
 
     function processTableColumn(e) {
         var td = $(e.element),
-        table = td.closest('table'),
+            table = td.closest('table'),
             maxHeight = $(e.element).height();
-        
-        if( table.find('li').length ){
+
+        if (table.find('li').length) {
             console.log('has');
-            table.find('td').each(function(){
-               tableFontCorrection($(this)); 
+            table.find('td').each(function() {
+                tableFontCorrection($(this));
             });
-            table.find('p').each(function(){
-               tableFontCorrection($(this)); 
+            table.find('p').each(function() {
+                tableFontCorrection($(this));
             });
         }
         // processTableRowsAndCells(td);
@@ -718,14 +718,14 @@ $(function() {
         return element.attr(attribute, existingAttribute);
 
     }
-    
-    function setNewElementAttributes(element, attribute , styleType, value) {
+
+    function setNewElementAttributes(element, attribute, styleType, value) {
         if (typeof styleType == "undefined") attribute = 'style';
-        
+
         var existingAttribute = element.attr(styleType);
-        
-        existingAttribute = existingAttribute + ''+attribute+': ' + value;
-       return element.attr(styleType, existingAttribute);
+
+        existingAttribute = existingAttribute + '' + attribute + ': ' + value;
+        return element.attr(styleType, existingAttribute);
 
     }
 

@@ -1,18 +1,23 @@
 /**
  * Created by Marijan on 25.04.2016..
  */
-$(function () {
+$(function() {
     /*Bind laravel security token to ajax*/
-    $.ajaxSetup({headers: {'X-CSRF-TOKEN': $(document).find('[name="csrf-token"]').val()}});
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $(document).find('[name="csrf-token"]').val()
+        }
+    });
     /* End Bind laravel security token to ajax*/
 
-    $(window).bind("load resize", function () {
+    $(window).bind("load resize", function() {
         topOffset = 50;
         width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
         if (width < 768) {
             $('div.navbar-collapse').addClass('collapse');
             topOffset = 100; // 2-row-menu
-        } else {
+        }
+        else {
             $('div.navbar-collapse').removeClass('collapse');
         }
         height = ((this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height) - 1;
@@ -25,11 +30,11 @@ $(function () {
 
     /*Exapand active class*/
     var url = window.location;
-    var element = $('ul.nav a').filter(function () {
+    var element = $('ul.nav a').filter(function() {
         return this.href == url || url.href.indexOf(this.href) == 0;
     }).parents("ul").not('#side-menu').addClass('in');
     // }).addClass('active').parent().parent().addClass('in').parent();
-    
+
     // console.log(element);
 
     /*Fix the problem where the */
@@ -37,17 +42,20 @@ $(function () {
         $('a[href="/"]').removeClass('active');
     }
 
-    $('a.active').each(function () {
-        var url = window.location, currentLink = window.location.href
+    $('a.active').each(function() {
+        var url = window.location,
+            currentLink = window.location.href
         if ($(this).attr('href') != currentLink)
             $(this).removeClass('active');
     });
-  
-    var parts = url.href.split('/'), lastLinkPart = parts[parts.length-1], isNumeric = false;;
+
+    var parts = url.href.split('/'),
+        lastLinkPart = parts[parts.length - 1],
+        isNumeric = false;;
     // parts.pop();
-    
+
     // console.log( lastLinkPart );    
-    if(Math.floor(lastLinkPart) == lastLinkPart && $.isNumeric(lastLinkPart)) {
+    if (Math.floor(lastLinkPart) == lastLinkPart && $.isNumeric(lastLinkPart)) {
         isNumeric = true;
     }
 
@@ -77,18 +85,19 @@ $(function () {
     }
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1) {
         $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
+        $('a[href$="/juristenportal"]').next('ul').removeClass('in');
     }
-    else if (url.href.indexOf('wiki-kategorie') != -1  && isNumeric == true) {
-        $('a[href$="wiki"]').addClass('active').closest('ul').addClass('in'); 
+    else if (url.href.indexOf('wiki-kategorie') != -1 && isNumeric == true) {
+        $('a[href$="wiki"]').addClass('active').closest('ul').addClass('in');
     }
-    else if (url.href.indexOf('wiki-kategorie') != -1  && url.href.indexOf('suche') != -1 ) {
-        $('a[href$="wiki"]').addClass('active').closest('ul').addClass('in'); 
+    else if (url.href.indexOf('wiki-kategorie') != -1 && url.href.indexOf('suche') != -1) {
+        $('a[href$="wiki"]').addClass('active').closest('ul').addClass('in');
     }
-    else if (url.href.indexOf('wiki-kategorie') != -1 ) {
-        $('a[href$="wiki-kategorie"]').addClass('active').closest('ul').addClass('in'); 
+    else if (url.href.indexOf('wiki-kategorie') != -1) {
+        $('a[href$="wiki-kategorie"]').addClass('active').closest('ul').addClass('in');
     }
-    else if (url.href.indexOf('verwalten-admin') != -1 ) {
-        $('a[href$="wiki/verwalten-admin"]').addClass('active').next('ul').addClass('in'); 
+    else if (url.href.indexOf('verwalten-admin') != -1) {
+        $('a[href$="wiki/verwalten-admin"]').addClass('active').next('ul').addClass('in');
     }
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('wiki') != -1) {
         $('a[href*="wiki/create"]').addClass('active').closest('ul').addClass('in');
@@ -105,11 +114,11 @@ $(function () {
     else if (url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }
-    else if (  url.href.indexOf('suche-abrechnen-abgerechnt') != -1 && url.href.indexOf('inventarliste') != -1) {
+    else if (url.href.indexOf('suche-abrechnen-abgerechnt') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="abrechnen"]').addClass('active').closest('ul').addClass('in').next('ul').addClass('in');
         console.log('init1');
     }
-    else if (  url.href.indexOf('suche-abrechnen') != -1 && url.href.indexOf('inventarliste') != -1) {
+    else if (url.href.indexOf('suche-abrechnen') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="abrechnen"]:not(.no-margin-bottom)').addClass('active').closest('ul').addClass('in').next('ul').addClass('in');
     }
     else if (url.href.indexOf('suche') != -1 && url.href.indexOf('inventarliste') != -1) {
@@ -121,18 +130,18 @@ $(function () {
     else if (url.href.indexOf('historie') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
     }
-   
-    else if ( url.href.indexOf('abrechnen-abgerechnt') != -1     && url.href.indexOf('inventarliste') != -1) {
+
+    else if (url.href.indexOf('abrechnen-abgerechnt') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="abrechnen"]').addClass('active').next('ul').addClass('in');
-         console.log('init2');
+        console.log('init2');
     }
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
-        if(slug == 'aktuelle-meldungen')
+        if (slug == 'aktuelle-meldungen')
             slug = 'dokumente/news';
-        $('a[href$="/'+slug+'"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
-        
-        if($('a[href$="/'+slug+'"]').addClass('active').next('ul').length )
-            $('a[href$="/'+slug+'"]').addClass('active').next('ul').addClass('in');
+        $('a[href$="/' + slug + '"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
+
+        if ($('a[href$="/' + slug + '"]').addClass('active').next('ul').length)
+            $('a[href$="/' + slug + '"]').addClass('active').next('ul').addClass('in');
     }
     else if (url.href.indexOf('suche') != -1 && url.href.indexOf('telefonliste') != -1) {
         $('a[href*="telefonliste"]').addClass('active').parent('li').find('ul').addClass('in');
@@ -157,25 +166,25 @@ $(function () {
             locker = true;
         }
 
-        else if ( documentType == "aktuelle Meldungen" && typeof(documentSlug) !== 'undefined' ) {
+        else if (documentType == "aktuelle Meldungen" && typeof(documentSlug) !== 'undefined') {
             detectHref = documentSlug;
             detectHref = 'news'
             locker = true;
-            
+
         }
-        else if ( documentType == "aktuelle Meldungen" ) {
+        else if (documentType == "aktuelle Meldungen") {
             detectHref = 'news'
             locker = true;
-            
+
         }
 
         else if (documentType == "ISO-Dokumente") {
-            if (typeof  isoCategoryName != 'undefined') {
+            if (typeof isoCategoryName != 'undefined') {
                 detectHref = $('#side-menu').find('a:contains("' + isoCategoryName + '")').attr('href');
-                 if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
-                      $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').next('ul').addClass('in');
-                     
-                 }
+                if ($('a[href$="' + detectHref + '"]').addClass('active').attr('class', 'active').parent("li").find('ul').length) {
+                    $('a[href$="' + detectHref + '"]').addClass('active').attr('class', 'active').next('ul').addClass('in');
+
+                }
             }
             else
                 detectHref = '/iso-dokumente';
@@ -189,7 +198,7 @@ $(function () {
     }
     else {
         $('a[href="' + url.href + '"]').addClass('active');
-        if( $('a[href="' + url.href + '"]').next('ul').length )
+        if ($('a[href="' + url.href + '"]').next('ul').length)
             $('a[href="' + url.href + '"]').next('ul').addClass('in').hide().show("fast");
     }
     if (element.is('li')) {
@@ -198,67 +207,68 @@ $(function () {
 
     var activeLink = $('#side-menu li a.active');
     activeLink.parents('li').addClass('active');
-    
+
     var activeLinkSubnavs = activeLink.parents('li').first().children('ul').children('li').children('ul');
-    activeLinkSubnavs.each(function(){
-       $(this).parent('li').addClass('active');
+    activeLinkSubnavs.each(function() {
+        $(this).parent('li').addClass('active');
     });
     activeLink.closest('li').next('ul').addClass('in');
     // activeLink.closest('li').children('ul').addClass('in');
-    
+
     /*End Exapand active class*/
-    
+
     /*fix when adding a active to button*/
-        $('a.no-margin-bottom.active').removeClass('active');
+    $('a.no-margin-bottom.active').removeClass('active');
     /* end fix when adding a active to button*/
-    
+
     /* Remove required if checkbox is not checked*/
-        $('.trigger-required').on('click touch change',function(){
-            var checkbox = $(this).find('input:checkbox');
-            var checkboxChecked = $(this).find(':checked');
-            var removeRequiredInput = $('.remove-required').find('input');
-            var removeRequiredLabel = $('.remove-required').find('label');
-            console.log(checkbox.attr('id'));
-            console.log(checkboxChecked.attr('id'));
-            if(checkbox.attr('id') == checkboxChecked.attr('id') ){
-               removeRequiredInput.removeAttr('required');
-               removeRequiredLabel.html(removeRequiredLabel.html().replace('*','') );
+    $('.trigger-required').on('click touch change', function() {
+        var checkbox = $(this).find('input:checkbox');
+        var checkboxChecked = $(this).find(':checked');
+        var removeRequiredInput = $('.remove-required').find('input');
+        var removeRequiredLabel = $('.remove-required').find('label');
+        console.log(checkbox.attr('id'));
+        console.log(checkboxChecked.attr('id'));
+        if (checkbox.attr('id') == checkboxChecked.attr('id')) {
+            removeRequiredInput.removeAttr('required');
+            removeRequiredLabel.html(removeRequiredLabel.html().replace('*', ''));
+        }
+        else {
+            console.log('trigered2');
+            removeRequiredInput.attr('required', true);
+            if (removeRequiredLabel.html().indexOf('*') == -1) {
+                removeRequiredLabel.html(removeRequiredLabel.html() + '*');
             }
-            else{
-                console.log('trigered2');
-                removeRequiredInput.attr('required',true);
-                if(removeRequiredLabel.html().indexOf('*') == -1){
-                    removeRequiredLabel.html(removeRequiredLabel.html()+'*' );
-                }
-                   
-            }
-        });
+
+        }
+    });
     /* End Remove required if checkbox is not checked*/
-    
+
 
     /* If clicked on arrow expand DD*/
-    $('a[href="#"]:contains("fa arrow")').on('click touch',function(){
+    $('a[href="#"]:contains("fa arrow")').on('click touch', function() {
         $(this).parent('li').addClass('in').children('ul').addClass('in');
     });
     /*End If clicked on arrow expand DD*/
-    
-    
+
+
     /* Page content sidebar treeview */
 
-        var elementNew = $('.content-nav ul.nav a').filter(function () {
-            return this.href == url || url.href.indexOf(this.href) == 0;
-        }).parents("ul").not('.parent-ul').addClass('in');
+    var elementNew = $('.content-nav ul.nav a').filter(function() {
+        return this.href == url || url.href.indexOf(this.href) == 0;
+    }).parents("ul").not('.parent-ul').addClass('in');
     /* End Page content sidebar treeview */
 
     /* Simulate tree view */
     if ($('.tree').length) {
         $('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
-        $('.tree li.parent_li > span').on('click', function (e) {
+        $('.tree li.parent_li > span').on('click', function(e) {
             var children = $(this).parent('li.parent_li').find(' > ul > li');
             if (children.is(":visible")) {
                 children.hide('fast');
                 $(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
-            } else {
+            }
+            else {
                 children.show('fast');
                 $(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
             }
@@ -268,13 +278,13 @@ $(function () {
     /* End Simulate tree view */
 
     /* Simulate tree view2 */
-    $('label.tree-toggler').click(function () {
+    $('label.tree-toggler').click(function() {
         $(this).parent().children('ul.tree').toggle(300);
     });
     /* End Simulate tree view2 */
 
     /* Prevent a.href=# from exec. Becouse of the nav.active script */
-    $('a').on('click touch', function (e) {
+    $('a').on('click touch', function(e) {
         if ($(this).attr('href') == "#")
             e.preventDefault();
     });
@@ -282,10 +292,10 @@ $(function () {
 
     /* Image preview before upload */
     if ($('#image-upload').length) {
-        document.getElementById("image-upload").onchange = function () {
+        document.getElementById("image-upload").onchange = function() {
             var reader = new FileReader();
 
-            reader.onload = function (e) {
+            reader.onload = function(e) {
                 // get loaded data and render thumbnail.
                 document.getElementById("image-preview").src = e.target.result;
             };
@@ -297,42 +307,42 @@ $(function () {
     /* End Image preview before upload */
 
     /*Copy new line*/
-    var addRow = function (e) {
+    var addRow = function(e) {
         var form = $(this);
         var method = form.find('input[name="_method"]').val() || 'POST';
         $.ajax({
             type: method,
             url: form.attr('action'),
             data: form.serialize(),
-            success: function (data) {
+            success: function(data) {
                 // console.log(data);
                 form.closest('.bind-before').before(data);
                 $('.select.mandant-roles').chosen();
             },
-            error: function (data) {
+            error: function(data) {
                 // console.log(data);
             },
         });
 
         e.preventDefault();
     };
-    
+
     /*End copy new line*/
     /*
      *Prevent accordion collapse trigger from adding hashtags at the address bar. 
      * This will prevent metisMenu (sidebar) from expanding
      */
-    $('[data-toggle="collapse"]').on('click touch', function (e) {
+    $('[data-toggle="collapse"]').on('click touch', function(e) {
         e.preventDefault();
     });
 
-    $('.list-group').on('click touch', function () {
+    $('.list-group').on('click touch', function() {
         $(this).find('li.node-selected').find('.glyphicon').trigger('click');
 
     });
 
     // Show elements if checkbox is checked
-    $('.trigger-inputs').on('change', function (e) {
+    $('.trigger-inputs').on('change', function(e) {
         if ($(this).is(':checked')) {
             $('[data-hide=' + $(this).data('second') + ']').removeClass('hide').attr('required');
         }
@@ -343,7 +353,7 @@ $(function () {
     });
 
     // Hide elements if checkbox is checked
-    $('.hide-input').on('change', function (e) {
+    $('.hide-input').on('change', function(e) {
         if ($(this).is(':checked')) {
             $('[data-hide=' + $(this).data('hide-target') + ']').addClass('hide').removeAttr('required');
             $('[data-disable=' + $(this).data('disable-target') + ']').attr('disabled', true);
@@ -364,12 +374,12 @@ $(function () {
     /* End Trigger tab switch*/
 
     /* Trigger tab destroy*/
-    $(document).on('click touch', '[data-delete-variant]', function () {
+    $(document).on('click touch', '[data-delete-variant]', function() {
         var tabsNumber = $('#tabs li').size() - 1;
         if (tabsNumber >= 1) {
             var variantId = $(this).data('delete-variant');
             tinymce.execCommand('mceRemoveControl', true, 'variant-' + variantId);
-            $('#variant' + variantId).remove(); 
+            $('#variant' + variantId).remove();
             $('#variation' + variantId).remove();
             $(this).closest('li').remove();
             $('.nav-tabs li.active').removeClass('active');
@@ -382,7 +392,7 @@ $(function () {
     /* End Trigger tab destroy*/
 
     /* Trigger tab creation*/
-    $('.add-tab').on('click touch', function () {
+    $('.add-tab').on('click touch', function() {
         var parent = $(this),
             prevNumber = $(this).closest('.parent-tabs').find('.nav-tabs li').size(),
             nextTab = $(this).closest('.parent-tabs').find('.nav-tabs li').size() + 1,
@@ -415,7 +425,7 @@ $(function () {
         /*
 
          */
-        $('.editable').each(function () {
+        $('.editable').each(function() {
             counter++;
 
             if ($(this).data('id'))
@@ -430,9 +440,11 @@ $(function () {
                 //width: 680,
                 // height: 820,
                 height: 450,
-                style_formats: [
-                    {title: 'Spiegelstriche', selector: 'ul', classes: 'list-style-dash'},
-                ],
+                style_formats: [{
+                    title: 'Spiegelstriche',
+                    selector: 'ul',
+                    classes: 'list-style-dash'
+                }, ],
                 style_formats_merge: true,
                 menubar: "edit,format,table,insert",
                 removed_menuitems: 'newdocument, bold, italic,underline, copy, paste,selectall, strikethrough,superscript ',
@@ -466,37 +478,37 @@ $(function () {
                                 processTableColumn(e);
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'p') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     var table = $(e.element).closest('table');
-                                    if( table.find('li').length ){
-                                        table.find('td').each(function(){
-                                           tableFontCorrection($(this)); 
+                                    if (table.find('li').length) {
+                                        table.find('td').each(function() {
+                                            tableFontCorrection($(this));
                                         });
-                                        table.find('p').each(function(){
-                                           tableFontCorrection($(this)); 
+                                        table.find('p').each(function() {
+                                            tableFontCorrection($(this));
                                         });
                                     }
-                                    
+
                                 }
                             }
                             if (e && e.element.nodeName.toLowerCase() == 'li') {
-                                if($(e.element).parent('td')){
+                                if ($(e.element).parent('td')) {
                                     tableRow = $(e.element).closest('tr');
-                                      tableRow.find('td').each(function(){
+                                    tableRow.find('td').each(function() {
                                         removeCss($(this), 'font-size');
                                         removeCss($(this), 'font-size', 'data-mce-style');
                                         removeCss($(this), 'line-height');
                                         removeCss($(this), 'line-height', 'data-mce-style');
-                                        setNewElementAttributes($(this), 'font-size' , 'style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'style', '20px ; ');
-                                        
-                                        setNewElementAttributes($(this), 'font-size' , 'data-mce-style', '18px ; ');
-                                        setNewElementAttributes($(this), 'line-height' , 'data-mce-style', '22px ; ');
+                                        setNewElementAttributes($(this), 'font-size', 'style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'style', '20px ; ');
+
+                                        setNewElementAttributes($(this), 'font-size', 'data-mce-style', '18px ; ');
+                                        setNewElementAttributes($(this), 'line-height', 'data-mce-style', '22px ; ');
                                     });
                                 }
-                              
+
                             }
-                           
+
                         });
 
                         /*Image setup */
@@ -538,63 +550,65 @@ $(function () {
                     } //end setup
             });
         });
-        
+
         if ($('.nav-tabs li.active').length < 1) {
             $('.nav-tabs li').first().addClass('active');
             $('.tab-content .tab-pane').first().addClass('active');
         }
         else {
-            $('.nav-tabs li.active').removeClass('active'); 
+            $('.nav-tabs li.active').removeClass('active');
             $('.tab-content .tab-pane').removeClass('active');
             $(document).find('a[href="#variation' + nextTab + '"]').closest('li').addClass('active');
             $('#variation' + nextTab).addClass('active');
-            $(document).find('a[href="#variation' + nextTab + '"]').click();//for preview hidden input change
+            $(document).find('a[href="#variation' + nextTab + '"]').click(); //for preview hidden input change
 
         }
     });
     /* End trigger tab creation*/
 
     /* Simulate submit button*/
-    $('.simulate-submit').on('click touch', function (e) {
+    $('.simulate-submit').on('click touch', function(e) {
         e.preventDefault();
         $(this).closest('form').submit();
     });
     /* End Simulate submit button*/
 
 
-    $('#return-to-top').click(function () {      // When arrow is clicked
+    $('#return-to-top').click(function() { // When arrow is clicked
         $('body,html,#wrapper').animate({
-            scrollTop: 0                       // Scroll to top of body
+            scrollTop: 0 // Scroll to top of body
         }, 500);
     });
 
     /* Trigger scroll to top display on scroll */
-    $('#wrapper').on('scroll', function () {
-        if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
-            $('#return-to-top').fadeIn(200);    // Fade in the arrow
-        } else {
-            $('#return-to-top').fadeOut(200);   // Else fade out the arrow
+    $('#wrapper').on('scroll', function() {
+        if ($(this).scrollTop() >= 50) { // If page is scrolled more than 50px
+            $('#return-to-top').fadeIn(200); // Fade in the arrow
+        }
+        else {
+            $('#return-to-top').fadeOut(200); // Else fade out the arrow
         }
     });
     /* End Trigger scroll to top display on scroll */
 
     /* Go to top */
-    $('#return-to-top').click(function () {      // When arrow is clicked
+    $('#return-to-top').click(function() { // When arrow is clicked
         $('body,html,#wrapper').animate({
-            scrollTop: 0                       // Scroll to top of body
+            scrollTop: 0 // Scroll to top of body
         }, 500);
     });
     /* End Go to top */
 
     /* On click check if form is empty and submit or go to URL*/
-    $('[data-link]').on('click touch', function (e) {
+    $('[data-link]').on('click touch', function(e) {
         window.location = $(this).data('link');
     });
     /* End On click check if form is empty and submit or go to URL*/
 
     /* Attachment option 2 - if file selected and  option dosent' have title, and isset 3 hidden fields*/
-    $('input[type=file]').on('change', function () {
-        var fileName = $('input[type=file]')[0].files[0].name, title = $(this).closest('form').find("input[name='name']").val(),
+    $('input[type=file]').on('change', function() {
+        var fileName = $('input[type=file]')[0].files[0].name,
+            title = $(this).closest('form').find("input[name='name']").val(),
             fileNameWithoutExtension = fileName.replace(/\.[^/.]+$/, "");
 
         if ($("input[name='user_id']").length && $("input[name='document_id']") && $("input[name='variant_id']") && title == '') {
@@ -611,7 +625,7 @@ $(function () {
     //     var allPost = $(this).serialize();
     //     console.log(allPost); 
     // })
-    $('.freigabe-process .no-validate').on('click touch', function (e) {
+    $('.freigabe-process .no-validate').on('click touch', function(e) {
         e.preventDefault();
         var input = $("<input>").attr("type", "hidden").attr("name", $(this).attr('name')).val($(this).val());
         $('.freigabe-process').append($(input));
@@ -619,7 +633,7 @@ $(function () {
         $('.freigabe-process').submit();
     });
 
-    $('.freigabe-process .validate').on('click touch', function (e) {
+    $('.freigabe-process .validate').on('click touch', function(e) {
         var input = $("<input>").attr("type", "hidden").attr("name", $(this).attr('name')).val($(this).val());
         $('.freigabe-process').append($(input));
         if ($('.approval-users')[0].checkValidity() == true) {
@@ -630,7 +644,7 @@ $(function () {
 
     /* Change the hidden input value on sites with .preview */
     if ($('.preview').length) {
-        $(document).on('click touch', '[data-variant] a', function () {
+        $(document).on('click touch', '[data-variant] a', function() {
             if ($(this).closest('li').hasClass('active')) {
                 $('input[name="current_variant"]').val($(this).closest('li').data('variant'));
             }
@@ -641,16 +655,16 @@ $(function () {
 
 
     /* Check if option has alle */
-    
-     $('.alle-switch').on('change',function(e){
-         var count = $(this).find('option:selected').length;
-         if( count > 1 ){
-             $(this).find('option:contains("Alle")').prop('selected',false).trigger('chosen:updated');
-         }
-            // $(this).attr('selected', true).parent().trigger('chosen:updated');  
-         
-     });
-     
+
+    $('.alle-switch').on('change', function(e) {
+        var count = $(this).find('option:selected').length;
+        if (count > 1) {
+            $(this).find('option:contains("Alle")').prop('selected', false).trigger('chosen:updated');
+        }
+        // $(this).attr('selected', true).parent().trigger('chosen:updated');  
+
+    });
+
 
 
     /* End check all options in select
@@ -665,10 +679,10 @@ $(function () {
     /* Check if variants*/
 
 
-    $('.roles-td').on('click touch', function () {
-        $(this).find('select option:selected').each(function () {
+    $('.roles-td').on('click touch', function() {
+        $(this).find('select option:selected').each(function() {
             if ($(this).val() == 'Alle') {
-                $(this).parent().find('option').each(function () {
+                $(this).parent().find('option').each(function() {
                     if ($(this).val() != 'Alle')
                         $(this).removeAttr('selected').parent().trigger('chosen:updated');
                 });
@@ -676,57 +690,57 @@ $(function () {
         });
 
     });
-    
+
     /* Prevent letterss from input type number */
-    $("input[type=number]").on("keyup blur scroll change",function (e) {
+    $("input[type=number]").on("keyup blur scroll change", function(e) {
         var inputValue = $(this).val();
         //8 backspace,37 left arrow,39 right arrow,46 delete
-        if(e.which < 46 || e.which > 59 && (e.which !== 8 && e.which !== 37 && e.which !== 39 && e.which !== 46 && e.keyCode !== 188)) { 
+        if (e.which < 46 || e.which > 59 && (e.which !== 8 && e.which !== 37 && e.which !== 39 && e.which !== 46 && e.keyCode !== 188)) {
             e.preventDefault();
         } // prevent if not number/dot 
         var valString = $(this).val().toString();
-            
-        if(e.keyCode == 188 && $(this).val().toString().indexOf('.') != -1){
+
+        if (e.keyCode == 188 && $(this).val().toString().indexOf('.') != -1) {
             e.preventDefault();
         } // prevent if already dot
-            var countMinus = inputValue.match(/-/g);
-            if( countMinus != null){
-                $(this).val(Math.abs($(this).val())) 
-            }
+        var countMinus = inputValue.match(/-/g);
+        if (countMinus != null) {
+            $(this).val(Math.abs($(this).val()))
+        }
     });
-    
+
     /*Float fix*/
-    $("input[type=text].float").on("keyup blur",function (e) {
+    $("input[type=text].float").on("keyup blur", function(e) {
         var str = $(this).val();
         var regex = /^(?!0+\.00)(?=.{1,9}(\.|$))(?!0(?!\.))\d{1,3}(,\d{3})*(\.\d+)?$/;
         var count = str.match(/,/g);
         var cleanCount = !count ? false : count.length;
         var i = 0;
-        if(cleanCount > 1 ){
-            str = str.replace(/[\,\%]/g, function(match) { 
-                return match === "," ? (i++ === 0 ? ',' : '') : ''; 
+        if (cleanCount > 1) {
+            str = str.replace(/[\,\%]/g, function(match) {
+                return match === "," ? (i++ === 0 ? ',' : '') : '';
             });
         }
-        if(regex.test(str) == false){
-           str = str.replace('.','');
+        if (regex.test(str) == false) {
+            str = str.replace('.', '');
         }
-        
+
         var countMinus = str.match(/-/g);
-        if( countMinus != null){
-           str = str.replace('-','');
+        if (countMinus != null) {
+            str = str.replace('-', '');
         }
-            $(this).val(str);
+        $(this).val(str);
     });
     /* end Prevent letterss from input type number */
-    
+
     /* Multiple chosen with required fix */
-//   $('.freigabe-process').on('submit',function(e){
-//       e.preventDefault();
-//       var check = false;
-//       $('.select.freigabe-mandant').each(function() {
-//           $(this).focus().trigger("click");
-//       });
-//   });
+    //   $('.freigabe-process').on('submit',function(e){
+    //       e.preventDefault();
+    //       var check = false;
+    //       $('.select.freigabe-mandant').each(function() {
+    //           $(this).focus().trigger("click");
+    //       });
+    //   });
 
 
     /* End multiple chosen with required fix */

@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Pagination\LengthAwarePaginator;
-
 use Auth;
 use File;
 use Mail;
-use URL;
-
 use App\Document;
 use App\DocumentComment;
 use App\DocumentCoauthor;
@@ -25,7 +20,6 @@ use App\WikiCategoryUser;
 use App\DocumentApproval;
 use App\ContactMessage;
 use App\MessageFile;
-
 use App\Helpers\ViewHelper;
 use App\Http\Repositories\DocumentRepository;
 
@@ -33,31 +27,29 @@ class HomeController extends Controller
 {
     /**
      * Create a new controller instance.
-     *
-     * @return void
      */
     public function __construct(DocumentRepository $docRepo)
     {
-      $this->document = $docRepo;
-      $this->uploadPath = public_path() . '/files/contacts/';
+        $this->document = $docRepo;
+        $this->uploadPath = public_path().'/files/contacts/';
     }
-
 
     /**
      * Create a length aware custom paginator instance.
      *
-     * @param  Collection  $items
-     * @param  int  $perPage
+     * @param Collection $items
+     * @param int        $perPage
+     *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-     
+
     /**
      * Show the application dashboard.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request) 
-    {   
+    public function index(Request $request)
+    {
         $filter = $request->get('filter');
         /*
             if role Struktur admin view all ()
@@ -68,16 +60,16 @@ class HomeController extends Controller
         // $this->universalDocumentPermission($document, false, array());
         // $documentsNew = Document::whereNotIn('document_status_id', array(1,2,4,5,6))->where('is_attachment',0)->where('active',1)
         $documentsNew = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-        ->where('document_status_id', 3)->where('is_attachment',0)->where('documents.active',1)
+        ->where('document_status_id', 3)->where('is_attachment', 0)->where('documents.active', 1)
         ->where('document_types.document_art', 0)
         ->orderBy('documents.date_published', 'desc')->limit(50)
-        ->get(['*','document_types.name as docTypeName', 'documents.name as name', 
-		'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at']);
-		
-		$documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
+        ->get(['*', 'document_types.name as docTypeName', 'documents.name as name',
+        'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at', ]);
+
+        $documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
-        
-        $myRundCoauthor = DocumentCoauthor::where('user_id',Auth::user()->id)->pluck('document_id')->toArray();
+
+        $myRundCoauthor = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
         // dd($myRundCoauthor);
 
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
@@ -85,149 +77,161 @@ class HomeController extends Controller
         ->where('document_types.document_art', 0)
         ->where(
             /* Neptun-345 */
-            function($query) use ($myRundCoauthor) {
+            function ($query) use ($myRundCoauthor) {
                 $query->where('user_id', Auth::user()->id)->orWhere('owner_user_id', Auth::user()->id);
                 $query->orWhereIn('documents.id', $myRundCoauthor);
             }
         );
-                
+
         // JIRA Task NEPTUN-657
-        if($filter){
-            
+        if ($filter) {
             // Draft ($document->document_status_id == 1)
             // Released ($document->document_status_id == 3)
             // Not Released in_array($document->document_status_id, [2,6])
             // Approved ($document->document_status_id == 2)
             // Not Approved ($document->document_status_id != 2)
-            
-            if($filter == "draft") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 1);
-            if($filter == "approved") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 2);
-            if($filter == "not-approved") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 6);
-            if($filter == "published") $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 3);
-            if($filter == "not-published") $rundschreibenMy = $rundschreibenMy->whereIn('documents.document_status_id', [2, 6]);
-            
+
+            if ($filter == 'draft') {
+                $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 1);
+            }
+            if ($filter == 'approved') {
+                $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 2);
+            }
+            if ($filter == 'not-approved') {
+                $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 6);
+            }
+            if ($filter == 'published') {
+                $rundschreibenMy = $rundschreibenMy->where('documents.document_status_id', 3);
+            }
+            if ($filter == 'not-published') {
+                $rundschreibenMy = $rundschreibenMy->whereIn('documents.document_status_id', [2, 6]);
+            }
         }
-        
+
         $rundschreibenMy = $rundschreibenMy->limit(50)
         ->orderBy('documents.id', 'desc')->get(['documents.id as id']);
-        
-        
-        $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->orderBy('date_published', 'desc' )
+
+        $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->orderBy('date_published', 'desc')
         ->paginate(10, ['*'], 'meine-rundschrieben');
         // dd($rundschreibenMy);
-        $rundschreibenMyTree = $this->document->generateTreeview( $rundschreibenMy, array('pageHome' => true, 'showHistory' => true,'myDocuments' => true));
-        
+        $rundschreibenMyTree = $this->document->generateTreeview($rundschreibenMy, array('pageHome' => true, 'showHistory' => true, 'myDocuments' => true));
+
         $uid = Auth::user()->id;
-        $approval = DocumentApproval::where('user_id',$uid)->where('date_approved', null)->pluck('document_id')->toArray();
-        
+        $approval = DocumentApproval::where('user_id', $uid)->where('date_approved', null)->pluck('document_id')->toArray();
+
         $freigabeEntries = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-        ->whereIn('document_status_id', [2,6]) 
+        ->whereIn('document_status_id', [2, 6])
         ->where('document_types.document_art', 0)
-        ->where(function($query) use ($approval) {
+        ->where(function ($query) use ($approval) {
             $query->where('user_id', Auth::user()->id)
                   ->orWhere('owner_user_id', Auth::user()->id);
         })
-        ->where('documents.active',1)
-        ->orWhereIn('documents.id',$approval)
+        ->where('documents.active', 1)
+        ->orWhereIn('documents.id', $approval)
         ->orderBy('documents.id', 'desc')->limit(50)->get(['documents.id as id']);
         // ->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ],'freigabe-dokumente');
         // dd($freigabeEntries);
         $freigabeEntries = Document::whereIn('id', array_pluck($freigabeEntries, 'id'))->orderBy('documents.id', 'desc')
         ->paginate(10, ['*'], 'freigabe-dokumente');
-        
-    
+
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));
-        
+
         /* Wiki setup */
-            $categoriesId = WikiCategoryUser::where('user_id',Auth::user()->id )->pluck('wiki_category_id')->toArray();
-            if( ViewHelper::universalHasPermission(array()) ){
-                $categoriesId = WikiCategory::pluck('id')->toArray();
-            }
-            $wikiPermissions = ViewHelper::getWikiUserCategories();
-            $categoriesId = $wikiPermissions->categoriesIdArray;
+            $categoriesId = WikiCategoryUser::where('user_id', Auth::user()->id)->pluck('wiki_category_id')->toArray();
+        if (ViewHelper::universalHasPermission(array())) {
+            $categoriesId = WikiCategory::pluck('id')->toArray();
+        }
+        $wikiPermissions = ViewHelper::getWikiUserCategories();
+        $categoriesId = $wikiPermissions->categoriesIdArray;
             // dd($categoriesId);
         /* End Wiki setup */
-        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id',2)->whereIn('category_id',$categoriesId)
-        ->orderBy('updated_at','DESC')->take(5)->get());
-        
+        $wikiEntries = $this->document->generateWikiTreeview(WikiPage::where('status_id', 2)->whereIn('category_id', $categoriesId)
+        ->orderBy('updated_at', 'DESC')->take(5)->get());
+
         $commentsNew = DocumentComment::where('id', '>', 0)->orderBy('updated_at', 'desc')->take(10)->get();
-        
+
         $commentVisibility = false;
-        $uid = Auth::user()->id;  
+        $uid = Auth::user()->id;
         /* Freigabe user */
-        $mandantUsers =  MandantUser::where('user_id',$uid)->get();
-        foreach($mandantUsers as $mu){
-            $userMandatRoles = MandantUserRole::where('mandant_user_id',$mu->id)->get();
-            foreach($userMandatRoles as $umr){
-                if($umr->role_id == 9 || $umr->role_id == 1)
+        $mandantUsers = MandantUser::where('user_id', $uid)->get();
+        foreach ($mandantUsers as $mu) {
+            $userMandatRoles = MandantUserRole::where('mandant_user_id', $mu->id)->get();
+            foreach ($userMandatRoles as $umr) {
+                if ($umr->role_id == 9 || $umr->role_id == 1) {
                     $commentVisibility = true;
+                }
             }
         }
         /* End Freigabe user */
         $commentsMy = DocumentComment::where('user_id', Auth::user()->id)->orderBy('created_at', 'desc')->take(10)->get();
-        
-        return view('dashboard', compact('documentsNew','documentsNewTree', 'rundschreibenMy','rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'wikiEntries', 'commentsNew', 'commentsMy','commentVisibility', 'filter'));
+
+        return view('dashboard', compact('documentsNew', 'documentsNewTree', 'rundschreibenMy', 'rundschreibenMyTree', 'freigabeEntries', 'freigabeEntriesTree', 'wikiEntries', 'commentsNew', 'commentsMy', 'commentVisibility', 'filter'));
     }
 
     /**
-     * Display the documents for the specified source
+     * Display the documents for the specified source.
      *
      * @return \Illuminate\Http\Response
      */
     public function neptunManagment()
     {
-        if(ViewHelper::universalHasPermission( array(6) ) == false )
+        if (ViewHelper::universalHasPermission(array(6, 35)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+
         return view('simple-pages.neptunManagment');
     }
 
     /**
-     * Contact form
+     * Contact form.
+     *
      * @param string $partOne
      * @param string $partTwo
      * @param string $subDir
      *
      * @return \Illuminate\Http\Response download
      */
-    public function tipsAndTricks() 
+    public function tipsAndTricks()
     {
         //Dropdown: ALL Neptun - active - user - firstname lastname
         // $data = array();
         // $neptun = Mandant::find(1);
         // $mandantUsers =  MandantUser::where('mandant_id',$neptun->id)->pluck('user_id')->toArray();
         // $users = User::whereIn('id',$mandantUsers)->where('active',1)->get();
-        
-        return view('simple-pages.tipsAndTricks' );
+
+        return view('simple-pages.tipsAndTricks');
     }
+
     /**
-     * Contact form
+     * Contact form.
+     *
      * @param string $partOne
      * @param string $partTwo
      * @param string $subDir
      *
      * @return \Illuminate\Http\Response download
      */
-    public function contact() 
+    public function contact()
     {
         //Dropdown: ALL Neptun - active - user - firstname lastname
         $data = array();
         $neptun = Mandant::find(1);
-        $mandantUsers =  MandantUser::where('mandant_id',$neptun->id)->pluck('user_id')->toArray();
-        $users = User::whereIn('id',$mandantUsers)->where('active',1)->orderBy('last_name','asc')->get();
-      
-        
-        return view('contact', compact(  'data', 'users' ) );
+        $mandantUsers = MandantUser::where('mandant_id', $neptun->id)->pluck('user_id')->toArray();
+        $users = User::whereIn('id', $mandantUsers)->where('active', 1)->orderBy('last_name', 'asc')->get();
+
+        return view('contact', compact('data', 'users'));
     }
-    
+
     /**
-     * Contact form
+     * Contact form.
+     *
      * @param string $partOne
      * @param string $partTwo
      * @param string $subDir
      *
      * @return \Illuminate\Http\Response download
      */
-    public function contactSend(Request $request) 
+    public function contactSend(Request $request)
     {
         $this->validate($request, [
             'to_user' => 'required',
@@ -235,12 +239,12 @@ class HomeController extends Controller
             'summary' => 'required',
             // 'files[]' => 'max:4096',
         ]);
-        
-        
+
         $uid = Auth::user()->id;
         $copy = false;
-        if($request->has('copy'))
+        if ($request->has('copy')) {
             $copy = true;
+        }
         $files = $request->file();
         $sizeLimit = 4096000;
         $request = $request->all();
@@ -249,105 +253,122 @@ class HomeController extends Controller
         $request['logo'] = asset('/img/logo-neptun-new.png');
         $request['from'] = $from;
         $request['to'] = $toUser;
-        
-        $template = view('email.contact' ,compact('request') )->render();
-        
+
+        $template = view('email.contact', compact('request'))->render();
+
         // Store message data
         $messageContact = ContactMessage::create(['user_id' => $request['to_user'], 'user_id_from' => $uid, 'title' => $request['subject'], 'message' => $request['summary'], 'send_copy' => $copy]);
-        
+
         // Store message attachment files
         $uploads = ViewHelper::fileUpload(User::find($request['to_user']), $this->uploadPath, $files, $sizeLimit);
-        
-        if($uploads === false) return redirect()->back()->with(['message' => trans('contactForm.fileSizeExceeded'), 'alert-class' => 'alert-danger' ]);
+
+        if ($uploads === false) {
+            return redirect()->back()->with(['message' => trans('contactForm.fileSizeExceeded'), 'alert-class' => 'alert-danger']);
+        }
         // if($uploads == false) return redirect()->back()->with('alert-class', 'danger');
 
         // Store message attachment files data
-        if(isset($messageContact) && isset($uploads)){
-            foreach($uploads as $file)
+        if (isset($messageContact) && isset($uploads)) {
+            foreach ($uploads as $file) {
                 MessageFile::create(['contact_message_id' => $messageContact->id, 'filename' => $file]);
+            }
         }
-        
-        $sent= Mail::send([], [], function ($message) use($template, $request, $from, $uploads){
+
+        $sent = Mail::send([], [], function ($message) use ($template, $request, $from, $uploads) {
             $to = User::find($request['to_user']);
-            $message->from(  $from->email, $from->first_name.' '.$from->last_name  )
-            ->to( $to->email, $to->first_name.' '.$to->last_name )
-            ->subject($request['subject'] )
+            $message->from($from->email, $from->first_name.' '.$from->last_name)
+            ->to($to->email, $to->first_name.' '.$to->last_name)
+            ->subject($request['subject'])
             ->setBody($template, 'text/html');
-            foreach($uploads as $file) $message->attach($this->uploadPath . $to->id .'/'. $file);
+            foreach ($uploads as $file) {
+                $message->attach($this->uploadPath.$to->id.'/'.$file);
+            }
         });
-        
-        if($copy == true){
+
+        if ($copy == true) {
             $request['copy'] = 'yes';
             $request['subject'] = 'E-Mail Kopie "'.$request['subject'].'"';
-            $template = view('email.contact' ,compact('request') )->render();
-            $sent= Mail::send([], [], function ($message) use($template, $request, $from, $uploads){
+            $template = view('email.contact', compact('request'))->render();
+            $sent = Mail::send([], [], function ($message) use ($template, $request, $from, $uploads) {
                 $to = User::find($request['to_user']);
-                $message->from(  $from->email, $from->first_name.' '.$from->last_name  )
-                ->to( $from->email, $from->first_name.' '.$from->last_name )
-                ->subject($request['subject'] )
+                $message->from($from->email, $from->first_name.' '.$from->last_name)
+                ->to($from->email, $from->first_name.' '.$from->last_name)
+                ->subject($request['subject'])
                 ->setBody($template, 'text/html');
-                foreach($uploads as $file) $message->attach($this->uploadPath . $to->id .'/'. $file);
-            });   
+                foreach ($uploads as $file) {
+                    $message->attach($this->uploadPath.$to->id.'/'.$file);
+                }
+            });
         }
-        
+
         return redirect()->back()->with('message', trans('contactForm.sendSuccess'));
     }
-    
-     /**
-     * Contact messages overview
+
+    /**
+     * Contact messages overview.
+     *
      * @return \Illuminate\Http\Response
      */
     public function contactIndex()
     {
-        if(!ViewHelper::universalHasPermission( array(6)))
+        if (!ViewHelper::universalHasPermission(array(6))) {
             return redirect('/')->with('message', trans('documentForm.noPermission'));
+        }
         $userId = null;
         $messagesAll = ContactMessage::orderBy('created_at', 'desc')->get();
         $messagesAllPaginated = ContactMessage::orderBy('created_at', 'desc')->paginate(20, ['*'], 'seite');
         $usersAll = User::whereIn('id', array_unique(array_pluck($messagesAll, 'user_id')))->get();
+
         return view('kontakt.index', compact('messagesAll', 'messagesAllPaginated', 'usersAll', 'userId'));
     }
-    
-     /**
-     * Contact messages overview
+
+    /**
+     * Contact messages overview.
+     *
      * @return \Illuminate\Http\Response
      */
     public function contactSearch(Request $request)
     {
         $userId = $request->get('user_id');
-        if(empty($userId)) return back()->with('message', 'Benutzer kann nicht gefunden werden.');
+        if (empty($userId)) {
+            return back()->with('message', 'Benutzer kann nicht gefunden werden.');
+        }
         $messagesAll = ContactMessage::where('user_id', $userId)->orderBy('created_at', 'desc')->get();
         $messagesAllPaginated = ContactMessage::where('user_id', $userId)->orderBy('created_at', 'desc')->paginate(20, ['*'], 'seite');
         $usersAll = User::whereIn('id', array_unique(array_pluck(ContactMessage::all(), 'user_id')))->get();
+
         return view('kontakt.index', compact('messagesAll', 'messagesAllPaginated', 'usersAll', 'userId'));
     }
-    
-    
+
     /**
-     * Download document
+     * Download document.
+     *
      * @param string $partOne
      * @param string $partTwo
      * @param string $subDir
      *
      * @return \Illuminate\Http\Response download
      */
-    public function download($partOne,$partTwo,$subDir='documents') 
+    public function download($partOne, $partTwo, $subDir = 'documents')
     {
-        $file= public_path(). '/files/'.$subDir.'/'.$partOne.'/'.$partTwo;
+        $file = public_path().'/files/'.$subDir.'/'.$partOne.'/'.$partTwo;
+
         return response()->download($file);
     }
-    
+
     /**
-     * Open document (PDF)
+     * Open document (PDF).
+     *
      * @param string $partOne
      * @param string $partTwo
      * @param string $subDir
      *
      * @return \Illuminate\Http\Response download
      */
-    public function open($partOne, $partTwo, $subDir='documents')
+    public function open($partOne, $partTwo, $subDir = 'documents')
     {
-        $file = File::get(public_path(). '/files/'.$subDir.'/'.$partOne.'/'.$partTwo);
+        $file = File::get(public_path().'/files/'.$subDir.'/'.$partOne.'/'.$partTwo);
+
         return response($file, 200)->header('Content-Type', 'application/pdf');
     }
 }

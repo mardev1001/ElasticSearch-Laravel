@@ -41,17 +41,25 @@ class UsersAssignRoles extends Command
     public function handle()
     {
         /**
-        14 Historien Leser
-        16 Wiki Leser
-        40 Intranet Benutzer
-        **/
-        $roleIds = array(14, 16, 40); // Assign all roles IDs to populate the MandantUserRole-s
-        foreach($roleIds as $roleId){
-            $mandantUsersRoles = MandantUserRole::where('role_id', $roleId)->groupBy('mandant_user_id')->get();
-            $mandantUsers = MandantUser::whereNotIn('id', array_pluck($mandantUsersRoles, 'mandant_user_id'))->orderBy('mandant_id')->orderBy('user_id')->get();
-            foreach($mandantUsers as $mu){
-                MandantUserRole::create(['mandant_user_id' => $mu->id, 'role_id' => $roleId]);
-            }
+         * ROLES LIST:
+         * 14 Historien Leser
+         * 40 Intranet Benutzer 
+         **/
+
+        // Every non-NEPTUN user ($mandant->rights_admin == false) should get "Intranet User" role
+        $mandantUsersRoles = MandantUserRole::where('role_id', 40)->groupBy('mandant_user_id')->get();
+        $mandantUsers = MandantUser::whereNotIn('id', array_pluck($mandantUsersRoles, 'mandant_user_id'))->orderBy('mandant_id')->orderBy('user_id')->get();
+        foreach($mandantUsers as $mu){
+            if($mu->mandant->rights_admin == false)
+                MandantUserRole::create(['mandant_user_id' => $mu->id, 'role_id' => 40]);
         }
+        
+        // ALL users should get "Historien Leser" role
+        $mandantUsersRoles = MandantUserRole::where('role_id', 14)->groupBy('mandant_user_id')->get();
+        $mandantUsers = MandantUser::whereNotIn('id', array_pluck($mandantUsersRoles, 'mandant_user_id'))->orderBy('mandant_id')->orderBy('user_id')->get();
+        foreach($mandantUsers as $mu){
+            MandantUserRole::create(['mandant_user_id' => $mu->id, 'role_id' => 14]);
+        }
+        
     }
 }

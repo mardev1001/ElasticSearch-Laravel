@@ -19,27 +19,48 @@
             <div class="box iso-category-overview">
                 
                 <ul class="level-1">
-                    <li>
-                        <a href="{{ url('benutzer/standard-benutzer') }}">{{ ucfirst( trans('contactForm.defaultUser') ) }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ url('kontaktanfragen') }}">{{ ucfirst( trans('contactForm.kontaktanfragen') ) }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ url('empfangerkreis') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }}-{{ ucfirst( trans('navigation.types') ) }}</a>
-                    </li>
-                    <li>
-                        <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }}-{{ trans('navigation.kategorien') }} </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('juristenportal-kategorien') }}">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
-                    </li>
-                    <li>
-                        <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
-                    </li>
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true )
+                        <li>
+                            <a href="{{ url('benutzer/standard-benutzer') }}">{{ ucfirst( trans('contactForm.defaultUser') ) }}</a>
+                        </li>
+                    @endif
+                        
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true )    
+                        <li>
+                            <a href="{{ url('kontaktanfragen') }}">{{ ucfirst( trans('contactForm.kontaktanfragen') ) }}</a>
+                        </li>
+                    @endif
+                    
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true )
+                        <li>
+                            <a href="{{ url('empfangerkreis') }}">{{ ucfirst( trans('navigation.adressate') ) }}</a>
+                        </li>
+                    @endif
+                    
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true )
+                        <li>
+                            <a href="{{ url('dokument-typen') }}">{{ ucfirst( trans('navigation.document') ) }}-{{ ucfirst( trans('navigation.types') ) }}</a>
+                        </li>
+                    @endif
+                    
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true )
+                        <li>
+                            <a href="{{ url('iso-kategorien') }}">{{ ucfirst( trans('navigation.iso') ) }}-{{ trans('navigation.kategorien') }} </a>
+                        </li>
+                    @endif
+                    
+                    @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                        <li>
+                            <a href="{{ url('juristenportal-kategorien') }}">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
+                        </li>
+                    @endif
+                    
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true )
+                        <li>
+                            <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
+                        </li>
+                    @endif
+                    
                 </ul>
                 
             </div>
