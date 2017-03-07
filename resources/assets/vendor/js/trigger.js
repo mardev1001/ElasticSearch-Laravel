@@ -227,14 +227,11 @@ $(function() {
         var checkboxChecked = $(this).find(':checked');
         var removeRequiredInput = $('.remove-required').find('input');
         var removeRequiredLabel = $('.remove-required').find('label');
-        console.log(checkbox.attr('id'));
-        console.log(checkboxChecked.attr('id'));
         if (checkbox.attr('id') == checkboxChecked.attr('id')) {
             removeRequiredInput.removeAttr('required');
             removeRequiredLabel.html(removeRequiredLabel.html().replace('*', ''));
         }
         else {
-            console.log('trigered2');
             removeRequiredInput.attr('required', true);
             if (removeRequiredLabel.html().indexOf('*') == -1) {
                 removeRequiredLabel.html(removeRequiredLabel.html() + '*');
@@ -328,6 +325,20 @@ $(function() {
     };
 
     /*End copy new line*/
+
+    /*Universal  panel openner*/
+    if ($('.panel-group').length) {
+        if (window.location.hash) {
+            $(".container-fluid a[href='" + window.location.hash + "']").click();
+        }
+    }
+
+    /*if link has hash navigation fix*/
+    if (window.location.hash) {
+        $('a[href$="' + window.location.pathname + '"]').addClass('active').parent('li').find('ul').addClass('in');
+
+    }
+
     /*
      *Prevent accordion collapse trigger from adding hashtags at the address bar. 
      * This will prevent metisMenu (sidebar) from expanding

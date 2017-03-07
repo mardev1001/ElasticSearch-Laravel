@@ -448,7 +448,7 @@
 
     <div class="clearfix"></div>
     
-    {{--@if(ViewHelper::universalHasPermission( array(9)))<!-- changed @task NEPTUN-630 --> --}}
+    {{-- @if(ViewHelper::universalHasPermission( array(9)))<!-- changed @task NEPTUN-630 --> --}}
     @if( ViewHelper::universalDocumentPermission($document, false, $freigeber = false, true) || 
     ViewHelper::universalDocumentPermission($document, false, true, true) || ViewHelper::universalHasPermission( array())  )
         {!! ViewHelper::generateFreigabeBox($document) !!}
@@ -457,7 +457,7 @@
      @if(ViewHelper::universalHasPermission( array(9)) || ViewHelper::universalDocumentPermission($document, false,false,true))
         @if( ViewHelper::universalDocumentPermission($document) == true )
            @if( $commentVisibility->freigabe == true || ViewHelper::universalDocumentPermission($document, false,false,true) )
-                @if(count($documentCommentsFreigabe) )
+                @if( count($documentCommentsFreigabe) )
                     {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}
                 @endif
             @endif

@@ -174,10 +174,8 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('inventarliste/sizes', 'InventoryController@postSizes');
     Route::post('inventarliste/sizes/{id}/update', 'InventoryController@updateSizes');
     Route::get('inventarliste/groessen', 'InventoryController@sizes');
-    Route::get('inventarliste/suche', function () {
-        return redirect('inventarliste');
-    });
-    Route::post('inventarliste/suche', 'InventoryController@search');
+    Route::get('inventarliste/suche', 'InventoryController@search');
+    //Route::post('inventarliste/suche', 'InventoryController@search');
     Route::resource('inventarliste', 'InventoryController');
 
     // Developer Routes

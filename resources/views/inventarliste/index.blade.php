@@ -53,7 +53,7 @@
             <h2 class="title"> @lang('inventoryList.searchInventoryList')</h2>
             <div class="box  box-white">
                 <div class="row">
-                    {!! Form::open(['action' => 'InventoryController@search', 'method'=>'POST']) !!}
+                    {!! Form::open(['action' => 'InventoryController@search', 'method'=>'GET']) !!}
                         <div class="input-group">
                             <div class="col-md-12 col-lg-12">
                               {!! ViewHelper::setInput('search', '',old('search',$searchInput), trans('inventoryList.name'),
@@ -64,6 +64,11 @@
                                     <button type="submit" class="btn btn-primary no-margin-bottom">
                                         {{ trans('navigation.search') }} 
                                     </button>
+                                    @if( $searchInput )
+                                        <a href="/inventarliste" class="btn btn-primary no-margin-bottom">
+                                            zurücksetzen
+                                        </a>
+                                    @endif
                                 </span>
                             </div>
                         </div>
@@ -107,7 +112,7 @@
                                     <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                                 </thead>
                                 <tbody>
-                                    @if(count($category->items->count()) )
+                                    @if(count($category->items) )
                                         @foreach($category->items as $k => $item)
                                             <tr>
                                                 <td class="text-center valign">
@@ -196,10 +201,10 @@
                                             {{ $item->category->name }}
                                         </td>
                                         <td class="text-center valign ">
-                                            <a href="#" data-toggle="modal" data-target="#item-taken-{{$item->id}}">
+                                            <a href="#" data-toggle="modal" data-target="#item-taken-{{$item->id}}-2">
                                                 {{ $item->value }}
                                             </a>
-                                            {!! ViewHelper::generateInventoryTakenModal($item,$searchInput) !!}  
+                                            {!! ViewHelper::generateInventoryTakenModal($item,$searchInput,true) !!}  
                                         </td>
                                         <td class="text-center valign ">
                                             {{ $item->size->name }}
@@ -282,7 +287,10 @@
                                 <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                             </thead>
                             <tbody>
-                                @if(count($category->items->count()) )
+                                @if($category->id == 6)
+                                
+                                @endif
+                                @if(count($category->items) )
                                     @foreach($category->items as $k => $item)
                                         <tr>
                                         <td class="text-center valign">

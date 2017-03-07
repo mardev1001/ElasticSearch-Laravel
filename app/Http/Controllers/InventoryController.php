@@ -47,7 +47,13 @@ class InventoryController extends Controller
         if (ViewHelper::universalHasPermission(array(34)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
+
+        if (!$request->has('search')) {
+            return redirect('inventarliste');
+        }
+
         $searchInput = $request->get('search');
+
         $searchCategories = InventoryCategory::where('active', 1)->where('name', 'LIKE', '%'.$searchInput.'%')->get();
         $categories = InventoryCategory::where('active', 1)->get();
         $activeCategories = $categories->pluck('id')->toArray();
@@ -57,6 +63,27 @@ class InventoryController extends Controller
 
         return view('inventarliste.index', compact('categories', 'sizes', 'searchCategories', 'searchInventory', 'searchInput'));
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+   /* public function search(Request $request)
+    {
+        if (ViewHelper::universalHasPermission(array(34)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        $searchInput = $request->get('search');
+        $searchCategories = InventoryCategory::where('active', 1)->where('name', 'LIKE', '%'.$searchInput.'%')->get();
+        $categories = InventoryCategory::where('active', 1)->get();
+        $activeCategories = $categories->pluck('id')->toArray();
+        $searchInventory = Inventory::whereIn('inventory_category_id', $activeCategories)->where('name', 'LIKE', '%'.$searchInput.'%')->get();
+
+        $sizes = InventorySize::all();
+
+        return view('inventarliste.index', compact('categories', 'sizes', 'searchCategories', 'searchInventory', 'searchInput'));
+    }*/
 
     /**
      * Show the form for creating a new resource.
@@ -210,7 +237,6 @@ class InventoryController extends Controller
                 $template = view('email.lowStock', compact('request', 'item'))->render();
                 $mandantUserIds = MandantUserRole::where('role_id', 34)->pluck('mandant_user_id')->toArray();
                 $mandatUsers = MandantUser::whereIn('id', $mandantUserIds)->pluck('user_id')->toArray();
-                // dd($from);
 
                 if (count($mandatUsers)) {
                     foreach ($mandatUsers as $user) {
@@ -227,9 +253,9 @@ class InventoryController extends Controller
             }
         }
         $previousUrl = app('url')->previous();
-       /* if (strpos($previousUrl, 'suche') !== false && ($search)) {
-            return redirect()->back()->withInput();
-        }*/
+        if (strpos($previousUrl, 'suche') !== false && ($search)) {
+            return redirect($previousUrl.$href)->with('messageSecondary', trans('inventoryList.inventoryUpdated'));
+        }
 
         return redirect()->to($previousUrl.$href)->with('messageSecondary', trans('inventoryList.inventoryUpdated'));
         // return redirect()->back($href);

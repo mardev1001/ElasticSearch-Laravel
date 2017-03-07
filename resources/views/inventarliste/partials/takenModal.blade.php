@@ -1,5 +1,12 @@
 <!-- edit modal for {{$item->name}} -->
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="item-taken--{{$item->id}}" aria-hidden="true" id="item-taken-{{$item->id}}">
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" 
+@if($double== true) 
+    id="item-taken-{{$item->id}}-2" aria-labelledby="item-taken-{{$item->id}}-2" 
+@else 
+    id="item-taken-{{$item->id}}" aria-labelledby="item-taken-{{$item->id}}"
+@endif
+>
+    
     <div class="modal-dialog modal-lg edit">
         <div class="modal-content">
             <div class="modal-header">

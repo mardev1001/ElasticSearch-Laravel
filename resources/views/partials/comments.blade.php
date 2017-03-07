@@ -63,7 +63,8 @@
     
                                             <span class="comment-body">
                                                 @if( isset($comment->comment) && !empty($comment->comment) )
-                                                    {!! str_limit( str_replace(["\r\n", "\r", "\n"], "<br/>", $comment->comment) , $limit = 200, $end = ' ...') !!}
+                                                    {{-- {!! str_limit( str_replace(["\r\n", "\r", "\n"], "<br/>", $comment->comment) , $limit = 200, $end = ' ...') !!} --}}
+                                                    {!! str_replace(["\r\n", "\r", "\n"], "<br/>", $comment->comment) !!}
                                                 @endif
                                             </span>
 

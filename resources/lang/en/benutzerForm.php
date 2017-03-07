@@ -4,6 +4,7 @@ return [
     'profileTitle' => 'Profil bearbeiten',
     'baseInfo' => 'Basisinformationen',
     'title' => 'Anrede',
+    'fax' => 'Fax',
     'username' => 'Benutzername',
     'username_sso' => 'Single Sign ON - Name',
     'password' => 'Passwort',
@@ -44,8 +45,16 @@ return [
     'informationen' => 'Informationen',
     'defaultUser' => 'Standard Benutzer',
     'defaultUserRoles' => 'Rollen Zuweisung',
+    'email-settings' => 'E-Mail Empfang',
     'saveSuccess' => 'Standard Benutzer erfolgreich aktualisiert.',
-    
+    'document-type' => 'Dokument Typ',
+    'email-recievers' => 'Empfänger',
+    'sending-method' => 'Versandart',
+    'email-type' => 'E-Mail Typ',
+    'destination' => 'Ziel',
+    'email-attachment' => 'Email mit Anhang',
+    'mail' => 'Brief',
+    'all' => 'Alle',
+
     'lastMandantRole' => 'Diese Benutzer-Rolle kann nicht gelöscht werden. Dies ist eine System relevante Benutzer-Rolle.',
-    
 ];

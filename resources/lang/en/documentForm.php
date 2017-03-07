@@ -39,20 +39,21 @@ return [
     'savedComment' => 'Kommentar wurde gespeichert.',
     // 'authorized' => 'Dokument wurde erfolgreich veröffentlicht.',
     'authorized' => 'Dokument wurde freigegeben.',
+    'not-authorized' => 'Dokument wurde nicht freigegeben.',
     'newVersionSuccess' => 'Neue Version wurde erstellt.',
     'landscape' => 'Dokument im Querformat',
     'additionalLetter' => 'Zusätzlicher Text',
     'noPermission' => 'Sie haben keine Berechtigung für diese Seite.',
     'documentTemplates' => 'Vorlagen',
     'saveContinue' => 'speichern und weiter',
-    
+
     'trashDeleted' => 'Dokumente wurden erfolgreich gelöscht.',
     'trashRestored' => 'Dokumente wurden erfolgreich wiederhergestellt.',
     'trashEmptied' => 'Papierkorb wurde geleert.',
     'noSelection' => 'Keine Dokumente ausgewählt.',
     'warningDeleteTrash' => 'Wollen Sie die ausgewählten Dokumente wirklich löschen?',
     'warningEmptyTrash' => 'Alle Dokumente im Papierkorb werden unwiederuflich gelöscht. Fortfahren?',
-    
+
     /* Freigabe process */
     'freigeben' => 'freigeben',
     'noFreigeben' => 'nicht freigeben',

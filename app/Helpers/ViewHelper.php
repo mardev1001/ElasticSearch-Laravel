@@ -1358,13 +1358,16 @@ class ViewHelper
      *
      * @return template
      */
-    public static function generateInventoryTakenModal($item, $searchParam = '')
+    public static function generateInventoryTakenModal($item, $searchParam = '', $double = false)
     {
         $categories = InventoryCategory::all();
         $sizes = InventorySize::all();
         $mandants = Mandant::whereNotIn('id', array(1))->get();
+        foreach ($mandants as $mandant) {
+            $mandant->name = $mandant->mandant_number.' - '.$mandant->kurzname;
+        }
 
-        return view('inventarliste.partials.takenModal', compact('item', 'categories', 'sizes', 'mandants', 'searchParam'))->render();
+        return view('inventarliste.partials.takenModal', compact('item', 'categories', 'sizes', 'mandants', 'searchParam', 'double'))->render();
     }
 
     /**

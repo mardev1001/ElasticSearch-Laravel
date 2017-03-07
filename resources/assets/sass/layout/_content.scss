@@ -1,15 +1,16 @@
-.container-fluid.first{
+.container-fluid.first {
     min-height: 95vh;
     padding-bottom: 30px;
     margin-top: 0px;
 }
+
 @media screen and (min-width: 992px) and (max-width: 1200px) {
-    .container-fluid.first{
+    .container-fluid.first {
         padding-bottom: 50px;
-    }  
+    }
 }
 
-.dl-horizontal dt{
+.dl-horizontal dt {
     text-overflow: clip !important;
     white-space: normal !important;
 }
@@ -24,6 +25,7 @@
     height: 21px;
     margin-top: 3px;
 }
+
 .panel-heading a.collapsed:not(.no-arrow):after {
     content: " ";
     background: url("/img/icons/arrow_dark.png") no-repeat;
@@ -31,28 +33,30 @@
     height: 21px;
     margin-top: 0px;
 }
+
 // .panel-heading span .btn{
 //     margin-top:-4px;
 // }
-
 .panel-heading a {
     line-height: 22px;
 }
+
 .panel-collapse {
     background-color: $box-grey-wrapper;
     padding: 0 15px 15px 15px;
 }
 
-.dataTables_wrapper, .panel-body {
+.dataTables_wrapper,
+.panel-body {
     background-color: $box-inner-color;
     padding: 15px;
 }
 
-#page-wrapper .panel-primary > .panel-heading + .panel-collapse > .panel-body {
+#page-wrapper .panel-primary>.panel-heading+.panel-collapse>.panel-body {
     border-top: 0;
 }
 
-#page-wrapper .panel-group .panel + .panel {
+#page-wrapper .panel-group .panel+.panel {
     margin-top: 15px;
 }
 
@@ -60,40 +64,49 @@
     height: 100%;
     overflow-y: scroll;
 }
+
 #page-wrapper {
     padding: 0 5px !important;
     margin-right: 10px !important;
     border: none !important;
     background-color: transparent !important;
 }
+
 .fixed-row {
     margin-top: 0;
     // padding-bottom: 65px;
 }
+
 .fixed-position {
     position: fixed !important;
-    background-color: transparent; 
+    background-color: transparent;
     z-index: 999;
     top: 73px;
     left: 315px;
     right: 30px;
     min-height: 40px;
 }
+
 .container-fluid {
     padding-right: 0px !important;
     padding-left: 63px !important;
 }
 
-.box-wrapper, .box {
+.box-wrapper,
+.box {
     padding: 16px;
 }
+
 .box-wrapper {
     background-color: $box-grey-wrapper;
     margin-bottom: 15px;
 }
-.box-wrapper.box-white .list-group-item,.box-wrapper.box-white .box{
+
+.box-wrapper.box-white .list-group-item,
+.box-wrapper.box-white .box {
     background-color: $box-white-wrapper !important;
 }
+
 .box {
     background-color: $box-inner-color;
 }
@@ -104,7 +117,6 @@
     margin: 0 0 20px 0;
 }
 
-
 h1.page-title {
     color: $dark-blue;
     font-size: 25px;
@@ -112,7 +124,9 @@ h1.page-title {
     font-weight: bold;
     margin-top: 5px;
 }
-.title, .modal-title {
+
+.title,
+.modal-title {
     font-family: $arial-font-family;
     color: $dark-blue;
     font-size: 18px;
@@ -128,7 +142,7 @@ h1.page-title {
     padding: 0;
 }
 
-.scrollable-document{
+.scrollable-document {
     width: 130px !important;
     position: fixed !important;
     right: 48px;
@@ -137,21 +151,24 @@ h1.page-title {
     z-index: 100;
     background: #fff;
 }
+
 // .form-group .checkbox {
 //     margin-top: 5px;
 //     margin-bottom: 10px;
 // }
-
-#page-wrapper.form-group .radio, #page-wrapper .form-group .checkbox, .checkbox-form-group {
+#page-wrapper.form-group .radio,
+#page-wrapper .form-group .checkbox,
+.checkbox-form-group {
     margin-top: 20px;
 }
 
+
 /*This is a fix for benuzer form on certain devices*/
 
+#page-wrapper .col-md-4.col-lg-3 .form-group .checkbox {
+    min-height: 41px;
+}
 
-    #page-wrapper .col-md-4.col-lg-3 .form-group .checkbox{
-        min-height: 41px;
-    }
 
 /*End This is a fix for benuzer form on certain devices*/
 
@@ -167,7 +184,8 @@ h1.page-title {
 #wrapper .panel-primary {
     border: none;
 }
-#wrapper .panel-primary > .panel-heading {
+
+#wrapper .panel-primary>.panel-heading {
     background-color: $box-grey-wrapper;
     border: none;
     font-family: $primary-font-family;
@@ -178,34 +196,44 @@ h1.page-title {
     padding-bottom: 20px;
 }
 
-#page-wrapper .panel-title > span,
-#page-wrapper .panel-title > a, #page-wrapper .panel-title > small, 
-#page-wrapper .panel-title > .small, #page-wrapper .panel-title > small > a,
-#page-wrapper .panel-title > .small > a, #page-wrapper .panel-title .col-xs-6 > a , #page-wrapper .panel-title .col-xs-7 > a {
+#page-wrapper .panel-title>span,
+#page-wrapper .panel-title>a,
+#page-wrapper .panel-title>small,
+#page-wrapper .panel-title>.small,
+#page-wrapper .panel-title>small>a,
+#page-wrapper .panel-title>.small>a,
+#page-wrapper .panel-title .col-xs-6>a,
+#page-wrapper .panel-title .col-xs-7>a {
     font-family: "Arial", sans-serif, "Helvetica Neue", Helvetica;
-    color: $dark-blue;// color: #0e1e6d;
+    color: $dark-blue; // color: #0e1e6d;
     font-size: 20px;
     text-transform: uppercase;
     font-weight: bold;
     word-wrap: break-word;
 }
 
-h1.transform-normal,h2.transform-normal, h3.transform-normal,h4.transform-normal,p.transform-normal,
-a.transform-normal, span.transform-normal{
+h1.transform-normal,
+h2.transform-normal,
+h3.transform-normal,
+h4.transform-normal,
+p.transform-normal,
+a.transform-normal,
+span.transform-normal {
     text-transform: initial !important;
 }
 
 // #page-wrapper .panel-title > a {
 //     padding-left: 15px;
 // }
-
 .white-bgrnd {
     background-color: $white-color;
 }
 
+
 /* document details - start */
+
 .box .header p {
-    margin-bottom: 0;    
+    margin-bottom: 0;
 }
 
 .box .content p {
@@ -214,13 +242,14 @@ a.transform-normal, span.transform-normal{
 
 .box .content p:not(.title-small) {
     margin-bottom: 16px;
-} 
+}
 
-.attachments span.indent{
+.attachments span.indent {
     display: inline-block;
     padding-left: 130px;
 }
-.document-attachments span.indent{
+
+.document-attachments span.indent {
     padding-left: 100px;
 }
 
@@ -232,10 +261,12 @@ a.transform-normal, span.transform-normal{
     margin-bottom: 0 !important;
 }
 
+
 /* document details - end */
 
 
 /* pagination - start */
+
 #page-wrapper .pagination {
     margin: 0;
     border-radius: 0;
@@ -243,11 +274,10 @@ a.transform-normal, span.transform-normal{
     padding: 0 15px;
     background-color: white;
     border-top: 1px solid $box-grey-wrapper;
-    
-
 }
 
-#page-wrapper .pagination > li > a, #page-wrapper .pagination > li > span {
+#page-wrapper .pagination>li>a,
+#page-wrapper .pagination>li>span {
     padding: 5px 3px;
     border: none;
     font-family: $primary-font-family;
@@ -257,40 +287,48 @@ a.transform-normal, span.transform-normal{
     line-height: 26px;
 }
 
-#page-wrapper .pagination > .active > a, 
-#page-wrapper .pagination > .active > span,
-#page-wrapper .pagination > .active > a:hover, 
-#page-wrapper .pagination > .active > span:hover, 
-#page-wrapper .pagination > .active > a:focus, 
-#page-wrapper .pagination > .active > span:focus {
+#page-wrapper .pagination>.active>a,
+#page-wrapper .pagination>.active>span,
+#page-wrapper .pagination>.active>a:hover,
+#page-wrapper .pagination>.active>span:hover,
+#page-wrapper .pagination>.active>a:focus,
+#page-wrapper .pagination>.active>span:focus {
     background-color: initial;
     font-weight: bold;
 }
 
-#page-wrapper .pagination > li > a:hover, 
-#page-wrapper .pagination > li > span:hover, 
-#page-wrapper .pagination > li > a:focus, 
-#page-wrapper .pagination > li > span:focus {
+#page-wrapper .pagination>li>a:hover,
+#page-wrapper .pagination>li>span:hover,
+#page-wrapper .pagination>li>a:focus,
+#page-wrapper .pagination>li>span:focus {
     background-color: $nav-light-grey;
 }
 
-#page-wrapper .pagination > li:first-child > a, #page-wrapper .pagination > li:first-child > span,
-#page-wrapper .pagination > li:last-child > a, #page-wrapper .pagination > li:last-child > span {
+#page-wrapper .pagination>li:first-child>a,
+#page-wrapper .pagination>li:first-child>span,
+#page-wrapper .pagination>li:last-child>a,
+#page-wrapper .pagination>li:last-child>span {
     border-radius: 0;
 }
+
+
 /* pagination - end */
 
 
-
 /* Box fix - start */
+
 .box-wrapper.button-box {
     margin-top: -45px;
 }
+
+
 /* Box fix - end */
 
+
 /* modal dialog - start */
+
 #page-wrapper .modal-content {
-    background-color: $box-grey-wrapper;   
+    background-color: $box-grey-wrapper;
     border-radius: 0;
     border: none;
     padding: 15px;
@@ -304,7 +342,7 @@ a.transform-normal, span.transform-normal{
 #page-wrapper .modal-body {
     background-color: $white-color;
 }
- 
+
 #page-wrapper .modal-footer {
     border: none;
     background-color: $white-color;
@@ -314,25 +352,33 @@ a.transform-normal, span.transform-normal{
 #page-wrapper .modal-footer .btn {
     margin-bottom: 0;
 }
+
+
 /* modal dialog - end */
 
+
 /*mandant-administration */
-.mandant-administration #page-wrapper .panel-title > a{
+
+.mandant-administration #page-wrapper .panel-title>a {
     // padding-left: 30px;
 }
-.mandant-administration #page-wrapper .panel .panel-options .btn{
-    min-width:100px;
-    margin-bottom:initial;
+
+.mandant-administration #page-wrapper .panel .panel-options .btn {
+    min-width: 100px;
+    margin-bottom: initial;
 }
-.mandant-administration .panel-heading{
-    display:inline-block;
+
+.mandant-administration .panel-heading {
+    display: inline-block;
     width: 100%;
     padding-left: 30px;
 }
-.mandant-administration .panel-options{
+
+.mandant-administration .panel-options {
     margin-top: 5px;
 }
-.mandant-administration .panel-options form{
+
+.mandant-administration .panel-options form {
     // padding-top: 10px;
 }
 
@@ -340,12 +386,11 @@ a.transform-normal, span.transform-normal{
     line-height: 28px;
 }
 
-.mandant-administration .panel-title a{
+.mandant-administration .panel-title a {
     padding-left: 0px;
-  
 }
 
-.mandant-administration .panel-heading a:not(.no-arrow):after, 
+.mandant-administration .panel-heading a:not(.no-arrow):after,
 .mandant-administration .panel-heading a.collapsed:not(.no-arrow):after {
     margin-left: -31px;
 }
@@ -354,28 +399,37 @@ a.transform-normal, span.transform-normal{
     box-shadow: none;
 }
 
-.container-fluid .mandant-administration .collapsing , .container-fluid .mandant-administration .collapse.in {
+.container-fluid .mandant-administration .collapsing,
+.container-fluid .mandant-administration .collapse.in {
     margin-top: -4px;
 }
+
+
 /* end mandant-administration */
 
+
 /* phonelist */
-.phonelist #page-wrapper .panel-title > a{
+
+.phonelist #page-wrapper .panel-title>a {
     // padding-left: 30px;
 }
-.phonelist #page-wrapper .panel .panel-options .btn{
+
+.phonelist #page-wrapper .panel .panel-options .btn {
     min-width: 100px;
     margin-bottom: initial;
 }
-.phonelist .panel-heading{
+
+.phonelist .panel-heading {
     display: inline-block;
     width: 100%;
     padding-left: 30px;
 }
-.phonelist .panel-options{
+
+.phonelist .panel-options {
     // margin-top: 5px;
 }
-.phonelist .panel-options form{
+
+.phonelist .panel-options form {
     // padding-top: 10px;
 }
 
@@ -383,16 +437,15 @@ a.transform-normal, span.transform-normal{
     line-height: 28px;
 }
 
-.phonelist .panel-title a{
+.phonelist .panel-title a {
     padding-left: 0px;
-  
 }
 
 .phonelist .panel-heading {
     margin-bottom: -4px;
 }
 
-.phonelist .panel-heading a:not(.no-arrow):after, 
+.phonelist .panel-heading a:not(.no-arrow):after,
 .phonelist .panel-heading a.collapsed:not(.no-arrow):after {
     margin-left: -31px;
 }
@@ -401,16 +454,20 @@ a.transform-normal, span.transform-normal{
     box-shadow: none;
 }
 
-.phonelist .collapsing , .mandant-administration .collapse.in {
+.phonelist .collapsing,
+.mandant-administration .collapse.in {
     // margin-top: -4px; 
 }
+
+
 /* end phonelist */
 
 
 /* tabs - start */
+
 .content .tab-content {
     padding: 10px;
-    border: 1px solid $border-color; 
+    border: 1px solid $border-color;
     border-width: 1px 1px 1px 1px;
     min-height: 227px;
 }
@@ -419,83 +476,125 @@ a.transform-normal, span.transform-normal{
     border-color: $border-color;
 }
 
-.row.flexbox-container a{
+.row.flexbox-container a {
     display: block;
     float: left;
     text-decoration: none !important;
 }
-.row.flexbox-container a.link{
+
+.row.flexbox-container a.link {
     margin-top: 3px;
 }
-.delete-comment{
+
+.delete-comment {
     padding: 0 10px;
 }
 
+
 /* tabs - end */
 
+
 /* Wiki search */
-.wiki-search a h4,.wiki-search a span{
+
+.wiki-search a h4,
+.wiki-search a span {
     font-size: 16px !important;
 }
-.wiki-search a h4,.wiki-search a small{
+
+.wiki-search a h4,
+.wiki-search a small {
     font-size: 14px !important;
 }
+
+
 /* End  Wiki search */
 
 
 /* Wiki administration */
-.wiki-managment-search select{
+
+.wiki-managment-search select {
     width: auto;
 }
 
+
 /* End Wiki administration */
 
+
 /* Treeview */
-.list-group .child-node{
+
+.list-group .child-node {
     border: none;
     border-top: none !important;
-    padding: 5px 0 15px 0 !important; 
+    padding: 5px 0 15px 0 !important;
 }
-.list-group .child-node.first-child{
+
+.list-group .child-node.first-child {
     // margin-top: -15px;
     margin-top: -10px;
 }
+
 .list-group .child-node .item-before-text,
-.list-group .child-node .item-after-text{
-    display:none;
+.list-group .child-node .item-after-text {
+    display: none;
 }
-.list-group .child-node span.icon{
+
+.list-group .child-node span.icon {
     height: 25px !important;
 }
 
-.tree-view.wiki .icon.glyphicon{
+.tree-view.wiki .icon.glyphicon {
     display: none !important;
 }
+
+
 /* End Treeview */
 
+
 /* Iso category page*/
-    .second-level{
-        margin-left: 25px;
-    }
+
+.second-level {
+    margin-left: 25px;
+}
+
+
 /* End Iso category page*/
 
+
 /* Wiki category search*/
-.corrected-search-margin{
-    margin-top:-50px;
+
+.corrected-search-margin {
+    margin-top: -50px;
 }
 
+
 /* Invetory list edit modal */
-.modal-lg.edit .control-label{
+
+.modal-lg.edit .control-label {
     float: left;
 }
-.modal-lg.edit .chosen-container{
+
+.modal-lg.edit .chosen-container {
     text-align: left;
 }
+
+
 /* end Invetory list edit modal */
 
 @media screen and (min-width: 992px) and (max-width: 1100px) {
-   .corrected-search-margin{
+    .corrected-search-margin {
         margin-top: -75px;
-    } 
+    }
 }
+
+
 /* End Wiki category search*/
+
+
+/* Inventory history */
+
+.history-div p {
+    word-wrap: break-word;
+}
+
+
+/* end Inventory history */

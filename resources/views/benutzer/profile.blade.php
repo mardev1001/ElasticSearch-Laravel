@@ -178,9 +178,99 @@
     </div>
     {!! Form::close() !!}
     
-    <div class="clearfix"></div> <br>
-    
 </fieldset> 
+
+@if($user->email_reciever)
+<fieldset class="email-settings">
+    <div class="box-wrapper">
+        
+        <h4 class="title">{{ trans('benutzerForm.email-settings') }}</h4>
+        
+        <div class="box">
+            
+            <div class="email-settings-form">
+                <div class="row">
+                
+                 {!! Form::open(['action' => 'UserController@profile', 'method'=>'POST']) !!}
+                 
+                    <div class="col-md-3 col-lg-3"> 
+                        <div class="form-group">
+                            <label class="control-label">{{trans('benutzerForm.document-type')}}*</label>
+                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.document-type')}}*" required>
+                                <option></option>
+                                @foreach($documentTypes as $type)
+                                    <option value="{{ $type->id }}">{{ $type->name }}</option> 
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 col-lg-3"> 
+                        <div class="form-group">
+                            <label class="control-label">{{trans('benutzerForm.email-recievers')}}*</label>
+                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.email-recievers')}}*" required>
+                                <option></option>
+                                <option value="all">{{ trans('benutzerForm.all') }}</option>
+                                @foreach($emailRecievers as $reciever)
+                                    <option value="{{ $reciever->id }}">{{ $reciever->name }}</option> 
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 col-lg-3"> 
+                        <div class="form-group">
+                            <label class="control-label">{{trans('benutzerForm.sending-method')}}*</label>
+                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.sending-method')}}*" required>
+                                <option></option>
+                                <option value="1">{{ trans('benutzerForm.email') }}</option>
+                                <option value="2">{{ trans('benutzerForm.email-attachment') }}</option>
+                                <option value="3">{{ trans('benutzerForm.fax') }}</option>
+                                <option value="4">{{ trans('benutzerForm.mail') }}</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 col-lg-3"> 
+                        <div class="form-group">
+                            <label class="control-label">{{trans('benutzerForm.email')}}*</label>
+                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.email')}}*">
+                                <option></option>
+                                @if(!empty($user->email)) <option value="{{$user->email}}">{{trans('benutzerForm.email')}} ({{$user->email}})</option> @endif
+                                @if(!empty($user->email_private)) <option value="{{$user->email_private}}">{{trans('benutzerForm.email_private')}} ({{$user->email_private}})</option> @endif
+                                @if(!empty($user->email_work)) <option value="{{$user->email_work}}">{{trans('benutzerForm.email_work')}} ({{$user->email_work}})</option> @endif
+                            </select>
+                        </div>
+                    </div>
+                
+                    <div class="col-md-3 col-lg-3">
+                        <div class="form-group">
+                           {!! ViewHelper::setInput('fax_custom', $user->mandant->fax, old('fax_custom'), trans('benutzerForm.fax'), trans('benutzerForm.fax'), true) !!}
+                        </div>   
+                    </div>
+                    
+                    <div class="col-md-3 col-lg-3">
+                       <br><button type="submit" class="btn btn-primary">{{trans('benutzerForm.save')}}</button>
+                    </div>
+                    
+                {{ Form::close() }}
+            
+                </div>
+            </div>
+            
+            <div class="email-settings-entries">
+                <div class="row">
+                    
+                    
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+</fieldset>
+@endif
 
 <fieldset>
     
@@ -231,5 +321,7 @@
     @endif
 
 </fieldset>
+
+<div class="cleafix"></div> <br>
 
 @stop

@@ -14,7 +14,7 @@
                 <div class="box  box-white">
                    @if( count($histories) )
                         @foreach( $histories as $history )
-                        <div>
+                        <div class="history-div">
                             <p class="text-left">
                                 {!! ViewHelper::genterateHistoryModalString($history) !!}
                                 <hr/>

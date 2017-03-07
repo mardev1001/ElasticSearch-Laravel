@@ -97,14 +97,6 @@ $(function() {
     });
 
     /*Universal  panel openner*/
-    if ($('.panel-group').length) {
-        if (window.location.hash) {
-            $(".container-fluid a[href='" + window.location.hash + "']").click();
-        }
-    }
-
-
-    /*Universal  panel openner*/
 
     if ($('.editable').length) {
         var counter = 0;
