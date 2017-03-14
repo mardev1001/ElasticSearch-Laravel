@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'document' => 'Dokument',
     'documents' => 'Dokumente',
     'name' => 'Name',
@@ -44,6 +43,6 @@ return [
     'favoriteCategoryNew' => 'Neue Kategorie anlegen',
     'favoriteCategorySelect' => 'Kategorie auswählen',
     'favoriteSaved' => 'Dokument wurde als Favorit gespeichert.',
-    'favoriteRemoved' => 'Dokument wurde aus Favoriten entfernt.',
-    
+    'publishSendSuccess' => 'Veröffentlichung und Versand erfolgreich abgeschlossen.',
+    'publishSuccess' => 'Veröffentlichung erfolgreich abgeschlossen.',
 ];

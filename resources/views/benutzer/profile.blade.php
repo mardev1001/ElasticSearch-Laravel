@@ -191,13 +191,14 @@
             <div class="email-settings-form">
                 <div class="row">
                 
-                 {!! Form::open(['action' => 'UserController@profile', 'method'=>'POST']) !!}
+                 {!! Form::open(['action' => 'UserController@saveEmailSettings', 'method'=>'POST']) !!}
                  
                     <div class="col-md-3 col-lg-3"> 
-                        <div class="form-group">
+                        <div class="form-group settings-document-type">
                             <label class="control-label">{{trans('benutzerForm.document-type')}}*</label>
-                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.document-type')}}*" required>
+                            <select name="settings_document_type" class="form-control select" data-placeholder="{{trans('benutzerForm.document-type')}}*" required>
                                 <option></option>
+                                <option value="all">{{ trans('benutzerForm.all') }}</option>
                                 @foreach($documentTypes as $type)
                                     <option value="{{ $type->id }}">{{ $type->name }}</option> 
                                 @endforeach
@@ -206,9 +207,9 @@
                     </div>
                     
                     <div class="col-md-3 col-lg-3"> 
-                        <div class="form-group">
+                        <div class="form-group settings-email-recievers">
                             <label class="control-label">{{trans('benutzerForm.email-recievers')}}*</label>
-                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.email-recievers')}}*" required>
+                            <select name="settings_email_recievers" class="form-control select" data-placeholder="{{trans('benutzerForm.email-recievers')}}*" required>
                                 <option></option>
                                 <option value="all">{{ trans('benutzerForm.all') }}</option>
                                 @foreach($emailRecievers as $reciever)
@@ -219,22 +220,24 @@
                     </div>
                     
                     <div class="col-md-3 col-lg-3"> 
-                        <div class="form-group">
+                        <div class="form-group settings-sending-method">
                             <label class="control-label">{{trans('benutzerForm.sending-method')}}*</label>
-                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.sending-method')}}*" required>
+                            <select name="settings_sending_method" class="form-control select" data-placeholder="{{trans('benutzerForm.sending-method')}}*" required>
                                 <option></option>
                                 <option value="1">{{ trans('benutzerForm.email') }}</option>
+                                @if(ViewHelper::universalHasPermission([2,4]))
                                 <option value="2">{{ trans('benutzerForm.email-attachment') }}</option>
                                 <option value="3">{{ trans('benutzerForm.fax') }}</option>
                                 <option value="4">{{ trans('benutzerForm.mail') }}</option>
+                                @endif
                             </select>
                         </div>
                     </div>
                     
                     <div class="col-md-3 col-lg-3"> 
-                        <div class="form-group">
+                        <div class="form-group settings-email">
                             <label class="control-label">{{trans('benutzerForm.email')}}*</label>
-                            <select name="title" class="form-control select" data-placeholder="{{trans('benutzerForm.email')}}*">
+                            <select name="settings_email" class="form-control select" data-placeholder="{{trans('benutzerForm.email')}}*" required>
                                 <option></option>
                                 @if(!empty($user->email)) <option value="{{$user->email}}">{{trans('benutzerForm.email')}} ({{$user->email}})</option> @endif
                                 @if(!empty($user->email_private)) <option value="{{$user->email_private}}">{{trans('benutzerForm.email_private')}} ({{$user->email_private}})</option> @endif
@@ -244,10 +247,12 @@
                     </div>
                 
                     <div class="col-md-3 col-lg-3">
-                        <div class="form-group">
-                           {!! ViewHelper::setInput('fax_custom', $user->mandant->fax, old('fax_custom'), trans('benutzerForm.fax'), trans('benutzerForm.fax'), true) !!}
+                        <div class="form-group settings-fax-custom">
+                           {!! ViewHelper::setInput('settings_fax_custom', '', old('settings_fax_custom'), trans('benutzerForm.fax'), trans('benutzerForm.fax'), true) !!}
                         </div>   
                     </div>
+                    
+                    <div class="clearfix"></div>
                     
                     <div class="col-md-3 col-lg-3">
                        <br><button type="submit" class="btn btn-primary">{{trans('benutzerForm.save')}}</button>
@@ -258,14 +263,70 @@
                 </div>
             </div>
             
+            @if(count($emailSettings))
             <div class="email-settings-entries">
-                <div class="row">
-                    
-                    
-                    
-                </div>
+                
+                <table class="table @if( count($mandant->mandantUsers) > 1) data-table @endif ">
+                    <thead>
+                        <th class="defaultSort">{{trans('benutzerForm.document-type')}}</th>
+                        <th class="no-sort">{{trans('benutzerForm.email-recievers')}}</th>
+                        <th class="no-sort">{{trans('benutzerForm.sending-method')}}</th>
+                        <th class="no-sort">{{trans('benutzerForm.target')}}</th>
+                        <th class="no-sort col-md-2 text-center">{{trans('benutzerForm.options')}}</th>
+                    </thead>
+                    <tbody>
+                        @foreach($emailSettings as $setting)
+                            <tr>
+                                <td class="valign">
+                                    @if($setting->document_type_id == 0) 
+                                        {{ trans('benutzerForm.all') }} 
+                                    @else
+                                        @foreach($documentTypes as $type)
+                                            @if($setting->document_type_id == $type->id) {{ $type->name }} @endif
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <td class="valign">
+                                    @if($setting->email_recievers_id == 0) 
+                                        {{ trans('benutzerForm.all') }} 
+                                    @else
+                                        @foreach($emailRecievers as $reciever)
+                                            @if($setting->email_recievers_id == $reciever->id) {{ $reciever->name }} @endif
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <td class="valign">
+                                    @if($setting->sending_method == 1) {{ trans('benutzerForm.email') }} @endif
+                                    @if($setting->sending_method == 2) {{ trans('benutzerForm.email-attachment') }} @endif
+                                    @if($setting->sending_method == 3) {{ trans('benutzerForm.fax') }} @endif
+                                    @if($setting->sending_method == 4) {{ trans('benutzerForm.mail') }} @endif
+                                </td>
+                                <td class="valign">
+                                    @if($setting->recievers_text)
+                                        {{ $setting->recievers_text }}
+                                    @else
+                                        -
+                                    @endif
+                                </td>
+                                <td class="valign table-options text-center">
+                                    {{ Form::open(['action' => 'UserController@updateEmailSettings', 'method'=>'POST']) }}
+                                        <input type="hidden" name="user_email_setting_id" value="{{ $setting->id }}">
+                                        @if($setting->active)
+                                            <button class="btn btn-xs btn-success" type="submit" name="active" value="0"></span>{{trans('benutzerForm.active')}}</button><br>
+                                        @else
+                                            <button class="btn btn-xs btn-danger" type="submit" name="active" value="1"></span>{{trans('benutzerForm.inactive')}}</button><br>
+                                        @endif
+                                        <button type="submit" name="delete" value="1" class="btn btn-xs btn-warning delete-prompt">{{trans('benutzerForm.remove')}}</button>
+                                    {{ Form::close() }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                
             </div>
-
+            @endif
+            
         </div>
     </div>
     

@@ -16,4 +16,5 @@ class JuristCategory extends Model
     public function hasAllDocuments(){
         return $this->hasMany('App\Document','jurist_category_id','id');
     }
+  
 }

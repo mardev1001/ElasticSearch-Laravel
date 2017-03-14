@@ -58,5 +58,10 @@ return [
     'freigeben' => 'freigeben',
     'noFreigeben' => 'nicht freigeben',
     'publish' => 'veröffentlichen',
+    'publish-only' => 'veröffentlichen ohne versand',
+    'publish-send' => 'veröffentlichen mit versand',
+    'mandants' => 'Mandanten',
+    'name' => 'Name',
+    'adress' => 'Anschrift',
     /* End Freigabe process */
 ];

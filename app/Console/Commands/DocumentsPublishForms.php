@@ -101,7 +101,7 @@ class DocumentsPublishForms extends Command
      * Document publishing procedure
      * @return bool 
      */
-    private function publishProcedure($document, $debug = false){
+    private function publishProcedure($document){
         
         $id = $document->id;
         $document->document_status_id = 3;

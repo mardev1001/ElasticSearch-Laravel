@@ -662,6 +662,7 @@ class InventoryController extends Controller
         // dd($pdf);
         return $pdf->stream();
     }
+    
 
     /**
      * Return pdf margins.

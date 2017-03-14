@@ -52,9 +52,12 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('pdf-upload', 'DocumentController@pdfUpload');
     Route::get('dokumente/new-version/{id}', 'DocumentController@newVersion');
     Route::get('dokumente/{id}/freigabe', 'DocumentController@freigabeApproval');
+    Route::get('dokumente/{id}/post-versand', 'DocumentController@postVersand');
     Route::get('dokumente/{id}/activate', 'DocumentController@documentActivation');
     Route::get('dokumente/{id}/publish', 'DocumentController@publishApproval');
+    Route::get('dokumente/{id}/publish/send', 'DocumentController@publishApproval');
     Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');
+    Route::get('dokumente/{id}/pdf/download', 'DocumentController@generatePdf');
     Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
     Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
     Route::get('papierkorb', 'DocumentController@indexTrash');
@@ -63,11 +66,6 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
     Route::post('comment/{id}', 'DocumentController@saveComment');
     Route::get('comment-delete/{comment_id}/{document_id}', 'DocumentController@deleteComment');
-
-    Route::get('juristenportal/notiz', 'JuristenPortalController@notiz');
-    Route::get('juristenportal/upload', 'JuristenPortalController@uploadView');
-    Route::post('juristenportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
-    Route::resource('juristenportal', 'JuristenPortalController');
 
     // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
     Route::get('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
@@ -90,6 +88,8 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('benutzer/standard-benutzer', 'UserController@defaultUser');
     Route::post('benutzer/standard-benutzer/save', 'UserController@defaultUserSave');
     Route::get('benutzer/profil', 'UserController@profile');
+    Route::post('benutzer/profil/email-settings', 'UserController@saveEmailSettings');
+    Route::post('benutzer/profil/email-settings-update', 'UserController@updateEmailSettings');
     Route::get('benutzer/{id}/partner/edit', 'UserController@editPartner');
     // Route::match(['post', 'get'], 'benutzer/{id}/partner/{mandant_id}/edit', 'UserController@editPartner');
     Route::post('benutzer/profil', 'UserController@saveProfile');
@@ -165,21 +165,47 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('inventarliste/suche-abrechnen-alle', 'InventoryController@searchAbrechnenAlle');
     Route::post('inventarliste/abrechnen/pdf', 'InventoryController@abrechnenPdf');
 
+
+    /*
+     * Inventory list
+     */
+     
+    //categories 
     Route::get('inventarliste/kategorien', 'InventoryController@categories');
     Route::post('inventarliste/kategorien', 'InventoryController@postCategories');
     Route::post('inventarliste/kategorien/{id}/update', 'InventoryController@updateCategories');
     Route::get('inventarliste/destroy-category/{id}', 'InventoryController@destroyCategory');
+    
+    //sizes
     Route::get('inventarliste/destroy-size/{id}', 'InventoryController@destroySize');
     Route::get('inventarliste/historie/{id}', 'InventoryController@history');
     Route::post('inventarliste/sizes', 'InventoryController@postSizes');
     Route::post('inventarliste/sizes/{id}/update', 'InventoryController@updateSizes');
     Route::get('inventarliste/groessen', 'InventoryController@sizes');
+    
     Route::get('inventarliste/suche', 'InventoryController@search');
     //Route::post('inventarliste/suche', 'InventoryController@search');
     Route::resource('inventarliste', 'InventoryController');
 
+
+    /*
+     * Juristen portal
+     */
+     
+    //Meta info
+    
+    Route::get('juristenportal/meta-info', 'JuristenPortalController@metaInfo');
+    Route::post('juristenportal/meta-info', 'JuristenPortalController@storeMetaInfo');
+    Route::patch('juristenportal/meta-info/{$metaId}/update', 'JuristenPortalController@updateMetaInfo');
+    
+    Route::get('juristenportal/notiz', 'JuristenPortalController@notiz');
+    Route::get('juristenportal/upload', 'JuristenPortalController@uploadView');
+    Route::post('juristenportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
+    Route::resource('juristenportal', 'JuristenPortalController');
+    
     // Developer Routes
     // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
+    Route::get('dev/sandbox/pdf/{id}', 'DocumentController@generatePdfObject');
 }); //end auth middleware
 
 //}); //end web middleware

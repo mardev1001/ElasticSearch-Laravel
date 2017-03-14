@@ -20,7 +20,7 @@ class PDF extends PdfServiceProvider{
 	 * @return void
 	 */
 	public function register() {
-	    dd('yeah brejk');
+	    dd('Here be dragons. You may not go forth!');
 		$this->mergeConfigFrom(
 			__DIR__ . '/../config/pdf.php', 'pdf'
 		);

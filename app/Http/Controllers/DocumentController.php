@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Input;
 use Request as RequestMerge;
 use App\Helpers\ViewHelper;
 use Auth;
+use Mail;
 use DB;
+use File;
 use Session;
 use App\Document;
 use App\DocumentCoauthor;
@@ -21,6 +23,7 @@ use App\DocumentApproval;
 use App\DocumentStatus;
 use App\DocumentComment;
 use App\UserReadDocument;
+use App\UserEmailSetting;
 use App\PublishedDocument;
 use App\FavoriteDocument;
 use App\FavoriteCategory;
@@ -1269,7 +1272,7 @@ class DocumentController extends Controller
             $dirty = $this->dirty($dirty, $document);
             $document->save();
 
-            $publishedDocs = $this->publishProcedure($document);
+            $publishedDocs = $this->publishProcedure($document, $sending = true);
 
             $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
                             ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
@@ -2070,8 +2073,16 @@ class DocumentController extends Controller
         /* User and freigabe comment visibility */
         $commentVisibility = $this->commentVisibility($document);
 
+        // Prepares and stores email settings entry counts to show
+        // $settingsQuery = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->get();
+        $emailSettings = array();
+        $emailSettings['email'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 1)->groupBy('user_id')->get()->count();
+        $emailSettings['emailAttached'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 2)->groupBy('user_id')->get()->count();
+        $emailSettings['fax'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 3)->groupBy('user_id')->get()->count();
+        $emailSettings['mail'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 4)->groupBy('user_id')->get()->count();
+        // dd($emailSettings);
         return view('dokumente.freigabe', compact('document', 'variants', 'documentCommentsUser', 'documentCommentsFreigabe', 'published',
-        'canPublish', 'hasPermission', 'authorised', 'authorisedPositive', 'commentVisiblity'));
+        'canPublish', 'hasPermission', 'authorised', 'authorisedPositive', 'commentVisiblity', 'emailSettings'));
     }
 
     /**
@@ -2079,8 +2090,12 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function publishApproval($id)
+    public function publishApproval(Request $request, $id)
     {
+        if ($request->segment(4) == 'send') {
+            $sending = true; // Process sending options when publishing documents
+        }
+
         $document = Document::find($id);
         $otherDocuments = Document::where('document_group_id', $document->document_group_id)->whereNotIn('id', array($document->id))->get();
         foreach ($otherDocuments as $oDoc) {
@@ -2092,18 +2107,23 @@ class DocumentController extends Controller
         $document->save();
         $continue = true;
         $uniqeUrl = '';
-        $this->publishProcedure($document);
+        $this->publishProcedure($document, $sending);
         $attachedDocuments = $document->editorVariantDocument;
         foreach ($document->editorVariant as $ev) {
             foreach ($ev->editorVariantDocument as $evD) {
-                $this->publishProcedure($evD->document);
+                $this->publishProcedure($evD->document, $sending);
             }
         }
 
         // dd($document->published);
         UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
 
-        return redirect()->back();
+        if ($sending) {
+            return back()->with('message', trans('dokumentShow.publishSendSuccess'));
+        } else {
+            return back()->with('message', trans('dokumentShow.publishSuccess'));
+        }
+
         /*if($document->published->url_unique)
             return redirect('dokumente/'.$document->published->url_unique);
         else
@@ -2170,7 +2190,7 @@ class DocumentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function generatePdf($id)
+    public function generatePdf(Request $request, $id)
     {
         $publishedDocumentLink = PublishedDocument::where('url_unique', $id)->first();
         if ((ctype_alnum($id) && !is_numeric($id)) || $publishedDocumentLink != null) {
@@ -2251,7 +2271,11 @@ class DocumentController extends Controller
         $pdf->AddPage($or);
         $pdf->WriteHTML($render);
 
-        return $pdf->stream();
+        if ($request->segment(4) == 'download') {
+            return $pdf->download('dokument_'.date('d-m-Y_h-i-s').'.pdf');
+        } else {
+            return $pdf->stream();
+        }
     }
 
     /**
@@ -2444,6 +2468,69 @@ class DocumentController extends Controller
         }
 
         return view('dokumente.show', compact('document', 'documentComments', 'variants'));
+    }
+
+    /**
+     * Generate a PDF object by document id (for further manipulation).
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function generatePdfObject($id)
+    {
+        $publishedDocumentLink = PublishedDocument::where('url_unique', $id)->first();
+        if ((ctype_alnum($id) && !is_numeric($id)) || $publishedDocumentLink != null) {
+            $publishedDocs = PublishedDocument::where('url_unique', $id)->first();
+            $id = $publishedDocs->document_id;
+            $document = Document::find($id);
+        } else {
+            $document = Document::find($id);
+        }
+
+        $variantPermissions = $this->document->documentVariantPermission($document);
+        if ($variantPermissions->permissionExists == false) {
+            return false;
+        }
+
+        $datePublished = new Carbon($document->date_published);
+        $dateNow = $this->getGermanMonthName(intval($datePublished->format('m')));
+        $dateNow .= ' '.$datePublished->format('Y');
+
+        $variants = $variantPermissions->variants;
+
+        // $document = Document::find($id);
+        $margins = $this->setPdfMargins($document);
+
+        $or = 'P';
+        if ($document->landscape == true) {
+            $or = 'L';
+        }
+
+        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', 'arial', $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop, $or]);
+
+        if ($document->document_type_id == $this->isoDocumentId) {
+            $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
+            $pdf->SetHTMLFooter(view('pdf.footerIso', compact('document', 'variants', 'dateNow'))->render());
+            $render = view('pdf.documentIso', compact('document', 'variants', 'dateNow'))->render();
+        } else {
+            if ($document->document_template == 1) {
+                $render = view('pdf.document', compact('document', 'variants', 'dateNow'))->render();
+                $pdf->SetHTMLFooter(view('pdf.footer', compact('document', 'variants', 'dateNow'))->render());
+            } else {
+                $render = view('pdf.new-layout-rund', compact('document', 'variants', 'dateNow'))->render();
+                $header = view('pdf.new-layout-rund-header', compact('document', 'variants', 'dateNow'))->render();
+                $footer = view('pdf.new-layout-rund-footer', compact('document', 'variants', 'dateNow'))->render();
+                $pdf->SetHTMLHeader($header);
+                $pdf->SetHTMLFooter($footer);
+            }
+        }
+
+        $pdf->AddPage($or);
+        $pdf->WriteHTML($render);
+
+        $filename = sys_get_temp_dir().'/'.$id.'_'.md5(microtime()).'.pdf';
+        $pdf->save($filename);
+
+        return $filename;
     }
 
     /**
@@ -3470,7 +3557,7 @@ class DocumentController extends Controller
      *
      * @return bool
      */
-    private function publishProcedure($document, $debug = false)
+    private function publishProcedure($document, $sending = false)
     {
         $id = $document->id;
         $document->document_status_id = 3;
@@ -3478,10 +3565,9 @@ class DocumentController extends Controller
         // $document->date_published = Carbon::now(); // NEPTUN-582, NEPTUN-590
         $document->save();
         // dd($document);
-        // if($debug == true)
-        //     dd($document);
         $continue = true;
         $uniqeUrl = '';
+        $sendOptions = $sending; // Flag for determining if the document should be sent to users or not
 
         $oldDocumentVersion = PublishedDocument::where('document_group_id', $document->document_group_id)
         ->orderBy('id', 'DESC')->first();
@@ -3508,8 +3594,9 @@ class DocumentController extends Controller
                 $publishedDocs->restore();
             }
         }
-         /*Set attached documents as actuell */
-            $variantsAttachedDocuments = EditorVariant::where('document_id', $document->id)->get();
+
+        /*Set attached documents as aktuell */
+        $variantsAttachedDocuments = EditorVariant::where('document_id', $document->id)->get();
         foreach ($variantsAttachedDocuments as $vad) {
             $editorVariantDocuments = $vad->editorVariantDocument;
             foreach ($editorVariantDocuments as $evd) {
@@ -3520,7 +3607,82 @@ class DocumentController extends Controller
                 $doc->save();
             }
         }
-            /* End set attached documents as actuell */
+        /* End set attached documents as actuell */
+
+        // Send published docs if necessary
+        if ($sendOptions) {
+            
+            // Generate temporary pdf export of the document
+            $documentPdf = $this->generatePdfObject($document->id);
+
+            // Fill the email container class with adequate values
+            $mailContent = new \StdClass();
+            $mailContent->subject = 'Neue Veröffentlichung';
+            $mailContent->title = 'Ein neues Dokument wurde veröffentlicht.';
+            $mailContent->fromEmail = 'info@neptun.de';
+            $mailContent->fromName = 'Informationsservice';
+            $mailContent->body = 'Test Content for the E-Mail ...';
+
+            // Get emails and clasify them by sending types
+            $emailSettings = UserEmailSetting::all();
+            
+            foreach($emailSettings as $emailSetting){
+                
+                // Get user data for the email setting
+                $user = User::find($emailSetting->user_id);
+                // Check if the role assigned to the email setting is a system role
+                $systemRole = Role::find($emailSetting->email_recievers_id)->system_role;
+                
+                // Sending method: email (This method is avaliable to all users)
+                if($emailSetting->sending_method == 1){
+                    // Check if the document type is corresponding the mailing settings
+                    if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                        
+                        $mailContent->toEmail = $emailSetting->recievers_text;
+                        $mailContent->toName = $user->first_name .' '. $user->last_name;
+                        $mailContent->links = [$document->name => url('dokumente/' . $document->id)];
+                        
+                        // Readout user email options and send
+                        Mail::send('email.publishedDocuments', ['content' => $mailContent], function ($message) use ($mailContent, $document, $documentPdf) {
+                            $message->from($mailContent->fromEmail, $mailContent->fromName);
+                            $message->to($mailContent->toEmail, $mailContent->toName);
+                            $message->subject($mailContent->subject);
+                        });
+                    }
+                }
+                
+                // Sending method: email + attachment (ONLY system roles can recieve documents as attachments)
+                if($systemRole && ($emailSetting->sending_method == 2)){
+                    // Check if the document type is corresponding the mailing settings
+                    if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                        
+                        $mailContent->toEmail = $emailSetting->recievers_text;
+                        $mailContent->toName = $user->first_name .' '. $user->last_name;
+
+                        // Readout user email options and send
+                        Mail::send('email.publishedDocuments', ['content' => $mailContent], function ($message) use ($mailContent, $document, $documentPdf) {
+                            $message->from($mailContent->fromEmail, $mailContent->fromName);
+                            $message->to($mailContent->toEmail, $mailContent->toName);
+                            $message->subject($mailContent->subject);
+                            $message->attach($documentPdf, ['as' => str_slug($document->id .'-'. $document->name) . '.pdf', 'mime' => 'application/pdf']);
+                        });
+                    }
+                }
+                
+                // Sending method: fax (This method sends the document via fax commands)
+                if($emailSetting->sending_method == 3){
+                    // Check if the document type is corresponding the mailing settings
+                    if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                        // Faxing commands
+                    }
+                }
+                
+            }
+            
+            // Delete generated pdf file
+            File::delete($documentPdf);
+        }
+        // dd('E-Mail Sent.');
     }
 
     /**
@@ -3562,6 +3724,35 @@ class DocumentController extends Controller
 
         /* End Freigabe user */
         return $commentVisibility;
+    }
+
+    /**
+     * Generate PDF with the list of all users that need to.
+     *
+     * @param Collection $document
+     *
+     * @return object
+     */
+    public function postVersand(Request $request, $id)
+    {
+        $document = Document::find($id);
+        $settingsUserIds = UserEmailSetting::where('sending_method', 4)
+            ->whereIn('document_type_id', [0, $document->document_type_id])
+            ->where('active', 1)->groupBy('user_id')->pluck('user_id');
+        $users = User::whereIn('id', $settingsUserIds)->get();
+
+        $margins = new \StdClass();
+        $margins->left = 10;
+        $margins->right = 10;
+        $margins->top = 10;
+        $margins->bottom = 10;
+        $margins->headerTop = 0;
+        $margins->footerTop = 5;
+        $render = view('pdf.post-versand', compact('users'));
+        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', '', $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop]);
+        $pdf->WriteHTML($render);
+
+        return $pdf->stream();
     }
 
     /**

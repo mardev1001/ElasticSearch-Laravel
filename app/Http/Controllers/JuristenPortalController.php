@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Helpers\ViewHelper;
 
+use App\JuristCategory;
+use App\JuristCategoryMeta;
+use App\JuristCategoryMetaField;
+use App\JuristCategoryMetaFieldValues;
+
 class JuristenPortalController extends Controller
 {
     /**
@@ -123,6 +128,68 @@ class JuristenPortalController extends Controller
 
         return view('juristenportal.upload');
     }
+    
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function metaInfo()
+    {
+        if (ViewHelper::universalHasPermission(array(7, 34)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        $categories = JuristCategoryMeta::all();
+
+        return view('juristenportal.metaInfo', compact('categories'));
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storeMetaInfo(Request $request)
+    {
+        // dd( $request->all() );
+        if(!$request->has('name')){
+            redirect()->back()->with('messageSecondary', trans('juristenportal.noCategoryName'));
+        }
+        $category = JuristCategoryMeta::create($request->all());
+        // dd($category);
+        if($request->has('meta-names') && count($request->get('meta-names'))){
+            $request->merge(['jurist_category_meta_id'=> $category->id]);
+            foreach($request->get('meta-names') as $meta){
+                 $request->merge(['name'=> $meta]);
+                 JuristCategoryMetaField::create($request->all());
+            }
+        }
+        
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+    }
+    
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateMetaInfo(Request $request, $id)
+    {
+        if (ViewHelper::universalHasPermission(array(34)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        $category = InventoryCategory::find($id);
+        $category->fill($request->all())->save();
+
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.categoryUpdated'));
+    }
+    
 
     /**
      * Update the specified resource in storage.

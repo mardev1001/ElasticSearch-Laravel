@@ -6,7 +6,6 @@
     <div class="col-xs-12">
 
         <div class="panel panel-primary" id="panelComments">
-
             <div class="panel-heading">
                 <h4 class="panel-title">
                     <a data-toggle="collapse" data-target="#commentsPanel-{{str_slug($title)}}" href="#commentsPanel-{{str_slug($title)}}" class="transform-normal collapsed">
@@ -27,7 +26,7 @@
                                     <div class="comment-{{++$k}} row flexbox-container">
                                         <!-- delete comment box -->
                                         <div class="pull-left delete-comment">
-                                            <a href="/comment-delete/{{$comment->id}}/{{ $comment->document_id }}" class="no-underline delete-prompt"
+                                            <a href="/comment-delete/{{$comment->id}}/{{ $comment->document_id }}" class="no-underline"
                                                data-text="Wollen Sie diesen Kommentar wirklich löschen?">
                                              <span class="icon icon-trash inline-block delete-prompt"
                                                    data-text="Wollen Sie diesen Kommentar wirklich löschen?" title="Entfernen"></span>

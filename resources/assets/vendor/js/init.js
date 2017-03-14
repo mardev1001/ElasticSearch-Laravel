@@ -57,43 +57,131 @@ $(function() {
         });
     }
 
-    $('.data-table').DataTable({
-        searching: false,
-        paging: false,
-        info: false,
-        language: {
-            "sEmptyTable": "Keine Daten vorhanden.",
-            "sInfo": "_START_ bis _END_ von _TOTAL_ EintrÃ¤gen",
-            "sInfoEmpty": "0 bis 0 von 0 EintrÃ¤gen",
-            "sInfoFiltered": "(gefiltert von _MAX_ EintrÃ¤gen)",
-            "sInfoPostFix": "",
-            "sInfoThousands": ".",
-            "sLengthMenu": "_MENU_ EintrÃ¤ge anzeigen",
-            "sLoadingRecords": "Wird geladen...",
-            "sProcessing": "Bitte warten...",
-            "sSearch": "Suchen",
-            "sZeroRecords": "Keine EintrÃ¤ge vorhanden.",
-            "oPaginate": {
-                "sFirst": "Erste",
-                "sPrevious": "ZurÃ¼ck",
-                "sNext": "NÃ¤chste",
-                "sLast": "Letzte"
-            },
-            "oAria": {
-                "sSortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
-                "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
+    /*If modal has comment*/
+    if ($('.modal-dialog').length) {
+        if ($('.modal-dialog').find('[name*="comment"]').length) {
+            $('.modal-dialog').find('[name*="comment"]').each(function() {
+                $(this).closest('.modal.fade').addClass('no-background');
+                $(this).closest('.modal-dialog').draggable({
+                    handle: ".modal-content:not(form)"
+                });
+                // additional options data-backdrop="static" data-keyboard="false"
+
+                // this is to remove the modal background- but ony on modals where the modal-dialog is draggable
+                var triggerId = $(this).closest('.modal.fade').attr('id');
+                $("[data-target='#" + triggerId + "']").attr("data-backdrop", "false");
+            });
+        }
+
+    }
+
+    if ($('.data-table').length) {
+        $('.data-table').each(function() {
+            if ($(this).closest('.panel-body').length) {
+                $(this).closest('.panel').find('.panel-title a').addClass('trigger-datatable')
             }
-        },
-        columnDefs: [{
-            targets: 'no-sort',
-            orderable: false
-        }, {
-            targets: 'col-hide',
-            visible: false
-        }],
-        order: [
-            [$('th.defaultSort').index(), 'asc']
-        ],
+            else {
+                $('.data-table').DataTable({
+                    searching: false,
+                    paging: false,
+                    info: false,
+                    // processing: true,
+                    // orderClasses: false,
+                    deferRender: true,
+                    language: {
+                        "sEmptyTable": "Keine Daten vorhanden.",
+                        "sInfo": "_START_ bis _END_ von _TOTAL_ EintrÃ¤gen",
+                        "sInfoEmpty": "0 bis 0 von 0 EintrÃ¤gen",
+                        "sInfoFiltered": "(gefiltert von _MAX_ EintrÃ¤gen)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ EintrÃ¤ge anzeigen",
+                        "sLoadingRecords": "Wird geladen...",
+                        "sProcessing": "Bitte warten...",
+                        "sSearch": "Suchen",
+                        "sZeroRecords": "Keine EintrÃ¤ge vorhanden.",
+                        "oPaginate": {
+                            "sFirst": "Erste",
+                            "sPrevious": "ZurÃ¼ck",
+                            "sNext": "NÃ¤chste",
+                            "sLast": "Letzte"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
+                            "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
+                        }
+                    },
+                    columnDefs: [{
+                        targets: 'no-sort',
+                        orderable: false
+                    }, {
+                        targets: 'col-hide',
+                        visible: false
+                    }],
+                    order: [
+                        [$('th.defaultSort').index(), 'asc']
+                    ],
+                });
+            }
+        });
+
+
+    }
+    $('.trigger-datatable').on('click touch', function() {
+        var initialTrigger = $(this);
+        if (!$(this).hasClass('init')) {
+            $(this).append('<span class="fa fa-spin fa-circle-o-notch remove-spinner"></span>');
+        }
+        if (!$(this).hasClass('init')) {
+            $(this).addClass('init');
+
+            setTimeout(function() {
+                initialTrigger.closest('.panel').find('.panel-body').find('.data-table').DataTable({
+                    searching: false,
+                    paging: false,
+                    info: false,
+                    // processing: true,
+                    // orderClasses: false,
+                    deferRender: true,
+                    language: {
+                        "sEmptyTable": "Keine Daten vorhanden.",
+                        "sInfo": "_START_ bis _END_ von _TOTAL_ EintrÃ¤gen",
+                        "sInfoEmpty": "0 bis 0 von 0 EintrÃ¤gen",
+                        "sInfoFiltered": "(gefiltert von _MAX_ EintrÃ¤gen)",
+                        "sInfoPostFix": "",
+                        "sInfoThousands": ".",
+                        "sLengthMenu": "_MENU_ EintrÃ¤ge anzeigen",
+                        "sLoadingRecords": "Wird geladen...",
+                        "sProcessing": "Bitte warten...",
+                        "sSearch": "Suchen",
+                        "sZeroRecords": "Keine EintrÃ¤ge vorhanden.",
+                        "oPaginate": {
+                            "sFirst": "Erste",
+                            "sPrevious": "ZurÃ¼ck",
+                            "sNext": "NÃ¤chste",
+                            "sLast": "Letzte"
+                        },
+                        "oAria": {
+                            "sSortAscending": ": aktivieren, um Spalte aufsteigend zu sortieren",
+                            "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
+                        }
+                    },
+                    columnDefs: [{
+                        targets: 'no-sort',
+                        orderable: false
+                    }, {
+                        targets: 'col-hide',
+                        visible: false
+                    }],
+                    order: [
+                        [$('th.defaultSort').index(), 'asc']
+                    ],
+                });
+            }, 600);
+            setTimeout(function() {
+                initialTrigger.closest('.panel').find('.remove-spinner').remove();
+            }, 300);
+        }
     });
 
     /*Universal  panel openner*/

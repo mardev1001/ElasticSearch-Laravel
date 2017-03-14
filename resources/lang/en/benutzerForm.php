@@ -47,6 +47,10 @@ return [
     'defaultUserRoles' => 'Rollen Zuweisung',
     'email-settings' => 'E-Mail Empfang',
     'saveSuccess' => 'Standard Benutzer erfolgreich aktualisiert.',
+    'saveEmailSettingError' => 'E-Mail Einstellungen existieren nicht oder können nicht bearbetet werden.',
+    'saveEmailSettingSuccess' => 'E-Mail Empfang Einstellungen erfolgreich gespeichert.',
+    'updateEmailSettingSuccess' => 'E-Mail Empfang Einstellungen erfolgreich aktualisiert.',
+    'deleteEmailSettingSuccess' => 'E-Mail Empfang Einstellungen wurden entfernt.',
     'document-type' => 'Dokument Typ',
     'email-recievers' => 'Empfänger',
     'sending-method' => 'Versandart',
@@ -54,7 +58,8 @@ return [
     'destination' => 'Ziel',
     'email-attachment' => 'Email mit Anhang',
     'mail' => 'Brief',
+    'target' => 'Ziel',
     'all' => 'Alle',
-
+    'all-nav' => 'Alle mir Navi-Eintrag',
     'lastMandantRole' => 'Diese Benutzer-Rolle kann nicht gelöscht werden. Dies ist eine System relevante Benutzer-Rolle.',
 ];

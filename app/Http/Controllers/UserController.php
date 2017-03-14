@@ -16,6 +16,7 @@ use App\InternalMandantUser;
 use App\Document;
 use App\DocumentType;
 use App\UserReadDocument;
+use App\UserEmailSetting;
 use App\GlobalSettings;
 use App\Http\Repositories\UtilityRepository;
 
@@ -441,6 +442,7 @@ class UserController extends Controller
         $id = Auth::user()->id;
         $documentTypes = DocumentType::where('visible_navigation', true)->get();
         $emailRecievers = Role::where('system_role', true)->get();
+        $emailSettings = UserEmailSetting::where('user_id', $id)->get();
 
         if (User::find($id)) {
             $user = User::find($id);
@@ -455,9 +457,76 @@ class UserController extends Controller
         $rolesAll = Role::all();
 
         if (isset($user)) {
-            return view('benutzer.profile', compact('user', 'rolesAll', 'documentTypes', 'emailRecievers'));
+            return view('benutzer.profile', compact('user', 'rolesAll', 'documentTypes', 'emailRecievers', 'emailSettings'));
         } else {
             return back()->with('message', 'Benutzer existiert nicht oder kann nicht bearbeitet werden.');
+        }
+    }
+
+    /**
+     * Store users email preferences.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function saveEmailSettings(Request $request)
+    {
+        // dd($request->all());
+        $uid = Auth::user()->id;
+        $emailSetting = new UserEmailSetting();
+
+        $emailSetting->user_id = $uid;
+
+        if ($request->settings_document_type == 'all') {
+            $emailSetting->document_type_id = 0;
+        } else {
+            $emailSetting->document_type_id = $request->settings_document_type;
+        }
+
+        if ($request->settings_email_recievers == 'all') {
+            $emailSetting->email_recievers_id = 0;
+        } else {
+            $emailSetting->email_recievers_id = $request->settings_email_recievers;
+        }
+
+        $emailSetting->sending_method = $request->settings_sending_method;
+
+        if (in_array($emailSetting->sending_method, [1, 2])) {
+            $emailSetting->recievers_text = $request->settings_email;
+        }
+
+        if (in_array($emailSetting->sending_method, [3])) {
+            $emailSetting->recievers_text = $request->settings_fax_custom;
+        }
+
+        // dd($emailSetting);
+        $emailSetting->save();
+
+        return back()->with('message', trans('benutzerForm.saveEmailSettingSuccess'));
+    }
+
+    /**
+     * Update users email preferences.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateEmailSettings(Request $request)
+    {
+        $setting = UserEmailSetting::find($request->user_email_setting_id);
+        if ($setting) {
+            if ($request->has('active')) {
+                $setting->active = $request->active;
+                $setting->save();
+
+                return back()->with('message', trans('benutzerForm.updateEmailSettingSuccess'));
+            }
+
+            if ($request->has('delete')) {
+                $setting->delete();
+
+                return back()->with('message', trans('benutzerForm.deleteEmailSettingSuccess'));
+            }
+        } else {
+            return back()->with('message', trans('benutzerForm.saveEmailSettingError'));
         }
     }
 

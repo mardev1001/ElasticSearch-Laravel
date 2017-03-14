@@ -187,7 +187,9 @@
                                 ( $document->documentType->document_art == 0 &&
                                 ViewHelper::universalHasPermission( array(11) ) == true ) )
                                 && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
-                            <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                                
+                                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#publishModal">{{ trans('documentForm.publish') }}</button>
+                            {{-- <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a> --}}
                         @endif
                 @endif
                 
@@ -199,7 +201,7 @@
                     @endforeach
                 @else
                     {{-- The link for generating PDF from the document content should be here (the content you see on the overview) --}}
-                    <a target="_blank" href="/dokumente/{{$document->id}}/pdf" class="btn btn-primary pull-right">Druckvorschau</a>
+                    <a target="_blank" href="{{ url('/dokumente/' . $document->id . '/pdf') }}" class="btn btn-primary pull-right">Druckvorschau</a>
                 @endif
                 
             </div>
@@ -334,24 +336,56 @@
                     </div>
                 </div>
             </div>  <!-- modal end -->  
+            
+            <!-- modal start -->   
+            <div id="publishModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hiddetn="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">{{ trans('documentForm.publish') }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            Geschäftsführer E-Mail: {{ $emailSettings['emailAttached'] }} <br>
+                            User E-Mail: {{ $emailSettings['email'] }} <br>
+                            Fax senden: {{ $emailSettings['fax'] }} <br>
+                            Postversand: {{ $emailSettings['mail'] }} <br>
+                            
+                            <div class="clearfix"></div> <br>
+                            
+                            <a href="{{ url('/dokumente/' . $document->id . '/pdf/download') }}">PDF Rundschreiben ausdrucken</a><br>
+                            <a href="{{ url('/dokumente/' . $document->id . '/post-versand') }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
+                            <!-- Mandaten, Name, Anschrift -->
+                        </div>
+                        
+                        <div class="modal-footer text-right">
+                            <a href="{{ url('/dokumente/' . $document->id . '/publish/send') }}" class="btn btn-primary" >{{ trans('documentForm.publish-send') }}</a>
+                            <a href="{{ url('/dokumente/' . $document->id . '/publish') }}" class="btn btn-primary ">{{ trans('documentForm.publish-only') }}</a> 
+                        </div>
+                    </div>
+                </div>
+            </div>  <!-- modal end -->  
         
 @stop        
-        @if( isset( $document->document_type_id ) )
-           @section('preScript')
-               <!-- variable for expanding document sidebar-->
-               <script type="text/javascript">
-                    var documentType = "{{ $document->documentType->name}}";
-                   
-                      
-               </script>
-               
-               <!--patch for checking iso category document-->
-                @if( isset($document->isoCategories->name) )
-                    <script type="text/javascript">   
-                        if( documentType == 'ISO Dokument')
-                            var isoCategoryName = '{{ $document->isoCategories->name}}';
-                    </script>
-                @endif
-               <!-- End variable for expanding document sidebar-->
-           @stop
-       @endif
+        
+@if( isset( $document->document_type_id ) )
+   @section('preScript')
+       <!-- variable for expanding document sidebar-->
+       <script type="text/javascript">
+            var documentType = "{{ $document->documentType->name}}";
+           
+              
+       </script>
+       
+       <!--patch for checking iso category document-->
+        @if( isset($document->isoCategories->name) )
+            <script type="text/javascript">   
+                if( documentType == 'ISO Dokument')
+                    var isoCategoryName = '{{ $document->isoCategories->name}}';
+            </script>
+        @endif
+       <!-- End variable for expanding document sidebar-->
+   @stop
+@endif

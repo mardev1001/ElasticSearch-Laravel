@@ -349,6 +349,20 @@ strong,
     font-size: 21px !important;
 }
 
+.ui-draggable-handle,
+.ui-draggable-handle:hover,
+.ui-draggable-handle:focus {
+    cursor: move;
+}
+
+.mandant-administration .collapse.in {
+    margin-top: -5px !important;
+}
+
+.mandant-administration .collapsing {
+    margin-top: -5px!important;
+}
+
 p,
 a,
 #page-wrapper label {

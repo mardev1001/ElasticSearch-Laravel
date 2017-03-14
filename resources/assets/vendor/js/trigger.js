@@ -363,6 +363,20 @@ $(function() {
 
     });
 
+    $('.add-single-field').on('click touch', function(e) {
+        e.preventDefault();
+        var html = '<div class="row input-row"><div class="col-xs-10"><input name="meta-names[]" required class="form-control" placeholder="Meta info name" /></div>' +
+            '<div class="col-xs-2"><a href="#" class="btn btn-xs btn-danger remove-row"> entfernen</a></ div ><br/>  </ div > <br/>';
+        var parent = $(this).closest('.parent-div');
+        parent.find('.add-wrapper').append(html);
+        if (parent.find('.submit-div').hasClass('hidden')) {
+            parent.find('.submit-div').removeClass('hidden');
+        }
+    });
+    $('.remove-row').on('click touch', function() {
+        $(this).closest('.input-row').remove();
+    });
+
     // Hide elements if checkbox is checked
     $('.hide-input').on('change', function(e) {
         if ($(this).is(':checked')) {
