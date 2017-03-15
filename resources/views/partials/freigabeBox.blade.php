@@ -30,15 +30,17 @@
 
                             <div class="clearfix"></div>
 
-                            @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
-                                @if( $approved->document->published != null )
-                                    <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                        <strong> {{ $approved->document->name }} </strong>
-                                    </a>
-                                @else
-                                    <a href="{{url('/dokumente/'. $comment->document->id)}}">
-                                        <strong> {{ $approved->document->name }} </strong>
-                                    </a>
+                            @if(isset($comment))
+                                @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
+                                    @if( $approved->document->published != null )
+                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                            <strong> {{ $approved->document->name }} </strong>
+                                        </a>
+                                    @else
+                                        <a href="{{url('/dokumente/'. $comment->document->id)}}">
+                                            <strong> {{ $approved->document->name }} </strong>
+                                        </a>
+                                    @endif
                                 @endif
                             @endif
 

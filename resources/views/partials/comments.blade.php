@@ -38,7 +38,7 @@
                                             
                                             <span class="comment-header">
     
-                                                @if($comment->freigeber == 1 &&  $comment->published != null)
+                                                @if( isset($comment) && $comment->freigeber == 1 &&  $comment->published != null)
                                                     <strong>
                                                         @if( $comment->published->approved == 1)
                                                             Freigegeben
@@ -71,7 +71,7 @@
                                             
                                             @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
                                                 Version {{ $comment->document->version }}, {{ $comment->document->documentStatus->name }} - 
-                                                {{ $comment->document->date_published }} - {{ $comment->document->owner->first_name ." ". $comment->document->owner->last_name }}
+                                               @if(isset($comment->document->date_published) ) {{ $comment->document->date_published }} -@endif @if(isset($comment->document->owner) ){{ $comment->document->owner->first_name ." ". $comment->document->owner->last_name }}@endif
                                                 <br>
                                                 @if( $comment->document->published != null )
                                                     <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">

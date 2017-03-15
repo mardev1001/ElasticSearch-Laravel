@@ -47,7 +47,7 @@ class InventoryController extends Controller
      */
     public function search(Request $request)
     {
-        if (ViewHelper::universalHasPermission(array(34)) == false) {
+        if (ViewHelper::universalHasPermission( array(7, 34) ) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
 

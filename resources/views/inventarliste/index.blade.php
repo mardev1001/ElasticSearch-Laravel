@@ -106,10 +106,10 @@
                                     <th class="text-center valign">@lang('inventoryList.changes')</th>
                                     @if( ViewHelper::universalHasPermission( array(34) ) )
                                         <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                                        <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                                     @else
                                         <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
                                     @endif
-                                    <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                                 </thead>
                                 <tbody>
                                     @if(count($category->items) )
@@ -137,6 +137,11 @@
                                                         @lang('inventoryList.edit')
                                                     </a>   
                                                 </td>
+                                                <td class="text-center valign"> 
+                                                    <a href="{{url('inventarliste/historie/'.$item->id)}}">
+                                                        @lang('inventoryList.history')
+                                                    </a>
+                                                </td>
                                                 @else
                                                     <td class="text-center valign"> 
                                                         <a href="#" data-toggle="modal" data-target="#item-view-{{$item->id}}">
@@ -145,11 +150,6 @@
                                                         {!! ViewHelper::generateInventoryViewModal($item) !!}  
                                                     </td>
                                                 @endif
-                                                <td class="text-center valign"> 
-                                                    <a href="{{url('inventarliste/historie/'.$item->id)}}">
-                                                        @lang('inventoryList.history')
-                                                    </a>
-                                                </td>
                                             </tr>
                                         @endforeach
                                     @else
@@ -185,10 +185,11 @@
                             <th class="text-center valign">@lang('inventoryList.changes')</th>
                             @if( ViewHelper::universalHasPermission( array(34) ) )    
                                 <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                                <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                             @else
                                 <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
                             @endif
-                            <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
+                            
                         </thead>
                         <tbody>
                             @if(isset($searchInventory) && count( $searchInventory ) > 0)
@@ -213,11 +214,16 @@
                                             {{ $item->updated_at }}
                                         </td>
                                         @if( ViewHelper::universalHasPermission( array(34) ) )
-                                        <td class="text-center valign"> 
-                                            <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
-                                                @lang('inventoryList.edit')
-                                            </a>   
-                                        </td>
+                                            <td class="text-center valign"> 
+                                                <a href="{{route('inventarliste.edit', ['id'=> $item->id])}}">
+                                                    @lang('inventoryList.edit')
+                                                </a>   
+                                            </td>
+                                            <td class="text-center valign"> 
+                                                <a href="{{url('inventarliste/historie/'.$item->id)}}">
+                                                    @lang('inventoryList.history')
+                                                </a>
+                                            </td>
                                         @else
                                             <td class="text-center valign"> 
                                                 <a href="#" data-toggle="modal" data-target="#item-view-{{$item->id}}">
@@ -226,12 +232,7 @@
                                                 {!! ViewHelper::generateInventoryViewModal($item) !!}  
                                             </td>
                                         @endif
-                                        <td class="text-center valign"> 
-                                            <a href="{{url('inventarliste/historie/'.$item->id)}}">
-                                                @lang('inventoryList.history')
-                                            </a>
-                                    </td>
-                                </tr>
+                                    </tr>
                                 @endforeach
                             @else
                                 <tr>
@@ -281,10 +282,10 @@
                                 <th class="text-center valign">@lang('inventoryList.changes')</th>
                                 @if( ViewHelper::universalHasPermission( array(34) ) )
                                     <th class="text-center valign no-sort">@lang('inventoryList.edit')</th>
+                                    <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                                 @else
                                     <th class="text-center valign no-sort">@lang('inventoryList.view')</th>
                                 @endif
-                                <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                             </thead>
                             <tbody>
                                 @if($category->id == 6)
@@ -314,6 +315,11 @@
                                                 @lang('inventoryList.edit')
                                             </a>   
                                         </td>
+                                        <td class="text-center valign"> 
+                                            <a href="{{url('inventarliste/historie/'.$item->id)}}">
+                                                @lang('inventoryList.history')
+                                            </a>
+                                        </td>
                                         @else
                                             <td class="text-center valign"> 
                                                 <a href="#" data-toggle="modal" data-target="#item-view-{{$item->id}}">
@@ -322,11 +328,6 @@
                                                 {!! ViewHelper::generateInventoryViewModal($item) !!}  
                                             </td>
                                         @endif
-                                        <td class="text-center valign"> 
-                                            <a href="{{url('inventarliste/historie/'.$item->id)}}">
-                                                @lang('inventoryList.history')
-                                            </a>
-                                        </td>
                                     </tr>
                                     @endforeach
                                 @else

@@ -47,11 +47,13 @@
     margin-top: -1px;
 }
 
-.dataTables_wrapper,
-.panel-body {
+.dataTables_wrapper {
     // background-color: $box-inner-color;
-    // background-color: #fff;
-    // padding: 15px;
+    // padding: 15px; 
+}
+
+.panel-body {
+    background-color: #fff;
 }
 
 #page-wrapper .panel-primary>.panel-heading+.panel-collapse>.panel-body {

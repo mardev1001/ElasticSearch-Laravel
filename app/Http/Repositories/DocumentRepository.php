@@ -225,12 +225,14 @@ class DocumentRepository
                         
                         $links = null;
                         foreach($document->variantDocuments as $key => $dc){
-                            if( in_array($dc->editorVariant->document->document_status_id, [3, 5])){
-                                if($this->universalDocumentPermission($dc->editorVariant->document)){
-                                    if($dc->editorVariant->document->published != null) {
-                                        $links .= trim('<a href="/dokumente/'. $dc->editorVariant->document->published->url_unique . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
-                                    } else {
-                                        $links .= trim('<a href="/dokumente/'. $dc->editorVariant->document->id . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                            if(isset($dc->editorVariant->document)){
+                                if( in_array($dc->editorVariant->document->document_status_id, [3, 5])){
+                                    if($this->universalDocumentPermission($dc->editorVariant->document)){
+                                        if($dc->editorVariant->document->published != null) {
+                                            $links .= trim('<a href="/dokumente/'. $dc->editorVariant->document->published->url_unique . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                                        } else {
+                                            $links .= trim('<a href="/dokumente/'. $dc->editorVariant->document->id . '" target="_blank" class="link-after-text">'. $dc->editorVariant->document->name .'</a>') .'; ';
+                                        }
                                     }
                                 }
                             }

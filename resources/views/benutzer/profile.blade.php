@@ -265,8 +265,7 @@
             
             @if(count($emailSettings))
             <div class="email-settings-entries">
-                
-                <table class="table @if( count($mandant->mandantUsers) > 1) data-table @endif ">
+                <table class="table @if( isset($mandant) && count($mandant->mandantUsers) > 1) data-table @endif ">
                     <thead>
                         <th class="defaultSort">{{trans('benutzerForm.document-type')}}</th>
                         <th class="no-sort">{{trans('benutzerForm.email-recievers')}}</th>
@@ -323,8 +322,7 @@
                         @endforeach
                     </tbody>
                 </table>
-                
-            </div>
+            </div><!-- .email-settings-entries-->
             @endif
             
         </div>

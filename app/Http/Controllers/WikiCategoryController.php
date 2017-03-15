@@ -114,12 +114,9 @@ class WikiCategoryController extends Controller
         $myQuery = $myQuery->where('user_id', Auth::user()->id);
         $myCategory = $myQuery->paginate(12);   
         $myCategoryEntriesTree = $this->document->generateWikiTreeview( $myCategory );
-           
-      
-       
-        // $categoryEntries = WikiPage::where('category_id',$id)->paginate(12);
+        $searchInput = '';
         
-        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree','myCategory','myCategoryEntriesTree') ); 
+        return view('wiki.category', compact('category','categoryEntries','categoryEntriesTree','myCategory','myCategoryEntriesTree','searchInput') ); 
     }
 
     /**

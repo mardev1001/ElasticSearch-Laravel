@@ -43,7 +43,7 @@
             <div class="col-md-4 col-lg-3">
                 <div class="form-group remove-required">
                     
-                    @if( $data->neptun_intern == 1 && Request::is('*/edit') )
+                    @if( isset($data->neptun_intern) &&$data->neptun_intern == 1 && Request::is('*/edit') )
                     
                         {!! ViewHelper::setInput('sell_price', $data,old('sell_price'), 
                         trans('inventoryList.sellPrice'), trans('inventoryList.sellPrice'), false,'text', array('float'),array('min="1"', 'step="0.1"') ) !!}

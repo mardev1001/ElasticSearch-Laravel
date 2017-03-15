@@ -209,7 +209,7 @@ class DocumentController extends Controller
         $data = $request->all();
         $documentsIds = $data['documentIds'];
 
-        if ($data['delete']) {
+        if (isset($data['delete'])) {
             if (count($documentsIds)) {
                 foreach ($documentsIds as $id) {
                     $document = Document::onlyTrashed()->where('id', $id)->first();
@@ -224,7 +224,7 @@ class DocumentController extends Controller
             } else {
                 return back()->with('message', trans('documentForm.noSelection'));
             }
-        } elseif ($data['restore']) {
+        } elseif (isset($data['restore'])) {
             if (count($documentsIds)) {
                 foreach ($documentsIds as $id) {
                     $document = Document::onlyTrashed()->where('id', $id)->first();
@@ -244,7 +244,7 @@ class DocumentController extends Controller
             } else {
                 return back()->with('message', trans('documentForm.noSelection'));
             }
-        } elseif ($data['empty-trash']) {
+        } elseif (isset($data['empty-trash'])) {
             $trashed = Document::onlyTrashed()->get();
             foreach ($trashed as $markedForDeletion) {
                 if (ViewHelper::universalDocumentPermission($markedForDeletion)) {
@@ -281,13 +281,13 @@ class DocumentController extends Controller
             $isoDocuments = IsoCategory::all();
             $documentStatus = DocumentStatus::all();
             $mandantUserRoles = MandantUserRole::where('role_id', 10)->pluck('mandant_user_id');
+            $mandantId = MandantUser::where('user_id', Auth::user()->id)->pluck('mandant_id');
+            $mandantUsers = MandantUser::whereIn('mandant_id', $mandantId)->get();
+            $mandantUsers = $this->clearUsers($mandantUsers);
 
             $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
             ->where('mandant_id', $mandantId)->get();
 
-            $mandantId = MandantUser::where('user_id', Auth::user()->id)->pluck('mandant_id');
-            $mandantUsers = MandantUser::whereIn('mandant_id', $mandantId)->get();
-            $mandantUsers = $this->clearUsers($mandantUsers);
 
             $pluckIdMandantUsers = $mandantUsers->pluck('user_id')->toArray();
             $mandantUsers = User::whereIn('id', $pluckIdMandantUsers)->orderBy('last_name', 'asc')->get();
@@ -2574,9 +2574,9 @@ class DocumentController extends Controller
         $docs = $request->get('documents');
         $sort = $request->get('sort');
         $myRundCoauthorArr = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
+        $docType = $this->rundId;
         $myRundCoauthor = Document::whereIn('id', $myRundCoauthorArr)->where('document_type_id', $docType)->pluck('id')->toArray();
 
-        $docType = $this->rundId;
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
         }
@@ -2819,19 +2819,11 @@ class DocumentController extends Controller
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
         }
+        $docType = $this->formulareId;
         $myRundCoauthorArr = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
         $myRundCoauthor = Document::whereIn('id', $myRundCoauthorArr)->where('document_type_id', $docType)->pluck('id')->toArray();
-        //     $isoEntwurfPaginated = Document::join('iso_categories','documents.iso_category_id','=','iso_categories.id')
-        //     // ->join('editor_variants','documents.id','=','editor_variants.document_id')
-        //   ->where(function($query) use ($myRundCoauthor,$highRole) {
-        //             if($highRole == false){
-        //                 $query->where('user_id', Auth::user()->id)
-        //                       ->orWhere('owner_user_id', Auth::user()->id);
-        //                 $query->orWhereIn('documents.id',$myRundCoauthor);
-        //             }
-        //         }
-        //     )
-        $docType = $this->formulareId;
+        
+       
 
         $formulareEntwurfPaginated = Document::where('document_type_id', $docType)
         ->where(function ($query) use ($highRole, $myRundCoauthor) {

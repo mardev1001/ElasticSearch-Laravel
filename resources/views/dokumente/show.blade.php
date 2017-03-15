@@ -361,9 +361,9 @@
                                             <option value="0">{{ $document->documentType->name }}</option>
                                             <option value="new">{{trans('favoriten.new-category')}}</option>
                                             @foreach($favoriteCategories as $category)
-                                            <option value="{{$category->id}}" @if($document->favorite->favorite_categories_id == $category->id) selected @endif >
-                                                {{$category->name}}
-                                            </option>
+                                                <option value="{{$category->id}}" @if(isset($document->favorite) && ($document->favorite->favorite_categories_id == $category->id)) selected @endif >
+                                                    {{$category->name}}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>

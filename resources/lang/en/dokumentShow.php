@@ -38,6 +38,7 @@ return [
     'CommentTitle' => 'Kommentare Freigeber',
     'delete' => 'Papierkorb',
     'delete-prompt' => 'Wollen Sie dieses Dokument wirklich entfernen?',
+    'favoriteRemoved' => 'Das Dokument wurde aus Favoriten entfernt.',
     'movedToTrash' => 'Das Dokument wurde in den Papierkorb verlegt.',
     'movedToTrashError' => 'Das Dokument konnte nicht entfernt werden.',
     'favoriteCategoryNew' => 'Neue Kategorie anlegen',

@@ -59,8 +59,8 @@ class WikiController extends Controller
         
         $myWikiPagesPagination = WikiPage::where('user_id', Auth::user()->id)->whereIn('category_id',$wikiCategories)->orderBy('updated_at','DESC')->paginate(10, ['*'], 'meine-beitraege');
         $myWikiPages = $this->document->generateWikiTreeview($myWikiPagesPagination);
-        
-        return view('wiki.index', compact('topCategories','newestWikiEntries','newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination'));
+        $searchResults = [];
+        return view('wiki.index', compact('topCategories','newestWikiEntries','newestWikiEntriesPagination','myWikiPages','myWikiPagesPagination','searchResults'));
     }
 
     /**

@@ -9,13 +9,11 @@
 @section('content')
 <div class="row">
     
-    <div class="col-xs-12 col-md-6 ">
+    <div class="col-xs-12 col-md-6">
         <div class="col-xs-12 box-wrapper">
             <h1 class="title">Bitte wählen Sie Ihren Kontakt:</h1>
-             {!! Form::open(['method'=>'POST', files => true]) !!}
+             {!! Form::open(['method'=>'POST', 'files' => true]) !!}
             <div class="box">
-               
-                
                 <!-- input box-->
                 <div class="col-md-12 col-lg-12"> 
                     <label class="control-label">
@@ -73,22 +71,19 @@
                     </div>
                 </div><!--End input box-->  
                 
-                
-                     <div class="col-md-12 col-lg-12 "> 
-                         <div class="form-group">
-                             <button class="btn btn-primary">{{ trans('contactForm.send') }}</button>
-                         </div>
-                 </div>
+                <div class="col-md-12 col-lg-12 "> 
+                    <div class="form-group">
+                        <button class="btn btn-primary">{{ trans('contactForm.send') }}</button>
+                    </div>
+                </div>
                 
                 <div class="clearfix"></div>
                 
             </div><!--end .box-->
             </form>
-        </div>
-    </div>
-    
-
-</div>
+        </div><!--end .box-wrapper-->
+    </div><!--end .col-xs-12.col-md-6-->
+</div><!--end .row-->
 
 @stop
    
