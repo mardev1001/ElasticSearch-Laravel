@@ -68,7 +68,8 @@
                 @yield('searchResults')<!-- End search results-->
             
             </div> <!-- End container fluid-->
-            @include('layouts.footer')    
+            
+            @include('layouts.footer') 
         </div> <!-- End #wrapper-->
         
         <!-- Right sidebar -->

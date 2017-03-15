@@ -1582,3 +1582,8 @@ only screen and (min-resolution: 1.5dppx) {
 #page-wrapper table.dataTable thead .sorting_desc_disabled:after {
     bottom: 15px;
 }
+
+table.dataTable {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}

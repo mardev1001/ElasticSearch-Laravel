@@ -70,25 +70,18 @@
             <div class="row">
                 <div class="col-xs-12">
                     <table class="table">
-                        {{--
-                        <tr>
-                            <th colspan="4">
-                                {{ trans('rollenForm.user-defined') }} {{ trans('rollenForm.roles') }}
-                            </th>
-                        </tr>
-                        --}}
                              @foreach($roles as $role)
                                 @if(!$role->system_role)
                                
                                 {!! Form::open(['route' => ['rollen.update', $role->id], 'method'=>'PATCH']) !!}
-                                    <tr>
+                                    <tr class="row">
                                         <td class="col-xs-4">
                                             <div class="form-group">
                                                 <label class="control-label">{{ trans('rollenForm.name') }}*</label>
                                                 <input class="form-control" type="text" name="name" value="{{ $role->name }}" placeholder="{{ trans('rollenForm.name') }}*" required/>
                                             </div>
                                         </td>
-                                        <td class="col-xs-4">
+                                        <td class="col-xs-4 position-relative">
                                             <label>{{ trans('rollenForm.rights') }}</label>
                                             <select name="role[]" class="form-control select" data-placeholder="{{ trans('rollenForm.rights') }}" multiple>
                                                 <option value="0"></option>
@@ -99,7 +92,7 @@
                                                 <option value="phone" @if($role->phone_role) selected @endif > Telefonliste</option>
                                             </select>
                                         </td>
-                                        <td class="col-xs-12 col-md-2 text-center table-options vertical-center">
+                                        <td class="col-xs-2 text-center table-options vertical-center">
                                             @if($role->active)
                                             <button class="btn btn-success" type="submit" name="activate" value="1">{{ trans('rollenForm.active') }}</button>
                                             @else
@@ -107,7 +100,7 @@
                                             @endif
                                             <button class="btn btn-primary">{{ trans('rollenForm.save') }}</button>
                                         </td>
-                                        <td class="col-xs-12 col-md-2 text-center table-options vertical-center">
+                                        <td class="col-xs-2 text-center table-options vertical-center">
                                             <a href="#;" data-toggle="modal" data-target="#role-{{$role->id}}" class="link">{{ trans('rollenForm.active-users') }}: 
                                             {{ count( $role->mandantUserRolesAll->where('role_id',$role->id)->where('deleted_at',null) ) }}
                                             </a>

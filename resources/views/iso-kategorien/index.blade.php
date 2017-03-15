@@ -73,7 +73,7 @@
                             <td class="col-xs-5 vertical-center">
                                  <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $isoCategory->name }}" required/>
                             </td>
-                            <td class="col-xs-4 vertical-center">
+                            <td class="col-xs-4 vertical-center position-relative">
                                 @if($isoCategory->parent)
                                    <p>{{ trans('isoKategorienForm.parent-category') }}</p>
                                 @else

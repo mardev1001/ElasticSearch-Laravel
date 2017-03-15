@@ -78,9 +78,9 @@
         </div><!-- end box wrapper-->
     </div>
 </div><!-- end search row -->
-    @if( $searchCategories || $searchInventory )
+    @if( isset($searchCategories) || isset($searchInventory) )
         <!-- search results categories categorie box-->
-        @if( count($searchCategories) )
+        @if( isset($searchCategories) && count($searchCategories) )
     
             <h2 class="title">{{ trans('inventoryList.categorySearchResults') }}</h2>
                 @foreach( $searchCategories as $category)
@@ -191,7 +191,7 @@
                             <th class="text-center valign no-sort">@lang('inventoryList.history')</th>
                         </thead>
                         <tbody>
-                            @if(count( $searchInventory ) > 0)
+                            @if(isset($searchInventory) && count( $searchInventory ) > 0)
                                 @foreach($searchInventory as $k => $item)
                                     <tr>
                                         <td class="text-center valign">

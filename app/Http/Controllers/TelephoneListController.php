@@ -8,6 +8,8 @@ use App\Helpers\ViewHelper;
 use Carbon\Carbon;
 use Auth;
 use Excel;
+use App\Classes\PdfWrapper;
+
 use App\Role;
 use App\User;
 use App\UserSettings;
@@ -229,10 +231,10 @@ class TelephoneListController extends Controller
         $margins->bottom = 10;
         $margins->headerTop = 0;
         $margins->footerTop = 5;
+        $or = 'P';
         $render = view('pdf.mandant', compact('mandant', 'mandantInfo', 'hauptstelle', 'dateNow'));
-        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', '',
-        $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop, $or, ]);
-        $pdf->AddPage($or);
+        $pdf = new PdfWrapper;
+        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         return $pdf->stream();

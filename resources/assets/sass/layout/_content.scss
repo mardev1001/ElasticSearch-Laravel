@@ -44,12 +44,14 @@
 .panel-collapse {
     background-color: $box-grey-wrapper;
     padding: 0 15px 15px 15px;
+    margin-top: -1px;
 }
 
 .dataTables_wrapper,
 .panel-body {
-    background-color: $box-inner-color;
-    padding: 15px;
+    // background-color: $box-inner-color;
+    // background-color: #fff;
+    // padding: 15px;
 }
 
 #page-wrapper .panel-primary>.panel-heading+.panel-collapse>.panel-body {

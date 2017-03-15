@@ -12,6 +12,8 @@ use Mail;
 use DB;
 use File;
 use Session;
+use App\Classes\PdfWrapper;
+
 use App\Document;
 use App\DocumentCoauthor;
 use App\DocumentType;
@@ -151,10 +153,7 @@ class DocumentController extends Controller
             if ($document->landscape == true) {
                 $or = 'L';
             }
-
-            $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', 'arial',
-            $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop, $or, ]);
-           // $pdf = \App::make('mpdf.wrapper');
+            $pdf = new PdfWrapper;
             $pdf->debug = true;
 
             if ($document->document_type_id == $this->isoDocumentId) {
@@ -178,7 +177,7 @@ class DocumentController extends Controller
                 }
             }
             // return $footer;
-            $pdf->AddPage($or);
+            $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
             $pdf->WriteHTML($render);
 
             // Delete document
@@ -407,13 +406,8 @@ class DocumentController extends Controller
             $model->save();
         }
 
-            // dd($request->get('adressat_id') );
-            // dd($model->documentUploads );
-
         $filename = '';
         $path = $this->pdfPath;
-        //   dd($path);
-        // dd($request->all() );
         if ($request->file()) {
             $fileNames = $this->fileUpload($model, $path, $request->file());
         }
@@ -2207,8 +2201,6 @@ class DocumentController extends Controller
             return redirect('/');
         }
 
-        // Carbon::setLocale('de_DE.utf8');
-        // setlocale(LC_TIME, 'German');
         $datePublished = new Carbon($document->date_published);
         $dateNow = $this->getGermanMonthName(intval($datePublished->format('m')));
 
@@ -2241,12 +2233,9 @@ class DocumentController extends Controller
         if ($document->landscape == true) {
             $or = 'L';
         }
-
-        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', 'arial',
-        $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop, $or, ]);
-       // $pdf = \App::make('mpdf.wrapper');
+        $pdf = new PdfWrapper;
         $pdf->debug = true;
-
+       
         if ($document->document_type_id == $this->isoDocumentId) {
             //   $pdf->setAutoTopMargin = 'stretch';
 
@@ -2267,8 +2256,8 @@ class DocumentController extends Controller
                 $pdf->SetHTMLFooter($footer);
             }
         }
-        // return $footer;
-        $pdf->AddPage($or);
+        // dd($or);
+        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         if ($request->segment(4) == 'download') {
@@ -2310,17 +2299,11 @@ class DocumentController extends Controller
         if ($document->landscape == true) {
             $or = 'L';
         }
-
-        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', '',
-        $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop, $or, ]);
-       // $pdf = \App::make('mpdf.wrapper');
-
+        $pdf = new PdfWrapper;
         $pdf->debug = true;
 
         if ($document->document_type_id == $this->isoDocumentId) {
-            //   $pdf->setAutoTopMargin = 'stretch';
-
-              $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
+            $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
             $pdf->SetHTMLFooter(view('pdf.footerIso', compact('document', 'variants', 'dateNow'))->render());
 
             $render = view('pdf.documentIso', compact('document', 'variants', 'dateNow'))->render();
@@ -2332,16 +2315,14 @@ class DocumentController extends Controller
                 $render = view('pdf.new-layout-rund', compact('document', 'variants', 'dateNow'))->render();
                 $header = view('pdf.new-layout-rund-header', compact('document', 'variants', 'dateNow'))->render();
                 $footer = view('pdf.new-layout-rund-footer', compact('document', 'variants', 'dateNow'))->render();
-                // return $footer;
                 $pdf->SetHTMLHeader($header);
                 $pdf->SetHTMLFooter($footer);
             }
         }
-        // return $footer;
-        $pdf->AddPage($or);
+        
+        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
-        // dd($pdf);
         return $pdf->stream();
     }
 
@@ -2505,8 +2486,8 @@ class DocumentController extends Controller
             $or = 'L';
         }
 
-        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', 'arial', $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop, $or]);
-
+        $pdf = new PdfWrapper;
+        
         if ($document->document_type_id == $this->isoDocumentId) {
             $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
             $pdf->SetHTMLFooter(view('pdf.footerIso', compact('document', 'variants', 'dateNow'))->render());
@@ -2524,7 +2505,7 @@ class DocumentController extends Controller
             }
         }
 
-        $pdf->AddPage($or);
+        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         $filename = sys_get_temp_dir().'/'.$id.'_'.md5(microtime()).'.pdf';
@@ -3749,7 +3730,8 @@ class DocumentController extends Controller
         $margins->headerTop = 0;
         $margins->footerTop = 5;
         $render = view('pdf.post-versand', compact('users'));
-        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', '', $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop]);
+        $pdf = new PdfWrapper;
+        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         return $pdf->stream();

@@ -1,4 +1,5 @@
 <!-- footer -->
+<div class="clearfix"></div><br>
 <div class="@if( Request::is('login') ) col-md-offset-3 col-md-9 pos-abs  @endif">
     <div class="footer footer-additional">
         <div class="footer-wrapper @if( Request::is('login') ) nopadding  @endif">

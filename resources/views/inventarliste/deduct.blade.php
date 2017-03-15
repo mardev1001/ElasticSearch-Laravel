@@ -92,7 +92,7 @@
         </div><!--end .box-wrapper -->
     </div><!--end .col-sm-12 -->
 </div><!--end .row -->
-    @if( $searchMandants && count($searchMandants) )
+    @if( isset($searchMandants) && count($searchMandants) )
     <!-- search results categories categorie box-->
         @foreach( $searchMandants as $mandant)
             <div class="panel-group">
@@ -170,7 +170,7 @@
             
             </div><!--end .panel-group-->  
         @endforeach
-    @elseif( $searchMandants && !count($searchMandants) )
+    @elseif( isset($searchMandants) && !count($searchMandants) )
         <!-- search results categories categorie box-->
          <div class="panel-group">
             <div class="panel panel-primary" id="panelInventory">

@@ -31,7 +31,7 @@
                     @if( !$item->neptun_intern )
                         <div class="col-md-6 col-lg-6">
                               <div class="form-group">
-                                {!! ViewHelper::setSelect($mandants,'mandant_id',$data,old('mandant_id'),
+                                {!! ViewHelper::setSelect($mandants,'mandant_id',$item,old('mandant_id'),
                                 trans('benutzerForm.mandant'), trans('inventoryList.select'), true, array(), array(), array(), true  ) !!}
                             </div>
                         </div>
@@ -40,7 +40,7 @@
                         <!-- input box-->
                         <div class="col-md-12 col-lg-12">
                             <div class="form-group">
-                                {!! ViewHelper::setArea('text',$data,old('text'),trans('inventoryList.text'),trans('inventoryList.text'),true ) !!}
+                                {!! ViewHelper::setArea('text',$item,old('text'),trans('inventoryList.text'),trans('inventoryList.text'),true ) !!}
                             </div>
                         </div><!--End input box-->  
                     @endif

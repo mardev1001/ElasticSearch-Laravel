@@ -7,6 +7,8 @@ use App\Helpers\ViewHelper;
 use Auth;
 use Mail;
 use Carbon\Carbon;
+use App\Classes\PdfWrapper;
+
 //Models
 use App\User;
 use App\MandantUser;
@@ -33,8 +35,9 @@ class InventoryController extends Controller
 
         $categories = InventoryCategory::where('active', 1)->get();
         $sizes = InventorySize::where('active', 1)->get();
+        $searchInput = '';
 
-        return view('inventarliste.index', compact('categories', 'sizes'));
+        return view('inventarliste.index', compact('categories', 'sizes','searchInput'));
     }
 
     /**
@@ -457,8 +460,8 @@ class InventoryController extends Controller
             $mandant->items = $items;
         }
         $searchSuggestions = ViewHelper::getMandantAccountingSearchSuggestions(array(0));
-
-        return view('inventarliste.deduct', compact('mandants', 'searchSuggestions'));
+        $searchInput = '';
+        return view('inventarliste.deduct', compact('mandants', 'searchSuggestions','searchInput'));
     }
 
     /**
@@ -646,20 +649,14 @@ class InventoryController extends Controller
             $mandant->items = $items;
         }
 
-        $margins = $this->setPdfMargins($document);
+        $margins = $this->setPdfMargins();
         $or = 'P';
-
-        $pdf = \App::make('mpdf.wrapper', ['th', 'A4', '', '',
-        $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop, $or, ]);
-
+        $pdf = new PdfWrapper;
         $pdf->debug = true;
-
-        // return $footer;
         $render = view('pdf.abrechnen', compact('mandants'))->render();
-        $pdf->AddPage($or);
+        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
-        // dd($pdf);
         return $pdf->stream();
     }
     
@@ -671,7 +668,7 @@ class InventoryController extends Controller
      *
      * @return object $margins
      */
-    private function setPdfMargins($document)
+    private function setPdfMargins()
     {
         $margins = new \StdClass();
        /* Set the document orientation */
@@ -690,7 +687,7 @@ class InventoryController extends Controller
      * Format description text string.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int                      $id
+     * @param int $id
      *
      * @return \Illuminate\Http\Response
      */

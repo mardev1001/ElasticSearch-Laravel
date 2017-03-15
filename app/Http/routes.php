@@ -197,6 +197,9 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('juristenportal/meta-info', 'JuristenPortalController@metaInfo');
     Route::post('juristenportal/meta-info', 'JuristenPortalController@storeMetaInfo');
     Route::patch('juristenportal/meta-info/{$metaId}/update', 'JuristenPortalController@updateMetaInfo');
+    Route::patch('juristenportal/meta-info/{$metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
+    Route::patch('juristenportal/meta-info/{$metaFieldId}/update-meta-filed', 'JuristenPortalController@updateMetaField');
+    // Route::patch('juristenportal/meta-info/{$metaId}/update-meta-category', 'JuristenPortalController@updateMetaField');
     
     Route::get('juristenportal/notiz', 'JuristenPortalController@notiz');
     Route::get('juristenportal/upload', 'JuristenPortalController@uploadView');
