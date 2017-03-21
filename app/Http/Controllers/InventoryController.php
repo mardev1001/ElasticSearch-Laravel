@@ -232,7 +232,7 @@ class InventoryController extends Controller
                 $from = new \StdClass();
                 $from->name = 'Informationsservice';
                 $from->email = 'info@neptun.de';
-                $toUser = User::find($request['to_user']);
+            
                 $request['logo'] = asset('/img/logo-neptun-new.png');
                 $request['from'] = $from->email;
 

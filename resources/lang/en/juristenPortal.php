@@ -11,4 +11,12 @@ return [
     'overview' => 'Übersicht',
     'category' => 'Kategorie',
     'categories' => 'Kategorien',
+    
+    //uploads
+    'documentsWithoutCategoriesMy' => 'Dokument ohne Kategorie - NUR Meine',
+    'documentsWithoutCategories' => 'Dokument ohne Kategorie - Alle',
+    
+    //meta field
+    'metaFieldsTitle' => 'Beratungs-Portal Dokument Typ - Meta Infos',
+    'metaFieldsAddTitle' => 'Übersicht',
 ];

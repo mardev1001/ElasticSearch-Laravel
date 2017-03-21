@@ -195,65 +195,16 @@
                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                             <tr>
                                 
-                                <td style="padding: 40px; text-align: center; font-family: sans-serif; font-size: 24px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+                                <td style="padding: 40px; text-align: center; font-family: sans-serif; font-size: 24px; mso-height-rule: exactly; line-height: 28px; color: #555555;">
                                     {{ $content->title }}
                                     <br><br>
-                                    <!-- Button : BEGIN -->
-                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto">
-                                    </table>
-                                    <!-- Button : END -->
                                 </td>
                             </tr>
                         </table>
                     </td>
                 </tr>
                 <!-- 1 Column Text + Button : END -->
-
-               <!-- Thumbnail Left, Text Right : BEGIN -->
-                <tr>
-                    <!-- dir=ltr is where the magic happens. This can be changed to dir=rtl to swap the alignment on wide while maintaining stack order on narrow. -->
-                    <td dir="ltr" bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%" style="padding: 0 0;">
-                        <!--[if mso]>
-                        <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="660">
-                        <tr>
-                        <td align="center" valign="top" width="660">
-                        <![endif]-->
-                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="max-width:660px;">
-                            <tr>
-                                <td align="center" valign="top" style="font-size:0; padding: 0 0;">
-                                    
-                                    <div style="display:inline-block; margin: 0 -2px; max-width:66.66%; min-width:320px; vertical-align:top;" class="stack-column">
-                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                                            <tr>
-                                                <td dir="ltr" style="font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
-                                                    <strong style="color:#111111;">Von:</strong>
-													{{ $content->fromName }} <<a class="email" href="mailto:{{ $content->fromEmail }}">{{ $content->fromEmail }}</a>>
-                                                    <!-- Button : Begin -->
-                                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
-                                                    
-                                                    </table>
-                                                    <!-- Button : END -->
-                                                </td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                    <!--[if mso]>
-                                    </td>
-                                    </tr>
-                                    </table>
-                                    <![endif]-->
-                                </td>
-                            </tr>
-                        </table>
-                        <!--[if mso]>
-                        </td>
-                        </tr>
-                        </table>
-                        <![endif]-->
-                    </td>
-                </tr>
-                <!-- Thumbnail Left, Text Right : END -->
-				
+	
 				<!-- Thumbnail Left, Text Right : BEGIN -->
                 <tr>
                     <!-- dir=ltr is where the magic happens. This can be changed to dir=rtl to swap the alignment on wide while maintaining stack order on narrow. -->
@@ -271,22 +222,25 @@
                                         <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                             <tr>
                                                 <td dir="ltr" style="font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555; padding: 10px 10px 0; text-align: left;" class="center-on-narrow">
-                                                    <strong style="color:#111111;">Nachricht:</strong><br>
-													{{ $content->body }}
-												    <br /> <br />
-												    
-												    @if(count($content->links))
-    												    <strong style="color:#111111;">Download:</strong><br>
-    												    @foreach($content->links as $name => $link)
-    												        <a href="{{ $link }}" target="_blank">{{ $name }}</a> <br>
-    												    @endforeach
-												    @endif
-													
-                                                    <!-- Button : Begin -->
-                                                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" class="center-on-narrow" style="float:left;">
-                                                        
-                                                    </table>
-                                                    <!-- Button : END -->
+                                                    @if($user->title == "Herr") Sehr geehrter Herr {{$user->last_name}}, @endif
+                                                    @if($user->title == "Frau") Sehr geehrte Frau {{$user->last_name}}, @endif 
+                                                    <br>
+                                                    <br>
+                                                    es wurde ein neues Dokument ({{$document->documentType->name}}) veröffentlicht mit dem Titel "{{$document->name}}".
+                                                    <br>
+                                                    <br>
+                                                    @if($attachments)
+                                                        Sie finden das Dokument als Anlage in dieser Email. Sie können es ebenso über folgenden Link im Intranet aufrufen: <a href="{{ $content->link }}" target="_blank">LINK</a>
+                                                    @else
+                                                        Sie erreichen dieses Dokument über folgenden Link: <a href="{{ $content->link }}" target="_blank">LINK</a>
+                                                    @endif 
+                                                    <br>
+                                                    <br>
+                                                    Bitte beachten Sie, dass das Intranet aus Sicherheitsgründen nur von innerhalb Ihres Firmennetzwerks erreichbar ist.
+                                                    <br>
+                                                    <br>
+                                                    Herzliche Grüße von Ihrem NEPTUN Team
+                                                    <br>
                                                 </td>
                                             </tr>
                                         </table>
@@ -323,9 +277,13 @@
             <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 680px;">
                 <tr>
                     <td style="padding: 40px 10px;width: 100%;font-size: 12px; font-family: sans-serif; mso-height-rule: exactly; line-height:18px; text-align: center; color: #888888; background-color:rgb(244,244,244);">
-                        NEPTUN Verwaltungs- und Beteiligungsgesellschaft mbH<br>
-                        <span class="mobile-link--footer">Eschenstraße 8, 82024 Taufkirchen</span><br>
-                        <span class="mobile-link--footer">Telefon: +49 89 61 29 010</span>
+                        NEPTUN Verwaltungs- und Beteiligungsgesellschaft mbH <br>
+                        <span class="mobile-link--footer">Eschenstraße 8, 82024 Taufkirchen</span> <br>
+                        <span class="mobile-link--footer">Telefon: +49 89 61 29 010</span> <br>
+                        <span class="mobile-link--footer">Telefax: +49 89 61 29 0122</span> <br>
+                        Geschäftsführerin: Bettina Engel <br>
+                        Registergericht: Amtsgericht München <br>
+                        Registernummer: HRB 74557 <br>
                     </td>
                 </tr>
             </table>

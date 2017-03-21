@@ -440,7 +440,7 @@ class UserController extends Controller
     public function profile()
     {
         $id = Auth::user()->id;
-        $documentTypes = DocumentType::where('visible_navigation', true)->get();
+        $documentTypes = DocumentType::where('publish_sending', true)->get();
         $emailRecievers = Role::where('system_role', true)->get();
         $emailSettings = UserEmailSetting::where('user_id', $id)->get();
 

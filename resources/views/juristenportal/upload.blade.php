@@ -27,6 +27,45 @@
                 </form>
             </div>
         </div>
+        
+        <div class="row">
+            
+            @if( count($documentsMy) )
+                <div class="col-xs-12 col-md-6 ">
+                    <div class="col-xs-12 box-wrapper box-white home">
+                        <h1 class="title">@lang('juristenPortal.documentsWithoutCategoriesMy')</h1>
+                        <div class="box home">
+                            <div class="tree-view" data-selector="documentsMy">
+                                <div class="documentsMy hide">
+                                    {{ $documentsMyTree }}
+                                </div>
+                            </div>
+                        </div>
+                          <div class="text-center">
+                            {!! $documentsMy->render() !!}
+                        </div>
+                    </div>
+                </div><!-- end box -->
+            @endif
+            
+            @if( count($documentsAll) )
+                <div class="col-xs-12 col-md-6 ">
+                    <div class="col-xs-12 box-wrapper box-white home">
+                        <h1 class="title">@lang('juristenPortal.documentsWithoutCategories')</h1>
+                        <div class="box home">
+                            <div class="tree-view" data-selector="documentsMy">
+                                <div class="documentsMy hide">
+                                    {{ $documentsAllTree }}
+                                </div>
+                            </div>
+                        </div>
+                          <div class="text-center">
+                            {!! $documentsAll->render() !!}
+                        </div>
+                    </div>
+                </div><!-- end box -->
+            @endif
+        </div><!--end .row -->
     @endsection
 
 

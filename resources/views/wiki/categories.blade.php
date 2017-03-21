@@ -27,7 +27,7 @@
                              <div class="col-md-12 col-lg-12">
                                 <span class="custom-input-group-btn">
                                     <button type="submit" class="btn btn-primary no-margin-bottom">
-                                        {{ trans('navigation.search') }} 
+                                        {{ trans('wiki.add') }} 
                                     </button>
                                 </span>
                             </div>

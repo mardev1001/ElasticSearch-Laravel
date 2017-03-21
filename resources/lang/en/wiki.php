@@ -32,5 +32,6 @@ return [
     'wikiCategory' => 'Kategorien',
     'wikiList' => 'Übersicht',
     'search' => 'Suche',
+    'add' => 'hinzufügen',
     /* End wiki category section */
 ];

@@ -138,7 +138,7 @@
                                                     </a>   
                                                 </td>
                                                 <td class="text-center valign"> 
-                                                    <a href="{{url('inventarliste/historie/'.$item->id)}}">
+                                                    <a href="{{ url('inventarliste/historie/'.$item->id) }}">
                                                         @lang('inventoryList.history')
                                                     </a>
                                                 </td>

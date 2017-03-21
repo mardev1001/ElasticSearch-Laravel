@@ -33,5 +33,6 @@ return [
     'toMenu' => 'In Hauptmenü',
     'toSubmenu' => 'In Untermenü',
     'updated' => 'Dokument Typ erfolgreich aktualisiert.',
+    'publish_sending' => 'Veröffenlichung Versand',
     
 ];

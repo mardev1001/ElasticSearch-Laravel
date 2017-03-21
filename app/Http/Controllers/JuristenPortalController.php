@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Artisan;
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Helpers\ViewHelper;
@@ -10,14 +12,28 @@ use App\JuristCategory;
 use App\JuristCategoryMeta;
 use App\JuristCategoryMetaField;
 use App\JuristCategoryMetaFieldValues;
+use App\JuristFile;
+use App\JuristFileAttachment;
+use App\JuristFileComment;
+use App\JuristFileUpload;
+use App\JuristDocumentsMandant;
+use App\Document;
+use App\EditorVariant;
+use App\DocumentUpload;
+
+use App\Http\Repositories\DocumentRepository;
+
 
 class JuristenPortalController extends Controller
 {
     /**
      * Class constructor.
      */
-    public function __construct()
+    public function __construct(DocumentRepository $docRepo)
     {
+        $this->document = $docRepo;
+        $this->uploadPath = public_path().'/files/contacts/';
+    
         $this->portalOcrUploads = public_path().'/files/juristenportal/ocr-uploads/';
     }
 
@@ -125,8 +141,22 @@ class JuristenPortalController extends Controller
         if (ViewHelper::universalHasPermission(array(35, 36), false) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
+        $query = Document::whereNull('document_type_id')
+        ->orderBy('documents.date_published', 'desc')->limit(50);
+        $documentsMy = $query->where(function ($query) {
+                $query->where('owner_user_id', Auth::user()->id)
+                ->orWhere('user_id', Auth::user()->id);
+                $query->orWhereIn('documents.id', [Auth::user()->id]);
+         })->paginate(10, ['*'], 'my-dokumente');
+        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
+       
+        $documentsAll = $query->paginate(10, ['*'], 'alle-dokumente');
+        $documentsAllTree = $this->document->generateTreeview($documentsAll, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
+        // $documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
+        // $documentsNewTree = $this->document->generateTreeview($documentsNew, 
+        // array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
 
-        return view('juristenportal.upload');
+        return view('juristenportal.upload', compact('documentsMy','documentsMyTree','documentsAll','documentsAllTree'));
     }
     
     
@@ -179,15 +209,92 @@ class JuristenPortalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateMetaInfo(Request $request, $id)
+    public function updateMetaInfo(Request $request, JuristCategoryMeta $juristenCategoryMeta)
     {
         if (ViewHelper::universalHasPermission(array(34)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
-        $category = InventoryCategory::find($id);
-        $category->fill($request->all())->save();
+       
+        $juristenCategoryMeta->fill($request->all())->save();
 
         return redirect()->back()->with('messageSecondary', trans('inventoryList.categoryUpdated'));
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function addJuristenCategoryMetaFields(Request $request, JuristCategoryMeta $juristenCategoryMeta)
+    {
+        $request->merge(['jurist_category_meta_id'=> $juristenCategoryMeta->id]);
+        if($request->has('meta-names') && count($request->get('meta-names'))){
+            foreach($request->get('meta-names') as $meta){
+                 $request->merge(['name'=> $meta]);
+                 JuristCategoryMetaField::create($request->all());
+            }
+        }
+        
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+    }
+    
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateMetaField(Request $request, $id)
+    {
+        if (ViewHelper::universalHasPermission(array(34)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        $metaField = JuristCategoryMetaField::find($id);
+        $metaField->fill($request->all())->save();
+        
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateJuristenCategoryMetaFields(Request $request, JuristCategoryMeta $juristenCategoryMeta)
+    {
+        $request->merge(['jurist_category_meta_id'=> $juristenCategoryMeta->id]);
+        if($request->has('meta-names') && count($request->get('meta-names'))){
+            foreach($request->get('meta-names') as $meta){
+                 $request->merge(['name'=> $meta]);
+                 JuristCategoryMetaField::create($request->all());
+            }
+        }
+        
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+    }
+    
+     /**
+     * Delete the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteJuristenCategoryMeta(JuristCategoryMeta $juristenCategoryMeta)
+    {
+        if (ViewHelper::universalHasPermission(array(34)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        $juristenCategoryMeta->delete();
+
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.deletedJuristenCategoryMeta'));
     }
     
 
@@ -205,10 +312,12 @@ class JuristenPortalController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $uploaded = $this->fileUpload($request->file);
-
+        
         if ($uploaded == false) {
             return redirect()->back()->with('messageSecondary', 'Upload fehlgeschlagen');
-        } else {
+        }
+        else {
+            Artisan::call('juristenportal:import');
             return redirect()->back()->with('messageSecondary', 'Dateien hochgeladen');
         }
     }

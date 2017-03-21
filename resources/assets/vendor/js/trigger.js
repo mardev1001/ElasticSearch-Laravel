@@ -716,6 +716,20 @@ $(function() {
 
     });
 
+    $("input[type=number]").on("keyup blur scroll change", function(e) {
+        var attr = $(this).attr('max'),
+            value = $(this).val();
+        if (value.toString().length < 2)
+            value = "0" + value;
+        if (typeof attr !== typeof undefined && attr !== false) {
+            if (value > attr) {
+                console.log(value + 'is greater than ' + attr);
+
+                $(this).val(attr);
+            }
+        }
+    });
+
     /* Prevent letterss from input type number */
     $("input[type=number]").on("keyup blur scroll change", function(e) {
         var inputValue = $(this).val();

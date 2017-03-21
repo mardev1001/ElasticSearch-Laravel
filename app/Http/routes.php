@@ -1,34 +1,27 @@
 <?php
 
-// Route::get('/formwrapper', function () {
-//     return view('formWrapper');
-// });
-
-//Route::get('/home', 'HomeController@index');
-
-//Route::group(['middleware' => ['web']], function () {
-
 Route::auth();
 
 Route::group(array('middleware' => ['auth']), function () {
+    
+    /*
+     * Intranet portal
+     */
+
+    // Document routes
     Route::get('/', 'HomeController@index');
     Route::get('kontakt', 'HomeController@contact');
     Route::post('kontakt', 'HomeController@contactSend');
     Route::get('kontaktanfragen', 'HomeController@contactIndex');
     Route::get('kontaktanfragen/suche', 'HomeController@contactSearch');
-    // Route::post('kontaktanfragen/suche', 'HomeController@contactSearch');
     Route::get('tipps-und-tricks', 'HomeController@tipsAndTricks');
     Route::get('neptun-verwaltung', 'HomeController@neptunManagment');
-
     Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
     Route::get('/open/{path_part_one}/{path_part_two}', 'HomeController@open');
-
     Route::post('dokumente/authorize/{id}', 'DocumentController@authorizeDocument');
     Route::get('anhang-delete/{document_id}/{editor_id}/{editor_document_id}', 'DocumentController@destroyByLink');
     Route::any('dokumente/suche', 'DocumentController@search');
-    // Route::get('dokumente/suchergebnisse', 'DocumentController@searchResults');
     Route::get('dokumente/rundschreiben', 'DocumentController@rundschreiben');
-    // Route::any('dokumente/rundschreiben/suche', 'DocumentController@search');
     Route::get('dokumente/rundschreiben-pdf', 'DocumentController@rundschreibenPdf');
     Route::get('dokumente/rundschreiben-qmr', 'DocumentController@rundschreibenQmr');
     Route::get('dokumente/news', 'DocumentController@rundschreibenNews');
@@ -52,12 +45,13 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('pdf-upload', 'DocumentController@pdfUpload');
     Route::get('dokumente/new-version/{id}', 'DocumentController@newVersion');
     Route::get('dokumente/{id}/freigabe', 'DocumentController@freigabeApproval');
-    Route::get('dokumente/{id}/post-versand', 'DocumentController@postVersand');
+    Route::get('dokumente/{id}/post-versand/{variantNumber}', 'DocumentController@postVersand');
     Route::get('dokumente/{id}/activate', 'DocumentController@documentActivation');
     Route::get('dokumente/{id}/publish', 'DocumentController@publishApproval');
     Route::get('dokumente/{id}/publish/send', 'DocumentController@publishApproval');
     Route::get('dokumente/{id}/pdf', 'DocumentController@generatePdf');
     Route::get('dokumente/{id}/pdf/download', 'DocumentController@generatePdf');
+    Route::get('dokumente/{id}/pdf/download/{variantNumber}', 'DocumentController@generatePdfObject');
     Route::get('dokumente/ansicht/{id}/{variant_id}', 'DocumentController@previewDocument');
     Route::get('dokumente/ansicht-pdf/{id}/{variant_id}', 'DocumentController@generatePdfPreview');
     Route::get('papierkorb', 'DocumentController@indexTrash');
@@ -66,8 +60,16 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
     Route::post('comment/{id}', 'DocumentController@saveComment');
     Route::get('comment-delete/{comment_id}/{document_id}', 'DocumentController@deleteComment');
+    Route::post('mandanten/export/xls', 'TelephoneListController@xlsExport');
+    Route::resource('iso-kategorien', 'IsoCategoryController');
+    Route::resource('rollen', 'RoleController');
+    Route::resource('empfangerkreis ', 'AdressatController');
+    Route::resource('adressaten', 'AdressatController');
+    Route::get('dokument-typen/sort-up/{id}', 'DocumentTypeController@sortUp');
+    Route::get('dokument-typen/sort-down/{id}', 'DocumentTypeController@sortDown');
+    Route::resource('dokument-typen', 'DocumentTypeController');
 
-    // Route::post('mandanten/{id}/user-role', 'MandantController@createInternalMandantUser');
+    // Mandant routes
     Route::get('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
     Route::post('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
     Route::post('mandanten/{id}/internal-roles', ['as' => 'mandant.internal-roles-add', 'uses' => 'MandantController@createInternalMandantUser']);
@@ -79,9 +81,9 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::patch('mandanten/activate', 'MandantController@mandantActivate');
     Route::get('mandantenverwaltung', 'MandantController@clientManagment');
     Route::get('mandanten/export', 'MandantController@xlsExport');
-    Route::post('mandanten/export/xls', 'TelephoneListController@xlsExport');
     Route::resource('mandanten', 'MandantController');
 
+    // User routes
     Route::get('benutzer/create-partner', ['as' => 'benutzer.create-partner', 'uses' => 'UserController@createPartner']);
     Route::post('benutzer/create-partner/store', ['as' => 'benutzer.create-partner-store', 'uses' => 'UserController@createPartnerStore']);
     Route::post('benutzer/create-partner-roles/store', ['as' => 'benutzer.partner-roles-store', 'uses' => 'UserController@createPartnerRolesStore']);
@@ -91,7 +93,6 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('benutzer/profil/email-settings', 'UserController@saveEmailSettings');
     Route::post('benutzer/profil/email-settings-update', 'UserController@updateEmailSettings');
     Route::get('benutzer/{id}/partner/edit', 'UserController@editPartner');
-    // Route::match(['post', 'get'], 'benutzer/{id}/partner/{mandant_id}/edit', 'UserController@editPartner');
     Route::post('benutzer/profil', 'UserController@saveProfile');
     Route::post('benutzer/role-transfer', 'UserController@userRoleTransfer');
     Route::post('benutzer/roles-add', 'UserController@userMandantRoleAdd');
@@ -99,18 +100,7 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::patch('benutzer/roles-edit-partner', 'UserController@userMandantRoleEditPartner');
     Route::patch('benutzer/activate', 'UserController@userActivate');
     Route::post('benutzer/user-delete', 'UserController@destroyMandantUser');
-    // Route::get('benutzer/{id}/edit/deleted', 'UserController@editDeleted');
-
-    // UserController@index is used as an individual mandant link becouse of the name-ing
     Route::resource('benutzer', 'UserController');
-    Route::resource('iso-kategorien', 'IsoCategoryController');
-    Route::resource('juristenportal-kategorien', 'JuristenPortalCategoryController');
-    Route::resource('rollen', 'RoleController');
-    Route::resource('empfangerkreis ', 'AdressatController');
-    Route::resource('adressaten', 'AdressatController');
-    Route::get('dokument-typen/sort-up/{id}', 'DocumentTypeController@sortUp');
-    Route::get('dokument-typen/sort-down/{id}', 'DocumentTypeController@sortDown');
-    Route::resource('dokument-typen', 'DocumentTypeController');
 
     // Favorites routes
     Route::get('dokumente/{id}/favorit', 'DocumentController@favorites');
@@ -119,9 +109,6 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('favoriten/kategorieverwaltung/store', 'FavoritesController@storeFavoriteCategory');
     Route::patch('favoriten/kategorieverwaltung/update', 'FavoritesController@updateFavoriteCategory');
     Route::resource('favoriten', 'FavoritesController');
-
-    // Route::resource('historie', 'HistoryController');
-    // Route::resource('statistik', 'StatsController');
     Route::get('telefonliste/{id}/pdf', 'TelephoneListController@pdfExport');
     Route::post('telefonliste/display-options', 'TelephoneListController@displayOptions');
     Route::resource('telefonliste', 'TelephoneListController');
@@ -143,12 +130,14 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('wiki/verwalten-admin', 'WikiController@managmentAdmin');
     Route::resource('wiki', 'WikiController');
 
-    // inventory routes
+    /*
+     * Inventory list
+     */
+
+    // Inventory routes
     Route::get('inventarliste/abrechnen', 'InventoryController@abrechnen');
     Route::get('inventarliste/abrechnen-abgerechnt', 'InventoryController@abrechnenAbgerechnt');
-
     Route::get('inventarliste/abrechnen-alle', 'InventoryController@abrechnenAlle');
-    // Route::get('inventarliste/abrechnen/','InventoryController@abrechnen');
     Route::post('inventarliste/abrechnen/{id}/update', 'InventoryController@updateAbrechnen');
     Route::get('inventarliste/suche-abrechnen', function () {
         return redirect('inventarliste/abrechnen');
@@ -158,57 +147,63 @@ Route::group(array('middleware' => ['auth']), function () {
         return redirect('inventarliste/abrechnen-abgerechnt');
     });
     Route::post('inventarliste/suche-abrechnen-abgerechnt', 'InventoryController@searchAbrechnenAbgerechnt');
-
     Route::get('inventarliste/suche-abrechnen-alle', function () {
         return redirect('inventarliste/abrechnen-alle');
     });
     Route::post('inventarliste/suche-abrechnen-alle', 'InventoryController@searchAbrechnenAlle');
     Route::post('inventarliste/abrechnen/pdf', 'InventoryController@abrechnenPdf');
 
-
-    /*
-     * Inventory list
-     */
-     
-    //categories 
+    // Categories
     Route::get('inventarliste/kategorien', 'InventoryController@categories');
     Route::post('inventarliste/kategorien', 'InventoryController@postCategories');
     Route::post('inventarliste/kategorien/{id}/update', 'InventoryController@updateCategories');
     Route::get('inventarliste/destroy-category/{id}', 'InventoryController@destroyCategory');
-    
-    //sizes
+
+    // Sizes
     Route::get('inventarliste/destroy-size/{id}', 'InventoryController@destroySize');
     Route::get('inventarliste/historie/{id}', 'InventoryController@history');
     Route::post('inventarliste/sizes', 'InventoryController@postSizes');
     Route::post('inventarliste/sizes/{id}/update', 'InventoryController@updateSizes');
     Route::get('inventarliste/groessen', 'InventoryController@sizes');
-    
-    Route::get('inventarliste/suche', 'InventoryController@search');
-    //Route::post('inventarliste/suche', 'InventoryController@search');
-    Route::resource('inventarliste', 'InventoryController');
 
+    Route::get('inventarliste/suche', 'InventoryController@search');
+    Route::resource('inventarliste', 'InventoryController');
 
     /*
      * Juristen portal
      */
-     
-    //Meta info
-    
+
+    // Meta info
+
     Route::get('juristenportal/meta-info', 'JuristenPortalController@metaInfo');
     Route::post('juristenportal/meta-info', 'JuristenPortalController@storeMetaInfo');
-    Route::patch('juristenportal/meta-info/{$metaId}/update', 'JuristenPortalController@updateMetaInfo');
-    Route::patch('juristenportal/meta-info/{$metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
-    Route::patch('juristenportal/meta-info/{$metaFieldId}/update-meta-filed', 'JuristenPortalController@updateMetaField');
-    // Route::patch('juristenportal/meta-info/{$metaId}/update-meta-category', 'JuristenPortalController@updateMetaField');
-    
+    Route::patch('juristenportal/meta-info/{juristenCategoryMeta}/update', 'JuristenPortalController@updateMetaInfo');
+    Route::patch('juristenportal/meta-info/{metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
+    Route::patch('juristenportal/meta-info/{metaField}/update-meta-filed', 'JuristenPortalController@updateMetaField');
+    Route::get('juristenportal/destroy-juristen-category-meta/{juristenCategoryMeta}', 'JuristenPortalController@deleteJuristenCategoryMeta');
+    Route::post('juristenportal/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
+    Route::patch('juristenportal/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     Route::get('juristenportal/notiz', 'JuristenPortalController@notiz');
     Route::get('juristenportal/upload', 'JuristenPortalController@uploadView');
     Route::post('juristenportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
     Route::resource('juristenportal', 'JuristenPortalController');
-    
-    // Developer Routes
-    // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
-    Route::get('dev/sandbox/pdf/{id}', 'DocumentController@generatePdfObject');
-}); //end auth middleware
+    Route::resource('juristenportal-kategorien', 'JuristenPortalCategoryController');
 
-//}); //end web middleware
+    Route::get('what',function(){
+       $documents = App\Document::where('document_type_id',7)->orWhere('document_type_id',null)->get();
+       dd($documents);
+        foreach($documents as $document){
+            foreach($document->editorVariantDocument as $ev){
+                $ev->documentUpload->delete();
+                $ev->delete();
+            }
+            $document->delete();
+        }
+    });
+    /*
+     * Developer Routes
+     */
+
+    // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
+    // Route::get('dev/sandbox/pdf/{id}', 'DocumentController@generatePdfObject');
+});

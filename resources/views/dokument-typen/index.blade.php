@@ -60,6 +60,9 @@
                     <div class="checkbox no-margin-top">
                         <input type="checkbox" name="visible_navigation" id="visible_navigation-0"><label for="visible_navigation-0">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
                     </div>
+                    <div class="checkbox no-margin-top">
+                        <input type="checkbox" name="publish_sending" id="publish_sending-0"><label for="publish_sending-0">{{ trans('dokumentTypenForm.publish_sending') }}</label>
+                    </div>
                     <div class="clearfix"></div>
                     <div>
                         <select name="menu_position" id="menu_position" class="form-control select" data-placeholder="anzeigen in ... *" required>
@@ -274,6 +277,10 @@
                                         <div class="checkbox no-margin-top">
                                             <input type="checkbox" name="visible_navigation" id="visible_navigation-{{$documentTypeSubmenu->id}}" @if($documentTypeSubmenu->visible_navigation) checked @endif>
                                             <label for="visible_navigation-{{$documentTypeSubmenu->id}}">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
+                                        </div>
+                                        <div class="checkbox no-margin-top">
+                                            <input type="checkbox" name="publish_sending" id="publish_sending-{{$documentTypeSubmenu->id}}" @if($documentTypeSubmenu->publish_sending) checked @endif>
+                                            <label for="publish_sending-{{$documentTypeSubmenu->id}}">{{ trans('dokumentTypenForm.publish_sending') }}</label>
                                         </div>
                                     </div>
                                  </td> 

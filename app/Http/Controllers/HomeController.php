@@ -56,9 +56,6 @@ class HomeController extends Controller
             maybe if document/Rundscriben verfasser
             else if Find all document where document  user_id,owner_user_id or coAuthor
         */
-        // $this->getDocumentsUser()
-        // $this->universalDocumentPermission($document, false, array());
-        // $documentsNew = Document::whereNotIn('document_status_id', array(1,2,4,5,6))->where('is_attachment',0)->where('active',1)
         $documentsNew = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
         ->where('document_status_id', 3)->where('is_attachment', 0)->where('documents.active', 1)
         ->where('document_types.document_art', 0)

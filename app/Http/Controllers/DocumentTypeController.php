@@ -59,6 +59,7 @@ class DocumentTypeController extends Controller
         if($request->has('read_required')) $documentType->read_required = true;
         if($request->has('allow_comments')) $documentType->allow_comments = true;
         if($request->has('visible_navigation')) $documentType->visible_navigation = true;
+        if($request->has('publish_sending')) $documentType->publish_sending = true;
         $documentType->active = true;
         $documentType->menu_position = $request->input('menu_position');
         
@@ -119,6 +120,9 @@ class DocumentTypeController extends Controller
             
             if($request->has('visible_navigation')) $documentType->visible_navigation = true;
             else $documentType->visible_navigation = false;
+            
+            if($request->has('publish_sending')) $documentType->publish_sending = true;
+            else $documentType->publish_sending = false;
         }
         
         if($request->has('activate'))

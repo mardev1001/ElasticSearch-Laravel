@@ -2,14 +2,14 @@
 
 @extends('master')
 
-@section('page-title') METAINFO NEED TITLE @stop
+@section('page-title') @lang('juristenPortal.metaFieldsTitle') @stop
 
 @section('content')
 <!-- add row-->
 <div class="row">
     <div class="col-sm-12 ">
         <div class="box-wrapper">
-            <h2 class="title"> add something NEED</h2>
+            <h2 class="title"> @lang('juristenPortal.metaFieldsAddTitle')</h2>
             <div class="box  box-white">
                 <div class="row">
                     {!! Form::open(['action' => 'JuristenPortalController@storeMetaInfo', 'method'=>'POST']) !!}
@@ -51,19 +51,14 @@
                  <div class="box box-white">
                     @foreach($categories as $category)
                     <div class="row">
-                        {!! Form::open(['url' => ['juristenportal/meta-info/'.$category->id.'/update'], 'method' => 'POST']) !!}
+                        {!! Form::open(['url' => ['juristenportal/meta-info/'.$category->id.'/update'], 'method' => 'patch']) !!}
                         <div class="col-xs-12 col-md-6 col-lg-5">
                              <input type="text" class="form-control" name="name" value="{{ $category->name }}" placeholder="Name"/>
                         </div>
                         <div class="col-xs-12 col-md-6 col-lg-5">
-                            @if($category->active )
-                                <button class="btn btn-success" type="submit" name="active" value="0">{{ trans('adressatenForm.active') }}</button>
-                            @else
-                                <button class="btn btn-danger" type="submit" name="active" value="1">{{ trans('adressatenForm.inactive') }}</button>
-                            @endif
                             <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                            @if( !count($category->items ) )
-                                <a href="{{url('inventarliste/destroy-category/'.$category->id)}}" class="btn btn-xs btn-warning delete-prompt">
+                            @if( !count($category->metaInfos ) )
+                                <a href="{{url('juristenportal/destroy-juristen-category-meta/'.$category->id)}}" class="btn btn-xs btn-warning delete-prompt">
                                     entfernen
                                 </a><br>
                             @endif
@@ -74,26 +69,29 @@
                         
                         @if( count($category->metaInfos) )
                             @foreach( $category->metaInfos as $metaInfo )
+                            {!! Form::open(['url' => ['juristenportal/meta-info/'.$metaInfo->id.'/update-meta-filed'] , 'method' => 'patch']) !!}
+                                <!--<input type="hidden" name="jurist_category_meta_id" value="{{$category->id}}" />-->
                                 <div class="col-md-10 col-md-offset-1">
                                     <div class="col-xs-12 col-md-6 col-lg-5">
                                          <input type="text" class="form-control" name="name" value="{{ $metaInfo->name }}" placeholder="Name"/>
                                     </div>
                                     <div class="col-xs-12 col-md-6 col-lg-5">
                                        <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                                        @if( !count($metaInfos->metaInfoValues ) )
+                                        {{-- @if( isset($metaInfos) && !count($metaInfos->metaInfoValues ) )
                                             <a href="{{url('agaga/destroy-category/'.$metaInfos->id)}}" class="btn btn-xs btn-warning delete-prompt">
                                                 entfernen
                                             </a><br>
-                                        @endif
+                                        @endif --}}
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
+                            {!! Form::close() !!}     
                             @endforeach
                             
                         @endif
                         
                         <div class="col-xs-12 parent-div">
-                            {!! Form::open(['url' => '#', 'method' => 'POST']) !!}
+                            {!! Form::open(['url' => ['juristenportal/add-juristen-category-meta-fiels/'.$category->id] , 'method' => 'POST']) !!}
                                 <a href="#" class="btn btn-primary add-single-field pull-left">ADD </a> 
                                 <div class="clearfix"></div>
                                 <div class="col-xs-6 add-wrapper">

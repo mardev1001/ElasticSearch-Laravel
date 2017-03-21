@@ -16,7 +16,7 @@ class DocumentType extends Model
     const NOTIZEN = 8;
     
     protected $guarded = []; //blacklist
-    protected $fillable = ['name','document_art','document_role','read_required','allow_comments','order_number', 'menu_position']; //whitelist
+    protected $fillable = ['name','document_art','document_role','read_required','allow_comments','order_number', 'menu_position', 'jurist_document', 'publish_sending']; //whitelist
 
     public function documents(){
         return $this->hasMany('App\Document');

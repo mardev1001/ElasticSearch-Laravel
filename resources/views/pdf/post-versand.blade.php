@@ -82,34 +82,37 @@
             </tr>
             </thead>
             <tbody>
-            @if(count($users) )
-                @foreach($users as $user)
-                    @foreach($user->mandantUsersDistinct as $ma)
-                        <tr>
-                            <td class="text-center valign">
-                                {{ $ma->mandant->number ." ". $ma->mandant->kurzname }}
-                            </td>
-                            <td class="text-center valign">
-                                {{ $user->title ." ". $user->first_name ." ". $user->last_name }}
-                            </td>
-                            <td class="text-center valigns">
-                                {{ $ma->mandant->strasse .' ' }}
-                                {{ $ma->mandant->hausnummer .' ' }}
-                                {{ $ma->mandant->plz .' ' }}
-                                {{ $ma->mandant->ort .' ' }}
-                                {{ $ma->mandant->bundesland .' ' }}
-                                {{ $ma->mandant->adreszusatz .' ' }}
-                                {{ $ma->mandant->strasse }}
-                            </td>
-                        </tr>
+                @if(count($mandants))
+                    @foreach($mandants as $mandant)
+                        @if(count($mandant->users))
+                            @foreach($mandant->users as $user)
+                                @if($users->contains($user))
+                                    <tr>
+                                        <td class="text-center valign">
+                                            {{ $mandant->number ." ". $mandant->kurzname }}
+                                        </td>
+                                        <td class="text-center valign">
+                                            {{ $user->title ." ". $user->first_name ." ". $user->last_name }}
+                                        </td>
+                                        <td class="text-center valigns">
+                                            {{ $mandant->strasse .' ' }}
+                                            {{ $mandant->hausnummer .' ' }}
+                                            {{ $mandant->plz .' ' }}
+                                            {{ $mandant->ort .' ' }}
+                                            {{ $mandant->bundesland .' ' }}
+                                            {{ $mandant->adreszusatz .' ' }}
+                                            {{ $mandant->strasse }}
+                                        </td>
+                                    </tr>
+                                @endif
+                            @endforeach
+                        @endif
                     @endforeach
-                @endforeach
-            @else
-                <tr>
-                    <td class="valign" colspan="3">Keine Daten vorhanden.</td>
-                </tr>
-            @endif
-
+                @else
+                    <tr>
+                        <td class="valign" colspan="3">Keine Daten vorhanden.</td>
+                    </tr>
+                @endif
             </tbody>
         </table>
     </div>

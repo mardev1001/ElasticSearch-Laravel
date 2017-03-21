@@ -11,4 +11,8 @@ class UserReadDocument extends Model
     
     protected $guarded = []; //blacklist
     protected $fillable = ['document_group_id','user_id','date_read', 'date_read_last']; //whitelist
+    
+    public function user(){
+       return $this->belongsTo('App\User', 'user_id', 'id');
+    }
 }

@@ -18,6 +18,7 @@ class Kernel extends ConsoleKernel
         Commands\DocumentsMarkAsRead::class,
         Commands\DocumentsResetTypes::class,
         Commands\DocumentsPublishForms::class,
+        Commands\DocumentsSendPublished::class,
         // Commands\FavoritesCreateCategories::class,
         Commands\UsersAssignRoles::class,
         Commands\UsersLogout::class,
@@ -34,5 +35,8 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('documents:archiveExpired')
             ->dailyAt('03:00');
+            
+        $schedule->command('documents:send-published')
+            ->everyTenMinutes()->withoutOverlapping();
     }
 }

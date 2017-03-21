@@ -48,10 +48,10 @@
                             <!--    @if($document->documentAdressats)-->
                             <!--    <p><b>{{ trans('dokumentShow.adressat') }}:</b> {{ $document->documentAdressats->name }}</p> -->
                             <!--    @endif-->
-                        <!--     @if( !empty( $document->betreff ))-->
+                            <!--     @if( !empty( $document->betreff ))-->
                             <!--        <p><b>{{ trans('dokumentShow.subject') }}:</b> {{ $document->betreff }}</p> -->
                             <!--     @endif-->
-                        <!--</div>-->
+                            <!--</div>-->
 
                             <div class="content @if($document->landscape == true) landscape @else portrait @endif">
                                 <!--<p class="text-strong title-small">{{ trans('dokumentShow.content') }}</p>-->
@@ -112,25 +112,27 @@
                                     <div class="clearfix"></div> <br>
                                     <div class="">
                                         @foreach($document->variantDocuments as $key =>$dc)
-                                            @if( in_array($dc->editorVariant->document->document_status_id, [3, 5]))
-                                                <div class="row flexbox-container">
-                                                    <div class="col-md-12 link-padding">
-                                                       <span class="text">
-                                                            <span>@if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif</span><br/>
-                                                            @if($dc->editorVariant->document->published != null)
-                                                                <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
-                                                            @else
-                                                                <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
-                                                            @endif    
-                                                                <strong>  {!! $dc->editorVariant->document->name !!} </strong>
-                                                            </a><br/>
-                                                            <span>
-                                                                {{ $dc->editorVariant->document->documentType->name }}
+                                            @if(isset($dc->editorVariant->document))
+                                                @if( in_array($dc->editorVariant->document->document_status_id, [3, 5]))
+                                                    <div class="row flexbox-container">
+                                                        <div class="col-md-12 link-padding">
+                                                           <span class="text">
+                                                                <span>@if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif</span><br/>
+                                                                @if($dc->editorVariant->document->published != null)
+                                                                    <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
+                                                                @else
+                                                                    <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
+                                                                @endif    
+                                                                    <strong>  {!! $dc->editorVariant->document->name !!} </strong>
+                                                                </a><br/>
+                                                                <span>
+                                                                    {{ $dc->editorVariant->document->documentType->name }}
+                                                                </span>
                                                             </span>
-                                                        </span>
-                                                        
-                                                    </div>
-                                                </div><!-- end flexbox container -->
+                                                            
+                                                        </div>
+                                                    </div><!-- end flexbox container -->
+                                                @endif
                                             @endif
                                         @endforeach
                                     </div>
@@ -185,8 +187,9 @@
 
                 </div><!-- end .col-sm-8 .col-md-9 .col-lg-10 -->
                 
-
+                <!-- sidebar -->
                 <div class="col-sm-4 col-md-3 col-lg-2 btns scrollable-document">
+                    
                     @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true )
                         @if( $document->document_status_id  != 5 )
                             <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a>
@@ -301,7 +304,7 @@
                         <a target="_blank" href="/dokumente/{{$document->id}}/pdf" class="btn btn-primary pull-right">Druckvorschau</a>
                     @endif
 
-                </div>
+                </div><!--end sidebar -->
 
                 <div class="clearfix"></div>
                 <!-- modal start -->
@@ -406,34 +409,36 @@
                     <div class="documentsAttached">
                                     
                         @foreach($document->variantDocuments as $key =>$dc)
-                            @if( in_array($dc->editorVariant->document->document_status_id, [3, 5]))
-                                <div class="row flexbox-container padding-left">
-                                    
-                                   <span class="text col-xs-12">
-                                        <span>
-                                            @if($dc->editorVariant->document->version) Version {{$dc->editorVariant->document->version}}, @endif
-                                            {{ $dc->editorVariant->document->documentStatus->name }} -
-                                            @if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif 
-                                            @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif
-                                        </span><br/>
+                            @if(isset($dc->editorVariant->document))
+                                @if( in_array($dc->editorVariant->document->document_status_id, [3, 5]))
+                                    <div class="row flexbox-container padding-left">
                                         
-                                        @if($dc->editorVariant->document->published != null)
-                                            <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
-                                        @else
-                                            <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
-                                        @endif    
-                                            <strong>  {!! $dc->editorVariant->document->name !!} </strong>
-                                        </a><br/>
-                                        
-                                        <span>
-                                            {{ $dc->editorVariant->document->documentType->name }}
+                                       <span class="text col-xs-12">
+                                            <span>
+                                                @if($dc->editorVariant->document->version) Version {{$dc->editorVariant->document->version}}, @endif
+                                                {{ $dc->editorVariant->document->documentStatus->name }} -
+                                                @if($dc->editorVariant->document->date_published){{$dc->editorVariant->document->date_published}} - @endif 
+                                                @if(isset($dc->editorVariant->document->owner) ){{ $dc->editorVariant->document->owner->first_name.' '.$dc->editorVariant->document->owner->last_name }}@endif
+                                            </span><br/>
+                                            
+                                            @if($dc->editorVariant->document->published != null)
+                                                <a href="/dokumente/{{ $dc->editorVariant->document->published->url_unique }}" target="_blank">
+                                            @else
+                                                <a href="/dokumente/{{ $dc->editorVariant->document->id }}" target="_blank">
+                                            @endif    
+                                                <strong>  {!! $dc->editorVariant->document->name !!} </strong>
+                                            </a><br/>
+                                            
+                                            <span>
+                                                {{ $dc->editorVariant->document->documentType->name }}
+                                            </span>
                                         </span>
-                                    </span>
+                                        
+                                    </div>
                                     
-                                </div>
-                                
-                                <div class="clearfix"></div>
-                                <hr/>
+                                    <div class="clearfix"></div>
+                                    <hr/>
+                                @endif
                             @endif
                         @endforeach
                         

@@ -362,14 +362,16 @@ $(function() {
 
     function checkSendMethod() {
         if (settingsSendMethod.val() == 1 || settingsSendMethod.val() == 2) {
+            settingsEmail.find('select').prop('required', true).val('').trigger('chosen:updated');
             settingsEmail.show(400);
             settingsFax.hide(400);
             settingsFax.find('input').prop('required', false).val('');
         }
         else if (settingsSendMethod.val() == 3) {
-            settingsEmail.hide(400);
-            settingsFax.show(400);
             settingsEmail.find('select').prop('required', false).val('').trigger('chosen:updated');
+            settingsEmail.hide(400);
+            settingsFax.find('input').prop('required', true).val('');
+            settingsFax.show(400);
         }
         else {
             settingsEmail.hide(400);

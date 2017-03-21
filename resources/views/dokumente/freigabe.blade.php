@@ -92,7 +92,7 @@
                         
                         <div class="clearfix"></div> <br>
                         
-                          <div class="footer">
+                           <div class="footer">
 
                                 @if(count($document->documentUploads))
                                     @if( ViewHelper::hasPdf( $document ) == true)
@@ -101,10 +101,6 @@
                                         <div class="clearfix"></div> <br>
 
                                         @foreach($document->documentUploads as $k => $attachment)
-                                                <!--<a target="_blank" href="#{{$attachment->file_path}}" class="">{{basename($attachment->file_path)}}</a><br>-->
-                                        <!--<a target="_blank" href="{{ url('download/'.str_slug($document->name).'/'.$attachment->file_path) }}" class="link">-->
-                                        <!--{{-- basename($attachment->file_path) --}} PDF download</a>-->
-                                        <!--<br><span class="indent"></span>-->
                                          @if( ViewHelper::htmlObjectType( $document,$attachment ) == 'application/pdf' )
                                             <object data="{{url('open/'.$document->id.'/'.$attachment->file_path)}}" 
                                             type="{{ ViewHelper::htmlObjectType( $document,$attachment ) }}" width="100%"  @if(ViewHelper::htmlObjectType( $document,$attachment )=='application/pdf') height="640" @endif>
@@ -118,35 +114,32 @@
                                 @endif
 
                                 @foreach( $variants as $v => $variant)
-                               
-                                    
-                                        @if( count( $variant->EditorVariantDocument ) )
-                                            <div class="attachments document-attachments">
-                                                <span class="text">Dokument Anlage/n für Variante {{$variant->variant_number}}: </span> <br>
-                                                <div class="">
+                                    @if( count( $variant->EditorVariantDocument ) )
+                                        <div class="attachments document-attachments">
+                                            <span class="text">Dokument Anlage/n für Variante {{$variant->variant_number}}: </span> <br>
+                                            <div>
                                                 @foreach($variant->EditorVariantDocument as $k =>$docAttach)
                                                     @if( $docAttach->document_id != $document->id )
                                                         @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
                                                             @if( $key == 0 )
-                                                            
-                                                             <!--<a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="btn btn-primary">-->
-                                                             <div class="row flexbox-container">
-                                                                 <div class="col-md-12">
-                                                                 <a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="no-underline">
-                                                                     <span class="icon icon-edit inline-block"></span>
-                                                                 </a> 
-                                                                 <a target="_blank" href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
-                                                                   {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}</a> <br> <!-- <span class="indent"></span> -->
+                                                                <div class="row flexbox-container">
+                                                                    <div class="col-md-12">
+                                                                        <a href="{{route('dokumente.edit', $docAttach->document->id)}}" class="no-underline">
+                                                                            <span class="icon icon-edit inline-block"></span>
+                                                                        </a> 
+                                                                        <a href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}" class="link pl10 pr10">
+                                                                            {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}
+                                                                        </a> <br> <!-- <span class="indent"></span> -->
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                            <div class="clearfix"></div>
+                                                                <div class="clearfix"></div>
                                                             @endif
                                                         @endforeach
                                                     @endif
                                                 @endforeach
-                                                </div>
-                                            </div><!-- end .attachments .document-attacments -->
-                                        @endif
+                                            </div>
+                                        </div><!-- end .attachments .document-attacments -->
+                                    @endif
                                 @endforeach
 
                             </div><!-- end .footer -->
@@ -188,8 +181,11 @@
                                 ViewHelper::universalHasPermission( array(11) ) == true ) )
                                 && ViewHelper::universalDocumentPermission( $document, false, false, true ) )
                                 
-                                <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#publishModal">{{ trans('documentForm.publish') }}</button>
-                            {{-- <a href="/dokumente/{{$document->id}}/publish" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a> --}}
+                                @if($document->documentType->publish_sending == true)
+                                    <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#publishModal">{{ trans('documentForm.publish') }}</button>
+                                @else
+                                    <a href="{{ url('/dokumente/' . $document->id . '/publish') }}" class="btn btn-primary pull-right">{{ trans('documentForm.publish') }}</a>
+                                @endif
                         @endif
                 @endif
                 
@@ -348,16 +344,44 @@
                             <h4 class="modal-title">{{ trans('documentForm.publish') }}</h4>
                         </div>
                         <div class="modal-body">
-                            Geschäftsführer E-Mail: {{ $emailSettings['emailAttached'] }} <br>
-                            User E-Mail: {{ $emailSettings['email'] }} <br>
-                            Fax senden: {{ $emailSettings['fax'] }} <br>
-                            Postversand: {{ $emailSettings['mail'] }} <br>
+                            {{ trans('documentForm.email') }}: {{ $emailSettings['email'] }} <br>
+                            {{ trans('documentForm.email-attachment') }}: {{ $emailSettings['emailAttached'] }} <br>
+                            {{-- {{ trans('documentForm.fax') }}: {{ $emailSettings['fax'] }} <br> --}}
+                            {{ trans('documentForm.mail') }}: {{ $emailSettings['mail'] }} <br>
                             
                             <div class="clearfix"></div> <br>
                             
-                            <a href="{{ url('/dokumente/' . $document->id . '/pdf/download') }}">PDF Rundschreiben ausdrucken</a><br>
-                            <a href="{{ url('/dokumente/' . $document->id . '/post-versand') }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
-                            <!-- Mandaten, Name, Anschrift -->
+                            @foreach( $variants as $v => $variant)
+                                <div class="attachments document-attachments">
+                                    <strong>Variante {{$variant->variant_number}}: </strong> <br>
+                                    <div>
+                                        {{--<a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download') }}">PDF ausdrucken</a><br>--}}
+                                        <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
+                                        <a href="{{ url('/dokumente/' . $variant->document_id . '/post-versand/'. $variant->variant_number) }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
+                            
+                                        @if( count( $variant->EditorVariantDocument ) )            
+                                            Anlagen fűr Variante {{$variant->variant_number}}:<br>
+                                            @foreach($variant->EditorVariantDocument as $k =>$docAttach)
+                                                @if( $docAttach->document_id != $document->id )
+                                                    @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
+                                                        @if( $key == 0 )
+                                                            <div class="row flexbox-container">
+                                                                <div class="col-md-12">
+                                                                    <a href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}">
+                                                                        {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}
+                                                                    </a> <br>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div> <br>
+                            @endforeach
                         </div>
                         
                         <div class="modal-footer text-right">

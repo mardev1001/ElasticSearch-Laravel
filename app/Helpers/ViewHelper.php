@@ -753,7 +753,7 @@ class ViewHelper
      *
      * @return object $object
      */
-    public static function documentVariantPermission($document)
+    public static function documentVariantPermission($document, $userId = null, $allVariants = false)
     {
         /*  class $object stores 2 attributes:
             1. permissionExists( this is a global hasPermissionso we dont have to iterate again to see if permission exists  )
@@ -762,50 +762,77 @@ class ViewHelper
 
         $object = new \StdClass();
         $object->permissionExists = false;
-        $mandantId = MandantUser::where('user_id', Auth::user()->id)->pluck('id');
-        $mandantUserMandant = MandantUser::where('user_id', Auth::user()->id)->pluck('mandant_id');
+        
+         // Added check for custom user id lookup
+        if(isset($userId)){
+            $mandantId = MandantUser::where('user_id', $userId)->pluck('id');
+            $mandantUserMandant = MandantUser::where('user_id', $userId)->pluck('mandant_id');
+        } else {
+            $mandantId = MandantUser::where('user_id', Auth::user()->id)->pluck('id');
+            $mandantUserMandant = MandantUser::where('user_id', Auth::user()->id)->pluck('mandant_id');
+        }
+        
         $mandantIdArr = $mandantUserMandant->toArray();
         $mandantRoles = MandantUserRole::whereIn('mandant_user_id', $mandantId)->pluck('role_id');
         $mandantRolesArr = $mandantRoles->toArray();
 
-        $variants = EditorVariant::where('document_id', $document->id)->get();
+        $variants = EditorVariant::where('document_id', $document->id)->orderBy('id','asc')->get();
         $hasPermission = false;
-
+        $additionalBoolean = false;
+        
         foreach ($variants as $variant) {
             //  dd($variant);
+            if($allVariants == true && $hasPermission == true){
+                $hasPermission = false;
+                $additionalBoolean = true;
+            }
             if ($hasPermission == false) {//check if hasPermission is already set
                 if ($variant->approval_all_mandants == true) {//database check
                     if ($document->approval_all_roles == true) {//database check
                         $hasPermission = true;
                         $variant->hasPermission = true;
                         $object->permissionExists = true;
+                        // dd('abc 1');
                     } else {
                         foreach ($variant->documentMandantRoles as $role) {// if not from database then iterate trough roles
                             if (self::universalDocumentPermission($document, false) == true) {
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
                                 $object->permissionExists = true;
+                                // dd('abc 2');
                             } else {
                                 if (in_array($role->role_id, $mandantRolesArr)) {//check if it exists in mandatRoleArr
                                     $variant->hasPermission = true;
                                     $hasPermission = true;
                                     $object->permissionExists = true;
+                                    // dd('abc 3');
                                 }
                             }
                         }//end foreach documentMandantRoles
                     }
                 } else {
                     foreach ($variant->documentMandantMandants as $mandant) {
+                        
                         if (self::universalDocumentPermission($document, false, false, true) == true) {
-                            if (self::userHasMandantVariant($document) == 0) {
+                            
+                            if (self::userHasMandantVariant($document) != 0) {
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
                                 $object->permissionExists = true;
+                                // dd('abc 4');
+                                
                             } else {
-                                if ($variant->id == self::userHasMandantVariant($document)) {
+                               if($variant->document->approval_all_roles == 1 && in_array($mandant->mandant_id, $mandantIdArr) ){
+                                   $hasPermission = true;
+                                   $variant->hasPermission = true;
+                                   $object->permissionExists = true;
+                                //   dd('abc 5');
+                                }
+                                elseif ( $variant->id == self::userHasMandantVariant($document) ) {
                                     $hasPermission = true;
                                     $variant->hasPermission = true;
                                     $object->permissionExists = true;
+                                    // dd('abc 6');
                                 }
                             }
 
@@ -813,15 +840,18 @@ class ViewHelper
                         } elseif (in_array($mandant->mandant_id, $mandantIdArr)) {
                             // dd($variant->documentMandantMandants);
                             if ($document->approval_all_roles == true) {
+                            
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
                                 $object->permissionExists = true;
+                                // dd('abc 7');
                             } else {
                                 foreach ($variant->documentMandantRoles as $role) {
                                     if (in_array($role->role_id, $mandantRolesArr)) {
                                         $variant->hasPermission = true;
                                         $hasPermission = true;
                                         $object->permissionExists = true;
+                                        // dd('abc 8');
                                     }
                                 }//end foreach documentMandantRoles
                             }
@@ -830,8 +860,14 @@ class ViewHelper
                 }
             }
         }
+        if( $additionalBoolean == true){
+            $hasPermission = true;
+        }
+         foreach($variants as $variant){
+            
+        }
         if ($object->permissionExists == false && self::universalDocumentPermission($document, false, false, true) == true
-            && count($variants)
+            && count($variants) && $additionalBoolean == true
         ) {
             $object->permissionExists = true;
             $variants[0]->hasPermission = true;
@@ -844,19 +880,23 @@ class ViewHelper
 //end documentVariant permission
 
     /**
-     * Check if user has mandant variant.
+     * Check if user has a mandant variant.
      *
      * @param collection $document
      *
      * @return int
      */
-    public static function userHasMandantVariant($document)
+    public static function userHasMandantVariant($document,$userId=null)
     {
+        if(!is_null($userId)){
+            $userId = Auth::user()->id;
+        }
         $uid = Auth::user()->id;
         $variants = EditorVariant::where('document_id', $document->id)->get();
-        $mandantId = MandantUser::where('user_id', Auth::user()->id)->pluck('id');
-        $mandantUserMandant = MandantUser::where('user_id', Auth::user()->id)->pluck('mandant_id');
+        $mandantId = MandantUser::where('user_id', $userId)->pluck('id');
+        $mandantUserMandant = MandantUser::where('user_id', $userId)->pluck('mandant_id');
         $mandantIdArr = $mandantUserMandant->toArray();
+        
         $hasOwnMandant = 0;
         foreach ($variants as $variant) {
             foreach ($variant->documentMandantMandants as $mandant) {
@@ -865,7 +905,6 @@ class ViewHelper
                 }
             }
         }
-
         return $hasOwnMandant;
     }
 

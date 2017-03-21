@@ -96,40 +96,6 @@ class DocumentRepository
         ];
         $options = array_merge($optionsDefault, $options);
 
-        /*
-        // Bootstrap treeview JSON structure
-        {
-          text: "Node 1",
-          icon: "glyphicon glyphicon-stop",
-          selectedIcon: "glyphicon glyphicon-stop",
-          color: "#000000",
-          backColor: "#FFFFFF",
-          href: "#node-1",
-          selectable: true,
-          state: {
-            checked: true,
-            disabled: true,
-            expanded: true,
-            selected: true
-          },
-          tags: ['available'],
-          nodes: [
-            {},
-            ...
-          ]
-        }
-        */
-
-        /*
-        @each $el in favorites, blocked, open, notread, read, notreleased, released, history, download, goto, comment, legend, arrow {
-          .icon-#{$el} {
-            background: url('/img/icons/icon_#{$el}.png') no-repeat;
-          }
-        }
-        */
-
-        // dd(json_encode($this->generateDummyData('Mein Kommentar', $this->generateDummyDataSingle('Kommentar Text Lorem Ipsum Dolor Sit Amet'))));
-
         $treeView = array();
         $documents = array();
         
@@ -140,7 +106,12 @@ class DocumentRepository
            
             foreach ($documents as $document) {
                 $node = new \StdClass();
-                $node->text = $document->name;
+                if(is_null($document->document_type_id) ){
+                    $node->text = 'Dokumente '. $document->id.' - '.$document->created_at->format('d.m.Y');
+                }
+                else{
+                    $node->text = $document->name;
+                }
                 $icon = $icon2 = '';
                 
                 if($document->document_type_id == 3 ){
@@ -188,8 +159,9 @@ class DocumentRepository
                             // $icon2 = 'icon-trash ';
                         }    
                     }
-                    
-                    $node->afterText = $document->documentType->name;
+                    if( !is_null($document->document_type_id) ){
+                        $node->afterText = $document->documentType->name;
+                    }
                     
                 }
                 
@@ -569,20 +541,19 @@ class DocumentRepository
         if (sizeof($items)) $documents = $items;
     
         if (count($documents) > 0) {
-           
             foreach ($documents->editorVariantDocument as $evd) {
                 if (Document::find($evd->document_id) != null) {
                     // dd($options['documentId']);
                     if ($evd->document_id != null && $options['documentId'] != 0 && $evd->document_id != $options['documentId']) {
-     
+                    
                         $secondDoc = Document::find($evd->document_id);
                         $node = new \StdClass();
                         $node->name = $secondDoc->name.' ('.$secondDoc->documentStatus->name .')';
                         $node->documentId = $secondDoc->id;
                         $node->deleteUrl = url('anhang-delete/' . $options['documentId'] . '/' . $evd->editor_variant_id . '/' . $evd->document_id);
     
-                        //$node->href = route('dokumente.show', $secondDoc->id);
-    
+                        //$//$node->href = route('dokumente.show', $secondDoc->id);
+                        // $secondDoc->d->documentUploads);
                         if (!$secondDoc->documentUploads->isEmpty()) {
                             
                             $node->files = array();
