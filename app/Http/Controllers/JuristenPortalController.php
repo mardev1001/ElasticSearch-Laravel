@@ -47,8 +47,9 @@ class JuristenPortalController extends Controller
         if (ViewHelper::universalHasPermission(array(35, 36), false) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
-
-        return view('juristenportal.index');
+        $juristenCategories = JuristCategory::where('parent',1)->where('active',1)->get();
+        
+        return view('juristenportal.index', compact('juristenCategories') );
     }
 
     /**
@@ -142,21 +143,53 @@ class JuristenPortalController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $query = Document::whereNull('document_type_id')
-        ->orderBy('documents.date_published', 'desc')->limit(50);
+        ->orderBy('documents.created_at', 'desc')->limit(50);
         $documentsMy = $query->where(function ($query) {
                 $query->where('owner_user_id', Auth::user()->id)
                 ->orWhere('user_id', Auth::user()->id);
                 $query->orWhereIn('documents.id', [Auth::user()->id]);
          })->paginate(10, ['*'], 'my-dokumente');
-        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
+        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
+        'showAttachments' => true, 'showHistory' => true));
        
         $documentsAll = $query->paginate(10, ['*'], 'alle-dokumente');
-        $documentsAllTree = $this->document->generateTreeview($documentsAll, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
+        $documentsAllTree = $this->document->generateTreeview($documentsAll, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
+        'showAttachments' => true, 'showHistory' => true));
         // $documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
         // $documentsNewTree = $this->document->generateTreeview($documentsNew, 
         // array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
 
         return view('juristenportal.upload', compact('documentsMy','documentsMyTree','documentsAll','documentsAllTree'));
+    }
+    
+    
+       
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function akten()
+    {
+        if (ViewHelper::universalHasPermission(array(7, 34)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+
+        return view('juristenportal.akten');
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storeAkten(Request $request)
+    {
+        
+        
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.addedSomething'));
     }
     
     

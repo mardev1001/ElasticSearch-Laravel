@@ -37,7 +37,11 @@ Mandantenverwaltung - Benutzer bearbeiten
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <div class="checkbox">
-                           {!! ViewHelper::setCheckbox('active',$user,old('active'),trans('benutzerForm.active') ) !!}
+                            @if(count($user->countMandants))
+                                @if(($user->countMandants->count() > 1) || ($user->countMandants->first()->mandant->active == true) )
+                                   {!! ViewHelper::setCheckbox('active',$user,old('active'),trans('benutzerForm.active') ) !!}
+                                @endif
+                            @endif
                         </div>
                     </div>   
                 </div>

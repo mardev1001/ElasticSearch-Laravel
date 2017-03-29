@@ -35,7 +35,7 @@ $(function() {
     }).parents("ul").not('#side-menu').addClass('in');
     // }).addClass('active').parent().parent().addClass('in').parent();
 
-    // console.log(element);
+
 
     /*Fix the problem where the */
     if ((location.protocol + "//" + location.host + '/') != url.href) {
@@ -148,6 +148,27 @@ $(function() {
     }
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
+    }
+    else if (url.href.indexOf('juristenportal') != -1 && url.href.indexOf('kategorien') == -1) {
+        $('a[href$="/juristenportal"]').addClass('active').next('ul').addClass('in');
+        $('a[href$="/juristenportal"]').closest('li').find('li.active').removeClass('active');
+        console.log($('a[href$="/juristenportal-kategorien/alle"]').closest('li.active').length);
+        $('a[href$="/juristenportal-kategorien/alle"]').closest('li').removeClass('active');
+    }
+    else if (url.href.indexOf('juristenportal-kategorien') != -1 && url.href.indexOf('alle') != -1) {
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul').find('li.active').each(function() {
+            if ($(this).hasClass('active')) {
+                $(this).removeClass('active');
+            }
+        });
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul.in li.active').removeClass('active');
+
+    }
+    else if (url.href.indexOf('juristenportal-kategorien') != -1 && url.href.indexOf('alle') == -1) {
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').closest('li.active').find('ul.in li.active').removeClass('active');
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul.in li.active').removeClass('active');
     }
     else if (typeof documentType !== 'undefined' && documentType.length) {
         var detectHref = '';

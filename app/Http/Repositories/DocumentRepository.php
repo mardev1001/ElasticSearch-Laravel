@@ -92,6 +92,7 @@ class DocumentRepository
             'pageDocuments' => false,
             'pageSearch' => false,
             'myDocuments' => false,
+            'noCategoryDocuments' => false,
             // 'formulare' => false,
         ];
         $options = array_merge($optionsDefault, $options);
@@ -106,12 +107,7 @@ class DocumentRepository
            
             foreach ($documents as $document) {
                 $node = new \StdClass();
-                if(is_null($document->document_type_id) ){
-                    $node->text = 'Dokumente '. $document->id.' - '.$document->created_at->format('d.m.Y');
-                }
-                else{
-                    $node->text = $document->name;
-                }
+                $node->text = $document->name;
                 $icon = $icon2 = '';
                 
                 if($document->document_type_id == 3 ){
@@ -127,7 +123,10 @@ class DocumentRepository
                         $node->beforeText = '';
                         if($options['pageHome'] == true && $options['myDocuments'] == true)
                             $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
-                        if( $document->published_at != null ){
+                        if( $document->published_at == null && is_null($document->document_type_id)){
+                            $node->beforeText .= Carbon::parse($document->created_at)->format('d.m.Y').' - ';
+                        }
+                        elseif( $document->published_at != null ){
                             $node->beforeText .= Carbon::parse($document->published_at)->format('d.m.Y').' - ';
                         }
                         else{
@@ -140,7 +139,7 @@ class DocumentRepository
                             $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
                             ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
                         
-                        if($document->documentType->read_required){
+                        if( !is_null($document->document_type_id) && $document->documentType->read_required){
                             if($document->document_status_id == 3){
                                 if(isset($readDocument)){ 
                                     $icon = 'icon-read ';
@@ -213,6 +212,62 @@ class DocumentRepository
                     }
                 }
                 
+                
+                if ($options['noCategoryDocuments'] == true) {
+                    
+                    if( is_null($document->document_type_id) ){
+               
+                      $variants = $this->documentVariantPermission($document, false)->variants;
+                    // if (sizeof($document->editorVariantNoDeleted)) {
+            
+                    if (count($variants)) {
+                        
+                        // get all variants, and all their attachments
+                        
+                        $documentsAttached = array();
+                            
+                        foreach($variants as $ev){
+                                array_push($documentsAttached, Document::find($ev->document_id));
+                            
+                        }
+                        
+                        // generate item for treeview and add his attachments
+                       
+                        if(count($documentsAttached)){
+               
+                            $node->nodes = array();
+                            // $node->icon .= ' parent-node ';
+                            
+                            // if ($options['tags']) $node->tags = array(sizeof($document->editorVariantDocument));
+    
+                            foreach ($documentsAttached as $secondDoc) {
+                                
+                                // $node->href = route('dokumente.show', $secondDoc->id);
+                                
+                                if (isset($secondDoc) && (!$secondDoc->documentUploads->isEmpty())) {
+                                    
+                                    // $subNode->nodes = array();
+                                    
+                                    foreach ($secondDoc->documentUploads as $upload) {
+                                        $subNode = new \StdClass();
+                                        $subNode->icon = 'child-node hidden ';
+                                        $subNode->icon2 = 'icon-download ';
+                                        $subNode->titleText2 = 'Download';
+                                        $subNode->text = $secondDoc->name;
+                                        // $subNode->text = $upload->file_path;
+                                        $subNode->href = '/download/' . $secondDoc->id . '/' . $upload->file_path;
+                                        array_push($node->nodes, $subNode);
+                                    }
+                                    
+                                }
+                            }
+                            
+                            if(count($node->nodes)<1)
+                                unset($node->nodes);
+                        }
+                    }
+                    }
+                }
                 if ($options['pageHistory'] == true) {
                     // $node->text = "Version " . $document->version . "- " . $node->text . " - " . $document->updated_at;
                     
@@ -340,8 +395,12 @@ class DocumentRepository
 					
                 elseif($document->document_status_id == 6)
 					$node->href = url('dokumente/'. $document->id .'/freigabe');
-                else 
+                elseif(is_null($document->document_type_id)){
+					$node->href = url('dokumente/'. $document->id .'/edit');
+                }
+                else{
 					$node->href = route('dokumente.show', $document->id);
+                }
 
                 // TreeView Delete Option - Uncomment if needed
                 if ($options['pageFavorites'] && $options['showDelete']){
@@ -608,9 +667,13 @@ class DocumentRepository
      */
     public function checkUploadType($data, $model, $pdf)
     {
+     
+        
+        $docTypeNews = DocumentType::find(DocumentType::NEWS);
+        $docTypeIso = DocumentType::find(DocumentType::ISO_DOKUMENTE);
          
-        if ( ((strpos(strtolower($model->name), 'rundschreiben') !== false) || (strpos(strtolower($model->name), 'news') !== false) 
-        || (strpos(strtolower($model->name), 'iso dokumente') !== false) ) && ($pdf != null || $pdf != 0 || $pdf != false )
+        if ( ((strpos(strtolower($model->name), 'rundschreiben') !== false) || (strpos(strtolower($model->name), strtolower($docTypeNews->name)) !== false) 
+        || (strpos(strtolower($model->name), strtolower($docTypeIso->name)) !== false) ) && ($pdf != null || $pdf != 0 || $pdf != false )
         ) {
             $data->form = 'pdfUpload';
             $data->url = 'pdf-upload';

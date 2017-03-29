@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\Helpers\ViewHelper;
 use App\Http\Requests\BenutzerRequest;
+use App\Http\Requests\BenutzerPartnerRequest;
 use Carbon\Carbon;
 use App\User;
 use App\Role;
@@ -261,7 +262,7 @@ class UserController extends Controller
         if (ViewHelper::universalHasPermission([2, 4, 17], false) == false) {
             return redirect('/')->with('message', trans('documentForm.noPermission'));
         }
-
+        
         $rolesAll = Role::where('mandant_role', 1)->get();
         $loggedUserMandants = MandantUser::where('user_id', Auth::user()->id)->get();
         // $loggedUserRoles = MandantUserRole::whereIn('mandant_user_id', $loggedUserMandants->pluck('id'))->get();
@@ -284,7 +285,7 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createPartnerStore(BenutzerRequest $request)
+    public function createPartnerStore(BenutzerPartnerRequest $request)
     {
         // dd( $request->all() );
 
@@ -293,6 +294,8 @@ class UserController extends Controller
         }
 
         $user = User::create($request->all());
+        
+        dd($user->getattributes());
 
         $userUpdate = User::find($user->id);
         $userUpdate->created_by = Auth::user()->id;
@@ -442,7 +445,8 @@ class UserController extends Controller
         $id = Auth::user()->id;
         $documentTypes = DocumentType::where('publish_sending', true)->get();
         $emailRecievers = Role::where('system_role', true)->get();
-        $emailSettings = UserEmailSetting::where('user_id', $id)->get();
+        // $emailSettings = UserEmailSetting::where('user_id', $id)->get();
+        $emailSettings = UserEmailSetting::where('user_id', $id)->orderBy('document_type_id')->orderBy('email_recievers_id')->get();
 
         if (User::find($id)) {
             $user = User::find($id);

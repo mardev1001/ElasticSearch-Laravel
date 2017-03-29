@@ -85,7 +85,7 @@ class DocumentController extends Controller
         foreach ($onlyTrashed as $trashed) {
             if (ViewHelper::universalDocumentPermission($trashed)) {
                 // Assign download link for upload-type documents
-                if (($trashed->pdf_upload == 1) || ($trashed->documentType->document_art == 1)) {
+                if (($trashed->pdf_upload == 1) || (isset($trashed->documentType) && $trashed->documentType->document_art == 1)) {
                     foreach ($trashed->editorVariantTrashed as $ev) {
                         foreach ($ev->documentUploadTrashed as $key => $du) {
                             if ($key > 0) {
@@ -2086,8 +2086,8 @@ class DocumentController extends Controller
         $emailSettings['email'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 1)->get()->count();
         $emailSettings['emailAttached'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 2)->get()->count();
         $emailSettings['fax'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 3)->get()->count();
-        $emailSettings['mail'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 4)->get()->groupBy('user_id')->count();
-        // dd($emailSettings);
+        $emailSettings['mail'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 4)->get()->count();
+        
         return view('dokumente.freigabe', compact('document', 'variants', 'documentCommentsUser', 'documentCommentsFreigabe', 'published',
         'canPublish', 'hasPermission', 'authorised', 'authorisedPositive', 'commentVisiblity', 'emailSettings'));
     }
@@ -3627,6 +3627,7 @@ class DocumentController extends Controller
                 if(($user->email_reciever == false) || ($document->documentType->publish_sending == false)) continue;
                 
                 // Check if the role assigned to the email setting is a system role
+                $systemRole = null;
                 $role = Role::find($emailSetting->email_recievers_id);
                 if(isset($role->system_role)) $systemRole = $role->system_role; 
                 
@@ -3709,6 +3710,7 @@ class DocumentController extends Controller
      */
     public function postVersand(Request $request, $id, $variantNumber)
     {
+        $allMandants = false;
         $variant = $variantNumber;
         $document = Document::find($id);
         
@@ -3718,12 +3720,16 @@ class DocumentController extends Controller
             ->where('active', 1)->groupBy('user_id')->pluck('user_id');
         $users = User::whereIn('id', $settingsUserIds)->get();
         
+        // dd($users);
         // Get list of user mandants that have permission for the document variant
         $mandantsList = array();
         foreach($users as $user){
             $editorVariants = ViewHelper::documentVariantPermission($document, $user->id, true); // Third parameter is for showing all variants
             foreach ($editorVariants->variants as $ev) {
-                if(($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
+                if($ev->approval_all_mandants == true){
+                    // Handle the case where a variant has approval for ALL mandants
+                    $allMandants = true;
+                } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
                     $dm = DocumentMandant::where('editor_variant_id', $ev->id)->pluck('id');
                     $dmm = DocumentMandantMandant::whereIn('document_mandant_id', $dm)->pluck('mandant_id');
                     foreach($dmm as $id) if(!in_array($id, $mandantsList)) $mandantsList[] = $id;
@@ -3731,8 +3737,10 @@ class DocumentController extends Controller
             }
         }
         
+        
         // Find mandants by id
-        $mandants = Mandant::whereIn('id', $mandantsList)->get();
+        if($allMandants == true) $mandants = Mandant::all();
+        else $mandants = Mandant::whereIn('id', $mandantsList)->get();
         
         $margins = new \StdClass();
         $margins->left = 10;

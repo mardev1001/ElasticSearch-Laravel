@@ -20,7 +20,7 @@
                             </div>
                         <div class="clearfix"></div><br/>
                           <div class="col-xs-12 parent-div">
-                                <a href="#" class="btn btn-primary add-single-field pull-left">ADD </a> 
+                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('isoKategorienForm.add') }} </a> 
                                 <div class="clearfix"></div>
                                 <div class="col-xs-6 add-wrapper">
                                     
@@ -47,7 +47,7 @@
      <div class="box-wrapper">    
         <div class="row">
             <div class="col-xs-12">
-                <h4 class="title">translation</h4>
+                <h4 class="title">@lang('juristenPortal.metaFieldsAddTitle')</h4>
                  <div class="box box-white">
                     @foreach($categories as $category)
                     <div class="row">
@@ -92,7 +92,7 @@
                         
                         <div class="col-xs-12 parent-div">
                             {!! Form::open(['url' => ['juristenportal/add-juristen-category-meta-fiels/'.$category->id] , 'method' => 'POST']) !!}
-                                <a href="#" class="btn btn-primary add-single-field pull-left">ADD </a> 
+                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('isoKategorienForm.add') }} </a> 
                                 <div class="clearfix"></div>
                                 <div class="col-xs-6 add-wrapper">
                                     

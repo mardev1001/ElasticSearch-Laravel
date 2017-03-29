@@ -31,14 +31,21 @@
                     <div class="form-group no-margin-bottom" data-hide="iso-categories">
                          <div class="col-md-6 col-lg-4"> 
                             <label>{{ trans('isoKategorienForm.parent-category') }}</label>
-                          
                             <select name="category_id" class="form-control select" data-disable="iso-categories" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
                                  <option value=""></option>
-                                 @foreach($juristenCategories as $jueristenCategory)
-                                     @if($jueristenCategory->parent)
+                                @foreach($juristenCategories as $jueristenCategory)
+                                    @if($jueristenCategory->parent)
                                          <option value="{{ $jueristenCategory->id }}"> {{ $jueristenCategory->name }} </option>
-                                     @endif
-                                 @endforeach
+                                        @if( count( $jueristenCategory->juristCategories ) )
+                                            @foreach( $jueristenCategory->juristCategories as $subLevel1)
+                                                <option  class="jurist-subcategory-option-level-one" 
+                                                value="{{ $subLevel1->id }}"> {{ $subLevel1->name }} 
+                                                </option>
+                                              
+                                            @endforeach
+                                        @endif
+                                    @endif
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -74,18 +81,31 @@
                                  <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $jueristenCategory->name }}" required/>
                             </td>
                             <td class="col-xs-4 vertical-center">
-                                @if($isoCategory->parent)
-                                   <p>{{ trans('juristenportal.parent-category') }}</p>
-                                @else
-                                 <select name="category_id" class="form-control select" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
-                                     <option value=""></option>
-                                     @foreach($juristenCategories as $jueristenCategoryChild)
-                                         @if($jueristenCategoryChild->parent)
-                                             <option value="{{ $jueristenCategoryChild->id }}" @if($jueristenCategory->jurist_category_parent_id == $jueristenCategoryChild->id) selected @endif > {{ $jueristenCategoryChild->name }} </option>
-                                         @endif
-                                     @endforeach
-                                 </select>
-                                @endif
+                                @if( $jueristenCategory->parent && count($jueristenCategory->juristCategories)  )
+                                <p>@lang('isoKategorienForm.parent-category')</p>
+                                @else 
+                                <select name="category_id" class="form-control select" data-placeholder="{{ trans('isoKategorienForm.parent-category-select') }}">
+                                    <option value="parent" @if($jueristenCategory->parent) selected @endif>
+                                        @lang('isoKategorienForm.parent-category')
+                                    </option>
+                                    @foreach($juristenCategories as $jueristenCategoryChild)
+                                        @if($jueristenCategoryChild->parent)
+                                            <option value="{{ $jueristenCategoryChild->id }}" @if($jueristenCategory->jurist_category_parent_id == $jueristenCategoryChild->id) selected @endif > {{ $jueristenCategoryChild->name }} </option>
+                                       
+                                            @if( count( $jueristenCategoryChild->juristCategories ) )
+                                                @if( $jueristenCategoryChild->id == 16) dd($jueristenCategoryChild->juristCategories)  @endif
+                                                @foreach( $jueristenCategoryChild->juristCategories as $subLevel1)
+                                                    <option  class="jurist-subcategory-option-level-one" 
+                                                    @if($jueristenCategory->jurist_category_parent_id == $subLevel1->id) selected @endif
+                                                    value="{{ $subLevel1->id }}"> {{ $subLevel1->name }} 
+                                                    </option>
+                                                   
+                                                @endforeach
+                                            @endif
+                                        @endif
+                                    @endforeach
+                                </select>
+                                @endif 
                             </td>
                             <td class="col-xs-3 text-right table-options">
         
@@ -101,7 +121,7 @@
                                @if( count($jueristenCategory->isJuristCategoryParent) < 1 && count($jueristenCategory->hasAllDocuments) < 1  )
                                 {!! Form::open(array('route' => array('juristenportal-kategorien.destroy', $jueristenCategory->id), 'method' => 'delete')) !!}
                                         <button  type="submit" href="" class="btn btn-danger delete-prompt"
-                                         data-text="Wollen Sie diesen kategorie wirklich löschen?">
+                                         data-text="Wollen Sie diesen Kategorie wirklich löschen?">
                                              löschen
                                          </button> 
                                      </form>

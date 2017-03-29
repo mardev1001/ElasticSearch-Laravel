@@ -347,7 +347,7 @@
                             {{ trans('documentForm.email') }}: {{ $emailSettings['email'] }} <br>
                             {{ trans('documentForm.email-attachment') }}: {{ $emailSettings['emailAttached'] }} <br>
                             {{-- {{ trans('documentForm.fax') }}: {{ $emailSettings['fax'] }} <br> --}}
-                            {{ trans('documentForm.mail') }}: {{ $emailSettings['mail'] }} <br>
+                            {{-- {{ trans('documentForm.mail') }}: {{ $emailSettings['mail'] }} <br> --}}
                             
                             <div class="clearfix"></div> <br>
                             
@@ -355,6 +355,7 @@
                                 <div class="attachments document-attachments">
                                     <strong>Variante {{$variant->variant_number}}: </strong> <br>
                                     <div>
+                                        Briefe: {{ ViewHelper::countMailingUsers($variant->document_id, $variant->variant_number) }} <br>
                                         {{--<a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download') }}">PDF ausdrucken</a><br>--}}
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/post-versand/'. $variant->variant_number) }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>

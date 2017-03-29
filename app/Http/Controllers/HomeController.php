@@ -70,6 +70,7 @@ class HomeController extends Controller
         // dd($myRundCoauthor);
 
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
+        // ->select(\DB::raw('*, MAX(version) AS max_version')) // NEPTUN-620
         ->where('documents.active', 1)
         ->where('document_types.document_art', 0)
         ->where(
@@ -79,7 +80,10 @@ class HomeController extends Controller
                 $query->orWhereIn('documents.id', $myRundCoauthor);
             }
         );
-
+        // )->groupBy('document_group_id'); // NEPTUN-620
+        
+        // if($request->debug == true) dd($rundschreibenMy->get();
+        
         // JIRA Task NEPTUN-657
         if ($filter) {
             // Draft ($document->document_status_id == 1)
@@ -107,6 +111,8 @@ class HomeController extends Controller
 
         $rundschreibenMy = $rundschreibenMy->limit(50)
         ->orderBy('documents.id', 'desc')->get(['documents.id as id']);
+        
+        // SELECT * , MAX( version )  FROM  `documents` GROUP BY document_group_id ORDER BY id
 
         $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->orderBy('date_published', 'desc')
         ->paginate(10, ['*'], 'meine-rundschrieben');
@@ -188,16 +194,6 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response download
      */
-    public function tipsAndTricks()
-    {
-        //Dropdown: ALL Neptun - active - user - firstname lastname
-        // $data = array();
-        // $neptun = Mandant::find(1);
-        // $mandantUsers =  MandantUser::where('mandant_id',$neptun->id)->pluck('user_id')->toArray();
-        // $users = User::whereIn('id',$mandantUsers)->where('active',1)->get();
-
-        return view('simple-pages.tipsAndTricks');
-    }
 
     /**
      * Contact form.

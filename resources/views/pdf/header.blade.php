@@ -3,6 +3,6 @@
         <p></p>
     </div>
     <div class="image-div">
-        <img src={{url("/img/Neptun-document-logo.jpg")}} alt="Neptun logo"/>
+        <img src={{ base_path("public/img/Neptun-document-logo.jpg") }} alt="Neptun logo"/>
     </div>
 </div>

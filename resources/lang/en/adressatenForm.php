@@ -10,6 +10,7 @@ return [
     'overview' => 'Übersicht',
     'add' => 'hinzufügen',
     'save' => 'speichern',
+    'delete' => 'löschen',
     'active' => 'aktiv',
     'inactive' => 'inaktiv',
     

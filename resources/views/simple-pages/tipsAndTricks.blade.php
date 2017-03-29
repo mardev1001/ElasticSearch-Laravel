@@ -7,23 +7,29 @@
 @section('bodyClass') contactPage @stop
 
 @section('content')
-<div class="row">
+<div class="box-wrapper ">
+    <div class="box box-white">
+                <div class="row">
+                    <div class="col-sm-8 col-md-9 col-lg-10">
+                        <div class="row">
+                            <div class="col-xs-12">
     
-    <div class="col-xs-12 col-md-6 ">
-        <div class="col-xs-12 box-wrapper">
-            <h1 class="title">{{ ucfirst( trans('navigation.tipsAndTricks') ) }}</h1>
-             {!! Form::open([
-                'method'=>'POST' 
-                ]) !!}
-            <div class="box box-white">
-               
-                
-            </div><!--end .box-->
-            </form>
-        </div>
-    </div>
-    
+                                <div class="content">
 
+                                    @if($data)
+                                        <div>
+                                            {!! ViewHelper::stripTags($data->content, array('div' ) ) !!}
+                                        </div>
+                                    @else
+                                        <div>keine Tipps und Tricks</div>
+                                    @endif
+    
+                                </div><!-- end .content -->
+                            </div><!--end col-xs-12-->
+                        </div><!--end row-->
+                    </div><!-- end .col-sm-8 .col-md-9 .col-lg-10 -->
+                </div>
+            </div>
 </div>
 
 @stop

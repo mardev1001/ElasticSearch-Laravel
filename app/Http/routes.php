@@ -14,7 +14,7 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('kontakt', 'HomeController@contactSend');
     Route::get('kontaktanfragen', 'HomeController@contactIndex');
     Route::get('kontaktanfragen/suche', 'HomeController@contactSearch');
-    Route::get('tipps-und-tricks', 'HomeController@tipsAndTricks');
+    Route::resource('tipps-und-tricks', 'TippsAndTricksController');
     Route::get('neptun-verwaltung', 'HomeController@neptunManagment');
     Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
     Route::get('/open/{path_part_one}/{path_part_two}', 'HomeController@open');
@@ -68,6 +68,7 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('dokument-typen/sort-up/{id}', 'DocumentTypeController@sortUp');
     Route::get('dokument-typen/sort-down/{id}', 'DocumentTypeController@sortDown');
     Route::resource('dokument-typen', 'DocumentTypeController');
+    Route::resource('wiedervorlagen-status', 'WiedervorlagenStatusController');
 
     // Mandant routes
     Route::get('mandanten/ajax-internal-roles', 'MandantController@ajaxInternalRoles');
@@ -183,23 +184,44 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('juristenportal/destroy-juristen-category-meta/{juristenCategoryMeta}', 'JuristenPortalController@deleteJuristenCategoryMeta');
     Route::post('juristenportal/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     Route::patch('juristenportal/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
+    
+    Route::get('juristenportal/akten', 'JuristenPortalController@akten');
+    Route::post('juristenportal/akten', 'JuristenPortalController@storeAkten');
+    
     Route::get('juristenportal/notiz', 'JuristenPortalController@notiz');
     Route::get('juristenportal/upload', 'JuristenPortalController@uploadView');
     Route::post('juristenportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
     Route::resource('juristenportal', 'JuristenPortalController');
+    
+    Route::get('juristenportal-kategorien/alle', 'JuristenPortalCategoryController@singlePageAll');
     Route::resource('juristenportal-kategorien', 'JuristenPortalCategoryController');
 
-    Route::get('what',function(){
+    
+    //Marijan Juristen Upload cleaner
+    /*Route::get('what',function(){
        $documents = App\Document::where('document_type_id',7)->orWhere('document_type_id',null)->get();
-       dd($documents);
+       $documents = App\Document::where('document_type_id',7)->orWhere('document_type_id',null)->withTrashed()->get();
+      dd($documents);
         foreach($documents as $document){
+            
+            // dd($document->editorVariantDocument);
+             if( File::deleteDirectory(public_path('files/documents/'.$document->id))){
+                    echo $document->id.'<br/>';
+                }
+                else{
+                    echo 'no:'.$document->id.'<br/>';
+                }
             foreach($document->editorVariantDocument as $ev){
-                $ev->documentUpload->delete();
+               
+                foreach($ev->documentUpload as $up){
+                
+                    $up->delete();
+                }
                 $ev->delete();
             }
             $document->delete();
         }
-    });
+    });*/
     /*
      * Developer Routes
      */

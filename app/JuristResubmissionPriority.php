@@ -6,5 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class JuristResubmissionPriority extends Model
 {
-    //
+    protected $fillable = ['name', 'color'];
+    
+    public function hasAllDocuments(){
+        return $this->hasMany('App\JuristFileResubmission','jurist_resubmission_priority_id','id');
+    }
 }

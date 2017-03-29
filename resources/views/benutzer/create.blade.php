@@ -33,14 +33,19 @@ Mandantenverwaltung - Benutzer anlegen
                        {!! ViewHelper::setInput('password_repeat', '', '', trans('benutzerForm.password_repeat'), trans('benutzerForm.password_repeat'), true, 'password') !!}
                     </div>   
                 </div>
-            
-                <div class="col-md-4 col-lg-3"> 
+                
+                <div class="col-md-4 col-lg-3">
+                    {{-- NEPTUN-751 --}}
+                    
                     <div class="form-group">
-                       {{-- !! ViewHelper::setCheckbox('active', '', old('active'), trans('benutzerForm.active'), false) !! --}}
+                    {{-- !! ViewHelper::setCheckbox('active', '', old('active'), trans('benutzerForm.active'), false) !! --}}
+                    {{--
                         <div class="checkbox">
-                           <input type="checkbox" value="1" name="active" id="active" checked><label for="active">{{ trans('benutzerForm.active') }}</label>
+                            <input type="checkbox" value="1" name="active" id="active" checked><label for="active">{{ trans('benutzerForm.active') }}</label>
                         </div>
-                    </div>   
+                    --}}
+                    </div>
+                    
                 </div>
                 
                 <div class="clearfix visible-lg-block"></div>

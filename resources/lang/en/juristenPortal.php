@@ -13,10 +13,13 @@ return [
     'categories' => 'Kategorien',
     
     //uploads
-    'documentsWithoutCategoriesMy' => 'Dokument ohne Kategorie - NUR Meine',
+    'documentsWithoutCategoriesMy' => 'Dokument ohne Kategorie - Meine',
     'documentsWithoutCategories' => 'Dokument ohne Kategorie - Alle',
     
     //meta field
     'metaFieldsTitle' => 'Beratungs-Portal Dokument Typ - Meta Infos',
     'metaFieldsAddTitle' => 'Übersicht',
+    
+    //akten
+    'aktenArt' => 'Aktenart',
 ];

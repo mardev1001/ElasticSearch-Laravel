@@ -1,6 +1,7 @@
 /*
  * Created by Marijan on 25.04.2016..
  */
+
 $(function() {
     /*Blank space fix for textareas*/
     $('textarea').each(function() {
@@ -818,9 +819,11 @@ $(function() {
     }
     /* End Automatic trigger to open the panel heading */
 
-    /* Add empty select option to doropdon */
-    // $(".empty-select").prepend("<option value='' >&nbsp;</option>");
-    /* End Add empty select option to doropdon */
+    /* colorpicker init */
+    $('.colorpicker').colorpicker({
+        format: 'hex'
+    });
+    /* End colorpicker init */
 
 
 });

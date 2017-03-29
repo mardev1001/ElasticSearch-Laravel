@@ -149,6 +149,9 @@
                                             </td>
                                             <td class="text-center valign">{{ count($mandantUser->user->countMandants) }}</td>
                                             <td class="valign table-options text-center">
+                                                {{-- NEPTUN-751 --}}
+                                                
+                                                @if($mandant->active || count($mandantUser->user->countMandants) > 1)
                                                 {!! Form::open(['action' => 'UserController@userActivate', 'method'=>'PATCH']) !!}
                                                     <input type="hidden" name="user_id" value="{{ $mandantUser->user->id }}">
                                                     <input type="hidden" name="mandant_id" value="{{ $mandant->id }}">
@@ -161,6 +164,7 @@
                                                         @endif
                                                     @endif
                                                 {!! Form::close() !!}
+                                                @endif
                                                 
                                                 @if($mandantUser->user->id != 1)
                                                     {{-- Form::open(['route'=>['benutzer.destroy', 'id'=> $mandantUser->user->id], 'method'=>'DELETE']) --}}

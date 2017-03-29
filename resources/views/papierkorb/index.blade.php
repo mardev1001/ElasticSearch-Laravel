@@ -46,7 +46,7 @@
                                         {{ Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
                                         @if(isset($document->owner)) - {{ $document->owner->first_name .' '. $document->owner->last_name }} @endif <br>
                                         
-                                        @if( ($document->pdf_upload == 1) || ($document->documentType->document_art == 1) )
+                                        @if( ($document->pdf_upload == 1) || (isset($document->documentType) && $document->documentType->document_art == 1) )
                                             @if($document->propAttachment)
                                                 <a href="{{url('download/'. $document->id .'/'. $document->propAttachment)}}" target="_blank">
                                                     <strong>{{ $document->name }}</strong>
@@ -59,7 +59,10 @@
                                             <a href="{{url('/papierkorb/download/' . $document->id)}}" target="_blank"> <strong>{{ $document->name }}</strong></a> <br>
                                         @endif
                                         
-                                        {{ $document->documentType->name }}<br>
+                                        @if(isset($document->documentType))
+                                            {{ $document->documentType->name }}
+                                        @endif
+                                        <br>
                                     </span>
                                 </div>
                             </div>

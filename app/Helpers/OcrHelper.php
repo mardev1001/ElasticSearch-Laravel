@@ -83,6 +83,18 @@ class OcrHelper{
         $this->file_basename = $path_parts['basename'];
     }
     
+    public function getFileName(){
+        return $this->file_name;
+    }
+    
+    public function getFileExtension(){
+        return $this->file_extension;
+    }
+    
+    public function getFileBaseName(){
+        return $this->file_basename;
+    }
+    
     /**
      * Returns the extravted text
      * 
@@ -155,6 +167,38 @@ class OcrHelper{
         $this->cleanUp();
         return $file;
     }
+    
+    /**
+     * Converts any filetype to pdf
+     * 
+     * @return string name of the pdf file
+     */
+    public function convertToPdfObject(){
+        $file = new \StdClass();
+        $file->filename = $this->file_basename;
+        switch($this->file_extension){
+            case 'doc':
+            case 'docx':
+            case 'xls':
+            case 'xlsx':
+            case 'ppt':
+            case 'pptx':
+                $file->object = $this->convertOfficeToPDF();
+                break;
+            case 'png':
+            case 'tif':
+            case 'jpg':
+                $file->object = $this->convertImageToPDF();
+                break;
+            case 'pdf':
+                $file->object = $this->convertPDFToSearchablePDF();
+            default:
+                break;
+        }
+        $this->cleanUp();
+        return $file;
+    }
+    
     
     /**
      * cd to Folder for the system() call
@@ -305,6 +349,29 @@ class OcrHelper{
         }else{
             return false;
         }
+    }
+    
+    
+    public function getMetaData(){
+        $output = '';
+        $cmd = $this->setHome()
+                .  $this->cdToFolder()
+                . 'exiftool ' . $this->file_basename;
+        exec($cmd, $output);
+        
+        
+        $values = [];
+        
+        foreach($output as $line){
+            $parts = explode(':',$line, 2);
+            if(count($parts) != 2){
+                continue;
+            }
+
+            $values[trim($parts[0])] = trim($parts[1]);
+        }
+        
+        return $values;
     }
     
     /**

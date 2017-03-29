@@ -12,7 +12,11 @@ class CreateTrippAndTricksTable extends Migration
      */
     public function up()
     {
-        //
+         Schema::create('tipp_and_tricks', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('content');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -22,6 +26,6 @@ class CreateTrippAndTricksTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('tipp_and_tricks');
     }
 }

@@ -61,6 +61,18 @@
                         </li>
                     @endif
                     
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true ) 
+                            <li>
+                                <a href="{{ url('wiedervorlagen-status') }}">{{ ucfirst( trans('navigation.wiedervorlagenStatus') ) }}</a>
+                            </li>
+                    @endif
+                    
+                    @if( ViewHelper::universalHasPermission( array(6) ) == true )
+                        <li>
+                            <a href="{{ url('tipps-und-tricks/create') }}">{{ ucfirst( trans('navigation.tipsAndTricks') ) }}</a>
+                        </li>
+                    @endif
+                    
                 </ul>
                 
             </div>

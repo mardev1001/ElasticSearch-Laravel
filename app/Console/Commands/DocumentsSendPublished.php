@@ -4,15 +4,18 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use Carbon;
 use File;
+use Mail;
+use Carbon\Carbon;
 
 use App\User;
+use App\Role;
 use App\UserEmailSetting;
 use App\UserSentDocument;
 use App\Document;
 use App\EditorVariant;
 use App\PublishedDocument;
+use App\Helpers\ViewHelper;
 use App\Classes\PdfWrapper;
 
 class DocumentsSendPublished extends Command
@@ -39,6 +42,11 @@ class DocumentsSendPublished extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->newsId = 1;
+        $this->rundId = 2;
+        $this->qmRundId = 3;
+        $this->isoDocumentId = 4;
+        $this->formulareId = 5;
     }
 
     /**
@@ -49,13 +57,26 @@ class DocumentsSendPublished extends Command
     public function handle()
     {
         $recievers = UserSentDocument::all();
+        foreach($recievers as $reciever){
+            // Send email ONLY if it is NOT SENT AND if PUBLISH DATE is TODAY
+            if($reciever->sent == false){
+                $document = Document::find($reciever->document_id);
+                if(Carbon::today()->toDateString() == Carbon::parse($document->date_published)->toDateString()){
+                    $this->sendPublishedDocuments($document, $reciever);
+                    $reciever->sent = true;
+                    $reciever->save();
+                }
+            }
+        }
         
     }
     
     private function sendPublishedDocuments($document, $reciever){
         
+        $emailSetting = $reciever->userEmailSetting;
+        
         // Generate temporary pdf export of the document variants
-        $documentPdf = $this->generatePdfObject($document->id);
+        $documentPdf = $this->generatePdfObject($document->id, null, $emailSetting->user_id);
         
         // Fill the email container class with adequate values
         $mailContent = new \StdClass();
@@ -64,109 +85,100 @@ class DocumentsSendPublished extends Command
         $mailContent->fromEmail = 'info@neptun.de';
         $mailContent->fromName = 'Informationsservice';
         $mailContent->link = url('dokumente/' . $document->id);
+            
+        // Get user data for the email setting
+        $user = User::find($emailSetting->user_id);
         
+        // Skip email sending if user has the email sending flag disabled
+        // Skip email sending if document type has no publish sending flag
+        if(($user->email_reciever == false) || ($document->documentType->publish_sending == false)) continue;
         
-        foreach($recievers as $reciever){
-            
-            $emailSetting = $reciever->emailSetting();
-            
-            // Get user data for the email setting
-            $user = User::find($emailSetting->user_id);
-            
-            // Skip email sending if user has the email sending flag disabled
-            // Skip email sending if document type has no publish sending flag
-            if(($user->email_reciever == false) || ($document->documentType->publish_sending == false)) continue;
-            
-            // Check if the role assigned to the email setting is a system role
-            // dd($emailSetting)
-            $role = Role::find($emailSetting->email_recievers_id);
-            if(isset($role->system_role)) $systemRole = $role->system_role; 
-            
-            // Alternate method to generate pdfs for each viewable variant (add as attachments)
-            // $documentPdfs = array();
-            // $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
-            // foreach($documentVariants as $dv) {
-            //     $documentPdfs[] = $this->generatePdfObject($dv->document_id, $dv->variant_number);
-            // }
-            // dd($documentPdfs);
-            
-            // Sending method: email (This method is avaliable to all users)
-            if($emailSetting->sending_method == 1){
-                // Check if the document type is corresponding the mailing settings
-                if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
-                    
-                    $mailContent->toEmail = $emailSetting->recievers_text;
-                    $mailContent->toName = $user->first_name .' '. $user->last_name;
-                    
-                    // Readout user email options and send
-                    Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => false], 
-                        function ($message) use ($mailContent, $document) {
-                            $message->from($mailContent->fromEmail, $mailContent->fromName);
-                            $message->to($mailContent->toEmail, $mailContent->toName);
-                            $message->subject($mailContent->subject);
-                    });
-                }
+        // Check if the role assigned to the email setting is a system role
+        $role = Role::find($emailSetting->email_recievers_id);
+        if(isset($role->system_role)) $systemRole = $role->system_role; 
+        
+        // Alternate method to generate pdfs for each viewable variant (add as attachments)
+        // $documentPdfs = array();
+        // $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
+        // foreach($documentVariants as $dv) {
+        //     $documentPdfs[] = $this->generatePdfObject($dv->document_id, $dv->variant_number);
+        // }
+        
+        // Sending method: email (This method is avaliable to all users)
+        if($emailSetting->sending_method == 1){
+            // Check if the document type is corresponding the mailing settings
+            if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                
+                $mailContent->toEmail = $emailSetting->recievers_text;
+                $mailContent->toName = $user->first_name .' '. $user->last_name;
+                
+                // Readout user email options and send
+                Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => false], 
+                    function ($message) use ($mailContent, $document) {
+                        $message->from($mailContent->fromEmail, $mailContent->fromName);
+                        $message->to($mailContent->toEmail, $mailContent->toName);
+                        $message->subject($mailContent->subject);
+                });
             }
-            
-            // Sending method: email + attachment (ONLY system roles can recieve documents as attachments)
-            if($systemRole && ($emailSetting->sending_method == 2)){
-                // Check if the document type is corresponding the mailing settings
-                if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
-                    
-                    $mailContent->toEmail = $emailSetting->recievers_text;
-                    $mailContent->toName = $user->first_name .' '. $user->last_name;
-                    
-                    // Get document attachments by variant permissions, for specified user id, then send them as email attachments
-                    $documentAttachments = array();
-                    
-                    $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
-                    foreach($documentVariants as $variant){
-                        foreach($variant->EditorVariantDocument as $k => $docAttach){
-                            if( $docAttach->document_id != $document->id ){
-                                foreach( $docAttach->document->documentUploads as $key => $docUpload){
-                                    if( $key == 0 ){
-                                        $documentAttachments[] = [
-                                            'filePath' => base_path() . '/public/files/documents/'. $docAttach->document->id .'/'. $docUpload->file_path, 
-                                            'fileName' => str_slug($docAttach->document->id .'-'. $docAttach->document->name) . '.pdf'
-                                        ];
-                                    }
+        }
+        
+        // Sending method: email + attachment (ONLY system roles can recieve documents as attachments)
+        if($systemRole && ($emailSetting->sending_method == 2)){
+            // Check if the document type is corresponding the mailing settings
+            if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                
+                $mailContent->toEmail = $emailSetting->recievers_text;
+                $mailContent->toName = $user->first_name .' '. $user->last_name;
+                
+                // Get document attachments by variant permissions, for specified user id, then send them as email attachments
+                $documentAttachments = array();
+                
+                $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
+                foreach($documentVariants as $variant){
+                    foreach($variant->EditorVariantDocument as $k => $docAttach){
+                        if( $docAttach->document_id != $document->id ){
+                            foreach( $docAttach->document->documentUploads as $key => $docUpload){
+                                if( $key == 0 ){
+                                    $documentAttachments[] = [
+                                        'filePath' => base_path() . '/public/files/documents/'. $docAttach->document->id .'/'. $docUpload->file_path, 
+                                        'fileName' => str_slug($docAttach->document->id .'-'. $docAttach->document->name) . '.pdf'
+                                    ];
                                 }
                             }
                         }
                     }
-                        
-                    // Readout user email options and send
-                    Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => true], 
-                        function ($message) use ($mailContent, $document, $documentPdf, $documentAttachments) {
-                            $message->from($mailContent->fromEmail, $mailContent->fromName);
-                            $message->to($mailContent->toEmail, $mailContent->toName);
-                            $message->subject($mailContent->subject);
-                            $message->attach($documentPdf, ['as' => str_slug($document->id .'-'. $document->name) . '.pdf', 'mime' => 'application/pdf']);
-                            // foreach ($documentPdfs as $documentPdf) {
-                            //     $message->attach($documentPdf, ['mime' => 'application/pdf']);
-                            // }
-                            foreach ($documentAttachments as $attachment) {
-                                $message->attach($attachment['filePath'], ['as' => $attachment['fileName'], 'mime' => 'application/pdf']);
-                            }
-                    });
                 }
+                    
+                // Readout user email options and send
+                Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => true], 
+                    function ($message) use ($mailContent, $document, $documentPdf, $documentAttachments) {
+                        $message->from($mailContent->fromEmail, $mailContent->fromName);
+                        $message->to($mailContent->toEmail, $mailContent->toName);
+                        $message->subject($mailContent->subject);
+                        $message->attach($documentPdf, ['as' => str_slug($document->id .'-'. $document->name) . '.pdf', 'mime' => 'application/pdf']);
+                        // foreach ($documentPdfs as $documentPdf) {
+                        //     $message->attach($documentPdf, ['mime' => 'application/pdf']);
+                        // }
+                        foreach ($documentAttachments as $attachment) {
+                            $message->attach($attachment['filePath'], ['as' => $attachment['fileName'], 'mime' => 'application/pdf']);
+                        }
+                });
             }
-            
-            // Sending method: fax (This method sends the document via fax commands)
-            if($emailSetting->sending_method == 3){
-                // Check if the document type is corresponding the mailing settings
-                if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
-                    // Faxing commands
-                }
-            }
-            
-            // Delete generated pdf files
-            // foreach($documentPdfs as $pdf){
-            //     File::delete($pdf);
-            // }
-            
         }
-
+        
+        // Sending method: fax (This method sends the document via fax commands)
+        if($emailSetting->sending_method == 3){
+            // Check if the document type is corresponding the mailing settings
+            if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                // Faxing commands
+            }
+        }
+        
+        // Delete generated pdf files
+        // foreach($documentPdfs as $pdf){
+        //     File::delete($pdf);
+        // }
+            
         // Delete generated pdf file
         File::delete($documentPdf);
     }
@@ -177,7 +189,7 @@ class DocumentsSendPublished extends Command
      *
      * @return string $filename
      */
-    private function generatePdfObject($id, $variantNumber = null)
+    private function generatePdfObject($id, $variantNumber = null, $userId = null )
     {
         $publishedDocumentLink = PublishedDocument::where('url_unique', $id)->first();
         if ((ctype_alnum($id) && !is_numeric($id)) || $publishedDocumentLink != null) {
@@ -187,8 +199,8 @@ class DocumentsSendPublished extends Command
         } else {
             $document = Document::find($id);
         }
-
-        $variantPermissions = $this->document->documentVariantPermission($document);
+        
+        $variantPermissions = ViewHelper::documentVariantPermission($document, $userId);
         if ($variantPermissions->permissionExists == false) {
             return false;
         }

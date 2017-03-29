@@ -5,9 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Helpers\ViewHelper;
 use App\JuristCategory;
+use App\Document;
+
+use App\Http\Repositories\DocumentRepository;
 
 class JuristenPortalCategoryController extends Controller
 {
+    /**
+     * Class constructor.
+     */
+    public function __construct(DocumentRepository $docRepo)
+    {
+        $this->document = $docRepo;
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -19,8 +30,23 @@ class JuristenPortalCategoryController extends Controller
             return redirect('/')->with('message', trans('documentForm.noPermission'));
         }
         $juristenCategories = $juristCategoryOptions = JuristCategory::all();
-
+       
         return view('juristenportal-kategorien.index', compact('juristenCategories', 'juristCategoryOptions'));
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function singlePageAll()
+    {
+        if (!ViewHelper::universalHasPermission(array(6, 35))) {
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+        }
+        $juristenCategories = $juristCategoryOptions = JuristCategory::where('parent',1)->where('active',1)->get();
+       
+        return view('juristenportal-kategorien.showAll', compact('juristenCategories', 'juristCategoryOptions'));
     }
 
     /**
@@ -47,7 +73,7 @@ class JuristenPortalCategoryController extends Controller
         if ($request->has('parent') && $request->get('parent') == 'on') {
             $request->merge(['parent' => 1]);
         }
-        $request->merge(['slug' => str_slug($isoCategory->name), 'active' => true]);
+        // $request->merge(['slug' => str_slug($isoCategory->name), 'active' => true]);
         $juristenCategory = JuristCategory::create($request->all());
 
         return back()->with('message', 'Jurist Kategorie erfolgreich gespeichert.');
@@ -62,6 +88,19 @@ class JuristenPortalCategoryController extends Controller
      */
     public function show($id)
     {
+      $category = JuristCategory::find($id);
+    //   dd( count($category->juristCategories) );
+        if(count($category->juristCategoriesActive )){
+            return view('juristenportal-kategorien.categoryWithSubcategories', compact('category') );
+        }
+        else{
+        $documents = Document::where('jurist_category_id',$category->id)->paginate(10);    
+        $documentsTree = $this->document->generateTreeview($documents, array('pageHome' => true, 'myDocuments' => true, 
+        'showAttachments' => true, 'showHistory' => true));
+       
+       
+         return view('juristenportal-kategorien.category', compact('category','documents','documentsTree') );
+        }
     }
 
     /**
@@ -91,14 +130,12 @@ class JuristenPortalCategoryController extends Controller
             $status = !$request->input('activate');
             $juristenCategory->active = $status;
         }
+        
 
         if ($request->has('category_id')) {
-            if ($juristenCategory->parent) {
-                return back()->with('error', 'Hauptkategorie kann nicht als Unterkategorie gespeichert werden.');
-            }
-            $juristenCategory->iso_category_parent_id = $request->input('category_id');
+            $juristenCategory->jurist_category_parent_id = $request->input('category_id');
         }
-
+        
         $juristenCategory->name = $request->input('name');
         $juristenCategory->slug = str_slug($juristenCategory->name);
         $juristenCategory->save();
