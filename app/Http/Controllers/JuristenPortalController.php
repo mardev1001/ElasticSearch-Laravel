@@ -20,6 +20,7 @@ use App\JuristDocumentsMandant;
 use App\Document;
 use App\EditorVariant;
 use App\DocumentUpload;
+use App\User;
 
 use App\Http\Repositories\DocumentRepository;
 
@@ -421,5 +422,13 @@ class JuristenPortalController extends Controller
         \File::delete($folder.'/'.$filename);
 
         return $newName;
+    }
+    
+    public function viewCalendar()
+    {
+        $data = User::find(1);
+        $users = User::where('active', 1)->get();
+        //dd($users);
+        return view('juristenportal.calendar', compact('users', 'data'));
     }
 }

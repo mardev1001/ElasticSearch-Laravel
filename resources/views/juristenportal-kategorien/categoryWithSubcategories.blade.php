@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('page-title') {{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }}  - {{ $category->name }}@stop
+@section('page-title') {{ ( trans('navigation.juristenPortalRechtsablage') ) }} {{ trans('navigation.kategorien') }}  - {{ $category->name }}@stop
 
 @section('content')
 
@@ -18,10 +18,10 @@
                 @foreach($category->juristCategoriesActive as $cat)
                     @if($cat->active)
                         <li>
-                            <a href="{{ url('juristenportal-kategorien/'. $cat->id) }}">{{ $cat->name }}</a>
+                            <a href="{{ url('rechtsablage/'. $cat->id) }}">{{ $cat->name }}</a>
                             <ul class="level-2">
                             @foreach($cat->juristCategoriesActive as $c)
-                                <li><a href="{{ url('juristenportal-kategorien/'. $c->id ) }}">{{$c->name}}</a></li>
+                                <li><a href="{{ url('rechtsablage/'. $c->id ) }}">{{$c->name}}</a></li>
                             @endforeach
                             </ul>
                         </li>

@@ -825,6 +825,11 @@ $(function() {
     });
     /* End colorpicker init */
 
+    /* fullCalendar init */
+    $('#calendar').fullCalendar({
+        // put your options and callbacks here
+    });
+    /* End fullCalendar init */
 
 });
 /*End function() wrapper*/

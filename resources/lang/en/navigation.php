@@ -49,7 +49,8 @@ return [
     'newInventory'          => 'neu anlegen',
     'deduct'                => 'Materialien abrechnen',
     'inventoryAbrechnen'    => 'Materialien abrechnen',
-    'juristenPortal'        => 'Juristenportal',
+    'juristenPortal'        => 'Beratung',
+    'juristenPortalRechtsablage' => 'Rechtsablage',
     'juristenPortalCategories'  => 'Kategorien',
     'wiedervorlagenStatus'  => 'Wiedervorlagen Status',
 

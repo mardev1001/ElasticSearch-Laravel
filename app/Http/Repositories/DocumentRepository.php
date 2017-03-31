@@ -667,8 +667,6 @@ class DocumentRepository
      */
     public function checkUploadType($data, $model, $pdf)
     {
-     
-        
         $docTypeNews = DocumentType::find(DocumentType::NEWS);
         $docTypeIso = DocumentType::find(DocumentType::ISO_DOKUMENTE);
          
@@ -689,7 +687,13 @@ class DocumentRepository
      */
     public function processOrSave($collections, $pluckedCollection, $requests, $modelName, $fields = array(), $notIn = array(), $tester = false)
     {
+        $triggerDelete = false;
+        if($modelName == 'DocumentMandantMandant'){
+            $triggerDelete = true;
+           
+        }
         $modelName = '\App\\' . $modelName;
+        $modelStringName = $modelName;
         if (count($collections) < 1 && count($pluckedCollection) < 1) {
             if ($tester == true) {
                 //  dd($requests);
@@ -705,17 +709,26 @@ class DocumentRepository
                 }
 
                 $model->save();
-                if ($tester == true)
-                    $array[] = $model;
+                $array[] = $model->id;
+                // if ($triggerDelete == true){
+                //     $array[] = $model->id;
+                 
+                // }
             }
-            // if($tester == true)
-            //  var_dump($array);
+            //  if($triggerDelete == true){
+            //     dd($array); 
+            //  }
+            //   dd($modelStringName);
+            // if($modelStringName == '\App\DocumentApproval')
+            
         } else {
             // \DB::enableQueryLog();
             $modelDelete = $modelName::where('id', '>', 0);
+             
             if (count($notIn) > 0) {
 
                 foreach ($notIn as $n => $in) {
+                   
                     $modelDelete->whereIn($n, $in);
                     /* if($tester == true){
                          var_dump($n);
@@ -725,29 +738,52 @@ class DocumentRepository
 
                 }
             }
+            if($triggerDelete == true){
+                $additionalFix = $modelDelete;
+                $additionalFix = $additionalFix->get();
+                
+            }
+            if ($tester == true) {
+                // dd($modelDelete->get());
+            }
             $modelDelete->delete();
+            if($triggerDelete == true){
+                foreach($additionalFix as $fx){
+                    $fx->delete();
+                }
+               
+            }
             if ($tester == true) {
                 // dd( \DB::getQueryLog() );
-                //var_dump($requests);
-                //var_dump($modelDelete->get());
-                // echo '<hr/>';
-                //echo '<hr/>';
+                
             }
             if (count($requests) > 0) {
-
+                
                 foreach ($requests as $request) {
-                    //if( !is_array($pluckedCollection) )
-                    //$pluckedCollection = (array) $pluckedCollection;
-                    //if ( !in_array($request, $pluckedCollection)) {
-
-                    $model = new $modelName();
-                    foreach ($fields as $k => $field) {
-                        if ($field == 'inherit')
-                            $model->$k = $request;
-                        else
-                            $model->$k = $field;
+                    $exists = false;
+                     if($triggerDelete == true){
+                     
+                        $result =  $modelName::where('document_mandant_id',$fields['document_mandant_id'])->get();
+                    //   dd($fields['document_mandant_id']);
+                    //   dd($fields);
+                    //   dd($result);
+                        if( count($result) > 0){
+                            $variant =  $result[0]->documentMandant->editorVariant;
+                            $exists = true;
+                        }
                     }
-                    $model->save();
+                    if($exists == false){
+                        $model = new $modelName();
+                        foreach ($fields as $k => $field) {
+                           
+                            if ($field == 'inherit')
+                                $model->$k = $request;
+                            else
+                                $model->$k = $field;
+                        }
+                        $model->save();
+                    }
+                    
                 }
                 //}
                 /* if($tester == true)

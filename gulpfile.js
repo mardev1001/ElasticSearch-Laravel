@@ -28,6 +28,7 @@ var cmsScripts = [
     "datatables/media/js/jquery.dataTables.js",
     "twitter-bootstrap-wizard/jquery.bootstrap.wizard.js",
     "bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
+    "fullcalendar/dist/fullcalendar.js",
     "js/**",
     //frontend //just the folder  look at line 2:)
 

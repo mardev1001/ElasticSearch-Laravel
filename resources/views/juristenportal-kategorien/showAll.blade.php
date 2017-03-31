@@ -20,21 +20,21 @@
                     <ul class="level-1">
                         @foreach( $juristenCategories as $jueristenCategory)
                             <li>
-                            <a href="{{url('juristenportal-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
+                            <a href="{{url('rechtsablage/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
                                 @if( count($jueristenCategory->juristCategoriesActive) ) <span class="fa arrow"></span> @endif
                             </a>
                             @if( count($jueristenCategory->juristCategoriesActive) )
                             <ul class="level-2">
                                 @foreach( $jueristenCategory->juristCategoriesActive as $subLevel1)
                                 <li>
-                                    <a href="{{url('juristenportal-kategorien/'.$subLevel1->id)}}">{{ $subLevel1->name }}
+                                    <a href="{{url('rechtsablage/'.$subLevel1->id)}}">{{ $subLevel1->name }}
                                         @if( count($subLevel1->juristCategoriesActive) ) <span class="fa arrow"></span> @endif
                                     </a>
                                     @if( count( $subLevel1->juristCategoriesActive ) )
                                     <ul class="level-3">
                                         @foreach( $subLevel1->juristCategoriesActive as $subLevel2)
                                             <li>
-                                                <a href="{{url('juristenportal-kategorien/'.$subLevel2->id)}}">{{ $subLevel2->name }}</a>
+                                                <a href="{{url('rechtsablage/'.$subLevel2->id)}}">{{ $subLevel2->name }}</a>
                                             </li>
                                         @endforeach
                                     </ul>

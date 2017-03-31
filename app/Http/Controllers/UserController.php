@@ -294,12 +294,12 @@ class UserController extends Controller
         }
 
         $user = User::create($request->all());
+        // $user = new User($request->all());
         
-        dd($user->getattributes());
-
         $userUpdate = User::find($user->id);
         $userUpdate->created_by = Auth::user()->id;
         $userUpdate->last_login = null;
+        $this->generateUsername($userUpdate);
         $userUpdate->save();
 
         // $defaultRoles = $this->utils->getDefaultUserRoleSettings();
@@ -1048,4 +1048,35 @@ class UserController extends Controller
 
         return $noDeleteArr;
     }
+    
+    private function generateUsername(User $user){
+        
+        $counter = 1;
+        $username = false;
+        $part1 = str_slug($user->last_name);
+        $part2 = str_slug($user->first_name);
+        $nameLength = strlen($part2);
+        
+        for($i=1; $i <= $nameLength; $i++){
+            $tmpUsername = $part1 . substr($part2, 0, $i);
+            $dbUser = User::where('username', $tmpUsername)->first();
+            if(is_null($dbUser)) {
+                $username = $tmpUsername;
+                break;
+            }
+        }
+        
+        while($username == false) {
+            $tmpUsername = $part1 . $part2 . $counter;
+            $dbUser = User::where('username', $tmpUsername)->first();
+            if(is_null($dbUser)) {
+                $username = $tmpUsername;
+                break;
+            }
+            $counter += 1;
+        }
+        
+        $user->username = $username;
+    }
+    
 }

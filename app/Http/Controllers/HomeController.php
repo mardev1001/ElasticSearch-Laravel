@@ -70,9 +70,9 @@ class HomeController extends Controller
         // dd($myRundCoauthor);
 
         $rundschreibenMy = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-        // ->select(\DB::raw('*, MAX(version) AS max_version')) // NEPTUN-620
         ->where('documents.active', 1)
         ->where('document_types.document_art', 0)
+        ->where('document_types.jurist_document', 0)
         ->where(
             /* Neptun-345 */
             function ($query) use ($myRundCoauthor) {
@@ -80,9 +80,15 @@ class HomeController extends Controller
                 $query->orWhereIn('documents.id', $myRundCoauthor);
             }
         );
-        // )->groupBy('document_group_id'); // NEPTUN-620
         
-        // if($request->debug == true) dd($rundschreibenMy->get();
+        // JIRA Task NEPTUN-620
+        // Filter highest document version
+        $myDocIds = array();
+        $docGroupIds = $rundschreibenMy->pluck('document_group_id')->unique()->sort()->values();
+        foreach($docGroupIds as $groupId){
+            $myDocIds[] = Document::where('document_group_id', $groupId)->orderBy('version', 'desc')->pluck('id')->first();
+        }
+        $rundschreibenMy = $rundschreibenMy->whereIn('documents.id', $myDocIds);
         
         // JIRA Task NEPTUN-657
         if ($filter) {
@@ -112,10 +118,9 @@ class HomeController extends Controller
         $rundschreibenMy = $rundschreibenMy->limit(50)
         ->orderBy('documents.id', 'desc')->get(['documents.id as id']);
         
-        // SELECT * , MAX( version )  FROM  `documents` GROUP BY document_group_id ORDER BY id
-
         $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->orderBy('date_published', 'desc')
         ->paginate(10, ['*'], 'meine-rundschrieben');
+        
         // dd($rundschreibenMy);
         $rundschreibenMyTree = $this->document->generateTreeview($rundschreibenMy, array('pageHome' => true, 'showHistory' => true, 'myDocuments' => true));
 

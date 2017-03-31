@@ -128,7 +128,7 @@ class JuristenPortalImport extends Command
         }
         
         $document = new Document();
-        $document->document_type_id = null;
+        $document->document_type_id = 7;
         $document->user_id = $user_id;
         if(isset($metaData['Title'])){
             $document->name = $metaData['Title'];

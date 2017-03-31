@@ -176,26 +176,31 @@ Route::group(array('middleware' => ['auth']), function () {
 
     // Meta info
 
-    Route::get('juristenportal/meta-info', 'JuristenPortalController@metaInfo');
-    Route::post('juristenportal/meta-info', 'JuristenPortalController@storeMetaInfo');
-    Route::patch('juristenportal/meta-info/{juristenCategoryMeta}/update', 'JuristenPortalController@updateMetaInfo');
-    Route::patch('juristenportal/meta-info/{metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
-    Route::patch('juristenportal/meta-info/{metaField}/update-meta-filed', 'JuristenPortalController@updateMetaField');
-    Route::get('juristenportal/destroy-juristen-category-meta/{juristenCategoryMeta}', 'JuristenPortalController@deleteJuristenCategoryMeta');
-    Route::post('juristenportal/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
-    Route::patch('juristenportal/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
+    Route::get('beratungsportal/meta-info', 'JuristenPortalController@metaInfo');
+    Route::post('beratungsportal/meta-info', 'JuristenPortalController@storeMetaInfo');
+    Route::patch('beratungsportal/meta-info/{juristenCategoryMeta}/update', 'JuristenPortalController@updateMetaInfo');
+    Route::patch('beratungsportal/meta-info/{metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
+    Route::patch('beratungsportal/meta-info/{metaField}/update-meta-filed', 'JuristenPortalController@updateMetaField');
+    Route::get('beratungsportal/destroy-juristen-category-meta/{juristenCategoryMeta}', 'JuristenPortalController@deleteJuristenCategoryMeta');
+    Route::post('beratungsportal/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
+    Route::patch('beratungsportal/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     
-    Route::get('juristenportal/akten', 'JuristenPortalController@akten');
-    Route::post('juristenportal/akten', 'JuristenPortalController@storeAkten');
+    Route::get('beratungsportal/akten', 'JuristenPortalController@akten');
+    Route::post('beratungsportal/akten', 'JuristenPortalController@storeAkten');
     
-    Route::get('juristenportal/notiz', 'JuristenPortalController@notiz');
-    Route::get('juristenportal/upload', 'JuristenPortalController@uploadView');
-    Route::post('juristenportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
-    Route::resource('juristenportal', 'JuristenPortalController');
+    Route::get('beratungsportal/notiz', 'JuristenPortalController@notiz');
+    Route::get('beratungsportal/upload', 'JuristenPortalController@uploadView');
+    Route::post('beratungsportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
+    Route::get('beratungsportal/calendar', 'JuristenPortalController@viewCalendar');
+    Route::resource('beratungsportal', 'JuristenPortalController');
     
-    Route::get('juristenportal-kategorien/alle', 'JuristenPortalCategoryController@singlePageAll');
-    Route::resource('juristenportal-kategorien', 'JuristenPortalCategoryController');
+    Route::get('rechtsablage/alle', 'JuristenPortalCategoryController@singlePageAll');
+    Route::resource('rechtsablage', 'JuristenPortalCategoryController');
 
+    
+    /*
+     * Developer Routes
+     */
     
     //Marijan Juristen Upload cleaner
     /*Route::get('what',function(){
@@ -222,9 +227,7 @@ Route::group(array('middleware' => ['auth']), function () {
             $document->delete();
         }
     });*/
-    /*
-     * Developer Routes
-     */
+    
 
     // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
     // Route::get('dev/sandbox/pdf/{id}', 'DocumentController@generatePdfObject');

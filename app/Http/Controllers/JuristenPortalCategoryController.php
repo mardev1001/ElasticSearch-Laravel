@@ -140,7 +140,7 @@ class JuristenPortalCategoryController extends Controller
         $juristenCategory->slug = str_slug($juristenCategory->name);
         $juristenCategory->save();
 
-        return back()->with('message', 'Jurist Kategorie erfolgreich aktualisiert.');
+        return back()->with('message', 'Rechtsablage Kategorie erfolgreich aktualisiert.');
     }
 
     /**

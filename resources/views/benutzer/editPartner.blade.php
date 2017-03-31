@@ -18,7 +18,10 @@ Benutzer bearbeiten
         
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('username', $user, old('username'), trans('benutzerForm.username'), trans('benutzerForm.username'), true) !!}
+                       {{-- ViewHelper::setInput('username', $user, old('username'), trans('benutzerForm.username'), trans('benutzerForm.username'), true) --}}
+                       <label>{{ trans('benutzerForm.username') }}</label>
+                       <input type="text" class="form-control" name="username" placeholder="{{ trans('benutzerForm.username') }}" value="{{$user->username}}" readonly>
+                       
                     </div>   
                 </div>
                 

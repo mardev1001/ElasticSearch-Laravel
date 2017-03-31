@@ -76,7 +76,7 @@ class DocumentsSendPublished extends Command
         $emailSetting = $reciever->userEmailSetting;
         
         // Generate temporary pdf export of the document variants
-        $documentPdf = $this->generatePdfObject($document->id, null, $emailSetting->user_id);
+        // $documentPdf = $this->generatePdfObject($document->id, null, $emailSetting->user_id);
         
         // Fill the email container class with adequate values
         $mailContent = new \StdClass();
@@ -98,11 +98,14 @@ class DocumentsSendPublished extends Command
         if(isset($role->system_role)) $systemRole = $role->system_role; 
         
         // Alternate method to generate pdfs for each viewable variant (add as attachments)
-        // $documentPdfs = array();
-        // $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
-        // foreach($documentVariants as $dv) {
-        //     $documentPdfs[] = $this->generatePdfObject($dv->document_id, $dv->variant_number);
-        // }
+        $documentPdfs = array();
+        $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
+        foreach($documentVariants as $dv) {
+            $documentPdfs[] = [
+                'filePath' => $this->generatePdfObject($dv->document_id, $dv->variant_number, $user->id),
+                'fileName' => str_slug($dv->document->id .'-v'. $dv->variant_number .'-'. $dv->document->name) . '.pdf'
+            ];
+        }
         
         // Sending method: email (This method is avaliable to all users)
         if($emailSetting->sending_method == 1){
@@ -151,14 +154,15 @@ class DocumentsSendPublished extends Command
                     
                 // Readout user email options and send
                 Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => true], 
-                    function ($message) use ($mailContent, $document, $documentPdf, $documentAttachments) {
+                    // function ($message) use ($mailContent, $document, $documentPdf, $documentAttachments) {
+                    function ($message) use ($mailContent, $document, $documentPdfs, $documentAttachments) {
                         $message->from($mailContent->fromEmail, $mailContent->fromName);
                         $message->to($mailContent->toEmail, $mailContent->toName);
                         $message->subject($mailContent->subject);
-                        $message->attach($documentPdf, ['as' => str_slug($document->id .'-'. $document->name) . '.pdf', 'mime' => 'application/pdf']);
-                        // foreach ($documentPdfs as $documentPdf) {
-                        //     $message->attach($documentPdf, ['mime' => 'application/pdf']);
-                        // }
+                        // $message->attach($documentPdf, ['as' => str_slug($document->id .'-'. $document->name) . '.pdf', 'mime' => 'application/pdf']);
+                        foreach ($documentPdfs as $documentPdf) {
+                            $message->attach($documentPdf['filePath'], ['as' => $documentPdf['fileName'], 'mime' => 'application/pdf']);
+                        }
                         foreach ($documentAttachments as $attachment) {
                             $message->attach($attachment['filePath'], ['as' => $attachment['fileName'], 'mime' => 'application/pdf']);
                         }
@@ -174,13 +178,13 @@ class DocumentsSendPublished extends Command
             }
         }
         
-        // Delete generated pdf files
-        // foreach($documentPdfs as $pdf){
-        //     File::delete($pdf);
-        // }
-            
         // Delete generated pdf file
-        File::delete($documentPdf);
+        // File::delete($documentPdf);
+        
+        // Delete generated pdf files
+        foreach($documentPdfs as $pdf){
+            File::delete($pdf['filePath']);
+        }
     }
     
     

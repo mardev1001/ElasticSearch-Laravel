@@ -6,6 +6,7 @@ use Auth;
 use File;
 use App\User;
 use App\Mandant;
+use App\Role;
 use App\MandantInventoryAccounting;
 use App\MandantUser;
 use App\MandantUserRole;
@@ -469,6 +470,7 @@ class ViewHelper
     public static function canCreateEditDoc()
     {
         $uid = Auth::user()->id;
+        // dd($uid);
         $mandantUsers = MandantUser::where('user_id', $uid)->get();
 
         foreach ($mandantUsers as $mu) {
@@ -1418,15 +1420,25 @@ class ViewHelper
      *
      * @return int $userNumber
      */
-    public static function countMailingUsers($documentId, $variantNumber)
+    public static function countSendingRecievers($documentId, $variantNumber, $sendingMethod = 1)
     {
         $allMandants = false;
         $document = Document::find($documentId);
         
         // Get all users with sending options
-        $settingsUserIds = UserEmailSetting::where('sending_method', 4)
+        $settingsUserIds = UserEmailSetting::where('sending_method', $sendingMethod)
             ->whereIn('document_type_id', [0, $document->document_type_id])
-            ->where('active', 1)->groupBy('user_id')->pluck('user_id');
+            ->where('active', 1)->groupBy('user_id');
+        
+        // Check if the role assigned to the email setting is a system role
+        // Only for sending method 2 - Email + attach
+        if($sendingMethod == 2){
+            $systemRolesArray = Role::where('system_role', true)->pluck('id');
+            $settingsUserIds->whereIn('email_recievers_id', $systemRolesArray);
+        }
+            
+        $settingsUserIds = $settingsUserIds->pluck('user_id');
+        
         $users = User::whereIn('id', $settingsUserIds)->get();
         
         // Get list of user mandants that have permission for the document variant

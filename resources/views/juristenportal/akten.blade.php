@@ -42,7 +42,7 @@
                  <div class="box box-white">
                     @foreach($akten as $akt)
                     <div class="row">
-                        {!! Form::open(['url' => ['juristenportal/akten/'.$akt->id.'/update'], 'method' => 'patch']) !!}
+                        {!! Form::open(['url' => ['beratungsportal/akten/'.$akt->id.'/update'], 'method' => 'patch']) !!}
                         <div class="col-xs-12 col-md-5 col-lg-5">
                              <input type="text" class="form-control" name="name" value="{{ $akt->name }}" placeholder="Name"/>
                         </div>

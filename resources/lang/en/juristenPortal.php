@@ -1,12 +1,13 @@
 <?php
 
 return [
-    'juristenportal' => 'Juristenportal',
-    'documents' => 'Dokumente',
+    'juristenportal' => 'Beratungsportal',
+    'documents' => 'Dokumente Beratung',
     'upload' => 'Upload',
     'calendar' => 'Kalender',
     'files' => 'Akten',
     'notes' => 'Notizen',
+    'createNotes' => 'Notiz ablegen',
     'createFile' => 'Akte anlegen',
     'overview' => 'Übersicht',
     'category' => 'Kategorie',
@@ -22,4 +23,7 @@ return [
     
     //akten
     'aktenArt' => 'Aktenart',
+    
+    //calendar
+    'calendar'  =>  'Kalender',
 ];

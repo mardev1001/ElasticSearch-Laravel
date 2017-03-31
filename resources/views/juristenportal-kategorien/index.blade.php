@@ -1,19 +1,19 @@
-{{-- ISO KATEGORIEN --}}
+{{-- Juristen kategor KATEGORIEN --}}
 
 @extends('master')
 
-@section('page-title') NEPTUN-Verwaltung - {{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} @stop
+@section('page-title') NEPTUN-Verwaltung - {{ ( trans('navigation.juristenPortalRechtsablage') ) }} {{ trans('navigation.kategorien') }} @stop
 
 @section('content')
 
 <fieldset class="form-group">
     <div class="box-wrapper">
-        <h4 class="title">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} {{ trans('isoKategorienForm.add') }} </h4>
+        <h4 class="title">{{ ( trans('navigation.juristenPortalRechtsablage') ) }} {{ trans('navigation.kategorien') }} {{ trans('isoKategorienForm.add') }} </h4>
         <div class="box box-white">
       
             <!-- input box-->
             
-            {!! Form::open(['route' => 'juristenportal-kategorien.store']) !!}
+            {!! Form::open(['route' => 'rechtsablage.store']) !!}
                 <div class="row">
                     <div class="col-md-6 col-lg-4"> 
                         <div class="form-group">
@@ -60,22 +60,23 @@
 
 
 <fieldset class="form-group">
-    
-     
     <div class="box-wrapper">
         <div class="row">
             <div class="col-md-12">
                 <h4 class="title">{{ trans('juristenPortal.overview') }}</h4>
                 <div class="box box-white">
-                    <table class="table">
-                        <tr>
-                            <th colspan="3">
-                                {{ trans('juristenPortal.categories') }}
-                            </th>
-                        </tr>
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-5 vertical-center">
+                                    {{ trans('juristenPortal.categories') }}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
                         @foreach($juristenCategories as $jueristenCategory)
                       
-                        {!! Form::open(['route' => ['juristenportal-kategorien.update', 'juristenportal-kategorien' => $jueristenCategory->id], 'method' => 'PATCH']) !!}
+                        {!! Form::open(['route' => ['rechtsablage.update', 'rechtsablage' => $jueristenCategory->id], 'method' => 'PATCH']) !!}
                          <tr>
                             <td class="col-xs-5 vertical-center">
                                  <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $jueristenCategory->name }}" required/>
@@ -107,7 +108,8 @@
                                 </select>
                                 @endif 
                             </td>
-                            <td class="col-xs-3 text-right table-options">
+                            
+                            <td class=" text-right table-options">
         
                                 @if($jueristenCategory->active)
                                 <button class="btn btn-success" type="submit" name="activate" value="1">{{ trans('adressatenForm.active') }}</button>
@@ -119,7 +121,7 @@
                                {!! Form::close() !!} 
                                
                                @if( count($jueristenCategory->isJuristCategoryParent) < 1 && count($jueristenCategory->hasAllDocuments) < 1  )
-                                {!! Form::open(array('route' => array('juristenportal-kategorien.destroy', $jueristenCategory->id), 'method' => 'delete')) !!}
+                                {!! Form::open(array('route' => array('rechtsablage.destroy', $jueristenCategory->id), 'method' => 'delete')) !!}
                                         <button  type="submit" href="" class="btn btn-danger delete-prompt"
                                          data-text="Wollen Sie diesen Kategorie wirklich löschen?">
                                              löschen
@@ -130,6 +132,7 @@
                             
                         </tr>
                         @endforeach
+                        </tbody>
                     </table>
                 </div>
             </div>

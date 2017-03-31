@@ -344,10 +344,6 @@
                             <h4 class="modal-title">{{ trans('documentForm.publish') }}</h4>
                         </div>
                         <div class="modal-body">
-                            {{ trans('documentForm.email') }}: {{ $emailSettings['email'] }} <br>
-                            {{ trans('documentForm.email-attachment') }}: {{ $emailSettings['emailAttached'] }} <br>
-                            {{-- {{ trans('documentForm.fax') }}: {{ $emailSettings['fax'] }} <br> --}}
-                            {{-- {{ trans('documentForm.mail') }}: {{ $emailSettings['mail'] }} <br> --}}
                             
                             <div class="clearfix"></div> <br>
                             
@@ -355,8 +351,10 @@
                                 <div class="attachments document-attachments">
                                     <strong>Variante {{$variant->variant_number}}: </strong> <br>
                                     <div>
-                                        Briefe: {{ ViewHelper::countMailingUsers($variant->document_id, $variant->variant_number) }} <br>
-                                        {{--<a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download') }}">PDF ausdrucken</a><br>--}}
+                                        {{ trans('documentForm.email') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 1) }} <br>
+                                        {{ trans('documentForm.email-attachment') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 2) }} <br>
+                                        {{ trans('documentForm.mail') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 4) }} <br>
+                                        
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/post-versand/'. $variant->variant_number) }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
                             

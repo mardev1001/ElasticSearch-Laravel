@@ -1087,7 +1087,9 @@ class DocumentController extends Controller
 
                     /*Fix where where variant is Alle and roles different from All*/
                     $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
+                    
                         if (count($documentMandants)) {
+                        
                             foreach ($documentMandants as $documentMandant) {
                                 $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->get();
                                 $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->pluck('role_id');
@@ -1124,11 +1126,12 @@ class DocumentController extends Controller
                     $editorVariant->approval_all_mandants = 0;
                     $dirty = $this->dirty($dirty, $editorVariant);
                     $editorVariant->save();
-
+                  
                     /*Create DocumentManant */
                     $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
-
+                    
                     if (count($documentMandants) < 1) {
+                         
                         $documentMandant = new DocumentMandant();
                         $documentMandant->document_id = $id;
                         $documentMandant->editor_variant_id = $editorVariant->id;
@@ -1137,32 +1140,40 @@ class DocumentController extends Controller
                         $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
                     }
                    /*End Create DocumentManant */
-
+                    
                     /* Create DocumentManant roles*/
+                  
                     foreach ($documentMandants as $documentMandant) {
                         $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->get();
                         $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->pluck('role_id');
-
+                        // dd('brejk2');
+                        
                         if ($request->has('roles')) {
                             $this->document->processOrSave($documentMandantRoles, $documentMandantRolesPluck, $request->get('roles'), 'DocumentMandantRole',
                             array('document_mandant_id' => $documentMandant->id, 'role_id' => 'inherit'),
                             array('document_mandant_id' => array($documentMandant->id)));
                         } elseif (!$request->has('roles')) {
                             $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->delete();
+                            
                         }
                     }
 
                     /*End Create DocumentManant roles*/
-
+                   
                     /* Create DocumentManant mandant*/
                     foreach ($documentMandants as $documentMandant) {
-                        $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->get();
-                        $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->pluck('mandant_id');
-
-                        //dd($request->get($k));
-                        //INSERTS LAST VALUES->check foreach!
-                        $this->document->processOrSave($documentMandantMandats, $documentMandantMandatsPluck, $request->get($k), 'DocumentMandantMandant',
-                            array('document_mandant_id' => $documentMandant->id, 'mandant_id' => 'inherit'),
+                      $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->get();
+                      $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->pluck('mandant_id');
+                    //   dd($documentMandantMandats);
+                        
+                    //   dd($request->all());
+                      // dd($k);
+                      // dd($request->get($k));
+                      //INSERTS LAST VALUES->check foreach!
+                      // collections, $pluckedCollection, $requests, $modelName, $fields = array(), $notIn = array(), $tester = false)
+                     
+                      $this->document->processOrSave($documentMandantMandats, $documentMandantMandatsPluck, $request->get($k),
+                      'DocumentMandantMandant', array('document_mandant_id' => $documentMandant->id, 'mandant_id' => 'inherit'),
                             array('document_mandant_id' => array($documentMandant->id)), true);
                     }
                     /*End Create DocumentManant mandant*/
@@ -1220,6 +1231,7 @@ class DocumentController extends Controller
                     /*End Create DocumentManant roles*/
 
                     /* Delete variant mandants*/
+                    
                         $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->delete();
                     /* End Delete variant mandants*/
             }
@@ -1250,6 +1262,7 @@ class DocumentController extends Controller
                    /*End Create DocumentManant */
 
                     /* Delete DocumentManant roles*/
+                    
                     foreach ($documentMandants as $documentMandant) {
                         $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->delete();
 
@@ -2076,6 +2089,8 @@ class DocumentController extends Controller
         }
         $variants = $variantPermissions->variants;
         /* End Button check */
+        
+        // dd($variants);
 
         /* User and freigabe comment visibility */
         $commentVisibility = $this->commentVisibility($document);
@@ -2083,10 +2098,10 @@ class DocumentController extends Controller
         // Prepares and stores email settings entry counts to show
         // $settingsQuery = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->get();
         $emailSettings = array();
-        $emailSettings['email'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 1)->get()->count();
-        $emailSettings['emailAttached'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 2)->get()->count();
-        $emailSettings['fax'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 3)->get()->count();
-        $emailSettings['mail'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 4)->get()->count();
+        // $emailSettings['email'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 1)->get()->count();
+        // $emailSettings['emailAttached'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 2)->get()->count();
+        // $emailSettings['fax'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 3)->get()->count();
+        // $emailSettings['mail'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 4)->get()->count();
         
         return view('dokumente.freigabe', compact('document', 'variants', 'documentCommentsUser', 'documentCommentsFreigabe', 'published',
         'canPublish', 'hasPermission', 'authorised', 'authorisedPositive', 'commentVisiblity', 'emailSettings'));

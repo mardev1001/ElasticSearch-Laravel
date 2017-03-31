@@ -51,20 +51,21 @@
                     
                     @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
                         <li>
-                            <a href="{{ url('juristenportal-kategorien') }}">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
+                            <a href="{{ url('rechtsablage') }}">{{ ( trans('navigation.juristenPortalRechtsablage') ) }} {{ trans('navigation.kategorien') }} </a>
                         </li>
+                    @endif
+                    
+                    
+                    @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                            <li>
+                                <a href="{{ url('wiedervorlagen-status') }}">{{ ucfirst( trans('navigation.wiedervorlagenStatus') ) }}</a>
+                            </li>
                     @endif
                     
                     @if( ViewHelper::universalHasPermission( array(6) ) == true )
                         <li>
                             <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
                         </li>
-                    @endif
-                    
-                    @if( ViewHelper::universalHasPermission( array(6) ) == true ) 
-                            <li>
-                                <a href="{{ url('wiedervorlagen-status') }}">{{ ucfirst( trans('navigation.wiedervorlagenStatus') ) }}</a>
-                            </li>
                     @endif
                     
                     @if( ViewHelper::universalHasPermission( array(6) ) == true )

@@ -5,11 +5,12 @@
     
     <div class="sidebar-nav navbar-collapse" id="nav-collapse">
         <ul class="nav" id="side-menu">
-
+            <!--startseite-->
             <li>
                 <a href="/" class="home-class">Startseite</a>
             </li>
-            
+            <!--end startseite-->
+            <!--favorites-->
             <li>
                 <a href="{{ url('favoriten') }}">{{ ucfirst( trans('navigation.favorites') ) }}
                     <span class="fa arrow"></span></a>
@@ -19,7 +20,8 @@
                         </li>
                     </ul>
             </li>
-            
+            <!--end favorites-->
+            <!--erweiterte suche-->
             <li>
                 <a href="{{ url('suche') }}">{{ ucfirst( trans('navigation.advanced_search') ) }}
                     <span class="fa arrow"></span></a>
@@ -29,7 +31,8 @@
                         </li>
                     </ul>
             </li>
-            
+            <!--end erweiterte suche-->
+            <!--dokumente-->
             @if(!empty($documentTypesMenu))
                         
                 @foreach($documentTypesMenu as $documentTypeMenu)
@@ -167,9 +170,9 @@
             </li>
             --}}
             
-              
+            <!--materialien-->  
             @if( ViewHelper::universalHasPermission( array(7,34) ) == true )
-                <!--inventarliste-->
+                
                 <li class="">
                     <a href="{{ url('inventarliste') }}">
                         {{ ucfirst( trans('navigation.inventoryList') )}}
@@ -192,10 +195,12 @@
                            
                         </ul>
                     @endif
-                </li><!--end inventarliste-->
+                </li>
             @endif
+            <!--end materialien-->
+            
+            <!--wiki-->
             @if( ViewHelper::universalHasPermission( array(15,16) ) == true ) 
-                <!--wiki-->
                 <li class="">
                     <a href="{{ url('wiki') }}">{{ ucfirst(trans('navigation.wiki')) }}
                         <span class="fa arrow"></span></a>
@@ -231,87 +236,110 @@
                             </li>
                         @endif
                     </ul>
-                </li><!-- end wiki -->
+                </li>
             @endif
+            <!--end wiki-->
             
-            
+            <!--notiz-->
             @if( ViewHelper::universalHasPermission( array(35, 36), false ) == true ) 
-                <!--notiz-->
                 <li class="">
-                    <a href="{{ url('#') }}">{{ ucfirst(trans('juristenPortal.notes')) }}</a>
-                    <!--<a href="{{ url('juristenportal/notiz') }}">{{ ucfirst(trans('navigation.notes')) }}</a>-->
-                </li><!-- end notiz -->
+                    <a href="{{ url('#') }}">{{ ucfirst(trans('juristenPortal.createNotes')) }}</a>
+                    <!--<a href="{{ url('beratungsportal/notiz') }}">{{ ucfirst(trans('navigation.notes')) }}</a>-->
+                </li>
             @endif
+            <!-- end notiz -->
+            
+             <!--beratungsportal-->
+             <!--end beratungsportal-->
+            
+             <!--juristenportal-->
             @if( ViewHelper::universalHasPermission( array(35, 36), false ) == true ) 
-                <!--juristenportal-->
                 <li class="">
-                    <a href="{{ url('juristenportal') }}">{{ ucfirst(trans('juristenPortal.juristenportal')) }}
+                    <a href="{{ url('beratungsportal') }}">{{ ucfirst(trans('juristenPortal.juristenportal')) }}
                         <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
+                        
+                            <li>
+                                <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
+                            </li>
+                        
+                            <li>
+                                <a href="{{ url('beratungsportal/calendar') }}">{{ ucfirst( trans('juristenPortal.calendar') ) }} </a>
+                            </li>
                             
                             <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.documents') ) }} </a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ url('juristenportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.calendar') ) }} </a>
-                            </li>
-                        
-                            <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.files') ) }} </a>
-                            </li>
-                            <li>
-                                <a href="{{url('juristenportal-kategorien/alle')}}"> @lang('navigation.juristenPortalCategories')
-                                    @if( count($juristenCategories) ) <span class="fa arrow"></span> @endif
-                                </a>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.notes') ) }} <span class="fa arrow"></span></a>
                                 
-                                @if(count($juristenCategories))
                                 <ul class="nav nav-third-level">
-                                    @foreach( $juristenCategories as $jueristenCategory)
-                                        <li>
-                                        <a href="{{url('juristenportal-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
-                                            @if( count($jueristenCategory->juristCategoriesActive) ) <span class="fa arrow"></span> @endif
-                                        </a>
-                                        @if( count($jueristenCategory->juristCategoriesActive) )
-                                        <ul class="nav nav-fourth-level">
-                                            @foreach( $jueristenCategory->juristCategoriesActive as $subLevel1)
-                                            <li>
-                                                <a href="{{url('juristenportal-kategorien/'.$subLevel1->id)}}">{{ $subLevel1->name }}
-                                                    @if( count($subLevel1->juristCategoriesActive) ) <span class="fa arrow"></span> @endif
-                                                </a>
-                                                @if( count( $subLevel1->juristCategoriesActive ) )
-                                                <ul class="nav nav-five-level">
-                                                    @foreach( $subLevel1->juristCategoriesActive as $subLevel2)
-                                                        <li>
-                                                            <a href="{{url('juristenportal-kategorien/'.$subLevel2->id)}}">{{ $subLevel2->name }}</a>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                                @endif
-                                            </li>
-                                            @endforeach
-                                        </ul>
-                                        @endif
-                                        </li>
-                                    @endforeach {{-- first level subcategory --}}
-                                </ul>
-                                      
-                                @endif
-                            </li>
-                        
-                            <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createFile') ) }} </a>
+                                    <li>
+                                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createNotes') ) }} </a>
+                                    </li>
+                                </ul>    
                             </li>
                             
+                            <li>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.files') ) }} <span class="fa arrow"></span></a>
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createFile') ) }}</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            
+                            <li>
+                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.documents') ) }} <span class="fa arrow"></span></a>
+                                
+                                <!--
+                                <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="{{url('rechtsablage/alle')}}"> @lang('navigation.juristenPortalCategories')
+                                        @if( count($juristenCategories) ) <span class="fa arrow"></span> @endif
+                                    </a>
+                                -->
+                                
+                                    @if(count($juristenCategories))
+                                    <ul class="nav nav-third-level">
+                                        @foreach( $juristenCategories as $jueristenCategory)
+                                            <li>
+                                            <a href="{{url('rechtsablage/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
+                                                @if( count($jueristenCategory->juristCategoriesActive) ) <span class="fa arrow"></span> @endif
+                                            </a>
+                                            @if( count($jueristenCategory->juristCategoriesActive) )
+                                            <ul class="nav nav-fourth-level">
+                                                @foreach( $jueristenCategory->juristCategoriesActive as $subLevel1)
+                                                <li>
+                                                    <a href="{{url('rechtsablage/'.$subLevel1->id)}}">{{ $subLevel1->name }}
+                                                        @if( count($subLevel1->juristCategoriesActive) ) <span class="fa arrow"></span> @endif
+                                                    </a>
+                                                    @if( count( $subLevel1->juristCategoriesActive ) )
+                                                    <ul class="nav nav-five-level">
+                                                        @foreach( $subLevel1->juristCategoriesActive as $subLevel2)
+                                                            <li>
+                                                                <a href="{{url('rechtsablage/'.$subLevel2->id)}}">{{ $subLevel2->name }}</a>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    @endif
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                            @endif
+                                            </li>
+                                        @endforeach {{-- first level subcategory --}}
+                                    </ul>
+                                          
+                                    @endif
+                                <!--
+                                 </li>
+                                 </ul>-->
+                            </li>
+                        
                         </ul>
-                </li><!-- end juristenportal -->
+                </li>
             @endif
+            <!-- end juristenportal-->
             
-            
+            <!--mandantenverwaltung-->
             @if( ViewHelper::universalHasPermission( array(17, 18, 20) ) == true )
                 {{-- removed neptun Verwalter NEPTUN-610 --}}
                 <li class="">
@@ -344,7 +372,9 @@
                     </ul>
                 </li>
             @endif
+            <!--end mandantenverwaltung-->
             
+            <!--benutzer-->
             @if( (ViewHelper::universalHasPermission() == false) && (ViewHelper::universalHasPermission( array(2,4)) == true) ) {{-- 2,4 NEPTUN-605 --}}
                 <li>
                     <a href="{{ url('benutzer') }}">{{ ucfirst( trans('navigation.benutzer') ) }}<span class="fa arrow"></span></a>
@@ -356,6 +386,7 @@
                     
                 </li>
             @endif
+            <!--end benutzer-->
             
             <!--neptun verwalten-->
             @if( ViewHelper::universalHasPermission( array(6, 35) ) == true )
@@ -398,19 +429,21 @@
                         
                         @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
                             <li>
-                                <a href="{{ url('juristenportal-kategorien') }}">{{ ( trans('navigation.juristenPortal') ) }}-{{ trans('navigation.kategorien') }} </a>
+                                <a href="{{ url('rechtsablage') }}">{{ ( trans('navigation.juristenPortalRechtsablage') ) }} {{ trans('navigation.kategorien') }} </a>
                             </li>
                         @endif
+                        
+                        
+                        @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                            <li>
+                                <a href="{{ url('wiedervorlagen-status') }}">{{ ucfirst( trans('navigation.wiedervorlagenStatus') ) }}</a>
+                            </li>
+                        @endif
+                        
                         
                         @if( ViewHelper::universalHasPermission( array(6) ) == true ) 
                             <li>
                                 <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>
-                            </li>
-                        @endif
-                        
-                        @if( ViewHelper::universalHasPermission( array(6) ) == true ) 
-                            <li>
-                                <a href="{{ url('wiedervorlagen-status') }}">{{ ucfirst( trans('navigation.wiedervorlagenStatus') ) }}</a>
                             </li>
                         @endif
                         

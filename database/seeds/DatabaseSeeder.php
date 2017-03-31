@@ -24,5 +24,6 @@ class DatabaseSeeder extends Seeder
         // $this->call(SatistikRoleSeeder::class);
         // $this->call(InventarRoleSeeder::class);
         // $this->call(JuristenPortalSeeder::class);
+        $this->call(JuristenCategoriesNewSeeder::class);
     }
 }
