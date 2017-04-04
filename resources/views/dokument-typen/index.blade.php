@@ -103,7 +103,8 @@
                         </tr>
                         
                         @foreach($documentTypesMenu as $documentTypeMenu)
-                            @if( in_array($documentTypeMenu->id, [App\DocumentType::JURISTEN, App\DocumentType::NOTIZEN]) == false )
+                            {{-- @if( in_array($documentTypeMenu->id, [App\DocumentType::JURISTEN, App\DocumentType::NOTIZEN]) == false ) --}}
+                            @if( $documentTypeMenu->jurist_document == false )
                             {!! Form::open(['route' => ['dokument-typen.update', 'dokument_typen' => $documentTypeMenu->id], 'method' => 'PATCH']) !!}
                             <tr>
                                 <td>
@@ -214,8 +215,8 @@
                         </tr>
                         
                         @foreach($documentTypesSubmenu as $documentTypeSubmenu)
-                            {{--@if($documentTypeSubmenu->id != App\DocumentType::JURISTEN)--}}
-                            @if( in_array($documentTypeSubmenu->id, [App\DocumentType::JURISTEN, App\DocumentType::NOTIZEN]) == false )
+                            {{-- @if( in_array($documentTypeSubmenu->id, [App\DocumentType::JURISTEN, App\DocumentType::NOTIZEN]) == false ) --}}
+                            @if( $documentTypeSubmenu->jurist_document == false )
                             {!! Form::open(['route' => ['dokument-typen.update', 'dokument_typen' => $documentTypeSubmenu->id], 'method' => 'PATCH']) !!}
                             <tr>
                                 <td>

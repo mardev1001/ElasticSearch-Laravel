@@ -51,6 +51,7 @@ return [
     'inventoryAbrechnen'    => 'Materialien abrechnen',
     'juristenPortal'        => 'Beratung',
     'juristenPortalRechtsablage' => 'Rechtsablage',
+    'juristenPortalBeratung' => 'Beratung',
     'juristenPortalCategories'  => 'Kategorien',
     'wiedervorlagenStatus'  => 'Wiedervorlagen Status',
 

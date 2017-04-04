@@ -13,7 +13,6 @@ use DB;
 use File;
 use Session;
 use App\Classes\PdfWrapper;
-
 use App\Document;
 use App\DocumentCoauthor;
 use App\DocumentType;
@@ -83,7 +82,7 @@ class DocumentController extends Controller
         $trashedDocuments = array();
         $onlyTrashed = Document::onlyTrashed()->get();
         foreach ($onlyTrashed as $trashed) {
-            if (ViewHelper::universalDocumentPermission($trashed)) {
+            if (ViewHelper::universalDocumentPermission($trashed, false)) { // false - disables session flash message
                 // Assign download link for upload-type documents
                 if (($trashed->pdf_upload == 1) || (isset($trashed->documentType) && $trashed->documentType->document_art == 1)) {
                     foreach ($trashed->editorVariantTrashed as $ev) {
@@ -154,7 +153,7 @@ class DocumentController extends Controller
             if ($document->landscape == true) {
                 $or = 'L';
             }
-            $pdf = new PdfWrapper;
+            $pdf = new PdfWrapper();
             $pdf->debug = true;
 
             if ($document->document_type_id == $this->isoDocumentId) {
@@ -178,7 +177,7 @@ class DocumentController extends Controller
                 }
             }
             // return $footer;
-            $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
+            $pdf->AddPage($or, $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop);
             $pdf->WriteHTML($render);
 
             // Delete document
@@ -288,7 +287,6 @@ class DocumentController extends Controller
 
             $mandantUsers2 = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
             ->where('mandant_id', $mandantId)->get();
-
 
             $pluckIdMandantUsers = $mandantUsers->pluck('user_id')->toArray();
             $mandantUsers = User::whereIn('id', $pluckIdMandantUsers)->orderBy('last_name', 'asc')->get();
@@ -764,7 +762,7 @@ class DocumentController extends Controller
         $mandantId = MandantUser::where('user_id', Auth::user()->id)->first()->mandant_id;
         $attachmentArray = array();
         /*Check if document has editorVariant*/
-        
+
         if (count($data->editorVariantNoDeleted) > 0) {
             foreach ($data->editorVariantNoDeleted as $variant) {
                 $attachmentArray[$variant->id] = $this->document->getAttachedDocumentLinks($variant, $id);
@@ -848,13 +846,13 @@ class DocumentController extends Controller
         }
 
         $currentEditorVariant = $request->get('variant_id');
-       
+
         $document = Document::find($request->get('document_id'));
-        
+
         /*If option 1*/
             if ($request->has('attach')) {
                 $currentDocumentLast = $data->lastEditorVariant[0];
-                
+
                     /*
                         Opcija 1 razložena
                         za svaki document upload od drugog documenta
@@ -863,7 +861,7 @@ class DocumentController extends Controller
                         i documentUploads uzmi path od drugog dokumenta i stavi editor_variant_id od trenutnog
                     */
                 $currDocEv = EditorVariant::find($currentEditorVariant);
-              
+
                 $documentCheck = EditorVariantDocument::where('editor_variant_id', $currentEditorVariant)->where('document_id', $document->id)->count();
                 //   dd($documentCheck);
                     //  dd( $request->all() );
@@ -1087,9 +1085,8 @@ class DocumentController extends Controller
 
                     /*Fix where where variant is Alle and roles different from All*/
                     $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
-                    
+
                         if (count($documentMandants)) {
-                        
                             foreach ($documentMandants as $documentMandant) {
                                 $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->get();
                                 $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->pluck('role_id');
@@ -1123,15 +1120,21 @@ class DocumentController extends Controller
                 } else {
                     //editorVariant insert/edit
                     $editorVariant = EditorVariant::where('document_id', $id)->where('variant_number', $variantNumber)->first();
+
+                    /*Fix when you remove document variant error*/
+                    if (is_null($editorVariant)) {
+                        $editorVariant = EditorVariant::where('document_id', $id)->where('variant_number', $variantNumber + 1)->first();
+                        $editorVariant->variant_number = $variantNumber;
+                        $editorVariant->save();
+                    }
                     $editorVariant->approval_all_mandants = 0;
                     $dirty = $this->dirty($dirty, $editorVariant);
                     $editorVariant->save();
-                  
+
                     /*Create DocumentManant */
                     $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
-                    
+
                     if (count($documentMandants) < 1) {
-                         
                         $documentMandant = new DocumentMandant();
                         $documentMandant->document_id = $id;
                         $documentMandant->editor_variant_id = $editorVariant->id;
@@ -1140,38 +1143,37 @@ class DocumentController extends Controller
                         $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
                     }
                    /*End Create DocumentManant */
-                    
+
                     /* Create DocumentManant roles*/
-                  
+
                     foreach ($documentMandants as $documentMandant) {
                         $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->get();
                         $documentMandantRolesPluck = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->pluck('role_id');
                         // dd('brejk2');
-                        
+
                         if ($request->has('roles')) {
                             $this->document->processOrSave($documentMandantRoles, $documentMandantRolesPluck, $request->get('roles'), 'DocumentMandantRole',
                             array('document_mandant_id' => $documentMandant->id, 'role_id' => 'inherit'),
                             array('document_mandant_id' => array($documentMandant->id)));
                         } elseif (!$request->has('roles')) {
                             $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->delete();
-                            
                         }
                     }
 
                     /*End Create DocumentManant roles*/
-                   
+
                     /* Create DocumentManant mandant*/
                     foreach ($documentMandants as $documentMandant) {
-                      $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->get();
-                      $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->pluck('mandant_id');
+                        $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->get();
+                        $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->pluck('mandant_id');
                     //   dd($documentMandantMandats);
-                        
+
                     //   dd($request->all());
                       // dd($k);
                       // dd($request->get($k));
                       //INSERTS LAST VALUES->check foreach!
                       // collections, $pluckedCollection, $requests, $modelName, $fields = array(), $notIn = array(), $tester = false)
-                     
+
                       $this->document->processOrSave($documentMandantMandats, $documentMandantMandatsPluck, $request->get($k),
                       'DocumentMandantMandant', array('document_mandant_id' => $documentMandant->id, 'mandant_id' => 'inherit'),
                             array('document_mandant_id' => array($documentMandant->id)), true);
@@ -1231,7 +1233,7 @@ class DocumentController extends Controller
                     /*End Create DocumentManant roles*/
 
                     /* Delete variant mandants*/
-                    
+
                         $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->delete();
                     /* End Delete variant mandants*/
             }
@@ -1262,7 +1264,7 @@ class DocumentController extends Controller
                    /*End Create DocumentManant */
 
                     /* Delete DocumentManant roles*/
-                    
+
                     foreach ($documentMandants as $documentMandant) {
                         $documentMandantRoles = DocumentMandantRole::where('document_mandant_id', $documentMandant->id)->delete();
 
@@ -1282,6 +1284,51 @@ class DocumentController extends Controller
         }
 
         if ($request->has('fast_publish')) {
+            //save to Published documents
+            $document->document_status_id = 3; //aktualan
+            $dirty = $this->dirty($dirty, $document);
+            $document->save();
+
+            $publishedDocs = $this->publishProcedure($document, false);
+
+            $readDocument = UserReadDocument::where('user_id', Auth::user()->id)
+                            ->where('document_group_id', $document->published->document_group_id)->orderBy('id', 'desc')->first();
+            if ($readDocument != null && $readDocument->deleted_at == null) {
+                $readDocument->delete();
+            }
+
+            $otherDocuments = Document::where('document_group_id', $document->document_group_id)
+                                ->whereNotIn('id', array($document->id))->get();
+            /*Set attached documents as actuell */
+            $variantsAttachedDocuments = EditorVariant::where('document_id', $document->id)->get();
+            foreach ($variantsAttachedDocuments as $vad) {
+                $editorVariantDocuments = $vad->editorVariantDocument;
+                foreach ($editorVariantDocuments as $evd) {
+                    $evd->document_status_id = 3;
+                    $evd->save();
+                    $doc = Document::find($evd->document_id);
+                    $doc->document_status_id = 3;
+                    $doc->save();
+                }
+            }
+            /* End set attached documents as actuell */
+
+            foreach ($otherDocuments as $oDoc) {
+                if ($oDoc->document_status_id != 6 && $oDoc->document_status_id != 2) {
+                    $oDoc->document_status_id = 5;
+                    $oDoc->save();
+                }
+            }
+
+            if ($dirty == true) {
+                // dd($document->published->document_group_id);
+                UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
+                session()->flash('message', trans('documentForm.fastPublished'));
+            }
+
+            return redirect('/');
+        } // end fast publish
+        elseif ($request->has('fast_publish_send')) {
             //save to Published documents
             $document->document_status_id = 3; //aktualan
             $dirty = $this->dirty($dirty, $document);
@@ -1325,7 +1372,7 @@ class DocumentController extends Controller
             }
 
             return redirect('/');
-        }//end fast publish
+        } // end fast publish with sending
         elseif ($request->has('ask_publishers')) {
             $document->document_status_id = 6;
 
@@ -1671,9 +1718,9 @@ class DocumentController extends Controller
                 }
             }
             // only strukturadmin and
-            if( ( Auth::user()->id != 1  && ViewHelper::universalDocumentPermission( $data,false,false,true ) == false) 
-                && $data->document_status_id  == 5){
-                return redirect('dokumente/'.$data->id)->with('messageSecondary', trans('documentForm.noPermission'));                
+            if ((Auth::user()->id != 1 && ViewHelper::universalDocumentPermission($data, false, false, true) == false)
+                && $data->document_status_id == 5) {
+                return redirect('dokumente/'.$data->id)->with('messageSecondary', trans('documentForm.noPermission'));
             }
 
             $url = 'PATCH';
@@ -1865,8 +1912,7 @@ class DocumentController extends Controller
                 $newEditorVariantDocument->editor_variant_id = $newVariant->id;
                 $newEditorVariantDocument->document_status_id = $newDocument->document_status_id;
                 $newEditorVariantDocument->document_group_id = $document->document_group_id;
-                // $newEditorVariantDocument->document_id = $newDocument->id;
-                // dd($newEditorVariantDocument);
+                $newEditorVariantDocument->document_id = $newDocument->id;
                 $newEditorVariantDocument->save();
             }
             /*End Duplicate editor_variant_documents*/
@@ -1875,8 +1921,8 @@ class DocumentController extends Controller
             if (count($variant->documentMandants) > 0) {
                 foreach ($variant->documentMandants as $documentMandant) {
                     $newDocumentMandant = $documentMandant->replicate();
-                // $newDocumentMandant->document_id = $newDocument->id;
-                $newDocumentMandant->editor_variant_id = $newVariant->id;
+                    $newDocumentMandant->document_id = $newDocument->id;
+                    $newDocumentMandant->editor_variant_id = $newVariant->id;
                     $newDocumentMandant->save();
 
                 /*Duplicate document mandant mandants*/
@@ -1899,7 +1945,6 @@ class DocumentController extends Controller
             /*End Duplicate  document mandants*/
         }
         /* End Duplicate document variants*/
-        // dd($newDocument);
          session()->flash('message', trans('documentForm.newVersionSuccess'));
 
         return redirect('dokumente/'.$newDocument->id.'/edit');
@@ -2089,7 +2134,7 @@ class DocumentController extends Controller
         }
         $variants = $variantPermissions->variants;
         /* End Button check */
-        
+
         // dd($variants);
 
         /* User and freigabe comment visibility */
@@ -2102,7 +2147,7 @@ class DocumentController extends Controller
         // $emailSettings['emailAttached'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 2)->get()->count();
         // $emailSettings['fax'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 3)->get()->count();
         // $emailSettings['mail'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 4)->get()->count();
-        
+
         return view('dokumente.freigabe', compact('document', 'variants', 'documentCommentsUser', 'documentCommentsFreigabe', 'published',
         'canPublish', 'hasPermission', 'authorised', 'authorisedPositive', 'commentVisiblity', 'emailSettings'));
     }
@@ -2262,9 +2307,9 @@ class DocumentController extends Controller
         if ($document->landscape == true) {
             $or = 'L';
         }
-        $pdf = new PdfWrapper;
+        $pdf = new PdfWrapper();
         $pdf->debug = true;
-       
+
         if ($document->document_type_id == $this->isoDocumentId) {
             //   $pdf->setAutoTopMargin = 'stretch';
 
@@ -2286,7 +2331,7 @@ class DocumentController extends Controller
             }
         }
         // dd($or);
-        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
+        $pdf->AddPage($or, $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         if ($request->segment(4) == 'download') {
@@ -2328,7 +2373,7 @@ class DocumentController extends Controller
         if ($document->landscape == true) {
             $or = 'L';
         }
-        $pdf = new PdfWrapper;
+        $pdf = new PdfWrapper();
         $pdf->debug = true;
 
         if ($document->document_type_id == $this->isoDocumentId) {
@@ -2348,8 +2393,8 @@ class DocumentController extends Controller
                 $pdf->SetHTMLFooter($footer);
             }
         }
-        
-        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
+
+        $pdf->AddPage($or, $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         return $pdf->stream();
@@ -2506,13 +2551,15 @@ class DocumentController extends Controller
         $dateNow .= ' '.$datePublished->format('Y');
 
         // Extend this functionality
-        if(isset($variantNumber)) {
+        if (isset($variantNumber)) {
             $variants = EditorVariant::where('document_id', $id)->where('variant_number', $variantNumber)->get();
             foreach ($variants as $variant) {
                 $variant->hasPermission = true;
             }
-        } else $variants = $variantPermissions->variants;
-    
+        } else {
+            $variants = $variantPermissions->variants;
+        }
+
         // $document = Document::find($id);
         $margins = $this->setPdfMargins($document);
 
@@ -2521,8 +2568,8 @@ class DocumentController extends Controller
             $or = 'L';
         }
 
-        $pdf = new PdfWrapper;
-        
+        $pdf = new PdfWrapper();
+
         if ($document->document_type_id == $this->isoDocumentId) {
             $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
             $pdf->SetHTMLFooter(view('pdf.footerIso', compact('document', 'variants', 'dateNow'))->render());
@@ -2540,19 +2587,19 @@ class DocumentController extends Controller
             }
         }
 
-        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
+        $pdf->AddPage($or, $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         $filename = sys_get_temp_dir().'/'.$id.'_'.md5(microtime()).'.pdf';
-        if(isset($variantNumber)) {
+        if (isset($variantNumber)) {
             $filename = sys_get_temp_dir().'/'.$id.'v'.$variantNumber.'_'.md5(microtime()).'.pdf';
         }
         $pdf->save($filename);
-        
+
         if ($request->segment(4) == 'download') {
             return response()->download($filename);
         }
-        
+
         return $filename;
     }
 
@@ -2864,8 +2911,6 @@ class DocumentController extends Controller
         $docType = $this->formulareId;
         $myRundCoauthorArr = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
         $myRundCoauthor = Document::whereIn('id', $myRundCoauthorArr)->where('document_type_id', $docType)->pluck('id')->toArray();
-        
-       
 
         $formulareEntwurfPaginated = Document::where('document_type_id', $docType)
         ->where(function ($query) use ($highRole, $myRundCoauthor) {
@@ -2913,7 +2958,7 @@ class DocumentController extends Controller
         // dd($formulareEntwurfPaginated);
 
         // $request->flash();
-        return view('dokumente.documentTemplates', compact('docType', 'formulareAllPaginated', 'formulareAllTree', 'formulareEntwurfPaginated', 'formulareEntwurfTree', 
+        return view('dokumente.documentTemplates', compact('docType', 'formulareAllPaginated', 'formulareAllTree', 'formulareEntwurfPaginated', 'formulareEntwurfTree',
         'formulareFreigabePaginated', 'formulareFreigabeTree', 'docs', 'sort'));
     }
 
@@ -2991,7 +3036,7 @@ class DocumentController extends Controller
             $documentsByTypeTree = $this->document->generateTreeview($documentsByTypePaginated, array('pageDocuments' => true, 'showHistory' => true));
         }
 
-        return view('dokumente.documentType', compact('documentType', 'documentsByTypeTree', 'documentsByTypePaginated', 'docsByTypeEntwurfPaginated', 
+        return view('dokumente.documentType', compact('documentType', 'documentsByTypeTree', 'documentsByTypePaginated', 'docsByTypeEntwurfPaginated',
             'docsByTypeEntwurfTree', 'docsByTypeFreigabePaginated', 'docsByTypeFreigabeTree', 'docs', 'sort'));
     }
 
@@ -3587,7 +3632,7 @@ class DocumentController extends Controller
         $sendOptions = $sending; // Flag for determining if the document should be sent to users or not
 
         $oldDocumentVersion = PublishedDocument::where('document_group_id', $document->document_group_id)->orderBy('id', 'DESC')->first();
-        
+
         $publishedDocs = PublishedDocument::where('document_id', $id)->first();
         if ($publishedDocs == null) {
             $continue = true;
@@ -3628,49 +3673,50 @@ class DocumentController extends Controller
 
         // Add published docs for sending if necessary
         if ($sendOptions) {
-            
             // Get emails and clasify them by sending types
             $emailSettings = UserEmailSetting::all();
-            
-            foreach($emailSettings as $emailSetting){
-                
+
+            foreach ($emailSettings as $emailSetting) {
                 // Get user data for the email setting
                 $user = User::find($emailSetting->user_id);
-                
+
                 // Skip email sending if user has the email sending flag disabled
                 // Skip email sending if document type has no publish sending flag
-                if(($user->email_reciever == false) || ($document->documentType->publish_sending == false)) continue;
-                
+                if (($user->email_reciever == false) || ($document->documentType->publish_sending == false)) {
+                    continue;
+                }
+
                 // Check if the role assigned to the email setting is a system role
                 $systemRole = null;
                 $role = Role::find($emailSetting->email_recievers_id);
-                if(isset($role->system_role)) $systemRole = $role->system_role; 
-                
+                if (isset($role->system_role)) {
+                    $systemRole = $role->system_role;
+                }
+
                 // Sending method: email (This method is avaliable to all users)
-                if($emailSetting->sending_method == 1){
+                if ($emailSetting->sending_method == 1) {
                     // Check if the document type is corresponding the mailing settings
-                    if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                    if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
                         UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
                     }
                 }
-                
+
                 // Sending method: email + attachment (ONLY system roles can recieve documents as attachments)
-                if($systemRole && ($emailSetting->sending_method == 2)){
+                if ($systemRole && ($emailSetting->sending_method == 2)) {
                     // Check if the document type is corresponding the mailing settings
-                    if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                    if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
                         // Save sent documents and settings log to DB
                         UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
                     }
                 }
-                
+
                 // Sending method: fax (This method sends the document via fax commands)
-                if($emailSetting->sending_method == 3){
+                if ($emailSetting->sending_method == 3) {
                     // Check if the document type is corresponding the mailing settings
-                    if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
+                    if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
                         UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
                     }
                 }
-                
             }
         }
     }
@@ -3728,35 +3774,41 @@ class DocumentController extends Controller
         $allMandants = false;
         $variant = $variantNumber;
         $document = Document::find($id);
-        
+
         // Get all users with sending options
         $settingsUserIds = UserEmailSetting::where('sending_method', 4)
             ->whereIn('document_type_id', [0, $document->document_type_id])
             ->where('active', 1)->groupBy('user_id')->pluck('user_id');
         $users = User::whereIn('id', $settingsUserIds)->get();
-        
+
         // dd($users);
         // Get list of user mandants that have permission for the document variant
         $mandantsList = array();
-        foreach($users as $user){
+        foreach ($users as $user) {
             $editorVariants = ViewHelper::documentVariantPermission($document, $user->id, true); // Third parameter is for showing all variants
             foreach ($editorVariants->variants as $ev) {
-                if($ev->approval_all_mandants == true){
+                if ($ev->approval_all_mandants == true) {
                     // Handle the case where a variant has approval for ALL mandants
                     $allMandants = true;
-                } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
+                } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)) {
                     $dm = DocumentMandant::where('editor_variant_id', $ev->id)->pluck('id');
                     $dmm = DocumentMandantMandant::whereIn('document_mandant_id', $dm)->pluck('mandant_id');
-                    foreach($dmm as $id) if(!in_array($id, $mandantsList)) $mandantsList[] = $id;
+                    foreach ($dmm as $id) {
+                        if (!in_array($id, $mandantsList)) {
+                            $mandantsList[] = $id;
+                        }
+                    }
                 }
             }
         }
-        
-        
+
         // Find mandants by id
-        if($allMandants == true) $mandants = Mandant::all();
-        else $mandants = Mandant::whereIn('id', $mandantsList)->get();
-        
+        if ($allMandants == true) {
+            $mandants = Mandant::all();
+        } else {
+            $mandants = Mandant::whereIn('id', $mandantsList)->get();
+        }
+
         $margins = new \StdClass();
         $margins->left = 10;
         $margins->right = 10;
@@ -3765,8 +3817,8 @@ class DocumentController extends Controller
         $margins->headerTop = 0;
         $margins->footerTop = 5;
         $render = view('pdf.post-versand', compact('users', 'mandants'));
-        $pdf = new PdfWrapper;
-        $pdf->AddPage($or,$margins->left, $margins->right, $margins->top, $margins->bottom,$margins->headerTop, $margins->footerTop);
+        $pdf = new PdfWrapper();
+        $pdf->AddPage($or, $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
         return $pdf->stream();
@@ -3921,16 +3973,16 @@ class DocumentController extends Controller
 
         $object = new \StdClass();
         $object->permissionExists = false;
-        
+
         // Added check for custom user id lookup
-        if(isset($userId)){
+        if (isset($userId)) {
             $mandantId = MandantUser::where('user_id', $userId)->pluck('id');
             $mandantUserMandant = MandantUser::where('user_id', $userId)->pluck('mandant_id');
         } else {
             $mandantId = MandantUser::where('user_id', Auth::user()->id)->pluck('id');
             $mandantUserMandant = MandantUser::where('user_id', Auth::user()->id)->pluck('mandant_id');
         }
-        
+
         $mandantIdArr = $mandantId->toArray();
         $mandantRoles = MandantUserRole::whereIn('mandant_user_id', $mandantId)->pluck('role_id');
         $mandantRolesArr = $mandantRoles->toArray();

@@ -167,7 +167,7 @@ class ViewHelper
      *
      * @param array  $collections
      * @param string $inputName
-     * @param array  $data        || string $data='' ( declared in FormViewComposer)
+     * @param array  $data        || string $data='' ( declared in FormViewComposer) 
      * @param string $old
      * @param string $label
      * @param string $placeholder

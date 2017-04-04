@@ -35,7 +35,8 @@ class SidebarViewComposer
         $view->with('documentTypesSubmenu', DocumentType::where('menu_position', 1)->orderBy('order_number', 'asc')->get() );
         $view->with('documentTypesMenu', DocumentType::where('menu_position', 2)->orderBy('order_number', 'asc')->get() );
         $view->with('isoCategories', IsoCategory::where('active', 1)->get() );
-        $view->with('juristenCategories', JuristCategory::where('parent',1)->where('active',1)->get() );
+        $view->with('juristenCategories', JuristCategory::where('beratung',0)->where('parent',1)->where('active',1)->get() );
+        $view->with('juristenCategoriesBeratung', JuristCategory::where('beratung',1)->where('parent',1)->where('active',1)->get() );
         // $view->with('isoCategories', IsoCategory::all() );
     }
     

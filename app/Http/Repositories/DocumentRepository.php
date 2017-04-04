@@ -192,7 +192,7 @@ class DocumentRepository
                     // if( isset($options['formulare']) && $options['formulare'] == true ){
                     if( $document->documentType->document_art == 1 ){
                         
-                        $variants = $this->documentVariantPermission($document, false)->variants;
+                        $variants = $this->documentVariantPermission($document, null, false)->variants;
                         
                         $links = null;
                         foreach($document->variantDocuments as $key => $dc){
@@ -217,7 +217,7 @@ class DocumentRepository
                     
                     if( is_null($document->document_type_id) ){
                
-                      $variants = $this->documentVariantPermission($document, false)->variants;
+                      $variants = $this->documentVariantPermission($document, null, false)->variants;
                     // if (sizeof($document->editorVariantNoDeleted)) {
             
                     if (count($variants)) {
@@ -417,7 +417,7 @@ class DocumentRepository
                 
                 if ($document->document_status_id != 6) {
                     
-                    $variants = $this->documentVariantPermission($document, false)->variants;
+                    $variants = $this->documentVariantPermission($document, null, false)->variants;
                     // if (sizeof($document->editorVariantNoDeleted)) {
                     if (count($variants)) {
                         
@@ -749,7 +749,7 @@ class DocumentRepository
             $modelDelete->delete();
             if($triggerDelete == true){
                 foreach($additionalFix as $fx){
-                    $fx->delete();
+                    // $fx->delete();
                 }
                
             }
@@ -763,11 +763,8 @@ class DocumentRepository
                     $exists = false;
                      if($triggerDelete == true){
                      
-                        $result =  $modelName::where('document_mandant_id',$fields['document_mandant_id'])->get();
-                    //   dd($fields['document_mandant_id']);
-                    //   dd($fields);
-                    //   dd($result);
-                        if( count($result) > 0){
+                   
+                        if( isset($result) && count($result) > 0){
                             $variant =  $result[0]->documentMandant->editorVariant;
                             $exists = true;
                         }
@@ -890,118 +887,14 @@ class DocumentRepository
             1. permissionExists( this is a global hasPermissionso we dont have to iterate again to see if permission exists  )
             2. variants (to store variants)[duuh]
         */
-        return ViewHelper::documentVariantPermission($document,$message);
+        return ViewHelper::documentVariantPermission($document, null, $message);
         
-        
-        $uid = Auth::user()->id;
-        $object = new \StdClass(); 
-        $object->permissionExists = false;
-        $mandantId = MandantUser::where('user_id',Auth::user()->id)->pluck('id');
-        $mandantUserMandant = MandantUser::where('user_id',Auth::user()->id)->pluck('mandant_id');
-        $madantArr = $mandantUserMandant->toArray();
-        $mandantIdArr = $mandantId->toArray();
-        $mandantRoles =  MandantUserRole::whereIn('mandant_user_id',$mandantId)->pluck('role_id');
-        $mandantRolesArr =  $mandantRoles->toArray();
-        
-        $variants = EditorVariant::where('document_id',$document->id)->get();
-        $hasPermission = false;
-        
-        foreach($variants as $variant){
-            if($hasPermission == false){//check if hasPermission is already set
-                if($variant->approval_all_mandants == true){//database check
-                     
-                    if($document->approval_all_roles == true){//database check
-                            $hasPermission = true;
-                            $variant->hasPermission = true;
-                            $object->permissionExists = true;
-                        }
-                        else{
-                            foreach($variant->documentMandantRoles as $role){// if not from database then iterate trough roles
-                                if( in_array($role->role_id, $mandantRolesArr) ){//check if it exists in mandatRoleArr
-                                 $variant->hasPermission = true;
-                                 $hasPermission = true;
-                                 $object->permissionExists = true;
-                                }
-                            }//end foreach documentMandantRoles
-                        }
-                
-                 
-                }
-                else{
-                    if( count($variant->documentMandantMandants ) ){
-                        foreach( $variant->documentMandantMandants as $mandant){
-                            //   if( $document->id == 3  && $uid == 17)
-                            //         dd($mandantRolesArr);
-                            
-                        if( $this->universalDocumentPermission($document,$message) == true){
-                          
-                           if($document->approval_all_roles == true){
-                              
-                                foreach($variant->documentMandantMandants as $mandant){
-                                    if( in_array($mandant->mandant_id, $madantArr) ){
-                                        $variant->hasPermission = true;
-                                        $hasPermission = true;
-                                        $object->permissionExists = true;
-                                    }
-                                }//end foreach documentMandantRoles
-                            }
-                            else{
-                                foreach($variant->documentMandantRoles as $role){
-                                    if( in_array($role->role_id, $mandantRolesArr) ){
-                                        
-                                        $variant->hasPermission = true;
-                                        $hasPermission = true;
-                                        $object->permissionExists = true;
-                                    }
-                                }//end foreach documentMandantRoles
-                            }
-                        }
-                        else if( in_array($mandant->mandant_id,$mandantRolesArr) ){
-                            
-                            if($document->approval_all_roles == true){
-                                $hasPermission = true;
-                                $variant->hasPermission = true;
-                                $object->permissionExists = true;
-                            }
-                            else{
-                                foreach($variant->documentMandantRoles as $role){
-                                   
-                                    if( in_array($role->role_id, $mandantRolesArr) ){
-                                        
-                                        $variant->hasPermission = true;
-                                        $hasPermission = true;
-                                        $object->permissionExists = true;
-                                    }
-                                }//end foreach documentMandantRoles
-                            }
-                        }
-                       
-                    }//end foreach documentMandantMandants
-                    }
-                    else{
-                        if( ($this->universalDocumentPermission($document,$message) == true) ){
-                            //  dd($document);
-                            if( $document->approval_all_roles == true ){
-                                $variant->hasPermission = true;
-                                 $hasPermission = true;
-                                 $object->permissionExists = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if( $object->permissionExists == true )
-            \Session::forget('message');
-        $object->variants = $variants;
-        // dd($variants);
-        return $object;
-}//end documentVariant permission
+    }//end documentVariant permission
    
 public function getUserPermissionedDocuments($collection,$paginator='page', $orderBy=array('field' => 'id', 'sort' => 'desc'), $perPage = 50){
         
     	foreach($collection as $key => $document){
-		    if(ViewHelper::documentVariantPermission($document,false)->permissionExists == false)
+		    if(ViewHelper::documentVariantPermission($document, null, false)->permissionExists == false)
 		        unset($collection[$key]);
 		    
 		}

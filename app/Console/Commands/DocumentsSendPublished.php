@@ -116,12 +116,16 @@ class DocumentsSendPublished extends Command
                 $mailContent->toName = $user->first_name .' '. $user->last_name;
                 
                 // Readout user email options and send
-                Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => false], 
+                $sent = Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => false], 
                     function ($message) use ($mailContent, $document) {
                         $message->from($mailContent->fromEmail, $mailContent->fromName);
                         $message->to($mailContent->toEmail, $mailContent->toName);
                         $message->subject($mailContent->subject);
                 });
+                
+                // Log sending
+                $logText = "E-Mail: ". $mailContent->toEmail ."; UserID: ". $user->id ."; DocumentID: ". $document->id ."; ";
+                ViewHelper::logSendPublished($sent, $logText);
             }
         }
         
@@ -153,7 +157,7 @@ class DocumentsSendPublished extends Command
                 }
                     
                 // Readout user email options and send
-                Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => true], 
+                $sent = Mail::send('email.publishedDocuments', ['content' => $mailContent, 'user' => $user, 'document' => $document, 'attachments' => true], 
                     // function ($message) use ($mailContent, $document, $documentPdf, $documentAttachments) {
                     function ($message) use ($mailContent, $document, $documentPdfs, $documentAttachments) {
                         $message->from($mailContent->fromEmail, $mailContent->fromName);
@@ -167,6 +171,10 @@ class DocumentsSendPublished extends Command
                             $message->attach($attachment['filePath'], ['as' => $attachment['fileName'], 'mime' => 'application/pdf']);
                         }
                 });
+                
+                // Log sending
+                $logText = "E-Mail: ". $mailContent->toEmail ."; UserID: ". $user->id ."; DocumentID: ". $document->id ."; ";
+                ViewHelper::logSendPublished($sent, $logText);
             }
         }
         
@@ -175,6 +183,8 @@ class DocumentsSendPublished extends Command
             // Check if the document type is corresponding the mailing settings
             if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
                 // Faxing commands
+                // // Log sending
+                // ViewHelper::logSendPublished($sent, $logText);
             }
         }
         

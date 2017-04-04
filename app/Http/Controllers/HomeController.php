@@ -62,8 +62,9 @@ class HomeController extends Controller
         ->orderBy('documents.date_published', 'desc')->limit(50)
         ->get(['*', 'document_types.name as docTypeName', 'documents.name as name',
         'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at', ]);
-
+        // dd($documentsNew);
         $documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
+        // dd($documentsNew);
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
 
         $myRundCoauthor = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
@@ -128,18 +129,18 @@ class HomeController extends Controller
         $approval = DocumentApproval::where('user_id', $uid)->where('date_approved', null)->pluck('document_id')->toArray();
 
         $freigabeEntries = Document::join('document_types', 'documents.document_type_id', '=', 'document_types.id')
-        ->whereIn('document_status_id', [2, 6])
+        ->whereIn('documents.document_status_id', [2, 6])
         ->where('document_types.document_art', 0)
         ->where(function ($query) use ($approval) {
-            $query->where('user_id', Auth::user()->id)
-                  ->orWhere('owner_user_id', Auth::user()->id);
+            $query->where('documents.user_id', Auth::user()->id)
+                  ->orWhere('documents.owner_user_id', Auth::user()->id);
         })
         ->where('documents.active', 1)
         ->orWhereIn('documents.id', $approval)
         ->orderBy('documents.id', 'desc')->limit(50)->get(['documents.id as id']);
         // ->paginate(10, ['*', 'documents.id as id', 'documents.created_at as created_at', 'documents.name as name' ],'freigabe-dokumente');
         // dd($freigabeEntries);
-        $freigabeEntries = Document::whereIn('id', array_pluck($freigabeEntries, 'id'))->orderBy('documents.id', 'desc')
+        $freigabeEntries = Document::whereIn('id', array_pluck($freigabeEntries, 'id'))->orderBy('documents.id', 'desc')->whereIn('documents.document_status_id', [2, 6])
         ->paginate(10, ['*'], 'freigabe-dokumente');
 
         $freigabeEntriesTree = $this->document->generateTreeview($freigabeEntries, array('pageHome' => true));

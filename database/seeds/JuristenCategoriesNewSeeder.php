@@ -32,7 +32,7 @@ class JuristenCategoriesNewSeeder extends Seeder
         DB::table('document_types')->insert(
             [
                 [
-                    'name' => 'Beratungsdokument ',
+                    'name' => 'Beratungsdokument',
                     'document_art' => '0',
                     'document_role' => '0',
                     'read_required' => '0',

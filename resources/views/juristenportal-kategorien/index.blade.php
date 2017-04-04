@@ -2,18 +2,18 @@
 
 @extends('master')
 
-@section('page-title') NEPTUN-Verwaltung - {{ ( trans('navigation.juristenPortalRechtsablage') ) }} {{ trans('navigation.kategorien') }} @stop
+@section('page-title') NEPTUN-Verwaltung - {{ ( trans('navigation.juristenPortalRechtsablage') ) }}-{{ trans('navigation.kategorien') }} @stop
 
 @section('content')
 
 <fieldset class="form-group">
     <div class="box-wrapper">
-        <h4 class="title">{{ ( trans('navigation.juristenPortalRechtsablage') ) }} {{ trans('navigation.kategorien') }} {{ trans('isoKategorienForm.add') }} </h4>
+        <h4 class="title">{{ ( trans('navigation.juristenPortalRechtsablage') ) }}-{{ trans('navigation.kategorien') }} {{ trans('isoKategorienForm.add') }} </h4>
         <div class="box box-white">
       
             <!-- input box-->
             
-            {!! Form::open(['route' => 'rechtsablage.store']) !!}
+            {!! Form::open(['route' => 'rechtsablage-kategorien.store']) !!}
                 <div class="row">
                     <div class="col-md-6 col-lg-4"> 
                         <div class="form-group">
@@ -22,7 +22,7 @@
                     </div>
                     <div class="col-md-6 col-lg-4"> 
                         <div class="checkbox">
-                            <input class="hide-input" id="hide-input" data-hide-target="iso-categories" data-disable-target="iso-categories" type="checkbox" name="parent" />
+                            <input class="hide-input" id="hide-input" data-hide-target="iso-categories" data-disable-target="iso-categories" type="checkbox" name="parent"  />
                             <label for="hide-input">{{ trans('isoKategorienForm.parent-category') }}</label>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                         <tbody>
                         @foreach($juristenCategories as $jueristenCategory)
                       
-                        {!! Form::open(['route' => ['rechtsablage.update', 'rechtsablage' => $jueristenCategory->id], 'method' => 'PATCH']) !!}
+                        {!! Form::open(['route' => ['rechtsablage-kategorien.update', 'rechtsablage' => $jueristenCategory->id], 'method' => 'PATCH']) !!}
                          <tr>
                             <td class="col-xs-5 vertical-center">
                                  <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $jueristenCategory->name }}" required/>
@@ -94,7 +94,6 @@
                                             <option value="{{ $jueristenCategoryChild->id }}" @if($jueristenCategory->jurist_category_parent_id == $jueristenCategoryChild->id) selected @endif > {{ $jueristenCategoryChild->name }} </option>
                                        
                                             @if( count( $jueristenCategoryChild->juristCategories ) )
-                                                @if( $jueristenCategoryChild->id == 16) dd($jueristenCategoryChild->juristCategories)  @endif
                                                 @foreach( $jueristenCategoryChild->juristCategories as $subLevel1)
                                                     <option  class="jurist-subcategory-option-level-one" 
                                                     @if($jueristenCategory->jurist_category_parent_id == $subLevel1->id) selected @endif
@@ -121,7 +120,7 @@
                                {!! Form::close() !!} 
                                
                                @if( count($jueristenCategory->isJuristCategoryParent) < 1 && count($jueristenCategory->hasAllDocuments) < 1  )
-                                {!! Form::open(array('route' => array('rechtsablage.destroy', $jueristenCategory->id), 'method' => 'delete')) !!}
+                                {!! Form::open(array('route' => array('rechtsablage-kategorien.destroy', $jueristenCategory->id), 'method' => 'delete')) !!}
                                         <button  type="submit" href="" class="btn btn-danger delete-prompt"
                                          data-text="Wollen Sie diesen Kategorie wirklich löschen?">
                                              löschen

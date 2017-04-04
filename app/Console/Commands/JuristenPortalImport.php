@@ -70,21 +70,14 @@ class JuristenPortalImport extends Command
      * @param string $fileName Name of the file
      */
     public function importFile($fileName){
+        //Filter out files which exists somewhere in the database
+        if(substr($fileName, -10) == '.duplicate'){
+            var_dump("Skip", $fileName);
+            return;
+        }
+        
         $ocrHelper = new OcrHelper($this->portalOcrUploads, $fileName);
         
-      //  dd($ocrHelper->getFileBaseName());
-
-       // $explode = explode('/', $fileName);
-       // $filteredNameFirst = last($explode);
-       // $originalDocument = $filteredNameFirst;
-        $documentExistsFirstTest =  Document::where('name','LIKE','%'.$ocrHelper->getFileBaseName().'%')
-                                            ->orWhere('name', 'LIKE','%'.$ocrHelper->getFileName().'%')
-                                            ->first();
-        //Check if we somehow already have this file in the db
-        if(count($documentExistsFirstTest) != 0){
-            return false;
-        }
-
         $text = $ocrHelper->extractText();
         $metaData = $ocrHelper->getMetaData();
 
@@ -94,39 +87,23 @@ class JuristenPortalImport extends Command
         }
         
         $ocrHelper->setFilename($fileName); /* Restore original filename */
-        
         $converted_file = $ocrHelper->convertToPDF();
-        //$converted_file = $ocrHelper->convertToPdfObject();
-        
+
         $explode = explode('/', $fileName);
         $filteredName = last($explode);
         
         $user_id = 1;
-        $user = null;
-        $userParts = [];
-
-        if(isset($metaData['Last Modified By'])){
-            $userParts = explode(' ', $metaData['Last Modified By'], 2);
-        }else if(isset($metaData['Creator'])){
-            $userParts = explode(' ', $metaData['Creator'], 2);
-        }
+        $real_user_name = '';
         
-        //Check Mirko Rosenthal and Rosenthal Mirko in Database
-        //because we don't know the order of first and last name in the meta data
-        if(count($userParts == 2)){
-             $user = User::where('first_name', $userParts[0])
-                    ->where('last_name', $userParts[1])
-                    ->orWhere(function ($query) use($userParts){
-                        $query->where('first_name', $userParts[1])
-                              ->where('last_name', $userParts[0]);
-                    })
-                    ->first();
+        if(isset($metaData['Last Modified By'])){
+            $real_user_name = $metaData['Last Modified By'];
+        }else if(isset($metaData['Creator'])){
+            $real_user_name = $metaData['Creator'];
         }
-       
-        if($user != null){
+        if(($user = User::findByName($real_user_name)) != null){
             $user_id = $user->id;
         }
-        
+
         $document = new Document();
         $document->document_type_id = 7;
         $document->user_id = $user_id;
@@ -157,14 +134,13 @@ class JuristenPortalImport extends Command
         $document_dir = public_path() . '/files/documents/'. $document->id.'/' ;
         File::makeDirectory($document_dir, 0777, true);
         File::move($fileName, $document_dir . $ocrHelper->getFileBaseName());
+        
+        
         $document_upload_original = new DocumentUpload();
         $document_upload_original->editor_variant_id = $editor_variant->id;
         $document_upload_original->file_path = $ocrHelper->getFileBaseName();
         $document_upload_original->save();
         
-        if (!File::exists($document_dir)) {
-            File::makeDirectory($document_dir, $mod = 0777, true, true);
-        }
         if (File::exists( $this->portalOcrUploads.'/'. $converted_file)) {
             File::move( $this->portalOcrUploads.'/'.$converted_file ,$document_dir . $converted_file );
             $document_upload_converted = new DocumentUpload();

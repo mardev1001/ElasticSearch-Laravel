@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use Carbon\Carbon;
 use Auth;
+use File;
 use App\Helpers\ViewHelper;
 use App\User;
 use App\MandantUser;
@@ -205,6 +206,9 @@ class DocumentTypeController extends Controller
      */
     public function devSandbox(Request $request)
     {
+         
+        // ViewHelper::logSendPublished(true, "Yeeee");
+        
         // if(ViewHelper::getMandantIsNeptun(Auth::user()->id)) echo 'NEPTUN Mandant';
         
         // $mandantUsersRoles = MandantUserRole::where('role_id', 40)->groupBy('mandant_user_id')->get();

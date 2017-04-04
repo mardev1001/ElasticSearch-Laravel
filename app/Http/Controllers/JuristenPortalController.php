@@ -48,9 +48,10 @@ class JuristenPortalController extends Controller
         if (ViewHelper::universalHasPermission(array(35, 36), false) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
-        $juristenCategories = JuristCategory::where('parent',1)->where('active',1)->get();
+        $juristenCategories = JuristCategory::where('beratung',0)->where('parent',1)->where('active',1)->get();
+        $juristenCategoriesBeratung = JuristCategory::where('beratung',1)->where('parent',1)->where('active',1)->get();
         
-        return view('juristenportal.index', compact('juristenCategories') );
+        return view('juristenportal.index', compact('juristenCategories','juristenCategoriesBeratung') );
     }
 
     /**
@@ -346,7 +347,8 @@ class JuristenPortalController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $uploaded = $this->fileUpload($request->file);
-        
+        $this->findDuplicates($uploaded);
+
         if ($uploaded == false) {
             return redirect()->back()->with('messageSecondary', 'Upload fehlgeschlagen');
         }
@@ -354,6 +356,66 @@ class JuristenPortalController extends Controller
             Artisan::call('juristenportal:import');
             return redirect()->back()->with('messageSecondary', 'Dateien hochgeladen');
         }
+    }
+
+    /**
+     * Find duplicate Files in the database
+     * 
+     * This function tries to find duplicate files by filename or meta data
+     * At first, it will check if a file with the same name exists.
+     * If not, then it checks the Author + Title in the Documents Table
+     * 
+     * Duplicate File will get the file ending .duplicate
+     * all other files will be renamed from .processing to their original name
+     * 
+     * @param array $files Array of fileNames [without the Path]
+     * @return array Array with duplicate Files and their original Document Object
+     */
+    private function findDuplicates(array $files){
+        $duplicates = [];
+        foreach($files as $filename){
+            $ocrHelper = new \App\Helpers\OcrHelper($this->portalOcrUploads, $filename);
+            $metaData = $ocrHelper->getMetaData();
+            $originalFilename = substr($filename, 0, -11);
+            
+            $dbDocumentUpload = DocumentUpload::with('editorVariant', 'editorVariant.document', 'editorVariant.document.user')
+                                                ->where('file_path', $originalFilename)
+                                                ->first();
+            if($dbDocumentUpload != null){
+                $duplicates[$filename] = ['metadata' => $metaData, 'original' => $dbDocumentUpload->editorVariant->document];
+                File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
+                continue;
+            }
+            
+            $user_id = 1;
+            $real_user_name = '';
+            $title = '';
+            
+            if(isset($metaData['Last Modified By'])){
+                $real_user_name = $metaData['Last Modified By'];
+            }else if(isset($metaData['Creator'])){
+                $real_user_name = $metaData['Creator'];
+            }
+            if(isset($metaData['Title'])){
+                $title = $metaData['Title'];
+            }
+
+            if(($user = User::findByName($real_user_name)) != null){
+                $user_id = $user->id;
+            }
+            
+            $document = Document::where('name', $title)
+                                 ->where('user_id', $user_id)
+                                 ->first();
+            if($document != null){
+                 $duplicates[$filename] = ['metadata' => $metaData, 'original' => $document];
+                 File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
+                 continue;
+            }
+
+            File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename);
+        }
+        return $duplicates;
     }
 
     /**
@@ -371,23 +433,10 @@ class JuristenPortalController extends Controller
             \File::makeDirectory($folder, $mod = 0777, true, true);
         }
         if (is_array($files)) {
-            $uploadedNames = array();
-            $counter = 0;
            //  dd($files);
             foreach ($files as $k => $file) {
-                ++$counter;
-                if (is_array($file)) {
-                    foreach ($file as $f) {
-                        if ($f !== null) {
-                            if (ViewHelper::fileTypeAllowed($file)) {
-                                $uploadedNames[] = $this->moveUploaded($f, $folder, $k);
-                            }
-                        }
-                    }
-                } else {
-                    if (ViewHelper::fileTypeAllowed($file)) {
-                        $uploadedNames[] = $this->moveUploaded($file, $folder, $k);
-                    }
+                 if (ViewHelper::fileTypeAllowed($file)) {
+                        $uploadedNames[] = $this->moveUploaded($file, $folder);
                 }
             }
         } else {
@@ -413,11 +462,8 @@ class JuristenPortalController extends Controller
      */
     private function moveUploaded($file, $folder, $counter = 0)
     {
-        //$filename = $image->getClientOriginalName();
-        $diffMarker = time() + $counter;
-        $newName = date('d-m-Y-H:i:s').'-'.$diffMarker.'.'.$file->getClientOriginalExtension();
-        $path = "$folder/$newName";
-        +$filename = $file->getClientOriginalName();
+        $filename = $file->getClientOriginalName();
+        $newName = $filename . '.processing';
         $uploadSuccess = $file->move($folder, $newName);
         \File::delete($folder.'/'.$filename);
 
@@ -426,9 +472,18 @@ class JuristenPortalController extends Controller
     
     public function viewCalendar()
     {
-        $data = User::find(1);
+        //$data = User::find(2); // here Auth::user werdet
         $users = User::where('active', 1)->get();
         //dd($users);
+        return view('juristenportal.calendar', compact('users'));
+    }
+    
+    public function viewUserCalendar(Request $request)
+    {
+        //dd($request->username);
+        $data = User::find($request->id);  // here selected user
+        //dd($data);
+        $users = User::where('active', 1)->get();
         return view('juristenportal.calendar', compact('users', 'data'));
     }
 }

@@ -257,7 +257,7 @@ class OcrHelper{
      */
     private function extractTextFromPDF(){
         $cmd = $this->cdToFolder() 
-                . 'pdftotext ' . $this->file_basename .  ' output.txt';
+                . 'pdftotext ' . escapeshellcmd($this->file_basename) .  ' output.txt';
         system($cmd);
         $this->parseText();
         $this->cleanUp();
@@ -270,7 +270,7 @@ class OcrHelper{
      */
     private function convertPDFToPNG(){
         $cmd = $this->cdToFolder()
-                . 'gs -dSAFER -sDEVICE=png16m -dINTERPOLATE -dNumRenderingThreads=4 -r600 -o output.png -c 300000000 setvmthreshold -f ' . $this->file_basename;
+                . 'gs -dSAFER -sDEVICE=png16m -dINTERPOLATE -dNumRenderingThreads=4 -r600 -o output.png -c 300000000 setvmthreshold -f ' . escapeshellcmd($this->file_basename);
         system($cmd);
         if(File::exists($this->storage_path . 'output.png')){
             $this->cleanUp();
@@ -286,7 +286,7 @@ class OcrHelper{
      */
     private function extractImage(){
         $cmd = $this->cdToFolder()
-                . 'tesseract ' . $this->file_basename . ' output -l deu+eng';
+                . 'tesseract ' . escapeshellcmd($this->file_basename) . ' output -l deu+eng';
         system($cmd);
         $this->parseText();
     }
@@ -298,7 +298,7 @@ class OcrHelper{
         
         $cmd = $this->setHome()
                . $this->cdToFolder()
-               . 'libreoffice --invisible --headless --convert-to txt:Text ' . $this->file_basename;
+               . 'libreoffice --invisible --headless --convert-to txt:Text ' . escapeshellcmd($this->file_basename);
         system($cmd);
         if(File::exists($this->storage_path . $this->file_name . '.txt')){
             File::move($this->storage_path . $this->file_name . '.txt', $this->storage_path . 'output.txt');
@@ -312,7 +312,7 @@ class OcrHelper{
     private function extractExcel(){
         $cmd = $this->setHome()
                 . $this->cdToFolder()
-                . 'libreoffice --invisible --headless --convert-to csv --infilter=CSV:44,34,76,1 ' . $this->file_basename;
+                . 'libreoffice --invisible --headless --convert-to csv --infilter=CSV:44,34,76,1 ' . escapeshellcmd($this->file_basename);
         system($cmd);
         if(File::exists($this->storage_path . $this->file_name . '.csv')){
             File::move($this->storage_path . $this->file_name . '.csv', $this->storage_path . 'output.txt');
@@ -326,7 +326,7 @@ class OcrHelper{
     private function extractPowerPoint(){
         $cmd = $this->setHome()
                 . $this->cdToFolder()
-                . 'libreoffice --invisible --headless --convert-to pdf ' . $this->file_basename;
+                . 'libreoffice --invisible --headless --convert-to pdf ' . escapeshellcmd($this->file_basename);
         system($cmd);
         if(File::exists($this->storage_path . $this->file_name . '.pdf')){
             $this->file_basename = $this->file_name . '.pdf';
@@ -342,7 +342,7 @@ class OcrHelper{
     private function convertOfficeToPDF(){
         $cmd = $this->setHome()
                 . $this->cdToFolder()
-                . 'libreoffice --invisible --headless --convert-to pdf ' . $this->file_basename;
+                . 'libreoffice --invisible --headless --convert-to pdf ' . escapeshellcmd($this->file_basename);
         system($cmd, $ret);
         if(File::exists($this->storage_path . $this->file_name . '.pdf')){
            return $this->file_name . '.pdf';
@@ -356,9 +356,8 @@ class OcrHelper{
         $output = '';
         $cmd = $this->setHome()
                 .  $this->cdToFolder()
-                . 'exiftool ' . $this->file_basename;
-        exec($cmd, $output);
-        
+                . 'exiftool ' . escapeshellcmd($this->file_basename);
+        exec($cmd, $output, $ret);
         
         $values = [];
         

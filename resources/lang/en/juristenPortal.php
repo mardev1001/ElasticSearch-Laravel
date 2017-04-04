@@ -2,7 +2,8 @@
 
 return [
     'juristenportal' => 'Beratungsportal',
-    'documents' => 'Dokumente Beratung',
+    'documentsRechtsablage' => 'Dokumente Rechtsablage',
+    'beratungDocuments' => 'Dokumente Beratung',
     'upload' => 'Upload',
     'calendar' => 'Kalender',
     'files' => 'Akten',

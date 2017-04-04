@@ -11,4 +11,8 @@ class DocumentUpload extends Model
     
     protected $guarded = []; //blacklist
     protected $fillable = ['editor_variant_id','file_path']; //whitelist
+    
+    public function editorVariant(){
+        return $this->belongsTo('App\EditorVariant');
+    }
 }

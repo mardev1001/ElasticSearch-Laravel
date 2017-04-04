@@ -29,7 +29,7 @@ class JuristenPortalCategoryController extends Controller
         if (!ViewHelper::universalHasPermission(array(6, 35))) {
             return redirect('/')->with('message', trans('documentForm.noPermission'));
         }
-        $juristenCategories = $juristCategoryOptions = JuristCategory::all();
+        $juristenCategories = $juristCategoryOptions = JuristCategory::where('beratung',0)->get();
        
         return view('juristenportal-kategorien.index', compact('juristenCategories', 'juristCategoryOptions'));
     }
@@ -44,7 +44,8 @@ class JuristenPortalCategoryController extends Controller
         if (!ViewHelper::universalHasPermission(array(6, 35))) {
             return redirect('/')->with('message', trans('documentForm.noPermission'));
         }
-        $juristenCategories = $juristCategoryOptions = JuristCategory::where('parent',1)->where('active',1)->get();
+        $juristenCategories = $juristCategoryOptions = JuristCategory::where('beratung',0)
+        ->where('parent',1)->where('active',1)->get();
        
         return view('juristenportal-kategorien.showAll', compact('juristenCategories', 'juristCategoryOptions'));
     }
@@ -67,16 +68,24 @@ class JuristenPortalCategoryController extends Controller
      */
     public function store(Request $request)
     {
+        
         if ($request->has('category_id')) {
             $request->merge(['jurist_category_parent_id' => $request->get('category_id')]);
+        }
+        else{
+            $request->merge([
+                'jurist_category_parent_id' =>null,
+                'parent' => 'on',
+            ]);
         }
         if ($request->has('parent') && $request->get('parent') == 'on') {
             $request->merge(['parent' => 1]);
         }
         // $request->merge(['slug' => str_slug($isoCategory->name), 'active' => true]);
+    
         $juristenCategory = JuristCategory::create($request->all());
 
-        return back()->with('message', 'Jurist Kategorie erfolgreich gespeichert.');
+        return back()->with('message', 'Rechtsablage-Kategorie erfolgreich gespeichert.');
     }
 
     /**
@@ -131,16 +140,20 @@ class JuristenPortalCategoryController extends Controller
             $juristenCategory->active = $status;
         }
         
-
-        if ($request->has('category_id')) {
+        if ($request->has('category_id') && $request->get('category_id') != 'parent') {
             $juristenCategory->jurist_category_parent_id = $request->input('category_id');
+            $juristenCategory->parent = 0;
+        }
+        else{
+             $juristenCategory->jurist_category_parent_id = null;
+             $juristenCategory->parent = 1;
         }
         
         $juristenCategory->name = $request->input('name');
         $juristenCategory->slug = str_slug($juristenCategory->name);
         $juristenCategory->save();
 
-        return back()->with('message', 'Rechtsablage Kategorie erfolgreich aktualisiert.');
+        return back()->with('message', 'Rechtsablage-Kategorie erfolgreich aktualisiert.');
     }
 
     /**

@@ -61,6 +61,11 @@ textarea {
     display: none;
 }
 
+.fc-icon-left-single-arrow:after,
+.fc-icon-right-single-arrow:after {
+    top: -4px;
+}
+
 @media(min-width:768px) {
     .sidebar {
         margin-top: 1px;

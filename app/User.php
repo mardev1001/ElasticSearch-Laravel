@@ -169,4 +169,33 @@ class User extends Authenticatable
 
         return false;
     }
+    
+    /**
+     * Searches a user by their first and lastname
+     * 
+     * This function tries to find users by their name.
+     * It will check Firstname and Lastname OR Lastname and Firstname
+     * For example 
+     *          ['first_name' = 'Foo', 'last_name' => 'Bar']
+     *          OR
+     *          ['first_name' = 'Bar', 'last_name' => 'Foo']
+     * 
+     * @param string $real_user_name A string with the real name
+     * @return User|null User object if found, null on fail
+     */
+    public static function findByName($real_user_name){
+        $parts = explode(' ', $real_user_name, 2);
+        if(count($parts) == 2){
+            $user = self::where('first_name', $parts[0])
+                        ->where('last_name', $parts[1])
+                        ->orWhere(function($query) use ($parts) {
+                            $query->where('first_name', $parts[1])
+                                  ->where('last_name', $parts[0]);
+                        })
+                        ->first();
+            return $user;
+        }else{
+            return null;
+        }
+    }
 }

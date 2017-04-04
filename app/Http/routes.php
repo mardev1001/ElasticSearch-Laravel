@@ -192,10 +192,16 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('beratungsportal/upload', 'JuristenPortalController@uploadView');
     Route::post('beratungsportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
     Route::get('beratungsportal/calendar', 'JuristenPortalController@viewCalendar');
+    Route::post('beratungsportal/calendar', 'JuristenPortalController@viewUserCalendar');
     Route::resource('beratungsportal', 'JuristenPortalController');
     
-    Route::get('rechtsablage/alle', 'JuristenPortalCategoryController@singlePageAll');
-    Route::resource('rechtsablage', 'JuristenPortalCategoryController');
+    Route::get('rechtsablage-kategorien/alle', 'JuristenPortalCategoryController@singlePageAll');
+    
+    Route::resource('rechtsablage-kategorien', 'JuristenPortalCategoryController');
+    
+    Route::resource('beratung-kategorien', 'BeratungController');
+    
+    
 
     
     /*
@@ -228,7 +234,6 @@ Route::group(array('middleware' => ['auth']), function () {
         }
     });*/
     
-
     // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
     // Route::get('dev/sandbox/pdf/{id}', 'DocumentController@generatePdfObject');
 });

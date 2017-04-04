@@ -98,9 +98,9 @@
                                                 
                                                 <option value="0"></option>
                                                 <option value="Alle" selected>Alle</option>
-                                                 @foreach( $mandants as $mandant)
-                                                    <option value="{{$mandant->id}}">{{ $mandant->name }}</option>
-                                                @endforeach
+                                                    @foreach( $mandants as $mandant)
+                                                        <option value="{{$mandant->id}}">({{ $mandant->mandant_number }}) {{ $mandant->kurzname }}</option>
+                                                    @endforeach
                                             @elseif( ViewHelper::countComplexMultipleSelect($variant,'documentMandantMandants',true) == false)
                                                
                                                 <option value="0"></option>
@@ -141,10 +141,15 @@
                             @if( $data->document_status_id != 3 )
                                 @if( ViewHelper::universalHasPermission(array(8) )
                                 || (ViewHelper::universalDocumentPermission($data, false,false, true) == true && $data->document_status_id ==2 ) )
-                                    <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
-                                        <!--<span class="fa fa-exclamation-triangle"></span>  -->
-                                        {{ trans('rightsRelease.fastPublish') }}
-                                    </button>
+                                    @if($data->documentType->publish_sending == true)
+                                        <a class="btn btn-info no-margin-bottom" data-toggle="modal" data-target="#publishModal" href="#">
+                                            {{ trans('rightsRelease.fastPublish') }}
+                                        </a>
+                                    @else
+                                        <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
+                                            {{ trans('rightsRelease.fastPublish') }}
+                                        </button>
+                                    @endif
                                 @endif
                                 
                                 <button type="submit" class="btn btn-primary no-margin-bottom validate"  name="ask_publishers" value="ask_publishers">
@@ -169,25 +174,90 @@
             </div>
         <div class="clearfix"></div>
         
+            <!-- modal start -->   
+            <div id="publishModal" class="modal fade" tabindex="-1" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hiddetn="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">{{ trans('rightsRelease.fastPublish') }}</h4>
+                        </div>
+                        <div class="modal-body">
+                            
+                            <div class="clearfix"></div> <br>
+                            
+                            @foreach( $variants as $v => $variant)
+                                <div class="attachments document-attachments">
+                                    <strong>Variante {{$variant->variant_number}}: </strong> <br>
+                                    <div>
+                                        {{ trans('documentForm.email') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 1) }} <br>
+                                        {{ trans('documentForm.email-attachment') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 2) }} <br>
+                                        {{ trans('documentForm.mail') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 4) }} <br>
+                                        
+                                        <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
+                                        <a href="{{ url('/dokumente/' . $variant->document_id . '/post-versand/'. $variant->variant_number) }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
+                            
+                                        @if( count( $variant->EditorVariantDocument ) )            
+                                            Anlagen fűr Variante {{$variant->variant_number}}:<br>
+                                            @foreach($variant->EditorVariantDocument as $k =>$docAttach)
+                                                @if( $docAttach->document_id != $data->id )
+                                                    @foreach( $docAttach->document->documentUploads as $key=>$docUpload)
+                                                        @if( $key == 0 )
+                                                            <div class="row flexbox-container">
+                                                                <div class="col-md-12">
+                                                                    <a href="{{ url('download/'. $docAttach->document->id .'/'.$docUpload->file_path) }}">
+                                                                        {!! ViewHelper::stripTags($docAttach->document->name, array('p' ) ) !!}
+                                                                    </a> <br>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clearfix"></div>
+                                                        @endif
+                                                    @endforeach
+                                                @endif
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div> <br>
+                            @endforeach
+                        </div>
+                        
+                        <div class="modal-footer text-right">
+                            <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish_send" value="fast_publish_send">
+                                {{ trans('documentForm.fast-publish-send') }}
+                            </button>
+                            <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
+                                {{ trans('documentForm.fast-publish-only') }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>  <!-- modal end -->  
+        
         </form>
+        
+        
+        
     @stop
     
-     @if( isset( $data->document_type_id ) )
-           @section('preScript')
-               <!-- variable for expanding document sidebar-->
-               <script type="text/javascript">
-                    var documentType = "{{ $data->documentType->name}}";
-                   
-                      
-               </script>
-               
-               <!--patch for checking iso category document-->
-                @if( isset($data->isoCategories->name) )
-                    <script type="text/javascript">   
-                        if( documentType == 'ISO Dokument')
-                            var isoCategoryName = '{{ $data->isoCategories->name}}';
-                    </script>
-                @endif
-               <!-- End variable for expanding document sidebar-->
-           @stop
-       @endif
+@if( isset( $data->document_type_id ) )
+   @section('preScript')
+       <!-- variable for expanding document sidebar-->
+       <script type="text/javascript">
+            var documentType = "{{ $data->documentType->name}}";
+           
+              
+       </script>
+       
+       <!--patch for checking iso category document-->
+        @if( isset($data->isoCategories->name) )
+            <script type="text/javascript">   
+                if( documentType == 'ISO Dokument')
+                    var isoCategoryName = '{{ $data->isoCategories->name}}';
+            </script>
+        @endif
+       <!-- End variable for expanding document sidebar-->
+   @stop
+@endif
