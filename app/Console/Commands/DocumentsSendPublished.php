@@ -146,9 +146,12 @@ class DocumentsSendPublished extends Command
                         if( $docAttach->document_id != $document->id ){
                             foreach( $docAttach->document->documentUploads as $key => $docUpload){
                                 if( $key == 0 ){
+                                    $path = base_path() . '/public/files/documents/'. $docAttach->document->id .'/'. $docUpload->file_path;
+                                    $mime = File::mimeType($path);
+                                    $extension = File::extension($path);
                                     $documentAttachments[] = [
-                                        'filePath' => base_path() . '/public/files/documents/'. $docAttach->document->id .'/'. $docUpload->file_path, 
-                                        'fileName' => str_slug($docAttach->document->id .'-'. $docAttach->document->name) . '.pdf'
+                                        'filePath' => $path,
+                                        'fileName' => str_slug($docAttach->document->id .'-'. $docAttach->document->name) .'.'. $extension
                                     ];
                                 }
                             }

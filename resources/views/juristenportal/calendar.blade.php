@@ -10,8 +10,9 @@
      
             <div class="box">
                  
-                {!! Form::open(['action' => 'JuristenPortalController@viewUserCalendar', 'method'=>'POST']) !!}
+                
                 <div class="row">
+                    {!! Form::open(['action' => 'JuristenPortalController@viewUserCalendar', 'method'=>'POST']) !!}
                     <div class="col-md-4 col-lg-3">
                           <div class="form-group">
                            {!! ViewHelper::setUserSelect($users,'id', $data, old('users'),'', 'Mitarbeiter',false ) !!}
@@ -23,15 +24,18 @@
                            <button class="btn btn-primary" type="submit">anzeigen</button>
                         </div>
                     </div>
+                    {!! Form::close() !!}
                     <div class="col-md-4 col-lg-3">
                     </div>
                     <div class="col-md-4 col-lg-3 text-right">
                         <label>&nbsp;</label>  
                         <div class="form-group">
+                            <a href="#" id="my-next-button">test next</a>
+                            <button class="btn btn-primary" type="submit">next</button>
                         </div>
                     </div>
                 </div>    
-                {!! Form::close() !!} 
+                
                 
                 <div id='calendar'></div>
                 
@@ -47,6 +51,13 @@
 
 @section('script')
 <script>
+
+$('#my-next-button').click(function() {
+    $('#calendar').fullCalendar('next');
+        var moment = $('#calendar').fullCalendar('getDate');
+    alert("The current date of the calendar is " + moment.format());
+});
+
 $('#calendar').fullCalendar({
     
     header: {
@@ -60,106 +71,36 @@ $('#calendar').fullCalendar({
 			},
 			
     eventLimit: 6, // for all non-agenda views
-
-    eventSources: [
-
-        {
-            events: [ // put the array in the `events` property
-                {
-                    title  : 'Test event 1',
-                    start  : '2017-04-05'
-                },
-                {
-                    title  : 'event2',
-                    start  : '2017-04-05',
-                    end    : '2017-04-07'
-                },
-                {
-                    title  : 'event3',
-                    start  : '2017-04-05T12:30:00',
-                },
-                {
-                    title  : 'Test event 4',
-                    start  : '2017-04-05'
-                },
-                {
-                    title  : 'event5',
-                    start  : '2017-04-05',
-                    end    : '2017-04-05'
-                },
-                {
-                    title  : 'event6',
-                    start  : '2017-04-05T12:30:00',
-                }
-            ],
-            color: 'blau',     // an option!
-            textColor: '#FAA' // an option!
-        },
+    
+    events: function(start, end, timezone, callback) {
         
-        {
-            events: [ // put the array in the `events` property
-                {
-                    title  : 'Test event 7',
-                    start  : '2017-04-05'
-                },
-                {
-                    title  : 'event8',
-                    start  : '2017-04-05',
-                    end    : '2017-04-05'
-                },
-                {
-                    title  : 'event9',
-                    start  : '2017-04-05T12:30:00',
-                }
-            ],
-            color: 'red',     // an option!
-            textColor: '#FAA' // an option!
-        },
-        
-        {
-            events: [ // put the array in the `events` property
-                {
-                    title  : 'Test event 10',
-                    start  : '2017-04-05'
-                },
-                {
-                    title  : 'event11',
-                    start  : '2017-04-05',
-                    end    : '2017-04-05'
-                },
-                {
-                    title  : 'event12',
-                    start  : '2017-04-05T12:30:00',
-                }
-            ],
-            color: 'green',     // an option!
-            textColor: '#FAA' // an option!
-        },
-        
-         {
-            events: [ // put the array in the `events` property
-                {
-                    title  : 'Test event 2',
-                    start  : '2017-04-20'
-                },
-                {
-                    title  : 'event2',
-                    start  : '2017-04-20',
-                    end    : '2017-04-20'
-                },
-                {
-                    title  : 'event3',
-                    start  : '2010-01-09T12:30:00',
-                }
-            ],
-            color: 'red',     // an option!
-            textColor: '#FAA' // an option!
-        }
-
-
-    ]
-
-});    
+        jQuery.ajax({
+            url: './calendarEvent',
+            type: 'POST',
+            dataType: 'json',
+            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+            data: {
+                start: start.format(),
+                end: end.format()
+            },
+            success: function(doc) {
+                console.log(doc.title);
+                var events = [];
+               // if(!!doc.result){
+                    $.map( doc, function() {
+                        events.push({
+                            id: '1',
+                            title: doc.title,
+                            start: '2017-04-05',
+                            end: '2017-04-05'
+                        });
+                    });
+               // }
+                callback(events);
+            }
+        });
+    }
+});
 </script>
 
 @stop

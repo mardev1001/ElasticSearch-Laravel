@@ -137,14 +137,9 @@
                                                 {{ $mandantUser->user->last_name ." ". $mandantUser->user->first_name }} 
                                                 </td>
                                             <td class="col-md-8 valign">
-                                                
-                                                @foreach( $roles as $role)
-                                                    @foreach( $mandantUser->mandantUserRoles as $mandantUserRole)
-                                                        @if($mandantUserRole->role_id == $role->id)
-                                                            {{ $role->name }};
-                                                        @endif
+                                                @foreach( $mandantUser->mandantUserRoles as $mandantUserRole)
+                                                       {{ $mandantUserRole->role->name }};
                                                     @endforeach
-                                                @endforeach
 
                                             </td>
                                             <td class="text-center valign">{{ count($mandantUser->user->countMandants) }}</td>

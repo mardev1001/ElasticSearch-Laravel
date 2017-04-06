@@ -1,6 +1,13 @@
 <?php
 
 return [
+    
+    //Navigation
+    'juristTemplates' => 'Wiedervorlage',
+    'juristTemplatesCreate' => 'Wiedervorlage anlegen',
+    'notes' => 'Notiz',
+    'notesCreate' => 'Notiz anlegen',
+    //misc
     'juristenportal' => 'Beratungsportal',
     'documentsRechtsablage' => 'Dokumente Rechtsablage',
     'beratungDocuments' => 'Dokumente Beratung',
@@ -8,7 +15,7 @@ return [
     'calendar' => 'Kalender',
     'files' => 'Akten',
     'notes' => 'Notizen',
-    'createNotes' => 'Notiz ablegen',
+    'createNotes' => 'Notiz anlegen',
     'createFile' => 'Akte anlegen',
     'overview' => 'Übersicht',
     'category' => 'Kategorie',

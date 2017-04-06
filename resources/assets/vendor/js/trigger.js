@@ -63,7 +63,6 @@ $(function() {
         $('a[href="/"]').addClass('active');
     }
     else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search-single') != -1) {
-        // console.log(element);
         $('a[href$="/benutzer"]').addClass('active');
         $('a[href$="/mandantenverwaltung"]').next('ul').removeClass('in');
     }
@@ -76,6 +75,7 @@ $(function() {
     else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search') != -1) {
         $('a[href$="mandanten"]').addClass('active').closest('ul').addClass('in');
     }
+
     else if (url.href.indexOf('benutzer') != -1 && url.href.indexOf('create-partner') != -1) {
         $('a[href*="benutzer/create-partner"]').addClass('active').closest('ul').addClass('in');
     }
@@ -85,7 +85,7 @@ $(function() {
     }
     else if (url.href.indexOf('edit') != -1 && url.href.indexOf('benutzer') != -1) {
         $('a[href*="benutzer/create"]').addClass('active').closest('ul').addClass('in');
-        $('a[href$="/juristenportal"]').next('ul').removeClass('in');
+        $('a[href$="/beratungsportal"]').next('ul').removeClass('in');
     }
     else if (url.href.indexOf('wiki-kategorie') != -1 && isNumeric == true) {
         $('a[href$="wiki"]').addClass('active').closest('ul').addClass('in');
@@ -116,24 +116,22 @@ $(function() {
     }
     else if (url.href.indexOf('suche-abrechnen-abgerechnt') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="abrechnen"]').addClass('active').closest('ul').addClass('in').next('ul').addClass('in');
-        console.log('init1');
     }
-    else if (url.href.indexOf('suche-abrechnen') != -1 && url.href.indexOf('inventarliste') != -1) {
+    else if (url.href.indexOf('inventarliste') != -1 && url.href.indexOf('suche-abrechnen') != -1) {
         $('a[href$="abrechnen"]:not(.no-margin-bottom)').addClass('active').closest('ul').addClass('in').next('ul').addClass('in');
     }
-    else if (url.href.indexOf('suche') != -1 && url.href.indexOf('inventarliste') != -1) {
+    else if (url.href.indexOf('inventarliste') != -1 && url.href.indexOf('suche') != -1) {
         $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
     }
-    else if (url.href.indexOf('edit') != -1 && url.href.indexOf('inventarliste') != -1) {
+    else if (url.href.indexOf('inventarliste') != -1 && url.href.indexOf('edit') != -1) {
         $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
     }
-    else if (url.href.indexOf('historie') != -1 && url.href.indexOf('inventarliste') != -1) {
+    else if (url.href.indexOf('inventarliste') != -1 && url.href.indexOf('historie') != -1) {
         $('a[href$="inventarliste"]').addClass('active').next('ul').addClass('in');
     }
 
-    else if (url.href.indexOf('abrechnen-abgerechnt') != -1 && url.href.indexOf('inventarliste') != -1) {
+    else if (url.href.indexOf('inventarliste') != -1 && url.href.indexOf('abrechnen-abgerechnt') != -1) {
         $('a[href$="abrechnen"]').addClass('active').next('ul').addClass('in');
-        console.log('init2');
     }
     else if (url.href.indexOf('suche') != -1 && typeof slug != 'undefined') {
         if (slug == 'aktuelle-meldungen')
@@ -149,10 +147,9 @@ $(function() {
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
     }
-    else if (url.href.indexOf('juristenportal') != -1 && url.href.indexOf('kategorien') == -1) {
-        $('a[href$="/juristenportal"]').addClass('active').next('ul').addClass('in');
-        $('a[href$="/juristenportal"]').closest('li').find('li.active').removeClass('active');
-        console.log($('a[href$="/juristenportal-kategorien/alle"]').closest('li.active').length);
+    else if (url.href.indexOf('beratungsportal') != -1 && url.href.indexOf('kategorien') == -1) {
+        $('a[href$="/beratungsportal"]').addClass('active').next('ul').addClass('in');
+        $('a[href$="/beratungsportal"]').closest('li').find('li.active').removeClass('active');
         $('a[href$="/juristenportal-kategorien/alle"]').closest('li').removeClass('active');
     }
     else if (url.href.indexOf('juristenportal-kategorien') != -1 && url.href.indexOf('alle') != -1) {
@@ -181,7 +178,6 @@ $(function() {
             detectHref = '/dokumente/vorlagedokumente';
             locker = true;
         }
-
         else if (documentType == "QM-Rundschreiben") {
             detectHref = '/dokumente/rundschreiben-qmr';
             locker = true;
@@ -211,11 +207,16 @@ $(function() {
                 detectHref = '/iso-dokumente';
             locker = true;
         }
+
         else if (typeof documentSlug !== 'undefined' && documentSlug.length && locker == false) {
 
             detectHref = '/dokumente/typ/' + documentSlug;
         }
+
         $('a[href$="' + detectHref + '"]').addClass('active').parents("ul").not('#side-menu').addClass('in');
+    }
+    else if (url.href.indexOf('dokumente') != -1 && window.location.pathname == '/dokumente') {
+        $('a.main-doc-url').addClass('active').next('ul').addClass('in');
     }
     else {
         $('a[href="' + url.href + '"]').addClass('active');

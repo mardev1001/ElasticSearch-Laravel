@@ -123,11 +123,11 @@ class DocumentRepository
                         $node->beforeText = '';
                         if($options['pageHome'] == true && $options['myDocuments'] == true)
                             $node->beforeText = 'Version '.$document->version.', '.$document->documentStatus->name.' - ';// Version 3, Entwurf
-                        if( $document->published_at == null && is_null($document->document_type_id)){
+                        if( $document->date_published == null && is_null($document->document_type_id)){
                             $node->beforeText .= Carbon::parse($document->created_at)->format('d.m.Y').' - ';
                         }
-                        elseif( $document->published_at != null ){
-                            $node->beforeText .= Carbon::parse($document->published_at)->format('d.m.Y').' - ';
+                        elseif( $document->date_published != null ){
+                            $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - ';
                         }
                         else{
                             $node->beforeText .= Carbon::parse($document->date_published)->format('d.m.Y').' - ';

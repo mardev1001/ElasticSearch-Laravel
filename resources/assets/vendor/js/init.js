@@ -82,7 +82,7 @@ $(function() {
                 $(this).closest('.panel').find('.panel-title a').addClass('trigger-datatable')
             }
             else {
-                $('.data-table').DataTable({
+                $(this).DataTable({
                     searching: false,
                     paging: false,
                     info: false,

@@ -14,7 +14,7 @@ class JuristCategory extends Model
     }
     
     public function juristenParent(){
-        return $this->belongsTo('App\JuristCategory','id','jurist_category_parent_id')->where('beratung',0);
+        return $this->belongsTo('App\JuristCategory','jurist_category_parent_id','id')->where('beratung',0);
     }
     
     public function juristCategories(){
@@ -29,7 +29,7 @@ class JuristCategory extends Model
     }
     
     public function juristenBeratungParent(){
-        return $this->belongsTo('App\JuristCategory','id','jurist_category_parent_id')->where('beratung',1);
+        return $this->belongsTo('App\JuristCategory','jurist_category_parent_id','id')->where('beratung',1);
     }
     
     public function juristCategoriesBeratung(){

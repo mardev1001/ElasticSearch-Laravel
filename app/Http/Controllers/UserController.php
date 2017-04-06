@@ -54,6 +54,7 @@ class UserController extends Controller
         $mandantIds = MandantUser::where('user_id', $uid)->whereIn('id', $mandantUserIds)->pluck('mandant_id')->toArray();
         $roles = Role::all();
         $mandants = Mandant::whereIn('id', $mandantIds)->get();
+        
 
         return view('mandanten.individualAdministration', compact('mandants', 'roles',
         'searchParameter', 'deletedUsers', 'deletedMandants'));

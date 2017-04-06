@@ -210,7 +210,7 @@
                         @endif
                     @endif
                     
-                    @if( $document->documentType->document_art == 1)
+                    @if(isset($document->documentType) && $document->documentType->document_art == 1)
                         @if( ViewHelper::universalDocumentPermission( $document,false,false,true ) == true || 
                         ViewHelper::universalHasPermission( array(13) ) == true )
                             <a href="/dokumente/new-version/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.new-version') }}</a> 
@@ -361,7 +361,9 @@
                                     <h5>{{trans('favoriten.assign-category')}}:</h5>
                                     <div class="form-group">
                                         <select name="category_id" id="favorite_category_id" class="form-control select" data-placeholder="{{ strtoupper(trans('dokumentShow.favoriteCategorySelect')) }}">
+                                            @if(isset($document->documentType))
                                             <option value="0">{{ $document->documentType->name }}</option>
+                                            @endif
                                             <option value="new">{{trans('favoriten.new-category')}}</option>
                                             @foreach($favoriteCategories as $category)
                                                 <option value="{{$category->id}}" @if(isset($document->favorite) && ($document->favorite->favorite_categories_id == $category->id)) selected @endif >
@@ -392,7 +394,7 @@
      
     <div class="clearfix"></div> <br>
     
-    @if( $document->documentType->document_art == 1 && count( $document->variantDocuments )  )
+    @if( isset($document->documentType->name) && $document->documentType->document_art == 1 && count( $document->variantDocuments )  )
     
         <div class="panel panel-primary" id="panelDokumente">
         
@@ -457,6 +459,7 @@
     @if( ViewHelper::universalDocumentPermission($document, false, $freigeber = false, true) || 
     ViewHelper::universalDocumentPermission($document, false, true, true) || ViewHelper::universalHasPermission( array())  )
         {!! ViewHelper::generateFreigabeBox($document) !!}
+        {!! ViewHelper::generateSentPublishedBox($document) !!}
     @endif
     
      @if(ViewHelper::universalHasPermission( array(9)) || ViewHelper::universalDocumentPermission($document, false,false,true))

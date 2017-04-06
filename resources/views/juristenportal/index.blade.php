@@ -47,7 +47,7 @@
                     </li>
                     
                     <li>
-                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.documentsRechtsablage') ) }} </a>
+                        <a href="{{ url('rechtsablage-kategorien/alle') }}">{{ ucfirst( trans('juristenPortal.documentsRechtsablage') ) }} </a>
                        
                         @if(!empty($juristenCategories))
                             @foreach( $juristenCategories as $juristenCategory)
@@ -84,7 +84,7 @@
                     </li>
                     
                     <li>
-                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.beratungDocuments') ) }} </a>
+                        <a href="{{ url('beratung-kategorien/alle') }}">{{ ucfirst( trans('juristenPortal.beratungDocuments') ) }} </a>
                        
                         @if(!empty($juristenCategories))
                             @foreach( $juristenCategoriesBeratung as $juristenCategory)

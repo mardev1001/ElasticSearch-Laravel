@@ -470,20 +470,42 @@ class JuristenPortalController extends Controller
         return $newName;
     }
     
+    /**
+     * load Auth::user data
+     */
     public function viewCalendar()
     {
-        //$data = User::find(2); // here Auth::user werdet
+        $data = Auth::user();
         $users = User::where('active', 1)->get();
-        //dd($users);
-        return view('juristenportal.calendar', compact('users'));
+        $documents = Document::where('user_id', $data->id)->get();
+        return view('juristenportal.calendar', compact('users', 'data', 'documents'));
     }
-    
+    /**
+     * load selected user data
+     */
     public function viewUserCalendar(Request $request)
     {
-        //dd($request->username);
-        $data = User::find($request->id);  // here selected user
-        //dd($data);
+        $data = User::find($request->id);
         $users = User::where('active', 1)->get();
-        return view('juristenportal.calendar', compact('users', 'data'));
+        $documents = Document::where('user_id', $data->id)->get();
+        return view('juristenportal.calendar', compact('users', 'data', 'documents'));
+    }
+    
+    public function viewNextMonth(Request $request)
+    {
+         //$msg = "This is a simple message.";
+         //return response()->json(array('msg'=> $documents), 200);
+         $documents = Document::where('user_id', 16)->get();
+         //dd(($documents));
+         
+         foreach($documents as $document){
+            $event[] = array(
+                'title' => $document->name
+            );
+         }
+         
+         //return response()->json(array($documents), 200);
+         //return response()->json(array('title'=>'test1', 'title1'=>'test2', 'title2'=>'test3'), 200);
+         return response()->json($event, 200);
     }
 }

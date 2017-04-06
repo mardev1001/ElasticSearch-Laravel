@@ -89,7 +89,7 @@
             @endif
                 
             <li>
-                <a href="{{ url('dokumente') }}">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
+                <a class="main-doc-url" href="{{ url('dokumente') }}">{{ ucfirst( trans('navigation.documents') ) }} <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse">
                     
                     @if(!empty($documentTypesSubmenu))
@@ -173,13 +173,13 @@
             <!--materialien-->  
             @if( ViewHelper::universalHasPermission( array(7,34) ) == true )
                 
-                <li class="">
+                <li>
                     <a href="{{ url('inventarliste') }}">
                         {{ ucfirst( trans('navigation.inventoryList') )}}
                         <span class="fa arrow"></span>
                     </a>
                     @if( ViewHelper::universalHasPermission( array(34) ) == true )
-                        <ul class="nav nav-second-level">
+                        <ul class="nav nav-second-level collapse">
                             <li>
                                 <a href="{{ url('inventarliste/kategorien') }}">{{ ucfirst( trans('navigation.inventarCategory') )}}</a>
                             </li>
@@ -258,36 +258,41 @@
                     <a href="{{ url('beratungsportal') }}">{{ ucfirst(trans('juristenPortal.juristenportal')) }}
                         <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
-                        
                             <li>
                                 <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
                             </li>
-                        
                             <li>
-                                <a href="{{ url('beratungsportal/calendar') }}">{{ ucfirst( trans('juristenPortal.calendar') ) }} </a>
-                            </li>
-                            
-                            <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.notes') ) }} <span class="fa arrow"></span></a>
+                                <a href="{{ url('#') }}"> @lang('juristenPortal.juristTemplates')<span class="fa arrow"></span></a>
                                 
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createNotes') ) }} </a>
+                                        <a href="{{ url('#') }}">@lang('juristenPortal.juristTemplatesCreate')</a>
                                     </li>
                                 </ul>    
-                            </li>
+                            </li><!--end Wiedervorlage -->
                             
                             <li>
-                                <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.files') ) }} <span class="fa arrow"></span></a>
+                                <a href="{{ url('#') }}">@lang('juristenPortal.notes')<span class="fa arrow"></span></a>
+                                
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ url('#') }}">{{ ucfirst( trans('juristenPortal.createFile') ) }}</a>
+                                        <a href="{{ url('#') }}">@lang('juristenPortal.notesCreate')</a>
                                     </li>
-                                </ul>
-                            </li>
+                                </ul>    
+                            </li><!--end notiz -->
                             
                             <li>
-                                <a href="{{ url('#') }}">@lang('juristenPortal.documentsRechtsablage') <span class="fa arrow"></span></a>
+                                <a href="{{ url('#') }}"> akten Translate<span class="fa arrow"></span></a>
+                                
+                                <ul class="nav nav-third-level">
+                                    <li>
+                                        <a href="{{ url('#') }}">akten create EDIT</a>
+                                    </li>
+                                </ul>    
+                            </li><!--end akten -->
+                            
+                            <li>
+                                <a href="{{ url('rechtsablage-kategorien/alle') }}">@lang('juristenPortal.documentsRechtsablage') <span class="fa arrow"></span></a>
                                     @if(count($juristenCategories))
                                     <ul class="nav nav-third-level">
                                         @foreach( $juristenCategories as $jueristenCategory)
@@ -326,7 +331,7 @@
                             </li>
                                   <!--Beratung Documents-->
                             <li>
-                                <a href="{{ url('#') }}">@lang('juristenPortal.beratungDocuments') <span class="fa arrow"></span></a>
+                                <a href="{{ url('beratung-kategorien/alle') }}">@lang('juristenPortal.beratungDocuments') <span class="fa arrow"></span></a>
                                     @if(count($juristenCategoriesBeratung))
                                     <ul class="nav nav-third-level">
                                         @foreach( $juristenCategoriesBeratung as $jueristenCategory)
@@ -412,6 +417,7 @@
                     </ul>
                     
                 </li>
+              
             @endif
             <!--end benutzer-->
             

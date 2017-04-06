@@ -33,7 +33,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('documents:archiveExpired')
+        $schedule->command('documents:archive-expired')
             ->dailyAt('03:00');
             
         $schedule->command('documents:send-published')

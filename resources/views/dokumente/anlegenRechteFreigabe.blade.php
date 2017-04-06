@@ -142,9 +142,15 @@
                                 @if( ViewHelper::universalHasPermission(array(8) )
                                 || (ViewHelper::universalDocumentPermission($data, false,false, true) == true && $data->document_status_id ==2 ) )
                                     @if($data->documentType->publish_sending == true)
-                                        <a class="btn btn-info no-margin-bottom" data-toggle="modal" data-target="#publishModal" href="#">
-                                            {{ trans('rightsRelease.fastPublish') }}
-                                        </a>
+                                        @if(count($data->documentMandants))
+                                            <a class="btn btn-info no-margin-bottom" data-toggle="modal" data-target="#publishModal" href="#">
+                                                {{ trans('rightsRelease.fastPublish') }}
+                                            </a>
+                                        @else
+                                            <button class="btn btn-info no-margin-bottom" disabled title="{{ trans('rightsRelease.rigtsSaveRequired') }}">
+                                                {{ trans('rightsRelease.fastPublish') }}
+                                            </button>
+                                        @endif
                                     @else
                                         <button type="submit" class="btn btn-info no-margin-bottom no-validate" name="fast_publish" value="fast_publish">
                                             {{ trans('rightsRelease.fastPublish') }}

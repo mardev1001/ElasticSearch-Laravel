@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Auth;
 use File;
+use Carbon\Carbon;
 use App\User;
 use App\Mandant;
 use App\Role;
@@ -15,6 +16,7 @@ use App\DocumentCoauthor;
 use App\DocumentMandant;
 use App\DocumentMandantMandant;
 use App\UserEmailSetting;
+use App\UserSentDocument;
 use App\Document;
 use App\EditorVariant;
 use App\DocumentApproval;
@@ -470,6 +472,7 @@ class ViewHelper
     public static function canCreateEditDoc()
     {
         $uid = Auth::user()->id;
+            
         // dd($uid);
         $mandantUsers = MandantUser::where('user_id', $uid)->get();
 
@@ -627,6 +630,21 @@ class ViewHelper
         $string = view('partials.freigabeBox', compact('document'))->render();
         echo $string;
     }
+    
+    /**
+     * Freigabe boxes.
+     *
+     * @param Collection $document
+     *
+     * @return string $string (html template)
+     */
+    public static function generateSentPublishedBox($document)
+    {
+        $string = '';
+        $sendingList = UserSentDocument::where('document_id', $document->id)->get();
+        $string = view('partials.sentPublishedBox', compact('document', 'sendingList'))->render();
+        echo $string;
+    }
 
     /**
      * Get all roles associated with the user.
@@ -637,7 +655,7 @@ class ViewHelper
      */
     public static function getUserRole($userId)
     {
-        //fetch all mandant Users id's by $userId
+        // fetch all mandant Users id's by $userId
         $mandantUserIds = MandantUser::where('user_id', $userId)->pluck('id')->toArray();
         $roles = MandantUserRole::whereIn('mandant_user_id', $mandantUserIds)->pluck('role_id')->toArray();
 
@@ -1691,4 +1709,18 @@ class ViewHelper
             }
         }
     }
+    
+     /**
+     * Log the status of sending the published documents
+     * 
+     * @param bool $sent
+     * @param string $message
+     */
+    public static function logSendPublished($sent, $message){
+        $logFile = storage_path('logs/publish-sending.log');
+        $sent ? $status = "OK" : $status = "FAIL";
+        $logMessage = "[". Carbon::now() ."]"."[".$status."]"." - "."[".$message."]"."\n";
+        File::append($logFile, $logMessage);
+    }
+    
 }

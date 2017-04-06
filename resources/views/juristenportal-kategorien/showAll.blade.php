@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('page-title')
-   Juristen Kategorien
+  @lang('navigation.juristenPortalRechtsablage')-@lang('navigation.kategorien')
 @stop
 
 

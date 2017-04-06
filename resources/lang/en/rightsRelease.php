@@ -11,4 +11,5 @@ return [
     'fastPublish' => 'schnell veröffentlichen',
     'share' => 'Freigabe starten',
     'save' => 'speichern',
+    'rigtsSaveRequired' => 'Die Rechte müssen erst gespeichert werden.',
 ];
