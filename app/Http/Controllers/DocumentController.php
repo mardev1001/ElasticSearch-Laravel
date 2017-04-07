@@ -3776,12 +3776,12 @@ class DocumentController extends Controller
         $document = Document::find($id);
 
         // Get all users with sending options
-        $settingsUserIds = UserEmailSetting::where('sending_method', 4)
+        $userSettings = UserEmailSetting::where('sending_method', 4)
             ->whereIn('document_type_id', [0, $document->document_type_id])
-            ->where('active', 1)->groupBy('user_id')->pluck('user_id');
-        $users = User::whereIn('id', $settingsUserIds)->get();
-
-        // dd($users);
+            ->where('active', 1)->get();
+        $users = User::whereIn('id', $userSettings->pluck('user_id'))->groupBy('id')->get();
+        $settingsMandant = Mandant::whereIn('id', $userSettings->pluck('mandant_id'))->get();
+        
         // Get list of user mandants that have permission for the document variant
         $mandantsList = array();
         foreach ($users as $user) {
@@ -3809,6 +3809,13 @@ class DocumentController extends Controller
             $mandants = Mandant::whereIn('id', $mandantsList)->get();
         }
 
+        // Filter mandants with permissions by selecting the mandant from the user email settings
+        $mandants = $mandants->filter(function ($value, $key) use ($settingsMandant) {
+            return $settingsMandant->contains($value);
+        });
+        
+        // dd($userSettings);
+        
         $margins = new \StdClass();
         $margins->left = 10;
         $margins->right = 10;
@@ -3816,7 +3823,7 @@ class DocumentController extends Controller
         $margins->bottom = 10;
         $margins->headerTop = 0;
         $margins->footerTop = 5;
-        $render = view('pdf.post-versand', compact('users', 'mandants'));
+        $render = view('pdf.post-versand', compact('users', 'mandants', 'userSettings'));
         $pdf = new PdfWrapper();
         $pdf->AddPage($or, $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);

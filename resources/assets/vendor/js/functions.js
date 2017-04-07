@@ -359,6 +359,7 @@ $(function() {
     var settingsSendMethod = $('.email-settings-form select[name="settings_sending_method"]');
     var settingsEmail = $('.email-settings-form .settings-email');
     var settingsFax = $('.email-settings-form .settings-fax-custom');
+    var settingsMandant = $('.email-settings-form .settings-mandant');
 
     function checkSendMethod() {
         if (settingsSendMethod.val() == 1 || settingsSendMethod.val() == 2) {
@@ -366,18 +367,30 @@ $(function() {
             settingsEmail.show(400);
             settingsFax.hide(400);
             settingsFax.find('input').prop('required', false).val('');
+            settingsMandant.hide(400);
+            settingsMandant.find('select').prop('required', false).val('').trigger('chosen:updated');
         }
         else if (settingsSendMethod.val() == 3) {
-            settingsEmail.find('select').prop('required', false).val('').trigger('chosen:updated');
-            settingsEmail.hide(400);
             settingsFax.find('input').prop('required', true).val('');
             settingsFax.show(400);
+            settingsEmail.find('select').prop('required', false).val('').trigger('chosen:updated');
+            settingsEmail.hide(400);
+        }
+        else if (settingsSendMethod.val() == 4) {
+            settingsMandant.find('select').prop('required', true).val('').trigger('chosen:updated');
+            settingsMandant.show(400);
+            settingsEmail.hide(400);
+            settingsEmail.find('select').prop('required', false).val('').trigger('chosen:updated');
+            settingsFax.hide(400);
+            settingsFax.find('input').prop('required', false).val('');
         }
         else {
             settingsEmail.hide(400);
-            settingsFax.hide(400);
             settingsEmail.find('select').prop('required', false).val('').trigger('chosen:updated');
+            settingsFax.hide(400);
             settingsFax.find('input').prop('required', false).val('');
+            settingsMandant.hide(400);
+            settingsMandant.find('select').prop('required', false).val('').trigger('chosen:updated');
         }
     }
 

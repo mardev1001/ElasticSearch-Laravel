@@ -82,31 +82,24 @@
             </tr>
             </thead>
             <tbody>
-                @if(count($mandants))
-                    @foreach($mandants as $mandant)
-                        @if(count($mandant->users))
-                            @foreach($mandant->users as $user)
-                                @if($users->contains($user))
-                                    <tr>
-                                        <td class="text-center valign">
-                                            {{ $mandant->number ." ". $mandant->kurzname }}
-                                        </td>
-                                        <td class="text-center valign">
-                                            {{ $user->title ." ". $user->first_name ." ". $user->last_name }}
-                                        </td>
-                                        <td class="text-center valigns">
-                                            {{ $mandant->strasse .' ' }}
-                                            {{ $mandant->hausnummer .' ' }}
-                                            {{ $mandant->plz .' ' }}
-                                            {{ $mandant->ort .' ' }}
-                                            {{ $mandant->bundesland .' ' }}
-                                            {{ $mandant->adreszusatz .' ' }}
-                                            {{ $mandant->strasse }}
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach
-                        @endif
+                
+                @if(count($userSettings))
+                    @foreach($userSettings as $setting)
+                        @foreach($mandants as $mandant)
+                            @if($mandant->id == $setting->mandant_id)
+                                <tr>
+                                    <td class="text-center valign">
+                                        {{ $mandant->number ." ". $mandant->kurzname }}
+                                    </td>
+                                    <td class="text-center valign">
+                                        {{ $setting->user->title ." ". $setting->user->first_name ." ". $setting->user->last_name }}
+                                    </td>
+                                    <td class="text-center valigns">
+                                        {{ ViewHelper::getMandantAdress($mandant->id) }}
+                                    </td>
+                                </tr>
+                            @endif
+                        @endforeach
                     @endforeach
                 @else
                     <tr>

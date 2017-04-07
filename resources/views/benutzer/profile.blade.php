@@ -245,6 +245,20 @@
                             </select>
                         </div>
                     </div>
+                    
+                    <div class="col-md-3 col-lg-3"> 
+                        <div class="form-group settings-mandant">
+                            <label class="control-label">{{trans('benutzerForm.mandant')}}*</label>
+                            <select name="settings_mandant" class="form-control select" data-placeholder="{{trans('benutzerForm.mandant')}}*" required>
+                                <option></option>
+                                @foreach($user->mandantUsersDistinct as $mandantUser)
+                                    @if($mandantUser->deleted_at == null)
+                                        <option value="{{$mandantUser->mandant->id}}">({{ $mandantUser->mandant->mandant_number }}) - {{ $mandantUser->mandant->kurzname }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 
                     <div class="col-md-3 col-lg-3">
                         <div class="form-group settings-fax-custom">
@@ -303,6 +317,8 @@
                                 <td class="valign">
                                     @if($setting->recievers_text)
                                         {{ $setting->recievers_text }}
+                                    @elseif($setting->mandant_id)
+                                        {{ ViewHelper::getMandantAdress($setting->mandant_id) }}
                                     @else
                                         -
                                     @endif

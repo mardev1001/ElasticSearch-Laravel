@@ -502,6 +502,12 @@ class UserController extends Controller
         if (in_array($emailSetting->sending_method, [3])) {
             $emailSetting->recievers_text = $request->settings_fax_custom;
         }
+        
+        if ($emailSetting->sending_method == 4) {
+            // $mandant = Mandant::find($request->settings_mandant);
+            // $address = $mandant->strasse .' '. $mandant->hausnummer .' '. $mandant->plz .' '. $mandant->ort .' '. $mandant->bundesland .' '. $mandant->adreszusatz;
+            $emailSetting->mandant_id = $request->settings_mandant;
+        }
 
         // dd($emailSetting);
         $emailSetting->save();

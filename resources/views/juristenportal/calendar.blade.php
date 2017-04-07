@@ -74,6 +74,8 @@ $('#calendar').fullCalendar({
     
     events: function(start, end, timezone, callback) {
         
+        var user_id = $('select[name=id]').val();
+        
         jQuery.ajax({
             url: './calendarEvent',
             type: 'POST',
@@ -81,20 +83,23 @@ $('#calendar').fullCalendar({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             data: {
                 start: start.format(),
-                end: end.format()
+                end: end.format(),
+                user_id: user_id
             },
             success: function(doc) {
-                console.log(doc.title);
+                console.log(doc.length);
                 var events = [];
-               // if(!!doc.result){
-                    $.map( doc, function() {
-                        events.push({
-                            id: '1',
-                            title: doc.title,
-                            start: '2017-04-05',
-                            end: '2017-04-05'
-                        });
-                    });
+                
+                for(var i = 0; i < doc.length; i++){
+                    var item = {};
+                    item.id = doc[i].id;
+                    item.title = doc[i].title;
+                    item.start = doc[i].start;
+                    item.color = doc[i].color;
+                    events.push(item);
+                }
+                
+               
                // }
                 callback(events);
             }

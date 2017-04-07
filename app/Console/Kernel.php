@@ -37,6 +37,6 @@ class Kernel extends ConsoleKernel
             ->dailyAt('03:00');
             
         $schedule->command('documents:send-published')
-            ->everyTenMinutes()->withoutOverlapping();
+            ->everyFiveMinutes()->withoutOverlapping();
     }
 }

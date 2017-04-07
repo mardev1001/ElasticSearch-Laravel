@@ -17,6 +17,8 @@ use App\JuristFileAttachment;
 use App\JuristFileComment;
 use App\JuristFileUpload;
 use App\JuristDocumentsMandant;
+use App\JuristResubmissionPriority;
+use App\JuristFileResubmission;
 use App\Document;
 use App\EditorVariant;
 use App\DocumentUpload;
@@ -475,16 +477,18 @@ class JuristenPortalController extends Controller
      */
     public function viewCalendar()
     {
-        $data = Auth::user();
-        $users = User::where('active', 1)->get();
-        $documents = Document::where('user_id', $data->id)->get();
-        return view('juristenportal.calendar', compact('users', 'data', 'documents'));
+       //$data = Auth::user();
+        //$users = User::where('active', 1)->get();
+        //$documents = Document::where('user_id', $data->id)->get();
+        //return view('juristenportal.calendar', compact('users', 'data', 'documents'));
+        return view('juristenportal.calendar');
     }
     /**
      * load selected user data
      */
     public function viewUserCalendar(Request $request)
     {
+        //dd($request);
         $data = User::find($request->id);
         $users = User::where('active', 1)->get();
         $documents = Document::where('user_id', $data->id)->get();
@@ -493,19 +497,26 @@ class JuristenPortalController extends Controller
     
     public function viewNextMonth(Request $request)
     {
-         //$msg = "This is a simple message.";
-         //return response()->json(array('msg'=> $documents), 200);
-         $documents = Document::where('user_id', 16)->get();
-         //dd(($documents));
+        
+         $start = date('Y-m-d', strtotime($request->start));
+         $end = date('Y-m-d', strtotime($request->end));
+      
+         $documents = JuristFileResubmission::where('sender_id', $request->user_id)
+                        ->join('jurist_files', 'jurist_file_id', '=', 'jurist_files.id')
+                        ->join('jurist_resubmission_priorities', 'jurist_resubmission_priority_id', '=', 'jurist_resubmission_priorities.id')
+                        ->whereBetween('date_available', [$start, $end])
+                        ->get();
          
          foreach($documents as $document){
             $event[] = array(
-                'title' => $document->name
+                'id' => $document->jurist_file_id,
+                'title' => $document->name,
+                'start' => date('Y-m-d', strtotime($document->date_available)),
+                'color' => $document->color,
+                //JuristResubmissionPriority::select('color')->inRandomOrder()->first()
             );
          }
-         
-         //return response()->json(array($documents), 200);
-         //return response()->json(array('title'=>'test1', 'title1'=>'test2', 'title2'=>'test3'), 200);
+     
          return response()->json($event, 200);
     }
 }

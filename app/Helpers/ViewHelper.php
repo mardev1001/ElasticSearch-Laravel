@@ -1113,6 +1113,20 @@ class ViewHelper
             return false;
         }
     }
+    
+    /**
+     * Get Mandant adress by ID.
+     *
+     * @param int $id
+     *
+     * @return string $address
+     */
+    public static function getMandantAdress($id)
+    {
+        $mandant = Mandant::find($id);
+        $address = $address = $mandant->strasse .' '. $mandant->hausnummer .' '. $mandant->plz .' '. $mandant->ort .' '. $mandant->bundesland .' '. $mandant->adreszusatz;
+        return $address;
+    }
 
     /**
      * Get all mandants by User ID.
@@ -1447,7 +1461,7 @@ class ViewHelper
         $settingsUserIds = UserEmailSetting::where('sending_method', $sendingMethod)
             ->whereIn('document_type_id', [0, $document->document_type_id])
             ->where('active', 1)->groupBy('user_id');
-        
+
         // Check if the role assigned to the email setting is a system role
         // Only for sending method 2 - Email + attach
         if($sendingMethod == 2){
@@ -1463,7 +1477,7 @@ class ViewHelper
         $mandantsList = array();
         foreach($users as $user){
             $editorVariants = ViewHelper::documentVariantPermission($document, $user->id, true); // Third parameter is for showing all variants
-            foreach ($editorVariants->variants as $ev) {
+            foreach ($editorVariants->variants as $ev){
                 if($ev->approval_all_mandants == true){
                     // Handle the case where a variant has approval for ALL mandants
                     $allMandants = true;
@@ -1488,6 +1502,28 @@ class ViewHelper
                     }
                 }
             }
+        }
+        
+        if($sendingMethod == 4){
+            
+            // Get all users with sending options
+            $userSettings = UserEmailSetting::where('sending_method', $sendingMethod)
+                ->whereIn('document_type_id', [0, $document->document_type_id])
+                ->where('active', 1)->get();
+                
+            // $users = User::whereIn('id', $userSettings->pluck('user_id'))->groupBy('id')->get();
+            $settingsUsers = User::whereIn('id', $userSettings->pluck('user_id'))->get();
+            $settingsMandant = Mandant::whereIn('id', $userSettings->pluck('mandant_id'))->get();
+            
+            // Filter mandants with permissions by selecting the mandant from the user email settings
+            $mandants = $mandants->filter(function ($value, $key) use ($settingsMandant) {
+                return $settingsMandant->contains($value->id);
+            });
+            
+            // Reset user count
+            $userNumber = 0;
+            foreach($userSettings as $setting) if($mandants->pluck('id')->contains($setting->mandant_id)) $userNumber += 1;
+             
         }
         
         return $userNumber;
