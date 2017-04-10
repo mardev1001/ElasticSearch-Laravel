@@ -39,16 +39,20 @@
                                     Speichern
                                 </button>
                                 
+                                {{-- NEPTUN-815 --}}
                                 @if( $data->documentType->document_art != 1 )
                                     <button class="btn btn-primary" type="submit" name="attachment" value="attachment"> 
                                         <!--<span class="fa fa-file-text-o"></span>-->
                                         Anlage hinzufügen
                                     </button>
                                 @endif
-                                <button class="btn btn-primary" type="submit" name="next" value="next"> 
-                                    <!--<span class="fa fa-chevron-right"></span>-->
-                                    Freigabe & Verteiler
-                                </button>    
+                                
+                                @if(in_array($data->document_status_id, [2, 6]) == false)
+                                    <button class="btn btn-primary" type="submit" name="next" value="next"> 
+                                        <!--<span class="fa fa-chevron-right"></span>-->
+                                        Freigabe & Verteiler
+                                    </button>
+                                @endif
                                 
                                 @yield('buttons')
                             </div>

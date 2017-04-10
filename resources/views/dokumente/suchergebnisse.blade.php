@@ -130,6 +130,8 @@
                                 {!! ViewHelper::setInput('search', '', $search, trans('navigation.search_placeholder'), trans('navigation.search_placeholder'), true) !!}
                                 @if(isset($docType)) <input type="hidden" name="document_type_id" value="{{ $docType }}"> @endif
                                 @if(isset($iso_category_id)) <input type="hidden" name="iso_category_id" value="{{ $iso_category_id }}"> @endif
+                                @if(isset($docs)) <input type="hidden" name="documents" value="{{ $docs }}"> @endif
+                                @if(isset($sort)) <input type="hidden" name="sort" value="{{ $sort }}"> @endif
                             </div>
                             <div class="col-md-12 col-lg-12">
                                 <span class="custom-input-group-btn">

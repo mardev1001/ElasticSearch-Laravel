@@ -88,6 +88,7 @@ class WiedervorlagenStatusController extends Controller
         
         $wiedervorlagenStatus->name = $request->input('name');
         $wiedervorlagenStatus->color = $request->input('color');
+        $wiedervorlagenStatus->bgcolor = $request->input('bgcolor');
         $wiedervorlagenStatus->save();
         
         return back()->with('message', trans('wiedervorlagenStatus.show-update'));

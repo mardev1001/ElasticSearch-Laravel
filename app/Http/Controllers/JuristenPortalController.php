@@ -473,50 +473,75 @@ class JuristenPortalController extends Controller
     }
     
     /**
+     * BEGIN: BERATUNGSPORTAL CALENDAR
+     * 
      * load Auth::user data
      */
     public function viewCalendar()
     {
-       //$data = Auth::user();
-        //$users = User::where('active', 1)->get();
-        //$documents = Document::where('user_id', $data->id)->get();
-        //return view('juristenportal.calendar', compact('users', 'data', 'documents'));
-        return view('juristenportal.calendar');
+        $data = Auth::user();
+        $users = User::where('active', 1)->get();
+        return view('juristenportal.calendar', compact('users', 'data'));
     }
+    
+
+    /**
+     * load calendar data for one month
+     */
+    private function loadOneMonth($request)
+    {
+        $start = date('Y-m-d', strtotime($request->start));
+        $end = date('Y-m-d', strtotime($request->end));
+         
+        $documents = JuristFileResubmission::where('sender_id', $request->user_id)
+                        ->join('jurist_files', 'jurist_file_id', '=', 'jurist_files.id')
+                        ->addSelect('jurist_files.name as jurist_file_name')
+                        ->addSelect('jurist_file_resubmissions.id as jfr_id')
+                        ->addSelect('jurist_file_resubmissions.date_available as jfr_date')
+                        
+                        ->join('jurist_resubmission_priorities', 'jurist_resubmission_priority_id', '=', 'jurist_resubmission_priorities.id')
+                        ->addSelect('jurist_resubmission_priorities.color as color')
+                        
+                        ->whereBetween('date_available', [$start, $end])
+                        ->get();
+                        
+        foreach($documents as $document){
+            $event[] = array(
+                'id' => $document->jfr_id,
+                'title' => $document->jurist_file_name,
+                'start' => date('Y-m-d', strtotime($document->jfr_date)),
+                'color' => $document->color,
+            );
+         }                
+                        
+        return $event;
+    }
+
+    
     /**
      * load selected user data
+     * click on button whit user
      */
     public function viewUserCalendar(Request $request)
     {
         //dd($request);
         $data = User::find($request->id);
         $users = User::where('active', 1)->get();
-        $documents = Document::where('user_id', $data->id)->get();
-        return view('juristenportal.calendar', compact('users', 'data', 'documents'));
+        //$startdate = date('Y-m-d', strtotime($request->starViewtDate));
+        $startdate = $request->starViewtDate;
+        //$documents = JuristFileResubmission::where('sender_id', $data->id)->get();
+        
+        return view('juristenportal.calendar', compact('users', 'data', 'startdate'));
     }
     
+    /**
+     * click next or prev month
+     */    
     public function viewNextMonth(Request $request)
     {
-        
-         $start = date('Y-m-d', strtotime($request->start));
-         $end = date('Y-m-d', strtotime($request->end));
-      
-         $documents = JuristFileResubmission::where('sender_id', $request->user_id)
-                        ->join('jurist_files', 'jurist_file_id', '=', 'jurist_files.id')
-                        ->join('jurist_resubmission_priorities', 'jurist_resubmission_priority_id', '=', 'jurist_resubmission_priorities.id')
-                        ->whereBetween('date_available', [$start, $end])
-                        ->get();
-         
-         foreach($documents as $document){
-            $event[] = array(
-                'id' => $document->jurist_file_id,
-                'title' => $document->name,
-                'start' => date('Y-m-d', strtotime($document->date_available)),
-                'color' => $document->color,
-                //JuristResubmissionPriority::select('color')->inRandomOrder()->first()
-            );
-         }
-     
-         return response()->json($event, 200);
+        $event = $this->loadOneMonth($request);
+        return response()->json($event, 200);
     }
+    
+
 }

@@ -20,9 +20,14 @@
                             {!! ViewHelper::setInput('name', '', old('name'), trans('wiedervorlagenStatus.name'), trans('wiedervorlagenStatus.name'), true) !!} 
                          </div> 
                     </div>
-                    <div class="col-md-6 col-lg-4"> 
+                    <div class="col-md-3 col-lg-2"> 
                         <div class="form-group">
-                            {!! ViewHelper::setInput('color', '', old('color'), trans('wiedervorlagenStatus.colorcode'), trans('wiedervorlagenStatus.colorcode'), true, '', array('colorpicker') ) !!}
+                            {!! ViewHelper::setInput('color', '', old('color'), trans('wiedervorlagenStatus.text-color-code'), trans('wiedervorlagenStatus.text-color-code'), true, '', array('colorpicker') ) !!}
+                         </div> 
+                    </div>
+                    <div class="col-md-3 col-lg-2"> 
+                        <div class="form-group">
+                            {!! ViewHelper::setInput('bgcolor', '', old('bgcolor'), trans('wiedervorlagenStatus.bg-color-code'), trans('wiedervorlagenStatus.bg-color-code'), true, '', array('colorpicker') ) !!}
                          </div> 
                     </div>
                 </div>
@@ -47,9 +52,11 @@
                 <div class="box box-white">
                     <table class="table">
                         <tr>
-                            <th colspan="3">
+                            <th>
                                 {{ trans('wiedervorlagenStatus.name') }}
                             </th>
+                            <th>{{ trans('wiedervorlagenStatus.text-color-code') }}</th>
+                            <th>{{ trans('wiedervorlagenStatus.bg-color-code') }}</th>
                         </tr>
                         @foreach($wiedervorlagenStatuss as $wiedervorlagenStatus)
                       
@@ -58,8 +65,11 @@
                             <td class="col-xs-4 vertical-center">
                                  <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $wiedervorlagenStatus->name }}" required/>
                             </td>
-                            <td class="col-xs-4 vertical-center position-relative">
-                                <input type="text" class="form-control colorpicker" name="color" placeholder="Farbcode" value="{{ $wiedervorlagenStatus->color }}" required/>
+                            <td class="col-xs-2 vertical-center position-relative">
+                                <input type="text" class="form-control colorpicker" name="color" placeholder="{{ trans('wiedervorlagenStatus.text-color-code') }}" value="{{ $wiedervorlagenStatus->color }}" required/>
+                            </td>
+                            <td class="col-xs-2 vertical-center position-relative">
+                                <input type="text" class="form-control colorpicker" name="bgcolor" placeholder="{{ trans('wiedervorlagenStatus.bg-color-code') }}" value="{{ $wiedervorlagenStatus->bgcolor }}" required/>
                             </td>
                             <td class="col-xs-4 text-right table-options">
         

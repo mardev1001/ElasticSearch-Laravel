@@ -13,6 +13,7 @@
                 
                 <div class="row">
                     {!! Form::open(['action' => 'JuristenPortalController@viewUserCalendar', 'method'=>'POST']) !!}
+                    <input type="hidden" id="starViewtDate" name="starViewtDate" value="">
                     <div class="col-md-4 col-lg-3">
                           <div class="form-group">
                            {!! ViewHelper::setUserSelect($users,'id', $data, old('users'),'', 'Mitarbeiter',false ) !!}
@@ -28,11 +29,7 @@
                     <div class="col-md-4 col-lg-3">
                     </div>
                     <div class="col-md-4 col-lg-3 text-right">
-                        <label>&nbsp;</label>  
-                        <div class="form-group">
-                            <a href="#" id="my-next-button">test next</a>
-                            <button class="btn btn-primary" type="submit">next</button>
-                        </div>
+                        
                     </div>
                 </div>    
                 
@@ -52,13 +49,15 @@
 @section('script')
 <script>
 
-$('#my-next-button').click(function() {
-    $('#calendar').fullCalendar('next');
-        var moment = $('#calendar').fullCalendar('getDate');
-    alert("The current date of the calendar is " + moment.format());
+$( 'select[name=id]' ).change(function() {
+    var start = $('#calendar').fullCalendar('getDate');
+    $('#starViewtDate').val(start.format());
 });
 
+
 $('#calendar').fullCalendar({
+
+    defaultDate: moment('{{  $startdate or Carbon\Carbon::today()->format("Y-m-d") }}'),
     
     header: {
 				left: 'prev,next, today',
@@ -74,6 +73,9 @@ $('#calendar').fullCalendar({
     
     events: function(start, end, timezone, callback) {
         
+        var startdate = $('#calendar').fullCalendar('getDate');
+        $('#starViewtDate').val(startdate.format());
+        
         var user_id = $('select[name=id]').val();
         
         jQuery.ajax({
@@ -87,7 +89,7 @@ $('#calendar').fullCalendar({
                 user_id: user_id
             },
             success: function(doc) {
-                console.log(doc.length);
+                
                 var events = [];
                 
                 for(var i = 0; i < doc.length; i++){
@@ -96,11 +98,10 @@ $('#calendar').fullCalendar({
                     item.title = doc[i].title;
                     item.start = doc[i].start;
                     item.color = doc[i].color;
+                    item.textColor = '#FFF';
                     events.push(item);
                 }
-                
-               
-               // }
+
                 callback(events);
             }
         });

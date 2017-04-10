@@ -968,6 +968,10 @@ class DocumentController extends Controller
     public function anlegenRechteFreigabe($id, $backButton = null)
     {
         $data = Document::find($id);
+        
+        // NEPTUN-815
+        if(in_array($data->document_status_id, [2, 6])) return back();
+        
         $dt = DocumentType::find($this->formulareId); //vorlage document
 
         $backButton = '/dokumente/editor/'.$data->id.'/edit';
