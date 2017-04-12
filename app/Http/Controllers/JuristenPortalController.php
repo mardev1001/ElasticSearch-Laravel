@@ -475,18 +475,37 @@ class JuristenPortalController extends Controller
     /**
      * BEGIN: BERATUNGSPORTAL CALENDAR
      * 
+     * load all users who have a record and record status != erledig (id:4)
+     */ 
+    private function loadUserWhithRecord()
+    {
+        $users = User::where('active', 1)
+                        ->join('jurist_file_resubmissions', function($join){
+                          $join->on('users.id', '=', 'jurist_file_resubmissions.sender_id');
+                          $join->on('jurist_file_resubmission_status_id', '!=', \DB::raw(4));
+                        })
+                        ->addSelect('users.id as id')
+                        ->addSelect('users.username as username')
+                        ->addSelect('users.last_name as last_name')
+                        ->addSelect('users.first_name as first_name')
+                        ->groupby('users.id')
+                        ->get();
+                    
+        return $users;
+    }
+     
+     /** 
      * load Auth::user data
      */
     public function viewCalendar()
     {
         $data = Auth::user();
-        $users = User::where('active', 1)->get();
+        $users = $this->loadUserWhithRecord();
         return view('juristenportal.calendar', compact('users', 'data'));
     }
     
-
     /**
-     * load calendar data for one month
+     * load all calendar data for one month who status != erledig (id:4)
      */
     private function loadOneMonth($request)
     {
@@ -494,6 +513,7 @@ class JuristenPortalController extends Controller
         $end = date('Y-m-d', strtotime($request->end));
          
         $documents = JuristFileResubmission::where('sender_id', $request->user_id)
+                        ->where('jurist_file_resubmission_status_id', '!=', '4')
                         ->join('jurist_files', 'jurist_file_id', '=', 'jurist_files.id')
                         ->addSelect('jurist_files.name as jurist_file_name')
                         ->addSelect('jurist_file_resubmissions.id as jfr_id')
@@ -501,6 +521,10 @@ class JuristenPortalController extends Controller
                         
                         ->join('jurist_resubmission_priorities', 'jurist_resubmission_priority_id', '=', 'jurist_resubmission_priorities.id')
                         ->addSelect('jurist_resubmission_priorities.color as color')
+                        ->addSelect('jurist_resubmission_priorities.bgcolor as bgcolor')
+                        
+                        ->join('jurist_file_resubmission_status', 'jurist_file_resubmissions.jurist_file_resubmission_status_id', '=', 'jurist_file_resubmission_status.id')
+                        ->addSelect('jurist_file_resubmission_status.name as statusName')
                         
                         ->whereBetween('date_available', [$start, $end])
                         ->get();
@@ -508,28 +532,25 @@ class JuristenPortalController extends Controller
         foreach($documents as $document){
             $event[] = array(
                 'id' => $document->jfr_id,
-                'title' => $document->jurist_file_name,
+                'title' => $document->jurist_file_name . ', ' . $document->statusName,
                 'start' => date('Y-m-d', strtotime($document->jfr_date)),
                 'color' => $document->color,
+                'bgcolor' => $document->bgcolor
             );
          }                
                         
         return $event;
     }
 
-    
     /**
      * load selected user data
      * click on button whit user
      */
     public function viewUserCalendar(Request $request)
     {
-        //dd($request);
         $data = User::find($request->id);
-        $users = User::where('active', 1)->get();
-        //$startdate = date('Y-m-d', strtotime($request->starViewtDate));
+        $users = $this->loadUserWhithRecord();
         $startdate = $request->starViewtDate;
-        //$documents = JuristFileResubmission::where('sender_id', $data->id)->get();
         
         return view('juristenportal.calendar', compact('users', 'data', 'startdate'));
     }
@@ -542,6 +563,10 @@ class JuristenPortalController extends Controller
         $event = $this->loadOneMonth($request);
         return response()->json($event, 200);
     }
+    
+    /**
+     * END: BERATUNGSPORTAL CALENDAR
+     */ 
     
 
 }

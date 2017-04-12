@@ -4,11 +4,13 @@
         {{ trans('controller.create') }}
     @stop
     @section('content')
-     
+    
         {!! Form::open([
         'url' => 'dokumente/rechte-und-freigabe/'.$data->id,
         'method' => 'POST',
         'class' => 'horizontal-form freigabe-process' ]) !!}
+            {{-- NEPTUN-815, NEPTUN-817 --}}
+             
             <div class="box-wrapper">
                 @if( $data->name != null)   
                     <div class="row">
@@ -20,7 +22,9 @@
                     <div class="row">
                         <div class="col-xs-12 col-md-6">
                             <label>{{ trans('rightsRelease.approver') }}*</label>
-                            <select name="approval_users[]" class="form-control select approval-users" required data-placeholder="{{ trans('rightsRelease.approver') }}" multiple>
+                            <select name="approval_users[]" class="form-control select approval-users" required 
+                            @if($data->document_status_id != 1) disabled @endif
+                            data-placeholder="{{ trans('rightsRelease.approver') }}" multiple>
                                 <option value="0"></option>
                                 @foreach($mandantUsers as $mandatUser)
                                 <option value="{{$mandatUser->id}}"
@@ -28,6 +32,18 @@
                                         >{{ $mandatUser->last_name }} {{ $mandatUser->first_name }} </option>
                                 @endforeach
                             </select>
+                            
+                            {{-- NEPTUN-815, NEPTUN-817 --}}
+                            @if($data->document_status_id != 1) 
+                                <select name="approval_users[]" class="hidden" multiple>
+                                @foreach($mandantUsers as $mandatUser)
+                                    <option value="{{$mandatUser->id}}" 
+                                        {!! ViewHelper::setMultipleSelect($data->documentApprovals, $mandatUser->id, 'user_id') !!}>
+                                        {{ $mandatUser->last_name }} {{ $mandatUser->first_name }}
+                                    </option>
+                                @endforeach
+                                </select>
+                            @endif
                         
                             <div class="clearfix"></div>
                             <div class="row">
@@ -35,8 +51,28 @@
                                 <div class="col-xs-12">
                                     <div class="form-group no-margin-bottom">
                                         <br>
-                                        {!! ViewHelper::setCheckbox('email_approval',$data,old('email_approval'),
+                                        
+                                        {{-- NEPTUN-815, NEPTUN-817 --}}
+                                        
+                                        @if($data->document_status_id != 1) 
+                                            <div class="checkbox no-margin-top">
+                                                <input type="checkbox"  value="1" name="email_approval" 
+                                                    @if( isset( $data->email_approval ) && ( $data->email_approval == 1  ) )
+                                                	    checked
+                                                	@endif 
+                                                	disabled readonly>
+                                                <label>{{ trans('rightsRelease.sendEmail') }}</label>
+                                            </div>
+                                            <div class="hidden"> 
+                                        @endif
+                                            
+                                        {!! ViewHelper::setCheckbox('email_approval', $data, old('email_approval'),
                                         trans('rightsRelease.sendEmail') ) !!}
+                                            
+                                        @if($data->document_status_id != 1) 
+                                            </div> 
+                                        @endif
+                                        
                                     </div>   
                                 </div><!--End input box--> 
                             </div>
@@ -45,6 +81,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="col-xs-12 box-wrapper">
                 <h2 class="title">{{ trans('rightsRelease.right') }}</h2>
                 <div class="box">
@@ -158,22 +195,33 @@
                                     @endif
                                 @endif
                                 
+                                {{-- NEPTUN-815, NEPTUN-817 --}}
+                                @if($data->document_status_id == 1)
                                 <button type="submit" class="btn btn-primary no-margin-bottom validate"  name="ask_publishers" value="ask_publishers">
-                                    <!--<span class="fa fa-share"></span>  -->
                                     {{ trans('rightsRelease.share') }}
                                 </button>
+                                @endif
+                                
+                                {{-- NEPTUN-824 --}}
+                                @if($data->document_status_id == 6)
+                                <button type="submit" class="btn btn-primary no-margin-bottom no-validate"  name="reset_approval" value="reset_approval">
+                                    {{ trans('rightsRelease.approvalReset') }}
+                                </button>
+                                @endif
+                                
                             @endif
                             
                             <button type="submit" class="btn btn-primary no-margin-bottom no-validate"  name="save" value="save">
-                                <!--<span class="fa fa-floppy-o"></span>  -->
                                 {{ trans('rightsRelease.save') }}
                             </button>
+                            
                             @if( $data->document_status_id == 2 ) 
-                                <a class="btn btn-primary no-margin-bottom no-validate"  href="dokumente/{{$data->id}}/edit">
+                                <a href="{{url('dokumente/'. $data->id .'/edit')}}" class="btn btn-primary no-margin-bottom">
                                     <!--<span class="fa fa-floppy-o"></span>  -->
                                     {{ trans('dataUpload.edit') }}
                                 </a>
                             @endif
+                            
                         </div>
                     </div>
                 </div>

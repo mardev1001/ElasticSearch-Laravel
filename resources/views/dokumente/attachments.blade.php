@@ -320,14 +320,14 @@
                                                     Speichern
                                                 </button>
                                                 
-                                                {{-- NEPTUN-815 --}}
-                                                @if(in_array($data->document_status_id, [2, 6]) == false)
+                                                {{-- NEPTUN-815, NEPTUN-817 --}}
+                                                {{-- @if(in_array($data->document_status_id, [2, 6]) == false) --}}
                                                     <button class="btn btn-primary" type="button" name="next" value="next"
                                                     @if( isset($nextButton) ) data-link="{{$nextButton}}" @endif  > 
                                                         <!--<span class="fa fa-chevron-right"></span>-->
                                                         Weiter
                                                     </button>
-                                                @endif
+                                                {{-- @endif --}}
                                                 
                                             </div>
                                             

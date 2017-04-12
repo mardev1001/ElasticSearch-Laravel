@@ -331,7 +331,7 @@ a,
 b,
 strong,
 .text,
-.box span:not(.fa):not(.glyphicon),
+.box span:not(.fa):not(.glyphicon):not(.fc-title),
 #page-wrapper .table>thead>tr>th,
 #page-wrapper .table>tbody>tr>th,
 #page-wrapper .table>tfoot>tr>th,
@@ -341,6 +341,13 @@ strong,
     font-family: $primary-font-family;
     font-size: 12px;
     color: $grey;
+    line-height: 16px;
+    text-transform: initial;
+}
+
+span.fc-title {
+    font-family: $primary-font-family;
+    font-size: 12px;
     line-height: 16px;
     text-transform: initial;
 }

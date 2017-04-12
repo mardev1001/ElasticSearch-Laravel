@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
     <meta name=”x-apple-disable-message-reformatting”>  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-    <title>{{ $request['subject'] }}</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
+    <title>{{ $content->title }}</title> <!-- The title tag shows in email notifications, like Android 4.4. -->
 
     <!-- Web Font / @font-face : BEGIN -->
     <!-- NOTE: If web fonts are not required, lines 9 - 26 can be safely removed. -->
@@ -183,7 +183,7 @@
                 <!--
                 <tr>
                     <td bgcolor="#ffffff" style="text-align:center; padding-top:20px;">
-                        <img src="{{ $request['logo'] }}"  height="" alt="alt_text" border="0" align="center" class="fluid" style="  background: #dddddd; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;">
+                        {{-- <img src="{{ $request['logo'] }}"  height="" alt="alt_text" border="0" align="center" class="fluid" style="  background: #dddddd; font-family: sans-serif; font-size: 15px; mso-height-rule: exactly; line-height: 20px; color: #555555;"> --}}
                     </td>
                 </tr>
                 -->

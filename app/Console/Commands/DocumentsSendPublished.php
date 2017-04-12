@@ -61,10 +61,13 @@ class DocumentsSendPublished extends Command
             // Send email ONLY if it is NOT SENT AND if PUBLISH DATE is TODAY
             if($reciever->sent == false){
                 $document = Document::find($reciever->document_id);
-                if(Carbon::today()->toDateString() == Carbon::parse($document->date_published)->toDateString()){
-                    $this->sendPublishedDocuments($document, $reciever);
-                    $reciever->sent = true;
-                    $reciever->save();
+                if(isset($document)){
+                    if(Carbon::today()->toDateString() == Carbon::parse($document->date_published)->toDateString()){
+                        $this->sendPublishedDocuments($document, $reciever);
+                        $reciever->sent = true;
+                        $reciever->save();
+                        
+                    }
                 }
             }
         }
@@ -91,9 +94,10 @@ class DocumentsSendPublished extends Command
         
         // Skip email sending if user has the email sending flag disabled
         // Skip email sending if document type has no publish sending flag
-        if(($user->email_reciever == false) || ($document->documentType->publish_sending == false)) continue;
+        if(($user->email_reciever == false) || ($document->documentType->publish_sending == false)) return;
         
         // Check if the role assigned to the email setting is a system role
+        $systemRole = false;
         $role = Role::find($emailSetting->email_recievers_id);
         if(isset($role->system_role)) $systemRole = $role->system_role; 
         
@@ -218,9 +222,6 @@ class DocumentsSendPublished extends Command
         }
         
         $variantPermissions = ViewHelper::documentVariantPermission($document, $userId);
-        if ($variantPermissions->permissionExists == false) {
-            return false;
-        }
 
         $datePublished = new Carbon($document->date_published);
         $dateNow = $this->getGermanMonthName(intval($datePublished->format('m')));

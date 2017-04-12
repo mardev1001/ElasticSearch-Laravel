@@ -167,6 +167,10 @@
                                             <input type="checkbox" name="visible_navigation" id="visible_navigation-{{$documentTypeMenu->id}}" @if($documentTypeMenu->visible_navigation) checked @endif>
                                             <label for="visible_navigation-{{$documentTypeMenu->id}}">{{ trans('dokumentTypenForm.visible_navigation') }}</label>
                                         </div>
+                                        <div class="checkbox no-margin-top">
+                                            <input type="checkbox" name="publish_sending" id="publish_sending-{{$documentTypeMenu->id}}" @if($documentTypeMenu->publish_sending) checked @endif>
+                                            <label for="publish_sending-{{$documentTypeMenu->id}}">{{ trans('dokumentTypenForm.publish_sending') }}</label>
+                                        </div>
                                     </div>
                                  </td> 
                                  <td>

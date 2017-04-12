@@ -16,7 +16,20 @@
                     <div class="sent-item-{{$item->document_id}} row flexbox-container col-xs-12">
                         <div class="pull-left">                                
                                 <span class="comment-header">
-                                    <strong> {{ $item->userEmailSetting->recievers_text }}</strong> <br>
+                                    <?php $user = ViewHelper::getUser($item->userEmailSetting->user_id); ?>
+                                    <strong> 
+                                        {{ $user->first_name .' '. $user->last_name }}
+                                        ({{$item->userEmailSetting->recievers_text}}) - 
+                                        @if($item->userEmailSetting->sending_method == 1)
+                                            {{ trans('benutzerForm.email') }}
+                                        @elseif($item->userEmailSetting->sending_method == 2)
+                                            {{ trans('benutzerForm.email-attachment') }}
+                                        @elseif($item->userEmailSetting->sending_method == 3)
+                                            {{ trans('benutzerForm.fax') }}
+                                        @elseif($item->userEmailSetting->sending_method == 4)
+                                            {{ trans('benutzerForm.mail') }}
+                                        @endif
+                                    </strong> <br>
 
                                     @if( $item->sent == true )
                                         Gesendet

@@ -14,6 +14,7 @@
                 <div class="row">
                     {!! Form::open(['action' => 'JuristenPortalController@viewUserCalendar', 'method'=>'POST']) !!}
                     <input type="hidden" id="starViewtDate" name="starViewtDate" value="">
+                    
                     <div class="col-md-4 col-lg-3">
                           <div class="form-group">
                            {!! ViewHelper::setUserSelect($users,'id', $data, old('users'),'', 'Mitarbeiter',false ) !!}
@@ -51,13 +52,18 @@
 
 $( 'select[name=id]' ).change(function() {
     var start = $('#calendar').fullCalendar('getDate');
-    $('#starViewtDate').val(start.format());
+    $('#starViewtDate').val(start.format('YYYY-MM-DD'));
 });
 
 
 $('#calendar').fullCalendar({
 
     defaultDate: moment('{{  $startdate or Carbon\Carbon::today()->format("Y-m-d") }}'),
+    
+    locale: 'de',
+    buttonText: {
+        today: 'heute'
+    },
     
     header: {
 				left: 'prev,next, today',
@@ -66,6 +72,7 @@ $('#calendar').fullCalendar({
 			},
     views: {
 				listMonth: { buttonText: 'Listenansicht' },
+				
 				month: { buttonText: 'Kalender' }
 			},
 			
@@ -74,19 +81,19 @@ $('#calendar').fullCalendar({
     events: function(start, end, timezone, callback) {
         
         var startdate = $('#calendar').fullCalendar('getDate');
-        $('#starViewtDate').val(startdate.format());
+        $('#starViewtDate').val(startdate.format('YYYY-MM-DD'));
         
         var user_id = $('select[name=id]').val();
         
         jQuery.ajax({
-            url: './calendarEvent',
+            url: '{{ url("calendarEvent") }}',
             type: 'POST',
             dataType: 'json',
-            headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
             data: {
                 start: start.format(),
                 end: end.format(),
-                user_id: user_id
+                user_id: user_id,
+                _token: '{{ csrf_token() }}',
             },
             success: function(doc) {
                 
@@ -97,8 +104,8 @@ $('#calendar').fullCalendar({
                     item.id = doc[i].id;
                     item.title = doc[i].title;
                     item.start = doc[i].start;
-                    item.color = doc[i].color;
-                    item.textColor = '#FFF';
+                    item.color = doc[i].bgcolor;
+                    item.textColor = doc[i].color;
                     events.push(item);
                 }
 
@@ -106,6 +113,7 @@ $('#calendar').fullCalendar({
             }
         });
     }
+    
 });
 </script>
 

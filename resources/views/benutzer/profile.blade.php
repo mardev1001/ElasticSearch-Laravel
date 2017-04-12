@@ -180,7 +180,7 @@
     
 </fieldset> 
 
-@if($user->email_reciever)
+
 <fieldset class="email-settings">
     <div class="box-wrapper">
         
@@ -345,7 +345,7 @@
     </div>
     
 </fieldset>
-@endif
+
 
 <fieldset>
     

@@ -193,7 +193,7 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('beratungsportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
     Route::get('beratungsportal/calendar', 'JuristenPortalController@viewCalendar');
     Route::post('beratungsportal/calendar', 'JuristenPortalController@viewUserCalendar');
-    Route::post('beratungsportal/calendarEvent', 'JuristenPortalController@viewNextMonth');
+    Route::post('calendarEvent', 'JuristenPortalController@viewNextMonth');
     Route::resource('beratungsportal', 'JuristenPortalController');
     
     Route::get('rechtsablage-kategorien/alle', 'JuristenPortalCategoryController@singlePageAll');

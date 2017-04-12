@@ -445,7 +445,6 @@ class UserController extends Controller
     {
         $id = Auth::user()->id;
         $documentTypes = DocumentType::where('publish_sending', true)->get();
-        $emailRecievers = Role::where('system_role', true)->get();
         // $emailSettings = UserEmailSetting::where('user_id', $id)->get();
         $emailSettings = UserEmailSetting::where('user_id', $id)->orderBy('document_type_id')->orderBy('email_recievers_id')->get();
 
@@ -459,7 +458,15 @@ class UserController extends Controller
             $user = null;
         }
 
-        $rolesAll = Role::all();
+        // NEPTUN-818
+        // $rolesAll = Role::all();
+        // $emailRecievers = Role::where('system_role', true)->get();
+        $loggedUserMandants = MandantUser::where('user_id', $id)->get();
+        $mandantsUser = Mandant::whereIn('id', $loggedUserMandants->pluck('mandant_id'))->get();
+        $mandantUsers = MandantUser::where('user_id', $id)->whereIn('mandant_id', $mandantsUser->pluck('id'))->get();
+        $mandants = Mandant::whereIn('id', array_pluck($mandantUsers, 'mandant_id'))->get();
+        $mandantUserRoles = MandantUserRole::whereIn('mandant_user_id', array_pluck($mandantUsers, 'id'))->get();
+        $emailRecievers = Role::whereIn('id', $mandantUserRoles->pluck('role_id'))->get();
 
         if (isset($user)) {
             return view('benutzer.profile', compact('user', 'rolesAll', 'documentTypes', 'emailRecievers', 'emailSettings'));

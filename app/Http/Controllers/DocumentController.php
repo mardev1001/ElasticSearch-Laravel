@@ -969,8 +969,8 @@ class DocumentController extends Controller
     {
         $data = Document::find($id);
         
-        // NEPTUN-815
-        if(in_array($data->document_status_id, [2, 6])) return back();
+        // NEPTUN-815, NEPTUN-817
+        // if(in_array($data->document_status_id, [2, 6])) return back();
         
         $dt = DocumentType::find($this->formulareId); //vorlage document
 
@@ -1378,6 +1378,9 @@ class DocumentController extends Controller
             return redirect('/');
         } // end fast publish with sending
         elseif ($request->has('ask_publishers')) {
+            // NEPTUN-815, NEPTUN-817 
+            // if($document->document_status_id != 1) return back();
+            
             $document->document_status_id = 6;
 
             //if send email-> send emails || messages
@@ -1394,6 +1397,22 @@ class DocumentController extends Controller
 
             if ($dirty == true) {
                 session()->flash('message', trans('documentForm.askPublishers'));
+            }
+
+            return redirect('/');
+        } elseif ($request->has('reset_approval')) {
+            
+            // NEPTUN-815, NEPTUN-817 
+            $document->document_status_id = 1;
+            
+            $dirty = $this->dirty($dirty, $document);
+            $document->save();
+
+            $approvals = DocumentApproval::where('document_id', $id)->delete();
+            $dirty = true;
+
+            if ($dirty == true) {
+                session()->flash('message', trans('documentForm.approvalReset'));
             }
 
             return redirect('/');
@@ -2828,7 +2847,8 @@ class DocumentController extends Controller
         $docType = $this->newsId;
         $myRundCoauthorArr = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
         $myRundCoauthor = Document::whereIn('id', $myRundCoauthorArr)->where('document_type_id', $docType)->pluck('id')->toArray();
-
+        
+        $highRole = false;
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
         }

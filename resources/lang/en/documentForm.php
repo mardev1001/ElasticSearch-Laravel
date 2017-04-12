@@ -45,6 +45,7 @@ return [
     'additionalLetter' => 'Zusätzlicher Text',
     'noPermission' => 'Sie haben keine Berechtigung für diese Seite.',
     'documentTemplates' => 'Vorlagen',
+    'approvalReset' => 'Freigabeprozess wurde zurückgesetzt.',
     'saveContinue' => 'speichern und weiter',
 
     'trashDeleted' => 'Dokumente wurden erfolgreich gelöscht.',

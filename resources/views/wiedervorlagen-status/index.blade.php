@@ -63,13 +63,13 @@
                         {!! Form::open(['route' => ['wiedervorlagen-status.update', 'wiedervorlagen-status' => $wiedervorlagenStatus->id], 'method' => 'PATCH']) !!}
                          <tr>
                             <td class="col-xs-4 vertical-center">
-                                 <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $wiedervorlagenStatus->name }}" required/>
+                                 <input type="text" class="form-control" name="name" id="{{ 'name' . $wiedervorlagenStatus->id  }}" placeholder="Name" value="{{ $wiedervorlagenStatus->name }}" required/>
                             </td>
                             <td class="col-xs-2 vertical-center position-relative">
-                                <input type="text" class="form-control colorpicker" name="color" placeholder="{{ trans('wiedervorlagenStatus.text-color-code') }}" value="{{ $wiedervorlagenStatus->color }}" required/>
+                                <input type="text" class="form-control colorpicker" id="{{ 'color' . $wiedervorlagenStatus->id  }}" onchange="colorChanger({{$wiedervorlagenStatus->id}})" name="color" placeholder="{{ trans('wiedervorlagenStatus.text-color-code') }}" value="{{ $wiedervorlagenStatus->color }}" required/>
                             </td>
                             <td class="col-xs-2 vertical-center position-relative">
-                                <input type="text" class="form-control colorpicker" name="bgcolor" placeholder="{{ trans('wiedervorlagenStatus.bg-color-code') }}" value="{{ $wiedervorlagenStatus->bgcolor }}" required/>
+                                <input type="text" class="form-control colorpicker" id="{{ 'bgcolor' . $wiedervorlagenStatus->id  }}" onchange="colorChanger({{$wiedervorlagenStatus->id}})" name="bgcolor" placeholder="{{ trans('wiedervorlagenStatus.bg-color-code') }}" value="{{ $wiedervorlagenStatus->bgcolor }}" required/>
                             </td>
                             <td class="col-xs-4 text-right table-options">
         
@@ -106,5 +106,17 @@
 </fieldset>
 
 <div class="clearfix"></div> <br>
+
+@stop
+
+@section('script')
+<script>
+function colorChanger(t) {
+    var color = $('#color' + t ).val();
+    var bgcolor = $('#bgcolor' + t ).val();
+    console.log(bgcolor);
+    $('#name' + t ).attr('style', 'color:'+ color + '!important; background-color:' + bgcolor + '!important;');
+}
+</script>
 
 @stop
