@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    Dokumente - @lang('navigation.juristenPortalBeratung') 
+    Dokumente @lang('navigation.juristenPortalBeratung') 
     @if($category->juristenBeratungParent)- {{$category->juristenBeratungParent->name}}@endif
     @if($category)- {{$category->name}}@endif
 @stop

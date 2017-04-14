@@ -642,6 +642,7 @@ class ViewHelper
     {
         $string = '';
         $sendingList = UserSentDocument::where('document_id', $document->id)->get();
+        // dd($sendingList);
         $string = view('partials.sentPublishedBox', compact('document', 'sendingList'))->render();
         echo $string;
     }
@@ -1114,6 +1115,19 @@ class ViewHelper
         }
     }
     
+
+    /**
+     * Get Mandant by ID.
+     *
+     * @param int $id
+     *
+     * @return Mandant | bool
+     */
+    public static function getMandantById($id)
+    {
+        return Mandant::find($id);
+    }
+    
     /**
      * Get Mandant adress by ID.
      *
@@ -1454,6 +1468,7 @@ class ViewHelper
      */
     public static function countSendingRecievers($documentId, $variantNumber, $sendingMethod = 1)
     {
+        $userNumber = 0;
         $allMandants = false;
         $document = Document::find($documentId);
         
@@ -1462,50 +1477,50 @@ class ViewHelper
             ->whereIn('document_type_id', [0, $document->document_type_id])
             ->where('active', 1)->groupBy('user_id');
 
-        // Check if the role assigned to the email setting is a system role
-        // Only for sending method 2 - Email + attach
-        if($sendingMethod == 2){
-            $systemRolesArray = Role::where('system_role', true)->pluck('id');
-            $settingsUserIds->whereIn('email_recievers_id', $systemRolesArray);
-        }
-            
         $settingsUserIds = $settingsUserIds->pluck('user_id');
         
-        $users = User::whereIn('id', $settingsUserIds)->get();
-        
-        // Get list of user mandants that have permission for the document variant
-        $mandantsList = array();
-        foreach($users as $user){
-            $editorVariants = ViewHelper::documentVariantPermission($document, $user->id, true); // Third parameter is for showing all variants
-            foreach ($editorVariants->variants as $ev){
-                if($ev->approval_all_mandants == true){
-                    // Handle the case where a variant has approval for ALL mandants
-                    $allMandants = true;
-                } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
-                    $dm = DocumentMandant::where('editor_variant_id', $ev->id)->pluck('id');
-                    $dmm = DocumentMandantMandant::whereIn('document_mandant_id', $dm)->pluck('mandant_id');
-                    foreach($dmm as $id) if(!in_array($id, $mandantsList)) $mandantsList[] = $id;
-                }
-            }
+        if($sendingMethod == 1){
+            $userNumber = $settingsUserIds->count();   
         }
-        
-        // Find mandants by id
-        if($allMandants == true) $mandants = Mandant::all();
-        else $mandants = Mandant::whereIn('id', $mandantsList)->get();
-        
-        $userNumber = 0;
-        if(count($mandants)){
-            foreach($mandants as $mandant){
-                if(count($mandant->users)){
-                    foreach($mandant->users as $user){
-                        if($users->contains($user)) $userNumber+=1;
-                    }
-                }
-            }
+            
+        if($sendingMethod == 2){
+            $userNumber = $settingsUserIds->count();
         }
         
         if($sendingMethod == 4){
             
+            $users = User::whereIn('id', $settingsUserIds)->get();
+            
+            // Get list of user mandants that have permission for the document variant
+            $mandantsList = array();
+            foreach($users as $user){
+                $editorVariants = ViewHelper::documentVariantPermission($document, $user->id, true); // Third parameter is for showing all variants
+                foreach ($editorVariants->variants as $ev){
+                    if($ev->approval_all_mandants == true){
+                        // Handle the case where a variant has approval for ALL mandants
+                        $allMandants = true;
+                    } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
+                        $dm = DocumentMandant::where('editor_variant_id', $ev->id)->pluck('id');
+                        $dmm = DocumentMandantMandant::whereIn('document_mandant_id', $dm)->pluck('mandant_id');
+                        foreach($dmm as $id) if(!in_array($id, $mandantsList)) $mandantsList[] = $id;
+                    }
+                }
+            }
+            
+            // Find mandants by id
+            if($allMandants == true) $mandants = Mandant::all();
+            else $mandants = Mandant::whereIn('id', $mandantsList)->get();
+            
+            if(count($mandants)){
+                foreach($mandants as $mandant){
+                    if(count($mandant->users)){
+                        foreach($mandant->users as $user){
+                            if($users->contains($user)) $userNumber+=1;
+                        }
+                    }
+                }
+            }
+        
             // Get all users with sending options
             $userSettings = UserEmailSetting::where('sending_method', $sendingMethod)
                 ->whereIn('document_type_id', [0, $document->document_type_id])

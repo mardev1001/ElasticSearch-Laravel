@@ -231,7 +231,7 @@ class InventoryController extends Controller
                 $request = $request->all();
                 $from = new \StdClass();
                 $from->name = 'Informationsservice';
-                $from->email = 'info@neptun.de';
+                $from->email = 'info@neptun-gmbh.de';
             
                 $request['logo'] = asset('/img/logo-neptun-new.png');
                 $request['from'] = $from->email;

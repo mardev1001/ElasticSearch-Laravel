@@ -9,12 +9,13 @@ return [
     'notesCreate' => 'Notiz anlegen',
     //misc
     'juristenportal' => 'Beratungsportal',
-    'documentsRechtsablage' => 'Dokumente Rechtsablage',
+    'documentsRechtsablage' => 'Rechtsablage',
+    'createRechtsablage' => 'Rechtsablage anlegen',
     'beratungDocuments' => 'Dokumente Beratung',
     'upload' => 'Upload',
     'calendar' => 'Kalender',
     'files' => 'Akten',
-    'notes' => 'Notizen',
+    //'notes' => 'Notizen',
     'createNotes' => 'Notiz anlegen',
     'createFile' => 'Akte anlegen',
     'overview' => 'Übersicht',
@@ -31,6 +32,8 @@ return [
     
     //akten
     'aktenArt' => 'Aktenart',
+    'akten' => 'Akten',
+    'createAkten' => 'Akten anlegen',
     
     //calendar
     'calendar'  =>  'Kalender',

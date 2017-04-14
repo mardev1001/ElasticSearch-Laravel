@@ -17,6 +17,7 @@ return [
     'email_private' => 'E-Mail Privat',
     'email_work' => 'E-Mail Geschäft',
     'email_reciever' => 'E-Mails empfangen',
+    'email_gf_reciever' => 'E-Mail/ Brief/ Fax Empfang',
     'picture' => 'Foto',
     'roleTransfer' => 'Rollenübertragung',
     'mandant' => 'Mandant',

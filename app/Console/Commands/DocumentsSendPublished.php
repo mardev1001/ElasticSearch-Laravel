@@ -85,7 +85,7 @@ class DocumentsSendPublished extends Command
         $mailContent = new \StdClass();
         $mailContent->subject = 'Benachrichtigung über ein neues Dokument im Intranet: "'. $document->name .'"';
         $mailContent->title = 'Benachrichtigung über ein neues Dokument im Intranet: "'. $document->name .'"';
-        $mailContent->fromEmail = 'info@neptun.de';
+        $mailContent->fromEmail = 'info@neptun-gmbh.de';
         $mailContent->fromName = 'Informationsservice';
         $mailContent->link = url('dokumente/' . $document->id);
             
@@ -101,15 +101,30 @@ class DocumentsSendPublished extends Command
         $role = Role::find($emailSetting->email_recievers_id);
         if(isset($role->system_role)) $systemRole = $role->system_role; 
         
-        // Alternate method to generate pdfs for each viewable variant (add as attachments)
         $documentPdfs = array();
         $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
-        foreach($documentVariants as $dv) {
-            $documentPdfs[] = [
-                'filePath' => $this->generatePdfObject($dv->document_id, $dv->variant_number, $user->id),
-                'fileName' => str_slug($dv->document->id .'-v'. $dv->variant_number .'-'. $dv->document->name) . '.pdf'
-            ];
+        
+        // If PDF uploads are enabled for document, download uploaded PDF instead of the document content
+        if($document->pdf_upload == true){
+            foreach($documentVariants as $dv) {
+                $file = $dv->documentUpload->last()->file_path;
+                // Assign paths to uploaded PDFs
+                $documentPdfs[] = [
+                    // 'filePath' => $this->generatePdfObject($dv->document_id, $dv->variant_number, $user->id),
+                    'filePath' => base_path() . '/public/files/documents/'. $document->id .'/'. $file,
+                    'fileName' => $file
+                ];
+            }    
+        } else {
+            foreach($documentVariants as $dv) {
+                // Alternate method to generate pdfs for each viewable variant (add as attachments)
+                $documentPdfs[] = [
+                    'filePath' => $this->generatePdfObject($dv->document_id, $dv->variant_number, $user->id),
+                    'fileName' => str_slug($dv->document->id .'-v'. $dv->variant_number .'-'. $dv->document->name) . '.pdf'
+                ];
+            }
         }
+        
         
         // Sending method: email (This method is avaliable to all users)
         if($emailSetting->sending_method == 1){

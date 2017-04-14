@@ -10,7 +10,7 @@ return [
     'variante' => 'Variante',
     'fastPublish' => 'schnell veröffentlichen',
     'share' => 'Freigabe starten',
-    'approvalReset' => 'Freigabe zurücksetzen',
+    'approvalReset' => 'Freigabe abbrechen',
     'save' => 'speichern',
     'rigtsSaveRequired' => 'Die Rechte müssen erst gespeichert werden.',
 ];

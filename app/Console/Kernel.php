@@ -13,13 +13,12 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        // Commands\Inspire::class,
         Commands\DocumentsArchiveExpired::class,
         Commands\DocumentsMarkAsRead::class,
         Commands\DocumentsResetTypes::class,
         Commands\DocumentsPublishForms::class,
         Commands\DocumentsSendPublished::class,
-        // Commands\FavoritesCreateCategories::class,
+        Commands\DocumentsNotifyApproval::class,
         Commands\UsersAssignRoles::class,
         Commands\UsersLogout::class,
         Commands\JuristenPortalImport::class,
@@ -35,6 +34,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('documents:archive-expired')
             ->dailyAt('03:00');
+        
+        $schedule->command('documents:notify-approval')
+            ->dailyAt('10:00');
             
         $schedule->command('documents:send-published')
             ->everyFiveMinutes()->withoutOverlapping();

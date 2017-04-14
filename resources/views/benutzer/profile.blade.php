@@ -139,7 +139,9 @@
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
                         <div class="checkbox">
-                            {!! ViewHelper::setCheckbox('email_reciever',$user,old('email_reciever'), trans('benutzerForm.email_reciever') ) !!}
+                            <?php if(ViewHelper::universalHasPermission([2,4])) $recieverLabel = trans('benutzerForm.email_gf_reciever');
+                                else $recieverLabel = trans('benutzerForm.email_reciever');  ?>
+                            {!! ViewHelper::setCheckbox('email_reciever',$user,old('email_reciever'), $recieverLabel ) !!}
                         </div>
                     </div>   
                 </div>
@@ -253,7 +255,7 @@
                                 <option></option>
                                 @foreach($user->mandantUsersDistinct as $mandantUser)
                                     @if($mandantUser->deleted_at == null)
-                                        <option value="{{$mandantUser->mandant->id}}">({{ $mandantUser->mandant->mandant_number }}) - {{ $mandantUser->mandant->kurzname }}</option>
+                                        <option value="{{$mandantUser->mandant->id}}">{{ $mandantUser->mandant->mandant_number }} - {{ $mandantUser->mandant->kurzname }}</option>
                                     @endif
                                 @endforeach
                             </select>
@@ -318,7 +320,8 @@
                                     @if($setting->recievers_text)
                                         {{ $setting->recievers_text }}
                                     @elseif($setting->mandant_id)
-                                        {{ ViewHelper::getMandantAdress($setting->mandant_id) }}
+                                        <?php $mandantById = ViewHelper::getMandantById($setting->mandant_id); ?>
+                                        {{ "(".$mandantById->mandant_number.") ". $mandantById->kurzname }}
                                     @else
                                         -
                                     @endif

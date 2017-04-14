@@ -75,11 +75,11 @@
     <div class="table-container">
         <table class="table">
             <thead>
-            <tr>
-                <th class="text-center valign">{{ trans('documentForm.mandants') }}</th>
-                <th class="text-center valign">{{ trans('documentForm.name') }}</th>
-                <th class="text-center valign">{{ trans('documentForm.adress') }}</th>
-            </tr>
+            <!--<tr>-->
+                <!--<th class="text-left valign">{{ trans('documentForm.mandants') }}</th>-->
+                <!--<th class="text-center valign">{{ trans('documentForm.name') }}</th>-->
+                <!--<th class="text-center valign">{{ trans('documentForm.adress') }}</th>-->
+            <!--</tr>-->
             </thead>
             <tbody>
                 
@@ -88,14 +88,13 @@
                         @foreach($mandants as $mandant)
                             @if($mandant->id == $setting->mandant_id)
                                 <tr>
-                                    <td class="text-center valign">
-                                        {{ $mandant->number ." ". $mandant->kurzname }}
-                                    </td>
-                                    <td class="text-center valign">
-                                        {{ $setting->user->title ." ". $setting->user->first_name ." ". $setting->user->last_name }}
-                                    </td>
-                                    <td class="text-center valigns">
-                                        {{ ViewHelper::getMandantAdress($mandant->id) }}
+                                    <td class="text-left valign" style="text-align: left;">
+                                        {{ $mandant->mandant_number }} <br>
+                                        {{ $mandant->name }} <br>
+                                        {{ $mandant->adresszusatz }} <br>
+                                        {{ $setting->user->title ." ". $setting->user->first_name ." ". $setting->user->last_name }} <br>
+                                        {{ $mandant->strasse }} {{ $mandant->hausnummer }} <br>
+                                        {{ $mandant->plz }} {{ $mandant->ort }} <br>
                                     </td>
                                 </tr>
                             @endif

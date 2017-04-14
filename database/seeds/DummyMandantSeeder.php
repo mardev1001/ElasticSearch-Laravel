@@ -34,7 +34,7 @@ class DummyMandantSeeder extends Seeder
                     'telefon' => '+000 123 456 7890',
                     'fax' => '+000 123 456 0000',
                     'kurzwahl' => '321',
-                    'email' => 'info@neptun.de',
+                    'email' => 'info@neptun-gmbh.de',
                     'website' => 'http://www.neptun.de',
                     'geschaftsfuhrer_history' => 'Historie Testeintrag 1',
                     'created_at' => date("Y-m-d H:i:s"),
