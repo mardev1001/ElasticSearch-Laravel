@@ -23,6 +23,9 @@ use App\Document;
 use App\EditorVariant;
 use App\DocumentUpload;
 use App\User;
+use App\Role;
+use App\MandantUserRole;
+use App\MandantUser;
 
 use App\Http\Repositories\DocumentRepository;
 
@@ -178,8 +181,10 @@ class JuristenPortalController extends Controller
         if (ViewHelper::universalHasPermission(array(7, 34)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
-
-        return view('juristenportal.akten');
+        $userMandantRoles = MandantUserRole::where('role_id', Role::JURISTBENUTZER )->pluck('mandant_user_id')->toArray();
+        $mandantUsers = MandantUser::select('user_id')->whereIn('id',$userMandantRoles)->distinct()->get();
+        $users = User::whereIn('id',$mandantUsers->toArray() )->get();
+        return view('juristenportal.akten', compact('users') );
     }
     
     /**
@@ -191,7 +196,7 @@ class JuristenPortalController extends Controller
      */
     public function storeAkten(Request $request)
     {
-        
+        dd($request->all());
         
         return redirect()->back()->with('messageSecondary', trans('juristenPortal.addedSomething'));
     }

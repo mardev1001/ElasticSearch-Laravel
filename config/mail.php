@@ -55,7 +55,9 @@ return [
     |
     */
 
-    'from' => ['address' => 'info@neptun-gmbh.de', 'name' => 'Informationsservice'],
+
+    'from' => ['address' => null, 'name' => null],
+    // 'from' => ['address' => 'info@neptun-gmbh.de', 'name' => 'Informationsservice'],
 
     /*
     |--------------------------------------------------------------------------

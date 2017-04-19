@@ -200,6 +200,7 @@ Route::group(array('middleware' => ['auth']), function () {
     
     Route::resource('rechtsablage-kategorien', 'JuristenPortalCategoryController');
     
+    Route::get('beratung-kategorien/alle', 'BeratungController@singlePageAll');
     Route::resource('beratung-kategorien', 'BeratungController');
 
     /*

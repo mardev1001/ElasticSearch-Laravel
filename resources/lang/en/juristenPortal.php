@@ -11,6 +11,7 @@ return [
     'juristenportal' => 'Beratungsportal',
     'documentsRechtsablage' => 'Rechtsablage',
     'createRechtsablage' => 'Rechtsablage anlegen',
+    'createBeratung' => 'Beratung anlegen',
     'beratungDocuments' => 'Dokumente Beratung',
     'upload' => 'Upload',
     'calendar' => 'Kalender',

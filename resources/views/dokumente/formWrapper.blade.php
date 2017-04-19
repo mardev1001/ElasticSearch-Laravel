@@ -73,7 +73,10 @@
                <script type="text/javascript">
                     var documentType = "{{ $data->documentType->name}}";
                     var documentSlug = "{{ str_slug($data->documentType->name)}}";
-                      
+                    $(document).ready(function(){
+                        console.log(documentType);
+                    });
+              
                </script>
                
                <!--patch for checking iso category document-->
@@ -85,4 +88,13 @@
                 @endif
                <!-- End variable for expanding document sidebar-->
            @stop
+           
+            @section('afterScript')
+                <script type="text/javascript">
+                $(document).ready(function(){
+                    console.log('ty:'+ documentType);
+                    
+                });
+                </script>          
+            @stop
        @endif

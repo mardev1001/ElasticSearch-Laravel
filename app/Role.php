@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
+    const JURISTBENUTZER = 36;
+    
     use SoftDeletes;
     
     protected $guarded = []; //blacklist
     protected $fillable = ['name','mandant_required','admin_role','system_role','mandant_role','wiki_role']; //whitelist
-
+    
     public function hasRole(){
         
     }

@@ -14,9 +14,21 @@
                 <div class="row">
                     {!! Form::open([ 'action' => 'JuristenPortalController@storeAkten','method'=>'POST']) !!} 
                       
-                            <div class="col-md-6 col-lg-6">
+                            <div class="col-md-4 col-lg-4">
                                 {!! ViewHelper::setInput('name', '',old('name'), 
                                 trans('inventoryList.name'), trans('inventoryList.name'), true) !!}
+                            </div>
+                            
+                            <div class="col-md-4 col-lg-4">
+                                <label>Benutzer</label>
+                               <select name="user_id[]" class="form-control select" multiple data-placeholder="Benutzer">
+                                <option></option>
+                                    @foreach($users as $user){
+                                       <option value="{{$user->id}}"  >
+                                        {{ $user->first_name }} {{ $user->last_name }}
+                                       </option>
+                                    @endforeach
+                                </select> 
                             </div>
                         <div class="clearfix"></div><br/>
                         

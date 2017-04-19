@@ -289,6 +289,12 @@
                                 <a href="{{ url('beratung-kategorien/alle') }}">@lang('juristenPortal.beratungDocuments') <span class="fa arrow"></span></a>
                                     @if(count($juristenCategoriesBeratung))
                                     <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">{{ ( trans('juristenPortal.createBeratung') ) }} </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
+                                        </li>
                                         @foreach( $juristenCategoriesBeratung as $jueristenCategory)
                                             <li>
                                             <a href="{{url('beratung-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
@@ -329,6 +335,12 @@
                                     <span class="fa arrow"></span></a>
                                     @if(count($juristenCategories))
                                     <ul class="nav nav-third-level">
+                                        <li>
+                                            <a href="#">{{ ucfirst( trans('juristenPortal.createRechtsablage') ) }} </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
+                                        </li>
                                         @foreach( $juristenCategories as $jueristenCategory)
                                             <li>
                                             <a href="{{url('rechtsablage-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
