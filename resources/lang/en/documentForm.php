@@ -73,4 +73,6 @@ return [
     'fax' => 'Fax',
     'mail' => 'Brief',
     
+    'documentUnAvailable' => 'Dieses Dokument ist nicht verfügbar',
+    
 ];

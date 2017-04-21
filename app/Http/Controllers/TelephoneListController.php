@@ -416,14 +416,11 @@ class TelephoneListController extends Controller
 
                     // Add sheet
                     $excel->sheet('Alle Mandanten', function ($sheet) use ($exportMandants) {
-                        $sheet->row(1, array('Nr.', 'Firma', 'Strasse', 'Ort', 'Telefon', 'Fax', 'GF-Vorname', 'GF-Name', 'Mail'));
+                        $sheet->row(1, array('Nr.', 'Firma', 'Strasse', 'Ort', 'Telefon', 'Fax', 'Geschäftsführer', 'Mail'));
 
                         if (in_array('0', $exportMandants)) {
                             foreach (Mandant::all() as $mandant) {
-                                $gfUser = array();
-                                $mandantInfo = MandantInfo::where('mandant_id', $mandant->id)->first();
-                                $mandantUsers = MandantUser::where('mandant_id', $mandant->id)->get();
-
+                            
                                 $rowArray = array(
                                     0 => $mandant->mandant_number,
                                     1 => $mandant->name,
@@ -431,43 +428,18 @@ class TelephoneListController extends Controller
                                     3 => $mandant->ort,
                                     4 => $mandant->telefon,
                                     5 => $mandant->fax,
-                                    6 => '-',
-                                    7 => '-',
-                                    8 => $mandant->email,
+                                    6 => $mandant->geschaftsfuhrer_history,
+                                    7 => $mandant->email,
                                 );
-
-                                // Get Geschäftsführer
-                                foreach ($mandantUsers as $mandantUser) {
-                                    foreach ($mandantUser->role as $role) {
-                                        if ($role->id == 2) {
-                                            // var_dump($mandantUser->user);
-                                            if (!in_array($mandantUser->user, $gfUser)) {
-                                                array_push($gfUser, $mandantUser->user);
-                                            }
-                                        }
-                                    }
-                                }
-                                // dd($gfUser);
-
-                                // Output to XLS
-                                if (count($gfUser)) {
-                                    $rowArray[6] = $rowArray[7] = '';
-                                    foreach ($gfUser as $user) {
-                                        $rowArray[6] .= $user->last_name.' ';
-                                        $rowArray[7] .= $user->first_name.' ';
-                                    }
-                                }
 
                                 // Add rows
                                 $sheet->appendRow($rowArray);
                             }
                         } else {
                             foreach ($exportMandants as $id) {
-                                $gfUser = array();
+                                
                                 $mandant = Mandant::find($id);
-                                $mandantInfo = MandantInfo::where('mandant_id', $id)->first();
-                                $mandantUsers = MandantUser::where('mandant_id', $id)->get();
-
+                                
                                 $rowArray = array(
                                     0 => $mandant->mandant_number,
                                     1 => $mandant->name,
@@ -475,32 +447,9 @@ class TelephoneListController extends Controller
                                     3 => $mandant->ort,
                                     4 => $mandant->telefon,
                                     5 => $mandant->fax,
-                                    6 => '-',
-                                    7 => '-',
-                                    8 => $mandant->email,
+                                    6 => $mandant->geschaftsfuhrer_history,
+                                    7 => $mandant->email,
                                 );
-
-                                // Get Geschäftsführer
-                                foreach ($mandantUsers as $mandantUser) {
-                                    foreach ($mandantUser->role as $role) {
-                                        if ($role->id == 2) {
-                                            // var_dump($mandantUser->user);
-                                            if (!in_array($mandantUser->user, $gfUser)) {
-                                                array_push($gfUser, $mandantUser->user);
-                                            }
-                                        }
-                                    }
-                                }
-                                // dd($gfUser);
-
-                                // Output to XLS
-                                if (count($gfUser)) {
-                                    $rowArray[6] = $rowArray[7] = '';
-                                    foreach ($gfUser as $user) {
-                                        $rowArray[6] .= $user->last_name.' ';
-                                        $rowArray[7] .= $user->first_name.' ';
-                                    }
-                                }
 
                                 // Add rows
                                 $sheet->appendRow($rowArray);

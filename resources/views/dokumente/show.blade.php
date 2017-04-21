@@ -516,7 +516,6 @@
                              if( $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').length){
                                   $('a[href$="'+detectHref+'"]').addClass('active').attr('class','active').parent("li").find('ul').addClass('in');
                              }
-                            
                          },1000 );
                 </script>
             @endif

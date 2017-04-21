@@ -353,7 +353,7 @@ tinymce.PluginManager.add('link', function(editor) {
 				if ((editor.settings.link_assume_external_targets && !/^\w+:/i.test(href)) ||
 					(!editor.settings.link_assume_external_targets && /^\s*www[\.|\d\.]/i.test(href))) {
 					delayedConfirm(
-						'The URL you entered seems to be an external link. Do you want to add the required http:// prefix?',
+						'Diese Adresse scheint ein externer Link zu sein.Möchten Sie das dazu benötigte http: // voranstellen?',
 						function(state) {
 							if (state) {
 								href = 'http://' + href;

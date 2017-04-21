@@ -3,6 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+
+use File;
+
 use App\Document;
 
 class ClearDocuments extends Command
@@ -41,15 +44,16 @@ class ClearDocuments extends Command
        $documents = Document::all();
         $deletedCount = 0;
         $notDeletedCount = 0;
-        /*foreach($documents as $document){
+        if(count($documents)){
+            foreach($documents as $document){
             
             // dd($document->editorVariantDocument);
              if( File::deleteDirectory(public_path('files/documents/'.$document->id))){
-                    echo 'deleted document: '$document->id.'<br/>';
+                    // echo 'deleted document: '.$document->id.'<br/>';
                     $deletedCount++;
                 }
                 else{
-                    echo 'no:'.$document->id.'<br/>';
+                    // echo 'no:'.$document->id.'<br/>';
                     $notDeletedCount++;
                 }
             foreach($document->editorVariantDocument as $ev){
@@ -61,8 +65,13 @@ class ClearDocuments extends Command
                 $ev->delete();
             }
             $document->delete();
-        }*/
+        }
         
-        echo '<br/> Deleted documents'
+        echo 'Number of deleted documents:'.$deletedCount;
+        }
+        else{
+            echo 'Documents are already deleted';
+        }
+        
     }
 }

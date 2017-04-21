@@ -1444,10 +1444,15 @@ class DocumentController extends Controller
         $publishedDocumentLink = PublishedDocument::where('url_unique', $id)->first();
         if ((ctype_alnum($id) && !is_numeric($id)) || $publishedDocumentLink != null) {
             $publishedDocs = PublishedDocument::where('url_unique', $id)->orderBy('id', 'DESC')->first();
+            if(is_null($publishedDocs)){
+                return redirect('/')->with('messageSecondary', trans('documentForm.documentUnAvailable'));
+            }
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
             $document = Document::find($id);
-
+            if(is_null($document)){
+                return redirect('/')->with('messageSecondary', trans('documentForm.documentUnAvailable'));
+            }
             /*Published hotfix*/
             // dd($document);
             if ($document->date_published == null) {
@@ -1469,8 +1474,8 @@ class DocumentController extends Controller
                     ->where('user_id', Auth::user()->id)->get();
             $dateReadBckp = '';
 
-            // dd($readDocs);
-
+             
+            
             if (count($readDocs) == 0) {
                 UserReadDocument::create([
                     'document_group_id' => $publishedDocs->document_group_id,
@@ -1478,14 +1483,20 @@ class DocumentController extends Controller
                     'date_read' => Carbon::now(),
                     'date_read_last' => Carbon::now(),
                 ]);
-            } else {
+            } 
+            else {
+                
                 foreach ($readDocs as $readDoc) {
                     $readDoc->date_read_last = Carbon::now();
                     $readDoc->save();
                         //  dd($readDoc);
                 }
             }
-        } else {
+        } 
+        else {
+            if(is_null($document)){
+                return redirect('/')->with('messageSecondary', trans('documentForm.documentUnAvailable'));
+            }
             $oldStatus = $document->document_status_id;
          /*
             Check if document is latest published. if not redirect from unique url to id url

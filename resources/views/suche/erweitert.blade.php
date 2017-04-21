@@ -221,8 +221,12 @@
                                     @endif
                                     -
                                     {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }}
+                                    
+                                    @if(isset($document->owner))
                                     -
                                     {{ $document->owner->first_name . " " .$document->owner->last_name }}
+                                    @endif
+                                    
                                     -
                                     @if(isset($parameter) && !empty($parameter)) 
                                         {!! ViewHelper::highlightKeywords(array($parameter), $document->name_long) !!}
@@ -239,8 +243,12 @@
                                     @endif
                                     -
                                     {{ \Carbon\Carbon::parse($document->date_published)->format('d.m.Y') }} 
+                                    
+                                    @if(isset($document->owner))
                                     -
                                     {{ $document->owner->first_name . " " .$document->owner->last_name }}
+                                    @endif
+                                    
                                     -
                                     @if(isset($parameter) && !empty($parameter)) 
                                         {!! ViewHelper::highlightKeywords(array($parameter), $document->name_long) !!}
