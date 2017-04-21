@@ -187,6 +187,7 @@ Route::group(array('middleware' => ['auth']), function () {
     
     Route::get('beratungsportal/akten', 'JuristenPortalController@akten');
     Route::post('beratungsportal/akten', 'JuristenPortalController@storeAkten');
+    Route::patch('beratungsportal/akten/update/{id?}', 'JuristenPortalController@updateAkten'); //
     
     Route::get('beratungsportal/notiz', 'JuristenPortalController@notiz');
     Route::get('beratungsportal/upload', 'JuristenPortalController@uploadView');

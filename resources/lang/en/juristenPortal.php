@@ -36,6 +36,10 @@ return [
     'akten' => 'Akten',
     'createAkten' => 'Akten anlegen',
     
+    //AktenArt
+    'savedAktenArt' => 'Dateityp gespeichert',
+    'updatedAktenArt' => 'Dateityp aktualisiert',
+    
     //calendar
     'calendar'  =>  'Kalender',
 ];

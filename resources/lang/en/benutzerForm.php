@@ -53,7 +53,7 @@ return [
     'updateEmailSettingSuccess' => 'E-Mail Empfang Einstellungen erfolgreich aktualisiert.',
     'deleteEmailSettingSuccess' => 'E-Mail Empfang Einstellungen wurden entfernt.',
     'document-type' => 'Dokument Typ',
-    'email-recievers' => 'Empfänger',
+    'email-recievers' => 'Berechtigung',
     'sending-method' => 'Versandart',
     'email-type' => 'E-Mail Typ',
     'destination' => 'Ziel',

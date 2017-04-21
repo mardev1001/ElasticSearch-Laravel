@@ -518,6 +518,9 @@ class ViewHelper
      */
     public static function canViewWikiManagmentAdmin()
     {
+         if(!Auth::user()){
+            return redirect('/login');
+        }
         $uid = Auth::user()->id;
         $mandantUsers = MandantUser::where('user_id', $uid)->get();
         foreach ($mandantUsers as $mu) {
@@ -687,6 +690,9 @@ class ViewHelper
      */
     public static function universalHasPermission($userArray = array(), $withAdmin = true, $debug = false)
     {
+         if(!Auth::user()){
+            return redirect('/login');
+        }
         $uid = Auth::user()->id;
 
         $mandantUsers = MandantUser::where('user_id', $uid)->get();

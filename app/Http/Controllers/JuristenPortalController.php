@@ -26,6 +26,8 @@ use App\User;
 use App\Role;
 use App\MandantUserRole;
 use App\MandantUser;
+use App\JuristFileType;
+use App\JuristFileTypeUser;
 
 use App\Http\Repositories\DocumentRepository;
 
@@ -184,7 +186,8 @@ class JuristenPortalController extends Controller
         $userMandantRoles = MandantUserRole::where('role_id', Role::JURISTBENUTZER )->pluck('mandant_user_id')->toArray();
         $mandantUsers = MandantUser::select('user_id')->whereIn('id',$userMandantRoles)->distinct()->get();
         $users = User::whereIn('id',$mandantUsers->toArray() )->get();
-        return view('juristenportal.akten', compact('users') );
+        $juristFileTypes = JuristFileType::all();
+        return view('juristenportal.akten', compact('users','juristFileTypes') );
     }
     
     /**
@@ -196,9 +199,69 @@ class JuristenPortalController extends Controller
      */
     public function storeAkten(Request $request)
     {
-        dd($request->all());
-        
-        return redirect()->back()->with('messageSecondary', trans('juristenPortal.addedSomething'));
+        // dd( $request->all() );
+        $akten =  JuristFileType::create($request->all());
+        if( $request->has('users') && count($request->get('users')) ){
+            $request->merge(['jurist_file_type_id' => $akten->id]);
+            foreach($request->get('users') as $user){
+                 $request->merge(['user_id' => $user]);
+                 $aktenArtUsers =  JuristFileTypeUser::create($request->all());
+            }
+        }
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.savedAktenArt'));
+    }
+     
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAkten(Request $request, $id)
+    {
+        $fileType = JuristFileType::find($id);
+        // dd( $fileType );
+         
+        if( $request->has('active') ){
+            // dd($request->all());
+            //  dd($fileType);
+            $fileType->active = $request->get('active');
+            $fileType->save();
+            //  dd($fileType);
+           
+        }
+        $fileType->fill($request->all() )->save();
+        if(!$request->has('users')){
+            $users = $fileType->juristFileTypeUsers;
+            foreach($users as $user){
+                $user->delete();
+            }
+        }
+        else{
+            $usersBeforeInsert = JuristFileTypeUser::where('jurist_file_type_id',$id)->pluck('user_id')->toArray();
+            $request->merge(['jurist_file_type_id' => $id]);
+            foreach($request->get('users') as $user){
+                $request->merge(['user_id' => $user]);
+                JuristFileTypeUser::create($request->all() );
+                foreach($usersBeforeInsert as $key=>$dek){
+                    if($user == $dek){
+                        unset ($usersBeforeInsert[$key]);
+                    }
+                    
+                }
+            }
+        }
+        foreach($usersBeforeInsert as $del){
+            $delUser = JuristFileTypeUser::where('jurist_file_type_id',$id)->where('user_id',$del)->get();
+            foreach($delUser as $dUr){
+                $dUr->delete();
+            }
+        }
+        // dd( $request->all() );
+       
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.updatedAktenArt'));
     }
     
     

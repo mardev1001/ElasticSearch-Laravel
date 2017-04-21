@@ -19,6 +19,7 @@ class Kernel extends ConsoleKernel
         Commands\DocumentsPublishForms::class,
         Commands\DocumentsSendPublished::class,
         Commands\DocumentsNotifyApproval::class,
+        Commands\ClearDocuments::class,
         Commands\UsersAssignRoles::class,
         Commands\UsersLogout::class,
         Commands\JuristenPortalImport::class,
