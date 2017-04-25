@@ -114,6 +114,9 @@ $(function() {
     else if (url.href.indexOf('wiki') != -1) {
         $('a[href$="wiki"]').addClass('active').next('ul').addClass('in');
     }
+    else if (url.href.indexOf('beratungsportal/calendar') != -1) {
+        $('a[href$="beratungsportal/calendar"]').addClass('active').next('ul').addClass('in');
+    }
     else if (url.href.indexOf('suche-abrechnen-abgerechnt') != -1 && url.href.indexOf('inventarliste') != -1) {
         $('a[href$="abrechnen"]').addClass('active').closest('ul').addClass('in').next('ul').addClass('in');
     }
@@ -148,9 +151,25 @@ $(function() {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
     }
     else if (url.href.indexOf('beratungsportal') != -1 && url.href.indexOf('kategorien') == -1) {
+        console.log('beratungs trigger');
+        console.log($('#side-menu').find('li.active').length);
+        console.log($('a[href$="/beratungsportal"]').closest('li').find('.nav-second-level li').length);
+        $('a[href$="/beratungsportal"]').closest('li').find('.nav-second-level li.active').removeClass('active');
         $('a[href$="/beratungsportal"]').addClass('active').next('ul').addClass('in');
         $('a[href$="/beratungsportal"]').closest('li').find('li.active').removeClass('active');
         $('a[href$="/juristenportal-kategorien/alle"]').closest('li').removeClass('active');
+        console.log($('a[href$="/beratungsportal"]').closest('li').find('.nav-second-level li.active').length);
+        // $('a[href$="/beratungsportal"]').closest('li').find('.nav-second-level li.active').removeClass('active');
+        console.log($('.sidebar-nav a[href$="/beratungsportal"]').next('ul').find('li').length);
+        $('.sidebar-nav a[href$="/beratungsportal"]').next('ul').find('li').each(function() {
+            if ($(this).hasClass('active')) {
+                console.log('has act');
+            }
+            else {
+                console.log('nope');
+            }
+        });
+
     }
     else if (url.href.indexOf('juristenportal-kategorien') != -1 && url.href.indexOf('alle') != -1) {
         $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
@@ -159,6 +178,7 @@ $(function() {
                 $(this).removeClass('active');
             }
         });
+
         $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul.in li.active').removeClass('active');
 
     }

@@ -17,17 +17,17 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-4"> 
                         <div class="form-group">
-                            {!! ViewHelper::setInput('name', '', old('name'), trans('wiedervorlagenStatus.name'), trans('wiedervorlagenStatus.name'), true) !!} 
+                            {!! ViewHelper::setInput('name', '', old('name'), trans('wiedervorlagenStatus.name'), trans('wiedervorlagenStatus.name'), true, '', array(''), array('id=new_name') ) !!} 
                          </div> 
                     </div>
                     <div class="col-md-3 col-lg-2"> 
                         <div class="form-group">
-                            {!! ViewHelper::setInput('color', '', old('color'), trans('wiedervorlagenStatus.text-color-code'), trans('wiedervorlagenStatus.text-color-code'), true, '', array('colorpicker') ) !!}
+                            {!! ViewHelper::setInput('color', '', old('color'), trans('wiedervorlagenStatus.text-color-code'), trans('wiedervorlagenStatus.text-color-code'), true, '', array('colorpicker'), array('id=new_color') ) !!}
                          </div> 
                     </div>
                     <div class="col-md-3 col-lg-2"> 
                         <div class="form-group">
-                            {!! ViewHelper::setInput('bgcolor', '', old('bgcolor'), trans('wiedervorlagenStatus.bg-color-code'), trans('wiedervorlagenStatus.bg-color-code'), true, '', array('colorpicker') ) !!}
+                            {!! ViewHelper::setInput('bgcolor', '', old('bgcolor'), trans('wiedervorlagenStatus.bg-color-code'), trans('wiedervorlagenStatus.bg-color-code'), true, '', array('colorpicker'), array('id=new_bgcolor') ) !!}
                          </div> 
                     </div>
                 </div>
@@ -114,9 +114,23 @@
 function colorChanger(t) {
     var color = $('#color' + t ).val();
     var bgcolor = $('#bgcolor' + t ).val();
-    console.log(bgcolor);
     $('#name' + t ).attr('style', 'color:'+ color + '!important; background-color:' + bgcolor + '!important;');
 }
+
+$('#new_color').change(function(event) {
+    var color = $('#new_color').val();
+    var bgcolor = $('#new_bgcolor').val();
+    $('#new_name').attr('style', 'color:'+ color + '!important; background-color:' + bgcolor + '!important;');
+});
+
+$('#new_bgcolor').change(function(event) {
+    var color = $('#new_color').val();
+    var bgcolor = $('#new_bgcolor').val();
+    $('#new_name').attr('style', 'color:'+ color + '!important; background-color:' + bgcolor + '!important;');
+});
+
 </script>
+
+
 
 @stop

@@ -68,6 +68,12 @@
                             </li>
                     @endif
                     
+                    @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                        <li>
+                             <a href="{{ url('beratungsportal/aktenart') }}">{{  trans('navigation.aktenArt') }}</a>
+                        </li>
+                    @endif
+                    
                     @if( ViewHelper::universalHasPermission( array(6) ) == true )
                         <li>
                             <a href="{{ url('rollen') }}">{{ ucfirst( trans('navigation.rollenverwatung') ) }}</a>

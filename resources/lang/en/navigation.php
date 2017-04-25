@@ -54,5 +54,6 @@ return [
     'juristenPortalBeratung' => 'Beratung',
     'juristenPortalCategories'  => 'Kategorien',
     'wiedervorlagenStatus'  => 'Wiedervorlagen Status',
+    'aktenArt'  => 'Akten Arten',
 
 ];

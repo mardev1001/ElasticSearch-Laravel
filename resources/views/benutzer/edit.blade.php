@@ -62,14 +62,14 @@ Mandantenverwaltung - Benutzer bearbeiten
                 <!-- input box-->
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('first_name', $user, old('first_name'), trans('benutzerForm.first_name'), trans('benutzerForm.first_name'), true) !!}
+                       {!! ViewHelper::setInput('first_name', $user, old('first_name'), trans('benutzerForm.first_name'), trans('benutzerForm.first_name'), false) !!}
                     </div>   
                 </div><!--End input box-->
         
                 <!-- input box-->
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('last_name', $user, old('last_name'), trans('benutzerForm.last_name'), trans('benutzerForm.last_name'), true) !!}
+                       {!! ViewHelper::setInput('last_name', $user, old('last_name'), trans('benutzerForm.last_name'), trans('benutzerForm.last_name'), false) !!}
                     </div>   
                 </div><!--End input box-->
         
@@ -82,7 +82,7 @@ Mandantenverwaltung - Benutzer bearbeiten
                 
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                        {!! ViewHelper::setInput('position', $user, old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), true) !!}
+                        {!! ViewHelper::setInput('position', $user, old('position'), trans('benutzerForm.position'), trans('benutzerForm.position'), false) !!}
                     </div>   
                 </div>
                 
@@ -136,7 +136,7 @@ Mandantenverwaltung - Benutzer bearbeiten
                 <!-- input box-->
                 <div class="col-md-4 col-lg-3"> 
                     <div class="form-group">
-                       {!! ViewHelper::setInput('email', $user, old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), true, 'email') !!}
+                       {!! ViewHelper::setInput('email', $user, old('email'), trans('benutzerForm.email'), trans('benutzerForm.email'), false, 'email') !!}
                     </div>   
                 </div><!--End input box-->
                 

@@ -256,12 +256,13 @@
                         <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li>
-                                <a href="{{ url('#') }}"> @lang('juristenPortal.juristTemplates')<span class="fa arrow"></span></a>
+                                <a href="{{ url('beratungsportal/calendar') }}"> @lang('juristenPortal.juristTemplates')<span class="fa arrow"></span></a>
                                 
                                 <ul class="nav nav-third-level">
                                     <li>
                                         <a href="{{ url('#') }}">@lang('juristenPortal.juristTemplatesCreate')</a>
                                     </li>
+                                    
                                 </ul>    
                             </li><!--end Wiedervorlage -->
                             <li>
@@ -495,6 +496,12 @@
                         @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
                             <li>
                                 <a href="{{ url('wiedervorlagen-status') }}">{{ ucfirst( trans('navigation.wiedervorlagenStatus') ) }}</a>
+                            </li>
+                        @endif
+                        
+                        @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                            <li>
+                                <a href="{{ url('beratungsportal/aktenart') }}">{{  trans('navigation.aktenArt') }}</a>
                             </li>
                         @endif
                         

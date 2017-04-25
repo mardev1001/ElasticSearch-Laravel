@@ -185,9 +185,9 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('beratungsportal/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     Route::patch('beratungsportal/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     
-    Route::get('beratungsportal/akten', 'JuristenPortalController@akten');
-    Route::post('beratungsportal/akten', 'JuristenPortalController@storeAkten');
-    Route::patch('beratungsportal/akten/update/{id?}', 'JuristenPortalController@updateAkten'); //
+    Route::get('beratungsportal/aktenart', 'JuristenPortalController@aktenArt');
+    Route::post('beratungsportal/aktenart', 'JuristenPortalController@storeAktenArt');
+    Route::patch('beratungsportal/aktenart/update/{id?}', 'JuristenPortalController@updateAktenArt'); //
     
     Route::get('beratungsportal/notiz', 'JuristenPortalController@notiz');
     Route::get('beratungsportal/upload', 'JuristenPortalController@uploadView');

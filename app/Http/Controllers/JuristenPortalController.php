@@ -178,7 +178,7 @@ class JuristenPortalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function akten()
+    public function aktenArt()
     {
         if (ViewHelper::universalHasPermission(array(7, 34)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
@@ -187,7 +187,7 @@ class JuristenPortalController extends Controller
         $mandantUsers = MandantUser::select('user_id')->whereIn('id',$userMandantRoles)->distinct()->get();
         $users = User::whereIn('id',$mandantUsers->toArray() )->get();
         $juristFileTypes = JuristFileType::all();
-        return view('juristenportal.akten', compact('users','juristFileTypes') );
+        return view('juristenportal.aktenArt', compact('users','juristFileTypes') );
     }
     
     /**
@@ -197,12 +197,18 @@ class JuristenPortalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function storeAkten(Request $request)
+    public function storeAktenArt(Request $request)
     {
         // dd( $request->all() );
         $akten =  JuristFileType::create($request->all());
         if( $request->has('users') && count($request->get('users')) ){
             $request->merge(['jurist_file_type_id' => $akten->id]);
+            if( in_array('Alle',$request->get('users'))){
+                $userMandantRoles = MandantUserRole::where('role_id', Role::JURISTBENUTZER )->pluck('mandant_user_id')->toArray();
+                $mandantUsers = MandantUser::select('user_id')->whereIn('id',$userMandantRoles)->distinct()->get();
+                $users = User::whereIn('id',$mandantUsers->toArray() )->pluck('id')->toArray();
+                $request->merge(['users'=> $users]);
+            }
             foreach($request->get('users') as $user){
                  $request->merge(['user_id' => $user]);
                  $aktenArtUsers =  JuristFileTypeUser::create($request->all());
@@ -219,7 +225,7 @@ class JuristenPortalController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function updateAkten(Request $request, $id)
+    public function updateAktenArt(Request $request, $id)
     {
         $fileType = JuristFileType::find($id);
         // dd( $fileType );
@@ -233,6 +239,7 @@ class JuristenPortalController extends Controller
            
         }
         $fileType->fill($request->all() )->save();
+        $usersBeforeInsert = JuristFileTypeUser::where('jurist_file_type_id',$id)->pluck('user_id')->toArray();
         if(!$request->has('users')){
             $users = $fileType->juristFileTypeUsers;
             foreach($users as $user){
@@ -240,8 +247,14 @@ class JuristenPortalController extends Controller
             }
         }
         else{
-            $usersBeforeInsert = JuristFileTypeUser::where('jurist_file_type_id',$id)->pluck('user_id')->toArray();
             $request->merge(['jurist_file_type_id' => $id]);
+             if( in_array('Alle',$request->get('users'))){
+                $userMandantRoles = MandantUserRole::where('role_id', Role::JURISTBENUTZER )->pluck('mandant_user_id')->toArray();
+                $mandantUsers = MandantUser::select('user_id')->whereIn('id',$userMandantRoles)->distinct()->get();
+                $users = User::whereIn('id',$mandantUsers->toArray() )->pluck('id')->toArray();
+                $request->merge(['users'=> $users]);
+            }
+            
             foreach($request->get('users') as $user){
                 $request->merge(['user_id' => $user]);
                 JuristFileTypeUser::create($request->all() );
@@ -253,6 +266,7 @@ class JuristenPortalController extends Controller
                 }
             }
         }
+      
         foreach($usersBeforeInsert as $del){
             $delUser = JuristFileTypeUser::where('jurist_file_type_id',$id)->where('user_id',$del)->get();
             foreach($delUser as $dUr){

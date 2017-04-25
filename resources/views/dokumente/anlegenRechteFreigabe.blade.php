@@ -203,7 +203,7 @@
                                 @endif
                                 
                                 {{-- NEPTUN-824 --}}
-                                @if($data->document_status_id == 6)
+                                @if(in_array($data->document_status_id, [2, 6]))
                                 <button type="submit" class="btn btn-primary no-margin-bottom no-validate"  name="reset_approval" value="reset_approval">
                                     {{ trans('rightsRelease.approvalReset') }}
                                 </button>
@@ -251,6 +251,9 @@
                                         {{ trans('documentForm.mail') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 4) }} <br>
                                         
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
+                                        @foreach($data->documentUploads as $k => $attachment)
+                                            @if($k > 0) @break @endif <a href="{{url('download/'. $data->id .'/'. $attachment->file_path)}}">PDF Rundschreiben ausdrucken</a><br>
+                                        @endforeach
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/post-versand/'. $variant->variant_number) }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
                             
                                         @if( count( $variant->EditorVariantDocument ) )            

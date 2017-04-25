@@ -237,7 +237,7 @@
                     
                 
                     @if( $document->document_status_id  != 5 )
-                        @if( ViewHelper::universalDocumentPermission($document) && ViewHelper::universalHasPermission(array(33)) ) 
+                        @if( ViewHelper::universalDocumentPermission($document,false) && ViewHelper::universalHasPermission(array(33)) ) 
                             @if($document->document_status_id == 3)
                                 <a href="/dokumente/statistik/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.stats') }}</a>
                             @endif
@@ -460,10 +460,11 @@
     ViewHelper::universalDocumentPermission($document, false, true, true) || ViewHelper::universalHasPermission( array())  )
         {!! ViewHelper::generateFreigabeBox($document) !!}
         {!! ViewHelper::generateSentPublishedBox($document) !!}
+        {{-- ViewHelper::generateSentMailBox($document) --}}
     @endif
     
      @if(ViewHelper::universalHasPermission( array(9)) || ViewHelper::universalDocumentPermission($document, false,false,true))
-        @if( ViewHelper::universalDocumentPermission($document) == true )
+        @if( ViewHelper::universalDocumentPermission($document,false) == true )
            @if( $commentVisibility->freigabe == true || ViewHelper::universalDocumentPermission($document, false,false,true) )
                 @if( count($documentCommentsFreigabe) )
                     {!! ViewHelper::generateCommentBoxes($documentCommentsFreigabe, trans('wiki.commentAdmin'),true ) !!}

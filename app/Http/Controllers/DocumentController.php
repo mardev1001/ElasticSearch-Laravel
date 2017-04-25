@@ -1391,6 +1391,7 @@ class DocumentController extends Controller
                 $approvals = DocumentApproval::where('document_id', $id)->delete();
                 foreach ($request->get('approval_users') as $approvalUser) {
                     $approvalUser = DocumentApproval::create(array('document_id' => $id, 'user_id' => $approvalUser));
+                    ViewHelper::notifyFreigeber($approvalUser);
                     $dirty = true;
                 }
             }
@@ -3714,43 +3715,56 @@ class DocumentController extends Controller
             foreach ($emailSettings as $emailSetting) {
                 // Get user data for the email setting
                 $user = User::find($emailSetting->user_id);
-
+                
                 // Skip email sending if user has the email sending flag disabled
                 // Skip email sending if document type has no publish sending flag
                 if (($user->email_reciever == false) || ($document->documentType->publish_sending == false)) {
                     continue;
                 }
-
-                // Check if the role assigned to the email setting is a system role
-                $systemRole = null;
-                $role = Role::find($emailSetting->email_recievers_id);
-                if (isset($role->system_role)) {
-                    $systemRole = $role->system_role;
-                }
-
-                // Sending method: email (This method is avaliable to all users)
-                if ($emailSetting->sending_method == 1) {
-                    // Check if the document type is corresponding the mailing settings
-                    if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
-                        UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
+                
+                // Check if user has document permission
+                $documentPermission = ViewHelper::documentVariantPermission($document, $user->id)->permissionExists;
+                if($documentPermission){
+                    
+                    // Check if the role assigned to the email setting is in the document verteiler roles for the document
+                    $allowed = false;
+                    if($emailSetting->email_recievers_id == 0){
+                        if($document->approval_all_roles == 1) $allowed = true;
+                    } else {
+                        $documentRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id');
+                        if($documentRecievers->contains($emailSetting->email_recievers_id)) $allowed = true;
                     }
-                }
-
-                // Sending method: email + attachment (ONLY system roles can recieve documents as attachments)
-                if ($systemRole && ($emailSetting->sending_method == 2)) {
-                    // Check if the document type is corresponding the mailing settings
-                    if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
-                        // Save sent documents and settings log to DB
-                        UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
+                    
+                    // Proceed if role assignment criteria is met
+                    if($allowed){
+                        
+                        // Sending method: email (This method is avaliable to all users)
+                        if ($emailSetting->sending_method == 1) {
+                            // Check if the document type is corresponding the mailing settings
+                            if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
+                                UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
+                            }
+                        }
+        
+                        // Sending method: email + attachment (ONLY system roles can recieve documents as attachments: this is handled in the user profile form)
+                        if ($emailSetting->sending_method == 2) {
+                            // Check if the document type is corresponding the mailing settings
+                            if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
+                                // Save sent documents and settings log to DB
+                                UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
+                            }
+                        }
+        
+                        // Sending method: fax (This method sends the document via fax commands)
+                        if ($emailSetting->sending_method == 3) {
+                            // Check if the document type is corresponding the mailing settings
+                            if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
+                                UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
+                            }
+                        }
+                        
                     }
-                }
-
-                // Sending method: fax (This method sends the document via fax commands)
-                if ($emailSetting->sending_method == 3) {
-                    // Check if the document type is corresponding the mailing settings
-                    if (in_array($emailSetting->document_type_id, [0, $document->document_type_id])) {
-                        UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
-                    }
+                    
                 }
             }
         }

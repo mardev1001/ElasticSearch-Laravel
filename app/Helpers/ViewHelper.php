@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Auth;
 use File;
+use Mail;
 use Carbon\Carbon;
 use App\User;
 use App\Mandant;
@@ -635,7 +636,7 @@ class ViewHelper
     }
     
     /**
-     * Freigabe boxes.
+     * Emails for sent published document box.
      *
      * @param Collection $document
      *
@@ -647,6 +648,22 @@ class ViewHelper
         $sendingList = UserSentDocument::where('document_id', $document->id)->get();
         // dd($sendingList);
         $string = view('partials.sentPublishedBox', compact('document', 'sendingList'))->render();
+        echo $string;
+    }
+    
+    /**
+     * Mailing list box.
+     *
+     * @param Collection $document
+     *
+     * @return string $string (html template)
+     */
+    public static function generateSentMailBox($document)
+    {
+        $string = '';
+        $mailList = UserSentDocument::where('document_id', $document->id)->get();
+        // dd($sendingList);
+        $string = view('partials.sentMailBox', compact('document', 'mailList'))->render();
         echo $string;
     }
 
@@ -1477,22 +1494,29 @@ class ViewHelper
         $userNumber = 0;
         $allMandants = false;
         $document = Document::find($documentId);
+        $emailRecievers = array();
+        
+        if($document->approval_all_roles == 1) $emailRecievers = [0];
+        elseif($document->documentMandants->first()){
+            $emailRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id')->toArray();
+        }
         
         // Get all users with sending options
         $settingsUserIds = UserEmailSetting::where('sending_method', $sendingMethod)
             ->whereIn('document_type_id', [0, $document->document_type_id])
-            ->where('active', 1)->groupBy('user_id');
-
-        $settingsUserIds = $settingsUserIds->pluck('user_id');
+            ->where('active', 1)->groupBy('user_id')->pluck('user_id');
         
-        if($sendingMethod == 1){
-            $userNumber = $settingsUserIds->count();   
-        }
-            
-        if($sendingMethod == 2){
-            $userNumber = $settingsUserIds->count();
+        // Get e-mailed user number
+        if(in_array($sendingMethod, [1, 2])){
+            $userNumber = UserEmailSetting::whereIn('user_id', $settingsUserIds)
+                ->whereIn('document_type_id', [0, $document->document_type_id])
+                ->whereIn('email_recievers_id', $emailRecievers)
+                ->where('sending_method', $sendingMethod)
+                ->where('active', 1)
+                ->count();
         }
         
+        // Get classic mailed user number
         if($sendingMethod == 4){
             
             $users = User::whereIn('id', $settingsUserIds)->get();
@@ -1751,6 +1775,38 @@ class ViewHelper
         // dd($searchSuggestions);
 
         return $searchSuggestions;
+    }
+    
+    /**
+     * Send email notification to the document freigebers
+     *
+     * @param DocumentApproval $approval
+     * @param array $userIds
+     *
+     */
+    public static function notifyFreigeber($approval)
+    {
+        // Get user and document data 
+        $user = User::find($approval->user_id);
+        $document = Document::find($approval->document_id);
+        
+        // Fill the email container class with adequate values
+        $mailContent = new \StdClass();
+        $mailContent->subject = 'Benachrichtigung über eine Dokumentfreigabe im Intranet: "'. $document->name .'"';
+        $mailContent->title = 'Benachrichtigung über eine Dokumentfreigabe im Intranet: "'. $document->name .'"';
+        $mailContent->fromEmail = 'info@neptun-gmbh.de';
+        $mailContent->fromName = 'Informationsservice';
+        $mailContent->link = url('dokumente/' . $document->id . '/freigabe');
+            
+        // Send email
+        $mailContent->toEmail = $user->email;
+        $mailContent->toName = $user->first_name .' '. $user->last_name;
+        $sent = Mail::send('email.notifyApproval', ['content' => $mailContent, 'user' => $user, 'document' => $document], 
+            function ($message) use ($mailContent, $document) {
+                $message->from($mailContent->fromEmail, $mailContent->fromName);
+                $message->to($mailContent->toEmail, $mailContent->toName);
+                $message->subject($mailContent->subject);
+        });
     }
 
     /**

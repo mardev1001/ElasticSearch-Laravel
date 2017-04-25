@@ -3,8 +3,8 @@
 @extends('master')
 
 @section('page-title')
-    Dokumente - @lang('navigation.juristenPortalRechtsablage') 
-    @if($category->juristenParent)- {{$category->juristenParent->name}}@endif
+    Dokumente @lang('navigation.juristenPortalRechtsablage') 
+    @if($category->juristenParent) - {{$category->juristenParent->name}}@endif
     @if($category)- {{$category->name}}@endif
 @stop
 

@@ -65,7 +65,7 @@ class DocumentsNotifyApproval extends Command
             $mailContent->title = 'Benachrichtigung über eine Dokumentfreigabe im Intranet: "'. $document->name .'"';
             $mailContent->fromEmail = 'info@neptun-gmbh.de';
             $mailContent->fromName = 'Informationsservice';
-            $mailContent->link = url('dokumente/' . $document->id);
+            $mailContent->link = url('dokumente/' . $document->id . '/freigabe');
                 
             // Send email
             $mailContent->toEmail = $user->email;

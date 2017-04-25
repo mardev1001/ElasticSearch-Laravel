@@ -96,11 +96,6 @@ class DocumentsSendPublished extends Command
         // Skip email sending if document type has no publish sending flag
         if(($user->email_reciever == false) || ($document->documentType->publish_sending == false)) return;
         
-        // Check if the role assigned to the email setting is a system role
-        $systemRole = false;
-        $role = Role::find($emailSetting->email_recievers_id);
-        if(isset($role->system_role)) $systemRole = $role->system_role; 
-        
         $documentPdfs = array();
         $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
         
@@ -112,7 +107,8 @@ class DocumentsSendPublished extends Command
                 $documentPdfs[] = [
                     // 'filePath' => $this->generatePdfObject($dv->document_id, $dv->variant_number, $user->id),
                     'filePath' => base_path() . '/public/files/documents/'. $document->id .'/'. $file,
-                    'fileName' => $file
+                    'fileName' => $file,
+                    'pdfUpload' => true
                 ];
             }    
         } else {
@@ -149,7 +145,7 @@ class DocumentsSendPublished extends Command
         }
         
         // Sending method: email + attachment (ONLY system roles can recieve documents as attachments)
-        if($systemRole && ($emailSetting->sending_method == 2)){
+        if($emailSetting->sending_method == 2){
             // Check if the document type is corresponding the mailing settings
             if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
                 
@@ -215,7 +211,7 @@ class DocumentsSendPublished extends Command
         
         // Delete generated pdf files
         foreach($documentPdfs as $pdf){
-            File::delete($pdf['filePath']);
+            if($pdf['pdfUpload'] != true) File::delete($pdf['filePath']);
         }
     }
     

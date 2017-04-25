@@ -356,6 +356,9 @@
                                         {{ trans('documentForm.mail') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 4) }} <br>
                                         
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
+                                        @foreach($document->documentUploads as $k => $attachment)
+                                            @if($k > 0) @break @endif <a href="{{url('download/'. $document->id .'/'. $attachment->file_path)}}">PDF Rundschreiben ausdrucken</a><br>
+                                        @endforeach
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/post-versand/'. $variant->variant_number) }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
                             
                                         @if( count( $variant->EditorVariantDocument ) )            

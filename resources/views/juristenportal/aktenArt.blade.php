@@ -12,7 +12,7 @@
             <h2 class="title"> @lang('juristenPortal.metaFieldsAddTitle')</h2>
             <div class="box  box-white">
                 <div class="row">
-                    {!! Form::open([ 'action' => 'JuristenPortalController@storeAkten','method'=>'POST']) !!} 
+                    {!! Form::open([ 'action' => 'JuristenPortalController@storeAktenArt','method'=>'POST']) !!} 
                       
                             <div class="col-md-4 col-lg-4">
                                 {!! ViewHelper::setInput('name', '',old('name'), 
@@ -21,8 +21,8 @@
                             
                             <div class="col-md-4 col-lg-4">
                                 <label>Benutzer</label>
-                                <select name="users[]" class="form-control select" multiple data-placeholder="Benutzer">
-                                <option></option>
+                                <select name="users[]" class="form-control select" required multiple data-placeholder="Benutzer">
+                                <option value='Alle'>Alle</option>
                                     @foreach($users as $user){
                                        <option value="{{$user->id}}"  >
                                         {{ $user->first_name }} {{ $user->last_name }}
@@ -63,17 +63,24 @@
                         <tbody>
                         @foreach($juristFileTypes as $fileType)
                         
-                        {!! Form::open(['url' => ['beratungsportal/akten/update/'.$fileType->id] , 'method' => 'patch']) !!}
+                        {!! Form::open(['url' => ['beratungsportal/aktenart/update/'.$fileType->id] , 'method' => 'patch']) !!}
                         <tr>
+                           
                             <td class="col-xs-5 vertical-center">
                                  <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $fileType->name }}" required/>
                             </td>
                             <td class="col-xs-4 vertical-center">
-                                <select name="users[]" class="form-control select" multiple data-placeholder="Benutzer">
-                                <option></option>
+                                <select name="users[]" class="form-control select" required multiple data-placeholder="Benutzer">
+                                <option value='Alle'
+                                    @if( count($users) == count($fileType->juristFileTypeUsers) )
+                                    selected
+                                    @endif
+                                >Alle</option>
                                     @foreach($users as $user){
                                        <option
+                                    @if( count($users) != count($fileType->juristFileTypeUsers) )
                                        {!! ViewHelper::setMultipleSelect($fileType->juristFileTypeUsers, $user->id,'user_id') !!}
+                                    @endif
                                        value="{{$user->id}}" multiple>
                                         {{ $user->first_name }} {{ $user->last_name }}
                                        </option>
