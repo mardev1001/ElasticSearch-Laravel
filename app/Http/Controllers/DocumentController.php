@@ -2701,6 +2701,7 @@ class DocumentController extends Controller
         $docType = $this->rundId;
         $myRundCoauthor = Document::whereIn('id', $myRundCoauthorArr)->where('document_type_id', $docType)->pluck('id')->toArray();
 
+        $highRole = false;
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
         }
@@ -2788,7 +2789,8 @@ class DocumentController extends Controller
         $sort = $request->get('sort');
 
         $docType = $this->qmRundId;
-
+        
+        $highRole = false;
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
         }
@@ -3267,6 +3269,7 @@ class DocumentController extends Controller
     {
         $docs = $request->get('documents');
         $sort = $request->get('sort');
+        $highRole = false;
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
         }
