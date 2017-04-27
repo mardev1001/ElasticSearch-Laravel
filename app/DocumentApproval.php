@@ -11,7 +11,7 @@ class DocumentApproval extends Model
     //use SoftDeletes;
     
     protected $guarded = []; //blacklist
-    protected $fillable = ['user_id','document_id','date_approved','approved']; //whitelist
+    protected $fillable = ['user_id','document_id','date_approved','approved', 'fast_published']; //whitelist
     
     public function getDateApprovedAttribute($value)
     {

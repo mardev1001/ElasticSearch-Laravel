@@ -4,7 +4,7 @@
     <div class="panel-heading">
         <h4 class="panel-title">
             <a data-toggle="collapse" data-target="#mailPanel" href="#mailPanel" class="transform-normal collapsed">
-                Versand
+                Versand Brief
             </a>
         </h4>
     </div>
@@ -12,30 +12,18 @@
     <div id="mailPanel" class="panel-collapse collapse" role="tabpanel">
         <div class="panel-body">
             <div class="sendingList">
-                @foreach( $mailList as $item )
+                @foreach( $variants as $variant )
+                    @foreach( ViewHelper::getMailsPerVariant($document, $variant) as $item )
                     <div class="sent-item-{{$item->document_id}} row flexbox-container col-xs-12">
                         <div class="pull-left">                                
                                 <span class="comment-header">
-                                    <?php $user = ViewHelper::getUser($item->userEmailSetting->user_id); ?>
+                                    <?php $user = ViewHelper::getUser($item->user_id); ?>
+                                    <?php $mandant = ViewHelper::getMandantById($item->mandant_id); ?>
                                     <strong> 
-                                        {{ $user->first_name .' '. $user->last_name }}
-                                        ({{$item->userEmailSetting->recievers_text}}) - 
-                                        @if($item->userEmailSetting->sending_method == 1)
-                                            {{ trans('benutzerForm.email') }}
-                                        @elseif($item->userEmailSetting->sending_method == 2)
-                                            {{ trans('benutzerForm.email-attachment') }}
-                                        @elseif($item->userEmailSetting->sending_method == 3)
-                                            {{ trans('benutzerForm.fax') }}
-                                        @elseif($item->userEmailSetting->sending_method == 4)
-                                            {{ trans('benutzerForm.mail') }}
-                                        @endif
+                                        ({{$mandant->mandant_number}}) {{$mandant->kurzname}}, {{ $user->first_name ." ". $user->last_name }}<br>
+                                        {{ "Variante " . $variant }}
                                     </strong> <br>
-
-                                    @if( $item->sent == true )
-                                        Gesendet
-                                    @else
-                                        Nicht gesendet
-                                    @endif
+                                    
                                 </span>
 
                             <div class="clearfix"></div>
@@ -44,6 +32,7 @@
 
                     <div class="clearfix"></div>
                     <hr/>
+                    @endforeach
                 @endforeach
             </div>
         </div><!--end .panel-body -->

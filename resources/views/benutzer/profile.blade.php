@@ -229,7 +229,7 @@
                                 <option value="1">{{ trans('benutzerForm.email') }}</option>
                                 @if(ViewHelper::universalHasPermission([2,4]))
                                 <option value="2">{{ trans('benutzerForm.email-attachment') }}</option>
-                                {{-- <option value="3">{{ trans('benutzerForm.fax') }}</option> --}}
+                                <option value="3">{{ trans('benutzerForm.fax') }}</option>
                                 <option value="4">{{ trans('benutzerForm.mail') }}</option>
                                 @endif
                             </select>
@@ -313,7 +313,7 @@
                                 <td class="valign">
                                     @if($setting->sending_method == 1) {{ trans('benutzerForm.email') }} @endif
                                     @if($setting->sending_method == 2) {{ trans('benutzerForm.email-attachment') }} @endif
-                                    {{-- @if($setting->sending_method == 3) {{ trans('benutzerForm.fax') }} @endif --}}
+                                    @if($setting->sending_method == 3) {{ trans('benutzerForm.fax') }} @endif
                                     @if($setting->sending_method == 4) {{ trans('benutzerForm.mail') }} @endif
                                 </td>
                                 <td class="valign">

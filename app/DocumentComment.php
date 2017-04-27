@@ -12,7 +12,7 @@ class DocumentComment extends Model
     use SoftDeletes;
     
     protected $guarded = []; //blacklist
-    protected $fillable = ['user_id','document_id','freigeber','betreff','comment','active']; //whitelist
+    protected $fillable = ['user_id','document_id','freigeber','betreff','comment','active', 'approved']; //whitelist
     
     public function getCreatedAtAttribute($value)
     {

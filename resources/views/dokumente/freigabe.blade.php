@@ -157,6 +157,7 @@
                 <!--<button class="btn btn-primary pull-right" data-toggle="modal" data-target="#kommentieren">{{ trans('dokumentShow.commenting') }}</button>-->
                 @if( ViewHelper::universalDocumentPermission( $document, false, false, true ) ) 
                     <a href="{{route('dokumente.edit', $document->id)}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.edit')}} </a> 
+                    <a href="/dokumente/rechte-und-freigabe/{{$document->id}}" class="btn btn-primary pull-right">{{ trans('dokumentShow.approvalSettingsPage')}} </a> 
                 @endif
                     
                

@@ -46,26 +46,22 @@ class ClearDocuments extends Command
         $notDeletedCount = 0;
         if(count($documents)){
             foreach($documents as $document){
-            
-            // dd($document->editorVariantDocument);
-             if( File::deleteDirectory(public_path('files/documents/'.$document->id))){
-                    // echo 'deleted document: '.$document->id.'<br/>';
+                if( \File::deleteDirectory(public_path('files/documents/'.$document->id))){
                     $deletedCount++;
                 }
                 else{
-                    // echo 'no:'.$document->id.'<br/>';
                     $notDeletedCount++;
                 }
-            foreach($document->editorVariantDocument as $ev){
-               
-                foreach($ev->documentUpload as $up){
-                
-                    $up->delete();
+                foreach($document->editorVariantDocument as $ev){
+                   
+                    foreach($ev->documentUpload as $up){
+                    
+                        $up->delete();
+                    }
+                    $ev->delete();
                 }
-                $ev->delete();
+                $document->delete();
             }
-            $document->delete();
-        }
         
         echo 'Number of deleted documents:'.$deletedCount;
         }

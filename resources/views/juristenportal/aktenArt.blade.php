@@ -65,17 +65,14 @@
                         
                         {!! Form::open(['url' => ['beratungsportal/aktenart/update/'.$fileType->id] , 'method' => 'patch']) !!}
                         <tr>
-                           
-                            <td class="col-xs-5 vertical-center">
+                           <td class="col-xs-5 vertical-center">
                                  <input type="text" class="form-control" name="name" placeholder="Name" value="{{ $fileType->name }}" required/>
                             </td>
                             <td class="col-xs-4 vertical-center">
                                 <select name="users[]" class="form-control select" required multiple data-placeholder="Benutzer">
                                 <option value='Alle'
-                                    @if( count($users) == count($fileType->juristFileTypeUsers) )
-                                    selected
-                                    @endif
-                                >Alle</option>
+                                    @if( count($users) == count($fileType->juristFileTypeUsers) ) selected @endif >
+                                    Alle </option>
                                     @foreach($users as $user){
                                        <option
                                     @if( count($users) != count($fileType->juristFileTypeUsers) )
@@ -97,11 +94,23 @@
                                 @endif
                                 
                                 <button class="btn btn-primary" type="submit">{{ trans('adressatenForm.save') }}</button>
-                             
+                                  {!! Form::close() !!} 
+                               
+                               @if( !count($fileType->juristFile)  )
+                                {!! Form::open([
+                                   'url' => 'beratungsportal/delete/'.$fileType->id,
+                                   'method' => 'POST',
+                                   'class' => 'horizontal-form',]) !!}
+                                        <button  type="submit" href="" class="btn btn-danger delete-prompt"
+                                         data-text="@lang('juristenPortal.deleteAlertAktenArt')">
+                                             löschen
+                                         </button> 
+                                     </form>
+                                @endif     
                             </td>
                             
                         </tr>
-                          {!! Form::close() !!} 
+                      
                         @endforeach
                         </tbody>
                     </table>

@@ -389,8 +389,13 @@ class DocumentRepository
                 // if ($options['showUniqueURL'] == true)
 				
                 if ($document->document_status_id == 3){
-					if($document->published) 
-						$node->href = route('dokumente.show', $document->published->url_unique);
+					if( !is_null($document->published) ){
+					    $node->href = route('dokumente.show', $document->id);
+					} 
+					else{
+					    $node->href = route('dokumente.show', $document->published->url_unique);
+					}
+						
 				} 
 					
                 elseif($document->document_status_id == 6)

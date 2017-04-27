@@ -19,7 +19,11 @@
                                     <strong> {{ $approved->user->first_name }} {{ $approved->user->last_name }} </strong> <br>
 
                                     @if( $approved->approved == 1 )
-                                        Freigegeben,
+                                        @if($approved->fast_published)
+                                            Schnell veröffentlicht,
+                                        @else
+                                            Freigegeben,
+                                        @endif
                                     @elseif( $approved->approved == 0 && $approved->date_approved != null)
                                         Nicht Freigegeben,
                                     @else

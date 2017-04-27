@@ -157,9 +157,7 @@ class DocumentController extends Controller
             $pdf->debug = true;
 
             if ($document->document_type_id == $this->isoDocumentId) {
-                //   $pdf->setAutoTopMargin = 'stretch';
-
-                  $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
+                $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
                 $pdf->SetHTMLFooter(view('pdf.footerIso', compact('document', 'variants', 'dateNow'))->render());
 
                 $render = view('pdf.documentIso', compact('document', 'variants', 'dateNow'))->render();
@@ -171,7 +169,6 @@ class DocumentController extends Controller
                     $render = view('pdf.new-layout-rund', compact('document', 'variants', 'dateNow'))->render();
                     $header = view('pdf.new-layout-rund-header', compact('document', 'variants', 'dateNow'))->render();
                     $footer = view('pdf.new-layout-rund-footer', compact('document', 'variants', 'dateNow'))->render();
-                    // return $footer;
                     $pdf->SetHTMLHeader($header);
                     $pdf->SetHTMLFooter($footer);
                 }
@@ -255,7 +252,6 @@ class DocumentController extends Controller
                     $markedForDeletion->forceDelete();
                 }
             }
-
             return back()->with('message', trans('documentForm.trashEmptied'));
         } else {
             return back();
@@ -306,13 +302,10 @@ class DocumentController extends Controller
                 $incrementedIso = $incrementedIso->iso_category_number;
                 $incrementedIso = $incrementedIso + 1;
             }
-                //$this->qmRundId = 3;
-            //$this->isoDocumentId = 4;
             $documentCoauthors = $mandantUsers;
 
             //this is until Neptun inserts the documents
             $documentUsers = $mandantUsers;
-
             return view('formWrapper',
             compact('url', 'documentTypes', 'isoDocuments', 'documentStatus', 'mandantUsers', 'documentUsers', 'documentCoauthors', 'incrementedQmr', 'incrementedIso'));
         } else {
@@ -326,12 +319,10 @@ class DocumentController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //   dd($request->all() );
         $adressats = Adressat::where('active', 1)->get();
         $docType = DocumentType::find($request->get('document_type_id'));
 
@@ -393,7 +384,6 @@ class DocumentController extends Controller
      */
     public function pdfUpload(Request $request)
     {
-        //  dd( $request->all() );
         $dirty = false;
         $model = Document::find($request->get('model_id'));
         if ($model == null) {
@@ -410,9 +400,8 @@ class DocumentController extends Controller
         if ($request->file()) {
             $fileNames = $this->fileUpload($model, $path, $request->file());
         }
-
-           //not summary, it is inhalt + attachment
-         RequestMerge::merge(['pdf_upload' => 1/*maybe auto*/]);
+        //not summary, it is inhalt + attachment
+        RequestMerge::merge(['pdf_upload' => 1/*maybe auto*/]);
         $data = Document::findOrNew($request->get('model_id'));
 
         $data->fill($request->all());
@@ -421,7 +410,6 @@ class DocumentController extends Controller
         $id = $data->id;
 
         RequestMerge::merge(['document_id' => $id, 'variant_number' => 1/*maybe auto*/]);
-        //$inputs = $request->except(array('_token', '_method','save','next') );
         $editorVariantId = EditorVariant::where('document_id', $id)->first();
         if ($editorVariantId == null) {
             $editorVariantId = new EditorVariant();
@@ -438,7 +426,6 @@ class DocumentController extends Controller
 
             foreach ($model->documentUploads as $oldUpload) {
                 $filePath = $folderName.'/'.$oldUpload->file_path;
-                // dd($filePath);
                 \File::delete($filePath);
                 $oldUpload->delete();
             }
@@ -492,7 +479,6 @@ class DocumentController extends Controller
         if ($request->has('attachment')) {
             return redirect('dokumente/anlagen/'.$id);
         }
-
         return redirect('dokumente/rechte-und-freigabe/'.$id);
     }
 
@@ -527,13 +513,10 @@ class DocumentController extends Controller
 
         $filename = '';
         $path = $this->pdfPath;
-        //dd($request->get('model_id') );
         if ($request->file()) {
             $fileNames = $this->fileUpload($model, $path, $request->file());
         }
-
-           //not summary, it is inhalt + attachment
-
+        //not summary, it is inhalt + attachment
         $data = Document::findOrNew($request->get('model_id'));
         $data->fill($request->all());
         $dirty = $this->dirty(false, $data);
@@ -541,8 +524,6 @@ class DocumentController extends Controller
         $id = $data->id;
 
         $counter = 0;
-        // var_dump('count number of files:'.count($fileNames));
-        // echo '<br/>';
         if (isset($fileNames) && count($fileNames) > 0) {
             foreach ($fileNames as $fileName) {
                 ++$counter;
@@ -553,7 +534,6 @@ class DocumentController extends Controller
                 }
                 $editorVariantId->document_id = $id;
                 $editorVariantId->variant_number = $counter;
-                // $editorVariantId->document_status_id = 1;
                 $editorVariantId->inhalt = $request->get('inhalt');
                 $dirty = $this->dirty($dirty, $editorVariantId);
                 $editorVariantId->save();
@@ -587,7 +567,6 @@ class DocumentController extends Controller
 
     /**
      * Display a listing of the resource.
-     *Laudantium, voluptate id odio labore voluptatibus aut maiores illum, non hic nihil vero dolor.
      *
      * @return \Illuminate\Http\Response
      */
@@ -599,7 +578,6 @@ class DocumentController extends Controller
         $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload);
         $url = $setDocument->url;
         $form = $setDocument->form;
-
         return view('dokumente.formWrapper', compact('data', 'backButton', 'form', 'url', 'adressats'));
     }
 
@@ -612,7 +590,6 @@ class DocumentController extends Controller
      */
     public function documentEditor(Request $request)
     {
-        //  dd($request->all());
         $model = Document::find($request->get('model_id'));
         if ($model == null) {
             return redirect('dokumente/create')->with(array('message' => 'No Document with that id'));
@@ -661,7 +638,6 @@ class DocumentController extends Controller
                     $editor->delete();
                 }
             }
-
             /*end some variant are removed*/
          if ($dirty == true) {
              session()->flash('message', trans('documentForm.documentEditorCreateSuccess'));
@@ -721,7 +697,6 @@ class DocumentController extends Controller
         $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload);
         $url = $setDocument->url;
         $form = $setDocument->form;
-        // session()->flash('message',trans('documentForm.documentEditorEditSuccess'));
         return view('dokumente.formWrapper', compact('data', 'backButton', 'form', 'url', 'adressats'));
     }
 
@@ -737,7 +712,6 @@ class DocumentController extends Controller
 
         if (ViewHelper::universalDocumentPermission($data) == false) {
             session()->flash('message', trans('documentForm.noPermission'));
-
             return redirect('/');
         }
 
@@ -766,7 +740,6 @@ class DocumentController extends Controller
         if (count($data->editorVariantNoDeleted) > 0) {
             foreach ($data->editorVariantNoDeleted as $variant) {
                 $attachmentArray[$variant->id] = $this->document->getAttachedDocumentLinks($variant, $id);
-                // dd($this->document->getAttachedDocumentLinks($variant, $id));
             }
         }
 
@@ -781,8 +754,6 @@ class DocumentController extends Controller
         foreach ($documentsFormulare as $df) {
             $df->name = $df->name.' ('.$df->documentStatus->name.')';
         }
-        // dd($documentsFormulare);
-
         $mandantUsers = User::leftJoin('mandant_users', 'users.id', '=', 'mandant_users.user_id')
         ->where('mandant_id', $mandantId)->get();
         $mandantUsers = $this->clearUsers($mandantUsers);
@@ -835,7 +806,6 @@ class DocumentController extends Controller
      */
     public function saveAttachments(Request $request, $id, $preparedVariant = 1)
     {
-        // dd( $request->all() );
         // option 1-> dodat dokument kao attachmet za trenutnu variantu i vorlage
         // option 2-> kreira se skroz novi dokument, ali se dodaje kao attchment postojećem
         //document attachment is a record in editor_variants && editor_variant_document
@@ -863,8 +833,6 @@ class DocumentController extends Controller
                 $currDocEv = EditorVariant::find($currentEditorVariant);
 
                 $documentCheck = EditorVariantDocument::where('editor_variant_id', $currentEditorVariant)->where('document_id', $document->id)->count();
-                //   dd($documentCheck);
-                    //  dd( $request->all() );
                     if ($documentCheck < 1) {
                         $newAttachment = new EditorVariantDocument();
                         $newAttachment->editor_variant_id = $currentEditorVariant;
@@ -1046,7 +1014,6 @@ class DocumentController extends Controller
             $dirty = $this->dirty(false, $document);
             $document->save();
             if (!count($request->get('roles')) || ($request->get('roles') != null && in_array('Alle', $request->get('roles')))) {
-                //  dd( $request->get('roles') );
                 if (is_null($request->get('roles'))) {
                     $request->merge(array('roles' => array('Alle' => 'Alle')));
                 }
@@ -1057,18 +1024,23 @@ class DocumentController extends Controller
             }
         }
 
+
         $documentApproval = DocumentApproval::where('document_id', $id)->get();
         $documentApprovalPluck = DocumentApproval::where('document_id', $id)->pluck('user_id');
-        //Process document approval users
-
-        //do document approvals need soft delete
-        if (!empty($request->get('approval_users'))) {
-            $this->document->processOrSave($documentApproval, $documentApprovalPluck, $request->get('approval_users'),
-            'DocumentApproval', array('user_id' => 'inherit', 'document_id' => $id), array('document_id' => array($id)));
-        } else {
-            $documentApproval = DocumentApproval::where('document_id', $id)->delete();
+        
+        // NEPTUN-871
+        // Add check for document status
+        if($document->document_status_id == 1){
+            //Process document approval users
+            //do document approvals need soft delete
+            if (!empty($request->get('approval_users'))) {
+                $this->document->processOrSave($documentApproval, $documentApprovalPluck, $request->get('approval_users'),
+                'DocumentApproval', array('user_id' => 'inherit', 'document_id' => $id), array('document_id' => array($id)));
+            } else {
+                $documentApproval = DocumentApproval::where('document_id', $id)->delete();
+            }
         }
-
+        
         //check if has variant
         $hasVariants = false;
         $processedArray = array();
@@ -1170,13 +1142,8 @@ class DocumentController extends Controller
                     foreach ($documentMandants as $documentMandant) {
                         $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->get();
                         $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->pluck('mandant_id');
-                    //   dd($documentMandantMandats);
-
-                    //   dd($request->all());
-                      // dd($k);
-                      // dd($request->get($k));
+                    
                       //INSERTS LAST VALUES->check foreach!
-                      // collections, $pluckedCollection, $requests, $modelName, $fields = array(), $notIn = array(), $tester = false)
 
                       $this->document->processOrSave($documentMandantMandats, $documentMandantMandatsPluck, $request->get($k),
                       'DocumentMandantMandant', array('document_mandant_id' => $documentMandant->id, 'mandant_id' => 'inherit'),
@@ -1185,7 +1152,6 @@ class DocumentController extends Controller
                     /*End Create DocumentManant mandant*/
                 }//end else
             }
-        // dd($request->all());
         }
 
         /*if removed mandants from variant return bool approval_all_mandants to true*/
@@ -1223,7 +1189,7 @@ class DocumentController extends Controller
                     $documentMandant->save();
                     $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
                 }
-                   /*End Create DocumentManant */
+                    /*End Create DocumentManant */
 
                     /* Create DocumentManant roles*/
                     foreach ($documentMandants as $documentMandant) {
@@ -1265,7 +1231,7 @@ class DocumentController extends Controller
                     $documentMandant->save();
                     $documentMandants = DocumentMandant::where('document_id', $id)->where('editor_variant_id', $editorVariant->id)->get();
                 }
-                   /*End Create DocumentManant */
+                    /*End Create DocumentManant */
 
                     /* Delete DocumentManant roles*/
 
@@ -1325,10 +1291,14 @@ class DocumentController extends Controller
             }
 
             if ($dirty == true) {
-                // dd($document->published->document_group_id);
                 UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
                 session()->flash('message', trans('documentForm.fastPublished'));
             }
+
+            // NEPTUN-870 
+            // When fast publishing - Add the entry for the fast-publisher
+            DocumentApproval::create(array('document_id' => $document->id, 'user_id' => Auth::user()->id, 
+                'date_approved' => Carbon::now() ,'approved' => true, 'fast_published' => true));
 
             return redirect('/');
         } // end fast publish
@@ -1370,10 +1340,14 @@ class DocumentController extends Controller
             }
 
             if ($dirty == true) {
-                // dd($document->published->document_group_id);
                 UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
                 session()->flash('message', trans('documentForm.fastPublished'));
             }
+
+            // NEPTUN-870 
+            // When fast publishing - Add the entry for the fast-publisher
+            DocumentApproval::create(array('document_id' => $document->id, 'user_id' => Auth::user()->id, 
+                'date_approved' => Carbon::now() ,'approved' => true, 'fast_published' => true));
 
             return redirect('/');
         } // end fast publish with sending
@@ -1391,7 +1365,7 @@ class DocumentController extends Controller
                 $approvals = DocumentApproval::where('document_id', $id)->delete();
                 foreach ($request->get('approval_users') as $approvalUser) {
                     $approvalUser = DocumentApproval::create(array('document_id' => $id, 'user_id' => $approvalUser));
-                    ViewHelper::notifyFreigeber($approvalUser);
+                    if($request->has('email_approval')) ViewHelper::notifyFreigeber($approvalUser);
                     $dirty = true;
                 }
             }
@@ -1455,7 +1429,6 @@ class DocumentController extends Controller
                 return redirect('/')->with('messageSecondary', trans('documentForm.documentUnAvailable'));
             }
             /*Published hotfix*/
-            // dd($document);
             if ($document->date_published == null) {
                 $doc = Document::find($document->id);
                 $doc->date_published = $doc->created_at->addDay();
@@ -1474,8 +1447,6 @@ class DocumentController extends Controller
             $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)
                     ->where('user_id', Auth::user()->id)->get();
             $dateReadBckp = '';
-
-             
             
             if (count($readDocs) == 0) {
                 UserReadDocument::create([
@@ -1486,11 +1457,9 @@ class DocumentController extends Controller
                 ]);
             } 
             else {
-                
                 foreach ($readDocs as $readDoc) {
                     $readDoc->date_read_last = Carbon::now();
                     $readDoc->save();
-                        //  dd($readDoc);
                 }
             }
         } 
@@ -1514,7 +1483,6 @@ class DocumentController extends Controller
         /*Published hotfix*/
 
          $latestPublished = PublishedDocument::where('document_group_id', $document->document_group_id)->orderBy('updated_at', 'desc')->first();
-            // dd($latestPublished);/
              if ($latestPublished != null && $latestPublished->document_id == $document->id && $document->document_status_id != 5) {
                  return redirect('dokumente/'.$latestPublished->url_unique);
              } elseif ($document->id != $initialUrl) {
@@ -1593,8 +1561,6 @@ class DocumentController extends Controller
         if (count($document->publishedDocuments->first()) > 0) {
             $published = true;
         }
-        // dd($authorised);
-        // dd($canPublish);
         /* End Button check */
 
         $hasPermission = false;
@@ -1637,14 +1603,12 @@ class DocumentController extends Controller
 
         /* If the document can be published or in freigabe process and the roles are correct */
             if ($authorised == true && $canPublish == true && $published == false && $document->document_status_id != 5 && $document->document_status_id != 1) {
-                //if( $authorised == false && $canPublish ==false && $published == false){
-                    if (($document->documentType->document_art == 1 && ViewHelper::universalHasPermission(array(13)) == true)
-                        || ($document->documentType->document_art == 0 && ViewHelper::universalHasPermission(array(11)) == true)
-                        || (ViewHelper::universalDocumentPermission($document, false, false, true))) {
-                        return redirect('dokumente/'.$document->id.'/freigabe');
-                    }
+               if (($document->documentType->document_art == 1 && ViewHelper::universalHasPermission(array(13)) == true)
+                    || ($document->documentType->document_art == 0 && ViewHelper::universalHasPermission(array(11)) == true)
+                    || (ViewHelper::universalDocumentPermission($document, false, false, true))) {
+                    return redirect('dokumente/'.$document->id.'/freigabe');
+                }
 
-                //}
             } elseif ($document->document_status_id != 1 && $document->document_status_id != 5 && (($authorised == false && $published == false) ||
                    ($authorised == true && $published == false) || ($canPublish == true && $published == false)
                    && (ViewHelper::universalDocumentPermission($document, false, false, true)))) {
@@ -1656,9 +1620,6 @@ class DocumentController extends Controller
                     return redirect('dokumente/'.$document->id.'/freigabe');
                 }
             } else {
-                //   dd($document);
-            //   dd($authorised);
-            //   dd($document);
                if ($document->document_status_id == 2 && $authorised == true) {
                    $doc = Document::find($document->id); //need a pure collections(elimintae hasFavorite error)
                    $this->publishProcedure($doc);
@@ -1695,22 +1656,6 @@ class DocumentController extends Controller
             }
         }
 
-        // JIRA Task NEPTUN-653
-        // If the document is "upload" type, show a treeview of documents where it is attached
-        // $documentsAttached = array();
-        // if( $document->documentType->document_art == 1 ){
-        //     foreach($document->variantDocuments as $key => $dc){
-        //         if(isset($dc->editorVariant->document->published)) $docPublished = $dc->editorVariant->document->published;
-        //         if(isset($docPublished)) $docStatus = in_array($docPublished->document->document_status_id, [3, 5]);
-        //         if($key != 0 && $docStatus && isset($docPublished->url_unique)) {
-        //             if($this->universalDocumentPermission($docPublished->document)){
-        //                 if(!in_array($docPublished->document_id, $documentsAttached)) array_push($documentsAttached, $docPublished->document_id);
-        //             }
-        //         }
-        //     }
-        // }
-        // dd($documentsAttached);
-
         $favoriteCategories = FavoriteCategory::where('user_id', Auth::user()->id)->get();
         $document->favorite = FavoriteDocument::where('document_group_id', $document->document_group_id)->where('user_id', Auth::user()->id)->first();
 
@@ -1723,7 +1668,6 @@ class DocumentController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
-     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -1777,7 +1721,6 @@ class DocumentController extends Controller
 
             //this is until Neptun inserts the documents
             $documentUsers = $mandantUsers;
-            // dd($documentUsers);
 
             $incrementedQmr = Document::where('document_type_id', $this->qmRundId)->orderBy('qmr_number', 'desc')->first();
             if ($incrementedQmr == null || $incrementedQmr->qmr_number == null) {
@@ -1808,8 +1751,7 @@ class DocumentController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     *
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -1820,12 +1762,10 @@ class DocumentController extends Controller
         if ($request->get('document_type_id') != $this->isoDocumentId) {
             RequestMerge::merge(['iso_category_id' => null]);
         }
-
         //fix pdf checkbox
         if (!$request->has('pdf_upload')) {
             RequestMerge::merge(['pdf_upload' => 0]);
         }
-            // dd( $request->all() );
         //if doc type formulare set ladnsace to null
         if (!$request->has('landscape')) {
             RequestMerge::merge(['landscape' => 0]);
@@ -1852,16 +1792,12 @@ class DocumentController extends Controller
         if (!$request->has('date_expired') || $request->get('date_expired') == '') {
             RequestMerge::merge(['date_expired' => null]);
         }
-
-        // dd($request->all() );
-
         $prevName = $data->name;
 
         if ($data->document_type_id == $this->formulareId) {
             RequestMerge::merge(['landscape' => 0]);
         }
 
-        // dd( $request->all() );
         $data->fill($request->all())->save();
 
         $data = Document::find($id);
@@ -1881,17 +1817,14 @@ class DocumentController extends Controller
             }
         }
         $backButton = url('/dokumente/'.$data->id.'/edit');
-        // session()->flash('message',trans('documentForm.documentCreateSuccess'));
         return view('dokumente.formWrapper', compact('data', 'backButton', 'form', 'url', 'adressats'));
-        //->with('message', trans('documentForm.documentCreateSuccess'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     *
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function newVersion($id)
@@ -1922,9 +1855,6 @@ class DocumentController extends Controller
             $newVariant->save();
             /*Duplicate document uploads*/
             foreach ($variant->documentUpload as $upload) {
-                // $oldSlug= str_slug($document->name);
-                // $newSlug= str_slug($newDocument->name);
-        // 		$newFileName = str_replace($oldSlug,$newSlug, $upload->file_path);
                 $newUpload = $upload->replicate();
                 $newUpload->editor_variant_id = $newVariant->id;
                 $newUpload->file_path = $upload->file_path;
@@ -1934,9 +1864,6 @@ class DocumentController extends Controller
                     \File::makeDirectory($this->movePath.'/'.$newDocument->id.'/', $mod = 0777, true, true);
                 }
                 $copy = copy($this->movePath.'/'.$document->id.'/'.$upload->file_path, $this->movePath.'/'.$newDocument->id.'/'.$upload->file_path);
-
-            //   dd($this->movePath.'/'.$newDocument->id.'/'.$upload->file_path);
-            //   $upload->file_path = $newFileName;
             }
             /*End Duplicate document uploads*/
 
@@ -2164,8 +2091,6 @@ class DocumentController extends Controller
             $canPublish = false;
             $authorised = false;
             $authorisedPositive = false;
-            // dd(count($document->documentApprovals->where('date_approved',null))   );
-            // dd( count($document->documentApprovals) );
         }
         $variants = $variantPermissions->variants;
         /* End Button check */
@@ -2176,13 +2101,8 @@ class DocumentController extends Controller
         $commentVisibility = $this->commentVisibility($document);
 
         // Prepares and stores email settings entry counts to show
-        // $settingsQuery = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->get();
         $emailSettings = array();
-        // $emailSettings['email'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 1)->get()->count();
-        // $emailSettings['emailAttached'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 2)->get()->count();
-        // $emailSettings['fax'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 3)->get()->count();
-        // $emailSettings['mail'] = UserEmailSetting::where('active', 1)->whereIn('document_type_id', [0, $document->document_type_id])->where('sending_method', 4)->get()->count();
-
+       
         return view('dokumente.freigabe', compact('document', 'variants', 'documentCommentsUser', 'documentCommentsFreigabe', 'published',
         'canPublish', 'hasPermission', 'authorised', 'authorisedPositive', 'commentVisiblity', 'emailSettings'));
     }
@@ -2217,8 +2137,6 @@ class DocumentController extends Controller
                 $this->publishProcedure($evD->document); // Dont send emails for attachments
             }
         }
-
-        // dd($document->published);
         UserReadDocument::where('document_group_id', $document->published->document_group_id)->delete();
 
         if ($sending) {
@@ -2226,11 +2144,6 @@ class DocumentController extends Controller
         } else {
             return back()->with('message', trans('dokumentShow.publishSuccess'));
         }
-
-        /*if($document->published->url_unique)
-            return redirect('dokumente/'.$document->published->url_unique);
-        else
-            return redirect('dokumente/'.$id);*/
     }
 
     /**
@@ -2242,7 +2155,6 @@ class DocumentController extends Controller
     {
         $document = Document::find($id);
         $favoriteCheck = FavoriteDocument::where('document_group_id', $document->document_group_id)->where('user_id', Auth::user()->id)->first();
-        // dd($document->published);
         if ($favoriteCheck == null) {
             $favorite = FavoriteDocument::create(['document_group_id' => $document->document_group_id, 'user_id' => Auth::user()->id]);
 
@@ -2252,12 +2164,6 @@ class DocumentController extends Controller
 
             return back()->with('message', trans('dokumentShow.favoriteRemoved'));
         }
-
-        // if($document->published->url_unique)
-        //     return redirect('dokumente/'.$document->published->url_unique);
-        // else
-        //     return redirect('dokumente/'.$id);
-        // return back();
     }
 
     /**
@@ -2331,8 +2237,6 @@ class DocumentController extends Controller
         $mandantRolesArr = $mandantRoles->toArray();
 
         $hasPermission = false;
-        // dd($mandantId);
-
         $variants = $variantPermissions->variants;
 
         $document = Document::find($id);
@@ -2346,9 +2250,8 @@ class DocumentController extends Controller
         $pdf->debug = true;
 
         if ($document->document_type_id == $this->isoDocumentId) {
-            //   $pdf->setAutoTopMargin = 'stretch';
 
-              $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
+            $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
             $pdf->SetHTMLFooter(view('pdf.footerIso', compact('document', 'variants', 'dateNow'))->render());
 
             $render = view('pdf.documentIso', compact('document', 'variants', 'dateNow'))->render();
@@ -2360,12 +2263,11 @@ class DocumentController extends Controller
                 $render = view('pdf.new-layout-rund', compact('document', 'variants', 'dateNow'))->render();
                 $header = view('pdf.new-layout-rund-header', compact('document', 'variants', 'dateNow'))->render();
                 $footer = view('pdf.new-layout-rund-footer', compact('document', 'variants', 'dateNow'))->render();
-                // return $footer;
+                
                 $pdf->SetHTMLHeader($header);
                 $pdf->SetHTMLFooter($footer);
             }
         }
-        // dd($or);
         $pdf->AddPage($or, $margins->left, $margins->right, $margins->top, $margins->bottom, $margins->headerTop, $margins->footerTop);
         $pdf->WriteHTML($render);
 
@@ -2661,7 +2563,7 @@ class DocumentController extends Controller
         $documentApproval->save();
 
         if ($request->has('comment') || $request->has('betreff')) {
-            RequestMerge::merge(['freigeber' => 1, 'active' => 1, 'document_id' => $document->id, 'user_id' => $user]);
+            RequestMerge::merge(['freigeber' => 1, 'active' => 1, 'approved' => $approved, 'document_id' => $document->id, 'user_id' => $user]);
             $comment = DocumentComment::create($request->all());
         }
 
@@ -3134,11 +3036,11 @@ class DocumentController extends Controller
             $usersCountRead[$mandant->id] = 0;
             $usersCountNew[$mandant->id] = 0;
             $documentReadersCount[$mandant->id] = array();
-
-            foreach ($mandant->mandantUsers as $mandantUser) {
+                
+            foreach ($mandant->users as $mandantUser) {
                 foreach ($documentReadersObj as $docReader) {
-                    if ($mandantUser->user->active) {
-                        if ($mandantUser->user_id == $docReader->user_id) {
+                    if ($mandantUser->active) {
+                        if ($mandantUser->id == $docReader->user_id) {
                             if (!in_array($docReader, $documentReadersCount[$mandant->id])) {
                                 array_push($documentReadersCount[$mandant->id], $docReader);
                             }
@@ -3726,8 +3628,8 @@ class DocumentController extends Controller
                 }
                 
                 // Check if user has document permission
-                $documentPermission = ViewHelper::documentVariantPermission($document, $user->id)->permissionExists;
-                if($documentPermission){
+                // $documentPermission = ViewHelper::documentVariantPermission($document, $user->id)->permissionExists;
+                // if($documentPermission){
                     
                     // Check if the role assigned to the email setting is in the document verteiler roles for the document
                     $allowed = false;
@@ -3768,7 +3670,7 @@ class DocumentController extends Controller
                         
                     }
                     
-                }
+                // }
             }
         }
     }

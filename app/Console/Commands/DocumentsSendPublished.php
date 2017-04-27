@@ -116,7 +116,7 @@ class DocumentsSendPublished extends Command
                 // Alternate method to generate pdfs for each viewable variant (add as attachments)
                 $documentPdfs[] = [
                     'filePath' => $this->generatePdfObject($dv->document_id, $dv->variant_number, $user->id),
-                    'fileName' => str_slug($dv->document->id .'-v'. $dv->variant_number .'-'. $dv->document->name) . '.pdf'
+                    'fileName' => str_slug('v'. $dv->variant_number .'-'. $dv->document->name .'-'. $dv->document->id) . '.pdf'
                 ];
             }
         }

@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
         Commands\UsersLogout::class,
         Commands\JuristenPortalImport::class,
         Commands\ClearDocuments::class,
+        Commands\JuristDocumentCleaner::class,
     ];
 
     /**

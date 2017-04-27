@@ -473,20 +473,17 @@ class ViewHelper
     public static function canCreateEditDoc()
     {
         $uid = Auth::user()->id;
-            
-        // dd($uid);
+       
         $mandantUsers = MandantUser::where('user_id', $uid)->get();
 
         foreach ($mandantUsers as $mu) {
             $userMandatRoles = MandantUserRole::where('mandant_user_id', $mu->id)->get();
-            //  dd( $userMandatRoles );
             foreach ($userMandatRoles as $umr) {
                 if ($umr->role_id == 1 || $umr->role_id == 11 || $umr->role_id == 13) {
                     return true;
                 }
             }
         }
-
         return false;
     }
 
@@ -507,15 +504,14 @@ class ViewHelper
                 }
             }
         }
-
         return false;
     }
 
     /**
-     * Check if is.
+     * Check if a user is the wiki redakteur
      *
      * @return bool
-     *              HINT same as universalHasPermission(15)
+     * HINT same as universalHasPermission(15)
      */
     public static function canViewWikiManagmentAdmin()
     {
@@ -532,7 +528,6 @@ class ViewHelper
                 }
             }
         }
-
         return false;
     }
 
@@ -548,12 +543,9 @@ class ViewHelper
         $uid = Auth::user()->id;
         $wiki = new \StdClass();
         $categoriesPluck = WikiCategoryUser::where('user_id', Auth::user()->id)->pluck('wiki_category_id')->toArray();
-        // dd( WikiCategoryUser::where('user_id', Auth::user()->id)->get() );
         $userRoles = self::getUserRole($uid);
         $roles = self::getAvailableWikiCategories();
         $categoriesId = array_merge($categoriesPluck, $roles);
-
-        // $categories = WikiCategory::whereIn('id', $categoriesId)->get();
         if (self::universalHasPermission(array())) {
             $categoriesId = WikiCategory::pluck('id')->toArray();
         }
@@ -602,7 +594,6 @@ class ViewHelper
         if (count($wikiCatByRoles) || self::universalHasPermission(array())) {
             return true;
         }
-
         return false;
     }
 
@@ -661,10 +652,84 @@ class ViewHelper
     public static function generateSentMailBox($document)
     {
         $string = '';
-        $mailList = UserSentDocument::where('document_id', $document->id)->get();
-        // dd($sendingList);
-        $string = view('partials.sentMailBox', compact('document', 'mailList'))->render();
+        $mailList = false;
+        $variants = $document->editorVariant->pluck('variant_number');
+        foreach($variants as $variant) {
+            if(ViewHelper::countSendingRecievers($document->id, $variant, 4))
+                $mailList = true;
+        }
+        $string = view('partials.sentMailBox', compact('document', 'variants', 'mailList'))->render();
         echo $string;
+    }
+
+    /**
+     * Get sent mail info for document per variant
+     *
+     * @param Document $document
+     * @param int $variantNumber
+     *
+     * @return array $userSettingArray
+     */
+    public static function getMailsPerVariant($document, $variantNumber){
+        $allMandants = false;//magic
+        $userSettingArray = array(); // Array to store returning
+        $sendingMethod = 4; // Mail sending
+        
+        // Check for document "vertelier" roles, and filter out accordingly
+        if($document->approval_all_roles == 1) $emailRecievers = [0];
+        elseif($document->documentMandants->first()){
+            $emailRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id')->toArray();
+        }
+        
+        // Get all users with sending options
+        $settingsUserIds = UserEmailSetting::where('sending_method', $sendingMethod)
+            ->whereIn('document_type_id', [0, $document->document_type_id])
+            ->whereIn('email_recievers_id', $emailRecievers)
+            ->where('active', 1)->groupBy('user_id')->pluck('user_id');
+            
+        // Get classic mailed user number
+        $users = User::whereIn('id', $settingsUserIds)->get();
+            
+        // Get list of user mandants that have permission for the document variant
+        $mandantsList = array();
+        foreach($users as $user){
+            $editorVariants = ViewHelper::documentVariantPermission($document, $user->id, true); // Third parameter is for showing all variants
+            foreach ($editorVariants->variants as $ev){
+                if($ev->approval_all_mandants == true){
+                    // Handle the case where a variant has approval for ALL mandants
+                    $allMandants = true;
+                } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
+                    $dm = DocumentMandant::where('editor_variant_id', $ev->id)->pluck('id');
+                    $dmm = DocumentMandantMandant::whereIn('document_mandant_id', $dm)->pluck('mandant_id');
+                    foreach($dmm as $id) if(!in_array($id, $mandantsList)) $mandantsList[] = $id;
+                }
+            }
+        }
+        
+        // Find mandants by id
+        if($allMandants == true) $mandants = Mandant::all();
+        else $mandants = Mandant::whereIn('id', $mandantsList)->get();
+        
+        // Get all users with sending options
+        $userSettings = UserEmailSetting::where('sending_method', $sendingMethod)
+            ->whereIn('document_type_id', [0, $document->document_type_id])
+            ->whereIn('user_id', $settingsUserIds)
+            ->where('active', 1)->get();
+        
+        $settingsUsers = User::whereIn('id', $userSettings->pluck('user_id'))->get();
+        $settingsMandant = Mandant::whereIn('id', $userSettings->pluck('mandant_id'))->get();
+        
+        // Filter mandants with permissions by selecting the mandant from the user email settings
+        $mandants = $mandants->filter(function ($value, $key) use ($settingsMandant) {
+            return $settingsMandant->contains($value->id);
+        });
+        
+        foreach($userSettings as $setting) {
+            if($mandants->pluck('id')->contains($setting->mandant_id)) $userSettingArray[] = $setting;
+        }
+        
+        return $userSettingArray;
+        
     }
 
     /**
@@ -791,8 +856,6 @@ class ViewHelper
         if ($message == true && $hasPermission == false) {
             session()->flash('message', trans('documentForm.noPermission'));
         }
-        //if($document->id == 118)
-        // dd($hasPermission);
         return $hasPermission;
     }
 
@@ -839,20 +902,17 @@ class ViewHelper
                         $hasPermission = true;
                         $variant->hasPermission = true;
                         $object->permissionExists = true;
-                        // dd('abc 1');
                     } else {
                         foreach ($variant->documentMandantRoles as $role) {// if not from database then iterate trough roles
                             if (self::universalDocumentPermission($document, false, false, false, $uid) == true) {
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
                                 $object->permissionExists = true;
-                                // dd('abc 2');
                             } else {
                                 if (in_array($role->role_id, $mandantRolesArr)) {//check if it exists in mandatRoleArr
                                     $variant->hasPermission = true;
                                     $hasPermission = true;
                                     $object->permissionExists = true;
-                                    // dd('abc 3');
                                 }
                             }
                         }//end foreach documentMandantRoles
@@ -866,39 +926,31 @@ class ViewHelper
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
                                 $object->permissionExists = true;
-                                // dd('abc 4');
                                 
                             } else {
                                if($variant->document->approval_all_roles == 1 && in_array($mandant->mandant_id, $mandantIdArr) ){
                                    $hasPermission = true;
                                    $variant->hasPermission = true;
                                    $object->permissionExists = true;
-                                //   dd('abc 5');
                                 }
                                 elseif ( $variant->id == self::userHasMandantVariant($document, $uid) ) {
                                     $hasPermission = true;
                                     $variant->hasPermission = true;
                                     $object->permissionExists = true;
-                                    // dd('abc 6');
                                 }
                             }
-
-                            // dd('test');
                         } elseif (in_array($mandant->mandant_id, $mandantIdArr)) {
-                            // dd($variant->documentMandantMandants);
                             if ($document->approval_all_roles == true) {
                             
                                 $hasPermission = true;
                                 $variant->hasPermission = true;
                                 $object->permissionExists = true;
-                                // dd('abc 7');
                             } else {
                                 foreach ($variant->documentMandantRoles as $role) {
                                     if (in_array($role->role_id, $mandantRolesArr)) {
                                         $variant->hasPermission = true;
                                         $hasPermission = true;
                                         $object->permissionExists = true;
-                                        // dd('abc 8');
                                     }
                                 }//end foreach documentMandantRoles
                             }
@@ -920,7 +972,6 @@ class ViewHelper
             $variants[0]->hasPermission = true;
         }
         $object->variants = $variants;
-
         return $object;
     }
 
@@ -1026,8 +1077,6 @@ class ViewHelper
         return $object;
     }
 
-//end documentVariant permission
-
     /**
      * Check if document has pdf (used for example show title etc).
      *
@@ -1064,7 +1113,6 @@ class ViewHelper
         if (in_array($extension, $allowedFileArray)) {
             return true;
         }
-
         return false;
     }
 
@@ -1138,7 +1186,6 @@ class ViewHelper
         }
     }
     
-
     /**
      * Get Mandant by ID.
      *
@@ -1179,7 +1226,6 @@ class ViewHelper
             foreach ($mandantUsers as $mandantUser) {
                 $mandants[] = Mandant::find($mandantUser->mandant_id);
             }
-
             return collect($mandants);
         } else {
             return false;
@@ -1250,7 +1296,6 @@ class ViewHelper
         }
 
         return $html;
-        // dd($html);
     }
 
     /**
@@ -1368,7 +1413,6 @@ class ViewHelper
         if (!\File::exists($folder)) {
             \File::makeDirectory($folder, $mod = 0777, true, true);
         }
-
         // File size validation
         if ($sizeLimit) {
             $totalSize = 0;
@@ -1443,7 +1487,6 @@ class ViewHelper
     {
         $categories = InventoryCategory::all();
         $sizes = InventorySize::all();
-
         return view('inventarliste.partials.editModal', compact('item', 'categories', 'sizes'))->render();
     }
 
@@ -1459,7 +1502,6 @@ class ViewHelper
         $categories = InventoryCategory::all();
         $sizes = InventorySize::all();
         $mandants = Mandant::all();
-
         return view('inventarliste.partials.inventoryViewModal', compact('item', 'categories', 'sizes', 'mandants'))->render();
     }
 
@@ -1483,9 +1525,11 @@ class ViewHelper
     }
 
     /**
-     * generate history inventory modal.
+     * Count the number of recievers according to the sending method
      *
+     * @param int $documentId
      * @param int $variantNumber
+     * @param int $sendingMethod
      *
      * @return int $userNumber
      */
@@ -1496,6 +1540,7 @@ class ViewHelper
         $document = Document::find($documentId);
         $emailRecievers = array();
         
+        // Check for document "vertelier" roles, and filter out accordingly
         if($document->approval_all_roles == 1) $emailRecievers = [0];
         elseif($document->documentMandants->first()){
             $emailRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id')->toArray();
@@ -1504,16 +1549,49 @@ class ViewHelper
         // Get all users with sending options
         $settingsUserIds = UserEmailSetting::where('sending_method', $sendingMethod)
             ->whereIn('document_type_id', [0, $document->document_type_id])
+            ->whereIn('email_recievers_id', $emailRecievers)
             ->where('active', 1)->groupBy('user_id')->pluck('user_id');
         
         // Get e-mailed user number
         if(in_array($sendingMethod, [1, 2])){
-            $userNumber = UserEmailSetting::whereIn('user_id', $settingsUserIds)
+            
+            $users = User::whereIn('id', $settingsUserIds)->get();
+            
+            // Get list of user mandants that have permission for the document variant
+            $mandantsList = array();
+            foreach($users as $user){
+                $editorVariants = ViewHelper::documentVariantPermission($document, $user->id, true); // Third parameter is for showing all variants
+                foreach ($editorVariants->variants as $ev){
+                    if($ev->approval_all_mandants == true){
+                        // Handle the case where a variant has approval for ALL mandants
+                        $allMandants = true;
+                    } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
+                        $dm = DocumentMandant::where('editor_variant_id', $ev->id)->pluck('id');
+                        $dmm = DocumentMandantMandant::whereIn('document_mandant_id', $dm)->pluck('mandant_id');
+                        foreach($dmm as $id) if(!in_array($id, $mandantsList)) $mandantsList[] = $id;
+                    }
+                }
+            }
+            
+            // Find mandants by id
+            if($allMandants == true) $mandants = Mandant::all();
+            else $mandants = Mandant::whereIn('id', $mandantsList)->get();
+            
+            // Get all users with sending options
+            $userSettings = UserEmailSetting::where('sending_method', $sendingMethod)
                 ->whereIn('document_type_id', [0, $document->document_type_id])
+                ->whereIn('user_id', $settingsUserIds)
                 ->whereIn('email_recievers_id', $emailRecievers)
-                ->where('sending_method', $sendingMethod)
-                ->where('active', 1)
-                ->count();
+                ->where('active', 1)->get();
+                
+                // var_dump($userSettings->pluck('id')->toArray());
+            
+            // Check if user mandants are the same as mandants assigned to the document variant
+            foreach($userSettings as $setting) {
+                $settingsMandantUsers = MandantUser::where('user_id', $setting->user_id)->get();
+                $userMandants = Mandant::whereIn('id', $settingsMandantUsers->pluck('mandant_id'))->get();
+                if($mandants->intersect($userMandants)->count()) $userNumber += 1;
+            }
         }
         
         // Get classic mailed user number
@@ -1541,22 +1619,12 @@ class ViewHelper
             if($allMandants == true) $mandants = Mandant::all();
             else $mandants = Mandant::whereIn('id', $mandantsList)->get();
             
-            if(count($mandants)){
-                foreach($mandants as $mandant){
-                    if(count($mandant->users)){
-                        foreach($mandant->users as $user){
-                            if($users->contains($user)) $userNumber+=1;
-                        }
-                    }
-                }
-            }
-        
             // Get all users with sending options
             $userSettings = UserEmailSetting::where('sending_method', $sendingMethod)
                 ->whereIn('document_type_id', [0, $document->document_type_id])
+                ->whereIn('user_id', $settingsUserIds)
                 ->where('active', 1)->get();
-                
-            // $users = User::whereIn('id', $userSettings->pluck('user_id'))->groupBy('id')->get();
+            
             $settingsUsers = User::whereIn('id', $userSettings->pluck('user_id'))->get();
             $settingsMandant = Mandant::whereIn('id', $userSettings->pluck('mandant_id'))->get();
             
@@ -1565,9 +1633,9 @@ class ViewHelper
                 return $settingsMandant->contains($value->id);
             });
             
-            // Reset user count
-            $userNumber = 0;
-            foreach($userSettings as $setting) if($mandants->pluck('id')->contains($setting->mandant_id)) $userNumber += 1;
+            foreach($userSettings as $setting) {
+                if($mandants->pluck('id')->contains($setting->mandant_id)) $userNumber += 1;
+            }
              
         }
         
@@ -1575,11 +1643,10 @@ class ViewHelper
     }
     
     /**
-     * 
-     *
+     * Gereates Inventory hitory modal and returns template
      * @param collection $item
      *
-     * @return template
+     * @return string $template
      */
     public static function generateInventoryHistoryModal($item)
     {
@@ -1590,7 +1657,6 @@ class ViewHelper
      * inventory history modal comma space fix.
      *
      * @param collection $history
-     *
      * @return string $string
      */
     public static function genterateHistoryModalString($history)
@@ -1712,8 +1778,6 @@ class ViewHelper
                 }
             } // end second foreach
 
-            // if($mandant->id == 1) dd($usersInternal);
-
             $mandant->usersInternal = $usersInternal;
             $mandant->usersInMandants = $mandant->users->whereIn('id', $userArr);
         }
@@ -1734,7 +1798,6 @@ class ViewHelper
         }
         $searchSuggestions = array_unique($searchSuggestions);
         natcasesort($searchSuggestions);
-        // dd($searchSuggestions);
 
         return $searchSuggestions;
     }
@@ -1772,8 +1835,6 @@ class ViewHelper
         }
         $searchSuggestions = array_unique($searchSuggestions);
         natcasesort($searchSuggestions);
-        // dd($searchSuggestions);
-
         return $searchSuggestions;
     }
     
@@ -1790,23 +1851,26 @@ class ViewHelper
         $user = User::find($approval->user_id);
         $document = Document::find($approval->document_id);
         
-        // Fill the email container class with adequate values
-        $mailContent = new \StdClass();
-        $mailContent->subject = 'Benachrichtigung über eine Dokumentfreigabe im Intranet: "'. $document->name .'"';
-        $mailContent->title = 'Benachrichtigung über eine Dokumentfreigabe im Intranet: "'. $document->name .'"';
-        $mailContent->fromEmail = 'info@neptun-gmbh.de';
-        $mailContent->fromName = 'Informationsservice';
-        $mailContent->link = url('dokumente/' . $document->id . '/freigabe');
+        if($user->active && $user->email_reciever){
             
-        // Send email
-        $mailContent->toEmail = $user->email;
-        $mailContent->toName = $user->first_name .' '. $user->last_name;
-        $sent = Mail::send('email.notifyApproval', ['content' => $mailContent, 'user' => $user, 'document' => $document], 
-            function ($message) use ($mailContent, $document) {
-                $message->from($mailContent->fromEmail, $mailContent->fromName);
-                $message->to($mailContent->toEmail, $mailContent->toName);
-                $message->subject($mailContent->subject);
-        });
+            // Fill the email container class with adequate values
+            $mailContent = new \StdClass();
+            $mailContent->subject = 'Benachrichtigung über eine Dokumentfreigabe im Intranet: "'. $document->name .'"';
+            $mailContent->title = 'Benachrichtigung über eine Dokumentfreigabe im Intranet: "'. $document->name .'"';
+            $mailContent->fromEmail = 'info@neptun-gmbh.de';
+            $mailContent->fromName = 'Informationsservice';
+            $mailContent->link = url('dokumente/' . $document->id . '/freigabe');
+                
+            // Send email
+            $mailContent->toEmail = $user->email;
+            $mailContent->toName = $user->first_name .' '. $user->last_name;
+            $sent = Mail::send('email.notifyApproval', ['content' => $mailContent, 'user' => $user, 'document' => $document], 
+                function ($message) use ($mailContent, $document) {
+                    $message->from($mailContent->fromEmail, $mailContent->fromName);
+                    $message->to($mailContent->toEmail, $mailContent->toName);
+                    $message->subject($mailContent->subject);
+            });
+        }
     }
 
     /**

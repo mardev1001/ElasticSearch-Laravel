@@ -59,6 +59,7 @@ class JuristenPortalImport extends Command
     public function handle()
     {
         $files = File::files($this->portalOcrUploads);
+        // dd($files);
         foreach($files as $file){
             $this->importFile($file);
         }
@@ -105,7 +106,7 @@ class JuristenPortalImport extends Command
         }
 
         $document = new Document();
-        $document->document_type_id = 7;
+        $document->document_type_id = null;
         $document->user_id = $user_id;
         if(isset($metaData['Title'])){
             $document->name = $metaData['Title'];
@@ -124,15 +125,23 @@ class JuristenPortalImport extends Command
         $document->version = 1;
         $document->save();
         
+        if( empty($document->name) ){
+            $document->name = 'Dokument '.$document->id;
+            $document->long_name = 'Dokument '.$document->id;
+            $document->save();
+        }
+        
         $editor_variant = new EditorVariant();
         $editor_variant->document_id = $document->id;
         $editor_variant->variant_number = 1;
         $editor_variant->inhalt = $text;
         $editor_variant->save();
 
-        
+    
         $document_dir = public_path() . '/files/documents/'. $document->id.'/' ;
-        File::makeDirectory($document_dir, 0777, true);
+        if (!File::exists($document_dir)) {
+            File::makeDirectory($document_dir, 0777, true);
+        }
         File::move($fileName, $document_dir . $ocrHelper->getFileBaseName());
         
         
@@ -142,61 +151,13 @@ class JuristenPortalImport extends Command
         $document_upload_original->save();
         
         if (File::exists( $this->portalOcrUploads.'/'. $converted_file)) {
-            File::move( $this->portalOcrUploads.'/'.$converted_file ,$document_dir . $converted_file );
+            if (!File::exists($document_dir . $converted_file)) {
+                File::move( $this->portalOcrUploads.'/'.$converted_file ,$document_dir . $converted_file );
+            }
             $document_upload_converted = new DocumentUpload();
             $document_upload_converted->editor_variant_id = $editor_variant->id;
             $document_upload_converted->file_path = $converted_file ;
             $document_upload_converted->save();   
         }
-        
-        /*
-       
-        if( count($documentExistsFirstTest) < 1 ){
-          
-
-            
-            $documentExists = Document::where('name',$fileName)->first();
-            if( is_null($documentExists) ){
-               
-                
-                $justName = explode('.',$fileName);
-                $justName = $justName[0];
-                
-                $files = File::allFiles($this->portalOcrUploads);
-                // dd($files);
-                foreach ($files as $file){
-                    if( strpos($file->getPathname(), 'cache') !== false
-                    ||  strpos($file->getPathname(), 'libreoffice') !== false
-                    ||  strpos($file->getPathname(), 'output') !== false ) { 
-                        continue;
-                    }            
-                    
-                    $name = explode('/',(string)$file);
-                    $name = last($name);
-                 
-                    $justFileName = explode('.',$name);
-                    $justFileName = $justFileName[0];
-                    
-                    if( strpos($file->getPathname(), $justFileName) !== false && 
-                    strpos($file->getPathname(), 'output') === false  ){
-                  
-                        if (!File::exists($document_dir)) {
-                            File::makeDirectory($document_dir, $mod = 0777, true, true);
-                        }
-                        if (File::exists( $this->portalOcrUploads.'/'.$file->getFilename())) {
-                            File::move( $this->portalOcrUploads.'/'.$file->getFilename() ,$document_dir . $file->getFilename() );
-                            $document_upload_converted = new DocumentUpload();
-                            $document_upload_converted->editor_variant_id = $editor_variant->id;
-                            $document_upload_converted->file_path = $file->getFilename() ;
-                            $document_upload_converted->save();   
-                        }
-                           
-                    }
-                }
-                  
-            }
-
-        }
-                    */
     }
 }

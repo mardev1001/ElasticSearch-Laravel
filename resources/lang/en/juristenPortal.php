@@ -11,7 +11,7 @@ return [
     'juristenportal' => 'Beratungsportal',
     'documentsRechtsablage' => 'Rechtsablage',
     'createRechtsablage' => 'Rechtsablage anlegen',
-    'createBeratung' => 'Beratung anlegen',
+    'createBeratung' => 'Dokumente Beratung anlegen',
     'beratungDocuments' => 'Dokumente Beratung',
     'upload' => 'Upload',
     'calendar' => 'Kalender',
@@ -39,6 +39,8 @@ return [
     //AktenArt
     'savedAktenArt' => 'Dateityp gespeichert',
     'updatedAktenArt' => 'Dateityp aktualisiert',
+    'deletedAktenArt' => 'Dateityp gelöscht',
+    'deleteAlertAktenArt' => 'Wollen Sie diese Artenart wirklich löschen?',
     
     //calendar
     'calendar'  =>  'Kalender',

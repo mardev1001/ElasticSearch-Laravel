@@ -40,28 +40,28 @@
                                 <th>{{ trans('statistikForm.date') }} {{ trans('statistikForm.last') }}</th>
                             </tr>
                             
-                            @foreach( $mandant->mandantUsers as $mandantUser )
+                            @foreach( $mandant->usersOrderByLastName as $mandantUser )
                                 
-                                @if($mandantUser->user->active)
-                                    @if(isset($documentReaders[$mandantUser->user_id]))
-                                        @if(\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->eq(\Carbon\Carbon::parse('0000-00-00 00:00:00')))
+                                @if($mandantUser->active)
+                                    @if(isset($documentReaders[$mandantUser->id]))
+                                        @if(\Carbon\Carbon::parse($documentReaders[$mandantUser->id]['date_read_last'])->eq(\Carbon\Carbon::parse('0000-00-00 00:00:00')))
                                             <tr>
-                                                <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
+                                                <td>{{$mandantUser->last_name}} {{$mandantUser->first_name}}</td>
                                                 <td>Neu</td>
                                                 <td>-</td>
                                                 <td>-</td>
                                             </tr>
                                         @else
                                             <tr>
-                                                <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
+                                                <td>{{$mandantUser->last_name}} {{$mandantUser->first_name}} </td>
                                                 <td>Ja</td>
-                                                <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read'])->format('d.m.Y H:i:s')}}</td>
-                                                <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->user_id]['date_read_last'])->format('d.m.Y H:i:s')}}</td>
+                                                <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->id]['date_read'])->format('d.m.Y H:i:s')}}</td>
+                                                <td>{{\Carbon\Carbon::parse($documentReaders[$mandantUser->id]['date_read_last'])->format('d.m.Y H:i:s')}}</td>
                                             </tr>
                                         @endif
                                     @else
                                         <tr>
-                                            <td>{{$mandantUser->user->first_name}} {{$mandantUser->user->last_name}}</td>
+                                            <td>{{$mandantUser->last_name}} {{$mandantUser->first_name}} </td>
                                             <td>Nein</td>
                                             <td>-</td>
                                             <td>-</td>

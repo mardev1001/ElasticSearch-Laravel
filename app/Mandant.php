@@ -33,6 +33,12 @@ class Mandant extends Model
         // return $this->hasManyThrough('App\User', 'App\MandantUser','mandant_id','id');
         return $this->belongsToMany('App\User', 'mandant_users', 'mandant_id', 'user_id')->where('mandant_users.deleted_at', null);
     }
+    
+    public function usersOrderByLastName(){
+        // return $this->hasManyThrough('App\User', 'App\MandantUser','mandant_id','id');
+        return $this->belongsToMany('App\User', 'mandant_users', 'mandant_id', 'user_id')
+        ->orderBy('last_name','asc')->where('mandant_users.deleted_at', null);
+    }
     public function usersWithTrashed(){
         // return $this->hasManyThrough('App\User', 'App\MandantUser','mandant_id','id');
         return $this->belongsToMany('App\User', 'mandant_users', 'mandant_id', 'user_id')->withTrashed();

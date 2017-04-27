@@ -29,6 +29,17 @@ $(function() {
         }
     });
 
+    $(".timepicker").datetimepicker({
+        locale: 'de',
+        format: 'HH:mm',
+        useCurrent: true,
+        showClose: true,
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'bottom'
+        }
+    });
+
     if ($('.tree-view').length) {
         var counter = 0; //let insted of var
         var $treeview = []; //let insted of var

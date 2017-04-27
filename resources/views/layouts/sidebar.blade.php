@@ -270,7 +270,7 @@
                                 
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ url('#') }}">@lang('juristenPortal.notesCreate')</a>
+                                        <a href="{{ url('notice/create') }}">@lang('juristenPortal.notesCreate')</a>
                                     </li>
                                 </ul>    
                             </li><!--end notiz -->
@@ -286,55 +286,60 @@
                                 
                             </li><!--end akten -->
                             
+                            <!--Beratung Documents-->
                             <li>
-                                <a href="{{ url('beratung-kategorien/alle') }}">@lang('juristenPortal.beratungDocuments') <span class="fa arrow"></span></a>
-                                    @if(count($juristenCategoriesBeratung))
+                                <a href="{{ url('beratung-kategorien/alle') }}">@lang('juristenPortal.beratungDocuments')
+                                <span class="fa arrow"></span></a>
                                     <ul class="nav nav-third-level">
                                         <li>
-                                            <a href="#">{{ ( trans('juristenPortal.createBeratung') ) }} </a>
+                                            <a href="#">{{ ucfirst( trans('juristenPortal.createBeratung') ) }} </a>
                                         </li>
+                                        
+                                        
+                                    
+                                        @if(count($juristenCategoriesBeratung))
                                         <li>
-                                            <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
-                                        </li>
-                                        @foreach( $juristenCategoriesBeratung as $jueristenCategory)
-                                            <li>
-                                            <a href="{{url('beratung-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
-                                                @if( count($jueristenCategory->juristCategoriesBeratungActive) ) <span class="fa arrow"></span> @endif
-                                            </a>
-                                            @if( count($jueristenCategory->juristCategoriesBeratungActive) )
                                             <ul class="nav nav-fourth-level">
-                                                @foreach( $jueristenCategory->juristCategoriesBeratungActive as $subLevel1)
+                                            
+                                            @foreach( $juristenCategoriesBeratung as $jueristenCategory)
                                                 <li>
-                                                    <a href="{{url('beratung-kategorien/'.$subLevel1->id)}}">{{ $subLevel1->name }}
-                                                        @if( count($subLevel1->juristCategoriesBeratungActive) ) <span class="fa arrow"></span> @endif
-                                                    </a>
-                                                    @if( count( $subLevel1->juristCategoriesBeratungActive ) )
+                                                <a href="{{url('beratung-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
+                                                    @if( count($jueristenCategory->juristCategoriesBeratungActive) ) <span class="fa arrow"></span> @endif
+                                                </a>
+                                                    @if( count($jueristenCategory->juristCategoriesBeratungActive) )
                                                     <ul class="nav nav-five-level">
-                                                        @foreach( $subLevel1->juristCategoriesBeratungActive as $subLevel2)
-                                                            <li>
-                                                                <a href="{{url('beratung-kategorien/'.$subLevel2->id)}}">{{ $subLevel2->name }}</a>
-                                                            </li>
+                                                        @foreach( $jueristenCategory->juristCategoriesBeratungActive as $subLevel1)
+                                                        <li>
+                                                            <a href="{{url('beratung-kategorien/'.$subLevel1->id)}}">{{ $subLevel1->name }}
+                                                                @if( count($subLevel1->juristCategoriesBeratungActive) ) <span class="fa arrow"></span> @endif
+                                                            </a>
+                                                            @if( count( $subLevel1->juristCategoriesBeratungActive ) )
+                                                            <ul class="nav nav-five-level">
+                                                                @foreach( $subLevel1->juristCategoriesBeratungActive as $subLevel2)
+                                                                    <li>
+                                                                        <a href="{{url('beratung-kategorien/'.$subLevel2->id)}}">{{ $subLevel2->name }}</a>
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                            @endif
+                                                        </li>
                                                         @endforeach
                                                     </ul>
                                                     @endif
                                                 </li>
-                                                @endforeach
+                                            @endforeach {{-- first level subcategory --}}
+                                            
                                             </ul>
-                                            @endif
-                                            </li>
-                                        @endforeach {{-- first level subcategory --}}
-                                    </ul>
-                                          
-                                    @endif
+                                        </li>
+                                        @endif
+                                </ul>
                                
                             </li><!-- End Beratung Documents-->
                             
-                            
-                            
+                            <!-- Rechtsablage Documents -->
                             <li>
                                 <a href="{{ url('rechtsablage-kategorien/alle') }}">@lang('juristenPortal.documentsRechtsablage')
                                     <span class="fa arrow"></span></a>
-                                    @if(count($juristenCategories))
                                     <ul class="nav nav-third-level">
                                         <li>
                                             <a href="#">{{ ucfirst( trans('juristenPortal.createRechtsablage') ) }} </a>
@@ -342,6 +347,8 @@
                                         <li>
                                             <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
                                         </li>
+                                    @if(count($juristenCategories))
+                                      
                                         @foreach( $juristenCategories as $jueristenCategory)
                                             <li>
                                             <a href="{{url('rechtsablage-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
@@ -369,19 +376,14 @@
                                             @endif
                                             </li>
                                         @endforeach {{-- first level subcategory --}}
-                                    </ul>
+                                        
                                           
                                     @endif
-                            </li><!-- End Rechtsablage Documents-->
+                                </ul><!-- end .nav-second-level -->
+                            </li>
+                            <!-- End Rechtsablage Documents-->
                             
-                            <ul class="nav nav-third-level">
-                                <li>
-                                    <a href="#">{{ ucfirst( trans('juristenPortal.createRechtsablage') ) }} </a>
-                                </li>
-                                <li>
-                                    <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
-                                </li>
-                            </ul>
+                         
                             
                             
                             <!--Beratung Documents-->

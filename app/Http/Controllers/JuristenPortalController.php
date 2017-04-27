@@ -278,6 +278,16 @@ class JuristenPortalController extends Controller
         return redirect()->back()->with('messageSecondary', trans('juristenPortal.updatedAktenArt'));
     }
     
+    public function deleteAktenArt($id)
+    {
+        $aktenArt = JuristFileType::find($id);
+        foreach($aktenArt->juristFileTypeUsers as $usr){
+            $usr->delete();
+        }
+        $aktenArt->delete();
+        
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.deletedAktenArt'));
+    }
     
     /**
      * Display a listing of the resource.

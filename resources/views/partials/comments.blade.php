@@ -38,9 +38,9 @@
                                             
                                             <span class="comment-header">
     
-                                                @if( isset($comment) && $comment->freigeber == 1 &&  $comment->published != null)
+                                                @if( isset($comment) && $comment->freigeber == 1)
                                                     <strong>
-                                                        @if( $comment->published->approved == 1)
+                                                        @if($comment->approved)
                                                             Freigegeben
                                                         @else
                                                             Nicht Freigegeben

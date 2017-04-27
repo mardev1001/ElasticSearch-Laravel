@@ -187,7 +187,8 @@ Route::group(array('middleware' => ['auth']), function () {
     
     Route::get('beratungsportal/aktenart', 'JuristenPortalController@aktenArt');
     Route::post('beratungsportal/aktenart', 'JuristenPortalController@storeAktenArt');
-    Route::patch('beratungsportal/aktenart/update/{id?}', 'JuristenPortalController@updateAktenArt'); //
+    Route::patch('beratungsportal/aktenart/update/{id?}', 'JuristenPortalController@updateAktenArt'); 
+    Route::post('beratungsportal/delete/{id}', 'JuristenPortalController@deleteAktenArt');
     
     Route::get('beratungsportal/notiz', 'JuristenPortalController@notiz');
     Route::get('beratungsportal/upload', 'JuristenPortalController@uploadView');
@@ -203,6 +204,8 @@ Route::group(array('middleware' => ['auth']), function () {
     
     Route::get('beratung-kategorien/alle', 'BeratungController@singlePageAll');
     Route::resource('beratung-kategorien', 'BeratungController');
+    
+    Route::resource('notice', 'NoticeController');
 
     /*
      * Developer Routes
