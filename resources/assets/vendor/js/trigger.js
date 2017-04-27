@@ -151,7 +151,6 @@ $(function() {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
     }
     else if (url.href.indexOf('beratungsportal') != -1 && url.href.indexOf('aktenart') != -1) {
-        console.log('yeah');
         $('a[href$="/beratungsportal"]').removeClass('active').parent('ul').removeClass('in');
         $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
 

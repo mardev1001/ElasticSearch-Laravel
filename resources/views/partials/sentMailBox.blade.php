@@ -1,4 +1,4 @@
-@if(count($mailList) )
+@if($mailList)
 <!-- versand panel -->
 <div class="panel panel-primary" id="panelMail">
     <div class="panel-heading">

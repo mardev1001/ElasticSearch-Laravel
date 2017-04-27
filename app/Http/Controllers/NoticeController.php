@@ -56,7 +56,9 @@ class NoticeController extends Controller
         
         $note = new Document;
         $note->document_type_id = $document_type_id->id;
-        $note->user_id = NULL; //$request->user;
+        $note->user_id = Auth::id();
+        $note->owner_user_id = $request->user;
+        $note->name = $request->username;
         $note->betreff = $request->betreff;
         
         $datetime = $request->date.' '.$request->time;

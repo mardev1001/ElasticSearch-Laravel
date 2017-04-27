@@ -344,9 +344,7 @@
                                         <li>
                                             <a href="#">{{ ucfirst( trans('juristenPortal.createRechtsablage') ) }} </a>
                                         </li>
-                                        <li>
-                                            <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
-                                        </li>
+                                       
                                     @if(count($juristenCategories))
                                       
                                         @foreach( $juristenCategories as $jueristenCategory)
@@ -383,10 +381,11 @@
                             </li>
                             <!-- End Rechtsablage Documents-->
                             
-                         
+                        <li>
+                            <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
+                        </li>
                             
                             
-                            <!--Beratung Documents-->
                     </ul>
                 </li>
             @endif
