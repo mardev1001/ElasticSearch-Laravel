@@ -137,7 +137,9 @@
                         <!--@endif-->
                         <!--  </ul>-->
                     </li>
-                    
+                     <li>
+                        <a href="{{ url('beratungsportal/upload') }}">{{ ucfirst( trans('juristenPortal.upload') ) }} </a>
+                    </li>
                     
                     
                 </ul>

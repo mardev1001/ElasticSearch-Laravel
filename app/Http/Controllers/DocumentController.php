@@ -266,12 +266,12 @@ class DocumentController extends Controller
     public function create()
     {
         if ($this->canCreateEditDoc() == true) {
-            $documentTypes = DocumentType::whereNotIn('name', ['Juristendokumente'])->get(); // if struktur admin
+            $documentTypes = DocumentType::where('jurist_document',0)->get(); // if struktur admin
 
             if ($this->returnRole() != false && $this->returnRole() == 11) { // 11 Rundschreiben Verfasser
-                $documentTypes = DocumentType::where('document_art', 0)->whereNotIn('name', ['Juristendokumente'])->get();
+                $documentTypes = DocumentType::where('document_art', 0)->where('jurist_document',0)->get();
             } elseif ($this->returnRole() != false && $this->returnRole() == 13) { // 13 Dokumenten Verfasser
-               $documentTypes = DocumentType::where('document_art', 1)->whereNotIn('name', ['Juristendokumente'])->get();
+               $documentTypes = DocumentType::where('document_art', 1)->where('jurist_document',0)->get();
             }
 
             $isoDocuments = IsoCategory::all();
@@ -1678,7 +1678,7 @@ class DocumentController extends Controller
                 return redirect('dokumente/create');
             }
         if ($this->canCreateEditDoc($data) == true) {
-            $documentTypes = DocumentType::all(); // if struktur admin
+            $documentTypes = DocumentType::where('jurist_document',0)->get(); // if struktur admin
             $docTypesArr = $documentTypes->pluck('id')->toArray();
 
             if ($this->returnRole() != false && $this->returnRole() == 11) { // 11 Rundschreiben Verfasser

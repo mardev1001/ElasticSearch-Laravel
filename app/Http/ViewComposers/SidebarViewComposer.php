@@ -37,6 +37,7 @@ class SidebarViewComposer
         $view->with('isoCategories', IsoCategory::where('active', 1)->get() );
         $view->with('juristenCategories', JuristCategory::where('beratung',0)->where('parent',1)->where('active',1)->get() );
         $view->with('juristenCategoriesBeratung', JuristCategory::where('beratung',1)->where('parent',1)->where('active',1)->get() );
+        // dd(JuristCategory::where('beratung',1)->where('parent',1)->where('active',1)->get());
         // $view->with('isoCategories', IsoCategory::all() );
     }
     

@@ -208,6 +208,14 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::resource('notice', 'NoticeController');
 
     /*
+    * Maintenance Routes
+    */
+    Route::get('neptun-verwaltung/datenbank-bereinigen', 'MaintenanceController@index');
+    Route::get('neptun-verwaltung/datenbank-bereinigen/delete-sending-published', 'MaintenanceController@deleteSendingPublished');
+    
+    
+
+    /*
      * Developer Routes
      */
     

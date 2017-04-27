@@ -109,44 +109,47 @@
                         {!! $data->content !!}
                     @endif
                 </div>
+                
             </div>
             
             <div class="col-xs-2 text-center">
-                <div class="form-group form-buttons">
-                    {{ Form::button('drucken', array('class' => 'btn btn-primary no-margin-bottom')) }}
+                <div class="form-group">
+                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">drucken</a>
+                </div>
+                <div class="form-group">
+                    <a href="{{ url('beratungsportal/calendar') }}" class="btn btn-primary no-margin-bottom">Wiedervorlage</a>
                 </div>
                 <div class="form-group form-buttons">
-                    {{ Form::button('Wiedervorlage', array('class' => 'btn btn-primary no-margin-bottom')) }}
+                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">zu Akte hinzufügen</a>
                 </div>
                 <div class="form-group form-buttons">
-                    {{ Form::button('zu Akte hinzufügen', array('class' => 'btn btn-primary no-margin-bottom')) }}
+                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">neue Akte anlegen</a>
                 </div>
                 <div class="form-group form-buttons">
-                    {{ Form::button('neue Akte anlegen', array('class' => 'btn btn-primary no-margin-bottom')) }}
-                </div>
-                <div class="form-group form-buttons">
-                    {{ Form::button('Notiy archivieren', array('class' => 'btn btn-primary no-margin-bottom')) }}
-                </div>
-                <div class="form-group form-buttons">
-                    {{ Form::submit('speichern', array('class' => 'btn btn-primary no-margin-bottom')) }}
+                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">Notiz archivieren</a>
                 </div>
             </div>
             
         </div>
+
     </div>
-
-
-<div class="clearfix"></div> <br/>
+    
+    <br/>
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-xs-12 form-buttons">
+            {{ Form::submit('speichern und weiter', array('class' => 'btn btn-primary no-margin-bottom')) }}
+        </div>
+    </div>
+    <div class="clearfix"></div> 
 @stop
 
 @section('script')
 <script>
 $('#user').change(function(event) {
-    
     var selected = $(this).find('option:selected');
     var name = $.trim(selected.text());
     var position = selected.data('position');
-    
     $('#username').val(name);
     $('#function').val(position);
 });

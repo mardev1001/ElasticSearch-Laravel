@@ -55,5 +55,8 @@ return [
     'juristenPortalCategories'  => 'Kategorien',
     'wiedervorlagenStatus'  => 'Wiedervorlagen Status',
     'aktenArt'  => 'Akten Arten',
+    'databaseCleanup'  => 'Datenbank bereinigen',
+    'databaseCleanupSuccess'  => 'Daten wurden erfolgreich entfernt.',
+    'dbCleanSendingPublished'  => 'Versand Daten Entfernen',
 
 ];

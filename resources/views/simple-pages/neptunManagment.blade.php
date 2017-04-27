@@ -86,6 +86,12 @@
                         </li>
                     @endif
                     
+                    @if( ViewHelper::universalHasPermission() == true )
+                        <li>
+                            <a href="{{ url('neptun-verwaltung/datenbank-bereinigen') }}">{{ ucfirst( trans('navigation.databaseCleanup') ) }}</a>
+                        </li>
+                    @endif
+                    
                 </ul>
                 
             </div>

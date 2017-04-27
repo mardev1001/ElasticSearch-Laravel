@@ -61,6 +61,11 @@ class NoticeController extends Controller
         $note->name = $request->username;
         $note->betreff = $request->betreff;
         
+        $note->funktion = $request->function;
+        $note->nachricht = $request->message;
+        $note->telefon = $request->phone;
+        $note->ruckruf = $request->has('recall');
+        
         $datetime = $request->date.' '.$request->time;
         $date =date('Y-m-d H:i:s', strtotime($datetime));
         $note->created_at = $date;
@@ -83,12 +88,17 @@ class NoticeController extends Controller
         $newDMR->mandant_id = $request->mandant;
         $newDMR->save();
         
-        //dd($request);
-        // recall
-        // phone
-        // function
+        //echo 'Note Created !';
+        //return redirect('notice/'.$note->id);
         
-        echo 'Note Created !';
+        return view('juristenportal.createNoteStep2', compact('note'));
+        
+       
+    }
+    
+    public function documentUpload(Request $request)
+    {
+        //
     }
 
     /**

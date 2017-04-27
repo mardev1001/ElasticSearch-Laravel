@@ -256,14 +256,16 @@
                         <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level collapse">
                             <li>
-                                <a href="{{ url('beratungsportal/calendar') }}"> @lang('juristenPortal.juristTemplates')<span class="fa arrow"></span></a>
+                                <a href="{{ url('beratungsportal/calendar') }}"> @lang('juristenPortal.juristTemplates')
+                                <!--<span class="fa arrow"></span>-->
+                                </a>
                                 
-                                <ul class="nav nav-third-level">
-                                    <li>
-                                        <a href="{{ url('#') }}">@lang('juristenPortal.juristTemplatesCreate')</a>
-                                    </li>
+                                <!--<ul class="nav nav-third-level">-->
+                                <!--    <li>-->
+                                <!--        <a href="{{ url('#') }}">@lang('juristenPortal.juristTemplatesCreate')</a>-->
+                                <!--    </li>-->
                                     
-                                </ul>    
+                                <!--</ul>    -->
                             </li><!--end Wiedervorlage -->
                             <li>
                                 <a href="{{ url('#') }}">@lang('juristenPortal.notes')<span class="fa arrow"></span></a>
@@ -294,10 +296,7 @@
                                         <li>
                                             <a href="#">{{ ucfirst( trans('juristenPortal.createBeratung') ) }} </a>
                                         </li>
-                                        
-                                        
-                                    
-                                        @if(count($juristenCategoriesBeratung))
+                                        @if($juristenCategoriesBeratung)
                                         <li>
                                             <ul class="nav nav-fourth-level">
                                             
@@ -516,6 +515,12 @@
                         @if( ViewHelper::universalHasPermission( array(6) ) == true ) 
                             <li>
                                 <a href="{{ url('tipps-und-tricks/create') }}">{{ ucfirst( trans('navigation.tipsAndTricks') ) }}</a>
+                            </li>
+                        @endif
+                        
+                        @if( ViewHelper::universalHasPermission() == true )
+                            <li>
+                                <a href="{{ url('neptun-verwaltung/datenbank-bereinigen') }}">{{ ucfirst( trans('navigation.databaseCleanup') ) }}</a>
                             </li>
                         @endif
                         

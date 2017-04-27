@@ -18,6 +18,9 @@
                 
                 @if(count($juristenCategories))
                     <ul class="level-1">
+                        <li>
+                            <a href="#">{{ ucfirst( trans('juristenPortal.createBeratung') ) }} </a>
+                        </li>
                         @foreach( $juristenCategories as $jueristenCategory)
                             <li>
                             <a href="{{url('beratung-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
