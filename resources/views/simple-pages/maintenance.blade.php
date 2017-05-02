@@ -3,7 +3,7 @@
 @extends('master')
 
 @section('page-title')
-    {{ ucfirst(trans('navigation.databaseCleanup')) }}
+    {{ ucfirst(trans('maintenance.databaseCleanup')) }}
 @stop
 
 
@@ -14,7 +14,7 @@
     <div class="col-xs-12">
         
         <a href="{{url('neptun-verwaltung/datenbank-bereinigen/delete-sending-published')}}" class="btn btn-primary delete-prompt" 
-        data-text="Wollen Sie die Versand Daten wirklich löschen?"> {{ trans('navigation.dbCleanSendingPublished') }} </a> <br>
+        data-text="Wollen Sie die Versand Daten wirklich löschen?"> {{ trans('maintenance.dbCleanSendingPublished') }} </a> <br>
             
     </div>
     

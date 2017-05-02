@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('page-title') {{ 'Notiz anlegen' }} @stop
+@section('page-title') {{ trans('juristenPortal.createNotes') }} @stop
 
 @section('content')
 
@@ -14,16 +14,16 @@
             <!-- row 1-->
             <div class="col-md-4 col-lg-3 "> 
                 <div class="form-group">
-                    <label class="control-label">Mandant</label>
-                    {!! ViewHelper::setUserSelect($mandantUsers,'mandant', '', old('mandant'),'', 'Mandant',false ) !!}
+                    <label class="control-label">{{ trans('juristenPortal.mandant') }}</label>
+                    {!! ViewHelper::setUserSelect($mandantUsers,'mandant', $data, old('mandant'),'', trans('juristenPortal.mandant'), false ) !!}
                 </div>
             </div>
             
             
             <div class="col-md-4 col-lg-3"> 
                 <div class="form-group">
-                    <label class="control-label"> Mitarbeiter </label>
-                    <select name="user" id="user" class="form-control select empty-select" data-placeholder="Mitarbeiter">
+                    <label class="control-label">{{ trans('juristenPortal.mitarbeiter') }}</label>
+                    <select name="mitarbeiter_id" id="mitarbeiter_id" class="form-control select empty-select" data-placeholder="Mitarbeiter">
                         <option value="" data-position="" select >&nbsp;</option>
                         @foreach($mitarbeiterUsers as $mitarbeiterUser)
                             <option value="{{$mitarbeiterUser->id}}" data-position="{{$mitarbeiterUser->position}}">
@@ -36,13 +36,13 @@
             
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
-                    {!! ViewHelper::setInput('username', '', old('username'), 'Mitarbeiter Name', 'Mitarbeiter Name', false, '', array(''), array('id=username')) !!}
+                    {!! ViewHelper::setInput('mitarbeiter', $data, old('mitarbeiter'), trans('juristenPortal.mitarbeiterName'), trans('juristenPortal.mitarbeiterName'), false, '', array(''), array('id=mitarbeiter')) !!}
                 </div>
             </div>
             
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
-                   {!! ViewHelper::setInput('date', '', old('date'), 'Datum', 'Datum', false, 'text', ['datetimepicker']) !!}
+                   {!! ViewHelper::setInput('date', $data, old('date'), trans('juristenPortal.date'), trans('juristenPortal.date'), false, 'text', ['datetimepicker']) !!}
                 </div>
             </div>
             
@@ -51,26 +51,26 @@
             <div class="col-md-4 col-lg-3"> 
                 <div class="form-group">
                     <div class="checkbox text-right">
-                        {!! ViewHelper::setCheckbox('recall', '', old('recall'), trans('wünscht Rückruf')) !!}
+                        {!! ViewHelper::setCheckbox('ruckruf', $data, old('ruckruf'), trans('juristenPortal.recall')) !!}
                     </div>
                 </div>   
             </div>
 
             <div class="col-md-4 col-lg-3"> 
                 <div class="form-group ">
-                      {!! ViewHelper::setInput('phone', '', old('phone'), 'Telefonnummer', 'Telefonnummer', false) !!}
+                      {!! ViewHelper::setInput('telefon', $data, old('telefon'), trans('juristenPortal.phone'), trans('juristenPortal.phone'), false) !!}
                 </div>   
             </div>
             
             <div class="col-md-4 col-lg-3"> 
                 <div class="form-group">
-                    {!! ViewHelper::setInput('function', '', old('function'), 'Function', 'Function', false, '', array(''), array('id=function')) !!}
+                    {!! ViewHelper::setInput('function', $data, old('function'), trans('juristenPortal.function'), trans('juristenPortal.function'), false, '', array(''), array('id=function')) !!}
                 </div>   
             </div><!--End input box-->
             
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
-                   {!! ViewHelper::setInput('time', '', old('time'), 'Uhrzeit', 'Uhrzeit', false, 'text', ['timepicker']) !!}
+                   {!! ViewHelper::setInput('time', $data, old('time'), trans('juristenPortal.time'), trans('juristenPortal.time'), false, 'text', ['timepicker']) !!}
                 </div>
             </div>
             
@@ -84,50 +84,26 @@
           
             <div class="col-md-9 col-lg-9"> 
                 <div class="form-group">
-                    {!! ViewHelper::setInput('message', '', old('username'), 'Nachricht für / Besprechen mit', 'Nachricht für / Besprechen mit', false) !!}
+                    {!! ViewHelper::setInput('nachricht', $data, old('nachricht'), trans('juristenPortal.nachricht'), trans('juristenPortal.nachricht'), false) !!}
                 </div>   
             </div>
             
             <!-- text editor-->
             <div class="clearfix"></div>
           
-            <div class="col-xs-10"> 
+            <div class="col-xs-12"> 
                 <div class="form-group">
-                    {!! ViewHelper::setInput('betreff', '', old('betreff'), 'Betreff', 'Betreff', false) !!}
+                    {!! ViewHelper::setInput('betreff', $data, old('betreff'), trans('juristenPortal.betreff'), trans('juristenPortal.betreff'), false) !!}
                 </div>   
             </div>
             
-            <div class="col-xs-2"> 
-                <div class="form-group">
-                    
-                </div>   
-            </div>
-            
-            <div class="col-xs-10">
+            <div class="col-xs-12">
                 <div class="variant" data-id='content'>
                     @if( isset($data->content) )
                         {!! $data->content !!}
                     @endif
                 </div>
                 
-            </div>
-            
-            <div class="col-xs-2 text-center">
-                <div class="form-group">
-                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">drucken</a>
-                </div>
-                <div class="form-group">
-                    <a href="{{ url('beratungsportal/calendar') }}" class="btn btn-primary no-margin-bottom">Wiedervorlage</a>
-                </div>
-                <div class="form-group form-buttons">
-                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">zu Akte hinzufügen</a>
-                </div>
-                <div class="form-group form-buttons">
-                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">neue Akte anlegen</a>
-                </div>
-                <div class="form-group form-buttons">
-                    <a href="{{ url('#') }}" class="btn btn-primary no-margin-bottom">Notiz archivieren</a>
-                </div>
             </div>
             
         </div>
@@ -138,7 +114,7 @@
     <div class="clearfix"></div>
     <div class="row">
         <div class="col-xs-12 form-buttons">
-            {{ Form::submit('speichern und weiter', array('class' => 'btn btn-primary no-margin-bottom')) }}
+            {{ Form::submit(trans('documentForm.saveContinue'), array('class' => 'btn btn-primary no-margin-bottom')) }}
         </div>
     </div>
     <div class="clearfix"></div> 
@@ -146,11 +122,11 @@
 
 @section('script')
 <script>
-$('#user').change(function(event) {
+$('#mitarbeiter_id').change(function(event) {
     var selected = $(this).find('option:selected');
     var name = $.trim(selected.text());
     var position = selected.data('position');
-    $('#username').val(name);
+    $('#mitarbeiter').val(name);
     $('#function').val(position);
 });
 </script>

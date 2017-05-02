@@ -180,7 +180,7 @@ class JuristenPortalController extends Controller
      */
     public function aktenArt()
     {
-        if (ViewHelper::universalHasPermission(array(7, 34)) == false) {
+        if (ViewHelper::universalHasPermission(array(7, 35)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $userMandantRoles = MandantUserRole::where('role_id', Role::JURISTBENUTZER )->pluck('mandant_user_id')->toArray();
@@ -296,10 +296,10 @@ class JuristenPortalController extends Controller
      */
     public function metaInfo()
     {
-        if (ViewHelper::universalHasPermission(array(7, 34)) == false) {
+        if (ViewHelper::universalHasPermission(array(7, 35)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
-        $categories = JuristCategoryMeta::all();
+        $categories = JuristCategoryMeta::where('beratung',1)->get();
 
         return view('juristenportal.metaInfo', compact('categories'));
     }
@@ -313,12 +313,11 @@ class JuristenPortalController extends Controller
      */
     public function storeMetaInfo(Request $request)
     {
-        // dd( $request->all() );
-        if(!$request->has('name')){
-            redirect()->back()->with('messageSecondary', trans('juristenportal.noCategoryName'));
+     if(!$request->has('name')){
+            redirect()->back()->with('messageSecondary', trans('juristenPortal.noCategoryName'));
         }
+        $request->merge(['beratung'=> 1]);
         $category = JuristCategoryMeta::create($request->all());
-        // dd($category);
         if($request->has('meta-names') && count($request->get('meta-names'))){
             $request->merge(['jurist_category_meta_id'=> $category->id]);
             foreach($request->get('meta-names') as $meta){
@@ -327,7 +326,7 @@ class JuristenPortalController extends Controller
             }
         }
         
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldCreated'));
     }
     
      /**
@@ -340,13 +339,76 @@ class JuristenPortalController extends Controller
      */
     public function updateMetaInfo(Request $request, JuristCategoryMeta $juristenCategoryMeta)
     {
-        if (ViewHelper::universalHasPermission(array(34)) == false) {
+        if (ViewHelper::universalHasPermission(array(35)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
        
+    //   dd($request->all());
         $juristenCategoryMeta->fill($request->all())->save();
 
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.categoryUpdated'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldUpadted'));
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function metaInfoRechtsablage() //Rechtsablage Dokument Typen
+    {
+        if (ViewHelper::universalHasPermission(array(7, 35)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        $categories = JuristCategoryMeta::where('beratung',0)->get();
+
+        return view('juristenportal.metaInfoRechtsablage', compact('categories'));
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function storeMetaInfoRechtsablage(Request $request)
+    {
+        // dd( $request->all() );
+        if(!$request->has('name')){
+            redirect()->back()->with('messageSecondary', trans('juristenportal.noCategoryName'));
+        }
+        $request->merge(['beratung'=> 0]);
+        $category = JuristCategoryMeta::create($request->all());
+        
+        if($request->has('meta-names') && count($request->get('meta-names'))){
+            $request->merge(['jurist_category_meta_id'=> $category->id]);
+            foreach($request->get('meta-names') as $meta){
+                 $request->merge(['name'=> $meta]);
+                 JuristCategoryMetaField::create($request->all());
+            }
+        }
+        
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldCreated'));
+    }
+    
+     /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateMetaInfoRechtsablage(Request $request, JuristCategoryMeta $juristenCategoryMeta)
+    {
+        if (ViewHelper::universalHasPermission(array(35)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+       
+    //   dd($request->all());
+        $juristenCategoryMeta->fill($request->all())->save();
+
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldUpdated'));
     }
     
     /**
@@ -366,7 +428,7 @@ class JuristenPortalController extends Controller
             }
         }
         
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldCreated'));
     }
     
      /**
@@ -379,13 +441,13 @@ class JuristenPortalController extends Controller
      */
     public function updateMetaField(Request $request, $id)
     {
-        if (ViewHelper::universalHasPermission(array(34)) == false) {
+        if (ViewHelper::universalHasPermission(array(35)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $metaField = JuristCategoryMetaField::find($id);
         $metaField->fill($request->all())->save();
         
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldCreated'));
     }
     
     /**
@@ -405,7 +467,7 @@ class JuristenPortalController extends Controller
             }
         }
         
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.inventoryAdded'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.inventoryAdded2'));
     }
     
      /**
@@ -418,12 +480,30 @@ class JuristenPortalController extends Controller
      */
     public function deleteJuristenCategoryMeta(JuristCategoryMeta $juristenCategoryMeta)
     {
-        if (ViewHelper::universalHasPermission(array(34)) == false) {
+        if (ViewHelper::universalHasPermission(array(35)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $juristenCategoryMeta->delete();
 
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.deletedJuristenCategoryMeta'));
+        return redirect()->back()->with('messageSecondary', trans('juristP.deletedJuristenCategoryMeta'));
+    }
+     
+    /**
+     * Delete the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function deleteJuristenCategoryMetaField(JuristCategoryMetaField $juristenCategoryMetaField)
+    {
+        if (ViewHelper::universalHasPermission(array(35)) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        $juristenCategoryMetaField->delete();
+
+        return redirect()->back()->with('messageSecondary', trans('inventoryList.deletedJuristenCategoryMetaField'));
     }
     
 

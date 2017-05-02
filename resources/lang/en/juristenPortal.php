@@ -16,8 +16,6 @@ return [
     'upload' => 'Upload',
     'calendar' => 'Kalender',
     'files' => 'Akten',
-    //'notes' => 'Notizen',
-    'createNotes' => 'Notiz anlegen',
     'createFile' => 'Akte anlegen',
     'overview' => 'Übersicht',
     'category' => 'Kategorie',
@@ -30,6 +28,12 @@ return [
     //meta field
     'metaFieldsTitle' => 'Beratungs-Portal Dokument Typ - Meta Infos',
     'metaFieldsAddTitle' => 'Übersicht',
+    'addField' => 'anlegen',
+    'fieldCreated' => 'Meta-Feld hinzugefügt',
+    'fieldUpdated' => 'Meta-Feld aktualisiert',
+    'fieldDeleted' => 'Meta-Feld gelöscht',
+    'fieldValueUpdated' => 'Meta-Feldwert aktualisiert',
+    'fieldValueDeleted' => 'Meta-Feldwert gelöscht',
     
     //akten
     'aktenArt' => 'Aktenart',
@@ -44,4 +48,25 @@ return [
     
     //calendar
     'calendar'  =>  'Kalender',
+    
+    // Notiz
+    //'notes' => 'Notizen',
+    'createNotes' => 'Notiz anlegen',
+    'mandant' => 'Mandant',
+    'mitarbeiter' => 'Mitarbeiter',
+    'mitarbeiterName' => 'Mitarbeiter Name',
+    'date' => 'Datum',
+    'time' => 'Uhrzeit',
+    'recall' => 'wünscht Rückruf',
+    'phone' => 'Telefonnummer',
+    'function' => 'Function',
+    'nachricht' => 'Nachricht für / Besprechen mit',
+    'betreff' => 'Betreff',
+    'print' => 'drucken',
+    'toAkten' => 'zu Akte hinzufügen',
+    'createAkten' => 'neue Akte anlegen',
+    'deactivateAkten' => 'Notiz archivieren',
+    'back' => 'Zurück',
+    'save' => 'Speichern',
+    
 ];

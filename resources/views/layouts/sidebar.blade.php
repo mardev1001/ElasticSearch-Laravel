@@ -297,16 +297,13 @@
                                             <a href="#">{{ ucfirst( trans('juristenPortal.createBeratung') ) }} </a>
                                         </li>
                                         @if($juristenCategoriesBeratung)
-                                        <li>
-                                            <ul class="nav nav-fourth-level">
-                                            
                                             @foreach( $juristenCategoriesBeratung as $jueristenCategory)
                                                 <li>
                                                 <a href="{{url('beratung-kategorien/'.$jueristenCategory->id)}}">{{ $jueristenCategory->name }}
                                                     @if( count($jueristenCategory->juristCategoriesBeratungActive) ) <span class="fa arrow"></span> @endif
                                                 </a>
                                                     @if( count($jueristenCategory->juristCategoriesBeratungActive) )
-                                                    <ul class="nav nav-five-level">
+                                                    <ul class="nav nav-fourth-level">
                                                         @foreach( $jueristenCategory->juristCategoriesBeratungActive as $subLevel1)
                                                         <li>
                                                             <a href="{{url('beratung-kategorien/'.$subLevel1->id)}}">{{ $subLevel1->name }}
@@ -327,9 +324,7 @@
                                                     @endif
                                                 </li>
                                             @endforeach {{-- first level subcategory --}}
-                                            
-                                            </ul>
-                                        </li>
+                                        
                                         @endif
                                 </ul>
                                
@@ -491,6 +486,11 @@
                                 <a href="{{ url('beratung-kategorien') }}">{{ ( trans('navigation.juristenPortalBeratung') ) }}-{{ trans('navigation.kategorien') }} </a>
                             </li>
                         @endif
+                        @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                            <li>
+                                <a href="{{ url('beratungsportal/meta-info') }}">{{ ( trans('navigation.juristenPortalBeratungMeta') ) }}-{{ trans('navigation.kategorien') }} </a>
+                            </li>
+                        @endif
                         
                         
                         @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
@@ -520,7 +520,7 @@
                         
                         @if( ViewHelper::universalHasPermission() == true )
                             <li>
-                                <a href="{{ url('neptun-verwaltung/datenbank-bereinigen') }}">{{ ucfirst( trans('navigation.databaseCleanup') ) }}</a>
+                                <a href="{{ url('neptun-verwaltung/datenbank-bereinigen') }}">{{ ucfirst( trans('maintenance.databaseCleanup') ) }}</a>
                             </li>
                         @endif
                         

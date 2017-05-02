@@ -31,7 +31,7 @@ class MaintenanceController extends Controller
             // Delete all UserEmailSetting (this also CASCADE DELETEs UserSentDocument entries)
             UserEmailSetting::whereNotNull('id')->delete();
             
-            return back()->with('message', trans('navigation.databaseCleanupSuccess'));
+            return back()->with('message', trans('maintenance.databaseCleanupSuccess'));
         }
     }
 }

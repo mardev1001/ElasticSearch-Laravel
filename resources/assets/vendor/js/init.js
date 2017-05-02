@@ -28,6 +28,17 @@ $(function() {
             vertical: 'bottom'
         }
     });
+    $(".datetimepicker.null").datetimepicker({
+        locale: 'de',
+        format: 'DD.MM.YYYY',
+        showTodayButton: true,
+        showClear: true,
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'bottom'
+        },
+        setNull: true
+    });
 
     $(".timepicker").datetimepicker({
         locale: 'de',

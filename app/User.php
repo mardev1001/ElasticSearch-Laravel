@@ -37,7 +37,7 @@ class User extends Authenticatable
      */
     public function getBirthdayAttribute($value)    {
         
-        if (empty($value)) return null;
+        if (empty($value) || $value == '0000-00-00') return null;
         else return Carbon::parse($value)->format('d.m.Y');
     }
     

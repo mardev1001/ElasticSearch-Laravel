@@ -20,7 +20,7 @@
                             </div>
                         <div class="clearfix"></div><br/>
                           <div class="col-xs-12 parent-div">
-                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('juristenPortal.addField') }} </a> 
+                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('isoKategorienForm.add') }} </a> 
                                 <div class="clearfix"></div>
                                 <div class="col-xs-6 add-wrapper">
                                     
@@ -62,7 +62,7 @@
                                 <button class="btn btn-danger" type="submit" name="active" value="1">{{ trans('adressatenForm.inactive') }}</button>
                             @endif
                             <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                            @if( !count($category->metaInfos )  && !count($category->documents) )
+                            @if( !count($category->metaInfos ) )
                                 <a href="{{url('beratungsportal/destroy-juristen-category-meta/'.$category->id)}}" class="btn btn-xs btn-warning delete-prompt">
                                     entfernen
                                 </a><br>
@@ -86,10 +86,12 @@
                                         @else
                                             <button class="btn btn-danger" type="submit" name="active" value="1">{{ trans('adressatenForm.inactive') }}</button>
                                         @endif
-                                        <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                                        <a href="{{url('beratungsportal/destroy-juristen-category-meta-field/'.$metaInfo->id)}}" class="btn btn-xs btn-warning delete-prompt">
-                                            entfernen
-                                        </a> <!-- delete meta field value --> <br> 
+                                       <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
+                                        {{-- @if( isset($metaInfos) && !count($metaInfos->metaInfoValues ) )
+                                            <a href="{{url('agaga/destroy-category/'.$metaInfos->id)}}" class="btn btn-xs btn-warning delete-prompt">
+                                                entfernen
+                                            </a><br>
+                                        @endif --}}
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>

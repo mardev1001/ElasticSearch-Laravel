@@ -6,6 +6,11 @@
     @foreach( $classes as $class)
         {{ $class }}
     @endforeach
+    @if(in_array('datetimepicker',$classes) )
+        @if( isset($data->$inputName) && ($data->$inputName == null || $data->$inputName == '0000-00-00 00:00:00') )
+            null
+        @endif
+    @endif
     " 
     name="{{ $inputName }}"
 

@@ -52,11 +52,9 @@ return [
     'juristenPortal'        => 'Beratung',
     'juristenPortalRechtsablage' => 'Rechtsablage',
     'juristenPortalBeratung' => 'Beratung',
+    'juristenPortalBeratungMeta' => 'Beratung Dokument Typen - Meta Infos',
     'juristenPortalCategories'  => 'Kategorien',
     'wiedervorlagenStatus'  => 'Wiedervorlagen Status',
     'aktenArt'  => 'Akten Arten',
-    'databaseCleanup'  => 'Datenbank bereinigen',
-    'databaseCleanupSuccess'  => 'Daten wurden erfolgreich entfernt.',
-    'dbCleanSendingPublished'  => 'Versand Daten Entfernen',
 
 ];

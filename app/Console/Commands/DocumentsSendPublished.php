@@ -64,7 +64,7 @@ class DocumentsSendPublished extends Command
                 if(isset($document)){
                     if(Carbon::today()->toDateString() == Carbon::parse($document->date_published)->toDateString()){
                         $this->sendPublishedDocuments($document, $reciever);
-                        $reciever->sent = true;
+                        // $reciever->sent = true;
                         $reciever->save();
                         
                     }
@@ -98,6 +98,11 @@ class DocumentsSendPublished extends Command
         
         $documentPdfs = array();
         $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
+        
+        // Get document variants for user according to his mandants/permissions
+        $documentVariants = $documentVariants->filter(function ($value, $key) {
+            return $value->hasPermission;
+        });
         
         // If PDF uploads are enabled for document, download uploaded PDF instead of the document content
         if($document->pdf_upload == true){
@@ -144,7 +149,7 @@ class DocumentsSendPublished extends Command
             }
         }
         
-        // Sending method: email + attachment (ONLY system roles can recieve documents as attachments)
+        // Sending method: email + attachment
         if($emailSetting->sending_method == 2){
             // Check if the document type is corresponding the mailing settings
             if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
@@ -155,7 +160,6 @@ class DocumentsSendPublished extends Command
                 // Get document attachments by variant permissions, for specified user id, then send them as email attachments
                 $documentAttachments = array();
                 
-                $documentVariants = ViewHelper::documentVariantPermission($document, $user->id, true)->variants;
                 foreach($documentVariants as $variant){
                     foreach($variant->EditorVariantDocument as $k => $docAttach){
                         if( $docAttach->document_id != $document->id ){
@@ -166,7 +170,8 @@ class DocumentsSendPublished extends Command
                                     $extension = File::extension($path);
                                     $documentAttachments[] = [
                                         'filePath' => $path,
-                                        'fileName' => str_slug($docAttach->document->id .'-'. $docAttach->document->name) .'.'. $extension
+                                        // 'fileName' => str_slug($docAttach->document->id .'-'. $docAttach->document->name) .'.'. $extension
+                                        'fileName' => str_slug($docAttach->document->name .'-'. $docAttach->document->id) .'.'. $extension
                                     ];
                                 }
                             }

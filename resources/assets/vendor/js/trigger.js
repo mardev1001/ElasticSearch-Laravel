@@ -172,12 +172,25 @@ $(function() {
     }
 
     else if (url.href.indexOf('juristenportal-kategorien') != -1 && url.href.indexOf('alle') != -1) {
+
         $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
         $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul').find('li.active').each(function() {
             if ($(this).hasClass('active')) {
                 $(this).removeClass('active');
             }
         });
+
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul.in li.active').removeClass('active');
+
+    }
+    else if (url.href.indexOf('beratung-kategorien') != -1 && url.href.indexOf('alle') != -1) {
+
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
+        // $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul').find('li.active').each(function() {
+        //     if ($(this).hasClass('active')) {
+        //         $(this).removeClass('active');
+        //     }
+        // });
 
         $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul.in li.active').removeClass('active');
 
@@ -203,13 +216,13 @@ $(function() {
             locker = true;
         }
 
-        else if (documentType == "aktuelle Meldungen" && typeof(documentSlug) !== 'undefined') {
+        else if (documentType.toLowerCase() == "aktuelle Meldungen" && typeof(documentSlug) !== 'undefined') {
             detectHref = documentSlug;
             detectHref = 'news'
             locker = true;
 
         }
-        else if (documentType == "aktuelle Meldungen") {
+        else if (documentType.toLowerCase() == "aktuelle meldungen") {
             detectHref = 'news'
             locker = true;
 
@@ -407,7 +420,7 @@ $(function() {
 
     $('.add-single-field').on('click touch', function(e) {
         e.preventDefault();
-        var html = '<div class="row input-row"><div class="col-xs-10"><input name="meta-names[]" required class="form-control" placeholder="Meta info name" /></div>' +
+        var html = '<div class="row input-row"><div class="col-md-10"><input name="meta-names[]" required class="form-control" placeholder="Meta info name" /></div>' +
             '<div class="col-xs-2"><a href="#" class="btn btn-xs btn-danger remove-row"> entfernen</a></ div ><br/>  </ div > <br/>';
         var parent = $(this).closest('.parent-div');
         parent.find('.add-wrapper').append(html);
@@ -415,7 +428,10 @@ $(function() {
             parent.find('.submit-div').removeClass('hidden');
         }
     });
-    $('.remove-row').on('click touch', function() {
+
+    $('body').on('click', '.remove-row', function(e) {
+        e.preventDefault();
+        console.log('triggered');
         $(this).closest('.input-row').remove();
     });
 

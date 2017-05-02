@@ -182,6 +182,7 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::patch('beratungsportal/meta-info/{metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
     Route::patch('beratungsportal/meta-info/{metaField}/update-meta-filed', 'JuristenPortalController@updateMetaField');
     Route::get('beratungsportal/destroy-juristen-category-meta/{juristenCategoryMeta}', 'JuristenPortalController@deleteJuristenCategoryMeta');
+    Route::get('beratungsportal/destroy-juristen-category-meta-field/{juristenCategoryMetaField}', 'JuristenPortalController@deleteJuristenCategoryMetaField');
     Route::post('beratungsportal/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     Route::patch('beratungsportal/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     
@@ -205,11 +206,14 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('beratung-kategorien/alle', 'BeratungController@singlePageAll');
     Route::resource('beratung-kategorien', 'BeratungController');
     
+    Route::get('notice/upload/{id}', 'NoticeController@uploadView');
+    Route::post('notice/upload', 'NoticeController@upload');
     Route::resource('notice', 'NoticeController');
 
     /*
     * Maintenance Routes
     */
+    
     Route::get('neptun-verwaltung/datenbank-bereinigen', 'MaintenanceController@index');
     Route::get('neptun-verwaltung/datenbank-bereinigen/delete-sending-published', 'MaintenanceController@deleteSendingPublished');
     
