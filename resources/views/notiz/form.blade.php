@@ -56,7 +56,7 @@
             
             <div class="col-md-4 col-lg-3"> 
                 <div class="form-group">
-                    {!! ViewHelper::setInput('function', $data, old('function'), trans('juristenPortal.function'), trans('juristenPortal.function'), false, '', array(''), array('id=function')) !!}
+                    {!! ViewHelper::setInput('funktion', $data, old('funktion'), trans('juristenPortal.function'), trans('juristenPortal.function'), false, '', array(''), array('id=function')) !!}
                 </div>   
             </div><!--End input box-->
             

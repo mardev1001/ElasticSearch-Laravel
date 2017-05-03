@@ -479,6 +479,7 @@ $(function() {
 
     if ($('.variant').length) {
         $('.variant').closest('form').addClass('.tinymce-image');
+        $('.variant').closest('form').attr('enctype', 'multipart/form-data');
 
         var counter = 0;
         $('.variant').each(function() {

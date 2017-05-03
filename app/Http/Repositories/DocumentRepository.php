@@ -26,6 +26,11 @@ use App\Helpers\ViewHelper;
 
 class DocumentRepository
 {
+    public function __construct(){
+        
+        $this->pdfPath = public_path().'/files/documents/';    
+    }
+    
     /**
      * Generate dummy data.
      *
@@ -949,12 +954,10 @@ public function getUserPermissionedDocuments($collection, $paginator = 'page', $
      * @return string $newName
      */
     private function moveUploaded($file, $folder, $model, $counter = 0)
-    {
-        //$filename = $image->getClientOriginalName();
+    {   
         $diffMarker = time() + $counter;
         $newName = str_slug($model->id).'-'.date('d-m-Y-H:i:s').'-'.$diffMarker.'.'.$file->getClientOriginalExtension();
         $path = "$folder/$newName";
-// 		dd($path);
         $filename = $file->getClientOriginalName();
         $uploadSuccess = $file->move($folder, $newName);
         \File::delete($folder.'/'.$filename);
