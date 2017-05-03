@@ -33,7 +33,9 @@ class NoticeController extends Controller
     {
         $this->document = $docRepo;
         $this->uploadPath = public_path().'/files/contacts/';
-    
+        
+        $this->movePath = public_path().'/files/documents';
+        $this->pdfPath = public_path().'/files/documents/';
         $this->portalOcrUploads = public_path().'/files/juristenportal/ocr-uploads/';
     }
     
@@ -72,11 +74,13 @@ class NoticeController extends Controller
     public function store(Request $request)
     {
         // dd($request->all() );
-        // $document_type_id =DocumentType::where('name', ['Notizen'])->first();
+        $filename = '';
+        $path = $this->pdfPath;
+        
         $request->merge(['document_type_id' => DocumentType::NOTIZEN, 'user_id' => Auth::user()->id,'name' => $request->get('betreff'),
         'name_long' => $request->get('betreff') ]);
         $note = Document::create($request->all() );
-        
+        $model = $note;
         
         $request->merge([ 'document_id' =>$note->id, 'variant_number' => 1,'inhalt' => $request->get('content')]);
         $editorVariant = EditorVariant::create( $request->all() );
@@ -87,7 +91,19 @@ class NoticeController extends Controller
         $request->merge([ 'document_mandant_id' => $documentMandat->id ]);
         $mandant =  DocumentMandantMandant::create($request->all() );
         
-        return redirect('notiz/upload/'.$note->id);
+        if ($request->file()) {
+            $fileNames = $this->fileUpload($model, $path, $request->file());
+        }
+        if (isset($fileNames) && count($fileNames) > 0) {
+            foreach ($fileNames as $fileName) {
+                ++$counter;
+                $request->merge([ 'file_path' => $fileName ]);
+                $documentAttachment = DocumentUpload::create( $request->all() );
+                
+            }
+        }
+        
+        return redirect()->back()->with('messageSecondary', trans('notiz.noteCreated'));
 
     }
     

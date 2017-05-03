@@ -26,6 +26,7 @@ class Document extends Model
         'qmr_number','landscape','additional_letter','jurist_category_id','beratung_category_id',
         'jurist_log_text','jurist_category_meta_id','jurist_log_text','funktion','nachricht','telefon','ruckruf'
     ]; //whitelist
+    
     protected $dates = ['created_at', 'updated_at', 'date_published','published_at'];
      
     public function getDatePublishedAttribute($value)

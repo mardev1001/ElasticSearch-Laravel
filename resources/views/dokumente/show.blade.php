@@ -459,8 +459,10 @@
     @if( ViewHelper::universalDocumentPermission($document, false, $freigeber = false, true) || 
     ViewHelper::universalDocumentPermission($document, false, true, true) || ViewHelper::universalHasPermission( array())  )
         {!! ViewHelper::generateFreigabeBox($document) !!}
-        {!! ViewHelper::generateSentPublishedBox($document) !!}
-        {!! ViewHelper::generateSentMailBox($document) !!}
+        @if($document->send_published)
+            {!! ViewHelper::generateSentPublishedBox($document) !!}
+            {!! ViewHelper::generateSentMailBox($document) !!}
+        @endif
     @endif
     
      @if(ViewHelper::universalHasPermission( array(9)) || ViewHelper::universalDocumentPermission($document, false,false,true))

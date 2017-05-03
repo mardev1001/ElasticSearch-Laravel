@@ -25,7 +25,7 @@ return [
     'comment' => 'Kommentar',
     'commenting' => 'kommentieren',
     'myComments' => 'meine Kommentare',
-    'approvalSettingsPage' => 'Freigabe',
+    'approvalSettingsPage' => 'Freigabe & Vert.',
     'approve' => 'freigeben',
     'disapprove' => 'ablehnen',
     'attachments' => 'Anhänge',

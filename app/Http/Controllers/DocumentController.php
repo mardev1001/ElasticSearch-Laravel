@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Input;
 use Request as RequestMerge;
 use App\Helpers\ViewHelper;
 use Auth;
-use Mail;
 use DB;
 use File;
 use Session;
@@ -125,7 +124,7 @@ class DocumentController extends Controller
             }
 
             // PDF generating procedure
-            $variantPermissions = $this->document->documentVariantPermission($document);
+            $variantPermissions = ViewHelper::documentVariantPermission($document);
             if ($variantPermissions->permissionExists == false) {
                 session()->flash('message', trans('documentForm.noPermission'));
 
@@ -252,6 +251,7 @@ class DocumentController extends Controller
                     $markedForDeletion->forceDelete();
                 }
             }
+
             return back()->with('message', trans('documentForm.trashEmptied'));
         } else {
             return back();
@@ -266,12 +266,12 @@ class DocumentController extends Controller
     public function create()
     {
         if ($this->canCreateEditDoc() == true) {
-            $documentTypes = DocumentType::where('jurist_document',0)->get(); // if struktur admin
+            $documentTypes = DocumentType::where('jurist_document', 0)->get(); // if struktur admin
 
             if ($this->returnRole() != false && $this->returnRole() == 11) { // 11 Rundschreiben Verfasser
-                $documentTypes = DocumentType::where('document_art', 0)->where('jurist_document',0)->get();
+                $documentTypes = DocumentType::where('document_art', 0)->where('jurist_document', 0)->get();
             } elseif ($this->returnRole() != false && $this->returnRole() == 13) { // 13 Dokumenten Verfasser
-               $documentTypes = DocumentType::where('document_art', 1)->where('jurist_document',0)->get();
+               $documentTypes = DocumentType::where('document_art', 1)->where('jurist_document', 0)->get();
             }
 
             $isoDocuments = IsoCategory::all();
@@ -306,6 +306,7 @@ class DocumentController extends Controller
 
             //this is until Neptun inserts the documents
             $documentUsers = $mandantUsers;
+
             return view('formWrapper',
             compact('url', 'documentTypes', 'isoDocuments', 'documentStatus', 'mandantUsers', 'documentUsers', 'documentCoauthors', 'incrementedQmr', 'incrementedIso'));
         } else {
@@ -319,6 +320,7 @@ class DocumentController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -479,6 +481,7 @@ class DocumentController extends Controller
         if ($request->has('attachment')) {
             return redirect('dokumente/anlagen/'.$id);
         }
+
         return redirect('dokumente/rechte-und-freigabe/'.$id);
     }
 
@@ -578,6 +581,7 @@ class DocumentController extends Controller
         $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload);
         $url = $setDocument->url;
         $form = $setDocument->form;
+
         return view('dokumente.formWrapper', compact('data', 'backButton', 'form', 'url', 'adressats'));
     }
 
@@ -697,6 +701,7 @@ class DocumentController extends Controller
         $setDocument = $this->document->setDocumentForm($data->document_type_id, $data->pdf_upload);
         $url = $setDocument->url;
         $form = $setDocument->form;
+
         return view('dokumente.formWrapper', compact('data', 'backButton', 'form', 'url', 'adressats'));
     }
 
@@ -712,6 +717,7 @@ class DocumentController extends Controller
 
         if (ViewHelper::universalDocumentPermission($data) == false) {
             session()->flash('message', trans('documentForm.noPermission'));
+
             return redirect('/');
         }
 
@@ -833,13 +839,13 @@ class DocumentController extends Controller
                 $currDocEv = EditorVariant::find($currentEditorVariant);
 
                 $documentCheck = EditorVariantDocument::where('editor_variant_id', $currentEditorVariant)->where('document_id', $document->id)->count();
-                    if ($documentCheck < 1) {
-                        $newAttachment = new EditorVariantDocument();
-                        $newAttachment->editor_variant_id = $currentEditorVariant;
-                        $newAttachment->document_id = $document->id;
-                        $newAttachment->document_status_id = 1;
-                        $newAttachment->save();
-                    }
+                if ($documentCheck < 1) {
+                    $newAttachment = new EditorVariantDocument();
+                    $newAttachment->editor_variant_id = $currentEditorVariant;
+                    $newAttachment->document_id = $document->id;
+                    $newAttachment->document_status_id = 1;
+                    $newAttachment->save();
+                }
             }
 
         /*If option 2*/
@@ -936,10 +942,10 @@ class DocumentController extends Controller
     public function anlegenRechteFreigabe($id, $backButton = null)
     {
         $data = Document::find($id);
-        
+
         // NEPTUN-815, NEPTUN-817
         // if(in_array($data->document_status_id, [2, 6])) return back();
-        
+
         $dt = DocumentType::find($this->formulareId); //vorlage document
 
         $backButton = '/dokumente/editor/'.$data->id.'/edit';
@@ -1024,13 +1030,12 @@ class DocumentController extends Controller
             }
         }
 
-
         $documentApproval = DocumentApproval::where('document_id', $id)->get();
         $documentApprovalPluck = DocumentApproval::where('document_id', $id)->pluck('user_id');
-        
+
         // NEPTUN-871
         // Add check for document status
-        if($document->document_status_id == 1){
+        if ($document->document_status_id == 1) {
             //Process document approval users
             //do document approvals need soft delete
             if (!empty($request->get('approval_users'))) {
@@ -1040,7 +1045,7 @@ class DocumentController extends Controller
                 $documentApproval = DocumentApproval::where('document_id', $id)->delete();
             }
         }
-        
+
         //check if has variant
         $hasVariants = false;
         $processedArray = array();
@@ -1142,7 +1147,7 @@ class DocumentController extends Controller
                     foreach ($documentMandants as $documentMandant) {
                         $documentMandantMandats = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->get();
                         $documentMandantMandatsPluck = DocumentMandantMandant::where('document_mandant_id', $documentMandant->id)->pluck('mandant_id');
-                    
+
                       //INSERTS LAST VALUES->check foreach!
 
                       $this->document->processOrSave($documentMandantMandats, $documentMandantMandatsPluck, $request->get($k),
@@ -1295,10 +1300,10 @@ class DocumentController extends Controller
                 session()->flash('message', trans('documentForm.fastPublished'));
             }
 
-            // NEPTUN-870 
+            // NEPTUN-870
             // When fast publishing - Add the entry for the fast-publisher
-            DocumentApproval::create(array('document_id' => $document->id, 'user_id' => Auth::user()->id, 
-                'date_approved' => Carbon::now() ,'approved' => true, 'fast_published' => true));
+            DocumentApproval::create(array('document_id' => $document->id, 'user_id' => Auth::user()->id,
+                'date_approved' => Carbon::now(), 'approved' => true, 'fast_published' => true, ));
 
             return redirect('/');
         } // end fast publish
@@ -1344,17 +1349,17 @@ class DocumentController extends Controller
                 session()->flash('message', trans('documentForm.fastPublished'));
             }
 
-            // NEPTUN-870 
+            // NEPTUN-870
             // When fast publishing - Add the entry for the fast-publisher
-            DocumentApproval::create(array('document_id' => $document->id, 'user_id' => Auth::user()->id, 
-                'date_approved' => Carbon::now() ,'approved' => true, 'fast_published' => true));
+            DocumentApproval::create(array('document_id' => $document->id, 'user_id' => Auth::user()->id,
+                'date_approved' => Carbon::now(), 'approved' => true, 'fast_published' => true, ));
 
             return redirect('/');
         } // end fast publish with sending
         elseif ($request->has('ask_publishers')) {
-            // NEPTUN-815, NEPTUN-817 
+            // NEPTUN-815, NEPTUN-817
             // if($document->document_status_id != 1) return back();
-            
+
             $document->document_status_id = 6;
 
             //if send email-> send emails || messages
@@ -1365,7 +1370,9 @@ class DocumentController extends Controller
                 $approvals = DocumentApproval::where('document_id', $id)->delete();
                 foreach ($request->get('approval_users') as $approvalUser) {
                     $approvalUser = DocumentApproval::create(array('document_id' => $id, 'user_id' => $approvalUser));
-                    if($request->has('email_approval')) ViewHelper::notifyFreigeber($approvalUser);
+                    if ($request->has('email_approval')) {
+                        ViewHelper::notifyFreigeber($approvalUser);
+                    }
                     $dirty = true;
                 }
             }
@@ -1376,10 +1383,9 @@ class DocumentController extends Controller
 
             return redirect('/');
         } elseif ($request->has('reset_approval')) {
-            
-            // NEPTUN-815, NEPTUN-817 
+            // NEPTUN-815, NEPTUN-817
             $document->document_status_id = 1;
-            
+
             $dirty = $this->dirty($dirty, $document);
             $document->save();
 
@@ -1419,13 +1425,13 @@ class DocumentController extends Controller
         $publishedDocumentLink = PublishedDocument::where('url_unique', $id)->first();
         if ((ctype_alnum($id) && !is_numeric($id)) || $publishedDocumentLink != null) {
             $publishedDocs = PublishedDocument::where('url_unique', $id)->orderBy('id', 'DESC')->first();
-            if(is_null($publishedDocs)){
+            if (is_null($publishedDocs)) {
                 return redirect('/')->with('messageSecondary', trans('documentForm.documentUnAvailable'));
             }
             $id = $publishedDocs->document_id;
             $datePublished = $publishedDocs->created_at;
             $document = Document::find($id);
-            if(is_null($document)){
+            if (is_null($document)) {
                 return redirect('/')->with('messageSecondary', trans('documentForm.documentUnAvailable'));
             }
             /*Published hotfix*/
@@ -1447,7 +1453,7 @@ class DocumentController extends Controller
             $readDocs = UserReadDocument::where('document_group_id', $publishedDocs->document_group_id)
                     ->where('user_id', Auth::user()->id)->get();
             $dateReadBckp = '';
-            
+
             if (count($readDocs) == 0) {
                 UserReadDocument::create([
                     'document_group_id' => $publishedDocs->document_group_id,
@@ -1455,16 +1461,14 @@ class DocumentController extends Controller
                     'date_read' => Carbon::now(),
                     'date_read_last' => Carbon::now(),
                 ]);
-            } 
-            else {
+            } else {
                 foreach ($readDocs as $readDoc) {
                     $readDoc->date_read_last = Carbon::now();
                     $readDoc->save();
                 }
             }
-        } 
-        else {
-            if(is_null($document)){
+        } else {
+            if (is_null($document)) {
                 return redirect('/')->with('messageSecondary', trans('documentForm.documentUnAvailable'));
             }
             $oldStatus = $document->document_status_id;
@@ -1483,11 +1487,11 @@ class DocumentController extends Controller
         /*Published hotfix*/
 
          $latestPublished = PublishedDocument::where('document_group_id', $document->document_group_id)->orderBy('updated_at', 'desc')->first();
-             if ($latestPublished != null && $latestPublished->document_id == $document->id && $document->document_status_id != 5) {
-                 return redirect('dokumente/'.$latestPublished->url_unique);
-             } elseif ($document->id != $initialUrl) {
-                 return redirect('dokumente/'.$document->id);
-             }
+            if ($latestPublished != null && $latestPublished->document_id == $document->id && $document->document_status_id != 5) {
+                return redirect('dokumente/'.$latestPublished->url_unique);
+            } elseif ($document->id != $initialUrl) {
+                return redirect('dokumente/'.$document->id);
+            }
         }
 
         $document = $this->checkFreigabeRoles($document);
@@ -1603,12 +1607,11 @@ class DocumentController extends Controller
 
         /* If the document can be published or in freigabe process and the roles are correct */
             if ($authorised == true && $canPublish == true && $published == false && $document->document_status_id != 5 && $document->document_status_id != 1) {
-               if (($document->documentType->document_art == 1 && ViewHelper::universalHasPermission(array(13)) == true)
+                if (($document->documentType->document_art == 1 && ViewHelper::universalHasPermission(array(13)) == true)
                     || ($document->documentType->document_art == 0 && ViewHelper::universalHasPermission(array(11)) == true)
                     || (ViewHelper::universalDocumentPermission($document, false, false, true))) {
                     return redirect('dokumente/'.$document->id.'/freigabe');
                 }
-
             } elseif ($document->document_status_id != 1 && $document->document_status_id != 5 && (($authorised == false && $published == false) ||
                    ($authorised == true && $published == false) || ($canPublish == true && $published == false)
                    && (ViewHelper::universalDocumentPermission($document, false, false, true)))) {
@@ -1620,10 +1623,10 @@ class DocumentController extends Controller
                     return redirect('dokumente/'.$document->id.'/freigabe');
                 }
             } else {
-               if ($document->document_status_id == 2 && $authorised == true) {
-                   $doc = Document::find($document->id); //need a pure collections(elimintae hasFavorite error)
+                if ($document->document_status_id == 2 && $authorised == true) {
+                    $doc = Document::find($document->id); //need a pure collections(elimintae hasFavorite error)
                    $this->publishProcedure($doc);
-               }
+                }
             }
 
         if (count($document->documentApprovalsApprovedDateNotNull) == count($document->documentApprovals)) {
@@ -1659,6 +1662,11 @@ class DocumentController extends Controller
         $favoriteCategories = FavoriteCategory::where('user_id', Auth::user()->id)->get();
         $document->favorite = FavoriteDocument::where('document_group_id', $document->document_group_id)->where('user_id', Auth::user()->id)->first();
 
+        // Prevent showing of document if publish date ist not today or past
+        if (Carbon::parse($document->date_published)->gte(Carbon::today())) {
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+        }
+
         return view('dokumente.show', compact('document', 'documentComments', 'documentCommentsFreigabe',
         'variants', 'published', 'datePublished', 'canPublish', 'authorised', 'commentVisibility', 'myComments',
         'isoCategoryName', 'isoCategoryParent', 'isoCategory', 'favoriteCategories'));
@@ -1668,6 +1676,7 @@ class DocumentController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -1678,7 +1687,7 @@ class DocumentController extends Controller
                 return redirect('dokumente/create');
             }
         if ($this->canCreateEditDoc($data) == true) {
-            $documentTypes = DocumentType::where('jurist_document',0)->get(); // if struktur admin
+            $documentTypes = DocumentType::where('jurist_document', 0)->get(); // if struktur admin
             $docTypesArr = $documentTypes->pluck('id')->toArray();
 
             if ($this->returnRole() != false && $this->returnRole() == 11) { // 11 Rundschreiben Verfasser
@@ -1751,7 +1760,8 @@ class DocumentController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -1817,6 +1827,7 @@ class DocumentController extends Controller
             }
         }
         $backButton = url('/dokumente/'.$data->id.'/edit');
+
         return view('dokumente.formWrapper', compact('data', 'backButton', 'form', 'url', 'adressats'));
     }
 
@@ -1824,7 +1835,8 @@ class DocumentController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function newVersion($id)
@@ -2009,7 +2021,7 @@ class DocumentController extends Controller
     public function freigabeApproval($id)
     {
         $document = Document::find($id);
-        $variantPermissions = $this->document->documentVariantPermission($document);
+        $variantPermissions = ViewHelper::documentVariantPermission($document);
 
         if ($this->document->universalDocumentPermission($document, true, true) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
@@ -2102,7 +2114,7 @@ class DocumentController extends Controller
 
         // Prepares and stores email settings entry counts to show
         $emailSettings = array();
-       
+
         return view('dokumente.freigabe', compact('document', 'variants', 'documentCommentsUser', 'documentCommentsFreigabe', 'published',
         'canPublish', 'hasPermission', 'authorised', 'authorisedPositive', 'commentVisiblity', 'emailSettings'));
     }
@@ -2209,7 +2221,7 @@ class DocumentController extends Controller
         } else {
             $document = Document::find($id);
         }
-        $variantPermissions = $this->document->documentVariantPermission($document);
+        $variantPermissions = ViewHelper::documentVariantPermission($document);
         if ($variantPermissions->permissionExists == false) {
             session()->flash('message', trans('documentForm.noPermission'));
 
@@ -2250,7 +2262,6 @@ class DocumentController extends Controller
         $pdf->debug = true;
 
         if ($document->document_type_id == $this->isoDocumentId) {
-
             $pdf->SetHTMLHeader(view('pdf.headerIso', compact('document', 'variants', 'dateNow'))->render());
             $pdf->SetHTMLFooter(view('pdf.footerIso', compact('document', 'variants', 'dateNow'))->render());
 
@@ -2263,7 +2274,7 @@ class DocumentController extends Controller
                 $render = view('pdf.new-layout-rund', compact('document', 'variants', 'dateNow'))->render();
                 $header = view('pdf.new-layout-rund-header', compact('document', 'variants', 'dateNow'))->render();
                 $footer = view('pdf.new-layout-rund-footer', compact('document', 'variants', 'dateNow'))->render();
-                
+
                 $pdf->SetHTMLHeader($header);
                 $pdf->SetHTMLFooter($footer);
             }
@@ -2478,7 +2489,7 @@ class DocumentController extends Controller
             $document = Document::find($id);
         }
 
-        $variantPermissions = $this->document->documentVariantPermission($document);
+        $variantPermissions = ViewHelper::documentVariantPermission($document);
         if ($variantPermissions->permissionExists == false) {
             return false;
         }
@@ -2691,7 +2702,7 @@ class DocumentController extends Controller
         $sort = $request->get('sort');
 
         $docType = $this->qmRundId;
-        
+
         $highRole = false;
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
@@ -2763,7 +2774,7 @@ class DocumentController extends Controller
         $docType = $this->newsId;
         $myRundCoauthorArr = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
         $myRundCoauthor = Document::whereIn('id', $myRundCoauthorArr)->where('document_type_id', $docType)->pluck('id')->toArray();
-        
+
         $highRole = false;
         if (ViewHelper::universalHasPermission(array(10)) == true) {
             $highRole = true;
@@ -3036,7 +3047,7 @@ class DocumentController extends Controller
             $usersCountRead[$mandant->id] = 0;
             $usersCountNew[$mandant->id] = 0;
             $documentReadersCount[$mandant->id] = array();
-                
+
             foreach ($mandant->users as $mandantUser) {
                 foreach ($documentReadersObj as $docReader) {
                     if ($mandantUser->active) {
@@ -3546,11 +3557,11 @@ class DocumentController extends Controller
     {
         $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
         $pass = array(); //remember to declare $pass as an array
-    $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
-    for ($i = 0; $i < $length; ++$i) {
-        $n = rand(0, $alphaLength);
-        $pass[] = $alphabet[$n];
-    }
+        $alphaLength = strlen($alphabet) - 1; //put the length -1 in cache
+        for ($i = 0; $i < $length; ++$i) {
+            $n = rand(0, $alphaLength);
+            $pass[] = $alphabet[$n];
+        }
 
         return implode($pass); //turn the array into a string
     }
@@ -3614,35 +3625,42 @@ class DocumentController extends Controller
 
         // Add published docs for sending if necessary
         if ($sendOptions) {
+            // Set document flag for sending to TRUE
+            $document->send_published = true;
+            $document->save();
+
             // Get emails and clasify them by sending types
             $emailSettings = UserEmailSetting::all();
 
             foreach ($emailSettings as $emailSetting) {
                 // Get user data for the email setting
                 $user = User::find($emailSetting->user_id);
-                
+
                 // Skip email sending if user has the email sending flag disabled
                 // Skip email sending if document type has no publish sending flag
                 if (($user->email_reciever == false) || ($document->documentType->publish_sending == false)) {
                     continue;
                 }
-                
+
                 // Check if user has document permission
                 // $documentPermission = ViewHelper::documentVariantPermission($document, $user->id)->permissionExists;
                 // if($documentPermission){
-                    
+
                     // Check if the role assigned to the email setting is in the document verteiler roles for the document
                     $allowed = false;
-                    if($emailSetting->email_recievers_id == 0){
-                        if($document->approval_all_roles == 1) $allowed = true;
-                    } else {
-                        $documentRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id');
-                        if($documentRecievers->contains($emailSetting->email_recievers_id)) $allowed = true;
+                if ($emailSetting->email_recievers_id == 0) {
+                    if ($document->approval_all_roles == 1) {
+                        $allowed = true;
                     }
-                    
+                } else {
+                    $documentRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id');
+                    if ($documentRecievers->contains($emailSetting->email_recievers_id)) {
+                        $allowed = true;
+                    }
+                }
+
                     // Proceed if role assignment criteria is met
-                    if($allowed){
-                        
+                    if ($allowed) {
                         // Sending method: email (This method is avaliable to all users)
                         if ($emailSetting->sending_method == 1) {
                             // Check if the document type is corresponding the mailing settings
@@ -3650,7 +3668,7 @@ class DocumentController extends Controller
                                 UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
                             }
                         }
-        
+
                         // Sending method: email + attachment (ONLY system roles can recieve documents as attachments: this is handled in the user profile form)
                         if ($emailSetting->sending_method == 2) {
                             // Check if the document type is corresponding the mailing settings
@@ -3659,7 +3677,7 @@ class DocumentController extends Controller
                                 UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
                             }
                         }
-        
+
                         // Sending method: fax (This method sends the document via fax commands)
                         if ($emailSetting->sending_method == 3) {
                             // Check if the document type is corresponding the mailing settings
@@ -3667,9 +3685,8 @@ class DocumentController extends Controller
                                 UserSentDocument::create(['user_email_setting_id' => $emailSetting->id, 'document_id' => $document->id]);
                             }
                         }
-                        
                     }
-                    
+
                 // }
             }
         }
@@ -3735,7 +3752,7 @@ class DocumentController extends Controller
             ->where('active', 1)->get();
         $users = User::whereIn('id', $userSettings->pluck('user_id'))->groupBy('id')->get();
         $settingsMandant = Mandant::whereIn('id', $userSettings->pluck('mandant_id'))->get();
-        
+
         // Get list of user mandants that have permission for the document variant
         $mandantsList = array();
         foreach ($users as $user) {
@@ -3767,9 +3784,9 @@ class DocumentController extends Controller
         $mandants = $mandants->filter(function ($value, $key) use ($settingsMandant) {
             return $settingsMandant->contains($value);
         });
-        
+
         // dd($userSettings);
-        
+
         $margins = new \StdClass();
         $margins->left = 10;
         $margins->right = 10;

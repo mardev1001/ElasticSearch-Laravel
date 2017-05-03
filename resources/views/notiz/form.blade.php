@@ -101,6 +101,27 @@
                 </div>
                 
             </div>
+            <div class="clearfix"></div>
+            <br/>
+            
+            <!-- input box-->
+            <div class="col-lg-6"> 
+                <div class="form-group">
+                    
+                    <input type="file" name="file[]" class="form-control" multiple />
+                </div>   
+            </div><!--End input box-->
+            @if( isset($data->documentUploads) && $data->documentUploads->count() > 0 )
+                <div class="col-lg-6 "> 
+                <span class="lead"> Hochgeladene Dateien</span>
+                @foreach($data->documentUploads as $doc)
+                   <p class="text-info"><span class="fa fa-file-o"></span> {{ $doc->file_path }}</p>
+                @endforeach
+              
+                </div><!--End input box-->
+            @endif
+        
+
             
         </div>
 
