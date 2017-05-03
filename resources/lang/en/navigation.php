@@ -53,6 +53,7 @@ return [
     'juristenPortalRechtsablage' => 'Rechtsablage',
     'juristenPortalBeratung' => 'Beratung',
     'juristenPortalBeratungMeta' => 'Beratung Dokument Typen - Meta Infos',
+    'juristenPortalRechtsablageMeta' => 'Rechtsablage Dokument Typen - Meta Infos',
     'juristenPortalCategories'  => 'Kategorien',
     'wiedervorlagenStatus'  => 'Wiedervorlagen Status',
     'aktenArt'  => 'Akten Arten',

@@ -59,7 +59,7 @@ class NoticeController extends Controller
         $mandantUsers = User::where('active', 1)->get();
         $mitarbeiterUsers = $mandantUsers;
 
-        return view('juristenportal.createNote',
+        return view('formWrapper',
             compact( 'data', 'mandantUsers', 'mitarbeiterUsers'));
     }
 
@@ -71,48 +71,84 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all() );
+        // $document_type_id =DocumentType::where('name', ['Notizen'])->first();
+        $request->merge(['document_type_id' => DocumentType::NOTIZEN, 'user_id' => Auth::user()->id,'name' => $request->get('betreff'),
+        'name_long' => $request->get('betreff') ]);
+        $note = Document::create($request->all() );
         
-        $document_type_id =DocumentType::where('name', ['Notizen'])->first();
         
-        $note = new Document;
-        $note->document_type_id = $document_type_id->id;
-        $note->user_id = Auth::id();
-        $note->owner_user_id = $request->mitarbeiter_id;    // id = NULL : free text
-        $note->name = $request->mitarbeiter;                // free text oder User Name
-        $note->betreff = $request->betreff;
-        $note->funktion = $request->function;
-        $note->nachricht = $request->nachricht;
-        $note->telefon = $request->telefon;
-        $note->ruckruf = $request->has('ruckruf');
-        $datetime = $request->date.' '.$request->time;      // Felder Date and Zeit -> created_at
-        $date =date('Y-m-d H:i:s', strtotime($datetime));
-        $note->created_at = $date;
-        $note->save();
+        $request->merge([ 'document_id' =>$note->id, 'variant_number' => 1,'inhalt' => $request->get('content')]);
+        $editorVariant = EditorVariant::create( $request->all() );
         
-        $editorVariant = new EditorVariant;
-        $editorVariant->document_id = $note->id;
-        $editorVariant->variant_number = 1;
-        $editorVariant->inhalt = $request->content;
-        $editorVariant->save();
+        $request->merge([ 'editor_variant_id' => $editorVariant->id ]);
+        $documentMandat =  DocumentMandant::create($request->all() );
         
-        $documentMandat = new DocumentMandant;
-        $documentMandat->document_id = $note->id;
-        $documentMandat->editor_variant_id = $editorVariant->id;
-        $documentMandat->save();
+        $request->merge([ 'document_mandant_id' => $documentMandat->id ]);
+        $mandant =  DocumentMandantMandant::create($request->all() );
         
-        $mandant = new DocumentMandantMandant;
-        $mandant->document_mandant_id = $documentMandat->id;
-        $mandant->mandant_id = $request->mandant;
-        $mandant->save();
-        
-        return redirect('notice/upload/'.$note->id);
+        return redirect('notiz/upload/'.$note->id);
 
+    }
+    
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        // not yet completed !!!!!!
+        
+        $data = Document::find($id);
+        
+        $mandantUsers = User::where('active', 1)->get();
+        $mitarbeiterUsers = $mandantUsers;
+        
+        //dd($data);
+        return view('formWrapper',
+            compact('data', 'mandantUsers', 'mitarbeiterUsers'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
     }
     
     public function uploadView($id)
     {
         $note = Document::find($id);
-        return view('juristenportal.uploadNote', compact('note'));
+        return view('notiz.uploadNote', compact('note'));
     }        
     
     /**
@@ -258,59 +294,5 @@ class NoticeController extends Controller
         \File::delete($folder.'/'.$filename);
 
         return $newName;
-    }
-    
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        // not yet completed !!!!!!
-        
-        $data = Document::find($id);
-        
-        $mandantUsers = User::where('active', 1)->get();
-        $mitarbeiterUsers = $mandantUsers;
-        
-        //dd($data);
-        return view('juristenportal.createNote',
-            compact('data', 'mandantUsers', 'mitarbeiterUsers'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

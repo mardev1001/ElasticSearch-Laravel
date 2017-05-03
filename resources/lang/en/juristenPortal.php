@@ -26,7 +26,8 @@ return [
     'documentsWithoutCategories' => 'Dokument ohne Kategorie - Alle',
     
     //meta field
-    'metaFieldsTitle' => 'Beratungs-Portal Dokument Typ - Meta Infos',
+    'metaFieldsTitle' => trans('navigation.juristenPortalBeratungMeta'),
+    'metaFieldsRechtsablageTitle' => trans('navigation.juristenPortalRechtsablageMeta'),
     'metaFieldsAddTitle' => 'Übersicht',
     'addField' => 'anlegen',
     'fieldCreated' => 'Meta-Feld hinzugefügt',

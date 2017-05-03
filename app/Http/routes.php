@@ -181,10 +181,25 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::patch('beratungsportal/meta-info/{juristenCategoryMeta}/update', 'JuristenPortalController@updateMetaInfo');
     Route::patch('beratungsportal/meta-info/{metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
     Route::patch('beratungsportal/meta-info/{metaField}/update-meta-filed', 'JuristenPortalController@updateMetaField');
+    
     Route::get('beratungsportal/destroy-juristen-category-meta/{juristenCategoryMeta}', 'JuristenPortalController@deleteJuristenCategoryMeta');
     Route::get('beratungsportal/destroy-juristen-category-meta-field/{juristenCategoryMetaField}', 'JuristenPortalController@deleteJuristenCategoryMetaField');
     Route::post('beratungsportal/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
     Route::patch('beratungsportal/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
+
+
+    // rechtsablage meta info
+    Route::get('rechtsablage/meta-info', 'JuristenPortalController@metaInfoRechtsablage');
+    Route::post('rechtsablage/meta-info', 'JuristenPortalController@storeMetaInfoRechtsablage');
+    Route::patch('rechtsablage/meta-info/{juristenCategoryMeta}/update', 'JuristenPortalController@updateMetaInfoRechtsablage');
+    Route::patch('rechtsablage/meta-info/{metaId}/add-meta-fileds', 'JuristenPortalController@addMetaFields');
+    Route::patch('rechtsablage/meta-info/{metaField}/update-meta-filed', 'JuristenPortalController@updateMetaField');
+    
+    Route::get('rechtsablage/destroy-juristen-category-meta/{juristenCategoryMeta}', 'JuristenPortalController@deleteJuristenCategoryMeta');
+    Route::get('rechtsablage/destroy-juristen-category-meta-field/{juristenCategoryMetaField}', 'JuristenPortalController@deleteJuristenCategoryMetaField');
+    Route::post('rechtsablage/add-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
+    Route::patch('rechtsablage/update-juristen-category-meta-fiels/{juristenCategoryMeta}', 'JuristenPortalController@addJuristenCategoryMetaFields');
+    // rechtsablage meta info end
     
     Route::get('beratungsportal/aktenart', 'JuristenPortalController@aktenArt');
     Route::post('beratungsportal/aktenart', 'JuristenPortalController@storeAktenArt');
@@ -206,9 +221,11 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('beratung-kategorien/alle', 'BeratungController@singlePageAll');
     Route::resource('beratung-kategorien', 'BeratungController');
     
-    Route::get('notice/upload/{id}', 'NoticeController@uploadView');
-    Route::post('notice/upload', 'NoticeController@upload');
-    Route::resource('notice', 'NoticeController');
+    /* Notice Resources */
+    Route::get('notiz/upload/{id}', 'NoticeController@uploadView');
+    Route::post('notiz/upload', 'NoticeController@upload');
+    Route::resource('notiz', 'NoticeController');
+    /* End Notice resources */
 
     /*
     * Maintenance Routes

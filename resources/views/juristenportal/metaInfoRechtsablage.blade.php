@@ -2,7 +2,7 @@
 
 @extends('master')
 
-@section('page-title') @lang('juristenPortal.metaFieldsTitle') @stop
+@section('page-title') @lang('juristenPortal.metaFieldsRechtsablageTitle') @stop
 
 @section('content')
 <!-- add row-->
@@ -12,7 +12,7 @@
             <h2 class="title"> @lang('juristenPortal.metaFieldsAddTitle')</h2>
             <div class="box  box-white">
                 <div class="row">
-                    {!! Form::open(['action' => 'JuristenPortalController@storeMetaInfo', 'method'=>'POST']) !!}
+                    {!! Form::open(['action' => 'JuristenPortalController@storeMetaInfoRechtsablage', 'method'=>'POST']) !!}
                       
                             <div class="col-md-6 col-lg-6">
                                 {!! ViewHelper::setInput('name', '',old('name'), 
@@ -20,7 +20,7 @@
                             </div>
                         <div class="clearfix"></div><br/>
                           <div class="col-xs-12 parent-div">
-                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('isoKategorienForm.add') }} </a> 
+                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('juristenPortal.addField') }} </a> 
                                 <div class="clearfix"></div>
                                 <div class="col-xs-6 add-wrapper">
                                     
@@ -51,7 +51,7 @@
                  <div class="box box-white">
                     @foreach($categories as $category)
                     <div class="row">
-                        {!! Form::open(['url' => ['beratungsportal/meta-info/'.$category->id.'/update'], 'method' => 'patch']) !!}
+                        {!! Form::open(['url' => ['rechtsablage/meta-info/'.$category->id.'/update'], 'method' => 'patch']) !!}
                         <div class="col-xs-12 col-md-6 col-lg-5">
                              <input type="text" class="form-control" name="name" value="{{ $category->name }}" placeholder="Name"/>
                         </div>
@@ -62,8 +62,8 @@
                                 <button class="btn btn-danger" type="submit" name="active" value="1">{{ trans('adressatenForm.inactive') }}</button>
                             @endif
                             <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                            @if( !count($category->metaInfos ) )
-                                <a href="{{url('beratungsportal/destroy-juristen-category-meta/'.$category->id)}}" class="btn btn-xs btn-warning delete-prompt">
+                            @if( !count($category->metaInfos )  && !count($category->documents) )
+                                <a href="{{url('rechtsablage/destroy-juristen-category-meta/'.$category->id)}}" class="btn btn-xs btn-warning delete-prompt">
                                     entfernen
                                 </a><br>
                             @endif
@@ -74,7 +74,7 @@
                         
                         @if( count($category->metaInfos) )
                             @foreach( $category->metaInfos as $metaInfo )
-                            {!! Form::open(['url' => ['beratungsportal/meta-info/'.$metaInfo->id.'/update-meta-filed'] , 'method' => 'patch']) !!}
+                            {!! Form::open(['url' => ['rechtsablage/meta-info/'.$metaInfo->id.'/update-meta-filed'] , 'method' => 'patch']) !!}
                                 <!--<input type="hidden" name="jurist_category_meta_id" value="{{$category->id}}" />-->
                                 <div class="col-md-10 meta-info-margin">
                                     <div class="col-xs-12 col-md-6 col-lg-5">
@@ -86,12 +86,10 @@
                                         @else
                                             <button class="btn btn-danger" type="submit" name="active" value="1">{{ trans('adressatenForm.inactive') }}</button>
                                         @endif
-                                       <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
-                                        {{-- @if( isset($metaInfos) && !count($metaInfos->metaInfoValues ) )
-                                            <a href="{{url('agaga/destroy-category/'.$metaInfos->id)}}" class="btn btn-xs btn-warning delete-prompt">
-                                                entfernen
-                                            </a><br>
-                                        @endif --}}
+                                        <button class="btn btn-primary" type="submit" name="save" value="1">{{ trans('adressatenForm.save') }}</button>
+                                        <a href="{{url('rechtsablage/destroy-juristen-category-meta-field/'.$metaInfo->id)}}" class="btn btn-xs btn-warning delete-prompt">
+                                            entfernen
+                                        </a> <!-- delete meta field value --> <br> 
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
@@ -101,8 +99,8 @@
                         @endif
                         
                         <div class="col-xs-12 parent-div">
-                            {!! Form::open(['url' => ['beratungsportal/add-juristen-category-meta-fiels/'.$category->id] , 'method' => 'POST']) !!}
-                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('isoKategorienForm.add') }} </a> 
+                            {!! Form::open(['url' => ['rechtsablage/add-juristen-category-meta-fiels/'.$category->id] , 'method' => 'POST']) !!}
+                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('juristenPortal.addField') }} </a> 
                                 <div class="clearfix"></div>
                                 <div class="col-xs-6 add-wrapper">
                                     

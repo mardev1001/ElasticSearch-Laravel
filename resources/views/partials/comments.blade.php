@@ -68,24 +68,24 @@
                                             </span>
 
                                             <div class="clearfix"></div>
-                                            
-                                            @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
-                                                Version {{ $comment->document->version }}, {{ $comment->document->documentStatus->name }} - 
-                                               @if(isset($comment->document->date_published) ) {{ $comment->document->date_published }} -@endif @if(isset($comment->document->owner) ){{ $comment->document->owner->first_name ." ". $comment->document->owner->last_name }}@endif
-                                                <br>
-                                                @if( $comment->document->published != null )
-                                                    <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
-                                                        <strong> {{ $comment->document->name }} </strong>
-                                                    </a>
-                                                @else
-                                                    <a href="{{url('/dokumente/'. $comment->document->id)}}">
-                                                        <strong> {{ $comment->document->name }} </strong>
-                                                    </a>
+                                            @if(isset($comment->document))
+                                                @if(ViewHelper::documentVariantPermission($comment->document)->permissionExists && $comment->document->active)
+                                                    Version {{ $comment->document->version }}, {{ $comment->document->documentStatus->name }} - 
+                                                   @if(isset($comment->document->date_published) ) {{ $comment->document->date_published }} -@endif @if(isset($comment->document->owner) ){{ $comment->document->owner->first_name ." ". $comment->document->owner->last_name }}@endif
+                                                    <br>
+                                                    @if( $comment->document->published != null )
+                                                        <a href="{{url('/dokumente/'. $comment->document->published->url_unique)}}">
+                                                            <strong> {{ $comment->document->name }} </strong>
+                                                        </a>
+                                                    @else
+                                                        <a href="{{url('/dokumente/'. $comment->document->id)}}">
+                                                            <strong> {{ $comment->document->name }} </strong>
+                                                        </a>
+                                                    @endif
+                                                    <br>
+                                                    {{ $comment->document->documentType->name }}
                                                 @endif
-                                                <br>
-                                                {{ $comment->document->documentType->name }}
                                             @endif
-
                                         </div>
 
                                     </div>

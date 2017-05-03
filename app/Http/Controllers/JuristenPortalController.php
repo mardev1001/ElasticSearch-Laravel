@@ -343,10 +343,9 @@ class JuristenPortalController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
        
-    //   dd($request->all());
         $juristenCategoryMeta->fill($request->all())->save();
 
-        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldUpadted'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldUpdated'));
     }
     
     /**
@@ -404,11 +403,9 @@ class JuristenPortalController extends Controller
         if (ViewHelper::universalHasPermission(array(35)) == false) {
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
-       
-    //   dd($request->all());
         $juristenCategoryMeta->fill($request->all())->save();
 
-        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldUpdated'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldUpdated'));//
     }
     
     /**
@@ -447,7 +444,7 @@ class JuristenPortalController extends Controller
         $metaField = JuristCategoryMetaField::find($id);
         $metaField->fill($request->all())->save();
         
-        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldCreated'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldValueUpdated'));
     }
     
     /**
@@ -485,7 +482,7 @@ class JuristenPortalController extends Controller
         }
         $juristenCategoryMeta->delete();
 
-        return redirect()->back()->with('messageSecondary', trans('juristP.deletedJuristenCategoryMeta'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldDeleted'));
     }
      
     /**
@@ -503,7 +500,7 @@ class JuristenPortalController extends Controller
         }
         $juristenCategoryMetaField->delete();
 
-        return redirect()->back()->with('messageSecondary', trans('inventoryList.deletedJuristenCategoryMetaField'));
+        return redirect()->back()->with('messageSecondary', trans('juristenPortal.fieldValueDeleted'));
     }
     
 

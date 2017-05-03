@@ -100,7 +100,7 @@
                         
                         <div class="col-xs-12 parent-div">
                             {!! Form::open(['url' => ['beratungsportal/add-juristen-category-meta-fiels/'.$category->id] , 'method' => 'POST']) !!}
-                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('isoKategorienForm.add') }} </a> 
+                                <a href="#" class="btn btn-primary add-single-field pull-left">{{ trans('juristenPortal.addField') }} </a> 
                                 <div class="clearfix"></div>
                                 <div class="col-xs-6 add-wrapper">
                                     

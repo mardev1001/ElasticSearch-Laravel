@@ -57,7 +57,18 @@
                     
                     @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
                         <li>
+                            <a href="{{ url('rechtsablage/meta-info') }}">{{ ( trans('navigation.juristenPortalRechtsablageMeta') ) }}-{{ trans('navigation.kategorien') }} </a>
+                        </li>
+                    @endif
+                    
+                    @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                        <li>
                             <a href="{{ url('beratung-kategorien') }}">{{ ( trans('navigation.juristenPortalBeratung') ) }}-{{ trans('navigation.kategorien') }} </a>
+                        </li>
+                    @endif
+                    @if( ViewHelper::universalHasPermission( array(35), false ) == true ) 
+                        <li>
+                            <a href="{{ url('beratungsportal/meta-info') }}">{{ ( trans('navigation.juristenPortalBeratungMeta') ) }}-{{ trans('navigation.kategorien') }} </a>
                         </li>
                     @endif
                     

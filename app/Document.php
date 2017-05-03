@@ -23,9 +23,9 @@ class Document extends Model
         'show_name','adressat_id','betreff','document_replaced_id',
         'date_approved','email_approval','approval_all_roles', 'document_template',
         'approval_all_mandants','pdf_upload','is_attachment','active','iso_category_number',
-        'qmr_number','landscape','additional_letter','jurist_category_id','beratung_category_id'
+        'qmr_number','landscape','additional_letter','jurist_category_id','beratung_category_id',
+        'jurist_log_text','jurist_category_meta_id','jurist_log_text','funktion','nachricht','telefon','ruckruf'
     ]; //whitelist
-    
     protected $dates = ['created_at', 'updated_at', 'date_published','published_at'];
      
     public function getDatePublishedAttribute($value)
