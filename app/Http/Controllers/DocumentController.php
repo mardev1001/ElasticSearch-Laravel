@@ -3654,19 +3654,17 @@ class DocumentController extends Controller
                 // Check if user has document permission
                 // $documentPermission = ViewHelper::documentVariantPermission($document, $user->id)->permissionExists;
                 // if($documentPermission){
-
+                    
                     // Check if the role assigned to the email setting is in the document verteiler roles for the document
                     $allowed = false;
-                if ($emailSetting->email_recievers_id == 0) {
-                    if ($document->approval_all_roles == 1) {
+                    if ($emailSetting->email_recievers_id == 0) {
                         $allowed = true;
+                    } else {
+                        $documentRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id');
+                        if ($documentRecievers->contains($emailSetting->email_recievers_id)) {
+                            $allowed = true;
+                        }
                     }
-                } else {
-                    $documentRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id');
-                    if ($documentRecievers->contains($emailSetting->email_recievers_id)) {
-                        $allowed = true;
-                    }
-                }
 
                     // Proceed if role assignment criteria is met
                     if ($allowed) {

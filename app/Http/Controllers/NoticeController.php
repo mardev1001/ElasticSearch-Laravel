@@ -149,7 +149,7 @@ class NoticeController extends Controller
      */
     public function update(Request $request,Document $id)
     {
-        dd('a-ha');
+        dd($id);
     }
 
     /**

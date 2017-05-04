@@ -353,13 +353,39 @@ $(function() {
         }
     });
 
-
-    // Hide or show profile email preferences fields
+    // Define sending settings variables (user profile page)
 
     var settingsSendMethod = $('.email-settings-form select[name="settings_sending_method"]');
     var settingsEmail = $('.email-settings-form .settings-email');
     var settingsFax = $('.email-settings-form .settings-fax-custom');
     var settingsMandant = $('.email-settings-form .settings-mandant');
+    var settingsDocTypes = $('.settings-document-type select[name="settings_document_type"]');
+
+    // Hide or show sending methods according to the document type selection
+
+    function checkDocType() {
+        if (settingsDocTypes.val() == 'all') {
+            settingsSendMethod.find('option').each(function() {
+                if (($(this).val() != 1) && ($(this).val() != 2)) {
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
+        else {
+            settingsSendMethod.find('option').each(function() {
+                $(this).prop('disabled', false);
+            });
+        }
+        settingsSendMethod.val('').trigger('chosen:updated');
+    }
+
+    checkDocType();
+    settingsDocTypes.chosen().change(function(event) {
+        checkDocType();
+        checkSendMethod();
+    });
+
+    // Hide or show profile email preferences fields
 
     function checkSendMethod() {
         if (settingsSendMethod.val() == 1 || settingsSendMethod.val() == 2) {
@@ -395,7 +421,6 @@ $(function() {
     }
 
     checkSendMethod();
-
     settingsSendMethod.chosen().change(function(event) {
         checkSendMethod();
     });

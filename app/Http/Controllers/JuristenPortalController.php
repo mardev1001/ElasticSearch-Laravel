@@ -518,9 +518,13 @@ class JuristenPortalController extends Controller
             return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
         }
         $uploaded = $this->fileUpload($request->file);
-        $this->findDuplicates($uploaded);
-                
-
+        if(!is_bool($uploaded) ){
+            $duplicates = $this->findDuplicates($uploaded);
+            
+        }
+        
+        // dd($duplicates);
+        
         if ($uploaded == false) {
             return redirect()->back()->with('messageSecondary', 'Upload fehlgeschlagen');
         }
@@ -553,7 +557,7 @@ class JuristenPortalController extends Controller
             $dbDocumentUpload = DocumentUpload::with('editorVariant', 'editorVariant.document', 'editorVariant.document.user')
                                                 ->where('file_path', $originalFilename)
                                                 ->first();
-            if($dbDocumentUpload != null){
+            if($dbDocumentUpload != null && is_null( $dbDocumentUpload->editorVariant->document->document_type_id ) ){
                 $duplicates[$filename] = ['metadata' => $metaData, 'original' => $dbDocumentUpload->editorVariant->document];
                 File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
                 continue;
@@ -578,13 +582,14 @@ class JuristenPortalController extends Controller
             
             $document = Document::where('name', $title)
                                  ->where('user_id', $user_id)
+                                 ->where('document_type_id',null)
                                  ->first();
             if($document != null){
+                // dd($metaData);
                  $duplicates[$filename] = ['metadata' => $metaData, 'original' => $document];
                  File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
                  continue;
             }
-
             File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename);
         }
         return $duplicates;
@@ -605,7 +610,6 @@ class JuristenPortalController extends Controller
             \File::makeDirectory($folder, $mod = 0777, true, true);
         }
         if (is_array($files)) {
-           //  dd($files);
             foreach ($files as $k => $file) {
                  if (ViewHelper::fileTypeAllowed($file)) {
                         $uploadedNames[] = $this->moveUploaded($file, $folder);

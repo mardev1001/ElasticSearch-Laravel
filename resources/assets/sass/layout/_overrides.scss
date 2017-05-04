@@ -66,6 +66,10 @@ textarea {
     top: -4px;
 }
 
+.chosen-container .chosen-results li.disabled-result {
+    color: #ccc !important;
+}
+
 @media(min-width:768px) {
     .sidebar {
         margin-top: 1px;

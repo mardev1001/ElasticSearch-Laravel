@@ -109,10 +109,10 @@ class JuristenPortalImport extends Command
         $document->user_id = $user_id;
         if(isset($metaData['Title'])){
             $document->name = $metaData['Title'];
-            $document->name_long = $metaData['Title'];
+            // $document->name_long = $metaData['Title'];
         }else{
             $document->name = $ocrHelper->getFileBaseName();
-            $document->name_long = $ocrHelper->getFileBaseName();
+            // $document->name_long = $ocrHelper->getFileBaseName();
         }
         if(isset($metaData['Keywords'])){
             $document->search_tags = $metaData['Keywords'];
@@ -125,7 +125,7 @@ class JuristenPortalImport extends Command
         $document->save();
         if( empty($document->name) ){
             $document->name = 'Dokument '.$document->id;
-            $document->long_name = 'Dokument '.$document->id;
+            // $document->long_name = 'Dokument '.$document->id;
             $document->save();
         }
         

@@ -674,11 +674,12 @@ class ViewHelper
         $allMandants = false;//magic
         $userSettingArray = array(); // Array to store returning
         $sendingMethod = 4; // Mail sending
+        $emailRecievers = [0];
         
         // Check for document "vertelier" roles, and filter out accordingly
-        if($document->approval_all_roles == 1) $emailRecievers = [0];
-        elseif($document->documentMandants->first()){
-            $emailRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id')->toArray();
+        if($document->documentMandants->first()){
+            $verteilerRoles = $document->documentMandants->first()->documentMandantRole->pluck('role_id')->toArray();
+            $emailRecievers = array_merge($emailRecievers, $verteilerRoles); 
         }
         
         // Get all users with sending options
@@ -1538,12 +1539,12 @@ class ViewHelper
         $userNumber = 0;
         $allMandants = false;
         $document = Document::find($documentId);
-        $emailRecievers = array();
+        $emailRecievers = [0];
         
         // Check for document "vertelier" roles, and filter out accordingly
-        if($document->approval_all_roles == 1) $emailRecievers = [0];
-        elseif($document->documentMandants->first()){
-            $emailRecievers = $document->documentMandants->first()->documentMandantRole->pluck('role_id')->toArray();
+        if($document->documentMandants->first()){
+            $verteilerRoles = $document->documentMandants->first()->documentMandantRole->pluck('role_id')->toArray();
+            $emailRecievers = array_merge($emailRecievers, $verteilerRoles); 
         }
         
         // Get all users with sending options
