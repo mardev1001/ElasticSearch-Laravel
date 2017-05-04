@@ -39,7 +39,7 @@ class DummyDocumentStatusSeeder extends Seeder
                     'updated_at' => date("Y-m-d H:i:s")
                 ],
                 [
-                    'name' => 'Im Freigabe Prozess',
+                    'name' => 'Im Freigabeprozess',
                     'created_at' => date("Y-m-d H:i:s"),
                     'updated_at' => date("Y-m-d H:i:s")
                 ]

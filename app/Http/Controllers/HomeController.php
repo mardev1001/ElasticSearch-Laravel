@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Auth;
+use Carbon\Carbon;
 use File;
 use Mail;
 use App\Document;
@@ -62,9 +63,14 @@ class HomeController extends Controller
         ->orderBy('documents.date_published', 'desc')->limit(50)
         ->get(['*', 'document_types.name as docTypeName', 'documents.name as name',
         'document_types.id as docTypeId', 'documents.id as id', 'documents.created_at as created_at', ]);
-        // dd($documentsNew);
+        
+        // Hide documents that have publish date higher than today
+        $documentsNew = $documentsNew->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
+        
         $documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
-        // dd($documentsNew);
+        
         $documentsNewTree = $this->document->generateTreeview($documentsNew, array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
 
         $myRundCoauthor = DocumentCoauthor::where('user_id', Auth::user()->id)->pluck('document_id')->toArray();
@@ -117,7 +123,12 @@ class HomeController extends Controller
         }
 
         $rundschreibenMy = $rundschreibenMy->limit(50)
-        ->orderBy('documents.id', 'desc')->get(['documents.id as id']);
+        ->orderBy('documents.id', 'desc')->get(['documents.id as id', 'documents.date_published as date_published']);
+        
+        // Hide documents that have publish date higher than today
+        $rundschreibenMy = $rundschreibenMy->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
         
         $rundschreibenMy = Document::whereIn('id', array_pluck($rundschreibenMy, 'id'))->orderBy('date_published', 'desc')
         ->paginate(10, ['*'], 'meine-rundschrieben');

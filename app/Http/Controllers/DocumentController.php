@@ -1663,9 +1663,9 @@ class DocumentController extends Controller
         $document->favorite = FavoriteDocument::where('document_group_id', $document->document_group_id)->where('user_id', Auth::user()->id)->first();
 
         // Prevent showing of document if publish date ist not today or past
-        if (Carbon::parse($document->date_published)->gte(Carbon::today())) {
-            return redirect('/')->with('message', trans('documentForm.noPermission'));
-        }
+        // if (Carbon::parse($document->date_published)->gt(Carbon::today())) {
+        //     return redirect('/')->with('message', trans('documentForm.noPermission'));
+        // }
 
         return view('dokumente.show', compact('document', 'documentComments', 'documentCommentsFreigabe',
         'variants', 'published', 'datePublished', 'canPublish', 'authorised', 'commentVisibility', 'myComments',
@@ -2628,7 +2628,6 @@ class DocumentController extends Controller
             }
         })
         ->where('document_status_id', 1)
-        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-entwurf');
         ->orderBy('date_published', 'desc')->paginate(10, ['*'], 'rundschreiben-entwurf');
         $rundEntwurfTree = $this->document->generateTreeview($rundEntwurfPaginated, array('pageDocuments' => true));
 
@@ -2642,24 +2641,25 @@ class DocumentController extends Controller
             }
         })
         ->whereIn('document_status_id', [2, 6])
-        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'rundschreiben-freigabe');
         ->orderBy('date_published', 'desc')->paginate(10, ['*'], 'rundschreiben-freigabe');
         $rundFreigabeTree = $this->document->generateTreeview($rundFreigabePaginated, array('pageDocuments' => true));
 
         // all status aktuell/published
         $rundAllPaginated = Document::where('document_type_id', $docType)
-        // ->where(function($query){
-        //     $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
-        // })
         ->where('document_status_id', 3)
         ->where('active', 1)->get();
-        // ->orderBy('id', 'desc')->get();
-        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-rundschreiben');
+        
+        // Hide documents that have publish date higher than today
+        $rundAllPaginated = $rundAllPaginated->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
+        
         if ($docs == 'alle' && $sort == 'asc') {
             $rundAllPaginated = $this->document->getUserPermissionedDocuments($rundAllPaginated, 'alle-rundschreiben', array('field' => 'date_published', 'sort' => 'asc'));
         } else {
             $rundAllPaginated = $this->document->getUserPermissionedDocuments($rundAllPaginated, 'alle-rundschreiben', array('field' => 'date_published', 'sort' => 'desc'));
         }
+        
         $rundAllTree = $this->document->generateTreeview($rundAllPaginated, array('pageDocuments' => true, 'showHistory' => true));
 
         // $rundschreibenAll = Document::where(['document_type_id' =>  $docType])->where('document_status_id',3)
@@ -2734,20 +2734,20 @@ class DocumentController extends Controller
             }
         })
         ->whereIn('document_status_id', [2, 6])
-        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
         ->orderBy('qmr_number', 'desc')->paginate(10, ['*'], 'qmr-freigabe');
         $qmrFreigabeTree = $this->document->generateTreeview($qmrFreigabePaginated, array('pageDocuments' => true));
 
         // all status aktuell/published
         $qmrAllPaginated = Document::where('document_type_id', $docType)
-        // ->where(function($query){
-        //     $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
-        // })
         ->where('document_status_id', 3)
         ->where('active', 1)
-        // ->orderBy('id', 'desc')->get();
         ->orderBy('qmr_number', 'desc')->get();
-        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-qmr');
+        
+        // Hide documents that have publish date higher than today
+        $qmrAllPaginated = $qmrAllPaginated->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
+        
         if ($docs == 'alle' && $sort == 'desc') {
             $qmrAllPaginated = $this->document->getUserPermissionedDocuments($qmrAllPaginated, 'alle-qmr', array('field' => 'qmr_number', 'sort' => 'desc'));
         } else {
@@ -2896,7 +2896,12 @@ class DocumentController extends Controller
 
         $formulareAllPaginated = Document::where(['document_type_id' => $docType])->where('document_status_id', 3)->where('active', 1)
         ->orderBy('id', 'desc')->get();
-        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'alle-formulare');
+        
+        // Hide documents that have publish date higher than today
+        $formulareAllPaginated = $formulareAllPaginated->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
+        
         if ($docs == 'alle' && $sort == 'asc') {
             $formulareAllPaginated = $this->document->getUserPermissionedDocuments($formulareAllPaginated, 'alle-formulare', array('field' => 'date_published', 'sort' => 'asc'));
         } else {
@@ -2977,7 +2982,12 @@ class DocumentController extends Controller
             $documentsByTypePaginated = Document::where('document_type_id', $documentType->id)->where('deleted_at', null)
             ->where('document_status_id', 3)->orderBy('id', 'desc')
             ->get();
-
+    
+            // Hide documents that have publish date higher than today
+            $documentsByTypePaginated = $documentsByTypePaginated->reject(function($document, $key){
+                return Carbon::parse($document->date_published)->gt(Carbon::today());
+            });
+    
             if ($docs == 'alle' && $sort == 'asc') {
                 $documentsByTypePaginated = $this->document->getUserPermissionedDocuments($documentsByTypePaginated, str_slug('all-'.$documentType->name), array('field' => 'date_published', 'sort' => 'asc'));
             } else {
@@ -3200,14 +3210,16 @@ class DocumentController extends Controller
         }
 
         $isoAllPaginated = Document::join('iso_categories', 'documents.iso_category_id', '=', 'iso_categories.id')
-        // ->join('editor_variants','documents.id','=','editor_variants.document_id')
         ->where('documents.document_type_id', $docType)
         ->where('slug', $slug)
         ->where('documents.document_status_id', 3)
-        // ->orderBy('documents.name', 'asc')
         ->orderBy('documents.date_published', 'desc')
         ->get(['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id']);
-        // ->paginate(10, ['*', 'iso_categories.name as isoCatName', 'documents.name as name', 'documents.id as id'], 'all-iso-dokumente');
+
+        // Hide documents that have publish date higher than today
+        $isoAllPaginated = $isoAllPaginated->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
 
         if ($docs == 'alle' && $sort == 'desc') {
             $isoAllPaginated = $this->document->getUserPermissionedDocuments($isoAllPaginated, 'all-iso-dokumente', array('field' => 'iso_category_number', 'sort' => 'desc'));
@@ -3222,10 +3234,10 @@ class DocumentController extends Controller
         $myRundCoauthor = Document::whereIn('id', $myRundCoauthorArr)->where('document_type_id', $docType)->pluck('id')->toArray();
         $isoEntwurfPaginated = Document::join('iso_categories', 'documents.iso_category_id', '=', 'iso_categories.id')
         // ->join('editor_variants','documents.id','=','editor_variants.document_id')
-       ->where(function ($query) use ($myRundCoauthor, $highRole) {
+        ->where(function ($query) use ($myRundCoauthor, $highRole) {
            if ($highRole == false) {
                $query->where('user_id', Auth::user()->id)
-                          ->orWhere('owner_user_id', Auth::user()->id);
+                    ->orWhere('owner_user_id', Auth::user()->id);
                $query->orWhereIn('documents.id', $myRundCoauthor);
            }
        }

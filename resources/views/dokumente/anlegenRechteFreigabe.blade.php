@@ -229,7 +229,7 @@
         <div class="clearfix"></div>
         
             <!-- modal start -->   
-            <div id="publishModal" class="modal fade" tabindex="-1" role="dialog">
+            <div id="publishModal" class="modal fade draggable" tabindex="-1" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -250,10 +250,14 @@
                                         {{ trans('documentForm.email-attachment') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 2) }} <br>
                                         {{ trans('documentForm.mail') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 4) }} <br>
                                         
-                                        <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
-                                        @foreach($data->documentUploads as $k => $attachment)
-                                            @if($k > 0) @break @endif <a href="{{url('download/'. $data->id .'/'. $attachment->file_path)}}">PDF Rundschreiben ausdrucken</a><br>
-                                        @endforeach
+                                        @if($data->pdf_upload)
+                                            @foreach($data->documentUploads as $k => $attachment)
+                                                @if($k > 0) @break @endif <a href="{{url('download/'. $data->id .'/'. $attachment->file_path)}}">PDF Rundschreiben ausdrucken</a><br>
+                                            @endforeach
+                                        @else
+                                            <a href="{{ url('/dokumente/' . $variant->document_id . '/pdf/download/'. $variant->variant_number) }}">PDF ausdrucken</a><br>
+                                        @endif
+                                        
                                         <a href="{{ url('/dokumente/' . $variant->document_id . '/post-versand/'. $variant->variant_number) }}" target="_blank">PDF Liste aller Post Versand Personen</a><br>
                             
                                         @if( count( $variant->EditorVariantDocument ) )            

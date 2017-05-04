@@ -155,6 +155,13 @@ class SearchController extends Controller
             $resultIds = array_pluck($resultsWithUrls, 'id');
             // $resultIds = array_pluck($results, 'id');
             
+            // Hide documents that have publish date higher than today
+            $tmpResults = Document::whereIn('id', $resultIds)->get();
+            $tmpResults = $tmpResults->reject(function($document, $key){
+                return Carbon::parse($document->date_published)->gt(Carbon::today());
+            });
+            $resultIds = array_pluck($tmpResults, 'id');
+            
             if($sort == 'asc')
                 $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->paginate(20, ['*'], 'seite');
                 // $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->get();
@@ -363,37 +370,6 @@ class SearchController extends Controller
             }
         }
         
-        // dd($documents->get());
-        
-        /***
-         
-        // Database search method - not applicable since document variants are being also added and searched
-        
-        if(!empty($name)) $documents->where('name_long', 'LIKE', '%'.$name.'%' );
-        
-        if(!empty($search_tags)) $documents->where('search_tags', 'LIKE', '%'.$search_tags.'%' );
-        
-        if(!empty($betreff)) $documents->where('betreff', 'LIKE', '%'.$betreff.'%');
-        
-        if(!empty($summary)) $documents->where('summary', 'LIKE', '%'.$summary.'%');
-        
-        if(!empty($document_type))  {
-            if($document_type == 3){
-                if(!empty($qmr_number))  $documents->where('qmr_number', $qmr_number );
-                if(!empty($additional_letter))  $documents->where('additional_letter', 'LIKE', '%'.$additional_letter.'%' );
-            } elseif($document_type == 4){
-                if(!empty($iso_category_number))  $documents->where('iso_category_number', $iso_category_number );
-                if(!empty($additional_letter))  $documents->where('additional_letter', 'LIKE', '%'.$additional_letter.'%' );
-            }
-            // $documents->where('document_type_id', 'LIKE', '%'.$document_type.'%' );
-            $documents->where('document_type_id', $document_type );
-        }
-        
-        if(!empty($date_from))  $documents->whereDate('documents.date_published', '>=', $date_from );
-        if(!empty($date_to))  $documents->whereDate('documents.date_published', '<=', $date_to );
-        if(!empty($user_id))  $documents->where('owner_user_id', $user_id );
-        
-        ***/
         
         $documents = $documents->get();
         
@@ -553,11 +529,6 @@ class SearchController extends Controller
             if(!empty($inhalt)) $resultsWiki = $resultsWiki->where('content', 'LIKE', '%'. $inhalt. '%');
             
             $resultsWiki = $resultsWiki->get();
-            
-            // $resultsWikiPagination = $resultsWiki->paginate(25, ['*'], 'suchergebnisse-wiki');
-            // $resultsWikiTree = $this->document->generateWikiTreeview($resultsWikiPagination, ['pageSearch' => true]);
-            // $resultsWiki = array();
-            
         }
         
         // dd($results);
@@ -567,7 +538,13 @@ class SearchController extends Controller
         $resultsWithUrls = array();
         foreach($results as $tmp) if(isset($tmp->published->url_unique)) $resultsWithUrls[] = $tmp;
         $resultIds = array_pluck($resultsWithUrls, 'id');
-        // $resultIds = array_pluck($results, 'id');
+        
+        // Hide documents that have publish date higher than today
+        $tmpResults = Document::whereIn('id', $resultIds)->get();
+        $tmpResults = $tmpResults->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
+        $resultIds = array_pluck($tmpResults, 'id');
     
         if($sort == 'asc')
             $results = Document::whereIn('id', $resultIds)->orderBy('date_published', 'asc')->paginate(20, ['*'], 'seite');

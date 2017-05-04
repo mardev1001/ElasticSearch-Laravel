@@ -82,6 +82,7 @@ $(function() {
 
     /*If modal has comment*/
     if ($('.modal-dialog').length) {
+
         if ($('.modal-dialog').find('[name*="comment"]').length) {
             $('.modal-dialog').find('[name*="comment"]').each(function() {
                 $(this).closest('.modal.fade').addClass('no-background');
@@ -95,6 +96,33 @@ $(function() {
                 $("[data-target='#" + triggerId + "']").attr("data-backdrop", "false");
             });
         }
+
+        if ($('.modal-dialog').find('[name*="comment"]').length) {
+            $('.modal-dialog').find('[name*="comment"]').each(function() {
+                $(this).closest('.modal.fade').addClass('no-background');
+                $(this).closest('.modal-dialog').draggable({
+                    handle: ".modal-content:not(form)"
+                });
+                // additional options data-backdrop="static" data-keyboard="false"
+
+                // this is to remove the modal background- but ony on modals where the modal-dialog is draggable
+                var triggerId = $(this).closest('.modal.fade').attr('id');
+                $("[data-target='#" + triggerId + "']").attr("data-backdrop", "false");
+            });
+        }
+
+        $('.modal.draggable').each(function() {
+            $(this).addClass('no-background');
+            $(this).find('.modal-dialog').draggable({
+                handle: ".modal-content:not(form)" //".modal-content:not(form)"
+            });
+            // additional options data-backdrop="static" data-keyboard="false"
+
+            // this is to remove the modal background- but ony on modals where the modal-dialog is draggable
+            var triggerId = $(this).attr('id');
+            $("[data-target='#" + triggerId + "']").attr("data-backdrop", "false");
+        });
+
 
     }
 

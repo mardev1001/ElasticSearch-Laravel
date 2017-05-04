@@ -519,6 +519,7 @@ class JuristenPortalController extends Controller
         }
         $uploaded = $this->fileUpload($request->file);
         $this->findDuplicates($uploaded);
+                
 
         if ($uploaded == false) {
             return redirect()->back()->with('messageSecondary', 'Upload fehlgeschlagen');

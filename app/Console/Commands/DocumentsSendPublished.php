@@ -121,7 +121,7 @@ class DocumentsSendPublished extends Command
                 // Alternate method to generate pdfs for each viewable variant (add as attachments)
                 $documentPdfs[] = [
                     'filePath' => $this->generatePdfObject($dv->document_id, $dv->variant_number, $user->id),
-                    'fileName' => str_slug('v'. $dv->variant_number .'-'. $dv->document->name .'-'. $dv->document->id) . '.pdf'
+                    'fileName' => str_replace(' ', '-', trim($dv->document->name .'-'. $dv->document->id .'-'.'V'. $dv->variant_number, '-')) . '.pdf'
                 ];
             }
         }
@@ -170,8 +170,7 @@ class DocumentsSendPublished extends Command
                                     $extension = File::extension($path);
                                     $documentAttachments[] = [
                                         'filePath' => $path,
-                                        // 'fileName' => str_slug($docAttach->document->id .'-'. $docAttach->document->name) .'.'. $extension
-                                        'fileName' => str_slug($docAttach->document->name .'-'. $docAttach->document->id) .'.'. $extension
+                                        'fileName' => str_replace(' ', '-', trim($docAttach->document->name .'-'. $docAttach->document->id, '-')) .'.'. $extension
                                     ];
                                 }
                             }

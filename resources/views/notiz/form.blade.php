@@ -8,8 +8,16 @@
 <div class="col-md-12 box-wrapper"> 
     <div class="box">
         <div class="row">
-            
-             {!! Form::open(['route' => 'notiz.store', 'method' => 'POST', 'class' => 'horizontal-form' ]) !!} 
+             @if( Request::is('*/edit') )
+                  {!! Form::open([
+                   'url' => route('notiz.update', $data->id) ,
+                   'method' => 'patch',
+                   'enctype' => 'multipart/form-data',
+                   'class' => 'horizontal-form']) !!}
+             @else
+                 {!! Form::open(['route' => 'notiz.store', 'method' => 'POST', 'class' => 'horizontal-form' ]) !!} 
+             @endif
+             
             
             <!-- row 1-->
             <div class="col-md-4 col-lg-3 "> 
@@ -92,11 +100,11 @@
             </div>
             
             <div class="clearfix"></div>
-            
+                </div>
             <div class="col-xs-12">
-                <div class="variant" data-id='content'>
-                    @if( isset($data->content) )
-                        {!! $data->content !!}
+                <div class="variant" data-id='inhalt'>
+                    @if( isset($data->editorVariant) )
+                        {!! $data->editorVariant->first()->inhalt !!}
                     @endif
                 </div>
                 

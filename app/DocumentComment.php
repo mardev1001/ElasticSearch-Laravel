@@ -21,8 +21,7 @@ class DocumentComment extends Model
     
     public function getCommentAttribute($value)
     {
-      return str_replace(["\r\n", "\r", "\n"], "<br/>", $value);
-    
+        return str_replace(["\r\n", "\r", "\n"], "<br/>", $value);
     }
      
     public function user(){

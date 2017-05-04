@@ -9,7 +9,7 @@
            'url' => $formWrapperData->controller.$formWrapperData->formUrl,
            'method' => $method,
            'enctype' => 'multipart/form-data',
-           'class' => 'horizontal-form a-ca',
+           'class' => 'horizontal-form',
            'id' => $formWrapperData->fileUpload]) !!}
     @else
    
@@ -17,14 +17,15 @@
            'url' => $formWrapperData->controller.$formWrapperData->formUrl,
            'method' => $formWrapperData->method,
            'enctype' => 'multipart/form-data',
-           'class' => 'horizontal-form acbc',
+           'class' => 'horizontal-form',
            'id' => $formWrapperData->fileUpload]) !!}
     @endif
+    
     {!! Form::open([
            'url' => $formWrapperData->controller.$formWrapperData->formUrl,
            'method' => $formWrapperData->method,
            'enctype' => 'multipart/form-data',
-           'class' => 'horizontal-form ddcd',
+           'class' => 'horizontal-form',
            'id' => $formWrapperData->fileUpload]) !!}
            
             @if( view()->exists($formWrapperData->controller.'.form') )
