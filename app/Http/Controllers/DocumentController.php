@@ -2821,17 +2821,14 @@ class DocumentController extends Controller
 
         // all status aktuell/published
         $newsAllPaginated = Document::where('document_type_id', $docType)
-        // ->where(function($query){
-        //     $query->where('owner_user_id', Auth::user()->id)->orWhere('user_id', Auth::user()->id );
-        // })
         ->where('document_status_id', 3)
         ->where('active', 1)->get();
-        // ->orderBy('id', 'desc')->get();
-        // if($docs == 'alle' && $sort == 'asc')
-        //     $newsAllPaginated->orderBy('date_published', 'asc')->get();
-        // else $newsAllPaginated->orderBy('date_published', 'desc')->get();
-
-        // ->orderBy('id', 'desc')->paginate(10, ['*'], 'all-news');
+        
+        // Hide documents that have publish date higher than today
+        $newsAllPaginated = $newsAllPaginated->reject(function($document, $key){
+            return Carbon::parse($document->date_published)->gt(Carbon::today());
+        });
+        
         if ($docs == 'alle' && $sort == 'asc') {
             $newsAllPaginated = $this->document->getUserPermissionedDocuments($newsAllPaginated, 'alle-news', array('field' => 'date_published', 'sort' => 'asc'));
         } else {

@@ -83,11 +83,9 @@ class JuristenPortalImport extends Command
         $metaData = $ocrHelper->getMetaData();
 
         if(strpos($text, 'DUMMY DOCUMENT') !== false){
-            
             //Ignore the dummy file
             return false;
         }
-        //   dd('not SKit');
         $ocrHelper->setFilename($fileName); /* Restore original filename */
         $converted_file = $ocrHelper->convertToPDF();
 
@@ -125,7 +123,6 @@ class JuristenPortalImport extends Command
         $document->owner_user_id = $user_id;
         $document->version = 1;
         $document->save();
-        dd($document);
         if( empty($document->name) ){
             $document->name = 'Dokument '.$document->id;
             $document->long_name = 'Dokument '.$document->id;
