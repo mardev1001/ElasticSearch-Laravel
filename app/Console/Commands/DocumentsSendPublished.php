@@ -7,6 +7,8 @@ use Illuminate\Console\Command;
 use File;
 use Mail;
 use Carbon\Carbon;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 use App\User;
 use App\Role;
@@ -63,8 +65,9 @@ class DocumentsSendPublished extends Command
                 $document = Document::find($reciever->document_id);
                 if(isset($document)){
                     if(Carbon::today()->toDateString() == Carbon::parse($document->date_published)->toDateString()){
+                        if($reciever->userEmailSetting->sending_method == 3)
                         $this->sendPublishedDocuments($document, $reciever);
-                        $reciever->sent = true;
+                        // $reciever->sent = true;
                         $reciever->save();
                         
                     }
@@ -76,10 +79,8 @@ class DocumentsSendPublished extends Command
     
     private function sendPublishedDocuments($document, $reciever){
         
+        // Define sending settings
         $emailSetting = $reciever->userEmailSetting;
-        
-        // Generate temporary pdf export of the document variants
-        // $documentPdf = $this->generatePdfObject($document->id, null, $emailSetting->user_id);
         
         // Fill the email container class with adequate values
         $mailContent = new \StdClass();
@@ -185,9 +186,10 @@ class DocumentsSendPublished extends Command
                         $message->from($mailContent->fromEmail, $mailContent->fromName);
                         $message->to($mailContent->toEmail, $mailContent->toName);
                         $message->subject($mailContent->subject);
-                        // $message->attach($documentPdf, ['as' => str_slug($document->id .'-'. $document->name) . '.pdf', 'mime' => 'application/pdf']);
+                        
                         foreach ($documentPdfs as $documentPdf) {
-                            $message->attach($documentPdf['filePath'], ['as' => $documentPdf['fileName'], 'mime' => 'application/pdf']);
+                            if($document->pdf_upload == true) $message->attach($documentPdf['filePath'], ['as' => $documentPdf['fileName'], 'mime' => 'application/pdf']);
+                            else $message->attach($documentPdf['filePath'], ['as' => $documentPdf['fileName']]);
                         }
                         foreach ($documentAttachments as $attachment) {
                             $message->attach($attachment['filePath'], ['as' => $attachment['fileName'], 'mime' => 'application/pdf']);
@@ -202,16 +204,40 @@ class DocumentsSendPublished extends Command
         
         // Sending method: fax (This method sends the document via fax commands)
         if($emailSetting->sending_method == 3){
+            
             // Check if the document type is corresponding the mailing settings
             if(in_array($emailSetting->document_type_id, [0, $document->document_type_id])){
-                // Faxing commands
-                // // Log sending
-                // ViewHelper::logSendPublished($sent, $logText);
+                foreach($documentPdfs as $documentPdf) {
+                        
+                    // Only send fax if document is a PDF-Runschreiben
+                    if($documentPdf['pdfUpload']){
+                        // Check to see if filetype is PDF
+                        if(strtolower(File::extension($documentPdf['fileName'])) == 'pdf'){
+                            /***/
+                            // Readout user fax options and send by executing faxing commands
+                            // Faxing command: /usr/bin/brpcfax -o fax-number=<number-with-leading-zeros>  <filename>
+                            $process = new Process('/usr/bin/brpcfax -o fax-number='.$emailSetting->recievers_text.' '. $documentPdf['filePath']);
+                            $process->run();
+                            
+                            // Executes after the command finishes
+                            $logText = "Fax: ". $emailSetting->recievers_text ."; UserID: ". $user->id ."; DocumentID: ". $document->id ."; ";
+                            if (!$process->isSuccessful()) {
+                                $sent = false;
+                                ViewHelper::logSendPublished($sent, $logText); // Log sending
+                                throw new ProcessFailedException($process); // Throw exception
+                            } else {
+                                $sent = true;
+                                ViewHelper::logSendPublished($sent, $logText); // Log sending
+                            }
+                            // echo $process->getOutput();
+                            /***/
+                        }
+                    }
+                        
+                }
             }
+            
         }
-        
-        // Delete generated pdf file
-        // File::delete($documentPdf);
         
         // Delete generated pdf files
         foreach($documentPdfs as $pdf){

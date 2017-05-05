@@ -44,7 +44,7 @@
             
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
-                    {!! ViewHelper::setInput('mitarbeiter', $data, old('mitarbeiter'), trans('juristenPortal.mitarbeiterName'), trans('juristenPortal.mitarbeiterName'), false, '', array(''), array('id=mitarbeiter')) !!}
+                    {!! ViewHelper::setInput('client', $data, old('client'), trans('juristenPortal.mitarbeiterName'), trans('juristenPortal.mitarbeiterName'), false, '', array(''), array('id=mitarbeiter')) !!}
                 </div>
             </div>
             
@@ -70,7 +70,7 @@
             
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
-                   {!! ViewHelper::setInput('time', $data, old('time'), trans('juristenPortal.time'), trans('juristenPortal.time'), true, 'text', ['timepicker']) !!}
+                   {!! ViewHelper::setInput('note_time', $data, old('note_time'), trans('juristenPortal.time'), trans('juristenPortal.time'), true, 'text', ['timepicker']) !!}
                 </div>
             </div>
             

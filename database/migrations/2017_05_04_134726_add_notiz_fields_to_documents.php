@@ -13,7 +13,10 @@ class AddNotizFieldsToDocuments extends Migration
     public function up()
     {
         Schema::table('documents', function (Blueprint $table) {
-            //
+            $table->date('note_date')->nullable();
+            $table->timestamp('note_time')->nullable();
+            $table->string('client');
+            
         });
     }
 

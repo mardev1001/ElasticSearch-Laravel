@@ -24,10 +24,12 @@ class Document extends Model
         'date_approved','email_approval','approval_all_roles', 'document_template',
         'approval_all_mandants','pdf_upload','is_attachment','active','iso_category_number',
         'qmr_number','landscape','additional_letter','jurist_category_id','beratung_category_id',
-        'jurist_log_text','jurist_category_meta_id','jurist_log_text','funktion','nachricht','telefon','ruckruf'
+        'jurist_log_text','jurist_category_meta_id','jurist_log_text','funktion','nachricht','telefon','ruckruf',
+        'note_date','note_time','client',
     ]; //whitelist
     
-    protected $dates = ['created_at', 'updated_at', 'date_published','published_at'];
+    
+    protected $dates = ['created_at', 'updated_at', 'date_published','published_at','note_date','note_time'];
      
     public function getDatePublishedAttribute($value)
     {

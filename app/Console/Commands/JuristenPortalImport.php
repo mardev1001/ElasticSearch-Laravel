@@ -107,8 +107,9 @@ class JuristenPortalImport extends Command
         $document = new Document();
         $document->document_type_id = null;
         $document->user_id = $user_id;
-        if(isset($metaData['Title'])){
+        if(isset($metaData['Title']) && !empty($metaData['Title'])){
             $document->name = $metaData['Title'];
+            // dd($metaData);
             // $document->name_long = $metaData['Title'];
         }else{
             $document->name = $ocrHelper->getFileBaseName();
