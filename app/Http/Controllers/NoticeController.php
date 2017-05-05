@@ -76,8 +76,11 @@ class NoticeController extends Controller
     {
         // dd($request->all() );
         // dd(  strtotime($request->get('note_time') ) );
-        dd( Carbon::today().' '.$request->get('note_time'));
-        dd( Carbon::createFromFormat(Carbon::today().' '.$request->get('note_time')) );
+        
+        $request->merge( ['note_time'=> Carbon::parse( $request->get('note_time') )->format('H:i:s'),'note_date' => Carbon::parse($request->get('note_date')) ]);
+        // dd($request->get('note_time'));
+        // dd( Carbon::today()->format('Y-m-d').' '.$request->get('note_time').':00' );
+        // dd( Carbon::createFromFormat(Carbon::today().' '.$request->get('note_time')) );
         $filename = '';
         $path = $this->pdfPath;
     

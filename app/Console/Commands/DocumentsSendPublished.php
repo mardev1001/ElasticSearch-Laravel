@@ -65,11 +65,9 @@ class DocumentsSendPublished extends Command
                 $document = Document::find($reciever->document_id);
                 if(isset($document)){
                     if(Carbon::today()->toDateString() == Carbon::parse($document->date_published)->toDateString()){
-                        if($reciever->userEmailSetting->sending_method == 3)
                         $this->sendPublishedDocuments($document, $reciever);
                         $reciever->sent = true;
                         $reciever->save();
-                        
                     }
                 }
             }
