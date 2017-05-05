@@ -77,7 +77,8 @@ class NoticeController extends Controller
         // dd($request->all() );
         // dd(  strtotime($request->get('note_time') ) );
         
-        $request->merge( ['note_time'=> Carbon::parse( $request->get('note_time') )->format('H:i:s'),'note_date' => Carbon::parse($request->get('note_date')) ]);
+        // $request->merge( [
+        // 'note_date' => Carbon::parse($request->get('note_date')) ]);
         // dd($request->get('note_time'));
         // dd( Carbon::today()->format('Y-m-d').' '.$request->get('note_time').':00' );
         // dd( Carbon::createFromFormat(Carbon::today().' '.$request->get('note_time')) );
@@ -155,9 +156,13 @@ class NoticeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,Document $id)
+    public function update(Request $request,$id)
     {
-        dd($id);
+        // dd($document);
+        $document = Document::find($id);
+        $request->merge([ 'user_id' => Auth::user()->id ]);
+        $document->fill($request->all())->save();
+        return redirect()->back()->withMessage('messageSecondary'. trans('notiz.updated') );
     }
 
     /**

@@ -110,7 +110,7 @@ class DocumentTypeController extends Controller
         
             $documentType->name = $request->input('name');
             
-            $documentType->document_art = $request->input('document_art');
+            if($request->input('document_art')) $documentType->document_art = $request->input('document_art');
             $documentType->document_role = $request->input('document_role');
             
             if($request->has('read_required')) $documentType->read_required = true;

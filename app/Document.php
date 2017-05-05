@@ -47,23 +47,43 @@ class Document extends Model
             $this->attributes['date_published'] = Carbon::parse($value);
     }
     
-    // public function getNoteTimeAttribute($value)
-    // {
-    //     if(empty($value) || $value == null || $value == '')
-    //         return null;
-    //     else
-    //     // Carbon\Carbon::createFromFormat('H:i', $value);
-    //         return Carbon::parse($value)->format('H:i');
-    // }
+    public function getNoteDateAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == '')
+            return null;
+        else
+        // Carbon\Carbon::createFromFormat('H:i', $value);
+            return Carbon::parse($value)->format('d.m.Y');
+    }
     
-    // public function setNoteTimeAttribute($value)
-    // {
-    //     if(empty($value) || $value == null || $value == '')
-    //         $this->attributes['note_date'] = null;
-    //     else{
-    //         $this->attributes['note_date'] = strtotime( $value );
-    //     }
-    // }
+    public function setNoteDateAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == ''){
+            $this->attributes['note_date'] = null;
+        }
+        else{
+        
+            $this->attributes['note_date'] = Carbon::parse( $value );
+        }
+    }
+    
+    public function getNoteTimeAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == '')
+            return null;
+        else
+        // Carbon\Carbon::createFromFormat('H:i', $value);
+            return Carbon::parse($value)->format('H:i');
+    }
+    
+    public function setNoteTimeAttribute($value)
+    {
+        if(empty($value) || $value == null || $value == '')
+            $this->attributes['note_time'] = null;
+        else{
+            $this->attributes['note_time'] = Carbon::parse( $value )->format('H:i:s');
+        }
+    }
     
     public function getPublishedAtAttribute($value)
     {

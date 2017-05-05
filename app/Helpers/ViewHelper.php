@@ -1569,6 +1569,7 @@ class ViewHelper
                 foreach ($editorVariants->variants as $ev){
                     if($ev->approval_all_mandants == true){
                         // Handle the case where a variant has approval for ALL mandants
+                        // This should be revised - Recalculate
                         $allMandants = true;
                     } elseif (($variantNumber == $ev->variant_number) && ($ev->hasPermission == true)){
                         $dm = DocumentMandant::where('editor_variant_id', $ev->id)->pluck('id');

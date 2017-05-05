@@ -59,6 +59,10 @@ class BeratungController extends Controller
      */
     public function create()
     {
+        if (!ViewHelper::universalHasPermission(array(6, 35))) {
+            return redirect('/')->with('message', trans('documentForm.noPermission'));
+        }
+        return view('formWrapper');
     }
 
     /**
