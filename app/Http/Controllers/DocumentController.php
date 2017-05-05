@@ -391,10 +391,10 @@ class DocumentController extends Controller
         if ($model == null) {
             return redirect('dokumente/create')->with(array('message' => 'No Document with that id'));
         }
-        
+        // dd($request->all() );
         if ($request->file()) {
             $files = $request->file();
-            if( ViewHelper::fileTypeAllowed($files['files'][0],['pdf']) == false ){
+            if( $files['files'][0] != null && ViewHelper::fileTypeAllowed($files['files'][0],['pdf']) == false ){
                 return redirect('/dokumente/pdf-upload/'.$model->id.'/edit')->with('messageSecondary',
                 trans('documentForm.onlyPDF'));
             }

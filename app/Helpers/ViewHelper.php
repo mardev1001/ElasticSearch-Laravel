@@ -1110,7 +1110,8 @@ class ViewHelper
     public static function fileTypeAllowed($file, $only = array())
     {
         $allowedFileArray = ['txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'pdf']; //,'png','jpg','jpeg','gif'
-       $extension = $file->getClientOriginalExtension();
+        $extension = '';
+        if(isset($file)) $extension = $file->getClientOriginalExtension();
         if ( empty($only) && in_array($extension, $allowedFileArray)) {
             return true;
         }

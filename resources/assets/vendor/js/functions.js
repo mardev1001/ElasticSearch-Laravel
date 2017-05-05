@@ -365,17 +365,31 @@ $(function() {
 
     function checkDocType() {
         if (settingsDocTypes.val() == 'all') {
+            resetDocTypeOptions();
             settingsSendMethod.find('option').each(function() {
-                if (($(this).val() != 1) && ($(this).val() != 2)) {
+                if (($(this).val() == 3) || ($(this).val() == 4)) {
                     $(this).prop('disabled', true);
                 }
             });
         }
-        else {
+        else if (settingsDocTypes.val() == '1') {
+            resetDocTypeOptions();
             settingsSendMethod.find('option').each(function() {
-                $(this).prop('disabled', false);
+                if (($(this).val() == 4)) {
+                    $(this).prop('disabled', true);
+                }
             });
         }
+        else if (settingsDocTypes.val() == '4') {
+            resetDocTypeOptions();
+            settingsSendMethod.find('option').each(function() {
+                if (($(this).val() == 3) || ($(this).val() == 4)) {
+                    $(this).prop('disabled', true);
+                }
+            });
+        }
+        else resetDocTypeOptions();
+
         settingsSendMethod.val('').trigger('chosen:updated');
     }
 
@@ -384,6 +398,12 @@ $(function() {
         checkDocType();
         checkSendMethod();
     });
+
+    function resetDocTypeOptions() {
+        settingsSendMethod.find('option').each(function() {
+            $(this).prop('disabled', false);
+        });
+    }
 
     // Hide or show profile email preferences fields
 

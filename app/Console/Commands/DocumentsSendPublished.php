@@ -216,7 +216,7 @@ class DocumentsSendPublished extends Command
                             /***/
                             // Readout user fax options and send by executing faxing commands
                             // Faxing command: /usr/bin/brpcfax -o fax-number=<number-with-leading-zeros>  <filename>
-                            $process = new Process('/usr/bin/brpcfax -o fax-number='.$emailSetting->recievers_text.' '. $documentPdf['filePath']);
+                            $process = new Process('/usr/bin/brpcfax -o fax-number=0'.$emailSetting->recievers_text.' '. $documentPdf['filePath']);
                             $process->run();
                             
                             // Executes after the command finishes

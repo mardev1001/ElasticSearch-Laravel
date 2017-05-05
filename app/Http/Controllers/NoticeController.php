@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Artisan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use Carbon\Carbon;
 use App\Helpers\ViewHelper;
 
 use App\Http\Requests;
@@ -74,13 +75,16 @@ class NoticeController extends Controller
     public function store(Request $request)
     {
         // dd($request->all() );
-        // dd( date( "h:i:s", strtotime($request->get('note_time') ) ) );
+        // dd(  strtotime($request->get('note_time') ) );
+        dd( Carbon::today().' '.$request->get('note_time'));
+        dd( Carbon::createFromFormat(Carbon::today().' '.$request->get('note_time')) );
         $filename = '';
         $path = $this->pdfPath;
     
         $request->merge(['document_type_id' => DocumentType::NOTIZEN, 'user_id' => Auth::user()->id,
         'owner_user_id' => Auth::user()->id,'name' => $request->get('betreff'),
         'name_long' => $request->get('betreff') ]);
+        
         $note = Document::create($request->all() );
         $model = $note;
         

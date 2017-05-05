@@ -65,7 +65,7 @@ return [
     'betreff' => 'Betreff',
     'print' => 'drucken',
     'toAkten' => 'zu Akte hinzufügen',
-    'createAkten' => 'neue Akte anlegen',
+    // 'createAkten' => 'neue Akte anlegen',
     'deactivateAkten' => 'Notiz archivieren',
     'back' => 'Zurück',
     'save' => 'Speichern',
