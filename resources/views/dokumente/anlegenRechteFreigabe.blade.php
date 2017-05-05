@@ -248,6 +248,7 @@
                                     <div>
                                         {{ trans('documentForm.email') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 1) }} <br>
                                         {{ trans('documentForm.email-attachment') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 2) }} <br>
+                                        {{ trans('documentForm.fax') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 3) }} <br>
                                         {{ trans('documentForm.mail') }}: {{ ViewHelper::countSendingRecievers($variant->document_id, $variant->variant_number, 4) }} <br>
                                         
                                         @if($data->pdf_upload)

@@ -50,7 +50,7 @@
             
             <div class="col-md-4 col-lg-3">
                 <div class="form-group">
-                   {!! ViewHelper::setInput('date', $data, old('date'), trans('juristenPortal.date'), trans('juristenPortal.date'), true, 'text', ['datetimepicker']) !!}
+                   {!! ViewHelper::setInput('note_date', $data, old('note_date'), trans('juristenPortal.date'), trans('juristenPortal.date'), true, 'text', ['datetimepicker']) !!}
                 </div>
             </div>
             

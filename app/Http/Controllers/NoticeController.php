@@ -73,10 +73,11 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-         
+        // dd($request->all() );
+        // dd( date( "h:i:s", strtotime($request->get('note_time') ) ) );
         $filename = '';
         $path = $this->pdfPath;
-        
+    
         $request->merge(['document_type_id' => DocumentType::NOTIZEN, 'user_id' => Auth::user()->id,
         'owner_user_id' => Auth::user()->id,'name' => $request->get('betreff'),
         'name_long' => $request->get('betreff') ]);

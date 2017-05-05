@@ -29,7 +29,7 @@ class Document extends Model
     ]; //whitelist
     
     
-    protected $dates = ['created_at', 'updated_at', 'date_published','published_at','note_date','note_time'];
+    protected $dates = ['created_at', 'updated_at', 'date_published','published_at','note_date'];
      
     public function getDatePublishedAttribute($value)
     {
@@ -46,6 +46,7 @@ class Document extends Model
         else
             $this->attributes['date_published'] = Carbon::parse($value);
     }
+    
     
     public function getPublishedAtAttribute($value)
     {

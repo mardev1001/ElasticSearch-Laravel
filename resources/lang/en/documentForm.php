@@ -21,6 +21,7 @@ return [
     'adressat' => 'EMPFÄNGER',
     'subject' => 'Betreff',
     'pdfUpload' => 'PDF Rundschreiben',
+    'onlyPDF' => 'Nur PDF Daten sind erlaubt.',
     'documents' => 'Dokument',
     'documentCreateSuccess' => 'Dokument wurde erfolgreich erstellt.',
     'documentEditSuccess' => 'Dokument wurde aktualisiert.',
