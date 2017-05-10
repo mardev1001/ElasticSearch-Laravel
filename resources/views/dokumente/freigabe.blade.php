@@ -407,7 +407,7 @@
        <!-- variable for expanding document sidebar-->
        <script type="text/javascript">
             var documentType = "{{ $document->documentType->name}}";
-           
+            var documentSlug = "{{ str_slug($document->documentType->name)}}";
               
        </script>
        

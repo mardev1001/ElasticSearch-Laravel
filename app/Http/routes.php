@@ -15,6 +15,7 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('kontaktanfragen', 'HomeController@contactIndex');
     Route::get('kontaktanfragen/suche', 'HomeController@contactSearch');
     Route::resource('tipps-und-tricks', 'TippsAndTricksController');
+    
     Route::get('neptun-verwaltung', 'HomeController@neptunManagment');
     Route::get('/download/{path_part_one}/{path_part_two}', 'HomeController@download');
     Route::get('/open/{path_part_one}/{path_part_two}', 'HomeController@open');
@@ -58,6 +59,7 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::get('papierkorb/download/{id}', 'DocumentController@downloadTrash');
     Route::post('papierkorb/manage', 'DocumentController@destroyTrash');
     Route::resource('dokumente', 'DocumentController'); //documente editor in CRUD
+    
     Route::post('comment/{id}', 'DocumentController@saveComment');
     Route::get('comment-delete/{comment_id}/{document_id}', 'DocumentController@deleteComment');
     Route::post('mandanten/export/xls', 'TelephoneListController@xlsExport');
@@ -219,13 +221,14 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::resource('rechtsablage-kategorien', 'JuristenPortalCategoryController');
     
     /* Beratungsdokument Resources */
-    Route::get('beratungsdokumente/create', 'BeratungController@create');
+    Route::resource('beratungsdokumente', 'BeratungDocumentsController');
     Route::get('beratung-kategorien/alle', 'BeratungController@singlePageAll');
     Route::resource('beratung-kategorien', 'BeratungController');
     
     /* Notice Resources */
     Route::get('notiz/upload/{id}', 'NoticeController@uploadView');
     Route::post('notiz/upload', 'NoticeController@upload');
+    Route::get('notiz/suche', 'NoticeController@search');
     Route::resource('notiz', 'NoticeController');
     /* End Notice resources */
 

@@ -3,4 +3,5 @@
 return [
     
     'datum' => 'Erstellungsdatum',
+    'dokumentArt' => 'Dokumentart',
 ];

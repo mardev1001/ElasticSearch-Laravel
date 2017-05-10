@@ -32,7 +32,7 @@ return [
     'rollenverwatung'       => 'Rollenverwaltung',
     'type'                  => 'Typ',
     'types'                 => 'Typen',
-    'favorites'             => 'Favoriten',
+    'favorites'             => 'Favoritenverwaltung',
     'kategorieverwaltung'   => 'Kategorie Verwaltung',
     'search'                => 'Suche',
     'advanced_search'       => 'erweiterte Suche',

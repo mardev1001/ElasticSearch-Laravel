@@ -47,7 +47,29 @@ class NoticeController extends Controller
      */
     public function index()
     {
-        //
+        $searchString = '';
+        $documents =  Document::where('document_type_id', DocumentType::NOTIZEN)
+        ->orderBy('created_at', 'desc')->paginate(10, ['*'], 'notiz');
+        
+        $documentsTree = $this->document->generateTreeview($documents,  array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
+        'showAttachments' => true, 'showHistory' => true));
+        return view('notiz.index',compact('documents','documentsTree','searchString') );
+    
+    }
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $searchString = $request->get('search');
+        $documents =  Document::where('document_type_id', DocumentType::NOTIZEN)->where('name','LIKE','%'.$request->get('search').'%')
+        ->orderBy('created_at', 'desc')->paginate(10, ['*'], 'notiz');
+        $documentsTree = $this->document->generateTreeview($documents, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true));
+        
+        return view('notiz.index',compact('documents','documentsTree','searchString'));
     }
 
     /**

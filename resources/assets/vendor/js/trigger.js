@@ -155,6 +155,11 @@ $(function() {
         $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
 
     }
+    else if (url.href.indexOf('beratungsportal') != -1 && url.href.indexOf('meta-info') != -1) {
+        $('a[href$="/beratungsportal"]').removeClass('active').parent('ul').removeClass('in');
+        $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
+
+    }
     else if (url.href.indexOf('beratungsportal') != -1 && url.href.indexOf('kategorien') == -1) {
         setTimeout(function() {
             $('a[href$="/beratungsportal"]').closest('li').find('.nav-second-level li.active').removeClass('active');

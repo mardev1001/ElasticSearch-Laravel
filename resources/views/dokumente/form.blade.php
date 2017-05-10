@@ -75,6 +75,7 @@
             <!-- input box-->
             <div class="col-md-4 col-lg-4"> 
                 <div class="form-group">
+                  
                         {!! ViewHelper::setInput('date_published',$data,old('date_published'),trans('documentForm.datePublished'), trans('documentForm.datePublished') , true, 'text' , ['datetimepicker']  ) !!}
                     
                 </div>   
@@ -114,7 +115,12 @@
                     <label class="control-label"> {{ trans('documentForm.user') }} *</label>
                     <select name="user_id" class="form-control select" data-placeholder="{{ strtoupper( trans('documentForm.user') ) }}" required>
                         @foreach( $documentUsers as $documentUser )
-                            <option value="{{$documentUser->id}}" @if( isset($data->user_id) && $documentUser->id == $data->user_id) selected @endif >
+                            <option value="{{$documentUser->id}}" 
+                            @if( isset($data->user_id) && $documentUser->id == $data->user_id) 
+                                selected 
+                            @elseif(Request::is('*/create') && Auth::user()->id == $documentUser->id)
+                                selected 
+                            @endif >
                                 {{ $documentUser->last_name }} {{ $documentUser->first_name }}  
                             </option>
                         @endforeach

@@ -765,6 +765,22 @@ class ViewHelper
     }
 
     /**
+     * Get all user by role ids going trough the MandantUserRole table, MandatUser and finally user
+     *
+     * @param array $roles
+     *
+     * @return collection $users
+     */
+    public static function getUserCollectionByRole($roles)
+    {
+        $userMandantRoles = MandantUserRole::whereIn('role_id', $roles )->pluck('mandant_user_id')->toArray();
+        $mandantUsers = MandantUser::select('user_id')->whereIn('id',$userMandantRoles)->distinct()->get();
+        $users = User::whereIn('id',$mandantUsers->toArray() )->orderBy('last_name', 'asc')->get();
+        
+        return $users;
+    }
+
+    /**
      * Universal user has permissions check.
      *
      * @param array $userArray
@@ -1818,13 +1834,15 @@ class ViewHelper
                     // do not add the user if he is in $usersInternal array
                     if ($mUser->active && !in_array($mUser->id, array_pluck($usersInternal, 'user_id'))) {
                         // Check for phone roles
-                        if ($mr->role->phone_role || $mr->role->mandant_role) {
-                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
+                        if (property_exists($mr->role, 'phone_role') || property_exists($mr->role, 'mandant_role')) {
+                            if (property_exists($mandant, 'id') && property_exists($mr->role, 'id')) {
+                                $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
                                 ->whereIn('mandant_id', array_pluck($myMandants, 'id'))->where('mandant_id_edit', $mandant->id)
                                 ->groupBy('role_id', 'user_id', 'mandant_id_edit')->get();
                             // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
-                            if (!count($internalRole)) {
-                                $userArr[] = $mandant->users[$k2]->id;
+                                if (!count($internalRole) && property_exists($mandant->users[$k2], 'id')) {
+                                    $userArr[] = $mandant->users[$k2]->id;
+                                }
                             }
                         }
                     }
@@ -1841,8 +1859,10 @@ class ViewHelper
             $searchSuggestions[] = $m->mandant_number;
             $searchSuggestions[] = $m->kurzname;
             foreach ($m->usersInternal as $ui) {
-                $searchSuggestions[] = $ui->user->first_name;
-                $searchSuggestions[] = $ui->user->last_name;
+                if (is_object($ui->user)) {
+                    $searchSuggestions[] = $ui->user->first_name;
+                    $searchSuggestions[] = $ui->user->last_name;
+                }
             }
             foreach ($m->usersInMandants as $um) {
                 $searchSuggestions[] = $um->first_name;

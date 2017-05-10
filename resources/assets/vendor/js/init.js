@@ -18,16 +18,36 @@ $(function() {
 
     $(".select").chosen({});
 
-    $(".datetimepicker").datetimepicker({
-        locale: 'de',
-        format: 'DD.MM.YYYY',
-        showTodayButton: true,
-        showClear: true,
-        widgetPositioning: {
-            horizontal: 'auto',
-            vertical: 'bottom'
-        }
-    });
+
+    var datePickerUrl = window.location;
+    if (datePickerUrl.href.indexOf('dokumente') != -1 && datePickerUrl.href.indexOf('create') != -1) {
+        dateToday = new Date();
+        $(".datetimepicker").datetimepicker({
+            locale: 'de',
+            defaultDate: dateToday,
+            format: 'DD.MM.YYYY',
+            showTodayButton: true,
+            showClear: true,
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+        });
+    }
+    else {
+        //normal datepicker
+        $(".datetimepicker").datetimepicker({
+            locale: 'de',
+            format: 'DD.MM.YYYY',
+            showTodayButton: true,
+            showClear: true,
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+        });
+    }
+
     $(".datetimepicker.null").datetimepicker({
         locale: 'de',
         format: 'DD.MM.YYYY',

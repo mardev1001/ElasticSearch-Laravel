@@ -51,8 +51,8 @@
                                                     title="{{ trans('telefonListeForm.search') }}">
                                                 <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
                                             </button>
-                                            
-                                            
+
+
                                         </span>
                                     </div>
                                     @if(isset($searchParameter))
@@ -85,8 +85,8 @@
                                                     title="{{ trans('telefonListeForm.search') }}">
                                                 <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
                                             </button>
-                                            
-                                            
+
+
                                         </span>
                             </div>
                             @if(isset($searchParameter))
@@ -147,7 +147,7 @@
                                         @endif
                                     </a>
                                 </h4>
-                            
+
                             <span class="panel-options col-lg-2 col-md-4 no-margin-top">
                                 <span class="pull-right">
                                     <a href="#" data-toggle="modal" data-target="#details{{$mandant->id}}"
@@ -182,32 +182,35 @@
                                         <tbody>
                                         {{-- dd(array_pluck($mandant->usersInternal,'role_id')) --}}
                                         @foreach($mandant->usersInternal as $internal)
-                                            <tr>
-                                                <td>
-                                                    @if(isset($internal->user->picture) && $internal->user->picture)
-                                                        <img class="img-responsive img-phonelist"
-                                                             src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
-                                                    @else
-                                                        <img class="img-responsive img-phonelist"
-                                                             src="{{url('/img/user-default.png')}}"/>
+                                            @if( is_object($internal->user))
+                                                <tr>
+                                                    <td>
+                                                        @if(isset($internal->user->picture) && $internal->user->picture)
+                                                            <img class="img-responsive img-phonelist"
+                                                                 src="{{url('/files/pictures/users/'. $internal->user->picture)}}"/>
+                                                        @else
+                                                            <img class="img-responsive img-phonelist"
+                                                                 src="{{url('/img/user-default.png')}}"/>
+                                                        @endif
+                                                    </td>
+
+                                                    <td>{{ $internal->user->title }}</td>
+                                                    <td>{{ $internal->user->first_name }}</td>
+                                                    <td>{{ $internal->user->last_name }}</td>
+                                                    {{-- <td>{{ $internal->role->name }}</td> --}}
+                                                    <td>{{ $internal->user->abteilung }}</td>
+                                                    <td>{{ $internal->user->phone }}</td>
+
+                                                    @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
+                                                    <td>{{ $internal->user->phone_short }}</td>
                                                     @endif
-                                                </td>
-                                                <td>{{ $internal->user->title }}</td>
-                                                <td>{{ $internal->user->first_name }}</td>
-                                                <td>{{ $internal->user->last_name }}</td>
-                                                {{-- <td>{{ $internal->role->name }}</td> --}}
-                                                <td>{{ $internal->user->abteilung }}</td>
-                                                <td>{{ $internal->user->phone }}</td>
-                                                
-                                                @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
-                                                <td>{{ $internal->user->phone_short }}</td>
-                                                @endif
-                                                
-                                                <td>{{ $internal->user->phone_mobile }}</td>
-                                                <td>{{ $internal->user->email_work }}</td>
-                                                <td>{{ $internal->user->email_private }}</td>
-                                                <td>{{ $internal->user->position }}</td>
-                                            </tr>
+
+                                                    <td>{{ $internal->user->phone_mobile }}</td>
+                                                    <td>{{ $internal->user->email_work }}</td>
+                                                    <td>{{ $internal->user->email_private }}</td>
+                                                    <td>{{ $internal->user->position }}</td>
+                                                </tr>
+                                            @endif
                                         @endforeach
 
                                         @foreach($mandant->usersInMandants as $user)
@@ -265,11 +268,11 @@
                                                     {{ $user->abteilung }}
                                                 </td>
                                                 <td>{{ $user->phone }}</td>
-                                                
+
                                                 @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                                 <td>{{ $user->phone_short }}</td>
                                                 @endif
-                                                
+
                                                 <td>{{ $user->phone_mobile }}</td>
                                                 <td>{{ $user->email_work }}</td>
                                                 <td>{{ $user->email_private }}</td>
@@ -345,21 +348,21 @@
                                             <td>{{ $internal->user->title }}</td>
                                             <td>{{ $internal->user->first_name }}</td>
                                             <td>{{ $internal->user->last_name }}</td>
-                                            
+
                                             {{--
                                             <td>
                                                 ({{$internal->mandant->mandant_number}})
                                                 {{ $internal->mandant->kurzname }}
                                             </td>
                                             --}}
-                                            
+
                                             <td>{{ $internal->user->abteilung }}</td>
                                             <td>{{ $internal->user->phone }}</td>
-                                            
+
                                             @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                             <td>{{ $internal->user->phone_short }}</td>
                                             @endif
-                                            
+
                                             <td>{{ $internal->user->phone_mobile }}</td>
                                             <td>{{ $internal->user->email_work }}</td>
                                             <td>{{ $internal->user->email_private }}</td>
@@ -390,11 +393,11 @@
                                             --}}
                                             <td>{{ $user->abteilung }}</td>
                                             <td>{{ $user->phone }}</td>
-                                            
+
                                             @if(ViewHelper::getMandantIsNeptun(Auth::user()->id))
                                             <td>{{ $user->phone_short }}</td>
                                             @endif
-                                            
+
                                             <td>{{ $user->phone_mobile }}</td>
                                             <td>{{ $user->email_work }}</td>
                                             <td>{{ $user->email_private }}</td>

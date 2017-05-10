@@ -20,7 +20,7 @@ class JuristCategory extends Model
     public function juristCategories(){
         return $this->hasMany('App\JuristCategory','jurist_category_parent_id','id')->where('beratung',0);
     }
-    public function juristCategoriesActive(){
+    public function juristCategoriesActive(){//rechablage
         return $this->hasMany('App\JuristCategory','jurist_category_parent_id','id')->where('active',1)->where('beratung',0);
     }
     
@@ -40,6 +40,10 @@ class JuristCategory extends Model
     }
     
     public function hasAllDocuments(){
+        return $this->hasMany('App\Document','jurist_category_id','id');
+    }
+    
+    public function juristCategoryMetaFields(){
         return $this->hasMany('App\Document','jurist_category_id','id');
     }
   

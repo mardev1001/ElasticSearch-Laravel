@@ -10,7 +10,7 @@ return [
     'benutzer'  => 'Benutzer',
     'adressaten' => 'Empfänger',
     'trash' => 'Papierkorb',
-    'favorites' => 'Favoriten',//Meine Favoriten
+    'favorites' => 'Favoritenverwaltung',//Meine Favoriten
     'mandantenverwaltung' => 'Mandantenverwaltung',
     'qmr' => 'QM-Rundschreiben',
     'attachment' => 'Dokument anlegen - Anlagen',

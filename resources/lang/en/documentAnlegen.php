@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 return [
     'documentType' => 'Dokument-Typ',
@@ -10,7 +10,7 @@ return [
     'datePublished' => 'Veröffentlichungstermin',
     'dateExpired' => 'Verfallsdatum',
     'isoCategory' => 'Kategorie bei ISO-Dokumenten',
-    'showName' => 'Namen nicht anzeigen',
+    'showName' => 'Empfänger nicht anzeigen',
     'adressat' => 'adressat_id',
     'subject' => 'Betreff',
     'pdfUpload' => 'PDF upload',

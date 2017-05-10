@@ -8,6 +8,8 @@ use App\Http\Requests;
 use App\Helpers\ViewHelper;
 use App\JuristCategory;
 use App\Document;
+use App\Role;
+use App\DocumentStatus;
 
 use App\Http\Repositories\DocumentRepository;
 
@@ -59,10 +61,7 @@ class BeratungController extends Controller
      */
     public function create()
     {
-        if (!ViewHelper::universalHasPermission(array(6, 35))) {
-            return redirect('/')->with('message', trans('documentForm.noPermission'));
-        }
-        return view('formWrapper');
+        
     }
 
     /**
@@ -125,6 +124,7 @@ class BeratungController extends Controller
      */
     public function edit($id)
     {
+        
     }
 
     /**

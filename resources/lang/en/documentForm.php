@@ -17,7 +17,7 @@ return [
     'datePublished' => 'Veröffentlichungstermin',
     'dateExpired' => 'Verfallsdatum',
     'isoCategory' => 'Kategorie ISO-Dokument',
-    'showName' => 'Namen nicht anzeigen',
+    'showName' => 'Empfänger nicht anzeigen',
     'adressat' => 'EMPFÄNGER',
     'subject' => 'Betreff',
     'pdfUpload' => 'PDF Rundschreiben',

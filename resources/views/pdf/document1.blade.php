@@ -349,18 +349,20 @@
           <div class="content-wrapper">
               <div class="row ">
                     <div class="document-title-row">
-                        @if( $document->adressat_id != null )
+                        @if( $document->adressat_id != null && $document->show_name != 1 )
                           <h4 class="document-adressat">{{$document->documentAdressats->name}}</h4>
                         @endif
                     </div>
-                    <div class="document-date-row">
-                        <div class="date-div"><p>
-                            <span class="right-correction">{{$document->date_published}}</span>
+                  <div class="document-date-row">
+                      <div class="date-div"><p>
+                           @if( $document->published_at != null)
+                              <span class="right-correction">{{$document->published_at}}</span>
+                          @elseif( $document->date_published != null)
+                              <span class="right-correction">{{$document->date_published}}</span>
+                          @endif
                           <br/>
-                          @if($document->show_name != 1) 
                               {{-- Inverted at the end of the project --}}
                               {{ $document->user->short_name }}
-                           @endif
                           </p></div>
                   </div>
                   <div class="clearfix"></div>
