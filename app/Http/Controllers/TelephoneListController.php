@@ -15,6 +15,7 @@ use App\User;
 use App\UserSettings;
 use App\Mandant;
 use App\MandantUser;
+use App\MandantUserRole;
 use App\MandantInfo;
 use App\InternalMandantUser;
 
