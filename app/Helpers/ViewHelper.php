@@ -1878,10 +1878,20 @@ class ViewHelper
                 }
             }
             if ($m->id == 1) {
-                // dd($userInMandantExists);
-                $availableRoles = Role::whereNotIn('id', $roleExists)->where('phone_role', 1)->pluck('id')->toArray();
-                $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
-                $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereNotIn('user_id', $userInMandantExists)->get();
+                $viewAllNeptunPhoneRoles = false;
+                if (self::universalHasPermission() == true || in_array(1, self::getUserMandants(Auth::user()->id)->toArray())) {
+                    $viewAllNeptunPhoneRoles = true;
+                }
+                if ($viewAllNeptunPhoneRoles == true) {
+                    $availableRoles = Role::where('phone_role', 1)->pluck('id')->toArray();
+                    $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
+                    $mandantUsers = MandantUser::where('mandant_id', 1)->whereIn('id', $mandantUserRoles)->get();
+                } else {
+                    $availableRoles = Role::whereNotIn('id', $roleExists)->where('phone_role', 1)->pluck('id')->toArray();
+                    $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
+                    $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereNotIn('user_id', $userInMandantExists)->get();
+                }
+
                 // dd($mandantUsers->pluck('user_id')->toArray());
                 foreach ($mandantUsers as $mu) {
                     if (!is_null($mu->user)) {

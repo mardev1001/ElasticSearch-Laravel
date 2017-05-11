@@ -31,7 +31,7 @@ class TelephoneListController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+     public function index()
      {
          $partner = false; // Partner user/mandant check var
         $visible = $this->utility->getPhonelistSettings();
@@ -119,12 +119,22 @@ class TelephoneListController extends Controller
                         $userInMandantExists[] = $um->id;
                     }
                 }
-
-                $availableRoles = Role::whereNotIn('id', $roleExists)->where('phone_role', 1)->pluck('id')->toArray();
-                $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
-                $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereNotIn('user_id', $userInMandantExists)->get();
+                $viewAllNeptunPhoneRoles = false;
+                // dd(ViewHelper::getUserMandants(Auth::user()->id));
+                if (ViewHelper::universalHasPermission() == true || in_array(1, ViewHelper::getUserMandants(Auth::user()->id)->toArray())) {
+                    $viewAllNeptunPhoneRoles = true;
+                }
+                if ($viewAllNeptunPhoneRoles == true) {
+                    $availableRoles = Role::where('phone_role', 1)->pluck('id')->toArray();
+                    $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
+                    $mandantUsers = MandantUser::where('mandant_id', 1)->whereIn('id', $mandantUserRoles)->get();
+                } else {
+                    $availableRoles = Role::whereNotIn('id', $roleExists)->where('phone_role', 1)->pluck('id')->toArray();
+                    $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
+                    $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereIn('user_id', $userInMandantExists)->get();
+                }
             }
-            if(isset($mandantUsers) && count($mandantUsers)){
+            if (isset($mandantUsers) && count($mandantUsers)) {
                 $mandant->usersInMandants = $mandant->users->whereIn('id', $mandantUsers->pluck('user_id')->toArray());
             }
         }
