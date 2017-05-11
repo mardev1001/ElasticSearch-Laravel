@@ -15,7 +15,7 @@ use App\User;
 use App\UserSettings;
 use App\Mandant;
 use App\MandantUser;
-use App\MandantUserRole;
+use App\MandantUserRole; 
 use App\MandantInfo;
 use App\InternalMandantUser;
 
@@ -124,9 +124,8 @@ class TelephoneListController extends Controller
                 $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
                 $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereNotIn('user_id', $userInMandantExists)->get();
             }
-            $mandant->usersInMandants = $mandant->users->whereIn('id', $mandantUsers->pluck('user_id')->toArray());
-            if ($mandant->id == 1) {
-                // dd($mandant->usersInMandants->pluck(array('id'))->toArray());
+            if(isset($mandantUsers) && count($mandantUsers)){
+                $mandant->usersInMandants = $mandant->users->whereIn('id', $mandantUsers->pluck('user_id')->toArray());
             }
         }
 
