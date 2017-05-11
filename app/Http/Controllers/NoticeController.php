@@ -52,7 +52,7 @@ class NoticeController extends Controller
         ->orderBy('created_at', 'desc')->paginate(10, ['*'], 'notiz');
         
         $documentsTree = $this->document->generateTreeview($documents,  array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
-        'showAttachments' => true, 'showHistory' => true));
+        'showAttachments' => true, 'temporaryNull' => true));
         return view('notiz.index',compact('documents','documentsTree','searchString') );
     
     }
@@ -67,7 +67,8 @@ class NoticeController extends Controller
         $searchString = $request->get('search');
         $documents =  Document::where('document_type_id', DocumentType::NOTIZEN)->where('name','LIKE','%'.$request->get('search').'%')
         ->orderBy('created_at', 'desc')->paginate(10, ['*'], 'notiz');
-        $documentsTree = $this->document->generateTreeview($documents, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true));
+        $documentsTree = $this->document->generateTreeview($documents, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
+        'showAttachments' => true, 'showHistory' => true,'temporaryNull'=>true));
         
         return view('notiz.index',compact('documents','documentsTree','searchString'));
     }

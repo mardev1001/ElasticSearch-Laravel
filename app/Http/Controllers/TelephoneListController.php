@@ -31,13 +31,13 @@ class TelephoneListController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $partner = false; // Partner user/mandant check var
+     {
+         $partner = false; // Partner user/mandant check var
         $visible = $this->utility->getPhonelistSettings();
         // dd($visible);
         // $mandants = array();
         $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
-        $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(), 'mandant_id'))->get();
+         $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(), 'mandant_id'))->get();
         // dd($myMandants);
 
         if (ViewHelper::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1) {
@@ -47,11 +47,11 @@ class TelephoneListController extends Controller
             $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
         }
 
-        foreach ($myMandants as $tmp) {
-            if (!$mandants->contains($tmp)) {
-                $mandants->prepend($tmp);
-            }
-        }
+         foreach ($myMandants as $tmp) {
+             if (!$mandants->contains($tmp)) {
+                 $mandants->prepend($tmp);
+             }
+         }
 
         // Sort by Mandant No.
         $mandants = array_values(array_sort($mandants, function ($value) {
@@ -101,23 +101,38 @@ class TelephoneListController extends Controller
             // if($mandant->id == 1) dd($usersInternal);
 
             $mandant->usersInternal = $usersInternal;
+
             $mandant->usersInMandants = $mandant->users->whereIn('id', $userArr);
+
+            $userInMandantExists = array();
+            $roleExists = array();
+            if ($mandant->id == 1) {
+                foreach ($mandant->usersInternal as $ui) {
+                    if (!is_null($ui->user)) {
+                        $userInMandantExists[] = $ui->user_id;
+                        $roleExists[] = $ui->role_id;
+                    }
+                }
+                foreach ($mandant->usersInMandants as $um) {
+                    if (!is_null($um)) {
+                        $userInMandantExists[] = $ui->user_id;
+                    }
+                }
+
+                $availableRoles = Role::whereNotIn('id', $roleExists)->where('phone_role', 1)->pluck('id')->toArray();
+                $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
+                $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereNotIn('user_id', $userInMandantExists)->get();
+            }
+            $mandant->usersInMandants = $mandant->users->whereIn('id', $mandantUsers->pluck('user_id')->toArray());
+            if ($mandant->id == 1) {
+                // dd($mandant->usersInMandants->pluck(array('id'))->toArray());
+            }
         }
 
-        // // Search suggestion array for telephone list select box
-        // $searchSuggestions = array();
-        // foreach ($mandants as $m) {
-        //     $name = $m->mandant_number ." - ". $m->kurzname;
-        //     $searchSuggestions[$m->mandant_number] = $name;
-        //     foreach ($m->usersInternal as $ui) $searchSuggestions[$ui->user->first_name] = $ui->user->first_name ." ". $ui->user->last_name;
-        //     foreach ($m->usersInMandants as $um) $searchSuggestions[$um->first_name] = $um->first_name ." ". $um->last_name;
-        // }
-        // $searchSuggestions = array_unique($searchSuggestions);
-        // ksort($searchSuggestions);
-        $searchSuggestions = ViewHelper::getTelephonelistSearchSuggestions();
+         $searchSuggestions = ViewHelper::getTelephonelistSearchSuggestions();
 
-        return view('telefonliste.index', compact('mandants', 'visible', 'partner', 'searchSuggestions'));
-    }
+         return view('telefonliste.index', compact('mandants', 'visible', 'partner', 'searchSuggestions'));
+     }
 
     /**
      * Show the form for creating a new resource.
