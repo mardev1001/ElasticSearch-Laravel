@@ -1799,12 +1799,12 @@ class ViewHelper
     public static function getTelephonelistSearchSuggestions()
     {
         $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
-        $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(), 'mandant_id'))->get();
+        $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(), 'mandant_id'))->orWhere('id', 1)->get();
 
         if (self::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1) {
-            $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
+            $mandants = Mandant::where('id', 1)->orWhere('active', 1)->orderBy('mandant_number')->get();
         } else {
-            $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
+            $mandants = Mandant::where('id', 1)->orWhere('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
         }
 
         foreach ($myMandants as $tmp) {
@@ -1817,7 +1817,6 @@ class ViewHelper
         $mandants = array_values(array_sort($mandants, function ($value) {
             return $value['mandant_number'];
         }));
-
         foreach ($mandants as $k => $mandant) {
             $userArr = array();
             $usersInternal = array();
@@ -1828,23 +1827,19 @@ class ViewHelper
             foreach ($internalMandantUsers as $user) {
                 $usersInternal[] = $user;
             }
-
             foreach ($mandant->users as $k2 => $mUser) {
                 foreach ($mUser->mandantRoles as $mr) {
                     // do not add the user if he is in $usersInternal array
                     if ($mUser->active && !in_array($mUser->id, array_pluck($usersInternal, 'user_id'))) {
                         // Check for phone roles
-                        if (property_exists($mr->role, 'phone_role') || property_exists($mr->role, 'mandant_role')) {
-                            if (property_exists($mandant, 'id') && property_exists($mr->role, 'id')) {
                                 $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
                                 ->whereIn('mandant_id', array_pluck($myMandants, 'id'))->where('mandant_id_edit', $mandant->id)
                                 ->groupBy('role_id', 'user_id', 'mandant_id_edit')->get();
+
                             // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
-                                if (!count($internalRole) && property_exists($mandant->users[$k2], 'id')) {
+                                if (!count($internalRole)) {
                                     $userArr[] = $mandant->users[$k2]->id;
                                 }
-                            }
-                        }
                     }
                 }
             } // end second foreach
@@ -1864,6 +1859,7 @@ class ViewHelper
                     $searchSuggestions[] = $ui->user->last_name;
                 }
             }
+
             foreach ($m->usersInMandants as $um) {
                 $searchSuggestions[] = $um->first_name;
                 $searchSuggestions[] = $um->last_name;

@@ -12,7 +12,7 @@
 
     <fieldset class="telefonliste forms">
 
-        <!--<div class="row">
+        <div class="row">
 
             {{ Form::open(['action' => 'SearchController@searchPhoneList', 'method' => 'POST']) }}
 
@@ -49,7 +49,7 @@
                                         <span class="custom-input-group-btn">
                                             <button type="submit" class="btn btn-primary no-margin-bottom"
                                                     title="{{ trans('telefonListeForm.search') }}">
-                                                <!--<i class="fa fa-search"></i>--><!--{{ trans('telefonListeForm.search') }}
+                                                <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
                                             </button>
 
 
@@ -70,7 +70,7 @@
                                                 <a href="#" class="btn btn-primary" data-toggle="modal"
                                                    data-target="#darstellung">
                                                     <!--<i class="fa fa-eye"></i> -->
-                                                    <!--{{ trans('telefonListeForm.appearance') }}
+                                                    {{ trans('telefonListeForm.appearance') }}
                                                 </a>
                                             </span>
                                     </div>
@@ -79,11 +79,11 @@
                             </div><!-- .row -->
 
 
-                           <!-- <div class="col-xs-4 hidden-md hidden-lg">
+                            <div class="col-xs-4 hidden-md hidden-lg">
                                         <span class="custom-input-group-btn">
                                             <button type="submit" class="btn btn-primary no-margin-bottom"
                                                     title="{{ trans('telefonListeForm.search') }}">
-                                                <!--<i class="fa fa-search"></i>--><!--{{ trans('telefonListeForm.search') }}
+                                                <!--<i class="fa fa-search"></i>-->{{ trans('telefonListeForm.search') }}
                                             </button>
 
 
@@ -114,7 +114,7 @@
 
             {{ Form::close() }}
 
-        </div>-->
+        </div>
 
     </fieldset>
 
