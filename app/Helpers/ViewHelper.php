@@ -1873,7 +1873,7 @@ class ViewHelper
                     $searchSuggestions[] = $um->first_name;
                     $searchSuggestions[] = $um->last_name;
                     if ($m->id == 1) {
-                        $userInMandantExists[] = $ui->user_id;
+                        $userInMandantExists[] = $um->id;
                     }
                 }
             }

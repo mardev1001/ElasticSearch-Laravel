@@ -116,7 +116,7 @@ class TelephoneListController extends Controller
                 }
                 foreach ($mandant->usersInMandants as $um) {
                     if (!is_null($um)) {
-                        $userInMandantExists[] = $ui->user_id;
+                        $userInMandantExists[] = $um->id;
                     }
                 }
 
