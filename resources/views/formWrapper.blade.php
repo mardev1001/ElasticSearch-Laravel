@@ -41,7 +41,7 @@
                     <div class="row">
                         <div class="col-xs-12 form-buttons">
                             <button class="btn btn-primary no-margin-bottom " type="submit">{{ $formWrapperData->buttonMethod }}</button>
-                            @yield('editApproval')
+                            
                         </div>
                     </div>
                 @yield('afterButtons')

@@ -58,7 +58,8 @@
                                         @foreach($isoCategories as $isoCategory)
                                             @if($isoCategory->parent)
                                             <li>
-                                                <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                                <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }} 
+                                                @if( count($isoCategory->isIsoCategoryParent) )<span class="fa arrow"></span>@endif</a>
                                                 <ul class="nav nav-fourth-level">
                                                 @foreach($isoCategories as $isoCategoryChild)
                                                     @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
@@ -117,7 +118,8 @@
                                                 @foreach($isoCategories as $isoCategory)
                                                     @if($isoCategory->parent)
                                                     <li>
-                                                        <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}<span class="fa arrow"></span></a>
+                                                        <a href="{{ url('iso-dokumente/'. $isoCategory->slug) }}">{{ $isoCategory->name }}
+                                                        @if( count($isoCategory->isIsoCategoryParent) )<span class="fa arrow"></span>@endif</a>
                                                         <ul class="nav nav-fourth-level">
                                                         @foreach($isoCategories as $isoCategoryChild)
                                                             @if($isoCategoryChild->iso_category_parent_id == $isoCategory->id)
@@ -243,7 +245,7 @@
             <!--notiz-->
             @if( ViewHelper::universalHasPermission( array(35, 36), false ) == true ) 
                 <li class="">
-                    <a href="{{ url('#') }}">{{ ucfirst(trans('juristenPortal.createNotes')) }}</a>
+                    <a href="{{ url('notiz/create') }}">{{ ucfirst(trans('juristenPortal.createNotes')) }}</a>
                     <!--<a href="{{ url('beratungsportal/notiz') }}">{{ ucfirst(trans('navigation.notes')) }}</a>-->
                 </li>
             @endif
@@ -268,11 +270,11 @@
                                 <!--</ul>    -->
                             </li><!--end Wiedervorlage -->
                             <li>
-                                <a href="{{ url('#') }}">@lang('juristenPortal.notes')<span class="fa arrow"></span></a>
+                                <a href="{{ url('notiz') }}">@lang('juristenPortal.notes')<span class="fa arrow"></span></a>
                                 
                                 <ul class="nav nav-third-level">
                                     <li>
-                                        <a href="{{ url('notice/create') }}">@lang('juristenPortal.notesCreate')</a>
+                                        <a href="{{ url('notiz/create') }}">@lang('juristenPortal.notesCreate')</a>
                                     </li>
                                 </ul>    
                             </li><!--end notiz -->

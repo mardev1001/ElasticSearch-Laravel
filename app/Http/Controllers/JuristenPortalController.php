@@ -162,8 +162,7 @@ class JuristenPortalController extends Controller
         'showAttachments' => true, 'showHistory' => true));
        
         $documentsAll = $query->paginate(10, ['*'], 'alle-dokumente');
-        $documentsAllTree = $this->document->generateTreeview($documentsAll, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
-        'showAttachments' => true, 'showHistory' => true));
+        $documentsAllTree = $this->document->generateTreeview($documentsAll, array('pageHome' => true,'showAttachments' => true,));
         // $documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
         // $documentsNewTree = $this->document->generateTreeview($documentsNew, 
         // array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));

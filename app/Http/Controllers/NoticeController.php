@@ -14,6 +14,7 @@ use App\DocumentType;
 use App\DocumentStatus;
 use App\DocumentMandantMandant;
 use App\DocumentMandant;
+use App\Mandant;
 use App\MandantUser;
 use App\EditorVariant;
 use App\DocumentUpload;
@@ -69,7 +70,7 @@ class NoticeController extends Controller
         ->orderBy('created_at', 'desc')->paginate(10, ['*'], 'notiz');
         $documentsTree = $this->document->generateTreeview($documents, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
         'showAttachments' => true, 'showHistory' => true,'temporaryNull'=>true));
-        
+        $mandants = Mandant::all();
         return view('notiz.index',compact('documents','documentsTree','searchString'));
     }
 
@@ -83,10 +84,11 @@ class NoticeController extends Controller
         $data = new Document;
         
         $mandantUsers = User::where('active', 1)->get();
+        $mandants = Mandant::all();
         $mitarbeiterUsers = $mandantUsers;
 
         return view('formWrapper',
-            compact( 'data', 'mandantUsers', 'mitarbeiterUsers'));
+            compact( 'data', 'mandants','mandantUsers', 'mitarbeiterUsers'));
     }
 
     /**
@@ -97,25 +99,17 @@ class NoticeController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all() );
-        // dd(  strtotime($request->get('note_time') ) );
-        
-        // $request->merge( [
-        // 'note_date' => Carbon::parse($request->get('note_date')) ]);
-        // dd($request->get('note_time'));
-        // dd( Carbon::today()->format('Y-m-d').' '.$request->get('note_time').':00' );
-        // dd( Carbon::createFromFormat(Carbon::today().' '.$request->get('note_time')) );
         $filename = '';
         $path = $this->pdfPath;
     
-        $request->merge(['document_type_id' => DocumentType::NOTIZEN, 'user_id' => Auth::user()->id,
+        $request->merge(['version'=> 1,'document_type_id' => DocumentType::NOTIZEN, 'user_id' => Auth::user()->id,
         'owner_user_id' => Auth::user()->id,'name' => $request->get('betreff'),
         'name_long' => $request->get('betreff') ]);
         
         $note = Document::create($request->all() );
         $model = $note;
         
-        $request->merge([ 'document_id' =>$note->id, 'variant_number' => 1,'inhalt' => $request->get('content')]);
+        $request->merge([ 'document_id' =>$note->id, 'variant_number' => 1]);
         $editorVariant = EditorVariant::create( $request->all() );
         
         $request->merge([ 'editor_variant_id' => $editorVariant->id ]);
@@ -128,16 +122,18 @@ class NoticeController extends Controller
             $fileNames = $this->document->fileUpload($model, $path, $request->file());
         }
         $counter = 0;
+        $attachArr = [];
+        // dd($request->all());
         if (isset($fileNames) && count($fileNames) > 0) {
             foreach ($fileNames as $fileName) {
                 ++$counter;
                 $request->merge([ 'file_path' => $fileName ]);
                 $documentAttachment = DocumentUpload::create( $request->all() );
-                
+                $attachArr[] = $documentAttachment;
             }
         }
         
-        return redirect()->back()->with('messageSecondary', trans('notiz.noteCreated'));
+        return redirect('notiz')->with('messageSecondary', trans('notiz.noteCreated'));
 
     }
     
@@ -160,16 +156,13 @@ class NoticeController extends Controller
      */
     public function edit($id)
     {
-        // not yet completed !!!!!!
-        
         $data = Document::find($id);
-        
         $mandantUsers = User::where('active', 1)->get();
         $mitarbeiterUsers = $mandantUsers;
-        
+        $mandants = Mandant::all();
         //dd($data);
         return view('formWrapper',
-            compact('data', 'mandantUsers', 'mitarbeiterUsers'));
+            compact('data', 'mandants', 'mandantUsers', 'mitarbeiterUsers'));
     }
 
     /**
@@ -181,10 +174,47 @@ class NoticeController extends Controller
      */
     public function update(Request $request,$id)
     {
-        // dd($document);
-        $document = Document::find($id);
-        $request->merge([ 'user_id' => Auth::user()->id ]);
-        $document->fill($request->all())->save();
+        $filename = '';
+        $path = $this->pdfPath;
+    
+        $request->merge(['version'=> 1,'document_type_id' => DocumentType::NOTIZEN, 'user_id' => Auth::user()->id,
+        'owner_user_id' => Auth::user()->id,'name' => $request->get('betreff'),
+        'name_long' => $request->get('betreff') ]);
+        if(!$request->has('ruckruf')){
+            $request->merge(['ruckruf' => 0]);
+        }
+        
+        $note = Document::find($id);
+        $note->fill($request->all() )->save();
+        
+        $model = $note;
+        
+        
+        
+        $editorVariant = EditorVariant::where('document_id',$id)->first();
+        $editorVariant->fill($request->all() )->save();
+        
+        $documentMandat =  DocumentMandant::where('editor_variant_id',$editorVariant->id)->first();
+        $documentMandat->fill($request->all() );
+        
+        $request->merge([ 'document_mandant_id' => $documentMandat->id ]);
+        $mandant =  DocumentMandantMandant::create($request->all() );
+     
+        if ($request->file()) {
+            $fileNames = $this->document->fileUpload($model, $path, $request->file());
+        }
+        $counter = 0;
+        $attachArr = [];
+        // dd($request->all());
+        if (isset($fileNames) && count($fileNames) > 0) {
+            foreach ($fileNames as $fileName) {
+                ++$counter;
+                $request->merge([ 'file_path' => $fileName ]);
+                $documentAttachment = DocumentUpload::create( $request->all() );
+                $attachArr[] = $documentAttachment;
+            }
+        }
+        
         return redirect()->back()->withMessage('messageSecondary'. trans('notiz.updated') );
     }
 

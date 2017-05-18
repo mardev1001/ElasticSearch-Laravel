@@ -59,8 +59,13 @@ $(function() {
         isNumeric = true;
     }
 
+
     if ((location.protocol + "//" + location.host + '/') == url.href) {
         $('a[href="/"]').addClass('active');
+    }
+    else if (url.href.indexOf('notiz') != -1 && url.href.indexOf('edit') != -1) {
+        console.log('trigger notice');
+        $('a[href$="notiz"]').addClass('active').next('ul').addClass('in');
     }
     else if (url.href.indexOf('mandanten') != -1 && url.href.indexOf('search-single') != -1) {
         $('a[href$="/benutzer"]').addClass('active');
@@ -150,6 +155,10 @@ $(function() {
     else if (url.href.indexOf('suche') != -1) {
         $('a[href*="suche"]').addClass('active').parent('li').find('ul').addClass('in');
     }
+    else if (url.href.indexOf('notiz') != -1 && url.href.indexOf('edit') == -1) {
+        console.log('trigger notice');
+        $('a[href$="notiz"]').addClass('active').next('ul').addClass('in');
+    }
     else if (url.href.indexOf('beratungsportal') != -1 && url.href.indexOf('aktenart') != -1) {
         $('a[href$="/beratungsportal"]').removeClass('active').parent('ul').removeClass('in');
         $('a[href$="' + window.location.pathname.substr(1) + '"]').addClass('active').next('ul').addClass('in');
@@ -205,6 +214,7 @@ $(function() {
         $('a[href$="' + window.location.pathname.substr(1) + '"]').closest('li.active').find('ul.in li.active').removeClass('active');
         $('a[href$="' + window.location.pathname.substr(1) + '"]').next('ul.in li.active').removeClass('active');
     }
+
     else if (typeof documentType !== 'undefined' && documentType.length) {
         var detectHref = '';
         var locker = false;
@@ -523,8 +533,8 @@ $(function() {
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
-                plugins: ["table link"],
-                toolbar1: "link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                plugins: ["table link code"],
+                toolbar1: "link  code | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 //width: 680,
                 // height: 820,
                 height: 450,
@@ -557,7 +567,7 @@ $(function() {
                             }
 
 
-                            if (e && e.element.nodeName.toLowerCase() == 'img') {
+                            if (e && e.element.nodeName.toLowerCase() == 'table') {
                                 // processImage(e);
 
                             }

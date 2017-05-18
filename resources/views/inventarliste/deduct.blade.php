@@ -80,7 +80,11 @@
                                 @else    
                                     value="0"
                                 @endif />
-                                <input type="hidden" name="search" value="{{old('search',$searchInput)}}"/>
+                                @if(isset($searchInput) )
+                                    <input type="hidden" name="search" value="{{old('search',$searchInput)}}"/>
+                                @else
+                                <input type="hidden" name="search" value="{{old('search')}}"/>
+                                @endif
                                 <button type="submit" class="btn btn-primary no-margin-bottom pull-right">
                                     {{ trans('inventoryList.downloadPDF') }} 
                                 </button>

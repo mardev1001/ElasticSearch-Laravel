@@ -54,6 +54,7 @@ elixir(function(mix) {
         .copy(bower + 'tinymce/plugins/spellchecker/', 'public/build/js/plugins/spellchecker/')
         .copy(bower + 'tinymce/plugins/anchor/', 'public/build/js/plugins/anchor/')
         .copy(bower + 'tinymce/plugins/image/', 'public/build/js/plugins/image/')
+        .copy(bower + 'tinymce/plugins/code/', 'public/build/js/plugins/code/')
         .copy(bower + 'datatables/media/images/', 'public/build/images/')
         .copy(bower + 'bootstrap-colorpicker/dist/img/', 'public/build/img/')
         .copy(bower + 'img/', 'public/img/');

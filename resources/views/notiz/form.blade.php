@@ -15,7 +15,8 @@
                    'enctype' => 'multipart/form-data',
                    'class' => 'horizontal-form']) !!}
              @else
-                 {!! Form::open(['route' => 'notiz.store', 'method' => 'POST', 'class' => 'horizontal-form' ]) !!} 
+                 {!! Form::open(['route' => 'notiz.store', 'method' => 'POST', 'class' => 'horizontal-form',
+                   'enctype' => 'multipart/form-data', ]) !!} 
              @endif
              
             
@@ -23,7 +24,7 @@
             <div class="col-md-4 col-lg-3 "> 
                 <div class="form-group">
                     <label class="control-label">{{ trans('juristenPortal.mandant') }}</label>
-                    {!! ViewHelper::setUserSelect($mandantUsers,'mandant_id', $data, old('mandant_id'),'', trans('juristenPortal.mandant'), true ) !!}
+                    {!! ViewHelper::setSelect($mandants,'mandant_id', $data, old('mandant_id'),'', trans('juristenPortal.mandant'), true ) !!}
                 </div>
             </div>
             
@@ -100,7 +101,7 @@
             </div>
             
             <div class="clearfix"></div>
-                </div>
+                
             <div class="col-xs-12">
                 <div class="variant" data-id='inhalt'>
                     @if( isset($data->editorVariant) )
@@ -115,7 +116,6 @@
             <!-- input box-->
             <div class="col-lg-6"> 
                 <div class="form-group">
-                    
                     <input type="file" name="file[]" class="form-control" multiple />
                 </div>   
             </div><!--End input box-->
@@ -123,7 +123,8 @@
                 <div class="col-lg-6 "> 
                 <span class="lead"> Hochgeladene Dateien</span>
                 @foreach($data->documentUploads as $doc)
-                   <p class="text-info"><span class="fa fa-file-o"></span> {{ $doc->file_path }}</p>
+                    <p class="text-info"><span class="fa fa-file-o"></span> 
+                    <a href="{{ url('download/'. $data->id .'/'.$doc->file_path) }}">{{ $doc->file_path }}</a></p>
                 @endforeach
               
                 </div><!--End input box-->

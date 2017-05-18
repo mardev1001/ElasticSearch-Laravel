@@ -402,8 +402,11 @@ class DocumentRepository
                     }
                 } elseif ($document->document_status_id == 6) {
                     $node->href = url('dokumente/'.$document->id.'/freigabe');
-                } elseif (is_null($document->document_type_id)  || $optionsDefault['temporaryNull'] == true) {
+                } elseif (is_null($document->document_type_id)  ) {
                     $node->href = url('dokumente/'.$document->id.'/edit');
+                } 
+                elseif ( $options['temporaryNull'] == true) {
+                    $node->href = url('notiz/'.$document->id.'/edit');
                 } else {
                     $node->href = route('dokumente.show', $document->id);
                 }

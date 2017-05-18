@@ -20,7 +20,7 @@ $(function() {
 
 
     var datePickerUrl = window.location;
-    if (datePickerUrl.href.indexOf('dokumente') != -1 && datePickerUrl.href.indexOf('create') != -1) {
+    if (((datePickerUrl.href.indexOf('dokumente') != -1) || (datePickerUrl.href.indexOf('notiz') != -1)) && datePickerUrl.href.indexOf('create') != -1) {
         dateToday = new Date();
         $(".datetimepicker").datetimepicker({
             locale: 'de',
@@ -282,8 +282,8 @@ $(function() {
             tinymce.init({
                 selector: '.editable',
                 skin_url: '/css/style',
-                plugins: ["table", 'link'],
-                toolbar1: "link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                plugins: ["table link code"],
+                toolbar1: "link  code | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 //width: docWidth,
                 height: docHeight,
@@ -307,12 +307,12 @@ $(function() {
                         });
                         editor.on('NodeChange', function(e) {
                             if (e && e.element.nodeName.toLowerCase() == 'tr') {
-                                processTableColumn(e);
+                                // processTableColumn(e);
 
                             }
 
 
-                            if (e && e.element.nodeName.toLowerCase() == 'img') {
+                            if (e && e.element.nodeName.toLowerCase() == 'table') {
                                 // processImage(e);
 
                             }
@@ -412,8 +412,8 @@ $(function() {
             tinymce.init({
                 selector: '.content-editor',
                 skin_url: '/css/style',
-                plugins: ["table", 'link'],
-                toolbar1: " link |undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                plugins: ["table link code"],
+                toolbar1: "link code |undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 height: docHeight,
                 height: 350,
@@ -436,7 +436,7 @@ $(function() {
                         });
                         editor.on('NodeChange', function(e) {
                             if (e && e.element.nodeName.toLowerCase() == 'tr') {
-                                processTableColumn(e);
+                                // processTableColumn(e);
 
                             }
 
@@ -549,8 +549,8 @@ $(function() {
             tinymce.init({
                 selector: '.variant',
                 skin_url: '/css/style',
-                plugins: ["table", 'link'],
-                toolbar1: "link | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
+                plugins: ["table link code"],
+                toolbar1: "link code | undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent",
                 body_class: classes,
                 //width: docWidth,
                 height: docHeight,
@@ -581,13 +581,13 @@ $(function() {
                         });
                         editor.on('NodeChange', function(e) {
                             if (e && e.element.nodeName.toLowerCase() == 'tr') {
-                                processTableColumn(e);
+                                // processTableColumn(e);
 
                             }
 
 
-                            if (e && e.element.nodeName.toLowerCase() == 'img') {
-                                // processImage(e);
+                            if (e && e.element.nodeName.toLowerCase() == 'table') {
+                                processImage(e);
 
                             }
 

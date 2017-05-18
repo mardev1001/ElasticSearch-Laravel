@@ -73,7 +73,7 @@ class JuristenPortalImport extends Command
     public function importFile($fileName){
         //Filter out files which exists somewhere in the database
         if(substr($fileName, -10) == '.duplicate'){
-            var_dump("Skip", $fileName);
+            echo "Skipping <code>" . $fileName . "</code><br />" . PHP_EOL;
             return;
         }
         

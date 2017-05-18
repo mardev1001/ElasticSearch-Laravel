@@ -43,7 +43,7 @@ return [
     'not-authorized' => 'Dokument wurde nicht freigegeben.',
     'newVersionSuccess' => 'Neue Version wurde erstellt.',
     'landscape' => 'Dokument im Querformat',
-    'additionalLetter' => 'Zusätzlicher Text',
+    'additionalLetter' => 'Zusatz zur QMR Nummer',
     'noPermission' => 'Sie haben keine Berechtigung für diese Seite.',
     'documentTemplates' => 'Vorlagen',
     'approvalReset' => 'Freigabeprozess wurde abgebrochen.',

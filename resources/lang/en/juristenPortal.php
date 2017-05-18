@@ -60,7 +60,7 @@ return [
     'time' => 'Uhrzeit',
     'recall' => 'wünscht Rückruf',
     'phone' => 'Telefonnummer',
-    'function' => 'Function',
+    'function' => 'Funktion',
     'nachricht' => 'Nachricht für / Besprechen mit',
     'betreff' => 'Betreff',
     'print' => 'drucken',

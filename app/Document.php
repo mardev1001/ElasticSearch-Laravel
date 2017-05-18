@@ -25,7 +25,7 @@ class Document extends Model
         'approval_all_mandants','pdf_upload','is_attachment','active','iso_category_number',
         'qmr_number','landscape','additional_letter','jurist_category_id','beratung_category_id',
         'jurist_log_text','jurist_category_meta_id','jurist_log_text','funktion','nachricht','telefon','ruckruf',
-        'note_date','note_time','client',
+        'note_date','note_time','client','mandant_id',
     ]; //whitelist
     
     

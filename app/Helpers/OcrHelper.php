@@ -258,7 +258,7 @@ class OcrHelper{
     private function extractTextFromPDF(){
         $cmd = $this->cdToFolder() 
                 . 'pdftotext ' . escapeshellcmd($this->file_basename) .  ' output.txt';
-        system($cmd);
+        exec($cmd);
         $this->parseText();
         $this->cleanUp();
     }
@@ -271,7 +271,7 @@ class OcrHelper{
     private function convertPDFToPNG(){
         $cmd = $this->cdToFolder()
                 . 'gs -dSAFER -sDEVICE=png16m -dINTERPOLATE -dNumRenderingThreads=4 -r600 -o output.png -c 300000000 setvmthreshold -f ' . escapeshellcmd($this->file_basename);
-        system($cmd);
+        exec($cmd);
         if(File::exists($this->storage_path . 'output.png')){
             $this->cleanUp();
             $this->file_basename = 'output.png';
@@ -287,7 +287,7 @@ class OcrHelper{
     private function extractImage(){
         $cmd = $this->cdToFolder()
                 . 'tesseract ' . escapeshellcmd($this->file_basename) . ' output -l deu+eng';
-        system($cmd);
+        exec($cmd);
         $this->parseText();
     }
     
@@ -299,7 +299,7 @@ class OcrHelper{
         $cmd = $this->setHome()
                . $this->cdToFolder()
                . 'libreoffice --invisible --headless --convert-to txt:Text ' . escapeshellcmd($this->file_basename);
-        system($cmd);
+        exec($cmd);
         if(File::exists($this->storage_path . $this->file_name . '.txt')){
             File::move($this->storage_path . $this->file_name . '.txt', $this->storage_path . 'output.txt');
         }
@@ -313,7 +313,7 @@ class OcrHelper{
         $cmd = $this->setHome()
                 . $this->cdToFolder()
                 . 'libreoffice --invisible --headless --convert-to csv --infilter=CSV:44,34,76,1 ' . escapeshellcmd($this->file_basename);
-        system($cmd);
+        exec($cmd);
         if(File::exists($this->storage_path . $this->file_name . '.csv')){
             File::move($this->storage_path . $this->file_name . '.csv', $this->storage_path . 'output.txt');
         }
@@ -327,7 +327,7 @@ class OcrHelper{
         $cmd = $this->setHome()
                 . $this->cdToFolder()
                 . 'libreoffice --invisible --headless --convert-to pdf ' . escapeshellcmd($this->file_basename);
-        system($cmd);
+        exec($cmd);
         if(File::exists($this->storage_path . $this->file_name . '.pdf')){
             $this->file_basename = $this->file_name . '.pdf';
             $this->extractTextFromPDF();
@@ -343,7 +343,7 @@ class OcrHelper{
         $cmd = $this->setHome()
                 . $this->cdToFolder()
                 . 'libreoffice --invisible --headless --convert-to pdf ' . escapeshellcmd($this->file_basename);
-        system($cmd, $ret);
+        exec($cmd, $ret);
         if(File::exists($this->storage_path . $this->file_name . '.pdf')){
            return $this->file_name . '.pdf';
         }else{
@@ -399,7 +399,7 @@ class OcrHelper{
         $cmd = $this->setHome()
                 . $this->cdToFolder()
                 . 'tesseract -l deu+eng ' . $this->file_basename . ' ' . $this->file_basename . '  pdf';
-        system($cmd);
+        exec($cmd);
         if(File::exists($this->storage_path . 'output.png.pdf')){
             return $this->storage_path . 'output.png.pdf';
         }else{
