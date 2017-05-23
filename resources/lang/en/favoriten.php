@@ -13,7 +13,7 @@ return [
     'save-favorite' => 'In Favoriten speichern',
     'add' => 'hinzufügen',
     'category' => 'Kategorie',
-    'favorite-categories' => 'Favoriten Kategorien',
+    'favorite-categories' => 'Favoritenverwaltung',
     'new-category' => 'Neue anlegen ...',
     'default-category' => 'Vorbelegte Kategorie',
     'assign-category' => 'Alle vorhandenen Kategorien',

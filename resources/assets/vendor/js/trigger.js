@@ -843,6 +843,27 @@ $(function() {
         }
         $(this).val(str);
     });
+
+    $(document).on('change', '.jurist-switch ', function() {
+        var beratungSwitchVal = $(this).find(':selected').val(),
+            beratungSwitchSelector = $('.jurist-switch option[value="' + beratungSwitchVal + '"]'),
+            beratungSwitch = beratungSwitchSelector.data('beratung-category');
+        console.log('switch:' + beratungSwitch);
+        if (typeof beratungSwitch !== typeof undefined) {
+            $('.jurist-switch-triggered > option').each(function() {
+                console.log($(this).data('jurist-type') != beratungSwitch);
+                if ($(this).data('jurist-type') != beratungSwitch) {
+                    $(this).hide();
+                }
+                else {
+                    $(this).show();
+                }
+            });
+            $('.jurist-switch-triggered').trigger('chosen:updated');
+        }
+
+    });
+
     /* end Prevent letterss from input type number */
 
     /* Multiple chosen with required fix */

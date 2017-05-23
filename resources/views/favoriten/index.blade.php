@@ -1,7 +1,7 @@
 {{-- FAVORITEN --}}
 
 @extends('master')
-@section('page-title') {{ trans('controller.favorites') }} @stop
+@section('page-title') {{ trans('navigation.favorites') }} @stop
 
 @section('content')
 
@@ -9,6 +9,7 @@
 <p>Sie haben noch keine Favoriten angelegt.</p>
 @endif
 
+<div class="row">
 <div class="flexbox-wrapper">
     
 {{-- DOCUMENT TYPE FAVORITES --}}
@@ -82,6 +83,7 @@
     
 @endif
 
+</div>
 </div>
 
 @stop

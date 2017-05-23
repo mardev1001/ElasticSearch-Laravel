@@ -1065,7 +1065,8 @@ class ViewHelper
                     }
                 } else {
                     foreach ($variant->documentMandantMandants as $mandant) {
-                        if ($this->universalDocumentPermission($document, false) == true) {
+                        // if ($this->universalDocumentPermission($document, false) == true) {
+                        if (self::universalDocumentPermission($document, false) == true) {
                             $hasPermission = true;
                             $variant->hasPermission = true;
                             $object->permissionExists = true;
@@ -1793,111 +1794,120 @@ class ViewHelper
 
     /**
      * Return list of search suggestions (mandants, users) for use in search suggestions on telephone list.
+     *      
+     * @param Mandant Collection $mandants
      *
      * @return array $searchSuggestions
      */
-    public static function getTelephonelistSearchSuggestions()
+    public static function getTelephonelistSearchSuggestions($mandants = null)
     {
-        $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
-        $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(), 'mandant_id'))->get();
+        if (!isset($mandants)) {
+            $myMandant = MandantUser::where('user_id', Auth::user()->id)->first()->mandant;
+            $myMandants = Mandant::whereIn('id', array_pluck(MandantUser::where('user_id', Auth::user()->id)->get(), 'mandant_id'))->get();
 
-        if (self::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1) {
-            $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
-        } else {
-            $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
-        }
-
-        foreach ($myMandants as $tmp) {
-            if (!$mandants->contains($tmp)) {
-                $mandants->prepend($tmp);
-            }
-        }
-
-        // Sort by Mandant No.
-        $mandants = array_values(array_sort($mandants, function ($value) {
-            return $value['mandant_number'];
-        }));
-
-        foreach ($mandants as $k => $mandant) {
-            $userArr = array();
-            $usersInternal = array();
-
-            $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($myMandants, 'id'))
-                ->where('mandant_id_edit', $mandant->id)->groupBy('role_id', 'user_id', 'mandant_id_edit')->get();
-
-            foreach ($internalMandantUsers as $user) {
-                $usersInternal[] = $user;
+            if (ViewHelper::universalHasPermission() || $myMandant->id == 1 || $myMandant->rights_admin == 1) {
+                $mandants = Mandant::where('active', 1)->orderBy('mandant_number')->get();
+            } else {
+                $partner = true;
+                $mandants = Mandant::where('active', 1)->where('rights_admin', 1)->orderBy('mandant_number')->get();
             }
 
-            foreach ($mandant->users as $k2 => $mUser) {
-                foreach ($mUser->mandantRoles as $mr) {
-                    // do not add the user if he is in $usersInternal array
-                    if ($mUser->active && !in_array($mUser->id, array_pluck($usersInternal, 'user_id'))) {
-                        // Check for phone roles
-                        if ($mr->role->phone_role || $mr->role->mandant_role) {
-                            $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
-                                ->whereIn('mandant_id', array_pluck($myMandants, 'id'))->where('mandant_id_edit', $mandant->id)
-                                ->groupBy('role_id', 'user_id', 'mandant_id_edit')->get();
-                            // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
-                            if (!count($internalRole) && property_exists($mandant->users[$k2], 'id')) {
-                                $userArr[] = $mandant->users[$k2]->id;
+            foreach ($myMandants as $tmp) {
+                if (!$mandants->contains($tmp)) {
+                    $mandants->prepend($tmp);
+                }
+            }
+
+            // Sort by Mandant No.
+            $mandants = array_values(array_sort($mandants, function ($value) {
+                return $value['mandant_number'];
+            }));
+            // dd($mandants);
+
+            foreach ($mandants as $k => $mandant) {
+                $userArr = array();
+                $usersInternal = array();
+
+                // Get all InternalMandantUsers
+                // NOTE: groupBy eliminates duplicates with same role_id, user_id and mandant_id_edit
+                $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($myMandants, 'id'))
+                    ->where('mandant_id_edit', $mandant->id)->groupBy('role_id', 'user_id', 'mandant_id_edit')->get();
+
+                foreach ($internalMandantUsers as $user) {
+                    $usersInternal[] = $user;
+                }
+
+                foreach ($mandant->users as $k2 => $mUser) {
+                    foreach ($mUser->mandantRoles as $mr) {
+                        // do not add the user if he is in $usersInternal array
+                        if ($mUser->active && !in_array($mUser->id, array_pluck($usersInternal, 'user_id'))) {
+                            // Check for phone roles
+                            if ($mr->role->phone_role || $mr->role->mandant_role) {
+                                $internalRole = InternalMandantUser::where('role_id', $mr->role->id)
+                                    ->whereIn('mandant_id', array_pluck($myMandants, 'id'))->where('mandant_id_edit', $mandant->id)
+                                    ->groupBy('role_id', 'user_id', 'mandant_id_edit')->get();
+                                // $internalRole = InternalMandantUser::where('role_id', $mr->role->id)->where('mandant_id_edit', $mandant->id)->first();
+                                if (!count($internalRole)) {
+                                    $userArr[] = $mandant->users[$k2]->id;
+                                }
                             }
                         }
                     }
-                }
-            } // end second foreach
+                } // end second foreach
 
-            $mandant->usersInternal = $usersInternal;
-            $mandant->usersInMandants = $mandant->users->whereIn('id', $userArr);
+                $mandant->usersInternal = $usersInternal;
+                $mandant->usersInMandants = $mandant->users->whereIn('id', $userArr);
+
+                $userInMandantExists = array();
+                $roleExists = array();
+                if ($mandant->id == 1) {
+                    foreach ($mandant->usersInternal as $ui) {
+                        if (!is_null($ui->user)) {
+                            $userInMandantExists[] = $ui->user_id;
+                            $roleExists[] = $ui->role_id;
+                        }
+                    }
+                    foreach ($mandant->usersInMandants as $um) {
+                        if (!is_null($um)) {
+                            $userInMandantExists[] = $um->id;
+                        }
+                    }
+                    $viewAllNeptunPhoneRoles = false;
+                    // dd(ViewHelper::getUserMandants(Auth::user()->id));
+                    if (ViewHelper::universalHasPermission() == true || in_array(1, ViewHelper::getUserMandants(Auth::user()->id)->toArray())) {
+                        $viewAllNeptunPhoneRoles = true;
+                    }
+                    if ($viewAllNeptunPhoneRoles == true) {
+                        $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
+                        $mandantUsers = MandantUser::where('mandant_id', 1)->whereIn('id', $mandantUserRoles)->get();
+                    } else {
+                        $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
+                        $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereIn('user_id', $userInMandantExists)->get();
+                    }
+                }
+                if (isset($mandantUsers) && count($mandantUsers)) {
+                    $mandant->usersInMandants = $mandant->users->whereIn('id', $mandantUsers->pluck('user_id')->toArray());
+                }
+            }
         }
-        $userInMandantExists = array();
-        $roleExists =  array();
+
         // Search suggestion array for telephone list select box
         $searchSuggestions = array();
         foreach ($mandants as $m) {
             $searchSuggestions[] = $m->mandant_number;
             $searchSuggestions[] = $m->kurzname;
-            foreach ($m->usersInternal as $ui) {
-                if (!is_null($ui->user)) {
-                    $searchSuggestions[] = $ui->user->first_name;
-                    $searchSuggestions[] = $ui->user->last_name;
-                    if ($m->id == 1) {
-                        $userInMandantExists[] = $ui->user_id;
-                        $roleExists[] = $ui->role_id;
+            if (isset($m->usersInternal)) {
+                foreach ($m->usersInternal as $ui) {
+                    if (is_object($ui->user)) {
+                        $searchSuggestions[] = $ui->user->first_name;
+                        $searchSuggestions[] = $ui->user->last_name;
                     }
                 }
             }
-
-            foreach ($m->usersInMandants as $um) {
-                if (!is_null($um)) {
+            if (isset($m->usersInMandants)) {
+                foreach ($m->usersInMandants as $um) {
                     $searchSuggestions[] = $um->first_name;
                     $searchSuggestions[] = $um->last_name;
-                    if ($m->id == 1) {
-                        $userInMandantExists[] = $um->id;
-                    }
-                }
-            }
-            if ($m->id == 1) {
-                $viewAllNeptunPhoneRoles = false;
-                if (self::universalHasPermission() == true || in_array(1, self::getUserMandants(Auth::user()->id)->toArray())) {
-                    $viewAllNeptunPhoneRoles = true;
-                }
-                if ($viewAllNeptunPhoneRoles == true) {
-                    $availableRoles = Role::where('phone_role', 1)->pluck('id')->toArray();
-                    $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
-                    $mandantUsers = MandantUser::where('mandant_id', 1)->whereIn('id', $mandantUserRoles)->get();
-                } else {
-                    $availableRoles = Role::whereNotIn('id', $roleExists)->where('phone_role', 1)->pluck('id')->toArray();
-                    $mandantUserRoles = MandantUserRole::whereIn('role_id', $roleExists)->pluck('mandant_user_id')->toArray();
-                    $mandantUsers = MandantUser::where('mandant_id', 1)->whereNotIn('id', $mandantUserRoles)->whereNotIn('user_id', $userInMandantExists)->get();
-                }
-
-                // dd($mandantUsers->pluck('user_id')->toArray());
-                foreach ($mandantUsers as $mu) {
-                    if (!is_null($mu->user)) {
-                        $searchSuggestions[] = $mu->user->first_name;
-                        $searchSuggestions[] = $mu->user->last_name;
-                    }
                 }
             }
         }
@@ -2003,6 +2013,20 @@ class ViewHelper
         $sent ? $status = "OK" : $status = "FAIL";
         $logMessage = "[". Carbon::now() ."]"."[".$status."]"." - "."[".$message."]"."\n";
         File::append($logFile, $logMessage);
+    }
+    
+        /**
+     * Convers file size in bytes to a human readable size
+     * 
+     * @param int $bytes Filesize in Bytes
+     * @return string Human readable Filesize (f.e. 1 MiB)
+     */
+    public static function bytesToHuman($bytes){
+        $units = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB'];
+        for ($i = 0; $bytes > 1024; $i++) {
+            $bytes /= 1024;
+        }
+        return round($bytes, 2) . ' ' . $units[$i];
     }
     
 }

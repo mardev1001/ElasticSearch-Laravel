@@ -13,7 +13,8 @@ class DocumentType extends Model
     const FORMULARE = 5;
     const ANLAGEN = 6;
     const JURISTEN = 7;
-    const NOTIZEN = 9;
+    const NOTIZEN = 8;
+    const BERATUNG = 9;
     
     protected $guarded = []; //blacklist
     protected $fillable = ['name','document_art','document_role','read_required','allow_comments','order_number', 'menu_position', 'jurist_document', 'publish_sending']; //whitelist

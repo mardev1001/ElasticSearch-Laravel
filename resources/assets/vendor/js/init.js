@@ -60,14 +60,19 @@ $(function() {
         setNull: true
     });
 
+    var now = '';
+    if (datePickerUrl.href.indexOf('create') != -1) {
+        now = moment();
+    }
     $(".timepicker").datetimepicker({
         locale: 'de',
         format: 'HH:mm',
         useCurrent: true,
+        defaultDate: now,
         showClose: true,
         widgetPositioning: {
             horizontal: 'auto',
-            vertical: 'bottom'
+            vertical: 'auto'
         }
     });
 
@@ -587,7 +592,7 @@ $(function() {
 
 
                             if (e && e.element.nodeName.toLowerCase() == 'table') {
-                                processImage(e);
+                                // processImage(e); 
 
                             }
 

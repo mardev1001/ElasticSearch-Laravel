@@ -462,7 +462,7 @@
           <div class="content-wrapper">
               <div class="row">
                     <div class="document-title-row">
-                        @if( $document->adressat_id != null )
+                           @if( $document->adressat_id != null && $document->show_name == 1 )
                           <h4 class="document-adressat">{{$document->documentAdressats->name}}</h4>
                         @endif
                     </div>
@@ -472,10 +472,8 @@
                               <span class="right-correction">{{$document->date_published}}</span>
                           @endif
                           <br/>
-                              {{-- Inverted at the end of the project --}}
-                              @if( $document->show_name != 1 )
-                                  {{ $document->user->short_name }}
-                              @endif
+                            {{-- Inverted at the end of the project --}}
+                            @if(!empty($document->owner->short_name)) {{ $document->owner->short_name }} @endif @if( !is_null($document->user) && !empty($document->user->short_name) )| {{ $document->user->short_name }} @endif
                           </p></div>
                   </div>
                   <div class="clearfix"></div>

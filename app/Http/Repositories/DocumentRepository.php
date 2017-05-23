@@ -103,6 +103,7 @@ class DocumentRepository
             'myDocuments' => false,
             'noCategoryDocuments' => false,
             'temporaryNull' => false,
+            'beratungsDokumente' => false,
             // 'formulare' => false,
         ];
         $options = array_merge($optionsDefault, $options);
@@ -393,7 +394,7 @@ class DocumentRepository
 
                 // $node->icon3 = $icon3 . 'last-node-icon ';
                 // if ($options['showUniqueURL'] == true)
-
+                // dd(is_null($document->document_type_id ));
                 if ($document->document_status_id == 3) {
                     if (isset($document->published)) {
                         $node->href = route('dokumente.show', $document->published->url_unique);
@@ -402,12 +403,18 @@ class DocumentRepository
                     }
                 } elseif ($document->document_status_id == 6) {
                     $node->href = url('dokumente/'.$document->id.'/freigabe');
-                } elseif (is_null($document->document_type_id)  ) {
+                } 
+                elseif ( $options['temporaryNull'] == true && $options['beratungsDokumente'] == true &&
+                    is_null($document->document_type_id ) ) {
+                    $node->href = url('beratungsdokumente/'.$document->id.'/edit');
+                } 
+                elseif ( $options['temporaryNull'] == true && is_null($document->document_type_id ) ) {
+                    $node->href = url('notiz/'.$document->id.'/edit');
+                } 
+                elseif (is_null($document->document_type_id)  ) {
                     $node->href = url('dokumente/'.$document->id.'/edit');
                 } 
-                elseif ( $options['temporaryNull'] == true) {
-                    $node->href = url('notiz/'.$document->id.'/edit');
-                } else {
+                else {
                     $node->href = route('dokumente.show', $document->id);
                 }
 

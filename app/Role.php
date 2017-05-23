@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Role extends Model
 {
+    const JURISTADMINISTRATOR = 35;
     const JURISTBENUTZER = 36;
+    const JURISTENDOKUMENTANLEGER = 38;
     
     use SoftDeletes;
     

@@ -112,9 +112,13 @@ Route::group(array('middleware' => ['auth']), function () {
     Route::post('favoriten/kategorieverwaltung/store', 'FavoritesController@storeFavoriteCategory');
     Route::patch('favoriten/kategorieverwaltung/update', 'FavoritesController@updateFavoriteCategory');
     Route::resource('favoriten', 'FavoritesController');
+    
+    // Phonelist routes
     Route::get('telefonliste/{id}/pdf', 'TelephoneListController@pdfExport');
     Route::post('telefonliste/display-options', 'TelephoneListController@displayOptions');
     Route::resource('telefonliste', 'TelephoneListController');
+    
+    // Search routes
     Route::resource('einstellungen', 'SettingsController');
     Route::get('suche/erweitert', 'SearchController@searchAdvanced');
     Route::get('suche/telefonliste', 'SearchController@searchPhoneList');
@@ -210,7 +214,9 @@ Route::group(array('middleware' => ['auth']), function () {
     
     Route::get('beratungsportal/notiz', 'JuristenPortalController@notiz');
     Route::get('beratungsportal/upload', 'JuristenPortalController@uploadView');
+    Route::get('beratungsportal/duplicate', 'JuristenPortalController@duplicateView');
     Route::post('beratungsportal/upload', ['as' => 'juristenportal.upload', 'uses' => 'JuristenPortalController@upload']);
+    Route::post('beratungsportal/duplicate', ['as' => 'juristenportal.duplicate', 'uses' => 'JuristenPortalController@duplicate']);
     Route::get('beratungsportal/calendar', 'JuristenPortalController@viewCalendar');
     Route::post('beratungsportal/calendar', 'JuristenPortalController@viewUserCalendar');
     Route::post('calendarEvent', 'JuristenPortalController@viewNextMonth');
@@ -222,14 +228,23 @@ Route::group(array('middleware' => ['auth']), function () {
     
     /* Beratungsdokument Resources */
     Route::resource('beratungsdokumente', 'BeratungDocumentsController');
+    /* End Beratungsdokument Resources */
+    
+    /* Beratung kategory Resources */
     Route::get('beratung-kategorien/alle', 'BeratungController@singlePageAll');
     Route::resource('beratung-kategorien', 'BeratungController');
+    /* End Beratung kategory Resources */
     
     /* Notice Resources */
     Route::get('notiz/upload/{id}', 'NoticeController@uploadView');
     Route::post('notiz/upload', 'NoticeController@upload');
     Route::get('notiz/suche', 'NoticeController@search');
     Route::resource('notiz', 'NoticeController');
+    /* End Notice resources */
+    
+    
+    /* Notice Resources */
+    Route::resource('akten', 'AktenController');
     /* End Notice resources */
 
     /*
@@ -273,4 +288,9 @@ Route::group(array('middleware' => ['auth']), function () {
     
     // Route::get('dev/sandbox', 'DocumentTypeController@devSandbox');
     // Route::get('dev/sandbox/pdf/{id}', 'DocumentController@generatePdfObject');
+    
+    // Route::get('/server-info',function(){
+    //     return phpinfo(); 
+    // });
+    
 });

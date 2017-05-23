@@ -69,7 +69,6 @@ class TelephoneListController extends Controller
 
             // Get all InternalMandantUsers
             // NOTE: groupBy eliminates duplicates with same role_id, user_id and mandant_id_edit
-            // TODO: Add groupBy also to search
             $internalMandantUsers = InternalMandantUser::whereIn('mandant_id', array_pluck($myMandants, 'id'))
                 ->where('mandant_id_edit', $mandant->id)->groupBy('role_id', 'user_id', 'mandant_id_edit')->get();
 
@@ -139,9 +138,9 @@ class TelephoneListController extends Controller
             }
         }
 
-         $searchSuggestions = ViewHelper::getTelephonelistSearchSuggestions();
+        $searchSuggestions = ViewHelper::getTelephonelistSearchSuggestions($mandants);
 
-         return view('telefonliste.index', compact('mandants', 'visible', 'partner', 'searchSuggestions'));
+        return view('telefonliste.index', compact('mandants', 'visible', 'partner', 'searchSuggestions'));
      }
 
     /**

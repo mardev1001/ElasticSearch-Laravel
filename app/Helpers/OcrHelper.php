@@ -356,9 +356,8 @@ class OcrHelper{
         $output = '';
         $cmd = $this->setHome()
                 .  $this->cdToFolder()
-                . 'exiftool ' . escapeshellcmd($this->file_basename);
+                . 'exiftool '. escapeshellarg($this->file_basename);
         exec($cmd, $output, $ret);
-        
         $values = [];
         
         foreach($output as $line){
@@ -366,8 +365,11 @@ class OcrHelper{
             if(count($parts) != 2){
                 continue;
             }
+            
+            //Remove all whitespaces in the key because blade templates can't handle them
+            $key = str_replace(' ', '', $parts[0]);
 
-            $values[trim($parts[0])] = trim($parts[1]);
+            $values[$key] = trim($parts[1]);
         }
         
         return $values;

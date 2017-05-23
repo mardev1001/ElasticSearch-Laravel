@@ -158,11 +158,12 @@ class JuristenPortalController extends Controller
                 ->orWhere('user_id', Auth::user()->id);
                 $query->orWhereIn('documents.id', [Auth::user()->id]);
          })->paginate(10, ['*'], 'my-dokumente');
-        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
-        'showAttachments' => true, 'showHistory' => true));
+        $documentsMyTree = $this->document->generateTreeview($documentsMy, array('pageHome' => true, 'myDocuments' => true, 
+        'noCategoryDocuments' => true, 'showAttachments' => true,'temporaryNull' => true,'beratungsDokumente' =>true));
        
         $documentsAll = $query->paginate(10, ['*'], 'alle-dokumente');
-        $documentsAllTree = $this->document->generateTreeview($documentsAll, array('pageHome' => true,'showAttachments' => true,));
+        $documentsAllTree = $this->document->generateTreeview($documentsAll, array( array('pageHome' => true, 'myDocuments' => true, 
+        'noCategoryDocuments' => true, 'showAttachments' => true,'temporaryNull' => true,'beratungsDokumente' =>true)) );
         // $documentsNew = $this->document->getUserPermissionedDocuments($documentsNew, 'neue-dokumente', array('field' => 'documents.date_published', 'sort' => 'desc'), $perPage = 10);
         // $documentsNewTree = $this->document->generateTreeview($documentsNew, 
         // array('pageHome' => true, 'showAttachments' => true, 'showHistory' => true));
@@ -518,8 +519,8 @@ class JuristenPortalController extends Controller
         }
         $uploaded = $this->fileUpload($request->file);
         if(!is_bool($uploaded) ){
-            $duplicates = $this->findDuplicates($uploaded);
-            
+            //Find duplicates and mark them with the .duplicate file ending
+            $this->findDuplicates($uploaded, true);
         }
         
         // dd($duplicates);
@@ -531,6 +532,55 @@ class JuristenPortalController extends Controller
             Artisan::call('juristenportal:import');
             return redirect()->back()->with('messageSecondary', 'Dateien hochgeladen');
         }
+    }
+    
+    public function duplicateView()
+    {
+        $files = File::files($this->portalOcrUploads);
+        $duplicate_files = array_where($files, function($key, $value){
+            return substr($value, -10) == '.duplicate';
+        });
+        
+        //Find duplicates and their originals
+        $duplicates = $this->findDuplicates($duplicate_files);
+        foreach($duplicates as $key => $dup){
+            if(!isset($dup['metadata']['FileName']) || $dup['metadata']['FileName'] == ''){
+                var_dump($key);
+                dd($dup);
+            }
+        }
+
+
+        if (ViewHelper::universalHasPermission(array(35, 36), false) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        
+        return view('juristenportal.duplicate', ['duplicates' => $duplicates]);
+    }
+    
+    public function duplicate(Request $request){
+        if (ViewHelper::universalHasPermission(array(35, 36), false) == false) {
+            return redirect('/')->with('messageSecondary', trans('documentForm.noPermission'));
+        }
+        
+        if(!$request->has('action') || !$request->has('originalID') || !$request->has('document')){
+            return redirect()->back()->with('messageSecondary', 'Something went wrong');
+        }
+        
+        switch($request->type){
+            case 'keep':
+                File::move($request->document, $this->portalOcrUploads . str_replace('.duplicate', $request->document));
+                return redirect()->back()->with('messageSecondary', 'Dokument für Import vorbereitet');
+                break;
+            case 'update':
+                break;
+            case 'delete':
+                File::delete($this->portalOcrUploads . $request->document);
+                return redirect()->back()->with('messageSecondary', 'Dokument gelöscht');
+                break;
+        }
+        
+        dd($request->all());
     }
 
     /**
@@ -544,21 +594,38 @@ class JuristenPortalController extends Controller
      * all other files will be renamed from .processing to their original name
      * 
      * @param array $files Array of fileNames [without the Path]
+     * @param bool $rename_files Found duplicates will be marked with .duplicate.
      * @return array Array with duplicate Files and their original Document Object
      */
-    private function findDuplicates(array $files){
+    private function findDuplicates(array $files, $rename_files = false){
         $duplicates = [];
+        
+        $ocrHelper = new \App\Helpers\OcrHelper($this->portalOcrUploads, 'default.file');
         foreach($files as $filename){
-            $ocrHelper = new \App\Helpers\OcrHelper($this->portalOcrUploads, $filename);
-            $metaData = $ocrHelper->getMetaData();
-            $originalFilename = substr($filename, 0, -11);
+             if(substr($filename, 0, -11) == '.processing'){
+                $originalFilename = substr($filename, 0, -11);
+             }else if(substr($filename, -10) == '.duplicate'){
+                $originalFilename = substr($filename, 0, -10);
+             }else{
+                $originalFilename = $filename;
+             }
             
+            $ocrHelper->setFilename($filename);
+            $metaData = $ocrHelper->getMetaData();
+
+            //Check if file with the same file name exists
             $dbDocumentUpload = DocumentUpload::with('editorVariant', 'editorVariant.document', 'editorVariant.document.user')
                                                 ->where('file_path', $originalFilename)
                                                 ->first();
+            
             if($dbDocumentUpload != null && is_null( $dbDocumentUpload->editorVariant->document->document_type_id ) ){
-                $duplicates[$filename] = ['metadata' => $metaData, 'original' => $dbDocumentUpload->editorVariant->document];
-                File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
+                $duplicates[$filename] = [
+                    'metadata' => $metaData,
+                    'original' => $dbDocumentUpload->editorVariant->document
+                ];
+                if($rename_files){
+                    File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
+                }
                 continue;
             }
             
@@ -566,11 +633,12 @@ class JuristenPortalController extends Controller
             $real_user_name = '';
             $title = '';
             
-            if(isset($metaData['Last Modified By'])){
-                $real_user_name = $metaData['Last Modified By'];
+            if(isset($metaData['LastModifiedBy'])){
+                $real_user_name = $metaData['LastModifiedBy'];
             }else if(isset($metaData['Creator'])){
                 $real_user_name = $metaData['Creator'];
             }
+            
             if(isset($metaData['Title'])){
                 $title = $metaData['Title'];
             }
@@ -579,20 +647,35 @@ class JuristenPortalController extends Controller
                 $user_id = $user->id;
             }
             
+            //Check if file with same title and same author exists
             $document = Document::where('name', $title)
                                  ->where('user_id', $user_id)
                                  ->where('document_type_id',null)
+                                 ->with('user')
                                  ->first();
+            
+            
             if($document != null){
                 // dd($metaData);
-                 $duplicates[$filename] = ['metadata' => $metaData, 'original' => $document];
-                 File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
-                 continue;
+                 $duplicates[$filename] = [
+                     'metadata' => $metaData,
+                     'original' => $document
+                 ];
+                 if($rename_files){
+                    File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename . '.duplicate');
+                }
+                continue;
             }
-            File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename);
+            
+            if($rename_files){
+                File::move($this->portalOcrUploads . $filename , $this->portalOcrUploads . $originalFilename);
+            }
+           
         }
         return $duplicates;
     }
+    
+    
 
     /**
      * Process files for upload.

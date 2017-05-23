@@ -979,7 +979,7 @@ class DocumentController extends Controller
         $mandantUserRoles = MandantUserRole::where('role_id', 10)->pluck('mandant_user_id');
         $mandantUsersTable = MandantUser::whereIn('id', $mandantUserRoles)->pluck('user_id');
         $mandantUsers = User::whereIn('id', $mandantUsersTable)->orderBy('last_name', 'asc')->get();
-        $mandants = Mandant::whereNull('deleted_at')->get();
+        $mandants = Mandant::whereNull('deleted_at')->orderBy('mandant_number','asc')->get();
 
         $documentMandats = DocumentMandant::where('document_id', $data->id)->get();
         foreach ($variants as $variant) {

@@ -52,7 +52,8 @@ class NoticeController extends Controller
         $documents =  Document::where('document_type_id', DocumentType::NOTIZEN)
         ->orderBy('created_at', 'desc')->paginate(10, ['*'], 'notiz');
         
-        $documentsTree = $this->document->generateTreeview($documents,  array('pageHome' => true, 'myDocuments' => true, 'noCategoryDocuments' => true,
+        $documentsTree = $this->document->generateTreeview($documents,  array('pageHome' => true, 'myDocuments' => true,
+        'beratungsDokumente' => true,
         'showAttachments' => true, 'temporaryNull' => true));
         return view('notiz.index',compact('documents','documentsTree','searchString') );
     
