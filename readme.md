@@ -1,4 +1,4 @@
-# Neptun project with Elastic Search inside
+# Intranet project with Elastic Search integrated
 
 Powered by Elastic Search for Laravel
 Multi Search enabled
